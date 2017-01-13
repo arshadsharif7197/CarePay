@@ -34,6 +34,7 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialog;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialogFragment;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
@@ -95,6 +96,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
     private PaymentsModel intakePaymentModel;
     private double amountToMakePayment;
     private String paymentDTOString;
+    private DemographicAddressPayloadDTO addressPayloadDTO;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -114,6 +116,11 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
             //paymentsModel = (PaymentsModel) arguments.getSerializable(CarePayConstants.INTAKE_BUNDLE);
             paymentsLabelDTO = intakePaymentModel.getPaymentsMetadata().getPaymentsLabel();
             amountToMakePayment = arguments.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
+            String addressPayloadString = ApplicationPreferences.Instance.readStringFromSharedPref(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE);
+            addressPayloadDTO = new DemographicAddressPayloadDTO();
+            if(addressPayloadString.length()>1){
+                addressPayloadDTO = gson.fromJson(addressPayloadString,DemographicAddressPayloadDTO.class);
+            }
         }
         Toolbar toolbar = (Toolbar) addNewCreditCardView.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
         TextView title = (TextView) toolbar.findViewById(com.carecloud.carepaylibrary.R.id.respons_toolbar_title);
@@ -301,30 +308,35 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
         address1EditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.addressEditTextId);
         address1EditText.setHint(paymentsLabelDTO.getPaymentAddressLine1Text());
         address1EditText.setTag(address1TextInput);
+        String addressPayloadString = ApplicationPreferences.Instance.readStringFromSharedPref(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE);
 
         address2TextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.address2TextInputLayout);
         address2TextInput.setTag(paymentsLabelDTO.getPaymentAddressLine2Text());
         address2EditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.addressEditText2Id);
         address2EditText.setHint(paymentsLabelDTO.getPaymentAddressLine2Text());
         address2EditText.setTag(address2TextInput);
+        address2EditText.setText(addressPayloadDTO.getAddress2());
 
         zipCodeTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.zipCodeTextInputLayout);
         zipCodeTextInput.setTag(paymentsLabelDTO.getPaymentZipcode());
         zipCodeEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.zipCodeId);
         zipCodeEditText.setHint(paymentsLabelDTO.getPaymentZipcode());
         zipCodeEditText.setTag(zipCodeTextInput);
+        zipCodeEditText.setText(addressPayloadDTO.getZipcode());
 
         cityTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.cityTextInputLayout);
         cityTextInput.setTag(paymentsLabelDTO.getPaymentCity());
         cityEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.cityId);
         cityEditText.setHint(paymentsLabelDTO.getPaymentCity());
         cityEditText.setTag(cityTextInput);
+        cityEditText.setText(addressPayloadDTO.getCity());
 
         stateTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.stateTextInputLayout);
         stateTextInput.setTag(paymentsLabelDTO.getPaymentState());
         stateEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.stateAutoCompleteTextView);
         stateEditText.setHint(paymentsLabelDTO.getPaymentState());
         stateEditText.setTag(stateTextInput);
+        stateEditText.setText(addressPayloadDTO.getState());
 
         nextButton = (Button) view.findViewById(com.carecloud.carepaylibrary.R.id.nextButton);
         nextButton.setText(paymentsLabelDTO.getPaymentPayText());

@@ -89,5 +89,6 @@ public class CarePayConstants {
 
     public static final String CLOVER_DEVICE = "Clover";
     public static final String DEMOGRAPHICS_SETTINGS_BUNDLE  = "demographics_settings_bundle";
+    public static final String DEMOGRAPHICS_ADDRESS_BUNDLE  = "demographics_address_bundle";
 
 }
