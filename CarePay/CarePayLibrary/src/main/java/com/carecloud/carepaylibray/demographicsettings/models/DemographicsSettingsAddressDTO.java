@@ -3,6 +3,8 @@ package com.carecloud.carepaylibray.demographicsettings.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Created by harshal_patil on 1/5/2017.
  */
@@ -20,6 +22,9 @@ public class DemographicsSettingsAddressDTO {
     @SerializedName("properties")
     @Expose
     private DemographicsSettingsMetadataPropertiesDTO properties;
+    @SerializedName("validations")
+    @Expose
+    private List<DemographicsSettingsValidationDTO> validations = null;
 
     public String getLabel() {
         return label;
@@ -51,6 +56,14 @@ public class DemographicsSettingsAddressDTO {
 
     public void setProperties(DemographicsSettingsMetadataPropertiesDTO properties) {
         this.properties = properties;
+    }
+
+    public List<DemographicsSettingsValidationDTO> getValidations() {
+        return validations;
+    }
+
+    public void setValidations(List<DemographicsSettingsValidationDTO> validations) {
+        this.validations = validations;
     }
 
 }
