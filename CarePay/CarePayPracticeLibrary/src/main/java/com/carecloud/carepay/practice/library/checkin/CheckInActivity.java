@@ -20,10 +20,10 @@ import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInLabelDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.LocationDTO;
+import com.carecloud.carepaylibray.payments.models.LocationDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.PatientBalanceDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.PatientDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.ProviderDTO;
+import com.carecloud.carepaylibray.payments.models.ProviderDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.CustomFilterPopupWindow;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
@@ -404,6 +404,17 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         return null;
     }
 
+    private AppointmentDTO getPatientBalanceDTOs(String patientId) {
+        List<AppointmentDTO>allApps =  checkInDTO.getPayload().getAppointments();
+        for (AppointmentDTO ap:allApps)
+              {
+                  if(ap.getPayload().getPatient().getId().equalsIgnoreCase(patientId)){
+                      return ap;
+                  }
+        }
+        return null;
+    }
+
     /**
      * On check in item click.
      *
@@ -411,7 +422,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
      */
     public void onCheckInItemClick(AppointmentPayloadDTO appointmentPayloadDTO) {
         AppointmentDetailDialog dialog = new AppointmentDetailDialog(context,
-                checkInDTO, getPatientBalanceDTO(appointmentPayloadDTO.getPatient().getId()),
+                checkInDTO, getPatientBalanceDTOs(appointmentPayloadDTO.getPatient().getId()),
                 appointmentPayloadDTO);
         dialog.show();
     }

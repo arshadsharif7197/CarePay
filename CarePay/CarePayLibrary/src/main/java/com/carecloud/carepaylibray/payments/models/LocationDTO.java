@@ -1,4 +1,4 @@
-package com.carecloud.carepay.practice.library.checkin.dtos;
+package com.carecloud.carepaylibray.payments.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

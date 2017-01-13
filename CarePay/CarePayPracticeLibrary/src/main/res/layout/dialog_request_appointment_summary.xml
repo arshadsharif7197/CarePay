@@ -27,6 +27,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:layout_marginTop="3dp"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/text_size_30sp"
                     app:customAssetFont="proxima_nova_regular" />
@@ -35,8 +36,8 @@
                     android:id="@+id/appointment_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dimen_60dp"
-                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:layout_marginBottom="@dimen/dimen_40dp"
+                    android:layout_marginTop="3dp"
                     android:gravity="center"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/text_size_30sp"
@@ -120,7 +121,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:layout_marginTop="@dimen/dimen_60dp"
+                android:layout_marginTop="@dimen/dimen_40dp"
                 android:gravity="end"
                 android:textSize="@dimen/apt_popup_optional"
                 app:customAssetFont="proxima_nova_semi_bold" />

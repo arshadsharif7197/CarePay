@@ -286,6 +286,17 @@ public class PersonalInformationActivity extends BasePracticeActivity {
             int month = calendar.get(Calendar.MONTH);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
 
+            try {
+                if(!selectDateButton.getText().toString().equalsIgnoreCase(labelsDTO.getPersonalInfoSelect())){
+                    String [] selectedDate = selectDateButton.getText().toString().split("/");
+                    month = Integer.parseInt(selectedDate[0])-1;
+                    day = Integer.parseInt(selectedDate[1]);
+                    year = Integer.parseInt(selectedDate[2]);
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+
             DatePickerDialog datePickerDialog = new DatePickerDialog(PersonalInformationActivity.this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, int year, int month, int day) {

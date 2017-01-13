@@ -19,10 +19,10 @@ public class CheckInPayloadDTO {
     private List<AppointmentDTO> appointments = new ArrayList<AppointmentDTO>();
     @SerializedName("provider_index")
     @Expose
-    private ProviderIndexDTO providerIndex;
+    private List<ProviderIndexDTO> providerIndex;
     @SerializedName("location_index")
     @Expose
-    private LocationIndexDTO locationIndex;
+    private List<LocationIndexDTO> locationIndex;
     @SerializedName("appointment_counts")
     @Expose
     private AppointmentCountsDTO appointmentCounts;
@@ -68,7 +68,7 @@ public class CheckInPayloadDTO {
      * @return
      * The providerIndex
      */
-    public ProviderIndexDTO getProviderIndex() {
+    public List<ProviderIndexDTO> getProviderIndex() {
         return providerIndex;
     }
 
@@ -77,7 +77,7 @@ public class CheckInPayloadDTO {
      * @param providerIndex
      * The provider_index
      */
-    public void setProviderIndex(ProviderIndexDTO providerIndex) {
+    public void setProviderIndex(List<ProviderIndexDTO> providerIndex) {
         this.providerIndex = providerIndex;
     }
 
@@ -86,7 +86,7 @@ public class CheckInPayloadDTO {
      * @return
      * The locationIndex
      */
-    public LocationIndexDTO getLocationIndex() {
+    public List<LocationIndexDTO> getLocationIndex() {
         return locationIndex;
     }
 
@@ -95,7 +95,7 @@ public class CheckInPayloadDTO {
      * @param locationIndex
      * The location_index
      */
-    public void setLocationIndex(LocationIndexDTO locationIndex) {
+    public void setLocationIndex(List<LocationIndexDTO> locationIndex) {
         this.locationIndex = locationIndex;
     }
 
