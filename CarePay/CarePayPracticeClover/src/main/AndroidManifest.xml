@@ -71,6 +71,14 @@
         <activity
             android:name="com.carecloud.carepaylibray.qrcodescanner.ScannerActivity"
             android:screenOrientation="landscape" />
+        <activity
+            android:name="com.carecloud.carepay.practice.clover.payments.CloverPaymentActivity"
+            android:label="@string/clover_payment_activity">
+            <intent-filter>
+                <action android:name="com.carecloud.carepay.practice.clover.payments.CloverPaymentActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
