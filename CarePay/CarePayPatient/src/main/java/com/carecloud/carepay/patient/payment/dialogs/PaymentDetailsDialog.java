@@ -16,8 +16,10 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.payment.adapter.PaymentItemsListAdapter;
 import com.carecloud.carepaylibray.appointments.models.AppointmentChargeDTO;
+import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,21 +28,21 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
 
     private Context context;
     private PaymentsModel paymentReceiptModel;
-    private List<AppointmentChargeDTO> details;
+    PatiencePayloadDTO paymentPayload;
     private PayNowClickListener listener;
 
     /**
      * Constructor.
      *
      * @param context             context
-     * @param details model
+     * @param paymentPayload model
      * @param listener listener
      */
-    public PaymentDetailsDialog(Context context, PaymentsModel paymentReceiptModel, List<AppointmentChargeDTO> details, PayNowClickListener listener) {
+    public PaymentDetailsDialog(Context context, PaymentsModel paymentReceiptModel, PatiencePayloadDTO paymentPayload, PayNowClickListener listener) {
         super(context);
         this.context = context;
         this.paymentReceiptModel = paymentReceiptModel;
-        this.details = details;
+        this.paymentPayload = paymentPayload;
         this.listener = listener;
     }
 
@@ -71,13 +73,14 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
         if (paymentReceiptModel != null) {
             PaymentsLabelDTO paymentsLabel = paymentReceiptModel.getPaymentsMetadata().getPaymentsLabel();
             if (paymentsLabel != null) {
-                ((TextView) findViewById(com.carecloud.carepaylibrary.R.id.payment_details_total_paid)).setText("");
+                String totalAmount = StringUtil.getFormattedBalanceAmount(paymentPayload.getAmount());
+                ((TextView) findViewById(com.carecloud.carepaylibrary.R.id.payment_details_total_paid)).setText(totalAmount);
 
                 ((TextView) findViewById(com.carecloud.carepaylibrary.R.id.payment_receipt_title))
                         .setText(paymentsLabel.getPaymentReceiptTitle());
                 ((TextView) findViewById(com.carecloud.carepaylibrary.R.id.payment_receipt_total_label))
                         .setText(paymentsLabel.getPaymentDetailsPatientBalanceLabel());
-                ((TextView) findViewById(com.carecloud.carepaylibrary.R.id.payment_receipt_total_value)).setText("");
+                ((TextView) findViewById(com.carecloud.carepaylibrary.R.id.payment_receipt_total_value)).setText(totalAmount);
 
                 payNowButton.setText(paymentsLabel.getPaymentDetailsPayNow());
             }
@@ -87,7 +90,7 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
         RecyclerView paymentDetailsRecyclerView = ((RecyclerView) findViewById(com.carecloud.carepaylibrary.R.id.payment_receipt_details_view));
         paymentDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        PaymentItemsListAdapter adapter = new PaymentItemsListAdapter(context, details);
+        PaymentItemsListAdapter adapter = new PaymentItemsListAdapter(context, paymentPayload.getDetails());
         paymentDetailsRecyclerView.setAdapter(adapter);
     }
 

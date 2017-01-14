@@ -10,6 +10,7 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentChargeDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.models.PaymentDetailsItemDTO;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class PaymentItemsListAdapter extends RecyclerView.Adapter<PaymentItemsLi
     public void onBindViewHolder(final PaymentDetailsListViewHolder holder, int position) {
         AppointmentChargeDTO paymentDetailsItem = detailsList.get(position);
         holder.paymentDetailLabel.setText(paymentDetailsItem.getDescription());
-        holder.paymentDetailAmount.setText(paymentDetailsItem.getAmount());
+        holder.paymentDetailAmount.setText(StringUtil.getFormattedBalanceAmount(Double.parseDouble(paymentDetailsItem.getAmount())));
     }
 
     @Override

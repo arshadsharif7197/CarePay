@@ -75,7 +75,7 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
                 public void onClick(View view) {
                     // Call for payment details dialog
                     PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(context ,
-                            paymentReceiptModel, paymentLineItem.getDetails(), payListener);
+                            paymentReceiptModel, paymentLineItem, payListener);
                    detailsDialog.show();
                 }
             });
