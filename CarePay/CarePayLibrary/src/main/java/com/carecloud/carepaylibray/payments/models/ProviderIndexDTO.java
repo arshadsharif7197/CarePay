@@ -2,32 +2,43 @@
 package com.carecloud.carepaylibray.payments.models;
 
 import java.util.List;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class ProviderIndexDTO {
 
-    @SerializedName("Dr. Lauren Derosa")
+    @SerializedName("name")
     @Expose
-    private List<String> drLaurenDerosa = null;
-    @SerializedName("Dr. Eric Mulkey")
+    private String name;
+    @SerializedName("id")
     @Expose
-    private List<String> drEricMulkey = null;
+    private String id;
+    @SerializedName("patient_ids")
+    @Expose
+    private List<String> patientIds = null;
 
-    public List<String> getDrLaurenDerosa() {
-        return drLaurenDerosa;
+    public String getName() {
+        return name;
     }
 
-    public void setDrLaurenDerosa(List<String> drLaurenDerosa) {
-        this.drLaurenDerosa = drLaurenDerosa;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public List<String> getDrEricMulkey() {
-        return drEricMulkey;
+    public String getId() {
+        return id;
     }
 
-    public void setDrEricMulkey(List<String> drEricMulkey) {
-        this.drEricMulkey = drEricMulkey;
+    public void setId(String id) {
+        this.id = id;
     }
 
+    public List<String> getPatientIds() {
+        return patientIds;
+    }
+
+    public void setPatientIds(List<String> patientIds) {
+        this.patientIds = patientIds;
+    }
 }

@@ -194,10 +194,10 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(context).dismiss();
-            ((ScheduleAppointmentActivity) context).finish();
-            AppointmentsActivity.setIsNewAppointmentScheduled(true);
-            PracticeNavigationHelper.getInstance().setIsPatientModeAppointments(false);
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(context, workflowDTO);
+            ((ScheduleAppointmentActivity) context).logout();
+//            AppointmentsActivity.setIsNewAppointmentScheduled(true);
+//            PracticeNavigationHelper.getInstance().setIsPatientModeAppointments(false);
+//            PracticeNavigationHelper.getInstance().navigateToWorkflow(context, workflowDTO);
         }
 
         @Override

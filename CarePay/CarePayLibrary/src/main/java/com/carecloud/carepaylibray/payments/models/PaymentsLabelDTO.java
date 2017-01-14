@@ -267,6 +267,18 @@ public class PaymentsLabelDTO {
     @SerializedName("practice_payments_detail_dialog_close_button")
     @Expose
     private String practicePaymentsDetailDialogCloseButton;
+    @SerializedName("practice_payments_filter_find_patient_by_name")
+    @Expose
+    private String practicePaymentsFilterFindPatientByName;
+    @SerializedName("practice_payments_filter_doctors")
+    @Expose
+    private String practicePaymentsFilterDoctors;
+    @SerializedName("practice_payments_filter_locations")
+    @Expose
+    private String practicePaymentsFilterLocations;
+    @SerializedName("practice_payments_filter_clear_filters")
+    @Expose
+    private String practicePaymentsFilterClearFilters;
 
     /**
      * @return The demographicsCheckinHeading
@@ -1633,5 +1645,69 @@ public class PaymentsLabelDTO {
      */
     public void setPracticePaymentsDetailDialogCloseButton(String practicePaymentsDetailDialogCloseButton) {
         this.practicePaymentsDetailDialogCloseButton = practicePaymentsDetailDialogCloseButton;
+    }
+
+    /**
+     *
+     * @return practicePaymentsFilterFindPatientByName
+     */
+    public String getPracticePaymentsFilterFindPatientByName() {
+        return StringUtil.getLabelForView(practicePaymentsFilterFindPatientByName);
+    }
+
+    /**
+     *
+     * @param practicePaymentsFilterFindPatientByName practicePaymentsFilterFindPatientByName
+     */
+    public void setPracticePaymentsFilterFindPatientByName(String practicePaymentsFilterFindPatientByName) {
+        this.practicePaymentsFilterFindPatientByName = practicePaymentsFilterFindPatientByName;
+    }
+
+    /**
+     *
+     * @return practicePaymentsFilterDoctors
+     */
+    public String getPracticePaymentsFilterDoctors() {
+        return StringUtil.getLabelForView(practicePaymentsFilterDoctors);
+    }
+
+    /**
+     *
+     * @param practicePaymentsFilterDoctors practicePaymentsFilterDoctors
+     */
+    public void setPracticePaymentsFilterDoctors(String practicePaymentsFilterDoctors) {
+        this.practicePaymentsFilterDoctors = practicePaymentsFilterDoctors;
+    }
+
+    /**
+     *
+     * @return practicePaymentsFilterLocations
+     */
+    public String getPracticePaymentsFilterLocations() {
+        return StringUtil.getLabelForView(practicePaymentsFilterLocations);
+    }
+
+    /**
+     *
+     * @param practicePaymentsFilterLocations practicePaymentsFilterLocations
+     */
+    public void setPracticePaymentsFilterLocations(String practicePaymentsFilterLocations) {
+        this.practicePaymentsFilterLocations = practicePaymentsFilterLocations;
+    }
+
+    /**
+     *
+     * @return practicePaymentsFilterClearFilters
+     */
+    public String getPracticePaymentsFilterClearFilters() {
+        return StringUtil.getLabelForView(practicePaymentsFilterClearFilters);
+    }
+
+    /**
+     *
+     * @param practicePaymentsFilterClearFilters practicePaymentsFilterClearFilters
+     */
+    public void setPracticePaymentsFilterClearFilters(String practicePaymentsFilterClearFilters) {
+        this.practicePaymentsFilterClearFilters = practicePaymentsFilterClearFilters;
     }
 }

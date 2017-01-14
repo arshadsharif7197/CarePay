@@ -43,7 +43,7 @@
                 style="@style/reviewDemographicBlue."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_15dp"
+                android:layout_marginTop="@dimen/dimen_20dp"
                 android:layout_marginBottom="@dimen/dimen_25dp"/>
 
             <FrameLayout
@@ -184,7 +184,8 @@
                     style="@style/DemographicsDocsLabelStyle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight=".30"/>
+                    android:text="Prefered Language"
+                    android:layout_weight=".60"/>
 
                 <TextView
                     android:id="@+id/languageTextView"
@@ -192,7 +193,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textAlignment="textEnd"
-                    android:layout_weight=".70"/>
+                    android:text="Prefered Language"
+                    android:layout_weight=".40"/>
             </LinearLayout>
 
             <View
@@ -204,6 +206,7 @@
                 android:id="@+id/reviewDriverLicenseLabel"
                 style="@style/SigninSignupTextInputStyle"
                 android:layout_weight="1"
+                android:layout_marginTop="@dimen/dimen_5dp"
                 app:hintTextAppearance="@style/FloatingLabelStyle">
 
                 <EditText
