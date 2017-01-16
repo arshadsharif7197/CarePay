@@ -19,9 +19,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.payment.adapter.PaymentLineItemsListAdapter;
+import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepay.patient.payment.dialogs.PartialPaymentDialog;
-import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsDialog;
+import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodFragment;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -127,11 +127,11 @@ public class ResponsibilityFragment extends Fragment implements PaymentDetailsDi
             List<PatiencePayloadDTO> paymentList =       paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
 
             if (paymentList != null && paymentList.size() > 0) {
-                RecyclerView PaymentDetailsListRecyclerView = ((RecyclerView) view.findViewById(R.id.responsibility_line_item_recycle_view));
-                PaymentDetailsListRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+                RecyclerView paymentDetailsListRecyclerView = ((RecyclerView) view.findViewById(R.id.responsibility_line_item_recycle_view));
+                paymentDetailsListRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
                 PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(), paymentDTO, paymentList, this);
-                PaymentDetailsListRecyclerView.setAdapter(adapter);
+                paymentDetailsListRecyclerView.setAdapter(adapter);
                 for (PatiencePayloadDTO payment : paymentList) {
                     total+= payment.getAmount();
 

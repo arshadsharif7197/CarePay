@@ -5,6 +5,8 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,11 +17,11 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.practice.library.payments.dialogs.PartialPaymentDialog;
-import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsDialog;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
@@ -39,7 +41,7 @@ import retrofit2.Response;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
-public class ResponsibilityFragment extends BaseCheckinFragment implements PaymentDetailsDialog.PayNowClickListener {
+public class ResponsibilityFragment extends BaseCheckinFragment implements com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog.PayNowClickListener {
 
     private static final String LOG_TAG = ResponsibilityFragment.class.getSimpleName();
     private AppCompatActivity appCompatActivity;
@@ -74,12 +76,12 @@ public class ResponsibilityFragment extends BaseCheckinFragment implements Payme
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         TextView responseTotal = (TextView) view.findViewById(R.id.respons_total);
-        TextView paymentDetails = (TextView) view.findViewById(R.id.response_payment_details);
-        TextView responseCopay = (TextView) view.findViewById(R.id.respons_copay);
-        TextView responsePreviousBalance = (TextView) view.findViewById(R.id.respons_prev_balance);
+        //TextView paymentDetails = (TextView) view.findViewById(R.id.response_payment_details);
+        //TextView responseCopay = (TextView) view.findViewById(R.id.respons_copay);
+        //TextView responsePreviousBalance = (TextView) view.findViewById(R.id.respons_prev_balance);
         TextView totalResponsibility = (TextView) view.findViewById(R.id.respons_total_label);
-        TextView prevBalanceResponsibility = (TextView) view.findViewById(R.id.respons_prev_balance_label);
-        TextView coPayResponsibility = (TextView) view.findViewById(R.id.respons_copay_label);
+        //TextView prevBalanceResponsibility = (TextView) view.findViewById(R.id.respons_prev_balance_label);
+        //TextView coPayResponsibility = (TextView) view.findViewById(R.id.respons_copay_label);
 
         Button payTotalButton = (Button) view.findViewById(R.id.pay_total_amount_button);
         payTotalButton.setClickable(false);
@@ -124,6 +126,11 @@ public class ResponsibilityFragment extends BaseCheckinFragment implements Payme
                             copayStr = payment.getAmount().toString();
                         }
                     }
+                    RecyclerView paymentDetailsListRecyclerView = ((RecyclerView) view.findViewById(R.id.responsibility_line_item_recycle_view));
+                    paymentDetailsListRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+
+                    PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(), paymentsModel, paymentList, this);
+                    paymentDetailsListRecyclerView.setAdapter(adapter);
 
                     try {
                         double copay = Double.parseDouble(copayStr!=null &&  !copayStr.isEmpty()?copayStr : "0.0" );
@@ -154,8 +161,8 @@ public class ResponsibilityFragment extends BaseCheckinFragment implements Payme
 
                         NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
                         responseTotal.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));
-                        responseCopay.setText(CarePayConstants.DOLLAR.concat(copayStr));
-                        responsePreviousBalance.setText(CarePayConstants.DOLLAR.concat(previousBalanceStr));
+                        //responseCopay.setText(CarePayConstants.DOLLAR.concat(copayStr));
+                        //responsePreviousBalance.setText(CarePayConstants.DOLLAR.concat(previousBalanceStr));
                     } catch (NumberFormatException ex) {
                         ex.printStackTrace();
                         Log.e(LOG_TAG, ex.getMessage());
@@ -163,25 +170,25 @@ public class ResponsibilityFragment extends BaseCheckinFragment implements Payme
                 }
             }
 
-            paymentDetails.setText(paymentDetailsString);
+            //paymentDetails.setText(paymentDetailsString);
             totalResponsibility.setText(totalResponsibilityString);
-            prevBalanceResponsibility.setText(previousBalanceString);
-            coPayResponsibility.setText(insuranceCopayString);
+            //prevBalanceResponsibility.setText(previousBalanceString);
+            //coPayResponsibility.setText(insuranceCopayString);
 
             payTotalButton.setText(payTotalAmountString);
             payPartialButton.setText(payPartialAmountString);
             payLaterButton.setText(payLaterString);
         }
 
-        paymentDetails.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        //paymentDetails.setOnClickListener(new View.OnClickListener() {
+        //    @Override
+        //    public void onClick(View view) {
                 // Call for payment details dialog
-                PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(getActivity(),
-                        paymentsModel, ResponsibilityFragment.this);
-                detailsDialog.show();
-            }
-        });
+        //        PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(getActivity(),
+        //                paymentsModel, ResponsibilityFragment.this);
+        //        detailsDialog.show();
+        //    }
+        //});
 
         payTotalButton.setOnClickListener(new View.OnClickListener() {
             @Override

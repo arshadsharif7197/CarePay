@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.payment.dialogs;
+package com.carecloud.carepaylibray.customdialogs;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -14,15 +14,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.payment.adapter.PaymentItemsListAdapter;
-import com.carecloud.carepaylibray.appointments.models.AppointmentChargeDTO;
+import com.carecloud.carepaylibray.adapters.PaymentItemsListAdapter;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class PaymentDetailsDialog extends Dialog implements View.OnClickListener {
 
