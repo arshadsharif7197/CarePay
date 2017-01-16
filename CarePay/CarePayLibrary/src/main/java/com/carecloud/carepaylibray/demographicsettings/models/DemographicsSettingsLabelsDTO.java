@@ -78,7 +78,48 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     @SerializedName("demographics_preferred_language_label")
     @Expose
     private String demographicsLanguageLabel;
-
+    @SerializedName("documents_document_type_label")
+    @Expose
+    private String documentsTypeLabel;
+    @SerializedName("documents_scan_front_label")
+    @Expose
+    private String documentsScanFirstLabel;
+    @SerializedName("documents_scan_back_label")
+    @Expose
+    private String documentsScanBackLabel;
+    @SerializedName("documents_dl_number_label")
+    @Expose
+    private String documentsDlNumberLabel;
+    @SerializedName("documents_dl_state_label")
+    @Expose
+    private String documentsDlStateLabel;
+    @SerializedName("documents_health_insurance_label")
+    @Expose
+    private String documentsHealthInsuranceLabel;
+    @SerializedName("documents_have_health_insurance_label")
+    @Expose
+    private String documentsHaveHealthInsuranceLabel;
+    @SerializedName("demographics_add_another_insurance_link")
+    @Expose
+    private String documentsAddnotherInsuranceLabel;
+    @SerializedName("demographics_golden_cross_Premium")
+    @Expose
+    private String documentsGoldenCrossLabel;
+    @SerializedName("settings_change_password")
+    @Expose
+    private String settingschangePasswordLabel;
+    @SerializedName("settings_messages")
+    @Expose
+    private String settingsMessagesLabel;
+    @SerializedName("settings_current_password")
+    @Expose
+    private String settingsCurrentPasswordLabel;
+    @SerializedName("settings_new_password")
+    @Expose
+    private String settingsNewPasswordLabel;
+    @SerializedName("settings_repeat_new_password")
+    @Expose
+    private String settingRepeatNewPasswordLabel;
 
     /**
      *
@@ -448,4 +489,229 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     public void setDemographicsLanguageLabel(String demographicsLanguageLabel) {
         this.demographicsLanguageLabel = demographicsLanguageLabel;
     }
+
+    /**
+     *
+     * @return documentsTypeLabel
+     */
+    public String getDocumentsTypeLabel() {
+        return StringUtil.getLabelForView(documentsTypeLabel);
+    }
+
+    /**
+     *
+     * @param documentsTypeLabel The documentsTypeLabel
+     */
+    public void setDocumentsTypeLabel(String documentsTypeLabel) {
+        this.documentsTypeLabel = documentsTypeLabel;
+    }
+
+    /**
+     *
+     * @return documentsScanFirstLabel
+     */
+    public String getDocumentsScanFirstLabel() {
+        return StringUtil.getLabelForView(documentsScanFirstLabel);
+    }
+
+    /**
+     *
+     * @param documentsScanFirstLabel The documentsScanFirstLabel
+     */
+    public void setDocumentsScanFirstLabel(String documentsScanFirstLabel) {
+        this.documentsScanFirstLabel = documentsScanFirstLabel;
+    }
+
+    /**
+     *
+     * @return documentsScanBackLabel
+     */
+    public String getDocumentsScanBackLabel() {
+        return StringUtil.getLabelForView(documentsScanBackLabel);
+    }
+
+    /**
+     *
+     * @param documentsScanBackLabel The documentsScanBackLabel
+     */
+    public void setDocumentsScanBackLabel(String documentsScanBackLabel) {
+        this.documentsScanBackLabel = documentsScanBackLabel;
+    }
+
+    /**
+     *
+     * @return documentsDlNumberLabel
+     */
+    public String getDocumentsDlNumberLabel() {
+        return StringUtil.getLabelForView(documentsDlNumberLabel);
+    }
+
+    /**
+     *
+     * @param documentsDlNumberLabel The documentsDlNumberLabel
+     */
+    public void setDocumentsDlNumberLabel(String documentsDlNumberLabel) {
+        this.documentsDlNumberLabel = documentsDlNumberLabel;
+    }
+
+    /**
+     *
+     * @return documentsDlStateLabel
+     */
+    public String getDocumentsDlStateLabel() {
+        return StringUtil.getLabelForView(documentsDlStateLabel);
+    }
+
+    /**
+     *
+     * @param documentsDlStateLabel The documentsDlStateLabel
+     */
+    public void setDocumentsDlStateLabel(String documentsDlStateLabel) {
+        this.documentsDlStateLabel = documentsDlStateLabel;
+    }
+
+    /**
+     *
+     * @return documentsHealthInsuranceLabel
+     */
+    public String getDocumentsHealthInsuranceLabel() {
+        return StringUtil.getLabelForView(documentsHealthInsuranceLabel);
+    }
+
+    /**
+     *
+     * @param documentsHealthInsuranceLabel The documentsHealthInsuranceLabel
+     */
+    public void setDocumentsHealthInsuranceLabel(String documentsHealthInsuranceLabel) {
+        this.documentsHealthInsuranceLabel = documentsHealthInsuranceLabel;
+    }
+
+    /**
+     *
+     * @return documentsHaveHealthInsuranceLabel
+     */
+    public String getDocumentsHaveHealthInsuranceLabel() {
+        return StringUtil.getLabelForView(documentsHaveHealthInsuranceLabel);
+    }
+
+    /**
+     *
+     * @param documentsHaveHealthInsuranceLabel The documentsHaveHealthInsuranceLabel
+     */
+    public void setDocumentsHaveHealthInsuranceLabel(String documentsHaveHealthInsuranceLabel) {
+        this.documentsHaveHealthInsuranceLabel = documentsHaveHealthInsuranceLabel;
+    }
+
+    /**
+     *
+     * @return documentsAddnotherInsuranceLabel
+     */
+    public String getDocumentsAddnotherInsuranceLabel() {
+        return StringUtil.getLabelForView(documentsAddnotherInsuranceLabel);
+    }
+
+    /**
+     *
+     * @param documentsAddnotherInsuranceLabel The documentsAddnotherInsuranceLabel
+     */
+    public void setDocumentsAddnotherInsuranceLabel(String documentsAddnotherInsuranceLabel) {
+        this.documentsAddnotherInsuranceLabel = documentsAddnotherInsuranceLabel;
+    }
+
+    /**
+     *
+     * @return documentsGoldenCrossLabel
+     */
+    public String getDocumentsGoldenCrossLabel() {
+        return StringUtil.getLabelForView(documentsGoldenCrossLabel);
+    }
+
+    /**
+     *
+     * @param documentsGoldenCrossLabel The documentsGoldenCrossLabel
+     */
+    public void setDocumentsGoldenCrossLabel(String documentsGoldenCrossLabel) {
+        this.documentsGoldenCrossLabel = documentsGoldenCrossLabel;
+    }
+
+    /**
+     *
+     * @return settingschangePasswordLabel
+     */
+    public String getSettingschangePasswordLabel() {
+        return StringUtil.getLabelForView(settingschangePasswordLabel);
+    }
+
+    /**
+     *
+     * @param settingschangePasswordLabel The settingschangePasswordLabel
+     */
+    public void setSettingschangePasswordLabel(String settingschangePasswordLabel) {
+        this.settingschangePasswordLabel = settingschangePasswordLabel;
+    }
+
+    /**
+     *
+     * @return settingsMessagesLabel
+     */
+    public String getSettingsMessagesLabel() {
+        return StringUtil.getLabelForView(settingsMessagesLabel);
+    }
+
+    /**
+     *
+     * @param settingsMessagesLabel The settingsMessagesLabel
+     */
+    public void setSettingsMessagesLabel(String settingsMessagesLabel) {
+        this.settingsMessagesLabel = settingsMessagesLabel;
+    }
+
+    /**
+     *
+     * @return settingsCurrentPasswordLabel
+     */
+    public String getSettingsCurrentPasswordLabel() {
+        return StringUtil.getLabelForView(settingsCurrentPasswordLabel);
+    }
+
+    /**
+     *
+     * @param settingsCurrentPasswordLabel The settingsCurrentPasswordLabel
+     */
+    public void setSettingsCurrentPasswordLabel(String settingsCurrentPasswordLabel) {
+        this.settingsCurrentPasswordLabel = settingsCurrentPasswordLabel;
+    }
+
+    /**
+     *
+     * @return settingsNewPasswordLabel
+     */
+    public String getSettingsNewPasswordLabel() {
+        return StringUtil.getLabelForView(settingsNewPasswordLabel);
+    }
+
+    /**
+     *
+     * @param settingsNewPasswordLabel The settingsNewPasswordLabel
+     */
+    public void setSettingsNewPasswordLabel(String settingsNewPasswordLabel) {
+        this.settingsNewPasswordLabel = settingsNewPasswordLabel;
+    }
+
+    /**
+     *
+     * @return settingRepeatNewPasswordLabel
+     */
+    public String getSettingRepeatNewPasswordLabel() {
+        return StringUtil.getLabelForView(settingRepeatNewPasswordLabel);
+    }
+
+    /**
+     *
+     * @param settingRepeatNewPasswordLabel The settingRepeatNewPasswordLabel
+     */
+    public void setSettingRepeatNewPasswordLabel(String settingRepeatNewPasswordLabel) {
+        this.settingRepeatNewPasswordLabel = settingRepeatNewPasswordLabel;
+    }
+
 }
