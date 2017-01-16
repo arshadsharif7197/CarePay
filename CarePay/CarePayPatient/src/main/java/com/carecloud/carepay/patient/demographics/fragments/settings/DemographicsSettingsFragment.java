@@ -53,9 +53,14 @@ public class DemographicsSettingsFragment extends Fragment {
     private String signOutString = null;
     private String editString = null;
     private String settingsString = null;
+    private String changePasswordString = null;
+    private String messagesString = null;
     private CarePayTextView editTextview = null;
     private Button signOutButton = null;
     private CarePayTextView demographicsTextview = null;
+    private CarePayTextView documentsTextview = null;
+    private CarePayTextView changePasswordTextview = null;
+    private CarePayTextView messagesTextview = null;
     private ImageView profileImageview = null;
 
     @Override
@@ -87,8 +92,10 @@ public class DemographicsSettingsFragment extends Fragment {
         getSettingsLabels();
         String userId = CognitoAppHelper.getCurrUser();
         demographicsTextview = (CarePayTextView) view.findViewById(R.id.demographicsTextView);
-        CarePayTextView documentsTextview = (CarePayTextView) view.findViewById(R.id.documentsTextView);
+        documentsTextview = (CarePayTextView) view.findViewById(R.id.documentsTextView);
         CarePayTextView creditCardsTextview = (CarePayTextView) view.findViewById(R.id.creditCardsTextView);
+        changePasswordTextview = (CarePayTextView) view.findViewById(R.id.changePasswordTextView);
+        messagesTextview = (CarePayTextView) view.findViewById(R.id.messagesTextView);
         editTextview = (CarePayTextView) view.findViewById(R.id.editTextView);
         signOutButton = (Button) view.findViewById(R.id.signOutButton);
         CarePayTextView patientNameTextview = (CarePayTextView) view.findViewById(R.id.patient_name);
@@ -97,6 +104,8 @@ public class DemographicsSettingsFragment extends Fragment {
 
         demographicsTextview.setText(demographicsString);
         documentsTextview.setText(documentsString);
+        changePasswordTextview.setText(changePasswordString);
+        messagesTextview.setText(messagesString);
         creditCardsTextview.setText(creditCardsString);
         editTextview.setText(editString);
         signOutButton.setText(signOutString);
@@ -133,6 +142,9 @@ public class DemographicsSettingsFragment extends Fragment {
                     signOutString = demographicsSettingsLabelsDTO.getSignOutLabel();
                     editString = demographicsSettingsLabelsDTO.getEditButtonLabel();
                     settingsString = demographicsSettingsLabelsDTO.getSettingsHeading();
+                    changePasswordString = demographicsSettingsLabelsDTO.getSettingschangePasswordLabel();
+                    messagesString = demographicsSettingsLabelsDTO.getSettingsMessagesLabel();
+
                 }
             }
         }
@@ -215,6 +227,64 @@ public class DemographicsSettingsFragment extends Fragment {
 
                 fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
                         DemographicsInformationFragment.class.getSimpleName()).addToBackStack(null).commit();
+
+            }
+        });
+
+        documentsTextview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+              /*  Bundle bundle = new Bundle();
+                Gson gson = new Gson();
+                String demographicsSettingsDTOString = gson.toJson(demographicsSettingsDTO);
+                bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
+
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                DemographicsSettingsDocumentsFragment fragment = (DemographicsSettingsDocumentsFragment)
+                        fm.findFragmentByTag(DemographicsSettingsDocumentsFragment.class.getSimpleName());
+                if (fragment == null) {
+                    fragment = new DemographicsSettingsDocumentsFragment();
+                }
+
+                //fix for random crashes
+                if(fragment.getArguments() !=null){
+                    fragment.getArguments().putAll(bundle);
+                }else{
+                    fragment.setArguments(bundle);
+                }
+
+                fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
+                        DemographicsSettingsDocumentsFragment.class.getSimpleName()).addToBackStack(null).commit();*/
+
+            }
+        });
+
+        changePasswordTextview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Bundle bundle = new Bundle();
+                Gson gson = new Gson();
+                String demographicsSettingsDTOString = gson.toJson(demographicsSettingsDTO);
+                bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
+
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                DemographicsSettingsChangePasswordFragment fragment = (DemographicsSettingsChangePasswordFragment)
+                        fm.findFragmentByTag(DemographicsSettingsChangePasswordFragment.class.getSimpleName());
+                if (fragment == null) {
+                    fragment = new DemographicsSettingsChangePasswordFragment();
+                }
+
+                //fix for random crashes
+                if(fragment.getArguments() !=null){
+                    fragment.getArguments().putAll(bundle);
+                }else{
+                    fragment.setArguments(bundle);
+                }
+
+                fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
+                        DemographicsSettingsChangePasswordFragment.class.getSimpleName()).addToBackStack(null).commit();
 
             }
         });
