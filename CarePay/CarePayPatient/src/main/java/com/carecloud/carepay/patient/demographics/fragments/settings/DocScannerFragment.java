@@ -46,13 +46,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTextInputLayout;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
-
-
 public class DocScannerFragment extends DocumentScannerFragment {
 
     private static final String LOG_TAG = DocScannerFragment.class.getSimpleName();
@@ -337,17 +330,17 @@ public class DocScannerFragment extends DocumentScannerFragment {
     @Override
     protected void setTypefaces(View view) {
         Context context = getActivity();
-        setGothamRoundedMediumTypeface(context, scanFrontButton);
-        setGothamRoundedMediumTypeface(context, scanBackButton);
+        SystemUtil.setGothamRoundedMediumTypeface(context, scanFrontButton);
+        SystemUtil.setGothamRoundedMediumTypeface(context, scanBackButton);
 
-        setProximaNovaRegularTypeface(context, stateLabel);
-        setProximaNovaSemiboldTypeface(context, idStateClickable);
-        setProximaNovaSemiboldTypeface(context, idNumberEdit);
+        SystemUtil.setProximaNovaRegularTypeface(context, stateLabel);
+        SystemUtil.setProximaNovaSemiboldTypeface(context, idStateClickable);
+        SystemUtil.setProximaNovaSemiboldTypeface(context, idNumberEdit);
 
         if (!StringUtil.isNullOrEmpty(idNumberEdit.getText().toString())) {
-            setProximaNovaExtraboldTypefaceInput(context, idNumberInputText);
+            SystemUtil.setProximaNovaExtraboldTypefaceInput(context, idNumberInputText);
         } else {
-            setProximaNovaSemiboldTextInputLayout(context, idNumberInputText);
+            SystemUtil.setProximaNovaSemiboldTextInputLayout(context, idNumberInputText);
         }
     }
 
