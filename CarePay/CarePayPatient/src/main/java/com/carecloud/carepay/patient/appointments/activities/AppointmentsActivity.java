@@ -2,7 +2,6 @@ package com.carecloud.carepay.patient.appointments.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -17,6 +16,7 @@ import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFrag
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.demographics.activities.NewReviewDemographicsActivity;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
@@ -24,7 +24,6 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -32,13 +31,11 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class AppointmentsActivity extends MenuPatientActivity {
 
     private static final String LOG_TAG = AppointmentsActivity.class.getSimpleName();
 
     public static AppointmentDTO model;
-
     private AppointmentsResultModel appointmentsDTO;
     private AppointmentDTO appointmentDTO;
 
@@ -72,40 +69,19 @@ public class AppointmentsActivity extends MenuPatientActivity {
                 .findViewById(com.carecloud.carepaylibrary.R.id.appointmentsDrawerIdTextView);
 
         appointmentsDTO = getConvertedDTO(AppointmentsResultModel.class);
-        if(appointmentsDTO.getPayload() != null
-                && appointmentsDTO.getPayload().getAppointments() != null
+
+        if (appointmentsDTO.getPayload() != null && appointmentsDTO.getPayload().getAppointments() != null
                 && appointmentsDTO.getPayload().getAppointments().size() > 0) {
+
             appointmentDTO = appointmentsDTO.getPayload().getAppointments().get(0);
+            practiceId = appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeId();
+            practiceMgmt = appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeMgmt();
+            patientId = appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPatientId();
+        }
 
-                practiceId = appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeId();
-                practiceMgmt = appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeMgmt();
-                patientId = appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPatientId();
-
-                transitionBalance = appointmentsDTO.getMetadata().getLinks().getPatientBalances();
-                transitionLogout = appointmentsDTO.getMetadata().getTransitions().getLogout();
-                transitionProfile = appointmentsDTO.getMetadata().getLinks().getProfileUpdate();
-            }
-
-        // Get appointment information data
-//        AppointmentService aptService = (new BaseServiceGenerator(this)).createService(AppointmentService.class);
-//        Call<AppointmentsResultModel> call = aptService.getAppointmentsInformation();
-//        call.enqueue(new Callback<AppointmentsResultModel>() {
-//
-//            @Override
-//            public void onResponse(Call<AppointmentsResultModel> call, Response<AppointmentsResultModel> response) {
-//                appointmentsDTO = response.body();
-//                AppointmentLabelDTO appointmentLabels = appointmentsDTO.getMetadata().getLabel();
-//
-//                // Set Appointment screen title
-//                toolbar.setTitle(StringUtil.getLabelForView(appointmentLabels.getAppointmentsHeading()));
-//                gotoAppointmentFragment();
-//            }
-//
-//            @Override
-//            public void onFailure(Call<AppointmentsResultModel> call, Throwable throwable) {
-//
-//            }
-//        });
+        transitionBalance = appointmentsDTO.getMetadata().getLinks().getPatientBalances();
+        transitionLogout = appointmentsDTO.getMetadata().getTransitions().getLogout();
+        transitionProfile = appointmentsDTO.getMetadata().getLinks().getProfileUpdate();
 
         inflateDrawer();
         gotoAppointmentFragment();
@@ -144,7 +120,7 @@ public class AppointmentsActivity extends MenuPatientActivity {
             drawer.closeDrawer(GravityCompat.START);
         }
 
-        if(CognitoAppHelper.getPool().getUser() != null){
+        if (CognitoAppHelper.getPool().getUser() != null) {
             CognitoAppHelper.getPool().getUser().signOut();
             CognitoAppHelper.setUser(null);
         }
@@ -170,7 +146,6 @@ public class AppointmentsActivity extends MenuPatientActivity {
             intent.putExtra("demographics_model", dtostring);
             startActivity(intent);
         }
-
     }
 
     @Override
@@ -191,13 +166,12 @@ public class AppointmentsActivity extends MenuPatientActivity {
 
             Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
             header.put("transition", "true");
-            WorkflowServiceHelper.getInstance().execute(appointmentsDTO.getMetadata().getTransitions().getCheckingIn(), transitionToDemographicsVerifyCallback, queries, header);
-
+            WorkflowServiceHelper.getInstance().execute(appointmentsDTO.getMetadata().getTransitions().getCheckingIn(),
+                    transitionToDemographicsVerifyCallback, queries, header);
         }
 
         return super.onOptionsItemSelected(item);
     }
-
 
     public void setAppointmentModel(AppointmentDTO model) {
         AppointmentsActivity.model = model;
