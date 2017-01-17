@@ -25,6 +25,7 @@ import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
+import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -75,7 +76,6 @@ public class ResponsibilityDialog extends Dialog {
 
         final DemographicsSettingsPersonalDetailsPayloadDTO personalDetails = paymentsPatient.getDemographics().getPayload().getPersonalDetails();
         ((TextView) findViewById(R.id.patient_full_name)).setText(personalDetails.getFirstName() + " " + personalDetails.getLastName());
-        ((TextView) findViewById(R.id.patient_provider_name)).setText(StringUtil.getLabelForView(""));
 
         ImageView profilePhoto = (ImageView) findViewById(R.id.patient_profile_photo);
         final TextView shortName = (TextView) findViewById(R.id.patient_profile_short_name);
@@ -168,6 +168,27 @@ public class ResponsibilityDialog extends Dialog {
 
             ((TextView) findViewById(R.id.payment_responsibility_close_label))
                     .setText(paymentsLabel.getPracticePaymentsDetailDialogCloseButton());
+
+            ((TextView) findViewById(R.id.patient_provider_name))
+                    .setText(getProviderName(balances.get(0).getMetadata().getPatientId()));
         }
+    }
+
+    private String getProviderName(String patientId) {
+        if (!StringUtil.isNullOrEmpty(patientId)) {
+            List<ProviderIndexDTO> providerIndex = paymentsModel.getPaymentPayload().getProviderIndex();
+
+            for (ProviderIndexDTO providerIndexDTO : providerIndex) {
+                List<String> patientIds = providerIndexDTO.getPatientIds();
+
+                for (String id : patientIds) {
+                    if (id.equalsIgnoreCase(patientId)) {
+                        return providerIndexDTO.getName();
+                    }
+                }
+            }
+        }
+
+        return StringUtil.getLabelForView("");
     }
 }
