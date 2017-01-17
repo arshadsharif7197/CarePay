@@ -106,11 +106,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
             List<PatiencePayloadDTO> paymentList =       paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
 
             if (paymentList != null && paymentList.size() > 0) {
-                RecyclerView paymentDetailsListRecyclerView = ((RecyclerView) view.findViewById(R.id.responsibility_line_item_recycle_view));
-                paymentDetailsListRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-
-                PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(), paymentDTO, paymentList, this);
-                paymentDetailsListRecyclerView.setAdapter(adapter);
+                fillDetailAdapter(view, paymentList);
                 for (PatiencePayloadDTO payment : paymentList) {
                     total+= payment.getAmount();
 

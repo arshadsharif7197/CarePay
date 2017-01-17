@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibray.adapters.PaymentItemsListAdapter;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
@@ -26,8 +27,9 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
 
     private Context context;
     private PaymentsModel paymentReceiptModel;
-    PatiencePayloadDTO paymentPayload;
+    private PatiencePayloadDTO paymentPayload;
     private PayNowClickListener listener;
+    private double size;
 
     /**
      * Constructor.
@@ -49,22 +51,20 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(com.carecloud.carepaylibrary.R.layout.dialog_payment_details);
+        setContentView(R.layout.dialog_payment_details);
+        onInitialization();
         setCancelable(false);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        double size = ApplicationMode.getInstance().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)?0.53:0.90;
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
         params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * size);
         getWindow().setAttributes(params);
 
 
-        onInitialization();
     }
 
     private void onInitialization() {
-        ImageView dialogCloseHeader = (ImageView) findViewById(com.carecloud.carepaylibrary.R.id.dialog_close_header);
-        dialogCloseHeader.setOnClickListener(this);
+
 
         Button payNowButton = (Button) findViewById(com.carecloud.carepaylibrary.R.id.payment_details_pay_now_button);
         payNowButton.setOnClickListener(this);
@@ -82,6 +82,31 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
                 ((TextView) findViewById(com.carecloud.carepaylibrary.R.id.payment_receipt_total_value)).setText(totalAmount);
 
                 payNowButton.setText(paymentsLabel.getPaymentDetailsPayNow());
+
+                ImageView dialogCloseHeader;
+                TextView closeLabel;
+                if(ApplicationMode.getInstance().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE))
+                {
+
+                    dialogCloseHeader = (ImageView) findViewById(R.id.payment_close_button);
+                    dialogCloseHeader.setVisibility(View.VISIBLE);
+                    dialogCloseHeader.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dismiss();
+                        }
+                    });
+
+                    closeLabel=((TextView) findViewById(R.id.payment_close_label));
+                    closeLabel.setText(paymentsLabel.getPaymentCloseButton());
+                    closeLabel.setVisibility(View.VISIBLE);
+                    size = 0.53;
+                }else{
+                    dialogCloseHeader = (ImageView) findViewById(com.carecloud.carepaylibrary.R.id.dialog_close_header);
+                    dialogCloseHeader.setVisibility(View.VISIBLE);
+                    dialogCloseHeader.setOnClickListener(this);
+                    size = 0.90;
+                }
             }
         }
 

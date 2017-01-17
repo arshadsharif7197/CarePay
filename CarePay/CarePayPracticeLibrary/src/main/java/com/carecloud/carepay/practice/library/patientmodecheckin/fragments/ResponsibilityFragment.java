@@ -96,11 +96,8 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
                             copayStr = payment.getAmount().toString();
                         }
                     }
-                    RecyclerView paymentDetailsListRecyclerView = ((RecyclerView) view.findViewById(R.id.responsibility_line_item_recycle_view));
-                    paymentDetailsListRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-                    PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(), paymentDTO, paymentList, this);
-                    paymentDetailsListRecyclerView.setAdapter(adapter);
+                    fillDetailAdapter(view, paymentList);
 
                     try {
                         double copay = Double.parseDouble(copayStr!=null &&  !copayStr.isEmpty()?copayStr : "0.0" );
@@ -160,6 +157,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
 
         return view;
     }
+
 
     protected void doPayment() {
         Bundle bundle = new Bundle();
