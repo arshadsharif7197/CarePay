@@ -413,10 +413,14 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
         AppointmentProviderDTO providersDTO;
         providersDTO = selectedResourcesDTO.getResource().getProvider();
 
-        AppointmentLocationDTO locationDTO = new AppointmentLocationDTO();
+        AppointmentLocationDTO locationDTO = availabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getLocation();
+        if(locationDTO == null){
+            locationDTO = new AppointmentLocationDTO();
+            AppointmentAddressDTO addressDTO = new AppointmentAddressDTO();
+            locationDTO.setName(resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentsPlaceNameHeading());
+            locationDTO.setAddress(addressDTO);
+        }
 
-        AppointmentAddressDTO addressDTO = new AppointmentAddressDTO();
-        locationDTO.setAddress(addressDTO);
         payloadDTO.setLocation(locationDTO);
         payloadDTO.setProvider(providersDTO);
 
