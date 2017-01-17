@@ -20,6 +20,7 @@
             android:layout_marginBottom="@dimen/apt_dl_image_elevation"
             android:layout_marginTop="@dimen/apt_dl_image_elevation"
             android:baselineAligned="false"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -30,8 +31,8 @@
                 android:textAlignment="viewStart"
                 android:paddingEnd="@dimen/default_title_indicator_title_padding"
                 android:paddingStart="0dp"
-                android:textColor="@color/cadet_gray"
-                android:textSize="@dimen/apt_list_upcoming_month_txt_size"
+                android:textColor="@color/grey_300"
+                android:textSize="@dimen/textview_default_textsize"
                 app:customAssetFont="proxima_nova_regular" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -39,7 +40,8 @@
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:textAlignment="textEnd"
+                android:paddingEnd="@dimen/default_title_indicator_title_padding"
                 android:textColor="@color/bright_cerulean"
                 android:textSize="@dimen/textview_textsize"
                 app:customAssetFont="proxima_nova_regular" />
@@ -50,7 +52,7 @@
                 android:layout_weight="0"
                 android:layout_height="wrap_content"
                 android:textAlignment="textEnd"
-                android:textColor="@color/gray"
+                android:textColor="@color/grey_400"
                 android:textSize="@dimen/textview_default_textsize"
                 android:textStyle="bold"
                 app:customAssetFont="proxima_nova_semi_bold" />

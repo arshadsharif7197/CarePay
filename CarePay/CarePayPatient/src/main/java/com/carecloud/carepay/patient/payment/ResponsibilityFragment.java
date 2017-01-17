@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -23,16 +22,11 @@ import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepay.patient.payment.dialogs.PartialPaymentDialog;
 import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodFragment;
-import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
+import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.services.PaymentsService;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.text.DecimalFormat;
@@ -45,27 +39,12 @@ import retrofit2.Response;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
-public class ResponsibilityFragment extends Fragment implements PaymentDetailsDialog.PayNowClickListener {
+public class ResponsibilityFragment extends ResponsibilityBaseFragment implements PaymentDetailsDialog.PayNowClickListener {
 
-    private static final String LOG_TAG = ResponsibilityFragment.class.getSimpleName();
-    private AppCompatActivity appCompatActivity;
-//    private String copayStr = "";
-//    private String previousBalanceStr = "";
-
-    private PaymentsModel paymentDTO = null;
-    private String totalResponsibilityString;
-    private String paymentDetailsString;
-    private String previousBalanceString;
-    private String insuranceCopayString;
-    private String payTotalAmountString;
-    private String payPartialAmountString;
-    private String payLaterString;
-    private double total;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        appCompatActivity = (AppCompatActivity) getActivity();
     }
 
     @SuppressWarnings("deprecation")
@@ -189,16 +168,6 @@ public class ResponsibilityFragment extends Fragment implements PaymentDetailsDi
             payLaterButton.setText(payLaterString);
         }
 
-//        paymentDetails.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                // Call for payment details dialog
-//                PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(getActivity(),
-//                        paymentDTO, ResponsibilityFragment.this);
-//                detailsDialog.show();
-//            }
-//        });
-
         payTotalAmountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -224,7 +193,7 @@ public class ResponsibilityFragment extends Fragment implements PaymentDetailsDi
         return view;
     }
 
-    private void doPayment() {
+    protected void doPayment() {
         FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
         PaymentMethodFragment fragment = (PaymentMethodFragment)
                 fragmentmanager.findFragmentByTag(PaymentMethodFragment.class.getSimpleName());
@@ -251,57 +220,7 @@ public class ResponsibilityFragment extends Fragment implements PaymentDetailsDi
         super.onViewCreated(view, savedInstanceState);
     }
 
-    private void getPaymentInformation() {
-        PaymentsService paymentService = (new BaseServiceGenerator(getActivity()))
-                .createService(PaymentsService.class);
-        Call<PaymentsModel> call = paymentService.fetchPaymentInformation();
-        call.enqueue(new Callback<PaymentsModel>() {
-            @Override
-            public void onResponse(Call<PaymentsModel> call, Response<PaymentsModel> response) {
-                PaymentsModel paymentsDTO = response.body();
-            }
 
-            @Override
-            public void onFailure(Call<PaymentsModel> call, Throwable throwable) {
-                SystemUtil.showFaultDialog(getActivity());
-                Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), "");
-            }
-        });
-    }
 
-    /**
-     * For tests
-     *
-     * @param activity The activity
-     */
-    public void setActivity(KeyboardHolderActivity activity) {
-        appCompatActivity = activity;
-    }
 
-    /**
-     * payment labels
-     */
-    public void getPaymentLabels() {
-        if (paymentDTO != null) {
-            PaymentsMetadataModel paymentsMetadataDTO = paymentDTO.getPaymentsMetadata();
-            if (paymentsMetadataDTO != null) {
-                PaymentsLabelDTO paymentsLabelsDTO = paymentsMetadataDTO.getPaymentsLabel();
-                if (paymentsLabelsDTO != null) {
-                    paymentDetailsString = paymentsLabelsDTO.getPaymentResponsibilityDetails();
-                    totalResponsibilityString = paymentsLabelsDTO.getPaymentTotalResponsibility();
-                    previousBalanceString = paymentsLabelsDTO.getPaymentPreviousBalance();
-                    insuranceCopayString = paymentsLabelsDTO.getPaymentInsuranceCopay();
-
-                    payTotalAmountString = paymentsLabelsDTO.getPaymentPayTotalAmountButton();
-                    payPartialAmountString = paymentsLabelsDTO.getPaymentPartialAmountButton();
-                    payLaterString = paymentsLabelsDTO.getPaymentResponsibilityPayLater();
-                }
-            }
-        }
-    }
-
-    @Override
-    public void onPayNowButtonClicked() {
-        doPayment();
-    }
 }

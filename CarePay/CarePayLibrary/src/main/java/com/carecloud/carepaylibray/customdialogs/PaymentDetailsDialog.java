@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibray.adapters.PaymentItemsListAdapter;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
@@ -51,11 +52,12 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
         setContentView(com.carecloud.carepaylibrary.R.layout.dialog_payment_details);
         setCancelable(false);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-
+        double size = ApplicationMode.getInstance().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)?0.53:0.90;
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.90);
+        params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * size);
         getWindow().setAttributes(params);
+
 
         onInitialization();
     }

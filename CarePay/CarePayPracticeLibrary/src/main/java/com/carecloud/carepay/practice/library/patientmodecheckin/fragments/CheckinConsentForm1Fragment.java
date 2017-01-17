@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +20,8 @@ import com.carecloud.carepay.practice.library.patientmodecheckin.consentform.For
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
+import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
+import com.carecloud.carepaylibray.practice.FlowStateInfo;
 
 import static com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity.SUBFLOW_CONSENT;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -149,9 +150,9 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
         super.onCreate(savedInstanceState);
         // set the index of the form
         formIndex = ((PatientModeCheckinActivity) getActivity()).getConsentFormIndex();
-        flowStateInfo = new PatientModeCheckinActivity.FlowStateInfo(SUBFLOW_CONSENT,
-                                                                     formIndex,
-                                                                     ((PatientModeCheckinActivity)getActivity()).getNumConsentForms());
+        flowStateInfo = new FlowStateInfo(SUBFLOW_CONSENT,
+                                           formIndex,
+                                            ((PatientModeCheckinActivity)getActivity()).getNumConsentForms());
 
     }
 
