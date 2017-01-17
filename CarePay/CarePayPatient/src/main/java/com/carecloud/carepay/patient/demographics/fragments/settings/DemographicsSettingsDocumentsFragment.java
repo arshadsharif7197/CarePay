@@ -32,22 +32,17 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsuranc
 import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapper;
 import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapperCollection;
 import com.carecloud.carepaylibray.demographics.misc.OnClickRemoveOrAddCallback;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsAddressDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDataModelsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDetailsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDriversLicenseDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMetadataDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadAddressDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPropertiesDTO;
+
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
-
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
@@ -70,8 +65,6 @@ public class DemographicsSettingsDocumentsFragment extends Fragment {
     private DemographicMetadataEntityIdDocsDTO     idDocsMetaDTO;
     private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
     private DemographicLabelsDTO                   globalLabelsMetaDTO;
-    private TextView                               header;
-    private TextView                               subheader;
     private SwitchCompat                           switchCompat;
     private TextView                               idTypeClickable;
     private TextView                               idDocTypeLabel;
@@ -87,6 +80,13 @@ public class DemographicsSettingsDocumentsFragment extends Fragment {
     private String documentsHaveHealthInsuranceString = null;
     private String documentsAddnotherInsuranceString = null;
     private String documentsGoldenCrossString = null;
+    private String selectDocumentString = null;
+    private String documentsmMultipleInsurancesString = null;
+    private String documentsHaveHealthInsurance = null;
+    private String documentsLicenseString = null;
+    private String documentsSaveChangesString = null;
+    private String documentsCancelString = null;
+
     private String languageString = null;
     private String documentsTypeString = null;
 
@@ -134,6 +134,12 @@ public class DemographicsSettingsDocumentsFragment extends Fragment {
                     documentsAddnotherInsuranceString = demographicsSettingsLabelsDTO.getDocumentsAddnotherInsuranceLabel();
                     documentsGoldenCrossString = demographicsSettingsLabelsDTO.getDocumentsGoldenCrossLabel();
                     documentsTypeString = demographicsSettingsLabelsDTO.getDocumentsTypeLabel();
+                    documentsCancelString = demographicsSettingsLabelsDTO.getDemographicsCancelLabel();
+                    selectDocumentString = demographicsSettingsLabelsDTO.getDemographicsSelectDocumentLabel();
+                    documentsmMultipleInsurancesString = demographicsSettingsLabelsDTO.getDemographicsMultipleInsurancesLabel();
+                    documentsLicenseString = demographicsSettingsLabelsDTO.getDemographicsLicenseLabel();
+                    documentsSaveChangesString = demographicsSettingsLabelsDTO.getDemographicsSaveChangesLabel();
+
                 }
             }
         }
@@ -150,26 +156,20 @@ public class DemographicsSettingsDocumentsFragment extends Fragment {
 
         String label;
 
-        //final String labelCancel = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsCancelLabel();
-
         idDocTypeLabel = (TextView) view.findViewById(R.id.demogrDocTypeLabel);
-        //label = idDocsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsTitleSelectIdType();
-        idDocTypeLabel.setText("Type");
+        idDocTypeLabel.setText(documentsTypeString);
 
         idTypeClickable = (TextView) view.findViewById(R.id.demogrDocTypeClickable);
-        //label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsChooseLabel();
-        idTypeClickable.setText("Select Document");
-        //final String titleSelIdDoc = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsChooseLabel();
+        idTypeClickable.setText(documentsTypeString);
         idTypeClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 SystemUtil.showChooseDialog(getActivity(),
-                        docTypes, "Select Document", "Cancel",
+                        docTypes, selectDocumentString, documentsCancelString,
                         idTypeClickable,
                         new SystemUtil.OnClickItemCallback() {
                             @Override
                             public void executeOnClick(TextView destination, String selectedOption) {
-                               // demPayloadIdDocDTO.setIdType(selectedOption);
                                 showCard(idCardContainer, true);
                             }
                         });
@@ -221,9 +221,6 @@ public class DemographicsSettingsDocumentsFragment extends Fragment {
                 demPayloadIdDocDTO = demographicPayload.getIdentityDocuments();
                 insuranceDTOsList = demographicPayload.getInsurances();
 
-                //demPayloadIdDocDTO = ((DemographicsActivity) getActivity()).getIdDocModel();
-                //insuranceDTOsList = ((DemographicsActivity) getActivity()).getInsuranceModelList();
-
                 if (demPayloadIdDocDTO == null) {
                     demPayloadIdDocDTO = new ArrayList<>();
                     demPayloadIdDocDTO.add(new DemographicIdDocPayloadDTO());
@@ -238,20 +235,17 @@ public class DemographicsSettingsDocumentsFragment extends Fragment {
                     insuranceDTOsList.add(new DemographicInsurancePayloadDTO());
                 }
             }
-        }    }
+        }
+    }
 
     private void setButtons() {
-        String label;
-
         // next button
         nextButton = (Button) view.findViewById(R.id.demographicsDocsNextButton);
-        //label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsNext();
-        nextButton.setText("Save Changes");
+        nextButton.setText(documentsSaveChangesString);
 
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // ((DemographicsActivity) getActivity()).setIdDocModel(demPayloadIdDocDTO);
                 // clear the list
                 insuranceDTOsList.clear();
 
@@ -270,8 +264,7 @@ public class DemographicsSettingsDocumentsFragment extends Fragment {
 
         // add button
         multipleInsClickable = (TextView) view.findViewById(R.id.demographicsDocumentsMultipleInsClickable);
-        //label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsDocumentsMultiInsLabel();
-        multipleInsClickable.setText("Have multiple Insurances");
+        multipleInsClickable.setText(documentsHaveHealthInsuranceString);
         multipleInsClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View buttonView) {
@@ -298,7 +291,7 @@ public class DemographicsSettingsDocumentsFragment extends Fragment {
 
         fm = getChildFragmentManager();
         // add license fragment
-        DocScannerFragment idDocFragment = (DocScannerFragment) fm.findFragmentByTag("license");
+        DocScannerFragment idDocFragment = (DocScannerFragment) fm.findFragmentByTag(documentsLicenseString);
         if (idDocFragment == null) {
             idDocFragment = new DocScannerFragment();
             idDocFragment.setModel(demPayloadIdDocDTO.get(0)); // set the model
@@ -310,7 +303,7 @@ public class DemographicsSettingsDocumentsFragment extends Fragment {
         }else{
             idDocFragment.setArguments(bundle);
         }
-        fm.beginTransaction().replace(R.id.demographicsDocsLicense, idDocFragment, "license").commit();
+        fm.beginTransaction().replace(R.id.demographicsDocsLicense, idDocFragment, documentsLicenseString).commit();
 
         insContainersWrapper = (LinearLayout) view.findViewById(R.id.demographicsDocsInsHoldersContainer);
         createInsuranceFragments(insContainersWrapper);
@@ -384,8 +377,7 @@ public class DemographicsSettingsDocumentsFragment extends Fragment {
                 }
             }
         });
-        //String label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsDocumentsSwitchLabel();
-        switchCompat.setText("Do You Have Health Insurance?");
+        switchCompat.setText(documentsHaveHealthInsuranceString);
         SystemUtil.hideSoftKeyboard(getActivity());
     }
 

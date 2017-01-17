@@ -120,6 +120,21 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     @SerializedName("settings_repeat_new_password")
     @Expose
     private String settingRepeatNewPasswordLabel;
+    @SerializedName("demographics_select_document")
+    @Expose
+    private String demographicsSelectDocumentLabel;
+    @SerializedName("demographics_have_health_insurance")
+    @Expose
+    private String demographicsHaveInsurancesLabel;
+    @SerializedName("demographics_have_multiple_insurances")
+    @Expose
+    private String demographicsMultipleInsurancesLabel;
+    @SerializedName("demographics_license_label")
+    @Expose
+    private String demographicsLicenseLabel;
+    @SerializedName("demographics_save_changes_label")
+    @Expose
+    private String demographicsSaveChangesLabel;
 
     /**
      *
@@ -712,6 +727,86 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
      */
     public void setSettingRepeatNewPasswordLabel(String settingRepeatNewPasswordLabel) {
         this.settingRepeatNewPasswordLabel = settingRepeatNewPasswordLabel;
+    }
+
+    /**
+     *
+     * @return demographicsSelectDocumentLabel
+     */
+    public String getDemographicsSelectDocumentLabel() {
+        return demographicsSelectDocumentLabel;
+    }
+
+    /**
+     *
+     * @param demographicsSelectDocumentLabel The demographicsSelectDocumentLabel
+     */
+    public void setDemographicsSelectDocumentLabel(String demographicsSelectDocumentLabel) {
+        this.demographicsSelectDocumentLabel = demographicsSelectDocumentLabel;
+    }
+
+    /**
+     *
+     * @return demographicsHaveInsurancesLabel
+     */
+    public String getDemographicsHaveInsurancesLabel() {
+        return demographicsHaveInsurancesLabel;
+    }
+
+    /**
+     *
+     * @param demographicsHaveInsurancesLabel The demographicsHaveInsurancesLabel
+     */
+    public void setDemographicsHaveInsurancesLabel(String demographicsHaveInsurancesLabel) {
+        this.demographicsHaveInsurancesLabel = demographicsHaveInsurancesLabel;
+    }
+
+    /**
+     *
+     * @return demographicsMultipleInsurancesLabel
+     */
+    public String getDemographicsMultipleInsurancesLabel() {
+        return demographicsMultipleInsurancesLabel;
+    }
+
+    /**
+     *
+     * @param demographicsMultipleInsurancesLabel The demographicsMultipleInsurancesLabel
+     */
+    public void setDemographicsMultipleInsurancesLabel(String demographicsMultipleInsurancesLabel) {
+        this.demographicsMultipleInsurancesLabel = demographicsMultipleInsurancesLabel;
+    }
+
+    /**
+     *
+     * @return demographicsLicenseLabel
+     */
+    public String getDemographicsLicenseLabel() {
+        return demographicsLicenseLabel;
+    }
+
+    /**
+     *
+     * @param demographicsLicenseLabel The demographicsLicenseLabel
+     */
+    public void setDemographicsLicenseLabel(String demographicsLicenseLabel) {
+        this.demographicsLicenseLabel = demographicsLicenseLabel;
+    }
+
+    /**
+     *
+     * @return demographicsSaveChangesLabel
+     */
+    public String getDemographicsSaveChangesLabel() {
+        return demographicsSaveChangesLabel;
+    }
+
+    /**
+     *
+     * @param demographicsSaveChangesLabel demographicsSaveChangesLabel
+     */
+    public void setDemographicsSaveChangesLabel(String demographicsSaveChangesLabel) {
+        this.demographicsSaveChangesLabel = demographicsSaveChangesLabel;
     }
 
 }
