@@ -36,10 +36,10 @@
                     android:id="@+id/appointment_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dimen_40dp"
+                    android:layout_marginBottom="@dimen/dimen_60dp"
                     android:layout_marginTop="3dp"
                     android:gravity="center"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/white_opacity_60"
                     android:textSize="@dimen/text_size_30sp"
                     android:textStyle="bold"
                     app:customAssetFont="gotham_rounded_medium" />
@@ -92,6 +92,13 @@
                 android:layout_marginStart="@dimen/dimen_24dp"
                 android:layout_marginTop="@dimen/dimen_21dp"
                 android:background="@color/light_gray" />
+            <ImageView
+                android:layout_width="@dimen/dimen_18dp"
+                android:layout_height="@dimen/dimen_26dp"
+                android:layout_marginTop="-13dp"
+                android:background="@color/white"
+                android:src="@drawable/icn_location_pin"
+                android:layout_gravity="center_horizontal"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/provider_place_name"

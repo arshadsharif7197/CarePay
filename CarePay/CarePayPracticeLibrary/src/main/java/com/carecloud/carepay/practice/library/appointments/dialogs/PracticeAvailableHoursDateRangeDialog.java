@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 
-public class PracticeAvailableHoursDateRangeDialog extends BasePracticeDialog implements PracticeAvailableHoursAdapter.SelectAppointmentTimeSlotCallback {
+public class PracticeAvailableHoursDateRangeDialog extends BasePracticeDialog {
 
     private CalendarPickerView calendarPickerView;
     private CustomGothamRoundedMediumButton applyDateRangeButton;
@@ -66,8 +66,8 @@ public class PracticeAvailableHoursDateRangeDialog extends BasePracticeDialog im
     private void inflateToolbar(View view) {
         Toolbar toolbar = (Toolbar) view.findViewById(com.carecloud.carepaylibrary.R.id.add_appointment_toolbar);
         TextView titleView = (TextView) toolbar.findViewById(com.carecloud.carepaylibrary.R.id.add_appointment_toolbar_title);
-         SystemUtil.setGothamRoundedMediumTypeface(context, titleView);
-         toolbar.setTitle("");
+        SystemUtil.setGothamRoundedMediumTypeface(context, titleView);
+        toolbar.setTitle("");
 
 
         CustomGothamRoundedMediumButton todayButton = (CustomGothamRoundedMediumButton)
@@ -269,15 +269,6 @@ public class PracticeAvailableHoursDateRangeDialog extends BasePracticeDialog im
     @Override
     protected void onDialogCancel() {
         new PracticeAvailableHoursDialog(context, "", newStartDate, newEndDate).show();
-        dismiss();
-    }
-
-
-    @Override
-    public void onSelectAppointmentTimeSlot(AppointmentsSlotsDTO appointmentsSlotsDTO) {
-        new PracticeRequestAppointmentDialog(context, ((ScheduleAppointmentActivity) context).getResourcesToSchedule()
-                .getMetadata().getLabel().getAvailableHoursBack(), appointmentsSlotsDTO).show();
-
         dismiss();
     }
 }

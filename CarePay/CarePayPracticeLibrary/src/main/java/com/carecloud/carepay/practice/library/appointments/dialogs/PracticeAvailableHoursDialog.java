@@ -321,7 +321,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     public void onSelectAppointmentTimeSlot(AppointmentsSlotsDTO appointmentsSlotsDTO) {
         // Call Request appointment Summary dialog from here
         new PracticeRequestAppointmentDialog(context, ((ScheduleAppointmentActivity) context).getResourcesToSchedule()
-                .getMetadata().getLabel().getAvailableHoursBack(), appointmentsSlotsDTO).show();
+                .getMetadata().getLabel().getAvailableHoursBack(), appointmentsSlotsDTO, availabilityDTO).show();
         dismiss();
     }
 }
