@@ -85,8 +85,6 @@ public class EditProfileFragment extends DocumentScannerFragment {
     private EditText middleNameEditText = null;
     private EditText lastNameEditText = null;
     private EditText emailEditText = null;
-    private EditText createPasswordEditText = null;
-    private EditText repeatPasswordEditText = null;
 
     private Button updateProfileButton = null;
     private DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO = null;
@@ -94,8 +92,6 @@ public class EditProfileFragment extends DocumentScannerFragment {
     private TextInputLayout middleNameLabel = null;
     private TextInputLayout lastNameLabel = null;
     private TextInputLayout emailLabel = null;
-    private TextInputLayout createPasswordLabel = null;
-    private TextInputLayout repeatPasswordLabel = null;
     private LinearLayout rootview;
 
     private boolean isFirstNameEmpty;
@@ -106,6 +102,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
     private DemographicsSettingsFirstNameDTO demographicsSettingsFirstNameDTO = null;
     private DemographicsSettingsLastNameDTO demographicsSettingsLastNameDTO = null;
     private ProgressBar progressBar = null;
+    private ImageView profileImageview = null;
 
 
     @Override
@@ -141,11 +138,11 @@ public class EditProfileFragment extends DocumentScannerFragment {
         middleNameEditText = (EditText) view.findViewById(R.id.reviewdemogrMiddleNameEdit);
         lastNameEditText = (EditText) view.findViewById(R.id.reviewdemogrLastNameEdit);
         emailEditText = (EditText) view.findViewById(R.id.signinEmailEditText);
-        createPasswordEditText = (EditText) view.findViewById(R.id.passwordEditText);
-        repeatPasswordEditText = (EditText) view.findViewById(R.id.repeatPasswordEditText);
 
         changeProfilePictureButton = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
         updateProfileButton = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
+
+        profileImageview = (ImageView) view.findViewById(R.id.providerPicImageView);
 
         ImageView imageViewDetailsImage = (ImageView) view.findViewById(R.id.providerPicImageView);
         if (demographicsSettingsDTO != null) {
@@ -162,6 +159,16 @@ public class EditProfileFragment extends DocumentScannerFragment {
         getPersonalDetails();
         title.setText(profileString);
 
+        DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
+        DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
+        DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
+        DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+        String imageUrl = demographicsPersonalDetails.getProfilePhoto();
+        if (!StringUtil.isNullOrEmpty(imageUrl)) {
+            Picasso.with(getActivity()).load(imageUrl).transform(
+                    new CircleImageTransform()).resize(160, 160).into(this.profileImageview);
+        }
+
         setClickables(view);
         formatEditText();
 
@@ -175,9 +182,6 @@ public class EditProfileFragment extends DocumentScannerFragment {
         middleNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrMiddleNameTextInputLayout);
         lastNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrLastNameTextInput);
         emailLabel = (TextInputLayout) view.findViewById(R.id.signInEmailTextInputLayout);
-        createPasswordLabel = (TextInputLayout) view.findViewById(R.id.passwordTextInputLayout);
-        repeatPasswordLabel = (TextInputLayout) view.findViewById(R.id.repeatPasswordTextInputLayout);
-
     }
 
     private void setEditTexts(View view) {
@@ -193,12 +197,6 @@ public class EditProfileFragment extends DocumentScannerFragment {
 
         emailLabel.setTag(emailString);
         emailEditText.setTag(emailLabel);
-
-        createPasswordLabel.setTag("Create Password");
-        createPasswordEditText.setTag(createPasswordLabel);
-
-        repeatPasswordLabel.setTag("Repeat Password");
-        repeatPasswordEditText.setTag(repeatPasswordLabel);
 
         setChangeFocusListeners();
     }
@@ -234,26 +232,6 @@ public class EditProfileFragment extends DocumentScannerFragment {
         });
 
         emailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
-
-        createPasswordEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
-
-        repeatPasswordEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean bool) {
                 if (bool) {
@@ -303,8 +281,6 @@ public class EditProfileFragment extends DocumentScannerFragment {
                         firstNameEditText.setHint(firstNameString);
                         lastNameEditText.setHint(lastNameString);
                         middleNameEditText.setHint(middleNameString);
-                        createPasswordEditText.setHint("Create Password");
-                        repeatPasswordEditText.setHint("Repeat Password");
 
                     }
                 }

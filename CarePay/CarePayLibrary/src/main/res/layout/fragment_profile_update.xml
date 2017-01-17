@@ -156,34 +156,6 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/passwordTextInputLayout"
-                style="@style/TextInputLayoutStyle"
-                app:hintTextAppearance="@style/FloatingLabelStyle">
-
-                <EditText
-                    android:id="@+id/passwordEditText"
-                    style="@style/EditTextStyle"
-                    android:inputType="textEmailAddress"
-                    />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/repeatPasswordTextInputLayout"
-                style="@style/TextInputLayoutStyle"
-                app:hintTextAppearance="@style/FloatingLabelStyle"
-                app:passwordToggleEnabled="false">
-
-                <EditText
-                    android:id="@+id/repeatPasswordEditText"
-                    style="@style/EditTextStyle"
-                    android:imeOptions="actionDone"
-                    android:inputType="textPassword"/>
-
-            </android.support.design.widget.TextInputLayout>
-
-
         </LinearLayout>
     </ScrollView>
 
