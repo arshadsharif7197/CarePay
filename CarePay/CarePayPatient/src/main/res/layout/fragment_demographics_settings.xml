@@ -263,31 +263,6 @@
         android:layout_marginRight="@dimen/list_apt_padding_right"
         android:background="@color/gray" />
 
-    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-        android:id="@+id/notificationsTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/review_default_heaight"
-        android:textColor="@color/textview_default_textcolor"
-        android:textSize="14sp"
-        android:layout_marginStart="@dimen/dimen_30dp"
-        app:customAssetFont="proxima_nova_semi_bold" />
-
-    <RelativeLayout
-        android:id="@+id/buttonLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/payment_method_parent_layout_padding">
-
-        <RadioGroup
-            android:id="@+id/paymentMethodsRadioGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dimen_5dp"
-            android:gravity="center_vertical"
-            android:orientation="vertical"></RadioGroup>
-    </RelativeLayout>
-
     <RelativeLayout
         android:id="@+id/signOutLayout"
         android:layout_width="match_parent"
@@ -301,9 +276,10 @@
             android:layout_height="wrap_content"
             android:background="@drawable/button_blue_border"
             android:textColor="@color/bright_cerulean"
-            android:layout_marginBottom="@dimen/dimen_5dp"
+            android:layout_marginBottom="@dimen/dimen_20dp"
             android:layout_alignParentBottom="true"
             android:layout_margin="@dimen/dimen_5dp"/>
+
     </RelativeLayout>
 
 
