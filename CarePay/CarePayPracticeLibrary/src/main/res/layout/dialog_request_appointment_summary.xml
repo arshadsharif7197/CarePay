@@ -143,6 +143,8 @@
                     android:id="@+id/reasonEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:maxLength="50"
                     android:focusable="false"
                     android:imeOptions="flagNoExtractUi"
                     android:textColor="@color/blue_cerulian" />

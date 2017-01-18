@@ -13,7 +13,6 @@
         android:layout_gravity="end"
         android:layout_marginTop="@dimen/apt_dl_margin"
         android:gravity="end"
-        android:text="Optional"
         android:textSize="@dimen/apt_popup_optional" />
 
     <android.support.design.widget.TextInputLayout
@@ -27,7 +26,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusable="false"
-            android:hint="Reason for visit"
+            android:maxLines="1"
+            android:maxLength="50"
             android:imeOptions="flagNoExtractUi"
             android:textColor="@color/blue_cerulian" />
 

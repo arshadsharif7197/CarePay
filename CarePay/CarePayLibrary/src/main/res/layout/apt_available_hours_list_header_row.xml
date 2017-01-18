@@ -9,6 +9,7 @@
         style="@style/AppointmentAvailableHoursListHeaderText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAllCaps="true"
         android:padding="@dimen/apt_available_hours_list_row_padding" />
 
 </LinearLayout>
