@@ -46,7 +46,7 @@
                 android:layout_weight="1"
                 android:layout_marginEnd="@dimen/respons_button_margin_left_right"
                 android:layout_marginStart="@dimen/respons_button_margin_left_right"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="@dimen/dimen_5dp"
                 android:orientation="vertical"
                 >
 

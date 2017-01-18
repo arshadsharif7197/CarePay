@@ -86,12 +86,8 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
         setGothamRoundedMediumTypeface(appCompatActivity, payLaterButton);
         payLaterButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
 
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            Gson gson = new Gson();
-            String paymentsDTOString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
-            paymentDTO = gson.fromJson(paymentsDTOString, PaymentsModel.class);
-
+        getPaymentInformation();
+        if (paymentDTO != null) {
             getPaymentLabels();
 
 /*
@@ -167,7 +163,6 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
         payTotalAmountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getPaymentInformation();
                 doPayment();
             }
         });

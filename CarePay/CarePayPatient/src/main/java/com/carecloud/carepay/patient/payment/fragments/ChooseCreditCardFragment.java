@@ -123,10 +123,7 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
         addNewCardButton.setOnClickListener(addNewCardButtonListener);
 
         if (paymentsModel != null) {
-            PaymentsPatientsCreditCardsPayloadDTO patientCreditCards = paymentsModel.getPaymentPayload().getPatientCreditCards();
-
-            if (patientCreditCards != null) {
-                List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = patientCreditCards.getPayload();
+                List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = paymentsModel.getPaymentPayload().getPatientCreditCards();
 
                 for (int i = 0; i < creditCardList.size(); i++) {
                     PaymentCreditCardsPayloadDTO creditCardItem = creditCardList.get(i).getPayload();
@@ -144,7 +141,7 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
                     chooseCreditCardRadioGroup.addView(dividerLineView);
                     onSetRadioButtonRegularTypeFace();
                 }
-            }
+
 
             PaymentsLabelDTO paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
             nextButton.setText(paymentsLabel.getPaymentPayText());
@@ -198,9 +195,7 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
     private View.OnClickListener nextButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            PaymentsPatientsCreditCardsPayloadDTO patientCreditCards = paymentsModel.getPaymentPayload().getPatientCreditCards();
-            if (patientCreditCards != null) {
-                List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = patientCreditCards.getPayload();
+                List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = paymentsModel.getPaymentPayload().getPatientCreditCards();
 
                 if (creditCardList != null) {
                     PaymentCreditCardsPayloadDTO creditCardPayload = creditCardList.get(selectedCreditCard).getPayload();
@@ -252,7 +247,7 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
                         e.printStackTrace();
                     }
                 }
-            }
+
         }
     };
 

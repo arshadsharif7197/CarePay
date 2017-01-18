@@ -67,7 +67,7 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
 
         if (paymentLineItem.getDetails() != null && paymentLineItem.getDetails().size() > 0) {
             holder.lineItemNameLabelDetails.setVisibility(View.VISIBLE);
-            holder.lineItemNameLabelDetails.setText("Details"); // Change to constant
+            holder.lineItemNameLabelDetails.setText(paymentReceiptModel.getPaymentsMetadata().getPaymentsLabel().getPaymentResponsibilityDetails());
 
             holder.lineItemNameLabelDetails.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -70,22 +70,16 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
         payPartialButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
 
 
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            Gson gson = new Gson();
-            String paymentInfo = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
-            paymentDTO = gson.fromJson(paymentInfo, PaymentsModel.class);
-
+        getPaymentInformation();
+        if (paymentDTO != null) {
             getPaymentLabels();
-
-            if (paymentDTO!= null) {
-                ((TextView)view.findViewById(R.id.respons_title)).setText(paymentsTitleString);
+            ((TextView)view.findViewById(R.id.respons_title)).setText(paymentsTitleString);
 /*
                 List<PaymentPatientBalancesPayloadDTO> paymentList2 =
                         paymentsModel.getPaymentPayload().getPatientBalances().get(0) .getPayload();
 */
                // List<PaymentPatientBalancesPayloadDTO> paymentList =
-                        List<PatiencePayloadDTO> paymentList =       paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
+             List<PatiencePayloadDTO> paymentList =       paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
                                 //.getPayload().getSummaryBalance();
 
                 if (paymentList != null && paymentList.size() > 0) {
@@ -129,7 +123,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
                         Log.e(LOG_TAG, ex.getMessage());
                     }
                 }
-            }
+
 
             //paymentDetails.setText(paymentDetailsString);
             totalResponsibility.setText(totalResponsibilityString);
@@ -143,7 +137,6 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
         payTotalButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getPaymentInformation();
                 doPayment();
             }
         });

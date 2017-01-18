@@ -230,12 +230,9 @@ public class PaymentPlanFragment extends Fragment {
             }
         });
 
-        PaymentsPatientsCreditCardsPayloadDTO patientCreditCards
-                = paymentsModel.getPaymentPayload().getPatientCreditCards();
 
-        if (patientCreditCards != null) {
-            List<PaymentsPatientsCreditCardsPayloadListDTO> payload = patientCreditCards.getPayload();
-
+        List<PaymentsPatientsCreditCardsPayloadListDTO> payload = paymentsModel.getPaymentPayload().getPatientCreditCards();
+        if (payload.size()>0) {
             if (payload != null && payload.size() > 0) {
                 // Get default credit card
                 PaymentCreditCardsPayloadDTO creditCard = payload.get(0).getPayload();
@@ -264,7 +261,7 @@ public class PaymentPlanFragment extends Fragment {
         @Override
         public void onCreditCardSelection(int selectedIndex) {
             List<PaymentsPatientsCreditCardsPayloadListDTO> payload
-                    = paymentsModel.getPaymentPayload().getPatientCreditCards().getPayload();
+                    = paymentsModel.getPaymentPayload().getPatientCreditCards();
 
             if (payload != null && payload.size() > 0) {
                 // Get default credit card

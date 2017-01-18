@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
@@ -20,14 +21,15 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.services.PaymentsService;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment implements PaymentDetailsDialog.PayNowClickListener {
 
@@ -46,6 +48,7 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment imp
     protected String paymentsTitleString;
     protected String payLaterString;
     protected double total;
+    protected String paymentInfo;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,21 +66,13 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment imp
     }
 
     protected void getPaymentInformation() {
-        PaymentsService paymentService = (new BaseServiceGenerator(getActivity()))
-                .createService(PaymentsService.class);
-        Call<PaymentsModel> call = paymentService.fetchPaymentInformation();
-        call.enqueue(new Callback<PaymentsModel>() {
-            @Override
-            public void onResponse(Call<PaymentsModel> call, Response<PaymentsModel> response) {
-                PaymentsModel paymentsDTO = response.body();
-            }
-
-            @Override
-            public void onFailure(Call<PaymentsModel> call, Throwable throwable) {
-                SystemUtil.showFaultDialog(getActivity());
-                Log.e(getActivity().getString(R.string.alert_title_server_error), "");
-            }
-        });
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            Gson gson = new Gson();
+            paymentInfo = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
+            String paymentsDTOString = arguments.getString(CarePayConstants.INTAKE_BUNDLE);
+            paymentDTO = gson.fromJson(paymentsDTOString, PaymentsModel.class);
+        }
     }
 
 
