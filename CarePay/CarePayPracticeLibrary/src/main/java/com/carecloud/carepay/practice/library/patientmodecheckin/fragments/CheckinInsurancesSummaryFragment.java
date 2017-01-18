@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class CheckinInsurancesSummaryFragment extends Fragment {
+public class CheckinInsurancesSummaryFragment extends BaseCheckinFragment {
 
     private FragmentManager                      fm;
     private View                                 view;
