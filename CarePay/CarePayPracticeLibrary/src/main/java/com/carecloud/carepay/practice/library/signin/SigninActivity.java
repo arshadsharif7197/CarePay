@@ -230,7 +230,9 @@ public class SigninActivity extends BasePracticeActivity {
         passwordTextInputLayout = (TextInputLayout) findViewById(R.id.passwordTextInputLayout);
         signinTitle = (TextView) findViewById(R.id.signinTitleTextview);
 
-        if (signInScreenMode == SignInScreenMode.PRACTICE_MODE_SIGNIN) {
+        if (signInScreenMode == SignInScreenMode.PRACTICE_MODE_SIGNIN
+                && signinDTO.getPayload().getLanguages() != null) {
+
             int languageListSize = signinDTO.getPayload().getLanguages().size();
             LanguageOptionDTO defaultLangOption = null;
             int indexDefault = 0;
