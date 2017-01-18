@@ -116,7 +116,7 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         appointmentJSONObj.addProperty("start_time", appointmentDTO.getPayload().getStartTime());
         appointmentJSONObj.addProperty("end_time", appointmentDTO.getPayload().getEndTime());
         appointmentJSONObj.addProperty("appointment_status_id", "5");
-        appointmentJSONObj.addProperty("location_id", 8775);
+        appointmentJSONObj.addProperty("location_id", appointmentDTO.getPayload().getLocation().getId());
         appointmentJSONObj.addProperty("provider_id", appointmentDTO.getPayload().getProviderId());
         appointmentJSONObj.addProperty("visit_reason_id", appointmentDTO.getPayload().getVisitReasonId());
         appointmentJSONObj.addProperty("resource_id", appointmentDTO.getPayload().getResourceId());
