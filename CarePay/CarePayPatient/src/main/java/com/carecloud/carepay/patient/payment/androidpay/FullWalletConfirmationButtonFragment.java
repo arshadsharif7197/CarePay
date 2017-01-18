@@ -249,7 +249,6 @@ public class FullWalletConfirmationButtonFragment extends Fragment
         });
 
         responsePreviousBalance = (CarePayTextView) view.findViewById(R.id.respons_prev_balance);
-        responsePreviousBalance.setText("101.00");
 
         return view;
     }
