@@ -118,8 +118,8 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
             WorkflowServiceHelper.getInstance().execute(appointmentsResultModel.getMetadata()
                     .getTransitions().getLogout(), logOutCall, query, headers);
         } else if (viewId == R.id.btnHome) {
-            //WorkflowServiceHelper.getInstance().execute(appointmentsResultModel.getMetadata()
-            // .getTransitions().getAuthenticate(), homeCall);
+            WorkflowServiceHelper.getInstance().execute(appointmentsResultModel.getMetadata()
+                    .getTransitions().getLogout(), homeCall);
         }
     }
 
