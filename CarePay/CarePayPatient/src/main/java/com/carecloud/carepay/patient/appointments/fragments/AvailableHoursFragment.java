@@ -37,10 +37,11 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -64,6 +65,8 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
     private RecyclerView availableHoursRecycleView;
     private AppointmentsResultModel resourcesToScheduleDTO;
     private String addAppointmentPatientId;
+    private String rangeEndDateString;
+    private CarePayTextView dateRangeCustomTextView;
 
     @Override
     public void onStart() {
@@ -109,7 +112,7 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
         /*inflate other UI components like button etc.*/
         inflateUIComponents(availableHoursListView);
         /*update date range*/
-        updateDateRange(availableHoursListView);
+        updateDateRange();
 
         return availableHoursListView;
     }
@@ -145,6 +148,9 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
                 availableHoursListView.findViewById(R.id.add_appointment_date_pick);
         editRangeButton.setOnClickListener(dateRangeClickListener);
 
+        dateRangeCustomTextView = (CarePayTextView)
+                availableHoursListView.findViewById(R.id.date_range_custom_text_view);
+
         LinearLayoutManager availableHoursLayoutManager = new LinearLayoutManager(getActivity());
         availableHoursLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
@@ -162,21 +168,23 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
 
     /**
      * Method to update date range that is selected on calendar
-     *
-     * @param availableHoursListView used as view component
      */
-    private void updateDateRange(View availableHoursListView) {
-        CustomProxyNovaSemiBoldLabel dateRangeCustomTextView = (CustomProxyNovaSemiBoldLabel)
-                availableHoursListView.findViewById(R.id.date_range_custom_text_view);
+    private void updateDateRange() {
+
         dateRangeCustomTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.glitter));
 
         DateUtil.getInstance().setFormat(CarePayConstants.RAW_DATE_FORMAT_FOR_CALENDAR_DATE_RANGE);
         String selectedRangeLabel = resourcesToScheduleDTO.getMetadata().getLabel().getAddAppointmentFromToText();
         if (startDate != null && endDate != null) {
             DateUtil.getInstance().setDate(startDate);
-            String formattedStartDate = DateUtil.getInstance().getDateAsDayMonthDayOrdinalYear();
+            String formattedStartDate = getFormattedDate();
+
             DateUtil.getInstance().setDate(endDate);
-            String formattedEndDate = DateUtil.getInstance().getDateAsDayMonthDayOrdinalYear();
+            String formattedEndDate = getFormattedDate();
+
+            if(!StringUtil.isNullOrEmpty(rangeEndDateString)){
+                formattedEndDate = rangeEndDateString;
+            }
 
             dateRangeCustomTextView.setText(String.format(selectedRangeLabel,formattedStartDate,formattedEndDate));
         } else {
@@ -188,12 +196,31 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
 
             startDate = rangeStart.getTime();
             endDate = rangeEnd.getTime();
-
             DateUtil.getInstance().setDate(endDate);
+
+            String formattedEndDate = getFormattedDate();
+
+            if(!StringUtil.isNullOrEmpty(rangeEndDateString)){
+                formattedEndDate = rangeEndDateString;
+            }
+
             dateRangeCustomTextView.setText(String.format(selectedRangeLabel,resourcesToScheduleDTO
-                            .getMetadata().getLabel().getTodayAppointmentsHeading(),
-                    DateUtil.getInstance().getDateAsDayMonthDayOrdinalYear()));
+                    .getMetadata().getLabel().getTodayAppointmentsHeading().toLowerCase(), formattedEndDate));
         }
+    }
+
+    private String getFormattedDate(){
+        String formattedDate = DateUtil.getInstance().getDateAsMonthLiteralDayOrdinal();
+
+        if(DateUtil.getInstance().isToday()){
+            formattedDate = resourcesToScheduleDTO.getMetadata().getLabel().getTodayAppointmentsHeading()
+                    .toLowerCase();
+        } else if(DateUtil.getInstance().isTomorrow()){
+            formattedDate = resourcesToScheduleDTO.getMetadata().getLabel().getAddAppointmentTomorrow()
+                    .toLowerCase();
+        }
+
+        return formattedDate;
     }
 
     /**
@@ -314,6 +341,11 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
                         timeSlotsListWithHeaders.add(timSlotsDTO);
                     }
                 }
+                if(!StringUtil.isNullOrEmpty(headerTitle) && headerTitle.contains(",")) {
+                    rangeEndDateString = headerTitle.split(", ")[1];
+                } else {
+                    rangeEndDateString = headerTitle.toLowerCase();
+                }
             }
         }
         return timeSlotsListWithHeaders;
@@ -384,6 +416,7 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
             availabilityDTO = gson.fromJson(workflowDTO.toString(), AppointmentAvailabilityDTO.class);
             availableHoursRecycleView.setAdapter(new AvailableHoursAdapter(getActivity(),
                     getAvailableHoursListWithHeader(), AvailableHoursFragment.this));
+            updateDateRange();
             ProgressDialogUtil.getInstance(getActivity()).dismiss();
         }
 

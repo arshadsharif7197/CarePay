@@ -26,6 +26,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -51,7 +52,8 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     private RecyclerView availableHoursRecycleView;
     private Date startDate;
     private Date endDate;
-
+    private CarePayTextView dateRangeCustomTextView;
+    private String rangeEndDateString;
 
     /**
      * Instantiates a new Practice available hours dialog.
@@ -92,7 +94,8 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
                 view.findViewById(R.id.add_appointment_date_pick);
         editRangeButton.setOnClickListener(dateRangeClickListener);
         SystemUtil.setGothamRoundedBoldTypeface(context, editRangeButton);
-        updateDateRange(view);
+        dateRangeCustomTextView = (CarePayTextView)view.findViewById(R.id.date_range_custom_text_view);
+        updateDateRange();
 
         LinearLayoutManager availableHoursLayoutManager = new LinearLayoutManager(context);
         availableHoursLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -133,12 +136,9 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
 
     /**
      * Method to update date range that is selected on calendar
-     *
-     * @param availableHoursListView used as view component
      */
-    private void updateDateRange(View availableHoursListView) {
-        CarePayTextView dateRangeCustomTextView = (CarePayTextView)
-                availableHoursListView.findViewById(R.id.date_range_custom_text_view);
+    private void updateDateRange() {
+
         SystemUtil.setProximaNovaRegularTypeface(context, dateRangeCustomTextView);
         dateRangeCustomTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.glitter));
 
@@ -147,13 +147,17 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
         String selectedRangeLabel = ((ScheduleAppointmentActivity) context).getResourcesToSchedule().getMetadata().getLabel().getAddAppointmentFromToText();
 
         if (startDate != null && endDate != null) {
-
             DateUtil.getInstance().setDate(startDate);
-            String formattedStartDate = DateUtil.getInstance().getDateAsDayMonthDayOrdinalYear();
-            DateUtil.getInstance().setDate(endDate);
-            String formattedEndDate = DateUtil.getInstance().getDateAsDayMonthDayOrdinalYear();
-            dateRangeCustomTextView.setText(String.format(selectedRangeLabel, formattedStartDate, formattedEndDate));
+            String formattedStartDate = getFormattedDate();
 
+            DateUtil.getInstance().setDate(endDate);
+            String formattedEndDate = getFormattedDate();
+
+            if (!StringUtil.isNullOrEmpty(rangeEndDateString)) {
+                formattedEndDate = rangeEndDateString;
+            }
+
+            dateRangeCustomTextView.setText(String.format(selectedRangeLabel, formattedStartDate, formattedEndDate));
         } else {
             /*To show by default one week as range from today*/
             Calendar rangeStart = Calendar.getInstance();
@@ -161,14 +165,35 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
             Calendar rangeEnd = Calendar.getInstance();
             rangeEnd.add(Calendar.DAY_OF_MONTH, 6);
 
-            //startDate = rangeStart.getTime();
-            //endDate = rangeEnd.getTime();
+            startDate = rangeStart.getTime();
+            endDate = rangeEnd.getTime();
+            DateUtil.getInstance().setDate(endDate);
 
-            DateUtil.getInstance().setDate(rangeEnd.getTime());
+            String formattedEndDate = getFormattedDate();
+
+            if (!StringUtil.isNullOrEmpty(rangeEndDateString)) {
+                formattedEndDate = rangeEndDateString;
+            }
+
             dateRangeCustomTextView.setText(String.format(selectedRangeLabel, ((ScheduleAppointmentActivity) context)
-                            .getResourcesToSchedule().getMetadata().getLabel().getTodayAppointmentsHeading(),
-                    DateUtil.getInstance().getDateAsDayMonthDayOrdinalYear()));
+                    .getResourcesToSchedule().getMetadata().getLabel().getTodayAppointmentsHeading().toLowerCase(), formattedEndDate));
         }
+    }
+
+    private String getFormattedDate(){
+        String formattedDate = DateUtil.getInstance().getDateAsMonthLiteralDayOrdinal();
+
+        if(DateUtil.getInstance().isToday()){
+            formattedDate = ((ScheduleAppointmentActivity) context)
+                    .getResourcesToSchedule().getMetadata().getLabel().getTodayAppointmentsHeading()
+                    .toLowerCase();
+        } else if(DateUtil.getInstance().isTomorrow()){
+            formattedDate = ((ScheduleAppointmentActivity) context)
+                    .getResourcesToSchedule().getMetadata().getLabel().getAddAppointmentTomorrow()
+                    .toLowerCase();
+        }
+
+        return formattedDate;
     }
 
     private void getAvailableHoursTimeSlots() {
@@ -206,6 +231,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
             availabilityDTO = gson.fromJson(workflowDTO.toString(), AppointmentAvailabilityDTO.class);
             availableHoursRecycleView.setAdapter(new PracticeAvailableHoursAdapter(context,
                     getAvailableHoursListWithHeader(), PracticeAvailableHoursDialog.this));
+            updateDateRange();
             ProgressDialogUtil.getInstance(context).dismiss();
         }
 
@@ -280,6 +306,11 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
                         timeSlotsListWithHeaders.add(timSlotsDTO);
                     }
                 }
+                if(!StringUtil.isNullOrEmpty(headerTitle) && headerTitle.contains(",")) {
+                    rangeEndDateString = headerTitle.split(", ")[1];
+                } else {
+                    rangeEndDateString = headerTitle.toLowerCase();
+                }
             }
         }
         return timeSlotsListWithHeaders;
@@ -321,7 +352,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     public void onSelectAppointmentTimeSlot(AppointmentsSlotsDTO appointmentsSlotsDTO) {
         // Call Request appointment Summary dialog from here
         new PracticeRequestAppointmentDialog(context, ((ScheduleAppointmentActivity) context).getResourcesToSchedule()
-                .getMetadata().getLabel().getAvailableHoursBack(), appointmentsSlotsDTO).show();
+                .getMetadata().getLabel().getAvailableHoursBack(), appointmentsSlotsDTO, availabilityDTO).show();
         dismiss();
     }
 }
