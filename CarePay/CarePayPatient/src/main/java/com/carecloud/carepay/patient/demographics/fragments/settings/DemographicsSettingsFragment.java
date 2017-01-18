@@ -1,6 +1,5 @@
 package com.carecloud.carepay.patient.demographics.fragments.settings;
 
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,6 +17,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.payment.fragments.SettingsCreditCardListFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -30,7 +30,6 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMetadataDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
@@ -59,6 +58,7 @@ public class DemographicsSettingsFragment extends Fragment {
     private Button signOutButton = null;
     private CarePayTextView demographicsTextview = null;
     private CarePayTextView documentsTextview = null;
+    private CarePayTextView creditCardsTextview;
     private CarePayTextView changePasswordTextview = null;
     private CarePayTextView messagesTextview = null;
     private ImageView profileImageview = null;
@@ -93,7 +93,7 @@ public class DemographicsSettingsFragment extends Fragment {
         String userId = CognitoAppHelper.getCurrUser();
         demographicsTextview = (CarePayTextView) view.findViewById(R.id.demographicsTextView);
         documentsTextview = (CarePayTextView) view.findViewById(R.id.documentsTextView);
-        CarePayTextView creditCardsTextview = (CarePayTextView) view.findViewById(R.id.creditCardsTextView);
+        creditCardsTextview = (CarePayTextView) view.findViewById(R.id.creditCardsTextView);
         changePasswordTextview = (CarePayTextView) view.findViewById(R.id.changePasswordTextView);
         messagesTextview = (CarePayTextView) view.findViewById(R.id.messagesTextView);
         editTextview = (CarePayTextView) view.findViewById(R.id.editTextView);
@@ -256,6 +256,34 @@ public class DemographicsSettingsFragment extends Fragment {
 
                 fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
                         DemographicsSettingsDocumentsFragment.class.getSimpleName()).addToBackStack(null).commit();*/
+
+            }
+        });
+
+        creditCardsTextview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                Gson gson = new Gson();
+                String demographicsSettingsDTOString = gson.toJson(demographicsSettingsDTO);
+                bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
+
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                SettingsCreditCardListFragment fragment = (SettingsCreditCardListFragment)
+                        fm.findFragmentByTag(SettingsCreditCardListFragment.class.getSimpleName());
+                if (fragment == null) {
+                    fragment = new SettingsCreditCardListFragment();
+                }
+
+                //fix for random crashes
+                if(fragment.getArguments() !=null){
+                    fragment.getArguments().putAll(bundle);
+                }else{
+                    fragment.setArguments(bundle);
+                }
+
+                fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
+                        SettingsCreditCardListFragment.class.getSimpleName()).addToBackStack(null).commit();
 
             }
         });

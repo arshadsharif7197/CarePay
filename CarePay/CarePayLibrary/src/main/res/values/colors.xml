@@ -84,5 +84,7 @@
     <!--Android Pay-->
     <color name="android_pay_background_color">#78C257</color>
 
+    <color name="settings_credit_card_details">#5BC5D0</color>
+    <color name="settings_set_as_default">#5BD063</color>
 
 </resources>

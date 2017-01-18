@@ -1,0 +1,32 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar_layout"
+        layout="@layout/toolbar_responsibility" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/payment_method_parent_layout_padding">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/creditCardsListRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/addNewCardButton" />
+
+        <Button
+            android:id="@+id/addNewCardButton"
+            style="@style/PaymentButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
+            android:background="@drawable/button_blue_border"
+            android:textColor="@color/bright_cerulean" />
+
+    </RelativeLayout>
+</LinearLayout>

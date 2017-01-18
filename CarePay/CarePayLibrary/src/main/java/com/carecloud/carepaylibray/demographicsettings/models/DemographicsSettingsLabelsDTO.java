@@ -120,6 +120,64 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     @SerializedName("settings_repeat_new_password")
     @Expose
     private String settingRepeatNewPasswordLabel;
+    @SerializedName("setting_set_as_default")
+    @Expose
+    private String settingSetAsDefaultLabel;
+    @SerializedName("setting_default")
+    @Expose
+    private String settingDefaultLabel;
+    @SerializedName("setting_details")
+    @Expose
+    private String settingDetailsLabel;
+    @SerializedName("setting_address")
+    @Expose
+    private String settingAddressLabel;
+    @SerializedName("setting_use_profile_address")
+    @Expose
+    private String settingUseProfileAddressLabel;
+    @SerializedName("new_credit_card_heading")
+    @Expose
+    private String newCreditCardHeadingLabel;
+    @SerializedName("credit_card_name_label")
+    @Expose
+    private String creditCardNameLabel;
+    @SerializedName("credit_card_number_label")
+    @Expose
+    private String creditCardNumberLabel;
+    @SerializedName("credit_card_cvc_label")
+    @Expose
+    private String creditCardCvcLabel;
+    @SerializedName("credit_card_expiration_label")
+    @Expose
+    private String creditCardExpirationLabel;
+    @SerializedName("credit_card_pick_date_label")
+    @Expose
+    private String creditCardPickDateLabel;
+    @SerializedName("credit_card_save_card_label")
+    @Expose
+    private String creditCardSaveCardLabel;
+    @SerializedName("credit_card_billing_address_label")
+    @Expose
+    private String creditCardBillingAddressLabel;
+    @SerializedName("address1_label")
+    @Expose
+    private String address1Label;
+    @SerializedName("address2_label")
+    @Expose
+    private String address2Label;
+    @SerializedName("zipcode_label")
+    @Expose
+    private String zipcodeLabel;
+    @SerializedName("city_label")
+    @Expose
+    private String cityLabel;
+    @SerializedName("state_label")
+    @Expose
+    private String stateLabel;
+    @SerializedName("country_label")
+    @Expose
+    private String countryLabel;
+
 
     /**
      *
@@ -714,4 +772,354 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
         this.settingRepeatNewPasswordLabel = settingRepeatNewPasswordLabel;
     }
 
+    /**
+     * Gets setting set as default label.
+     *
+     * @return the setting set as default label
+     */
+    public String getSettingSetAsDefaultLabel() {
+        return StringUtil.getLabelForView(settingSetAsDefaultLabel);
+    }
+
+    /**
+     * Sets setting set as default label.
+     *
+     * @param settingSetAsDefaultLabel the setting set as default label
+     */
+    public void setSettingSetAsDefaultLabel(String settingSetAsDefaultLabel) {
+        this.settingSetAsDefaultLabel = settingSetAsDefaultLabel;
+    }
+
+    /**
+     * Gets setting default label.
+     *
+     * @return the setting default label
+     */
+    public String getSettingDefaultLabel() {
+        return StringUtil.getLabelForView(settingDefaultLabel);
+    }
+
+    /**
+     * Sets setting default label.
+     *
+     * @param settingDefaultLabel the setting default label
+     */
+    public void setSettingDefaultLabel(String settingDefaultLabel) {
+        this.settingDefaultLabel = settingDefaultLabel;
+    }
+
+    /**
+     * Gets setting details label.
+     *
+     * @return the setting details label
+     */
+    public String getSettingDetailsLabel() {
+        return StringUtil.getLabelForView(settingDetailsLabel);
+    }
+
+    /**
+     * Sets setting details label.
+     *
+     * @param settingDetailsLabel the setting details label
+     */
+    public void setSettingDetailsLabel(String settingDetailsLabel) {
+        this.settingDetailsLabel = settingDetailsLabel;
+    }
+
+    /**
+     * Gets demographicssection label.
+     *
+     * @return the demographicssection label
+     */
+    public String getDemographicssectionLabel() {
+        return StringUtil.getLabelForView(demographicssectionLabel);
+    }
+
+    /**
+     * Gets setting address label.
+     *
+     * @return the setting address label
+     */
+    public String getSettingAddressLabel() {
+        return StringUtil.getLabelForView(settingAddressLabel);
+    }
+
+    /**
+     * Sets setting address label.
+     *
+     * @param settingAddressLabel the setting address label
+     */
+    public void setSettingAddressLabel(String settingAddressLabel) {
+        this.settingAddressLabel = settingAddressLabel;
+    }
+
+    /**
+     * Gets setting use profile address label.
+     *
+     * @return the setting use profile address label
+     */
+    public String getSettingUseProfileAddressLabel() {
+        return StringUtil.getLabelForView(settingUseProfileAddressLabel);
+    }
+
+    /**
+     * Sets setting use profile address label.
+     *
+     * @param settingUseProfileAddressLabel the setting use profile address label
+     */
+    public void setSettingUseProfileAddressLabel(String settingUseProfileAddressLabel) {
+        this.settingUseProfileAddressLabel = settingUseProfileAddressLabel;
+    }
+
+    /**
+     * Gets new credit card heading label.
+     *
+     * @return the new credit card heading label
+     */
+    public String getNewCreditCardHeadingLabel() {
+        return StringUtil.getLabelForView(newCreditCardHeadingLabel);
+    }
+
+    /**
+     * Sets new credit card heading label.
+     *
+     * @param newCreditCardHeadingLabel the new credit card heading label
+     */
+    public void setNewCreditCardHeadingLabel(String newCreditCardHeadingLabel) {
+        this.newCreditCardHeadingLabel = newCreditCardHeadingLabel;
+    }
+
+    /**
+     * Gets credit card name label.
+     *
+     * @return the credit card name label
+     */
+    public String getCreditCardNameLabel() {
+        return StringUtil.getLabelForView(creditCardNameLabel);
+    }
+
+    /**
+     * Sets credit card name label.
+     *
+     * @param creditCardNameLabel the credit card name label
+     */
+    public void setCreditCardNameLabel(String creditCardNameLabel) {
+        this.creditCardNameLabel = creditCardNameLabel;
+    }
+
+    /**
+     * Gets credit card number label.
+     *
+     * @return the credit card number label
+     */
+    public String getCreditCardNumberLabel() {
+        return StringUtil.getLabelForView(creditCardNumberLabel);
+    }
+
+    /**
+     * Sets credit card number label.
+     *
+     * @param creditCardNumberLabel the credit card number label
+     */
+    public void setCreditCardNumberLabel(String creditCardNumberLabel) {
+        this.creditCardNumberLabel = creditCardNumberLabel;
+    }
+
+    /**
+     * Gets credit card cvc label.
+     *
+     * @return the credit card cvc label
+     */
+    public String getCreditCardCvcLabel() {
+        return StringUtil.getLabelForView(creditCardCvcLabel);
+    }
+
+    /**
+     * Sets credit card cvc label.
+     *
+     * @param creditCardCvcLabel the credit card cvc label
+     */
+    public void setCreditCardCvcLabel(String creditCardCvcLabel) {
+        this.creditCardCvcLabel = creditCardCvcLabel;
+    }
+
+    /**
+     * Gets credit card expiration label.
+     *
+     * @return the credit card expiration label
+     */
+    public String getCreditCardExpirationLabel() {
+        return StringUtil.getLabelForView(creditCardExpirationLabel);
+    }
+
+    /**
+     * Sets credit card expiration label.
+     *
+     * @param creditCardExpirationLabel the credit card expiration label
+     */
+    public void setCreditCardExpirationLabel(String creditCardExpirationLabel) {
+        this.creditCardExpirationLabel = creditCardExpirationLabel;
+    }
+
+    /**
+     * Gets credit card pick date label.
+     *
+     * @return the credit card pick date label
+     */
+    public String getCreditCardPickDateLabel() {
+        return StringUtil.getLabelForView(creditCardPickDateLabel);
+    }
+
+    /**
+     * Sets credit card pick date label.
+     *
+     * @param creditCardPickDateLabel the credit card pick date label
+     */
+    public void setCreditCardPickDateLabel(String creditCardPickDateLabel) {
+        this.creditCardPickDateLabel = creditCardPickDateLabel;
+    }
+
+    /**
+     * Gets credit card save card label.
+     *
+     * @return the credit card save card label
+     */
+    public String getCreditCardSaveCardLabel() {
+        return StringUtil.getLabelForView(creditCardSaveCardLabel);
+    }
+
+    /**
+     * Sets credit card save card label.
+     *
+     * @param creditCardSaveCardLabel the credit card save card label
+     */
+    public void setCreditCardSaveCardLabel(String creditCardSaveCardLabel) {
+        this.creditCardSaveCardLabel = creditCardSaveCardLabel;
+    }
+
+    /**
+     * Gets credit card billing address label.
+     *
+     * @return the credit card billing address label
+     */
+    public String getCreditCardBillingAddressLabel() {
+        return StringUtil.getLabelForView(creditCardBillingAddressLabel);
+    }
+
+    /**
+     * Sets credit card billing address label.
+     *
+     * @param creditCardBillingAddressLabel the credit card billing address label
+     */
+    public void setCreditCardBillingAddressLabel(String creditCardBillingAddressLabel) {
+        this.creditCardBillingAddressLabel = creditCardBillingAddressLabel;
+    }
+
+    /**
+     * Gets address 1 label.
+     *
+     * @return the address 1 label
+     */
+    public String getAddress1Label() {
+        return StringUtil.getLabelForView(address1Label);
+    }
+
+    /**
+     * Sets address 1 label.
+     *
+     * @param address1Label the address 1 label
+     */
+    public void setAddress1Label(String address1Label) {
+        this.address1Label = address1Label;
+    }
+
+    /**
+     * Gets address 2 label.
+     *
+     * @return the address 2 label
+     */
+    public String getAddress2Label() {
+        return StringUtil.getLabelForView(address2Label);
+    }
+
+    /**
+     * Sets address 2 label.
+     *
+     * @param address2Label the address 2 label
+     */
+    public void setAddress2Label(String address2Label) {
+        this.address2Label = address2Label;
+    }
+
+    /**
+     * Gets zipcode label.
+     *
+     * @return the zipcode label
+     */
+    public String getZipcodeLabel() {
+        return StringUtil.getLabelForView(zipcodeLabel);
+    }
+
+    /**
+     * Sets zipcode label.
+     *
+     * @param zipcodeLabel the zipcode label
+     */
+    public void setZipcodeLabel(String zipcodeLabel) {
+        this.zipcodeLabel = zipcodeLabel;
+    }
+
+    /**
+     * Gets city label.
+     *
+     * @return the city label
+     */
+    public String getCityLabel() {
+        return StringUtil.getLabelForView(cityLabel);
+    }
+
+    /**
+     * Sets city label.
+     *
+     * @param cityLabel the city label
+     */
+    public void setCityLabel(String cityLabel) {
+        this.cityLabel = cityLabel;
+    }
+
+    /**
+     * Gets state label.
+     *
+     * @return the state label
+     */
+    public String getStateLabel() {
+        return StringUtil.getLabelForView(stateLabel);
+    }
+
+    /**
+     * Sets state label.
+     *
+     * @param stateLabel the state label
+     */
+    public void setStateLabel(String stateLabel) {
+        this.stateLabel = stateLabel;
+    }
+
+    /**
+     * Gets country label.
+     *
+     * @return the country label
+     */
+    public String getCountryLabel() {
+        return StringUtil.getLabelForView(countryLabel);
+    }
+
+    /**
+     * Sets country label.
+     *
+     * @param countryLabel the country label
+     */
+    public void setCountryLabel(String countryLabel) {
+        this.countryLabel = countryLabel;
+    }
 }
