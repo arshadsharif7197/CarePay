@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.consentform.FormData;
-import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.BaseCheckinFragment;
+import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinConsentForm1Fragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinConsentForm2Fragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinDemographicsRevFragment;
@@ -42,6 +42,7 @@ import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHol
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
 import com.carecloud.carepaylibray.intake.models.LabelModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.practice.FlowStateInfo;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -557,7 +558,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     public void updateSection(FlowStateInfo stateInfo) {
         if (currentFlowStateInfo != null) {
             // reset the current state
-            int subflow = currentFlowStateInfo.subflow;
+            int subflow = currentFlowStateInfo.getSubflow();
             toggleHighlight(subflow, false);
             if (subflow == SUBFLOW_CONSENT || subflow == SUBFLOW_INTAKE) {
                 toggleVisibleFormCounter(subflow, false);
@@ -566,35 +567,12 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         currentFlowStateInfo = stateInfo;
         if (currentFlowStateInfo != null) {
             // set the current state
-            int subflow = currentFlowStateInfo.subflow;
+            int subflow = currentFlowStateInfo.getSubflow();
             toggleHighlight(subflow, true);
             if (subflow == SUBFLOW_CONSENT || subflow == SUBFLOW_INTAKE) {
                 toggleVisibleFormCounter(subflow, true);
-                changeCounterOfForm(subflow, currentFlowStateInfo.fragmentIndex, currentFlowStateInfo.maxFragIndex);
+                changeCounterOfForm(subflow, currentFlowStateInfo.fragmentIndex, currentFlowStateInfo.getMaxFragIndex());
             }
-        }
-    }
-
-    /**
-     * Class holding info about the curent point in the checkin flow
-     */
-    public static class FlowStateInfo {
-
-        int subflow;
-        public int fragmentIndex;
-        int maxFragIndex;
-
-        /**
-         * Ctor
-         *
-         * @param subflow       The subflow
-         * @param fragmentIndex The index of the current fragment (if necessary)
-         * @param maxFragIndex  The meximum number of the fragments
-         */
-        public FlowStateInfo(int subflow, int fragmentIndex, int maxFragIndex) {
-            this.subflow = subflow;
-            this.fragmentIndex = fragmentIndex;
-            this.maxFragIndex = maxFragIndex;
         }
     }
 
@@ -620,7 +598,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         currentFlowStateInfo = fragment.getFlowStateInfo();
 
         if (currentFlowStateInfo != null) {
-            if (currentFlowStateInfo.subflow == SUBFLOW_CONSENT) {
+            if (currentFlowStateInfo.getSubflow() == SUBFLOW_CONSENT) {
                 Log.v("back", "consent: " + currentFlowStateInfo.fragmentIndex);
                 consentFormIndex = currentFlowStateInfo.fragmentIndex;
 
@@ -630,7 +608,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
                     showingForm = showingForm.prev();
                 }
                 super.onBackPressed();
-            } else if (currentFlowStateInfo.subflow == SUBFLOW_INTAKE) {
+            } else if (currentFlowStateInfo.getSubflow() == SUBFLOW_INTAKE) {
                 Log.v("back", "intake: " + currentFlowStateInfo.fragmentIndex);
                 currentFlowStateInfo.fragmentIndex = --intakeFormIndex;
                 updateSection(currentFlowStateInfo);

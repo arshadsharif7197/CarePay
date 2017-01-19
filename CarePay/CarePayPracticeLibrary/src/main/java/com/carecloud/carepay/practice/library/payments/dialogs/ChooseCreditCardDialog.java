@@ -64,11 +64,8 @@ public class ChooseCreditCardDialog extends Dialog implements RadioGroup.OnCheck
         chooseCreditCardRadioGroup.setOnCheckedChangeListener(this);
 
         if (paymentsModel != null) {
-            PaymentsPatientsCreditCardsPayloadDTO patientCreditCards
-                    = paymentsModel.getPaymentPayload().getPatientCreditCards();
 
-            if (patientCreditCards != null) {
-                List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = patientCreditCards.getPayload();
+                List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = paymentsModel.getPaymentPayload().getPatientCreditCards();;
 
                 for (int i = 0; i < creditCardList.size(); i++) {
                     PaymentCreditCardsPayloadDTO creditCardItem = creditCardList.get(i).getPayload();
@@ -85,7 +82,7 @@ public class ChooseCreditCardDialog extends Dialog implements RadioGroup.OnCheck
                     chooseCreditCardRadioGroup.addView(dividerLineView);
                     onSetRadioButtonRegularTypeFace();
                 }
-            }
+
 
             PaymentsLabelDTO paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
             ((TextView) findViewById(R.id.choose_credit_card_title)).setText(paymentsLabel.getPaymentChooseCreditCardButton());

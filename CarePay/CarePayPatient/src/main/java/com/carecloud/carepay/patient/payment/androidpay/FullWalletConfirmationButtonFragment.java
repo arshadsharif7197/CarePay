@@ -37,6 +37,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.google.android.gms.common.ConnectionResult;
@@ -123,6 +124,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
     private RetryHandler retryHandler;
     //    private ItemInfo mItemInfo;
     private Button confirmButton;
+    private CarePayTextView responsePreviousBalance ;
     private MaskedWallet maskedWallet;
     private int retryLoadFullWalletCount = 0;
     private Intent activityLaunchIntent;
@@ -246,11 +248,8 @@ public class FullWalletConfirmationButtonFragment extends Fragment
             }
         });
 
-        TextView responsePreviousBalance = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.respons_prev_balance);
+        responsePreviousBalance = (CarePayTextView) view.findViewById(R.id.respons_prev_balance);
 
-        PaymentResponsibilityModel paymentModel = PaymentResponsibilityModel.getInstance();
-
-        //responsePreviousBalance.setText(CarePayConstants.DOLLAR.concat(paymentModel.getBalancesList().get(0).toString()));
         return view;
     }
 
