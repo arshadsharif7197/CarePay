@@ -77,6 +77,7 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         optionalTextView.setText(appointmentsResultModel.getMetadata().getLabel().getAppointmentsOptionalHeading());
 
         reasonEditText = (EditText) childActionView.findViewById(R.id.reasonEditText);
+        reasonEditText.setHint(appointmentsResultModel.getMetadata().getLabel().getAppointmentsReasonForVisitHeading());
         reasonEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
