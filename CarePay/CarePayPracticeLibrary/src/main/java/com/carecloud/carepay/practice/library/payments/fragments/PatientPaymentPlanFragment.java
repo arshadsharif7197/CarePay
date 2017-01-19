@@ -18,7 +18,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
-import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.BaseCheckinFragment;
+import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.ChooseCreditCardDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -223,12 +223,8 @@ public class PatientPaymentPlanFragment extends BaseCheckinFragment {
             }
         });
 
-        PaymentsPatientsCreditCardsPayloadDTO patientCreditCards
-                = paymentsModel.getPaymentPayload().getPatientCreditCards();
-
-        if (patientCreditCards != null) {
-            List<PaymentsPatientsCreditCardsPayloadListDTO> payload = patientCreditCards.getPayload();
-
+        List<PaymentsPatientsCreditCardsPayloadListDTO> payload = paymentsModel.getPaymentPayload().getPatientCreditCards();
+        if (payload.size()>0){
             if (payload != null && payload.size() > 0) {
                 // Get default credit card
                 PaymentCreditCardsPayloadDTO creditCard = payload.get(0).getPayload();
@@ -257,7 +253,7 @@ public class PatientPaymentPlanFragment extends BaseCheckinFragment {
         @Override
         public void onCreditCardSelection(int selectedIndex) {
             List<PaymentsPatientsCreditCardsPayloadListDTO> payload
-                    = paymentsModel.getPaymentPayload().getPatientCreditCards().getPayload();
+                    = paymentsModel.getPaymentPayload().getPatientCreditCards();
 
             if (payload != null && payload.size() > 0) {
                 // Get default credit card
