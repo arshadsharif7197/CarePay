@@ -19,6 +19,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.util.Base64;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +37,7 @@ import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 
-public class SystemUtil {
+public class SystemUtil implements Thread.UncaughtExceptionHandler{
 
     private static final String LOG_TAG = SystemUtil.class.getSimpleName();
 
@@ -389,6 +390,15 @@ public class SystemUtil {
     public interface OnClickItemCallback {
 
         void executeOnClick(TextView destination, String selectedOption);
+    }
+
+    @Override
+    public void uncaughtException(Thread thread, Throwable ex) {
+        Log.e("Exception", "Received exception '" + ex.getMessage() + "' from thread " + thread.getName(), ex);
+
+//        Use this in implementing class
+//        Thread t = Thread.currentThread();
+//        t.setDefaultUncaughtExceptionHandler(new SystemUtil());
     }
 
 }
