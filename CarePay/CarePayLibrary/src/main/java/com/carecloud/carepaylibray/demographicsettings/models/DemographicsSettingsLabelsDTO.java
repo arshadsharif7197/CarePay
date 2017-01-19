@@ -135,6 +135,27 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     @SerializedName("demographics_save_changes_label")
     @Expose
     private String demographicsSaveChangesLabel;
+    @SerializedName("remove_link")
+    @Expose
+    private String demographicsRemoveLabel;
+    @SerializedName("demographics_provider_label")
+    @Expose
+    private String demographicsProviderLabel;
+    @SerializedName("demographics_plan_label")
+    @Expose
+    private String demographicsPlanLabel;
+    @SerializedName("demographics_card_type_label")
+    @Expose
+    private String demographicsCardTypeLabel;
+    @SerializedName("demographics_card_number_label")
+    @Expose
+    private String demographicsCardNumberLabel;
+    @SerializedName("setting_change_name")
+    @Expose
+    private String demographicsChangeNameLabel;
+    @SerializedName("setting_change_Email")
+    @Expose
+    private String demographicsChangeEmailLabel;
 
     /**
      *
@@ -734,7 +755,8 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
      * @return demographicsSelectDocumentLabel
      */
     public String getDemographicsSelectDocumentLabel() {
-        return demographicsSelectDocumentLabel;
+        return StringUtil.getLabelForView(demographicsSelectDocumentLabel);
+
     }
 
     /**
@@ -750,7 +772,8 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
      * @return demographicsHaveInsurancesLabel
      */
     public String getDemographicsHaveInsurancesLabel() {
-        return demographicsHaveInsurancesLabel;
+        return StringUtil.getLabelForView(demographicsHaveInsurancesLabel);
+
     }
 
     /**
@@ -766,7 +789,7 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
      * @return demographicsMultipleInsurancesLabel
      */
     public String getDemographicsMultipleInsurancesLabel() {
-        return demographicsMultipleInsurancesLabel;
+        return StringUtil.getLabelForView(demographicsMultipleInsurancesLabel);
     }
 
     /**
@@ -782,7 +805,7 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
      * @return demographicsLicenseLabel
      */
     public String getDemographicsLicenseLabel() {
-        return demographicsLicenseLabel;
+        return StringUtil.getLabelForView(demographicsLicenseLabel);
     }
 
     /**
@@ -798,7 +821,8 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
      * @return demographicsSaveChangesLabel
      */
     public String getDemographicsSaveChangesLabel() {
-        return demographicsSaveChangesLabel;
+        return StringUtil.getLabelForView(demographicsSaveChangesLabel);
+
     }
 
     /**
@@ -807,6 +831,119 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
      */
     public void setDemographicsSaveChangesLabel(String demographicsSaveChangesLabel) {
         this.demographicsSaveChangesLabel = demographicsSaveChangesLabel;
+    }
+
+    /**
+     *
+     * @return demographicsRemoveLabel
+     */
+    public String getDemographicsRemoveLabel() {
+        return StringUtil.getLabelForView(demographicsRemoveLabel);
+
+    }
+
+    /**
+     *
+     * @param demographicsRemoveLabel The demographicsRemoveLabel
+     */
+    public void setDemographicsRemoveLabel(String demographicsRemoveLabel) {
+        this.demographicsRemoveLabel = demographicsRemoveLabel;
+    }
+
+    /**
+     *
+     * @return demographicsProviderLabel
+     */
+    public String getDemographicsProviderLabel() {
+        return StringUtil.getLabelForView(demographicsProviderLabel);
+    }
+
+    /**
+     *
+     * @param demographicsProviderLabel The demographicsProviderLabel
+     */
+    public void setDemographicsProviderLabel(String demographicsProviderLabel) {
+        this.demographicsProviderLabel = demographicsProviderLabel;
+    }
+
+    /**
+     *
+     * @return demographicsPlanLabel
+     */
+    public String getDemographicsPlanLabel() {
+        return StringUtil.getLabelForView(demographicsPlanLabel);
+    }
+
+    /**
+     *
+     * @param demographicsPlanLabel The demographicsPlanLabel
+     */
+    public void setDemographicsPlanLabel(String demographicsPlanLabel) {
+        this.demographicsPlanLabel = demographicsPlanLabel;
+    }
+
+    /**
+     *
+     * @return demographicsCardTypeLabel
+     */
+    public String getDemographicsCardTypeLabel() {
+        return StringUtil.getLabelForView(demographicsCardTypeLabel);
+    }
+
+    /**
+     *
+     * @param demographicsCardTypeLabel The demographicsCardTypeLabel
+     */
+    public void setDemographicsCardTypeLabel(String demographicsCardTypeLabel) {
+        this.demographicsCardTypeLabel = demographicsCardTypeLabel;
+    }
+
+    /**
+     *
+     * @return demographicsCardNumberLabel
+     */
+    public String getDemographicsCardNumberLabel() {
+        return StringUtil.getLabelForView(demographicsCardNumberLabel);
+    }
+
+    /**
+     *
+     * @param demographicsCardNumberLabel The demographicsCardNumberLabel
+     */
+    public void setDemographicsCardNumberLabel(String demographicsCardNumberLabel) {
+        this.demographicsCardNumberLabel = demographicsCardNumberLabel;
+    }
+
+    /**
+     *
+     * @return demographicsChangeNameLabel
+     */
+    public String getDemographicsChangeNameLabel() {
+        return StringUtil.getLabelForView(demographicsChangeNameLabel);
+    }
+
+    /**
+     *
+     * @param demographicsChangeNameLabel The demographicsChangeNameLabel
+     */
+    public void setDemographicsChangeNameLabel(String demographicsChangeNameLabel) {
+        this.demographicsChangeNameLabel = demographicsChangeNameLabel;
+    }
+
+    /**
+     *
+     * @return demographicsChangeEmailLabel
+     */
+    public String getDemographicsChangeEmailLabel() {
+        return StringUtil.getLabelForView(demographicsChangeEmailLabel);
+    }
+
+    /**
+     *
+     * @param demographicsChangeEmailLabel demographicsChangeEmailLabel
+     */
+    public void setDemographicsChangeEmailLabel(String demographicsChangeEmailLabel) {
+        this.demographicsChangeEmailLabel = demographicsChangeEmailLabel;
     }
 
 }

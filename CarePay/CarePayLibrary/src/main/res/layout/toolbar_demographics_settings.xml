@@ -2,7 +2,7 @@
 
 <android.support.v7.widget.Toolbar
     android:id="@+id/settings_toolbar"
-    style="@style/CustomToolbarStyle"
+    style="@style/SettingsToolbarStyle"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <TextView

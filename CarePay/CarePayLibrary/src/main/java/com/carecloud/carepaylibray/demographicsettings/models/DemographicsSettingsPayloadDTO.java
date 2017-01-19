@@ -12,7 +12,7 @@ public class DemographicsSettingsPayloadDTO {
     private List<DemographicsSettingsLanguageDTO> demographicsSettingsLanguageDTOs = null;
     @SerializedName("patient_credit_cards")
     @Expose
-    private DemographicsSettingsPatientCreditCardsDTO patientCreditCards;
+    private List<DemographicsSettingsPatientCreditCardsDTO> patientCreditCards;
     @SerializedName("demographics")
     @Expose
     private DemographicsSettingsDemographicsDTO demographics;
@@ -34,11 +34,11 @@ public class DemographicsSettingsPayloadDTO {
         this.demographics = demographics;
     }
 
-    public DemographicsSettingsPatientCreditCardsDTO getPatientCreditCards() {
+    public List<DemographicsSettingsPatientCreditCardsDTO> getPatientCreditCards() {
         return patientCreditCards;
     }
 
-    public void setPatientCreditCards(DemographicsSettingsPatientCreditCardsDTO patientCreditCards) {
+    public void setPatientCreditCards(List<DemographicsSettingsPatientCreditCardsDTO> patientCreditCards) {
         this.patientCreditCards = patientCreditCards;
     }
 

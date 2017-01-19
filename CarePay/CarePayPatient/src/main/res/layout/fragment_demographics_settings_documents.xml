@@ -8,14 +8,15 @@
     android:focusable="true"
     android:orientation="vertical">
 
-    <include layout="@layout/toolbar_documents_review" />
-
+    <include layout="@layout/toolbar_demographics_settings" />
 
     <TextView
             android:id="@+id/demographicsDocsHeaderSubtitle"
             style="@style/DemographicsDocsDocumentLabelStyle"
             android:layout_marginStart="@dimen/dimen_15dp"
             android:layout_marginTop="@dimen/dimen_36dp"
+            android:textSize="@dimen/dimen_14dp"
+            android:textColor="@color/textview_default_textcolor"
             android:text="IDENTITY" />
 
     <ScrollView
@@ -41,11 +42,14 @@
                     style="@style/DemographicsDocsDocumentLabelStyle"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:textSize="@dimen/dimen_17dp"
+                    android:textColor="@color/textview_default_textcolor"
                     android:text="@string/demogr_docs_document_type" />
 
                 <TextView
                     android:id="@+id/demogrDocTypeClickable"
                     style="@style/DemographicsDocsClickableTextStyle"
+                    android:textColor="@color/settings_toolbar_color"
                     android:text="@string/demographicsChooseLabel" />
             </LinearLayout>
 
@@ -102,14 +106,19 @@
         android:layout_width="match_parent"
         android:layout_marginBottom="@dimen/demographics_docs_header_top_margin"
         android:layout_marginEnd="7dp"
+        android:textColor="@color/settings_toolbar_color"
         android:layout_marginTop="7dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:text="@string/demogr_docs_add_card" />
 
     <Button
-        android:id="@+id/demographicsDocsNextButton"
-        style="@style/DemographicsNextButtonStyle"
-        android:layout_marginTop="5dp"
-        android:text="SAVE CHANGES" />
+        android:id="@+id/buttonAddDemographicInfo"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@drawable/settings_button_selector"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:text="SAVE CHANGES"
+        android:textColor="@color/white" />
 
 </LinearLayout>

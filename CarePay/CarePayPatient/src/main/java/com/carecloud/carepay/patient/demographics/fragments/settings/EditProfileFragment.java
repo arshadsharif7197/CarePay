@@ -31,6 +31,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDataModelsDTO;
@@ -80,29 +81,28 @@ public class EditProfileFragment extends DocumentScannerFragment {
     private String firstNameValString = null;
     private String lastNameValString = null;
     private String middleNameValString = null;
+    private String changeNameString = null;
+    private String changeEmailString = null;
+    private String changePasswordString = null;
+
     private Button changeProfilePictureButton = null;
-    private EditText firstNameEditText = null;
-    private EditText middleNameEditText = null;
-    private EditText lastNameEditText = null;
-    private EditText emailEditText = null;
 
     private Button updateProfileButton = null;
     private DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO = null;
-    private TextInputLayout firstNameLabel = null;
-    private TextInputLayout middleNameLabel = null;
-    private TextInputLayout lastNameLabel = null;
-    private TextInputLayout emailLabel = null;
-    private LinearLayout rootview;
 
-    private boolean isFirstNameEmpty;
-    private boolean isLastNameEmpty;
-    private boolean isEmptyEmail;
+    private LinearLayout rootview;
 
     private DemographicsSettingsPersonalDetailsDTO demographicsSettingsDetailsDTO = null;
     private DemographicsSettingsFirstNameDTO demographicsSettingsFirstNameDTO = null;
     private DemographicsSettingsLastNameDTO demographicsSettingsLastNameDTO = null;
     private ProgressBar progressBar = null;
     private ImageView profileImageview = null;
+    private CarePayTextView patientNameLabel = null;
+    private CarePayTextView patientNameValue = null;
+    private CarePayTextView patientEmailLabel = null;
+    private CarePayTextView patientEmailValue = null;
+    private CarePayTextView patientPasswordLabel = null;
+    private CarePayTextView patientPasswordValue = null;
 
 
     @Override
@@ -125,7 +125,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
         progressBar = (ProgressBar) view.findViewById(R.id.demographicReviewProgressBar);
         progressBar.setVisibility(View.GONE);
         setGothamRoundedMediumTypeface(appCompatActivity, title);
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_close));
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -134,10 +134,13 @@ public class EditProfileFragment extends DocumentScannerFragment {
             String demographicsSettingsDTOString = bundle.getString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE);
             demographicsSettingsDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsDTO.class);
         }
-        firstNameEditText = (EditText) view.findViewById(R.id.reviewdemogrFirstNameEdit);
-        middleNameEditText = (EditText) view.findViewById(R.id.reviewdemogrMiddleNameEdit);
-        lastNameEditText = (EditText) view.findViewById(R.id.reviewdemogrLastNameEdit);
-        emailEditText = (EditText) view.findViewById(R.id.signinEmailEditText);
+
+        patientNameValue = (CarePayTextView) view.findViewById(R.id.patientNameTextView);
+        patientNameLabel = (CarePayTextView) view.findViewById(R.id.patientChangeNameTextView);
+        patientEmailValue = (CarePayTextView) view.findViewById(R.id.patientEmailTextView);
+        patientEmailLabel = (CarePayTextView) view.findViewById(R.id.patientChangeEmailTextView);
+        patientPasswordValue = (CarePayTextView) view.findViewById(R.id.patientPasswordTextView);
+        patientPasswordLabel = (CarePayTextView) view.findViewById(R.id.patientChangePasswordTextView);
 
         changeProfilePictureButton = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
         updateProfileButton = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
@@ -152,10 +155,6 @@ public class EditProfileFragment extends DocumentScannerFragment {
         }
         getEditProfileLabels();
 
-        initialiseUIFields(view);
-        getProfileProperties();
-        setEditTexts(view);
-
         getPersonalDetails();
         title.setText(profileString);
 
@@ -168,78 +167,16 @@ public class EditProfileFragment extends DocumentScannerFragment {
             Picasso.with(getActivity()).load(imageUrl).transform(
                     new CircleImageTransform()).resize(160, 160).into(this.profileImageview);
         }
+        String userId = CognitoAppHelper.getCurrUser();
 
+        patientNameValue.setText(firstNameValString + " " + middleNameValString+" " + lastNameValString);
+        patientEmailValue.setText(userId);
+
+        patientNameLabel.setText(changeNameString);
+        patientEmailLabel.setText(changeEmailString);
+        patientPasswordLabel.setText(changePasswordString);
         setClickables(view);
-        formatEditText();
-
         return view;
-
-    }
-
-    private void initialiseUIFields(View view) {
-
-        firstNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrFirstNameTextInput);
-        middleNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrMiddleNameTextInputLayout);
-        lastNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrLastNameTextInput);
-        emailLabel = (TextInputLayout) view.findViewById(R.id.signInEmailTextInputLayout);
-    }
-
-    private void setEditTexts(View view) {
-
-        firstNameLabel.setTag(firstNameString);
-        firstNameEditText.setTag(firstNameLabel);
-
-        middleNameLabel.setTag(middleNameString);
-        middleNameEditText.setTag(middleNameLabel);
-
-        lastNameLabel.setTag(lastNameString);
-        lastNameEditText.setTag(lastNameLabel);
-
-        emailLabel.setTag(emailString);
-        emailEditText.setTag(emailLabel);
-
-        setChangeFocusListeners();
-    }
-
-    private void setChangeFocusListeners() {
-        firstNameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
-        middleNameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
-
-        lastNameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
-
-        emailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
 
     }
 
@@ -254,35 +191,10 @@ public class EditProfileFragment extends DocumentScannerFragment {
                 if (demographicsSettingsLabelsDTO != null) {
                     profileString = demographicsSettingsLabelsDTO.getProfileHeadingLabel();
                     emailString = demographicsSettingsLabelsDTO.getEmailLabel();
+                    changeNameString = demographicsSettingsLabelsDTO.getDemographicsChangeNameLabel();
+                    changeEmailString = demographicsSettingsLabelsDTO.getDemographicsChangeEmailLabel();
+                    changePasswordString = demographicsSettingsLabelsDTO.getSettingschangePasswordLabel();
 
-                }
-            }
-        }
-    }
-
-    public void getProfileProperties() {
-        if (demographicsSettingsDTO != null) {
-            DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
-            if (demographicsSettingsMetadataDTO != null) {
-                DemographicsSettingsDataModelsDTO demographicsSettingsDataModelsDTO = demographicsSettingsMetadataDTO.getDataModels();
-                if (demographicsSettingsDataModelsDTO != null) {
-                    DemographicsSettingsDetailsDTO demographicsSettingsDetailsDTO = demographicsSettingsDataModelsDTO.getDemographic();
-                    if (demographicsSettingsDetailsDTO != null) {
-                        DemographicsSettingsPersonalDetailsPropertiesDTO demographicsSettingsPersonalDetailsPreopertiesDTO = demographicsSettingsDetailsDTO.getPersonalDetails();
-                        DemographicsSettingsPersonalDetailsDTO demographicsSettingsPersonalDetailsDTO = demographicsSettingsPersonalDetailsPreopertiesDTO.getProperties();
-                        DemographicsSettingsFirstNameDTO demographicsSettingsFirstNameDTO = demographicsSettingsPersonalDetailsDTO.getFirstName();
-                        DemographicsSettingsLastNameDTO demographicsSettingsLastNameDTO = demographicsSettingsPersonalDetailsDTO.getLastName();
-                        DemographicsSettingsMiddleNameDTO demographicsSettingsMiddleNameDTO = demographicsSettingsPersonalDetailsDTO.getMiddleName();
-
-                        firstNameString = demographicsSettingsFirstNameDTO.getLabel();
-                        lastNameString = demographicsSettingsLastNameDTO.getLabel();
-                        middleNameString = demographicsSettingsMiddleNameDTO.getLabel();
-
-                        firstNameEditText.setHint(firstNameString);
-                        lastNameEditText.setHint(lastNameString);
-                        middleNameEditText.setHint(middleNameString);
-
-                    }
                 }
             }
         }
@@ -290,7 +202,6 @@ public class EditProfileFragment extends DocumentScannerFragment {
     }
 
     private void getPersonalDetails() {
-        String userId = CognitoAppHelper.getCurrUser();
 
         if (demographicsSettingsDTO != null) {
             DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
@@ -301,140 +212,15 @@ public class EditProfileFragment extends DocumentScannerFragment {
                 firstNameValString = demographicsPersonalDetails.getFirstName();
                 lastNameValString = demographicsPersonalDetails.getLastName();
                 middleNameValString = demographicsPersonalDetails.getMiddleName();
-                if (SystemUtil.isNotEmptyString(firstNameValString)) {
-                    firstNameEditText.setText(firstNameValString);
-                    firstNameEditText.requestFocus();
-                }
-
-                if (SystemUtil.isNotEmptyString(lastNameValString)) {
-                    lastNameEditText.setText(lastNameValString);
-                    lastNameEditText.requestFocus();
-                }
-
-                if (SystemUtil.isNotEmptyString(middleNameValString)) {
-                    middleNameEditText.setText(middleNameValString);
-                    middleNameEditText.requestFocus();
-
-                }
-                if (SystemUtil.isNotEmptyString(userId)) {
-                    emailEditText.setText(userId);
-                    emailEditText.requestFocus();
-                } else {
-                    Log.v(LOG_TAG, "middle name field is empty");
-                }
-                rootview.requestFocus();
                 hideSoftKeyboard(getActivity());
 
+
             }
         }
 
     }
 
-    private boolean isFirstNameAvailable () {
-        String firstName = firstNameEditText.getText().toString();
-        isFirstNameEmpty = StringUtil.isNullOrEmpty(firstName);
-        firstNameLabel.setErrorEnabled(isFirstNameEmpty); // enable for error if either empty or invalid first name
-        if (isFirstNameEmpty) {
-            firstNameLabel.setError("");
-        } else {
-            firstNameLabel.setError(null);
-        }
-        return !isFirstNameEmpty;
-    }
-
-    private boolean isLastNameAvailable () {
-        String lastName = lastNameEditText.getText().toString();
-        isLastNameEmpty = StringUtil.isNullOrEmpty(lastName);
-        lastNameLabel.setErrorEnabled(isLastNameEmpty); // enable for error if either empty or invalid last name
-        if (isLastNameEmpty) {
-            lastNameLabel.setError("");
-        } else {
-            lastNameLabel.setError(null);
-        }
-        return !isLastNameEmpty ;
-    }
-
-    private boolean isAllFieldsValid() {
-        boolean isFirstNameValid = isFirstNameAvailable();
-        if (!isFirstNameValid) {
-            firstNameEditText.requestFocus();
-        }
-        boolean isLastNameValid = isLastNameAvailable();
-        if (!isLastNameValid) {
-            lastNameEditText.requestFocus();
-        }
-
-        return !isFirstNameEmpty && !isLastNameEmpty;
-
-    }
-
-    private void formatEditText() {
-
-        if (demographicsSettingsDTO != null) {
-            DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
-            if (demographicsSettingsMetadataDTO != null) {
-                DemographicsSettingsDataModelsDTO demographicsSettingsDataModelsDTO = demographicsSettingsMetadataDTO.getDataModels();
-                DemographicsSettingsDetailsDTO demographicsSettingsDemographicsDTO = demographicsSettingsDataModelsDTO.getDemographic();
-                DemographicsSettingsPersonalDetailsPropertiesDTO demographicsSettingsPersonalDetailsDTO = demographicsSettingsDemographicsDTO.getPersonalDetails();
-                demographicsSettingsDetailsDTO = demographicsSettingsPersonalDetailsDTO.getProperties();
-
-            }
-        }
-        firstNameEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int count, int end) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                isFirstNameEmpty = StringUtil.isNullOrEmpty(firstNameEditText.getText().toString());
-                if (!isFirstNameEmpty) {
-                    firstNameLabel.setError(null);
-                    firstNameLabel.setErrorEnabled(false);
-                } else {
-                    demographicsSettingsFirstNameDTO = demographicsSettingsDetailsDTO.getFirstName();
-                    final String firstNameError = demographicsSettingsFirstNameDTO.getValidations().get(0).getErrorMessage();
-                    firstNameLabel.setError(firstNameError);
-                    firstNameLabel.setErrorEnabled(true);
-                }
-            }
-        });
-
-        lastNameEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int count, int end) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                isLastNameEmpty = StringUtil.isNullOrEmpty(lastNameEditText.getText().toString());
-                if (!isLastNameEmpty) {
-                    lastNameLabel.setError(null);
-                    lastNameLabel.setErrorEnabled(false);
-                } else {
-                    demographicsSettingsLastNameDTO = demographicsSettingsDetailsDTO.getLastName();
-                    final String lastNameError = demographicsSettingsLastNameDTO.getValidations().get(0).getErrorMessage();
-                    lastNameLabel.setError(lastNameError);
-                    lastNameLabel.setErrorEnabled(true);
-                }
-            }
-        });
-
-    }
-
-    private void setClickables(View view) {
+   private void setClickables(View view) {
         changeProfilePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -446,7 +232,6 @@ public class EditProfileFragment extends DocumentScannerFragment {
         updateProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isAllFieldsValid()) {
                     if (demographicsSettingsDTO != null) {
                         DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
                         if (demographicsSettingsMetadataDTO != null) {
@@ -462,9 +247,6 @@ public class EditProfileFragment extends DocumentScannerFragment {
                                         DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
                                         DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
                                         DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
-                                        demographicsPersonalDetails.setFirstName(firstNameEditText.getText().toString());
-                                        demographicsPersonalDetails.setLastName(lastNameEditText.getText().toString());
-                                        demographicsPersonalDetails.setMiddleName(middleNameEditText.getText().toString());
 
                                         Gson gson = new Gson();
                                         String jsonInString = gson.toJson(demographicPayload);
@@ -478,7 +260,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
                             }
                         }
                     }
-                }
+
             }
         });
     }
