@@ -422,9 +422,10 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
             if(HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE)){
                 capturedBitmap = rotateBitmap(capturedBitmap, 270);
             }
-            if(cameraType == CameraType.SCAN_DOC && !SystemUtil.isTablet(context)){
+            // removed extra rotation
+            /*if(cameraType == CameraType.SCAN_DOC && !SystemUtil.isTablet(context)){
                 capturedBitmap = rotateBitmap(capturedBitmap, 180);
-            }
+            }*/
             Rect rectFrame = shadowRect;
 
             double scaleWidth = (float) capturedBitmap.getWidth() / getHeight();

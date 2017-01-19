@@ -58,9 +58,9 @@ public class ProvidersListAdapter extends RecyclerView.Adapter<ProvidersListAdap
 
         //Endpoint not support location for individual resource,
         //Hence used 0th item from location array
-        AppointmentLocationDTO location = appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getLocations().get(0);
-        holder.placeName.setText(location.getName());
-        holder.address.setText(location.getAddress().getPlaceAddressString());
+//        AppointmentLocationDTO location = appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getLocations().get(0);
+//        holder.placeName.setText(location.getName());
+//        holder.address.setText(location.getAddress().getPlaceAddressString());
 
         AppointmentLabelDTO label = appointmentsResultModel.getMetadata().getLabel();
         holder.scheduleAppointment.setText(label.getProviderListScheduleAppointmentButton());
