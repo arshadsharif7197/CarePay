@@ -75,11 +75,12 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
                 queryString.put("practice_mgmt", practiceMgmt);
                 queryString.put("patient_id", patientId);
                 WorkflowServiceHelper.getInstance().execute(transitionAppointments, appointmentsWorkflowCallback, queryString);
+
         } else if (id == com.carecloud.carepaylibrary.R.id.nav_payments && transitionBalance != null) {
                 Map<String, String> queryString = new HashMap<>();
-                queryString.put("practice_id", practiceId);
-                queryString.put("practice_mgmt", practiceMgmt);
-                queryString.put("patient_id", patientId);
+                queryString.put("practice_id", practiceId == null ? "" : practiceId);
+                queryString.put("practice_mgmt", practiceMgmt == null ? "" : practiceMgmt);
+                queryString.put("patient_id", patientId == null ? "" : patientId);
                 WorkflowServiceHelper.getInstance().execute(transitionBalance, paymentsCallBack, queryString);
 
         } else if (id == com.carecloud.carepaylibrary.R.id.nav_settings && transitionProfile != null) {

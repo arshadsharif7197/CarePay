@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -40,21 +39,13 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressP
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
+import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
-
 import com.carecloud.carepaylibray.utils.ValidationHelper;
-
 import com.google.gson.Gson;
 import com.smartystreets.api.us_zipcode.City;
 
@@ -65,7 +56,7 @@ import java.util.List;
 /**
  * Fragment to update the demographisc info (except insurances)
  */
-public class CheckinDemographicsFragment extends Fragment implements View.OnClickListener {
+public class CheckinDemographicsFragment extends BaseCheckinFragment implements View.OnClickListener {
 
     int selectedDataArray;
     private Button      buttonAddDemographicInfo;
@@ -962,7 +953,7 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
                 middleNameText.requestFocus();
 
             } else {
-                Log.v(LOG_TAG, "middle name field is empty");
+                Log.v(KeyboardHolderActivity.LOG_TAG, "middle name field is empty");
             }
             String datetime = demographicPersDetailsPayloadDTO.getDateOfBirth();
             if (datetime != null) {
@@ -970,7 +961,7 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
                 dobEditText.setText(dateOfBirthString);
                 dobEditText.requestFocus();
             } else {
-                Log.v(LOG_TAG, "date is null");
+                Log.v(KeyboardHolderActivity.LOG_TAG, "date is null");
             }
             String getGender = demographicPersDetailsPayloadDTO.getGender();
             if (SystemUtil.isNotEmptyString(getGender)) {
@@ -994,7 +985,7 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
             }
 
         } else {
-            Log.v(LOG_TAG, "demographic personal details is empty");
+            Log.v(KeyboardHolderActivity.LOG_TAG, "demographic personal details is empty");
         }
 
         if (demographicIdDocPayloadDTO != null) {
@@ -1004,7 +995,7 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
                 driverlicenseEditText.requestFocus();
             }
         } else {
-            Log.v(LOG_TAG, "demographic personal details is empty");
+            Log.v(KeyboardHolderActivity.LOG_TAG, "demographic personal details is empty");
         }
 
         if (demographicAddressPayloadDTO != null) {
@@ -1045,11 +1036,11 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
             }
 
         } else {
-            Log.v(LOG_TAG, "Demographic adress is empty ");
+            Log.v(KeyboardHolderActivity.LOG_TAG, "Demographic adress is empty ");
         }
 
         rootview.requestFocus();
-        hideSoftKeyboard(getActivity());
+        SystemUtil.hideSoftKeyboard(getActivity());
     }
 
     private void openNewFragment() {
@@ -1083,92 +1074,83 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
     }
 
     private void setTypefaces(View view) {
-        setGothamRoundedMediumTypeface(getActivity(),
-                                       (TextView) view.findViewById(R.id.detailsReviewHeading));
+        SystemUtil.setGothamRoundedMediumTypeface(getActivity(),
+                (TextView) view.findViewById(R.id.detailsReviewHeading));
 
         if (!StringUtil.isNullOrEmpty(firstNameText.getText().toString())) {
-            setProximaNovaExtraboldTypefaceInput(getActivity(), firstNameLabel);
+            SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), firstNameLabel);
         } else {
-            setProximaNovaRegularTypefaceLayout(getActivity(), firstNameLabel);
+            SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), firstNameLabel);
         }
 
-
         if (!StringUtil.isNullOrEmpty(lastNameText.getText().toString())) {
-            setProximaNovaExtraboldTypefaceInput(getActivity(), lastNameLabel);
+            SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), lastNameLabel);
         } else {
-            setProximaNovaRegularTypefaceLayout(getActivity(), lastNameLabel);
+            SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), lastNameLabel);
         }
 
         if (!StringUtil.isNullOrEmpty(middleNameText.getText().toString())) {
-            setProximaNovaExtraboldTypefaceInput(getActivity(), middleNameLabel);
+            SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), middleNameLabel);
         } else {
-            setProximaNovaRegularTypefaceLayout(getActivity(), middleNameLabel);
+            SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), middleNameLabel);
         }
 
         if (!StringUtil.isNullOrEmpty(dobEditText.getText().toString())) {
-            setProximaNovaExtraboldTypefaceInput(getActivity(), doblabel);
+            SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), doblabel);
         } else {
-            setProximaNovaRegularTypefaceLayout(getActivity(), doblabel);
+            SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), doblabel);
         }
 
         if (!StringUtil.isNullOrEmpty(phoneNumberEditText.getText().toString())) {
-            setProximaNovaExtraboldTypefaceInput(getActivity(), phoneNumberLabel);
+            SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), phoneNumberLabel);
         } else {
-            setProximaNovaRegularTypefaceLayout(getActivity(), phoneNumberLabel);
+            SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), phoneNumberLabel);
         }
 
         if (!StringUtil.isNullOrEmpty(address1EditText.getText().toString())) {
-            setProximaNovaExtraboldTypefaceInput(getActivity(), address1Label);
+            SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), address1Label);
         } else {
-            setProximaNovaRegularTypefaceLayout(getActivity(), address1Label);
+            SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), address1Label);
         }
 
-
         if (!StringUtil.isNullOrEmpty(address2EditText.getText().toString())) {
-            setProximaNovaExtraboldTypefaceInput(getActivity(), address2Label);
+            SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), address2Label);
         } else {
-            setProximaNovaRegularTypefaceLayout(getActivity(), address2Label);
+            SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), address2Label);
         }
 
         if (!StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString())) {
-            setProximaNovaExtraboldTypefaceInput(getActivity(), zipcodeLabel);
+            SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), zipcodeLabel);
         } else {
-            setProximaNovaRegularTypefaceLayout(getActivity(), zipcodeLabel);
+            SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), zipcodeLabel);
         }
 
         if (!StringUtil.isNullOrEmpty(cityEditText.getText().toString())) {
-            setProximaNovaExtraboldTypefaceInput(getActivity(), cityLabel);
+            SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), cityLabel);
         } else {
-            setProximaNovaRegularTypefaceLayout(getActivity(), cityLabel);
+            SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), cityLabel);
         }
 
         if (!StringUtil.isNullOrEmpty(stateEditText.getText().toString())) {
-            setProximaNovaExtraboldTypefaceInput(getActivity(), stateLabel);
+            SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), stateLabel);
         } else {
-            setProximaNovaRegularTypefaceLayout(getActivity(), stateLabel);
+            SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), stateLabel);
         }
         if (!StringUtil.isNullOrEmpty(driverlicenseEditText.getText().toString())) {
-            setProximaNovaExtraboldTypefaceInput(getActivity(), driverLicenseLabel);
+            SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), driverLicenseLabel);
         } else {
-            setProximaNovaRegularTypefaceLayout(getActivity(), driverLicenseLabel);
+            SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), driverLicenseLabel);
         }
 
-
-        setProximaNovaSemiboldTypeface(getActivity(), peronalInfoSectionTextview);
-        setProximaNovaSemiboldTypeface(getActivity(), demographicSectionTextView);
-
-
-        setProximaNovaRegularTypeface(getActivity(), raceLabelTextView);
-        setProximaNovaSemiboldTypeface(getActivity(), raceDataTextView);
-
-        setProximaNovaRegularTypeface(getActivity(), genderLabelTextView);
-        setProximaNovaSemiboldTypeface(getActivity(), selectGender);
-
-        setProximaNovaSemiboldTypeface(getActivity(), addressSectionTextView);
-
-
-        setProximaNovaRegularTypeface(getActivity(), ethnicityLabelTextView);
-        setProximaNovaSemiboldTypeface(getActivity(), ethnicityDataTextView);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), peronalInfoSectionTextview);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), demographicSectionTextView);
+        SystemUtil.setProximaNovaRegularTypeface(getActivity(), raceLabelTextView);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), raceDataTextView);
+        SystemUtil.setProximaNovaRegularTypeface(getActivity(), genderLabelTextView);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), selectGender);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), addressSectionTextView);
+        SystemUtil.setProximaNovaRegularTypeface(getActivity(), ethnicityLabelTextView);
+        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), ethnicityDataTextView);
     }
 
     /**
