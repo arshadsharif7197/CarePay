@@ -16,7 +16,9 @@ public class LinksDTO {
     @SerializedName("checkin_status")
     @Expose
     private TransitionDTO checkinStatus;
-
+    @SerializedName("queue_status")
+    @Expose
+    private TransitionDTO queueStatus;
     /**
      * @return The self
      */
@@ -43,5 +45,19 @@ public class LinksDTO {
      */
     public void setCheckinStatus(TransitionDTO checkinStatus) {
         this.checkinStatus = checkinStatus;
+    }
+
+    /**
+     * @return The queueStatus
+     */
+    public TransitionDTO getQueueStatus() {
+        return queueStatus;
+    }
+
+    /**
+     * @param queueStatus the queueStatus to set
+     */
+    public void setQueueStatus(TransitionDTO queueStatus) {
+        this.queueStatus = queueStatus;
     }
 }

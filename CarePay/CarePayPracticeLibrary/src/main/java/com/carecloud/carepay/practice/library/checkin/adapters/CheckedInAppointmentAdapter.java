@@ -26,16 +26,17 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
 
     private Context context;
     private ArrayList<AppointmentPayloadDTO> appointmentArrayList;
-
+    private boolean isWaitingroom;
     /**
      * Constructor.
      *
      * @param context context
      * @param data    list of appointments
      */
-    public CheckedInAppointmentAdapter(Context context, ArrayList<AppointmentPayloadDTO> data) {
+    public CheckedInAppointmentAdapter(Context context, ArrayList<AppointmentPayloadDTO> data, boolean isWaitingroom) {
         this.context = context;
         appointmentArrayList = data;
+        this.isWaitingroom = isWaitingroom;
         System.out.println("size: " + data.size());
     }
 
@@ -127,7 +128,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
 
         @Override
         public void onClick(View view) {
-            ((CheckInActivity)context).onCheckInItemClick((AppointmentPayloadDTO)view.getTag());
+            ((CheckInActivity)context).onCheckInItemClick((AppointmentPayloadDTO)view.getTag(), isWaitingroom);
         }
 
         /*@Override

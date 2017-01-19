@@ -24,8 +24,11 @@ import com.carecloud.carepay.practice.library.checkin.dtos.PatientBalancePayload
 import com.carecloud.carepay.practice.library.checkin.dtos.QueryStrings;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.appointments.models.QueueDTO;
+import com.carecloud.carepaylibray.appointments.models.QueueStatusPayloadDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -60,6 +63,7 @@ public class AppointmentDetailDialog extends Dialog {
     private CarePayButton pageButton;
     private ImageView patientImageView;
     private AppointmentDTO appointmentDTO;
+    private boolean isWaitingroom;
 
     /**
      * Constructor.
@@ -73,6 +77,7 @@ public class AppointmentDetailDialog extends Dialog {
         this.checkInDTO = checkInDTO;
         this.patientBalanceDTO = patientBalanceDTO;
         this.appointmentPayloadDTO = payloadDTO;
+        this.isWaitingroom = isWaitingroom;
     }
 
     /**
@@ -81,12 +86,13 @@ public class AppointmentDetailDialog extends Dialog {
      * @param context context
      */
     public AppointmentDetailDialog(Context context, CheckInDTO checkInDTO, AppointmentDTO patientBalanceDTO,
-                                   AppointmentPayloadDTO payloadDTO) {
+                                   AppointmentPayloadDTO payloadDTO,  boolean isWaitingroom) {
         super(context);
         this.context = context;
         this.checkInDTO = checkInDTO;
         this.appointmentDTO = patientBalanceDTO;
         this.appointmentPayloadDTO = payloadDTO;
+        this.isWaitingroom = isWaitingroom;
     }
 
     /**
@@ -205,9 +211,17 @@ public class AppointmentDetailDialog extends Dialog {
             JsonObject queryStringObject = checkInDTO.getMetadata().getLinks().getCheckinStatus().getQueryString();
             Gson gson = new Gson();
             QueryStrings queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
+            TransitionDTO transition;
+            WorkflowServiceCallback callback;
+            if (isWaitingroom) {
+                transition = checkInDTO.getMetadata().getLinks().getQueueStatus();
+                callback = getQueueCallBack;
+            }else{
+                transition = checkInDTO.getMetadata().getLinks().getCheckinStatus();
+                callback = getStatusCallBack;
+            }
 
-            WorkflowServiceHelper.getInstance().execute(checkInDTO.getMetadata().getLinks()
-                    .getCheckinStatus(), getStatusCallBack, getQueryParam(queryStrings));
+            WorkflowServiceHelper.getInstance().execute(transition, callback, getQueryParam(queryStrings));
         }
     }
 
@@ -240,6 +254,49 @@ public class AppointmentDetailDialog extends Dialog {
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+    WorkflowServiceCallback getQueueCallBack = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            updateQueueStatus(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            SystemUtil.showFaultDialog(context);
+            Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+    /**
+     * @param workflowDTO workflow model returned by server.
+     */
+    private void updateQueueStatus(WorkflowDTO workflowDTO) {
+        JsonObject jsonObject = (JsonObject) workflowDTO.getPayload();
+
+        Gson gson = new Gson();
+        QueueStatusPayloadDTO queueStatusPayloadDTO = gson.fromJson(jsonObject, QueueStatusPayloadDTO.class);
+        Log.d(this.getClass().getSimpleName(), "queue size: "+ queueStatusPayloadDTO.getQueueStatus().getQueueStatusInnerPayload().getQueueList().size());
+        if (queueStatusPayloadDTO != null) {
+            for(QueueDTO queue : queueStatusPayloadDTO.getQueueStatus().getQueueStatusInnerPayload().getQueueList()){
+                Log.d(this.getClass().getSimpleName(), "queue practice id: "+queue.getPatientId());
+            }
+            /*CheckInStatusDataPayloadValueDTO payloadValueDTO = checkInStatusPayloadDTO
+                    .getCheckInStatusData().getPayload();
+            demographicsCheckbox.setChecked(payloadValueDTO.getDemographicsVerifyComplete()
+                    .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
+            consentFormsCheckbox.setChecked(payloadValueDTO.getConsentFormsComplete()
+                    .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
+            intakeCheckbox.setChecked(payloadValueDTO.getIntakeFormsComplete()
+                    .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
+            responsibilityCheckbox.setChecked(payloadValueDTO.getRespsonsibility()
+                    .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));*/
+        }
+    }
 
     /**
      * @param workflowDTO workflow model returned by server.
