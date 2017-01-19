@@ -52,6 +52,7 @@ public class CognitoAppHelper {
     private static CognitoAppHelper cognitoAppHelper;
     private static CognitoUserPool  userPool;
     private static String           user;
+    private static String           patientUser;
     private static CognitoDevice    newDevice;
     private static int              itemCount;
 
@@ -146,11 +147,18 @@ public class CognitoAppHelper {
     }
 
     public static String getCurrUser() {
+        if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            return patientUser;
+        }
         return user;
     }
 
     public static void setUser(String newUser) {
-        user = newUser;
+        if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            patientUser = newUser;
+        } else {
+            user = newUser;
+        }
     }
 
     public static boolean isPhoneVerified() {
