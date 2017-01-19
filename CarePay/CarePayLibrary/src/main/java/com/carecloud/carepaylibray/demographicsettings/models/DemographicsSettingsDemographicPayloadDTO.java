@@ -1,5 +1,7 @@
 package com.carecloud.carepaylibray.demographicsettings.models;
 
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
@@ -15,7 +17,8 @@ public class DemographicsSettingsDemographicPayloadDTO {
     private DemographicsSettingsDriversLicenseDTO driversLicense;
     @SerializedName("insurances")
     @Expose
-    private List<DemographicsSettingsPayloadInsurancesDTO> insurances = null;
+    //private List<DemographicsSettingsPayloadInsurancesDTO> insurances = null;
+    private List<DemographicInsurancePayloadDTO> insurances = null;
     @SerializedName("personal_details")
     @Expose
     private DemographicsSettingsPersonalDetailsPayloadDTO personalDetails;
@@ -24,7 +27,8 @@ public class DemographicsSettingsDemographicPayloadDTO {
     private DemographicsSettingsPayloadAddressDTO address;
     @SerializedName("identity_documents")
     @Expose
-    private List<DemographicsSettingsPayloadIdentityDocumentDTO> identityDocuments = null;
+    //private List<DemographicsSettingsPayloadIdentityDocumentDTO> identityDocuments = null;
+    private List<DemographicIdDocPayloadDTO> identityDocuments = null;
 
     public DemographicsSettingsDriversLicenseDTO getDriversLicense() {
         return driversLicense;
@@ -34,11 +38,11 @@ public class DemographicsSettingsDemographicPayloadDTO {
         this.driversLicense = driversLicense;
     }
 
-    public List<DemographicsSettingsPayloadInsurancesDTO> getInsurances() {
+    public List<DemographicInsurancePayloadDTO> getInsurances() {
         return insurances;
     }
 
-    public void setInsurances(List<DemographicsSettingsPayloadInsurancesDTO> insurances) {
+    public void setInsurances(List<DemographicInsurancePayloadDTO> insurances) {
         this.insurances = insurances;
     }
 
@@ -58,11 +62,11 @@ public class DemographicsSettingsDemographicPayloadDTO {
         this.address = address;
     }
 
-    public List<DemographicsSettingsPayloadIdentityDocumentDTO> getIdentityDocuments() {
+    public List<DemographicIdDocPayloadDTO> getIdentityDocuments() {
         return identityDocuments;
     }
 
-    public void setIdentityDocuments(List<DemographicsSettingsPayloadIdentityDocumentDTO> identityDocuments) {
+    public void setIdentityDocuments(List<DemographicIdDocPayloadDTO> identityDocuments) {
         this.identityDocuments = identityDocuments;
     }
 

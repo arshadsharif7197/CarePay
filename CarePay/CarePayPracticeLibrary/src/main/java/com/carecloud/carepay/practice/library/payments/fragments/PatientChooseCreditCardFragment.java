@@ -18,7 +18,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
-import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.BaseCheckinFragment;
+import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -122,11 +122,8 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
         addNewCardButton.setOnClickListener(addNewCardButtonListener);
 
         if (paymentsModel != null) {
-            PaymentsPatientsCreditCardsPayloadDTO patientCreditCards
-                    = paymentsModel.getPaymentPayload().getPatientCreditCards();
 
-            if (patientCreditCards != null) {
-                List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = patientCreditCards.getPayload();
+                List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = paymentsModel.getPaymentPayload().getPatientCreditCards();
 
                 for (int i = 0; i < creditCardList.size(); i++) {
                     PaymentCreditCardsPayloadDTO creditCardItem = creditCardList.get(i).getPayload();
@@ -143,7 +140,7 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
                     chooseCreditCardRadioGroup.addView(dividerLineView);
                     onSetRadioButtonRegularTypeFace();
                 }
-            }
+
 
             PaymentsLabelDTO paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
             nextButton.setText(paymentsLabel.getPaymentPayText());
@@ -180,9 +177,8 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
     private View.OnClickListener nextButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            PaymentsPatientsCreditCardsPayloadDTO patientCreditCards = paymentsModel.getPaymentPayload().getPatientCreditCards();
-            if (patientCreditCards != null) {
-                List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = patientCreditCards.getPayload();
+
+                List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = paymentsModel.getPaymentPayload().getPatientCreditCards();
 
                 if (creditCardList != null) {
                     PaymentCreditCardsPayloadDTO creditCardPayload = creditCardList.get(selectedCreditCard).getPayload();
@@ -234,7 +230,7 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
                         e.printStackTrace();
                     }
                 }
-            }
+
         }
     };
 

@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,6 +35,8 @@ import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforauth
 import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforauthorization.ConsentFormMinorGenderDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforauthorization.ConsentFormMinorLastNameDTO;
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
+import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
+import com.carecloud.carepaylibray.practice.FlowStateInfo;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import static com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity.SUBFLOW_CONSENT;
@@ -378,9 +379,9 @@ public class CheckinConsentForm2Fragment extends BaseCheckinFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         formIndex = ((PatientModeCheckinActivity)getActivity()).getConsentFormIndex();
-        flowStateInfo = new PatientModeCheckinActivity.FlowStateInfo(SUBFLOW_CONSENT,
-                                                                     formIndex,
-                                                                     ((PatientModeCheckinActivity)getActivity()).getNumConsentForms());
+        flowStateInfo = new FlowStateInfo(SUBFLOW_CONSENT,
+                                            formIndex,
+                                            ((PatientModeCheckinActivity)getActivity()).getNumConsentForms());
     }
 
     @Override

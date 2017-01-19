@@ -30,6 +30,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadI
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
 import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapperCollection;
 import com.carecloud.carepaylibray.demographics.misc.OnClickRemoveOrAddCallback;
+import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -41,7 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class CheckinInsurancesSummaryFragment extends Fragment {
+public class CheckinInsurancesSummaryFragment extends BaseCheckinFragment {
 
     private FragmentManager                      fm;
     private View                                 view;

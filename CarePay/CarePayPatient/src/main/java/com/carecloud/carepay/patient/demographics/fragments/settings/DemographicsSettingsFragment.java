@@ -235,7 +235,7 @@ public class DemographicsSettingsFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-              /*  Bundle bundle = new Bundle();
+               Bundle bundle = new Bundle();
                 Gson gson = new Gson();
                 String demographicsSettingsDTOString = gson.toJson(demographicsSettingsDTO);
                 bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
@@ -255,7 +255,7 @@ public class DemographicsSettingsFragment extends Fragment {
                 }
 
                 fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
-                        DemographicsSettingsDocumentsFragment.class.getSimpleName()).addToBackStack(null).commit();*/
+                        DemographicsSettingsDocumentsFragment.class.getSimpleName()).addToBackStack(null).commit();
 
             }
         });

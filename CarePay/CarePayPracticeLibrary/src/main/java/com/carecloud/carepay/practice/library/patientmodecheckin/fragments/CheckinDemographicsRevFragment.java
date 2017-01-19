@@ -35,6 +35,8 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsuranc
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
+import com.carecloud.carepaylibray.practice.FlowStateInfo;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -580,7 +582,7 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        flowStateInfo = new PatientModeCheckinActivity.FlowStateInfo(SUBFLOW_DEMOGRAPHICS_INS, 0, 0);
+        flowStateInfo = new FlowStateInfo(SUBFLOW_DEMOGRAPHICS_INS, 0, 0);
     }
 
     @Override

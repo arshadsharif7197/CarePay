@@ -26,7 +26,7 @@ android {
     }
     productFlavors {
         development {
-            applicationId "com.carecloud.carepay.practice.clover.development"
+            applicationId "com.carecloud.carepay.practice.clover"
             buildConfigField 'String', 'API_BASE_URL', '"https://g8r79tifa4.execute-api.us-east-1.amazonaws.com"'
             buildConfigField 'String', 'API_START_URL', '"https://g8r79tifa4.execute-api.us-east-1.amazonaws.com/dev/workflow/carepay/practice_mode/practice_mode_signin/start"'
             buildConfigField 'String', 'X_API_KEY', '"VXlNfYaZYk4sxti0C4caw1v0J0dEDHXH9oQ3bPsA"'

@@ -12,9 +12,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.appointments.AppointmentsActivity;
 import com.carecloud.carepay.practice.library.appointments.ScheduleAppointmentActivity;
-import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.customdialog.BasePracticeDialog;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -23,6 +21,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLocationDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
@@ -43,6 +42,7 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
     private View view;
     private AppointmentsResultModel appointmentsResultModel;
     private AppointmentsSlotsDTO appointmentsSlotsDTO;
+    private AppointmentAvailabilityDTO appointmentAvailabilityDTO;
     private EditText visitTypeEditText;
     public static boolean isAppointmentAdded=false;
 
@@ -52,11 +52,13 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
      * @param cancelString String
      * @param appointmentsSlotsDTO AppointmentsSlotsDTO
      */
-    public PracticeRequestAppointmentDialog(Context context, String cancelString, AppointmentsSlotsDTO appointmentsSlotsDTO) {
+    public PracticeRequestAppointmentDialog(Context context, String cancelString, AppointmentsSlotsDTO appointmentsSlotsDTO
+            , AppointmentAvailabilityDTO appointmentAvailabilityDTO) {
 
         super(context, cancelString, false);
         this.context = context;
         this.appointmentsSlotsDTO = appointmentsSlotsDTO;
+        this.appointmentAvailabilityDTO = appointmentAvailabilityDTO;
         inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         isAppointmentAdded=false;
     }
@@ -109,8 +111,7 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
 
         //Endpoint not support location for individual resource,
         //Hence used 0th item from location array
-        AppointmentLocationDTO location = appointmentsResultModel.getPayload().getResourcesToSchedule()
-                .get(0).getLocations().get(0);
+        AppointmentLocationDTO location = appointmentAvailabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getLocation();
         CarePayTextView appointmentPlaceNameTextView = (CarePayTextView)view.findViewById(R.id.provider_place_name);
         appointmentPlaceNameTextView.setText(location.getName());
         CarePayTextView appointmentAddressTextView = (CarePayTextView)view.findViewById(R.id.provider_place_address);
@@ -119,6 +120,7 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         appointmentNewPatientTextView.setText(appointmentsResultModel.getMetadata().getLabel().getRequestAppointmentNewPatient());
 
         visitTypeEditText = (EditText)view.findViewById(R.id.reasonEditText);
+        visitTypeEditText.setHint(appointmentsResultModel.getMetadata().getLabel().getVisitTypeHeading());
         visitTypeEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
@@ -162,8 +164,8 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         appointmentJSONObj.addProperty("start_time", appointmentsSlotsDTO.getStartTime());
         appointmentJSONObj.addProperty("end_time", appointmentsSlotsDTO.getEndTime());
         appointmentJSONObj.addProperty("appointment_status_id", "5");
-        appointmentJSONObj.addProperty("location_id", appointmentsResultModel.getPayload().getResourcesToSchedule()
-                .get(0).getLocations().get(0).getId());
+        appointmentJSONObj.addProperty("location_id", appointmentAvailabilityDTO.getPayload().getAppointmentAvailability()
+                .getPayload().get(0).getLocation().getId());
         appointmentJSONObj.addProperty("provider_id", ((ScheduleAppointmentActivity)context).getSelectedResource()
                 .getResource().getProvider().getId());
         appointmentJSONObj.addProperty("visit_reason_id", ((ScheduleAppointmentActivity)context).getSelectedVisitTypeDTO()

@@ -25,9 +25,11 @@ import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
+import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
@@ -38,6 +40,7 @@ public class ResponsibilityDialog extends Dialog {
     private Context context;
     private PaymentsModel paymentsModel;
     private int selectedIndex;
+    private PaymentsPatientBalancessDTO patientPayments;
 
     /**
      * Constructor
@@ -67,15 +70,20 @@ public class ResponsibilityDialog extends Dialog {
         getWindow().setAttributes(params);
 
         onInitialization();
+        handleException();
+    }
+
+    private void handleException() {
+        Thread t = Thread.currentThread();
+        t.setDefaultUncaughtExceptionHandler(new SystemUtil());
     }
 
     @SuppressLint("InflateParams")
     private void onInitialization() {
-        PaymentsPatientBalancessDTO paymentsPatient = paymentsModel.getPaymentPayload().getPatientBalances().get(selectedIndex);
+        patientPayments = paymentsModel.getPaymentPayload().getPatientBalances().get(selectedIndex);
 
-        final DemographicsSettingsPersonalDetailsPayloadDTO personalDetails = paymentsPatient.getDemographics().getPayload().getPersonalDetails();
+        final DemographicsSettingsPersonalDetailsPayloadDTO personalDetails = patientPayments.getDemographics().getPayload().getPersonalDetails();
         ((TextView) findViewById(R.id.patient_full_name)).setText(personalDetails.getFirstName() + " " + personalDetails.getLastName());
-        ((TextView) findViewById(R.id.patient_provider_name)).setText(StringUtil.getLabelForView(""));
 
         ImageView profilePhoto = (ImageView) findViewById(R.id.patient_profile_photo);
         final TextView shortName = (TextView) findViewById(R.id.patient_profile_short_name);
@@ -101,7 +109,7 @@ public class ResponsibilityDialog extends Dialog {
         }
 
         PaymentsLabelDTO paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
-        List<PatienceBalanceDTO> balances = paymentsPatient.getBalances();
+        List<PatienceBalanceDTO> balances = patientPayments.getBalances();
         if (balances != null && balances.size() > 0) {
             ScrollView amountDetails = (ScrollView) findViewById(R.id.payment_responsibility_balance_details);
 
@@ -152,9 +160,7 @@ public class ResponsibilityDialog extends Dialog {
                 @Override
                 public void onClick(View view) {
                     if (HttpConstants.getDeviceInformation().getDeviceType().equals("Clover")) {
-                        Intent intent = new Intent();
-                        intent.setAction("com.carecloud.carepay.practice.clover.payments.CloverPaymentActivity");
-                        getContext().startActivity(intent, new Bundle());
+                        setCloverPayment();
                     }
                 }
             });
@@ -168,6 +174,45 @@ public class ResponsibilityDialog extends Dialog {
 
             ((TextView) findViewById(R.id.payment_responsibility_close_label))
                     .setText(paymentsLabel.getPracticePaymentsDetailDialogCloseButton());
+
+            ((TextView) findViewById(R.id.patient_provider_name))
+                    .setText(getProviderName(balances.get(0).getMetadata().getPatientId()));
         }
+    }
+
+    private String getProviderName(String patientId) {
+        if (!StringUtil.isNullOrEmpty(patientId)) {
+            List<ProviderIndexDTO> providerIndex = paymentsModel.getPaymentPayload().getProviderIndex();
+
+            for (ProviderIndexDTO providerIndexDTO : providerIndex) {
+                List<String> patientIds = providerIndexDTO.getPatientIds();
+
+                for (String id : patientIds) {
+                    if (id.equalsIgnoreCase(patientId)) {
+                        return providerIndexDTO.getName();
+                    }
+                }
+            }
+        }
+
+        return StringUtil.getLabelForView("");
+    }
+
+    private void setCloverPayment()
+    {
+        Gson gson = new Gson();
+        String patientPaymentMetaDataString = gson.toJson(patientPayments.getBalances().get(0).getMetadata());
+        String paymentTransitionString = gson.toJson(paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment());
+        Intent intent = new Intent();
+        intent.setAction("com.carecloud.carepay.practice.clover.payments.CloverPaymentActivity");
+        intent.putExtra("PAYMENT_METADATA", patientPaymentMetaDataString);
+        intent.putExtra("PAYMENT_AMOUNT", patientPayments.getBalances().get(0).getPayload().get(0).getAmount().doubleValue());
+        intent.putExtra("PAYMENT_TRANSITION", paymentTransitionString);
+        if(StringUtil.isNullOrEmpty(patientPayments.getBalances().get(0).getPayload().get(0).getType()))
+        {
+            intent.putExtra("ITEM_NAME", patientPayments.getBalances().get(0).getPayload().get(0).getType());
+        }
+        getContext().startActivity(intent, new Bundle());
+        dismiss();
     }
 }

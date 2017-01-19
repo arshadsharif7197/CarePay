@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographicsettings.models;
 
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -16,7 +17,7 @@ public class DemographicsSettingsDetailsDTO {
     private DemographicsSettingsPersonalDetailsPropertiesDTO personalDetails;
     @SerializedName("identity_documents")
     @Expose
-    private DemographicsSettingsIdentityDocumentsDTO identityDocuments;
+    private DemographicMetadataEntityIdDocsDTO identityDocuments;
     @SerializedName("insurances")
     @Expose
     private DemographicsSettingsInsurancesDTO insurances;
@@ -40,11 +41,11 @@ public class DemographicsSettingsDetailsDTO {
         this.personalDetails = personalDetails;
     }
 
-    public DemographicsSettingsIdentityDocumentsDTO getIdentityDocuments() {
+    public DemographicMetadataEntityIdDocsDTO getIdentityDocuments() {
         return identityDocuments;
     }
 
-    public void setIdentityDocuments(DemographicsSettingsIdentityDocumentsDTO identityDocuments) {
+    public void setIdentityDocuments(DemographicMetadataEntityIdDocsDTO identityDocuments) {
         this.identityDocuments = identityDocuments;
     }
 

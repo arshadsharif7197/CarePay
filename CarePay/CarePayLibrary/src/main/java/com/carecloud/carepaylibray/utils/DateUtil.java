@@ -142,6 +142,17 @@ public class DateUtil {
     }
 
     /**
+     * Format current date as Month, Day(ordinal) (eg October 3rd)
+     *
+     * @return The formatted date as string
+     */
+    public String getDateAsMonthLiteralDayOrdinal() {
+        String ordinal = instance.getOrdinalSuffix(day); // fetch the ordinal
+        return String.format(Locale.getDefault(), "%s %s%s",
+                monthLiteral, day, ordinal);
+    }
+
+    /**
      * Format date as MM-dd-yyyy
      *
      * @return The formatted date as string
@@ -408,6 +419,20 @@ public class DateUtil {
         int crtDay = calendar.get(Calendar.DAY_OF_MONTH);
         // check if crt date is before the date in the util and the days differ
         return compareTo(today) == 1 && crtDay != day;
+    }
+
+    /**
+     * Check date is tomorrow
+     *
+     * @return true if tomorrow
+     */
+    public boolean isTomorrow() {
+        Calendar calendar = Calendar.getInstance();
+        int crtDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int crtMonth = calendar.get(Calendar.MONTH);
+        int crtYear = calendar.get(Calendar.YEAR);
+
+        return crtDay == day-1 && crtMonth == month && crtYear == year;
     }
 
     /**

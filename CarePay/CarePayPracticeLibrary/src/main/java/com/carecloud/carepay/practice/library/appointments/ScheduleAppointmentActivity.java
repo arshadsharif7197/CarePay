@@ -77,8 +77,8 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
         if (viewId == R.id.provider_logout) {
             logout();
         } else if (viewId == R.id.btnHome) {
-            //WorkflowServiceHelper.getInstance().execute(scheduleResourcesModel.getMetadata()
-            // .getTransitions().getAuthenticate(), homeCall);
+            WorkflowServiceHelper.getInstance().execute(scheduleResourcesModel.getMetadata()
+                    .getTransitions().getLogout(), homeCall);
         }
     }
 

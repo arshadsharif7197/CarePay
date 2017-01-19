@@ -18,6 +18,7 @@ import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
+import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Picasso;
@@ -28,6 +29,7 @@ import java.util.Locale;
 public class PracticePaymentsAdapter extends RecyclerView.Adapter<PracticePaymentsAdapter.CartViewHolder> {
 
     private Context context;
+    private PaymentsModel paymentsModel;
     private List<PaymentsPatientBalancessDTO> patientBalances;
 
     /**
@@ -38,6 +40,7 @@ public class PracticePaymentsAdapter extends RecyclerView.Adapter<PracticePaymen
      */
     public PracticePaymentsAdapter(Context context, PaymentsModel paymentsModel) {
         this.context = context;
+        this.paymentsModel = paymentsModel;
         this.patientBalances = paymentsModel.getPaymentPayload().getPatientBalances();
     }
 
@@ -48,13 +51,13 @@ public class PracticePaymentsAdapter extends RecyclerView.Adapter<PracticePaymen
      * @param viewType view type
      * @return created view
      */
-    public PracticePaymentsAdapter.CartViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CartViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.payments_list_item_layout, parent, false);
         return new CartViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final PracticePaymentsAdapter.CartViewHolder holder, final int position) {
+    public void onBindViewHolder(final CartViewHolder holder, final int position) {
         DemographicsSettingsDemographicsDTO demographics = patientBalances.get(position).getDemographics();
         final DemographicsSettingsPersonalDetailsPayloadDTO personalDetails = demographics.getPayload().getPersonalDetails();
         holder.shortName.setText(StringUtil.onShortDrName(personalDetails.getFirstName() + " " + personalDetails.getLastName()));
@@ -65,7 +68,8 @@ public class PracticePaymentsAdapter extends RecyclerView.Adapter<PracticePaymen
             builder.listener(new Picasso.Listener() {
                 @Override
                 public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                    holder.shortName.setText(StringUtil.onShortDrName(personalDetails.getFirstName() + " " + personalDetails.getLastName()));
+                    holder.shortName.setText(StringUtil.onShortDrName(
+                            personalDetails.getFirstName() + " " + personalDetails.getLastName()));
                 }
             });
 
@@ -76,7 +80,6 @@ public class PracticePaymentsAdapter extends RecyclerView.Adapter<PracticePaymen
         }
 
         holder.patientName.setText(personalDetails.getFirstName() + " " + personalDetails.getLastName());
-        holder.providerName.setText(StringUtil.getLabelForView(""));
 
         double balanceAmount = 0;
         List<PatienceBalanceDTO> balances = patientBalances.get(position).getBalances();
@@ -86,7 +89,27 @@ public class PracticePaymentsAdapter extends RecyclerView.Adapter<PracticePaymen
                 balanceAmount += payload.get(j).getAmount();
             }
         }
+
+        holder.providerName.setText(getProviderName(balances.get(0).getMetadata().getPatientId()));
         holder.amount.setText(String.format(Locale.getDefault(), "$%.2f", balanceAmount));
+    }
+
+    private String getProviderName(String patientId) {
+        if (!StringUtil.isNullOrEmpty(patientId)) {
+            List<ProviderIndexDTO> providerIndex = paymentsModel.getPaymentPayload().getProviderIndex();
+
+            for (ProviderIndexDTO providerIndexDTO : providerIndex) {
+                List<String> patientIds = providerIndexDTO.getPatientIds();
+
+                for (String id : patientIds) {
+                    if (id.equalsIgnoreCase(patientId)) {
+                        return providerIndexDTO.getName();
+                    }
+                }
+            }
+        }
+
+        return StringUtil.getLabelForView("");
     }
 
     @Override
