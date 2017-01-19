@@ -32,7 +32,6 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.Mult
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
 import com.amazonaws.regions.Regions;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
-import com.carecloud.carepay.service.library.constants.CognitoConstants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -146,6 +145,10 @@ public class CognitoAppHelper {
         refreshWithSync();
     }
 
+    /**
+     * Gives current user
+     * @return current user
+     */
     public static String getCurrUser() {
         if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             return patientUser;
@@ -153,6 +156,10 @@ public class CognitoAppHelper {
         return user;
     }
 
+    /**
+     * Set current user
+     * @param newUser user
+     */
     public static void setUser(String newUser) {
         if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             patientUser = newUser;
