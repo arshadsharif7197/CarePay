@@ -37,6 +37,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -165,15 +166,18 @@ public class AppointmentDetailDialog extends Dialog {
      */
     private void onSetValuesFromDTO() {
         CheckInLabelDTO checkInLabelDTO = checkInDTO.getMetadata().getLabel();
+        if (!isWaitingroom) {
+            demographicsCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogDemographics()));
+            consentFormsCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogConsentForms()));
+            intakeCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogIntake()));
+            responsibilityCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogResponsibility()));
+
+        }
         checkingInLabel.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogCheckingIn()));
         balanceTextLabel.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogBalance()));
-        demographicsCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogDemographics()));
-        consentFormsCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogConsentForms()));
-        intakeCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogIntake()));
-        responsibilityCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogResponsibility()));
-        paymentButton.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogPayment()));
         assistButton.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogAssist()));
         pageButton.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogPage()));
+        paymentButton.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogPayment()));
 
         balanceValueLabel.setText(StringUtil.getFormatedLabal(context, getPatientBalance()));
         patientNameLabel.setText(StringUtil.getFormatedLabal(context, appointmentPayloadDTO.getPatient().getFullName()));
@@ -208,20 +212,27 @@ public class AppointmentDetailDialog extends Dialog {
         if (checkInDTO != null && checkInDTO.getMetadata().getLinks() != null &&
                 checkInDTO.getMetadata().getLinks().getCheckinStatus() != null) {
 
-            JsonObject queryStringObject = checkInDTO.getMetadata().getLinks().getCheckinStatus().getQueryString();
+            JsonObject queryStringObject;
             Gson gson = new Gson();
-            QueryStrings queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
+            QueryStrings queryStrings;
             TransitionDTO transition;
+            Map<String, String> querymap;
             WorkflowServiceCallback callback;
             if (isWaitingroom) {
+                queryStringObject = checkInDTO.getMetadata().getLinks().getQueueStatus().getQueryString();
+                queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
+                querymap = getQueueQueryParam(queryStrings);
                 transition = checkInDTO.getMetadata().getLinks().getQueueStatus();
                 callback = getQueueCallBack;
             }else{
+                queryStringObject = checkInDTO.getMetadata().getLinks().getCheckinStatus().getQueryString();
+                queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
+                querymap = getQueryParam(queryStrings);
                 transition = checkInDTO.getMetadata().getLinks().getCheckinStatus();
                 callback = getStatusCallBack;
             }
 
-            WorkflowServiceHelper.getInstance().execute(transition, callback, getQueryParam(queryStrings));
+            WorkflowServiceHelper.getInstance().execute(transition, callback, querymap);
         }
     }
 
@@ -232,6 +243,19 @@ public class AppointmentDetailDialog extends Dialog {
     private Map<String, String> getQueryParam(QueryStrings queryStrings) {
         Map<String, String> queryMap = new HashMap<String, String>();
         queryMap.put(queryStrings.getAppointmentId().getName(), appointmentDTO.getMetadata().getAppointmentId());
+        queryMap.put(queryStrings.getPracticeManagement().getName(), appointmentDTO.getMetadata().getPracticeMgmt());
+        queryMap.put(queryStrings.getPracticeId().getName(), appointmentDTO.getMetadata().getPracticeId());
+
+        return queryMap;
+    }
+
+    /**
+     * @param queryStrings the query strings for the url
+     * @return queryMap
+     */
+    private Map<String, String> getQueueQueryParam(QueryStrings queryStrings) {
+        Map<String, String> queryMap = new HashMap<String, String>();
+        queryMap.put(queryStrings.getPatientId().getName(), appointmentDTO.getMetadata().getPatientId());
         queryMap.put(queryStrings.getPracticeManagement().getName(), appointmentDTO.getMetadata().getPracticeMgmt());
         queryMap.put(queryStrings.getPracticeId().getName(), appointmentDTO.getMetadata().getPracticeId());
 
@@ -281,9 +305,12 @@ public class AppointmentDetailDialog extends Dialog {
         Gson gson = new Gson();
         QueueStatusPayloadDTO queueStatusPayloadDTO = gson.fromJson(jsonObject, QueueStatusPayloadDTO.class);
         Log.d(this.getClass().getSimpleName(), "queue size: "+ queueStatusPayloadDTO.getQueueStatus().getQueueStatusInnerPayload().getQueueList().size());
+
         if (queueStatusPayloadDTO != null) {
+            List<QueueDTO> queueList = queueStatusPayloadDTO.getQueueStatus().getQueueStatusInnerPayload().getQueueList();
+            int index = queueList.size()-1;
             for(QueueDTO queue : queueStatusPayloadDTO.getQueueStatus().getQueueStatusInnerPayload().getQueueList()){
-                Log.d(this.getClass().getSimpleName(), "queue practice id: "+queue.getPatientId());
+                Log.d(this.getClass().getSimpleName(), "queue practice id: "+queue.getFirstName());
             }
             /*CheckInStatusDataPayloadValueDTO payloadValueDTO = checkInStatusPayloadDTO
                     .getCheckInStatusData().getPayload();
