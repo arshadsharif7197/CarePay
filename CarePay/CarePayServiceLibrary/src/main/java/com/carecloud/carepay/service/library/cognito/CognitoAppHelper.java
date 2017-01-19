@@ -32,7 +32,6 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.Mult
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
 import com.amazonaws.regions.Regions;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
-import com.carecloud.carepay.service.library.constants.CognitoConstants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,6 +51,7 @@ public class CognitoAppHelper {
     private static CognitoAppHelper cognitoAppHelper;
     private static CognitoUserPool  userPool;
     private static String           user;
+    private static String           patientUser;
     private static CognitoDevice    newDevice;
     private static int              itemCount;
 
@@ -145,12 +145,27 @@ public class CognitoAppHelper {
         refreshWithSync();
     }
 
+    /**
+     * Gives current user
+     * @return current user
+     */
     public static String getCurrUser() {
+        if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            return patientUser;
+        }
         return user;
     }
 
+    /**
+     * Set current user
+     * @param newUser user
+     */
     public static void setUser(String newUser) {
-        user = newUser;
+        if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            patientUser = newUser;
+        } else {
+            user = newUser;
+        }
     }
 
     public static boolean isPhoneVerified() {
