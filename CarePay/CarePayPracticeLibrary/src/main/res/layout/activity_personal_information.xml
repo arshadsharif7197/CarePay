@@ -94,6 +94,8 @@
                     android:id="@+id/firstNameEditText"
                     style="@style/EditTextStyle"
                     android:layout_width="@dimen/dimen_500dp"
+                    android:maxLines="1"
+                    android:maxLength="100"
                     android:layout_height="wrap_content"
                     android:imeOptions="actionNext"
                     android:textSize="@dimen/text_size_18sp" />
@@ -110,6 +112,8 @@
                     android:id="@+id/lastNameEditText"
                     style="@style/EditTextStyle"
                     android:layout_width="@dimen/dimen_500dp"
+                    android:maxLines="1"
+                    android:maxLength="100"
                     android:layout_height="wrap_content"
                     android:imeOptions="actionNext"
                     android:textSize="@dimen/text_size_18sp" />
@@ -128,8 +132,10 @@
                     android:layout_width="@dimen/dimen_500dp"
                     android:layout_height="wrap_content"
                     android:imeOptions="actionDone"
-                    android:inputType="number"
-                    android:maxLength="15"
+                    android:inputType="phone"
+                    android:digits="1234567890-+"
+                    android:maxLines="1"
+                    android:maxLength="20"
                     android:textSize="@dimen/text_size_18sp" />
 
             </android.support.design.widget.TextInputLayout>

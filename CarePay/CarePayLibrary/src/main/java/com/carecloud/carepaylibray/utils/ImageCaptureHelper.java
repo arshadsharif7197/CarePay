@@ -396,6 +396,9 @@ public class ImageCaptureHelper {
         } else {
             if (shape == ROUND_IMAGE) {
                 bitmap = getRoundedCroppedBitmap(Bitmap.createScaledBitmap(croppedBitmap, imgWidth, imgWidth, false));
+                if(cameraType == null && !SystemUtil.isTablet(context)) {
+                    bitmap = rotateBitmap(bitmap,90);
+                }
             } else if (shape == RECTANGULAR_IMAGE) {
                 bitmap = getSquareCroppedBitmap(Bitmap.createScaledBitmap(croppedBitmap, imgWidth, imgHeight, true));
             }
@@ -406,5 +409,9 @@ public class ImageCaptureHelper {
 
     public void resetTargetView() {
         imageViewTarget.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icn_camera));
+    }
+
+    public void setCameraType(CameraType cameraType){
+        this.cameraType=cameraType;
     }
 }
