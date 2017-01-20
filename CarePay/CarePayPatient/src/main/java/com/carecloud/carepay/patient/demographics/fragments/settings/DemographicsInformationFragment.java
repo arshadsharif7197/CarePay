@@ -194,14 +194,14 @@ public class DemographicsInformationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_demographics_information, container, false);
 
-        final Toolbar toolbar = (Toolbar) view.findViewById(R.id.demographics_review_toolbar);
-        TextView title = (TextView) toolbar.findViewById(R.id.demographics_review_toolbar_title);
+        final Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
+        TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
         setGothamRoundedMediumTypeface(appCompatActivity, title);
 
         rootview = (LinearLayout) view.findViewById(R.id.demographicsReviewRootLayout);
         progressBar = (ProgressBar) view.findViewById(R.id.demographicReviewProgressBar);
         progressBar.setVisibility(View.GONE);
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_close));
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         Bundle bundle = getArguments();
         if (bundle != null) {

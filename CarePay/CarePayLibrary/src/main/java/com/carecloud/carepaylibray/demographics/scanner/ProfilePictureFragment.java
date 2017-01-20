@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
@@ -146,5 +147,20 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
 
     public void setGlobalLabelsDTO(DemographicLabelsDTO globalLabelsDTO) {
         this.globalLabelsDTO = globalLabelsDTO;
+    }
+
+    @Override
+    protected void setChangeFocusListeners() {
+
+    }
+
+    @Override
+    public void setInsuranceDTO(DemographicInsurancePayloadDTO insuranceDTO, String placeholderBase64) {
+
+    }
+
+    @Override
+    public void enablePlanClickable(boolean enabled) {
+
     }
 }

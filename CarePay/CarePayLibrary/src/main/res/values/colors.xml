@@ -84,5 +84,8 @@
     <!--Android Pay-->
     <color name="android_pay_background_color">#78C257</color>
 
+    <!--Demographuics Settings-->
+    <color name="settings_toolbar_color">#5BC5D0</color>
+    <color name="settings_edit_text_color">#5BD063</color>
 
 </resources>

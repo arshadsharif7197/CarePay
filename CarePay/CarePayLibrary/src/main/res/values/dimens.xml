@@ -33,6 +33,7 @@
     <dimen name="dimen_390dp">390dp</dimen>
     <dimen name="dimen_130dp">130dp</dimen>
     <dimen name="dimen_114dp">114dp</dimen>
+    <dimen name="dimen_150dp">150dp</dimen>
 
     <dimen name="text_size_11">11sp</dimen>
     <dimen name="text_size_13">13sp</dimen>

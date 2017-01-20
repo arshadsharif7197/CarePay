@@ -11,7 +11,7 @@
     android:orientation="vertical">
 
 
-    <include layout="@layout/toolbar_demographics_review" />
+    <include layout="@layout/toolbar_demographics_settings" />
 
     <ProgressBar
         android:id="@+id/demographicReviewProgressBar"
@@ -62,6 +62,7 @@
                         android:imeOptions="actionNext"
                         android:inputType="date"
                         android:maxLength="10"
+                        android:textColor="@color/settings_toolbar_color"
                         android:nextFocusForward="@+id/revewidemoPhoneNumberEdit" />
                 </android.support.design.widget.TextInputLayout>
 
@@ -83,6 +84,7 @@
                     android:imeOptions="actionNext"
                     android:inputType="phone"
                     android:maxLength="12"
+                    android:textColor="@color/settings_toolbar_color"
                     android:nextFocusForward="@+id/driverLicenseEditText" />
             </android.support.design.widget.TextInputLayout>
 
@@ -110,6 +112,7 @@
                 <TextView
                     android:id="@+id/chooseGenderTextView"
                     style="@style/DemographicsDocsClickableTextStyle"
+                    android:textColor="@color/settings_toolbar_color"
                     android:layout_width="wrap_content" />
             </LinearLayout>
 
@@ -137,6 +140,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textAlignment="textEnd"
+                    android:textColor="@color/settings_toolbar_color"
                     android:layout_weight=".70"/>
             </LinearLayout>
 
@@ -164,6 +168,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textAlignment="textEnd"
+                    android:textColor="@color/settings_toolbar_color"
                     android:layout_weight=".65" />
 
             </LinearLayout>
@@ -194,6 +199,7 @@
                     android:layout_height="wrap_content"
                     android:textAlignment="textEnd"
                     android:text="Prefered Language"
+                    android:textColor="@color/settings_toolbar_color"
                     android:layout_weight=".40"/>
             </LinearLayout>
 
@@ -213,6 +219,7 @@
                     android:id="@+id/driverLicenseEditText"
                     style="@style/SigninSignupEditStyle"
                     android:imeOptions="actionNext"
+                    android:textColor="@color/settings_toolbar_color"
                     android:nextFocusForward="@+id/addressEditTextId" />
             </android.support.design.widget.TextInputLayout>
 
@@ -245,6 +252,7 @@
                         android:imeOptions="actionNext"
                         android:inputType="textPostalAddress"
                         android:maxLength="50"
+                        android:textColor="@color/settings_toolbar_color"
                         android:nextFocusForward="@+id/addressEditText2Id"
                         app:hintTextAppearance="@style/FloatingLabelStyle" />
 
@@ -267,6 +275,7 @@
                             android:imeOptions="actionNext"
                             android:inputType="textPostalAddress"
                             android:maxLength="50"
+                            android:textColor="@color/settings_toolbar_color"
                             android:nextFocusForward="@+id/zipCodeId" />
                     </android.support.design.widget.TextInputLayout>
 
@@ -289,6 +298,7 @@
                         android:digits="0123456789-"
                         android:imeOptions="actionNext"
                         android:maxLength="10"
+                        android:textColor="@color/settings_toolbar_color"
                         android:nextFocusForward="@+id/cityId" />
 
                 </android.support.design.widget.TextInputLayout>
@@ -307,6 +317,7 @@
                         <EditText
                             android:id="@+id/cityId"
                             style="@style/SigninSignupEditStyle"
+                            android:textColor="@color/settings_toolbar_color"
                             android:nextFocusRight="@+id/stateAutoCompleteTextView" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -323,6 +334,7 @@
                             android:digits="ABCDEFGHIJKLMNOPQURSTUVWXYZ"
                             android:imeOptions="actionDone"
                             android:inputType="textCapCharacters"
+                            android:textColor="@color/settings_toolbar_color"
                             android:maxLength="2" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -337,7 +349,8 @@
         android:id="@+id/buttonAddDemographicInfo"
         android:layout_width="match_parent"
         android:layout_height="52dp"
-        android:background="@drawable/language_button_selector"
+        android:background="@drawable/settings_button_selector"
+        android:layout_alignParentBottom="true"
         android:gravity="center"
         android:text="SAVE CHANGES"
         android:textColor="@color/white" />
