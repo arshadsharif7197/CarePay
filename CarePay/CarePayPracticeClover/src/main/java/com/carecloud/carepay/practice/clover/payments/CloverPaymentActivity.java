@@ -61,7 +61,9 @@ public class CloverPaymentActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //  setContentView(R.layout.activity_clover_payment);
+        try
+        {
+
         Intent intent = getIntent();
         if (intent.hasExtra("PAYMENT_AMOUNT")) {
             amountDouble = intent.getDoubleExtra("PAYMENT_AMOUNT", 0.00);
@@ -93,6 +95,12 @@ public class CloverPaymentActivity extends AppCompatActivity {
                 finish();
                 return;
             }
+        }
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
 
     }

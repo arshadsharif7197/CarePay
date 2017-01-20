@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -19,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
@@ -28,6 +31,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -172,6 +176,9 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CHECK)){
                     paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.blue_cerulian));
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_GIFT_CARD)){
+                    if (HttpConstants.getDeviceInformation().getDeviceType().equals("Clover")) {
+                        setCloverPayment();
+                    }
                     paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.blue_cerulian));
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_PAYPAL)){
                     paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.dark_green));
@@ -293,6 +300,31 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                     paymentCreatePlanString = paymentsLabelsDTO.getPaymentCreatePlanButton();
                 }
             }
+        }
+    }
+
+    private void setCloverPayment()
+    {
+        try
+        {
+        PaymentsPatientBalancessDTO patientPayments = paymentsDTO.getPaymentPayload().getPatientBalances().get(0);
+        Gson gson = new Gson();
+        String patientPaymentMetaDataString = gson.toJson(patientPayments.getBalances().get(0).getMetadata());
+        String paymentTransitionString = gson.toJson(paymentsDTO.getPaymentsMetadata().getPaymentsTransitions().getMakePayment());
+        Intent intent = new Intent();
+        intent.setAction("com.carecloud.carepay.practice.clover.payments.CloverPaymentActivity");
+        intent.putExtra("PAYMENT_METADATA", patientPaymentMetaDataString);
+        intent.putExtra("PAYMENT_AMOUNT", patientPayments.getBalances().get(0).getPayload().get(0).getAmount().doubleValue());
+        intent.putExtra("PAYMENT_TRANSITION", paymentTransitionString);
+        if(StringUtil.isNullOrEmpty(patientPayments.getBalances().get(0).getPayload().get(0).getType()))
+        {
+            intent.putExtra("ITEM_NAME", patientPayments.getBalances().get(0).getPayload().get(0).getType());
+        }
+        getContext().startActivity(intent, new Bundle());
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 }
