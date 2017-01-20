@@ -36,9 +36,11 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 /**
  * Created by sudhir_pingale on 10/26/2016.
@@ -65,6 +67,7 @@ public class AppointmentDetailDialog extends Dialog {
     private ImageView patientImageView;
     private AppointmentDTO appointmentDTO;
     private boolean isWaitingroom;
+    private Vector<CheckBox> checkBoxes = new Vector<>();
 
     /**
      * Constructor.
@@ -146,10 +149,10 @@ public class AppointmentDetailDialog extends Dialog {
      */
     private void onSettingStyle() {
         checkingInLabel.setTextColor(ContextCompat.getColor(context, R.color.charcoal_78));
-        patientNameLabel.setTextColor(ContextCompat.getColor(context, R.color.charcoal));
-        doctorNameLabel.setTextColor(ContextCompat.getColor(context, R.color.taupe_gray_78));
-        balanceTextLabel.setTextColor(ContextCompat.getColor(context, R.color.charcoal));
-        balanceValueLabel.setTextColor(ContextCompat.getColor(context, R.color.charcoal));
+        //patientNameLabel.setTextColor(ContextCompat.getColor(context, R.color.charcoal));
+        //doctorNameLabel.setTextColor(ContextCompat.getColor(context, R.color.taupe_gray_78));
+        //balanceTextLabel.setTextColor(ContextCompat.getColor(context, R.color.charcoal));
+        //balanceValueLabel.setTextColor(ContextCompat.getColor(context, R.color.charcoal));
 
         GradientDrawable bgShapePaymentButton = (GradientDrawable) paymentButton.getBackground();
         bgShapePaymentButton.setColor(ContextCompat.getColor(context, R.color.yellowGreen));
@@ -171,7 +174,11 @@ public class AppointmentDetailDialog extends Dialog {
             consentFormsCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogConsentForms()));
             intakeCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogIntake()));
             responsibilityCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogResponsibility()));
-
+        } else {
+            checkBoxes.add(demographicsCheckbox);
+            checkBoxes.add(consentFormsCheckbox);
+            checkBoxes.add(intakeCheckbox);
+            checkBoxes.add(responsibilityCheckbox);
         }
         checkingInLabel.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogCheckingIn()));
         balanceTextLabel.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogBalance()));
@@ -303,25 +310,34 @@ public class AppointmentDetailDialog extends Dialog {
         JsonObject jsonObject = (JsonObject) workflowDTO.getPayload();
 
         Gson gson = new Gson();
-        QueueStatusPayloadDTO queueStatusPayloadDTO = gson.fromJson(jsonObject, QueueStatusPayloadDTO.class);
-        Log.d(this.getClass().getSimpleName(), "queue size: "+ queueStatusPayloadDTO.getQueueStatus().getQueueStatusInnerPayload().getQueueList().size());
+        try {
 
-        if (queueStatusPayloadDTO != null) {
-            List<QueueDTO> queueList = queueStatusPayloadDTO.getQueueStatus().getQueueStatusInnerPayload().getQueueList();
-            int index = queueList.size()-1;
-            for(QueueDTO queue : queueStatusPayloadDTO.getQueueStatus().getQueueStatusInnerPayload().getQueueList()){
-                Log.d(this.getClass().getSimpleName(), "queue practice id: "+queue.getFirstName());
+            QueueStatusPayloadDTO queueStatusPayloadDTO = gson.fromJson(jsonObject, QueueStatusPayloadDTO.class);
+            Log.d(this.getClass().getSimpleName(), "queue size: " + queueStatusPayloadDTO.getQueueStatus().getQueueStatusInnerPayload().getQueueList().size());
+
+            if (queueStatusPayloadDTO != null) {
+                List<QueueDTO> queueList = queueStatusPayloadDTO.getQueueStatus().getQueueStatusInnerPayload().getQueueList();
+                int maxIndex = queueList.size() - 1;
+                int index = maxIndex;
+                QueueDTO queue;
+                CheckBox checkBox;
+                for(int chkindex = index >= 3 ? 3 : index; chkindex >=0; chkindex--){
+                    queue = queueList.get(index);
+                    checkBox = checkBoxes.get(chkindex);
+                    if(index == maxIndex){
+                        checkBox.setChecked(true);
+                        checkBox.setText(ordinal(queue.getRank()));
+                        checkBox.setTextColor(ContextCompat.getColor(context, R.color.bright_cerulean));
+                    }else{
+                        checkBox.setText(ordinal(queue.getRank())+" "+queue.getFirstName());
+                    }
+                    Log.d(this.getClass().getSimpleName(), "queue practice id: " + queue.getFirstName());
+                    index --;
+                }
             }
-            /*CheckInStatusDataPayloadValueDTO payloadValueDTO = checkInStatusPayloadDTO
-                    .getCheckInStatusData().getPayload();
-            demographicsCheckbox.setChecked(payloadValueDTO.getDemographicsVerifyComplete()
-                    .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
-            consentFormsCheckbox.setChecked(payloadValueDTO.getConsentFormsComplete()
-                    .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
-            intakeCheckbox.setChecked(payloadValueDTO.getIntakeFormsComplete()
-                    .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
-            responsibilityCheckbox.setChecked(payloadValueDTO.getRespsonsibility()
-                    .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));*/
+        }catch (Exception ex){
+           SystemUtil.showFaultDialog(context);
+           Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), ex.getMessage());
         }
     }
 
@@ -332,19 +348,24 @@ public class AppointmentDetailDialog extends Dialog {
         JsonObject jsonObject = (JsonObject) workflowDTO.getPayload();
 
         Gson gson = new Gson();
-        CheckInStatusPayloadDTO checkInStatusPayloadDTO = gson.fromJson(jsonObject, CheckInStatusPayloadDTO.class);
+        try {
+            CheckInStatusPayloadDTO checkInStatusPayloadDTO = gson.fromJson(jsonObject, CheckInStatusPayloadDTO.class);
 
-        if (checkInStatusPayloadDTO != null) {
-            CheckInStatusDataPayloadValueDTO payloadValueDTO = checkInStatusPayloadDTO
-                    .getCheckInStatusData().getPayload();
-            demographicsCheckbox.setChecked(payloadValueDTO.getDemographicsVerifyComplete()
-                    .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
-            consentFormsCheckbox.setChecked(payloadValueDTO.getConsentFormsComplete()
-                    .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
-            intakeCheckbox.setChecked(payloadValueDTO.getIntakeFormsComplete()
-                    .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
-            responsibilityCheckbox.setChecked(payloadValueDTO.getRespsonsibility()
-                    .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
+            if (checkInStatusPayloadDTO != null) {
+                CheckInStatusDataPayloadValueDTO payloadValueDTO = checkInStatusPayloadDTO
+                        .getCheckInStatusData().getPayload();
+                demographicsCheckbox.setChecked(payloadValueDTO.getDemographicsVerifyComplete()
+                        .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
+                consentFormsCheckbox.setChecked(payloadValueDTO.getConsentFormsComplete()
+                        .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
+                intakeCheckbox.setChecked(payloadValueDTO.getIntakeFormsComplete()
+                        .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
+                responsibilityCheckbox.setChecked(payloadValueDTO.getRespsonsibility()
+                        .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
+            }
+        }catch (Exception ex){
+           SystemUtil.showFaultDialog(context);
+           Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), ex.getMessage());
         }
     }
 
@@ -356,5 +377,18 @@ public class AppointmentDetailDialog extends Dialog {
         }
 */
         return " "+StringUtil.getFormattedBalanceAmount(totalBalance);
+    }
+
+    public String ordinal(int i) {
+        String[] sufixes = new String[] { "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th" };
+        switch (i % 100) {
+            case 11:
+            case 12:
+            case 13:
+                return i + sufixes[0];
+            default:
+                return i + sufixes[i % 10];
+
+        }
     }
 }
