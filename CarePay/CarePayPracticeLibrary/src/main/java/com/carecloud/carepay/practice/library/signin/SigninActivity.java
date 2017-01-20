@@ -48,7 +48,6 @@ import java.util.Map;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-import static java.lang.System.getProperties;
 
 /**
  * Created by Jahirul Bhuiyan on 10/13/2016.
