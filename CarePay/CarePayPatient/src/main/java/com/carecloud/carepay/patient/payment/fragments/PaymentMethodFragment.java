@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.payment.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -97,6 +98,8 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
     private ScrollView scrollviewChoices ;
 
     private List lineItems;
+    private boolean isAndroidPayReady;
+
 
 
     @Override
@@ -117,7 +120,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                 RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.MATCH_PARENT);
         int margin = getResources().getDimensionPixelSize(R.dimen.payment_method_layout_checkbox_margin);
         radioGroupLayoutParam.setMargins(margin, margin, margin, margin);
-        ScrollView scrollviewChoices = (ScrollView) view.findViewById(R.id.scrollview_choices);
+        scrollviewChoices = (ScrollView) view.findViewById(R.id.scrollview_choices);
 
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -227,6 +230,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                         if (booleanResult.getStatus().isSuccess()) {
                             if (booleanResult.getValue()) {
                                 showOrHideProgressDialog();
+                                isAndroidPayReady=true;
                                 addAndroidPayPaymentMethod();
                             } else {
 
@@ -240,6 +244,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                     }
                 });
 
+        addAndroidPayPaymentMethod();
     }
 
     private void initializeViews(View view) {
@@ -261,11 +266,14 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
 
     private void addAndroidPayPaymentMethod() {
-        PaymentsMethodsDTO androidPayPaymentMethod = new PaymentsMethodsDTO();
-        androidPayPaymentMethod.setLabel(PaymentConstants.ANDROID_PAY);
-        androidPayPaymentMethod.setType(CarePayConstants.TYPE_ANDROID_PAY);
-        paymentMethodsList.add(androidPayPaymentMethod);
-        addPaymentMethodOptionView(paymentMethodsList.size() - 1);
+        if(isAndroidPayReady){
+            PaymentsMethodsDTO androidPayPaymentMethod = new PaymentsMethodsDTO();
+            androidPayPaymentMethod.setLabel(PaymentConstants.ANDROID_PAY);
+            androidPayPaymentMethod.setType(CarePayConstants.TYPE_ANDROID_PAY);
+            paymentMethodsList.add(androidPayPaymentMethod);
+            addPaymentMethodOptionView(paymentMethodsList.size() - 1);
+        }
+
     }
 
 
@@ -461,6 +469,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                     setLineItems(paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPayload());
                     createAndAddWalletFragment(paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPendingRepsonsibility());// getPayload().get(0).getTotal());
                     //scrollviewChoices.fullScroll(View.FOCUS_DOWN);
+
                 } else {
 
                     if (paymentChoiceButton.getVisibility() == View.GONE) {
@@ -504,15 +513,16 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
      */
     private void createAndAddWalletFragment(String totalPrice) {
         WalletFragmentStyle walletFragmentStyle = new WalletFragmentStyle()
-                .setBuyButtonHeight(R.dimen.dimen_33dp)
-                .setBuyButtonText(WalletFragmentStyle.BuyButtonText.LOGO_ONLY)
+                .setBuyButtonHeight( WalletFragmentStyle.Dimension.UNIT_DIP,CarePayConstants.ANDROID_PAY_BUTTON_HEIGHT)
                 .setBuyButtonWidth(WalletFragmentStyle.Dimension.MATCH_PARENT)
+                .setBuyButtonText(WalletFragmentStyle.BuyButtonText.LOGO_ONLY)
+                .setBuyButtonAppearance(WalletFragmentStyle.BuyButtonAppearance.ANDROID_PAY_LIGHT_WITH_BORDER)
                 .setMaskedWalletDetailsBackgroundColor(R.color.android_pay_background_color);
 
         WalletFragmentOptions walletFragmentOptions = WalletFragmentOptions.newBuilder()
                 .setEnvironment(PaymentConstants.WALLET_ENVIRONMENT)
                 .setFragmentStyle(walletFragmentStyle)
-                .setTheme(WalletConstants.THEME_LIGHT)
+                .setTheme(WalletConstants.THEME_DARK)
                 .setMode(WalletFragmentMode.BUY_BUTTON)
                 .build();
         _walletFragment = SupportWalletFragment.newInstance(walletFragmentOptions);
@@ -532,6 +542,14 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         getFragmentManager().beginTransaction()
                 .replace(com.carecloud.carepay.patient.R.id.dynamic_wallet_button_fragment, _walletFragment)
                 .commit();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                scrollviewChoices.fullScroll(ScrollView.FOCUS_DOWN);
+            }
+        }, 300);
+
     }
 
 

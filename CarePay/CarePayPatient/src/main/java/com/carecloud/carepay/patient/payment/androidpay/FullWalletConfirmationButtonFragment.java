@@ -18,6 +18,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -200,6 +202,10 @@ public class FullWalletConfirmationButtonFragment extends Fragment
         if (arguments != null) {
             Gson gson = new Gson();
             paymentsDTOString = arguments.getString(CarePayConstants.INTAKE_BUNDLE);
+
+           // intent.putExtra(PaymentConstants.EXTRA_AMOUNT, amount);
+
+           // paymentsDTOString = arguments.getString(CarePayConstants.EXTRA_AMOUNT);
             intakePaymentModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
             paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
             amountToMakePayment = arguments.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
@@ -239,7 +245,6 @@ public class FullWalletConfirmationButtonFragment extends Fragment
         initializeProgressDialog();
         View view = inflater.inflate(R.layout.fragment_full_wallet_confirmation_button, container, false);
         //mItemInfo = PaymentConstants.ITEMS_FOR_SALE[itemId];
-
         confirmButton = (Button) view.findViewById(R.id.button_place_order);
         confirmButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -247,8 +252,9 @@ public class FullWalletConfirmationButtonFragment extends Fragment
                 confirmPurchase();
             }
         });
-
+        confirmButton.setText(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentPayText());
         responsePreviousBalance = (CarePayTextView) view.findViewById(R.id.respons_prev_balance);
+        responsePreviousBalance.setText(CarePayConstants.DOLLAR.concat(totalAmount));
 
         return view;
     }
@@ -455,6 +461,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
         if (connectionResult != null) {
             // The user needs to resolve an issue before GoogleApiClient can connect
             resolveUnsuccessfulConnectionResult();
+            confirmButton.setClickable(true);
         } else {
             getFullWallet();
             progressDialog.setCancelable(false);

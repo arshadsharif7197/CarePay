@@ -61,7 +61,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
-        android:layout_margin="@dimen/dimen_5dp"
+        android:layout_margin="@dimen/dimen_1dp"
         android:layout_below="@+id/paymentChoiceButton"/>
 
     <Button
