@@ -130,7 +130,8 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
      * documents labels
      */
     public void getInsuranceLabels() {
-        if (demographicsSettingsDTO != null) {
+        try{
+            if (demographicsSettingsDTO != null) {
             DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
             if (demographicsSettingsMetadataDTO != null) {
                 DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO = demographicsSettingsMetadataDTO.getLabels();
@@ -153,9 +154,12 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
 
                 }
             }
+          }
+        }catch(Exception e)
+        {
+            e.printStackTrace();
         }
     }
-
 
     private void initializeUIFields() {
         DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO = null;
@@ -469,7 +473,8 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
         insuranceCardNumEditText.clearFocus();
     }
 
-    private void setChangeFocusListeners() {
+    @Override
+    protected void setChangeFocusListeners() {
         insuranceCardNumEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
@@ -525,6 +530,8 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
      *
      * @param insuranceDTO The DTO
      */
+
+    @Override
     public void setInsuranceDTO(DemographicInsurancePayloadDTO insuranceDTO, String placeholderBase64) {
         this.insuranceDTO = insuranceDTO;
         List<DemographicInsurancePhotoDTO> photoDTOs = insuranceDTO.getInsurancePhotos();
@@ -556,6 +563,7 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
                 Log.v("ins_scanner", "loaded second placeholder");
             }
         }
+
     }
 
     public DemographicInsurancePayloadDTO getInsuranceDTO() {
@@ -566,7 +574,8 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
         this.insuranceMetadataDTO = insuranceMetadataDTO;
     }
 
-    private void enablePlanClickable(boolean enabled) {
+    @Override
+    public void enablePlanClickable(boolean enabled) {
         if (enabled) {
             planTextView.setText(documentsPlanString);
             planTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.settings_toolbar_color));

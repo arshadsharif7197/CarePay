@@ -54,6 +54,7 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsUpdateDocumentsDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
+import com.google.zxing.qrcode.decoder.Version;
 
 import org.json.JSONObject;
 
@@ -84,6 +85,7 @@ public class DemographicsSettingsDocumentsFragment extends Fragment {
     private TextView                               idTypeClickable;
     private TextView                               idDocTypeLabel;
     private TextView                               identityLabel;
+    private TextView                               healthInsuranceLabel;
     private String[]                               docTypes;
     private LinearLayout                           insContainersWrapper;
     private InsuranceWrapperCollection             wrapperCollection1;
@@ -105,6 +107,9 @@ public class DemographicsSettingsDocumentsFragment extends Fragment {
     private String languageString = null;
     private String documentsTypeString = null;
     private String documentsString = null;
+    private String documentsLicenseNumberString = null;
+    private String documentsIdentityString = null;
+
     private AppCompatActivity appCompatActivity;
 
     @Override
@@ -141,6 +146,9 @@ public class DemographicsSettingsDocumentsFragment extends Fragment {
         mainScrollView = (ScrollView) view.findViewById(R.id.demographicsDocsScroll);
         identityLabel = (TextView) view.findViewById(R.id.demographicsDocsHeaderSubtitle);
         setProximaNovaSemiboldTypeface(appCompatActivity, identityLabel);
+        healthInsuranceLabel = (TextView) view.findViewById(R.id.demographicsDocsHealthInsurancetitle);
+        healthInsuranceLabel.setText(documentsHealthInsuranceString);
+        identityLabel.setText(documentsIdentityString);
         initializeUIFields();
 
         return view;
@@ -150,7 +158,8 @@ public class DemographicsSettingsDocumentsFragment extends Fragment {
      * documents labels
      */
     public void getDocumentsLabels() {
-        if (demographicsSettingsDTO != null) {
+        try{
+            if (demographicsSettingsDTO != null) {
             DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
             if (demographicsSettingsMetadataDTO != null) {
                 DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO = demographicsSettingsMetadataDTO.getLabels();
@@ -169,10 +178,16 @@ public class DemographicsSettingsDocumentsFragment extends Fragment {
                     documentsmMultipleInsurancesString = demographicsSettingsLabelsDTO.getDemographicsMultipleInsurancesLabel();
                     documentsLicenseString = demographicsSettingsLabelsDTO.getDemographicsLicenseLabel();
                     documentsSaveChangesString = demographicsSettingsLabelsDTO.getDemographicsSaveChangesLabel();
+                    documentsHealthInsuranceString = demographicsSettingsLabelsDTO.getDocumentsHealthInsuranceLabel();
+                    documentsLicenseNumberString = demographicsSettingsLabelsDTO.getDemographics_driver_license_Label();
+                    documentsIdentityString = demographicsSettingsLabelsDTO.getDemographicsIdentityLabel();
                     documentsString = demographicsSettingsLabelsDTO.getDocumentsLabel();
 
                 }
             }
+          }
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -218,6 +233,7 @@ public class DemographicsSettingsDocumentsFragment extends Fragment {
     }
 
     private void getOptions() {
+           try{
             if (demographicsSettingsDTO != null) {
                 DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
                 if (demographicsSettingsMetadataDTO != null) {
@@ -228,6 +244,9 @@ public class DemographicsSettingsDocumentsFragment extends Fragment {
 
                 }
             }
+           }catch(Exception e){
+               e.printStackTrace();
+           }
 
         if (idDocsMetaDTO == null) {
             docTypes = new String[1];
@@ -244,6 +263,7 @@ public class DemographicsSettingsDocumentsFragment extends Fragment {
     }
 
     private void getPayloadDTOs() {
+        try{
         if (demographicsSettingsDTO != null) {
             DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
             if(demographicsSettingsPayloadDTO!=null) {
@@ -267,6 +287,9 @@ public class DemographicsSettingsDocumentsFragment extends Fragment {
                     insuranceDTOsList.add(new DemographicInsurancePayloadDTO());
                 }
             }
+          }
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
 

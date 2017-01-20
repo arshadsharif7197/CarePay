@@ -156,6 +156,12 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     @SerializedName("setting_change_Email")
     @Expose
     private String demographicsChangeEmailLabel;
+    @SerializedName("profile_change_photo_label")
+    @Expose
+    private String demographicsChangePhotoLabel;
+    @SerializedName("document_identity_label")
+    @Expose
+    private String demographicsIdentityLabel;
 
     /**
      *
@@ -944,6 +950,38 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
      */
     public void setDemographicsChangeEmailLabel(String demographicsChangeEmailLabel) {
         this.demographicsChangeEmailLabel = demographicsChangeEmailLabel;
+    }
+
+    /**
+     *
+     * @return demographicsChangePhotoLabel
+     */
+    public String getDemographicsChangePhotoLabel() {
+        return StringUtil.getLabelForView(demographicsChangePhotoLabel);
+    }
+
+    /**
+     *
+     * @param demographicsChangePhotoLabel the demographicsChangePhotoLabel
+     */
+    public void setDemographicsChangePhotoLabel(String demographicsChangePhotoLabel) {
+        this.demographicsChangePhotoLabel = demographicsChangePhotoLabel;
+    }
+
+    /**
+     *
+     * @return demographicsIdentityLabel
+     */
+    public String getDemographicsIdentityLabel() {
+        return StringUtil.getLabelForView(demographicsIdentityLabel);
+    }
+
+    /**
+     *
+     * @param demographicsIdentityLabel the demographicsIdentityLabel
+     */
+    public void setDemographicsIdentityLabel(String demographicsIdentityLabel) {
+        this.demographicsIdentityLabel = demographicsIdentityLabel;
     }
 
 }

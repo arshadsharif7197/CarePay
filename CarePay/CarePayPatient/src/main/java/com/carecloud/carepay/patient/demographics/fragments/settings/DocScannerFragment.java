@@ -31,6 +31,7 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPhotoDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHolder;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
@@ -414,5 +415,20 @@ public class DocScannerFragment extends DocumentScannerFragment {
 
     public void setIdDocsMetaDTO(DemographicMetadataEntityItemIdDocDTO idDocsMetaDTO) {
         this.idDocsMetaDTO = idDocsMetaDTO;
+    }
+
+    @Override
+    protected void setInsuranceDTO(DemographicInsurancePayloadDTO insuranceDTO, String placeholderBase64) {
+
+    }
+
+    @Override
+    protected void setChangeFocusListeners() {
+
+    }
+
+    @Override
+    protected void enablePlanClickable(boolean enabled) {
+
     }
 }

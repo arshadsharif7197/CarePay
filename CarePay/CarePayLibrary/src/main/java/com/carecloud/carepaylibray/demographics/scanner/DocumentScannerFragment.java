@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.PermissionsUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -51,10 +52,10 @@ public abstract class DocumentScannerFragment extends Fragment {
         // create the chooser dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(ImageCaptureHelper.chooseActionDlgTitle);
-        if(cameraType==ImageCaptureHelper.CameraType.DEFAULT_CAMERA){
-            builder.setItems(ImageCaptureHelper.chooseActionDlOptions,dialogOnClickListener);
+        if (cameraType == ImageCaptureHelper.CameraType.DEFAULT_CAMERA) {
+            builder.setItems(ImageCaptureHelper.chooseActionDlOptions, dialogOnClickListener);
         } else {
-            builder.setItems(ImageCaptureHelper.chooseActionDocumentDlOptions,dialogDocumentScanOnClickListener);
+            builder.setItems(ImageCaptureHelper.chooseActionDocumentDlOptions, dialogDocumentScanOnClickListener);
         }
 
         builder.show();
@@ -160,9 +161,9 @@ public abstract class DocumentScannerFragment extends Fragment {
             if (requestCode == ImageCaptureHelper.SELECT_FILE) {
                 bitmap = imageCaptureHelper.onSelectFromGalleryResult(data, getImageShape());
             } else if (requestCode == ImageCaptureHelper.REQUEST_CAMERA) {
-                if(cameraType == ImageCaptureHelper.CameraType.CUSTOM_CAMERA) {
+                if (cameraType == ImageCaptureHelper.CameraType.CUSTOM_CAMERA) {
                     bitmap = imageCaptureHelper.onCaptureImageResult(getImageShape());
-                    Log.v(LOG_TAG,"Orientation camera to: " + imageCaptureHelper.getOrientation());
+                    Log.v(LOG_TAG, "Orientation camera to: " + imageCaptureHelper.getOrientation());
                 } else {
                     bitmap = imageCaptureHelper.onCaptureImageResult(data, getImageShape());
                 }
@@ -192,4 +193,23 @@ public abstract class DocumentScannerFragment extends Fragment {
      * Set the typefaces
      */
     protected abstract void setTypefaces(View view);
+
+    /**
+     * Set insurance DTO
+     *
+     * @param insuranceDTO
+     * @param placeholderBase64
+     */
+    protected abstract void setInsuranceDTO(DemographicInsurancePayloadDTO insuranceDTO, String placeholderBase64);
+
+    /**
+     * @param enabled
+     */
+    protected abstract void enablePlanClickable(boolean enabled);
+
+    /**
+     *set focus change listeners
+     */
+    protected abstract void setChangeFocusListeners();
+
 }

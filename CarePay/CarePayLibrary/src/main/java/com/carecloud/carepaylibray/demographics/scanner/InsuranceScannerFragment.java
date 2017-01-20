@@ -96,6 +96,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
 
         // create the view
         view = inflater.inflate(R.layout.fragment_demographics_scan_insurance, container, false);
+        Log.d("OLD","OLD");
 
         initializeUIFields();
 
@@ -406,7 +407,8 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         insuranceCardNumEditText.clearFocus();
     }
 
-    private void setChangeFocusListeners() {
+    @Override
+    protected void setChangeFocusListeners() {
         insuranceCardNumEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
@@ -503,7 +505,8 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         this.insuranceMetadataDTO = insuranceMetadataDTO;
     }
 
-    private void enablePlanClickable(boolean enabled) {
+    @Override
+    protected void enablePlanClickable(boolean enabled) {
         if (enabled) {
             String label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsChooseLabel();
             planTextView.setText(label);

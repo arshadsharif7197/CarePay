@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -32,6 +33,7 @@ import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDataModelsDTO;
@@ -84,6 +86,8 @@ public class EditProfileFragment extends DocumentScannerFragment {
     private String changeNameString = null;
     private String changeEmailString = null;
     private String changePasswordString = null;
+    private String changePhotoString = null;
+    private String saveChangesString = null;
 
     private Button changeProfilePictureButton = null;
 
@@ -134,6 +138,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
             String demographicsSettingsDTOString = bundle.getString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE);
             demographicsSettingsDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsDTO.class);
         }
+        getEditProfileLabels();
 
         patientNameValue = (CarePayTextView) view.findViewById(R.id.patientNameTextView);
         patientNameLabel = (CarePayTextView) view.findViewById(R.id.patientChangeNameTextView);
@@ -143,7 +148,9 @@ public class EditProfileFragment extends DocumentScannerFragment {
         patientPasswordLabel = (CarePayTextView) view.findViewById(R.id.patientChangePasswordTextView);
 
         changeProfilePictureButton = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
+        changeProfilePictureButton.setText(changePhotoString);
         updateProfileButton = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
+        updateProfileButton.setText(saveChangesString);
 
         profileImageview = (ImageView) view.findViewById(R.id.providerPicImageView);
 
@@ -153,7 +160,6 @@ public class EditProfileFragment extends DocumentScannerFragment {
                 demographicsSettingsLabelsDTO = demographicsSettingsMetadataDTO.getLabels();
                 imageCaptureHelper = new ImageCaptureHelper(getActivity(), imageViewDetailsImage, demographicsSettingsLabelsDTO);
         }
-        getEditProfileLabels();
 
         getPersonalDetails();
         title.setText(profileString);
@@ -194,6 +200,8 @@ public class EditProfileFragment extends DocumentScannerFragment {
                     changeNameString = demographicsSettingsLabelsDTO.getDemographicsChangeNameLabel();
                     changeEmailString = demographicsSettingsLabelsDTO.getDemographicsChangeEmailLabel();
                     changePasswordString = demographicsSettingsLabelsDTO.getSettingschangePasswordLabel();
+                    changePhotoString = demographicsSettingsLabelsDTO.getDemographicsChangePhotoLabel();
+                    saveChangesString = demographicsSettingsLabelsDTO.getDemographicsSaveChangesLabel();
 
                 }
             }
@@ -232,6 +240,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
         updateProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                try{
                     if (demographicsSettingsDTO != null) {
                         DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
                         if (demographicsSettingsMetadataDTO != null) {
@@ -260,9 +269,100 @@ public class EditProfileFragment extends DocumentScannerFragment {
                             }
                         }
                     }
+                 }catch(Exception e){
+                    e.printStackTrace();
+                }
 
             }
+
         });
+
+       patientNameLabel.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               Bundle bundle = new Bundle();
+               Gson gson = new Gson();
+               String demographicsSettingsDTOString = gson.toJson(demographicsSettingsDTO);
+               bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
+
+               FragmentManager fm = getActivity().getSupportFragmentManager();
+               DemographicsSettingsUpdateNameFragment fragment = (DemographicsSettingsUpdateNameFragment)
+                       fm.findFragmentByTag(DemographicsSettingsUpdateNameFragment.class.getSimpleName());
+               if (fragment == null) {
+                   fragment = new DemographicsSettingsUpdateNameFragment();
+               }
+
+               //fix for random crashes
+               if (fragment.getArguments() != null) {
+                   fragment.getArguments().putAll(bundle);
+               } else {
+                   fragment.setArguments(bundle);
+               }
+
+               fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
+                       DemographicsSettingsUpdateNameFragment.class.getSimpleName()).addToBackStack(null).commit();
+
+           }
+
+       });
+
+       patientEmailLabel.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               Bundle bundle = new Bundle();
+               Gson gson = new Gson();
+               String demographicsSettingsDTOString = gson.toJson(demographicsSettingsDTO);
+               bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
+
+               FragmentManager fm = getActivity().getSupportFragmentManager();
+               DemographicsSettingUpdateEmailFragment fragment = (DemographicsSettingUpdateEmailFragment)
+                       fm.findFragmentByTag(DemographicsSettingUpdateEmailFragment.class.getSimpleName());
+               if (fragment == null) {
+                   fragment = new DemographicsSettingUpdateEmailFragment();
+               }
+
+               //fix for random crashes
+               if (fragment.getArguments() != null) {
+                   fragment.getArguments().putAll(bundle);
+               } else {
+                   fragment.setArguments(bundle);
+               }
+
+               fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
+                       DemographicsSettingUpdateEmailFragment.class.getSimpleName()).addToBackStack(null).commit();
+
+           }
+
+       });
+
+       patientPasswordLabel.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+            /*   Bundle bundle = new Bundle();
+               Gson gson = new Gson();
+               String demographicsSettingsDTOString = gson.toJson(demographicsSettingsDTO);
+               bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
+
+               FragmentManager fm = getActivity().getSupportFragmentManager();
+               DemographicsSettingsChangePasswordFragment fragment = (DemographicsSettingsChangePasswordFragment)
+                       fm.findFragmentByTag(DemographicsSettingsChangePasswordFragment.class.getSimpleName());
+               if (fragment == null) {
+                   fragment = new DemographicsSettingsChangePasswordFragment();
+               }
+
+               //fix for random crashes
+               if (fragment.getArguments() != null) {
+                   fragment.getArguments().putAll(bundle);
+               } else {
+                   fragment.setArguments(bundle);
+               }
+
+               fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
+                       DemographicsSettingsChangePasswordFragment.class.getSimpleName()).addToBackStack(null).commit();*/
+
+           }
+
+       });
     }
 
     WorkflowServiceCallback updateProfileCallback = new WorkflowServiceCallback() {
@@ -365,6 +465,21 @@ public class EditProfileFragment extends DocumentScannerFragment {
 
     @Override
     protected void setTypefaces(View view) {
+
+    }
+
+    @Override
+    protected void setChangeFocusListeners() {
+
+    }
+
+    @Override
+    public void setInsuranceDTO(DemographicInsurancePayloadDTO insuranceDTO, String placeholderBase64) {
+
+    }
+
+    @Override
+    public void enablePlanClickable(boolean enabled) {
 
     }
 }

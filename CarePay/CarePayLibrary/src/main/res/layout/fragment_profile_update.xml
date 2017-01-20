@@ -43,7 +43,6 @@
             style="@style/DemographicsChooseProfilePicStyle"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="CHANGE CURRENT PHOTO"
             android:textColor="@color/settings_toolbar_color" />
 
     </LinearLayout>
@@ -82,7 +81,6 @@
                     android:layout_toRightOf="@id/patientTitleTextView"
                     android:gravity="right"
                     android:layout_alignParentRight="true"
-                    android:text="sdasd"
                     android:padding="2dp"
                     android:textSize="@dimen/text_size_14"
                     android:textStyle="bold"
@@ -111,7 +109,6 @@
                     android:layout_width="@dimen/dimen_150dp"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:text="ada sdasdadad"
                     android:gravity="left"
                     android:padding="2dp"
                     android:textSize="@dimen/textview_default_textsize"
@@ -155,7 +152,6 @@
                     android:layout_width="@dimen/dimen_150dp"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:text="Test123"
                     android:gravity="left"
                     android:padding="2dp"
                     android:textSize="@dimen/textview_default_textsize"
@@ -199,7 +195,6 @@
         android:background="@drawable/settings_button_selector"
         android:layout_alignParentBottom="true"
         android:gravity="center"
-        android:text="SAVE CHANGES"
         android:textColor="@color/white" />
     </RelativeLayout>
 </LinearLayout>

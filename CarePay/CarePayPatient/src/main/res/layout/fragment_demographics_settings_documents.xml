@@ -17,7 +17,7 @@
             android:layout_marginTop="@dimen/dimen_36dp"
             android:textSize="@dimen/dimen_14dp"
             android:textColor="@color/textview_default_textcolor"
-            android:text="IDENTITY" />
+             />
 
     <ScrollView
         android:id="@+id/demographicsDocsScroll"
@@ -44,7 +44,7 @@
                     android:layout_weight="1"
                     android:textSize="@dimen/dimen_17dp"
                     android:textColor="@color/textview_default_textcolor"
-                    android:text="@string/demogr_docs_document_type" />
+                    />
 
                 <TextView
                     android:id="@+id/demogrDocTypeClickable"
@@ -64,7 +64,7 @@
                 style="@style/DemographicsDocsDocumentLabelStyle"
                 android:layout_marginStart="0dp"
                 android:layout_marginTop="@dimen/dimen_36dp"
-                android:text="Health Insurance" />
+                 />
 
             <android.support.v7.widget.SwitchCompat
                 android:id="@+id/demographicsDocumentsInsuranceSwitch"
@@ -109,7 +109,7 @@
         android:textColor="@color/settings_toolbar_color"
         android:layout_marginTop="7dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:text="@string/demogr_docs_add_card" />
+        />
 
     <Button
         android:id="@+id/buttonAddDemographicInfo"
@@ -118,7 +118,6 @@
         android:background="@drawable/settings_button_selector"
         android:layout_alignParentBottom="true"
         android:gravity="center"
-        android:text="SAVE CHANGES"
         android:textColor="@color/white" />
 
 </LinearLayout>
