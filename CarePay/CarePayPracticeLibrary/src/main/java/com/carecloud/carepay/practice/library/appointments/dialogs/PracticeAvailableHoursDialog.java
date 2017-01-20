@@ -115,7 +115,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     View.OnClickListener dateRangeClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            new PracticeAvailableHoursDateRangeDialog(context, "").show();
+            new PracticeAvailableHoursDateRangeDialog(context, availabilityDTO, "").show();
             dismiss();
         }
     };

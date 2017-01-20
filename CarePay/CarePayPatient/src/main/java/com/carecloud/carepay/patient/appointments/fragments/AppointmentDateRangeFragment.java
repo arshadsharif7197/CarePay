@@ -12,10 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carecloud.carepay.patient.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
@@ -29,6 +31,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by arpit_jain1 on 10/10/2016.
@@ -250,7 +253,14 @@ public class AppointmentDateRangeFragment extends Fragment {
             }
 
             if(newStartDate != null && newEndDate != null) {
-                applyDateRangeButton.setEnabled(true);
+                long diff = newEndDate.getTime() - newStartDate.getTime();
+                long numOfDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+                if (numOfDays >= 93) {
+                    AppointmentLabelDTO label = resourcesToScheduleDTO.getMetadata().getLabel();
+                    Toast.makeText(getActivity(), label.getAddAppointmentMaxDateRangeMessage(), Toast.LENGTH_LONG).show();
+                } else {
+                    applyDateRangeButton.setEnabled(true);
+                }
             } else {
                 applyDateRangeButton.setEnabled(false);
             }
