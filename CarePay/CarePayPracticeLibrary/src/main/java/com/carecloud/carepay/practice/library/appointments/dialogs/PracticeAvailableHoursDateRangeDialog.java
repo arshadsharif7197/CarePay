@@ -6,16 +6,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.appointments.ScheduleAppointmentActivity;
-import com.carecloud.carepay.practice.library.appointments.adapters.PracticeAvailableHoursAdapter;
 import com.carecloud.carepay.practice.library.customdialog.BasePracticeDialog;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.timessquare.CalendarPickerView;
@@ -26,12 +22,10 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-
 public class PracticeAvailableHoursDateRangeDialog extends BasePracticeDialog {
 
     private CalendarPickerView calendarPickerView;
     private CustomGothamRoundedMediumButton applyDateRangeButton;
-    private List<Date> dateList;
     private Date newStartDate;
     private Date newEndDate;
     private Context context;
@@ -80,7 +74,7 @@ public class PracticeAvailableHoursDateRangeDialog extends BasePracticeDialog {
     /**
      * Click listener for today button on toolbar
      */
-    View.OnClickListener todayButtonClickListener = new View.OnClickListener() {
+    private View.OnClickListener todayButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             clearSelectedDate();
@@ -154,7 +148,7 @@ public class PracticeAvailableHoursDateRangeDialog extends BasePracticeDialog {
         calendarPickerView = (CalendarPickerView) view.findViewById(com.carecloud.carepaylibrary.R.id.calendarView);
         if (newStartDate != null && newEndDate != null) {
             /*Instantiate calendar for a date range selected*/
-            Collection<Date> selectedDates = new ArrayList<Date>();
+            Collection<Date> selectedDates = new ArrayList<>();
             selectedDates.add(newStartDate);
             selectedDates.add(newEndDate);
             calendarPickerView.init(new Date(), getNextSixMonthCalendar().getTime())
@@ -167,14 +161,9 @@ public class PracticeAvailableHoursDateRangeDialog extends BasePracticeDialog {
             Calendar rangeEnd = Calendar.getInstance();
             rangeEnd.add(Calendar.DAY_OF_MONTH, 7);
 
-            Collection<Date> selectedDates = new ArrayList<Date>();
-            selectedDates.add(rangeStart.getTime());
-            selectedDates.add(rangeEnd.getTime());
-
             Date today = new Date();
             calendarPickerView.init(today, getNextSixMonthCalendar().getTime())
-                    .inMode(CalendarPickerView.SelectionMode.RANGE)
-                    .withSelectedDates(selectedDates);
+                    .inMode(CalendarPickerView.SelectionMode.RANGE);
         }
 
         calendarPickerView.setOnDateSelectedListener(onDateSelectListener);
@@ -188,7 +177,7 @@ public class PracticeAvailableHoursDateRangeDialog extends BasePracticeDialog {
     /*
     *   Click listener for apply button
     */
-    View.OnClickListener applyButtonClickListener = new View.OnClickListener() {
+    private View.OnClickListener applyButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             new PracticeAvailableHoursDialog(context, "", newStartDate, newEndDate).show();
@@ -201,11 +190,11 @@ public class PracticeAvailableHoursDateRangeDialog extends BasePracticeDialog {
     /**
      * Click listener for calendar dates
      */
-    CalendarPickerView.OnDateSelectedListener onDateSelectListener =
+    private CalendarPickerView.OnDateSelectedListener onDateSelectListener =
             new CalendarPickerView.OnDateSelectedListener() {
                 @Override
                 public void onDateSelected(Date date) {
-                    dateList = calendarPickerView.getSelectedDates();
+                    List<Date> dateList = calendarPickerView.getSelectedDates();
 
                     if (dateList.size() > 1) {
                         newStartDate = dateList.get(0);
@@ -235,7 +224,7 @@ public class PracticeAvailableHoursDateRangeDialog extends BasePracticeDialog {
     /**
      * Method to remove selected date
      */
-    void clearSelectedDate() {
+    private void clearSelectedDate() {
         /*removing previously selected dates*/
         newStartDate = null;
         newEndDate = null;
@@ -255,7 +244,7 @@ public class PracticeAvailableHoursDateRangeDialog extends BasePracticeDialog {
     /**
      * Click listener for edit range and edit date range button
      */
-    View.OnClickListener dateRangeClickListener = new View.OnClickListener() {
+    private View.OnClickListener dateRangeClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
         }
