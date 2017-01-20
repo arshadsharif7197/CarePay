@@ -9,9 +9,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.customdialog.BasePracticeDialog;
+import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.timessquare.CalendarPickerView;
@@ -21,10 +24,12 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class PracticeAvailableHoursDateRangeDialog extends BasePracticeDialog {
 
     private CalendarPickerView calendarPickerView;
+    private AppointmentAvailabilityDTO availabilityDTO;
     private CustomGothamRoundedMediumButton applyDateRangeButton;
     private Date newStartDate;
     private Date newEndDate;
@@ -38,9 +43,10 @@ public class PracticeAvailableHoursDateRangeDialog extends BasePracticeDialog {
      * @param context      the context
      * @param cancelString the cancel string
      */
-    public PracticeAvailableHoursDateRangeDialog(Context context, String cancelString) {
+    public PracticeAvailableHoursDateRangeDialog(Context context, AppointmentAvailabilityDTO availabilityDTO, String cancelString) {
         super(context, cancelString, false);
         this.context = context;
+        this.availabilityDTO = availabilityDTO;
         inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -208,7 +214,14 @@ public class PracticeAvailableHoursDateRangeDialog extends BasePracticeDialog {
                     }
 
                     if (newStartDate != null && newEndDate != null) {
-                        applyDateRangeButton.setEnabled(true);
+                        long diff = newEndDate.getTime() - newStartDate.getTime();
+                        long numOfDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+                        if (numOfDays >= 93) {
+                            AppointmentLabelDTO label = availabilityDTO.getMetadata().getLabel();
+                            Toast.makeText(context, label.getAddAppointmentMaxDateRangeMessage(), Toast.LENGTH_LONG).show();
+                        } else {
+                            applyDateRangeButton.setEnabled(true);
+                        }
                     } else {
                         applyDateRangeButton.setEnabled(false);
                     }
