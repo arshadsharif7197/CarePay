@@ -92,4 +92,6 @@ public class CarePayConstants {
     public static final String DEMOGRAPHICS_SETTINGS_BUNDLE  = "demographics_settings_bundle";
     public static final String DEMOGRAPHICS_ADDRESS_BUNDLE  = "demographics_address_bundle";
 
+    public static final int ANDROID_PAY_BUTTON_HEIGHT= 58;
+
 }
