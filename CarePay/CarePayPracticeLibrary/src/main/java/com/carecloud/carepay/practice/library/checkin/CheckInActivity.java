@@ -274,17 +274,19 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
                 //drag shadow has been released,the drag point is within the bounding box of the View
                 case DragEvent.ACTION_DROP:
                     AppointmentPayloadDTO appointmentDTO = getAppintmentById(dragEvent.getClipDescription().getLabel().toString(), waitingRoomAppointments);
-                    waitingRoomAppointments.remove(appointmentDTO);
+
                     if (appointmentDTO != null) {
+                        waitingRoomAppointments.remove(appointmentDTO);
                         appointmentDTO.getAppointmentStatus().setName("Pending");
+
+                        checkingInAppointments.add(appointmentDTO);
+                        applySortByAppointmentTime(waitingRoomAppointments);
+                        applySortByAppointmentTime(checkingInAppointments);
+                        waitingRoomAdapter.notifyDataSetChanged();
+                        checkedInAdapter.notifyDataSetChanged();
+                        checkingInCounterTextview.setText(String.valueOf(checkingInAppointments.size()));
+                        waitingCounterTextview.setText(String.valueOf(waitingRoomAppointments.size()));
                     }
-                    checkingInAppointments.add(appointmentDTO);
-                    applySortByAppointmentTime(waitingRoomAppointments);
-                    applySortByAppointmentTime(checkingInAppointments);
-                    waitingRoomAdapter.notifyDataSetChanged();
-                    checkedInAdapter.notifyDataSetChanged();
-                    checkingInCounterTextview.setText(String.valueOf(checkingInAppointments.size()));
-                    waitingCounterTextview.setText(String.valueOf(waitingRoomAppointments.size()));
                     break;
                 //the drag and drop operation has concluded.
                 case DragEvent.ACTION_DRAG_ENDED:
@@ -314,17 +316,19 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
                 //drag shadow has been released,the drag point is within the bounding box of the View
                 case DragEvent.ACTION_DROP:
                     AppointmentPayloadDTO appointmentDTO = getAppintmentById(dragEvent.getClipDescription().getLabel().toString(), checkingInAppointments);
-                    checkingInAppointments.remove(appointmentDTO);
+
                     if (appointmentDTO != null) {
+                        checkingInAppointments.remove(appointmentDTO);
                         appointmentDTO.getAppointmentStatus().setName("Checked-In");
+
+                        waitingRoomAppointments.add(appointmentDTO);
+                        applySortByAppointmentTime(waitingRoomAppointments);
+                        applySortByAppointmentTime(checkingInAppointments);
+                        waitingRoomAdapter.notifyDataSetChanged();
+                        checkedInAdapter.notifyDataSetChanged();
+                        checkingInCounterTextview.setText(String.valueOf(checkingInAppointments.size()));
+                        waitingCounterTextview.setText(String.valueOf(waitingRoomAppointments.size()));
                     }
-                    waitingRoomAppointments.add(appointmentDTO);
-                    applySortByAppointmentTime(waitingRoomAppointments);
-                    applySortByAppointmentTime(checkingInAppointments);
-                    waitingRoomAdapter.notifyDataSetChanged();
-                    checkedInAdapter.notifyDataSetChanged();
-                    checkingInCounterTextview.setText(String.valueOf(checkingInAppointments.size()));
-                    waitingCounterTextview.setText(String.valueOf(waitingRoomAppointments.size()));
                     break;
                 //the drag and drop operation has concluded.
                 case DragEvent.ACTION_DRAG_ENDED:
@@ -342,7 +346,10 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
             //@TargetApi(Build.VERSION_CODES.KITKAT)
             @Override
             public int compare(AppointmentPayloadDTO lhs, AppointmentPayloadDTO rhs) {
-                return lhs.getStartTime().compareTo(rhs.getStartTime());
+                if (lhs != null && rhs != null) {
+                    return lhs.getStartTime().compareTo(rhs.getStartTime());
+                }
+                return -1;
             }
         });
     }
@@ -352,7 +359,10 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
             //@TargetApi(Build.VERSION_CODES.KITKAT)
             @Override
             public int compare(FilterDataDTO lhs, FilterDataDTO rhs) {
-                return lhs.getDisplayText().compareTo(rhs.getDisplayText());
+                if (lhs != null && rhs != null) {
+                    return lhs.getDisplayText().compareTo(rhs.getDisplayText());
+                }
+                return -1;
             }
         });
     }

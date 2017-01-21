@@ -13,7 +13,8 @@ import java.util.List;
  */
 public class DemographicInsurancePayloadDTO extends BasePersonModel {
 
-    @SerializedName("insurance_photos") @Expose
+    @SerializedName("insurance_photos")
+    @Expose
     private List<DemographicInsurancePhotoDTO> insurancePhotos = new ArrayList<>();
 
     @SerializedName("insurance_provider") @Expose

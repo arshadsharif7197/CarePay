@@ -6,11 +6,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.intake.models.PaymentModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.google.android.gms.wallet.MaskedWallet;
 import com.google.android.gms.wallet.WalletConstants;
 import com.google.android.gms.wallet.fragment.SupportWalletFragment;
@@ -18,6 +26,9 @@ import com.google.android.gms.wallet.fragment.WalletFragmentInitParams;
 import com.google.android.gms.wallet.fragment.WalletFragmentMode;
 import com.google.android.gms.wallet.fragment.WalletFragmentOptions;
 import com.google.android.gms.wallet.fragment.WalletFragmentStyle;
+import com.google.gson.Gson;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 /**
  * Activity that displays the user's Google Wallet checkout confirmation page. It displays
@@ -25,7 +36,7 @@ import com.google.android.gms.wallet.fragment.WalletFragmentStyle;
  *
  * @see FullWalletConfirmationButtonFragment
  */
-public class ConfirmationActivity extends FragmentActivity {
+public class ConfirmationActivity extends AppCompatActivity {
 
     private SupportWalletFragment walletFragment;
     private MaskedWallet maskedWallet;
@@ -35,15 +46,41 @@ public class ConfirmationActivity extends FragmentActivity {
     public Bundle bundle;
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         maskedWallet = getIntent().getParcelableExtra(PaymentConstants.EXTRA_MASKED_WALLET);
 
         bundle = getIntent().getExtras();
-        setContentView(R.layout.activity_confirmation);
+        String paymentsDTOString = bundle.getString(PaymentConstants.EXTRA_RESULT_MESSAGE);
 
+        setContentView(R.layout.activity_confirmation);
+        Toolbar toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(this, com.carecloud.carepaylibrary.R.drawable.icn_patient_mode_nav_back));
+        TextView title = (TextView) toolbar.findViewById(com.carecloud.carepaylibrary.R.id.respons_toolbar_title);
+
+        if(paymentsDTOString != null){
+            Gson gson = new Gson();
+            PaymentsLabelDTO paymentLabelsDTO = gson.fromJson(paymentsDTOString, PaymentsLabelDTO.class);
+            title.setText(paymentLabelsDTO.getPaymentPatientBalanceToolbar());
+        }
+        setGothamRoundedMediumTypeface(this, title);
+        setSupportActionBar(toolbar);
         createAndAddWalletFragment();
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        if (menuItem.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(menuItem);
     }
 
     /**
@@ -51,6 +88,7 @@ public class ConfirmationActivity extends FragmentActivity {
      */
     private void createAndAddWalletFragment() {
         WalletFragmentStyle walletFragmentStyle = new WalletFragmentStyle()
+
                 .setMaskedWalletDetailsTextAppearance(
                         R.style.WalletFragmentDetailsTextAppearance)
                 .setMaskedWalletDetailsHeaderTextAppearance(
@@ -174,12 +212,12 @@ public class ConfirmationActivity extends FragmentActivity {
      * @param bundle       the bundle
      * @return the intent
      */
-    public static Intent newIntent(Context context, MaskedWallet maskedWallet, String amount, String env, Bundle bundle) {
+    public static Intent newIntent(Context context, MaskedWallet maskedWallet, String amount, String env, Bundle bundle, String labels) {
         Intent intent = new Intent(context, ConfirmationActivity.class);
         intent.putExtra(PaymentConstants.EXTRA_MASKED_WALLET, maskedWallet);
         intent.putExtra(PaymentConstants.EXTRA_AMOUNT, amount);
         intent.putExtra(PaymentConstants.EXTRA_ENV, env);
-        intent.putExtra(PaymentConstants.EXTRA_ENV, env);
+        intent.putExtra(PaymentConstants.EXTRA_RESULT_MESSAGE, labels);
         intent.putExtra(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, bundle);
         return intent;
     }

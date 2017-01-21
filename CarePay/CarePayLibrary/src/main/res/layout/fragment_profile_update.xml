@@ -10,7 +10,6 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
-
     <include layout="@layout/toolbar_demographics_settings" />
 
     <ProgressBar
@@ -23,148 +22,179 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/no_apt_place_holder_icon_margin_top"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
         android:layout_marginLeft="@dimen/dimen_17dp"
-        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_20dp"
         android:layout_marginRight="@dimen/dimen_17dp"
-        android:text="@string/hello_blank_fragment" >
-        <RelativeLayout
-            android:layout_width="@dimen/signup_clickable_textview_height"
-            android:layout_height="@dimen/signup_clickable_textview_height"
-            android:gravity="center">
+        android:layout_marginBottom="@dimen/dimen_40dp"
+         >
 
-            <ImageView
-                android:id="@+id/cellAvatarImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:elevation="@dimen/apt_lst_img_elevation"
-                />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/dimen_5dp"
-                android:gravity="center">
-
-                <ImageView
-                    android:id="@+id/providerPicImageView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:src="@drawable/icn_placeholder_user_profile_png"
-                    />
-            </RelativeLayout>
-
-        </RelativeLayout>
+        <ImageView
+             android:id="@+id/providerPicImageView"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:contentDescription="@string/profile_picture"
+             android:src="@drawable/icn_placeholder_user_profile_png" />
 
         <Button
             android:id="@+id/changeCurrentPhotoButton"
-            style="@style/DemographicsAddRemoveInsuranceStyle"
+            style="@style/DemographicsChooseProfilePicStyle"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="CHANGE CURRENT PHOTO"/>
+            android:textColor="@color/settings_toolbar_color" />
 
     </LinearLayout>
-
-    <ScrollView
-        android:id="@+id/adddemoScrollview"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/demographics_address_bottom_margin"
-        android:layout_weight="1">
 
         <LinearLayout
             android:id="@+id/adddemoLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="17dp"
-            android:layout_marginRight="17dp"
+            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:layout_marginRight="@dimen/dimen_10dp"
             android:orientation="vertical">
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/reviewdemogrFirstNameTextInput"
-                style="@style/TextInputLayoutStyle"
-                android:layout_marginTop="18dp"
-                app:hintTextAppearance="@style/FloatingLabelStyle">
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginStart="@dimen/dimen_25dp"
+                android:layout_marginEnd="@dimen/dimen_25dp"
+                android:layout_marginBottom="@dimen/dimen_15dp">
 
-                <EditText
-                    android:id="@+id/reviewdemogrFirstNameEdit"
-                    style="@style/SigninSignupEditStyle"
-                    android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ "
-                    android:inputType="textPersonName"
-                    android:maxLength="100"
-                    android:nextFocusForward="@+id/reviewdemogrMiddleNameEdit" />
-            </android.support.design.widget.TextInputLayout>
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/patientNameTextView"
+                    android:layout_width="@dimen/dimen_150dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:padding="2dp"
+                    android:textSize="@dimen/textview_default_textsize"
+                    android:textStyle="bold"
+                    android:textColor="@color/textview_default_textcolor"
+                    app:customAssetFont="proxima_nova_regular"/>
 
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/patientChangeNameTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/patientTitleTextView"
+                    android:gravity="right"
+                    android:layout_alignParentRight="true"
+                    android:padding="2dp"
+                    android:textSize="@dimen/text_size_14"
+                    android:textStyle="bold"
+                    android:textColor="@color/settings_toolbar_color"
+                    app:customAssetFont="proxima_nova_regular"/>/>
 
-            <FrameLayout
+            </RelativeLayout>
+
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/list_apt_padding_right"
+                android:layout_marginRight="@dimen/list_apt_padding_right"
+                android:background="@color/gray"
+                android:layout_marginBottom="@dimen/dimen_15dp"/>
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/reviewdemogrMiddleNameTextInputLayout"
-                    style="@style/SigninSignupTextInputStyle"
-                    app:hintTextAppearance="@style/FloatingLabelStyle">
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginStart="@dimen/dimen_25dp"
+                android:layout_marginEnd="@dimen/dimen_25dp"
+                android:layout_marginBottom="@dimen/dimen_15dp">
 
-                    <EditText
-                        android:id="@+id/reviewdemogrMiddleNameEdit"
-                        style="@style/SigninSignupEditStyle"
-                        android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ "
-                        android:imeOptions="actionNext"
-                        android:inputType="textPersonName"
-                        android:maxLength="100"
-                        android:nextFocusForward="@+id/reviewdemogrsLastNameEdit" />
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/patientEmailTextView"
+                    android:layout_width="@dimen/dimen_150dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:padding="2dp"
+                    android:textSize="@dimen/textview_default_textsize"
+                    android:textStyle="bold"
+                    android:textColor="@color/textview_default_textcolor"
+                    app:customAssetFont="proxima_nova_regular"/>
 
-                </android.support.design.widget.TextInputLayout>
 
-                <TextView
-                    android:id="@+id/reviewdemogrMiddleNameOptionalLabel"
-                    style="@style/SignupRequireHintStyle"
-                    android:text="Optional"
-                    android:textColor="@color/cadet_gray" />
-            </FrameLayout>
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/patientChangeEmailTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/patientEmailTextView"
+                    android:gravity="right"
+                    android:layout_alignParentRight="true"
+                    android:text="sdasd"
+                    android:padding="2dp"
+                    android:textSize="@dimen/text_size_14"
+                    android:textStyle="bold"
+                    android:textColor="@color/settings_toolbar_color"
+                    app:customAssetFont="proxima_nova_regular"/>/>
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/reviewdemogrLastNameTextInput"
-                style="@style/SigninSignupTextInputStyle"
-                app:hintTextAppearance="@style/FloatingLabelStyle">
+            </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/list_apt_padding_right"
+                android:layout_marginRight="@dimen/list_apt_padding_right"
+                android:layout_marginBottom="@dimen/dimen_15dp"
+                android:background="@color/gray" />
 
-                <EditText
-                    android:id="@+id/reviewdemogrLastNameEdit"
-                    style="@style/SigninSignupEditStyle"
-                    android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ "
-                    android:imeOptions="actionNext"
-                    android:inputType="textPersonName"
-                    android:maxLength="100"
-                    android:nextFocusForward="@+id/reviewdemogrEmailEdit" />
-            </android.support.design.widget.TextInputLayout>
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginStart="@dimen/dimen_25dp"
+                android:layout_marginEnd="@dimen/dimen_25dp"
+                android:layout_marginBottom="@dimen/dimen_15dp">
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/signInEmailTextInputLayout"
-                style="@style/TextInputLayoutStyle"
-                app:hintTextAppearance="@style/FloatingLabelStyle">
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/patientPasswordTextView"
+                    android:layout_width="@dimen/dimen_150dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:padding="2dp"
+                    android:textSize="@dimen/textview_default_textsize"
+                    android:textStyle="bold"
+                    android:inputType="textPassword"
+                    app:customAssetFont="proxima_nova_regular"/>
 
-                <EditText
-                    android:id="@+id/signinEmailEditText"
-                    style="@style/EditTextStyle"
-                    android:inputType="textEmailAddress"
-                    />
 
-            </android.support.design.widget.TextInputLayout>
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/patientChangePasswordTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/patientPasswordTextView"
+                    android:gravity="right"
+                    android:layout_alignParentRight="true"
+                    android:text="sdasd"
+                    android:padding="2dp"
+                    android:textSize="@dimen/text_size_14"
+                    android:textStyle="bold"
+                    android:textColor="@color/settings_toolbar_color"
+                    app:customAssetFont="proxima_nova_regular"/>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/list_apt_padding_right"
+                android:layout_marginRight="@dimen/list_apt_padding_right"
+                android:background="@color/gray" />
 
         </LinearLayout>
-    </ScrollView>
 
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
     <Button
         android:id="@+id/buttonAddDemographicInfo"
         android:layout_width="match_parent"
         android:layout_height="52dp"
-        android:background="@drawable/language_button_selector"
+        android:background="@drawable/settings_button_selector"
+        android:layout_alignParentBottom="true"
         android:gravity="center"
-        android:text="SAVE CHANGES"
         android:textColor="@color/white" />
+    </RelativeLayout>
 </LinearLayout>

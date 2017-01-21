@@ -194,9 +194,9 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
             Calendar rangeEnd = Calendar.getInstance();
             rangeEnd.add(Calendar.DAY_OF_MONTH, 6);
 
-            startDate = rangeStart.getTime();
-            endDate = rangeEnd.getTime();
-            DateUtil.getInstance().setDate(endDate);
+//            startDate = rangeStart.getTime();
+//            endDate = rangeEnd.getTime();
+//            DateUtil.getInstance().setDate(endDate);
 
             String formattedEndDate = getFormattedDate();
 

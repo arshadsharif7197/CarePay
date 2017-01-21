@@ -18,7 +18,7 @@ public class DemographicsSettingsTransitionsDTO {
     private TransitionDTO demographicsSettingsDeleteCreditCardDTO;
     @SerializedName("update_documents")
     @Expose
-    private DemographicsSettingsUpdateDocumentsDTO demographicsSettingsUpdateDocumentsDTO;
+    private TransitionDTO demographicsSettingsUpdateDocumentsDTO;
     @SerializedName("update_demographics")
     @Expose
     private TransitionDTO demographicsSettingsUpdateDemographicsDTO;
@@ -53,11 +53,11 @@ public class DemographicsSettingsTransitionsDTO {
         this.demographicsSettingsDeleteCreditCardDTO = demographicsSettingsDeleteCreditCardDTO;
     }
 
-    public DemographicsSettingsUpdateDocumentsDTO getUpdateDocuments() {
+    public TransitionDTO getUpdateDocuments() {
         return demographicsSettingsUpdateDocumentsDTO;
     }
 
-    public void setUpdateDocuments(DemographicsSettingsUpdateDocumentsDTO demographicsSettingsUpdateDocumentsDTO) {
+    public void setUpdateDocuments(TransitionDTO demographicsSettingsUpdateDocumentsDTO) {
         this.demographicsSettingsUpdateDocumentsDTO = demographicsSettingsUpdateDocumentsDTO;
     }
 

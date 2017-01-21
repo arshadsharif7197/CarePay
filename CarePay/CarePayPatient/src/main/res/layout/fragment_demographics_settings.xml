@@ -48,7 +48,7 @@
                 android:id="@+id/patient_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/button_bright_cerulean"
+                android:textColor="@color/settings_toolbar_color"
                 android:textSize="@dimen/textview_default_textsize"
                 android:textStyle="bold"
                 app:customAssetFont="proxima_nova_semi_bold" />
@@ -78,7 +78,7 @@
                 android:layout_marginTop="@dimen/divider_margin_bottom"
                 android:text="Edit"
                 android:textSize="@dimen/button_textsize_medium"
-                android:textColor="@color/overlay_green"
+                android:textColor="@color/settings_edit_text_color"
                 app:customAssetFont="gotham_rounded_bold" />
         </LinearLayout>
 
@@ -197,49 +197,14 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/signup_clickable_textview_height"
         android:layout_marginStart="@dimen/dimen_10dp"
-        android:layout_marginTop="@dimen/dimen_8dp"
-        android:id="@+id/changePasswordLayout"
-        android:orientation="horizontal">
-        <ImageView
-            android:id="@+id/changePasswordImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/icn_payment_credit_card_default"
-            android:layout_marginStart="@dimen/dimen_10dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            />
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/changePasswordTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/dimen_10dp"
-            android:textColor="@color/textview_default_textcolor"
-            android:textSize="@dimen/textview_default_textsize"
-            android:textStyle="bold"
-            app:customAssetFont="proxima_nova_regular" />
-
-    </LinearLayout>
-    <View
-        android:id="@+id/changePasswordDivider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="@dimen/list_apt_padding_right"
-        android:layout_marginRight="@dimen/list_apt_padding_right"
-        android:background="@color/gray" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/signup_clickable_textview_height"
-        android:layout_marginStart="@dimen/dimen_10dp"
-        android:layout_marginTop="@dimen/dimen_20dp"
+        android:layout_marginTop="@dimen/dimen_36dp"
         android:id="@+id/messagesLayout"
         android:orientation="horizontal">
         <ImageView
             android:id="@+id/messagesImageView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/icn_payment_credit_card_default"
+            android:src="@drawable/icn_settings_messaging_cell"
             android:layout_marginStart="@dimen/dimen_10dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
@@ -267,18 +232,18 @@
         android:id="@+id/signOutLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dimen_5dp"
+        android:layout_marginBottom="@dimen/dimen_20dp"
         >
         <Button
             android:id="@+id/signOutButton"
             style="@style/PaymentButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_blue_border"
-            android:textColor="@color/bright_cerulean"
-            android:layout_marginBottom="@dimen/dimen_20dp"
+            android:background="@drawable/button_green_border"
+            android:textColor="@color/settings_toolbar_color"
+            android:layout_marginBottom="@dimen/dimen_36dp"
             android:layout_alignParentBottom="true"
-            android:layout_margin="@dimen/dimen_5dp"/>
+            android:layout_margin="@dimen/dimen_20dp"/>
 
     </RelativeLayout>
 

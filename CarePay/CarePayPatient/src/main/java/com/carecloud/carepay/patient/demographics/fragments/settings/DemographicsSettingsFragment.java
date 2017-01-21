@@ -52,14 +52,12 @@ public class DemographicsSettingsFragment extends Fragment {
     private String signOutString = null;
     private String editString = null;
     private String settingsString = null;
-    private String changePasswordString = null;
     private String messagesString = null;
     private CarePayTextView editTextview = null;
     private Button signOutButton = null;
     private CarePayTextView demographicsTextview = null;
     private CarePayTextView documentsTextview = null;
     private CarePayTextView creditCardsTextview;
-    private CarePayTextView changePasswordTextview = null;
     private CarePayTextView messagesTextview = null;
     private ImageView profileImageview = null;
 
@@ -94,7 +92,7 @@ public class DemographicsSettingsFragment extends Fragment {
         demographicsTextview = (CarePayTextView) view.findViewById(R.id.demographicsTextView);
         documentsTextview = (CarePayTextView) view.findViewById(R.id.documentsTextView);
         creditCardsTextview = (CarePayTextView) view.findViewById(R.id.creditCardsTextView);
-        changePasswordTextview = (CarePayTextView) view.findViewById(R.id.changePasswordTextView);
+        CarePayTextView creditCardsTextview = (CarePayTextView) view.findViewById(R.id.creditCardsTextView);
         messagesTextview = (CarePayTextView) view.findViewById(R.id.messagesTextView);
         editTextview = (CarePayTextView) view.findViewById(R.id.editTextView);
         signOutButton = (Button) view.findViewById(R.id.signOutButton);
@@ -104,7 +102,6 @@ public class DemographicsSettingsFragment extends Fragment {
 
         demographicsTextview.setText(demographicsString);
         documentsTextview.setText(documentsString);
-        changePasswordTextview.setText(changePasswordString);
         messagesTextview.setText(messagesString);
         creditCardsTextview.setText(creditCardsString);
         editTextview.setText(editString);
@@ -142,7 +139,6 @@ public class DemographicsSettingsFragment extends Fragment {
                     signOutString = demographicsSettingsLabelsDTO.getSignOutLabel();
                     editString = demographicsSettingsLabelsDTO.getEditButtonLabel();
                     settingsString = demographicsSettingsLabelsDTO.getSettingsHeading();
-                    changePasswordString = demographicsSettingsLabelsDTO.getSettingschangePasswordLabel();
                     messagesString = demographicsSettingsLabelsDTO.getSettingsMessagesLabel();
 
                 }
@@ -188,16 +184,14 @@ public class DemographicsSettingsFragment extends Fragment {
                 }
 
                 //fix for random crashes
-                if(fragment.getArguments() !=null){
+                if (fragment.getArguments() != null) {
                     fragment.getArguments().putAll(bundle);
-                }else{
+                } else {
                     fragment.setArguments(bundle);
                 }
 
                 fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
                         EditProfileFragment.class.getSimpleName()).addToBackStack(null).commit();
-
-
 
 
             }
@@ -219,9 +213,9 @@ public class DemographicsSettingsFragment extends Fragment {
                 }
 
                 //fix for random crashes
-                if(fragment.getArguments() !=null){
+                if (fragment.getArguments() != null) {
                     fragment.getArguments().putAll(bundle);
-                }else{
+                } else {
                     fragment.setArguments(bundle);
                 }
 
@@ -235,7 +229,7 @@ public class DemographicsSettingsFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-               Bundle bundle = new Bundle();
+                Bundle bundle = new Bundle();
                 Gson gson = new Gson();
                 String demographicsSettingsDTOString = gson.toJson(demographicsSettingsDTO);
                 bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
@@ -248,9 +242,9 @@ public class DemographicsSettingsFragment extends Fragment {
                 }
 
                 //fix for random crashes
-                if(fragment.getArguments() !=null){
+                if (fragment.getArguments() != null) {
                     fragment.getArguments().putAll(bundle);
-                }else{
+                } else {
                     fragment.setArguments(bundle);
                 }
 
@@ -276,9 +270,9 @@ public class DemographicsSettingsFragment extends Fragment {
                 }
 
                 //fix for random crashes
-                if(fragment.getArguments() !=null){
+                if (fragment.getArguments() != null) {
                     fragment.getArguments().putAll(bundle);
-                }else{
+                } else {
                     fragment.setArguments(bundle);
                 }
 
@@ -287,45 +281,16 @@ public class DemographicsSettingsFragment extends Fragment {
 
             }
         });
-
-        changePasswordTextview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Bundle bundle = new Bundle();
-                Gson gson = new Gson();
-                String demographicsSettingsDTOString = gson.toJson(demographicsSettingsDTO);
-                bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
-
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                DemographicsSettingsChangePasswordFragment fragment = (DemographicsSettingsChangePasswordFragment)
-                        fm.findFragmentByTag(DemographicsSettingsChangePasswordFragment.class.getSimpleName());
-                if (fragment == null) {
-                    fragment = new DemographicsSettingsChangePasswordFragment();
-                }
-
-                //fix for random crashes
-                if(fragment.getArguments() !=null){
-                    fragment.getArguments().putAll(bundle);
-                }else{
-                    fragment.setArguments(bundle);
-                }
-
-                fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
-                        DemographicsSettingsChangePasswordFragment.class.getSimpleName()).addToBackStack(null).commit();
-
-            }
-        });
     }
 
-    private String getUserName(){
+    private String getUserName() {
         DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
         DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
         DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
         DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
         String firstName = demographicsPersonalDetails.getFirstName();
         String lastName = demographicsPersonalDetails.getLastName();
-        String userName = firstName +" " +lastName;
+        String userName = firstName + " " + lastName;
         return userName;
     }
 
@@ -348,7 +313,5 @@ public class DemographicsSettingsFragment extends Fragment {
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
-
-
 }
 

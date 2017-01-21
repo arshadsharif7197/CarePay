@@ -42,6 +42,4 @@ public class DemographicsSettingsPayloadDTO {
     public void setPatientCreditCards(List<DemographicsSettingsCreditCardsPayloadDTO> patientCreditCards) {
         this.patientCreditCards = patientCreditCards;
     }
-
-
 }

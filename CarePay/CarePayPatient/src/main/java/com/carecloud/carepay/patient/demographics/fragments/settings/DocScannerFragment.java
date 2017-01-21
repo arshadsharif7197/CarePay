@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -29,6 +31,7 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPhotoDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHolder;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
@@ -45,6 +48,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 
 public class DocScannerFragment extends DocumentScannerFragment {
 
@@ -75,6 +80,13 @@ public class DocScannerFragment extends DocumentScannerFragment {
     private String documentsTypeString = null;
     private String documentsCancelString = null;
     private DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO = null;
+    private AppCompatActivity appCompatActivity;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        appCompatActivity = (AppCompatActivity) getActivity();
+    }
 
     @Nullable
     @Override
@@ -159,6 +171,12 @@ public class DocScannerFragment extends DocumentScannerFragment {
 
         scanFrontButton = (Button) view.findViewById(R.id.demogrDocsFrontScanButton);
         scanFrontButton.setText(documentsdocumentsScanFirstString);
+        GradientDrawable shape = new GradientDrawable();
+        shape.setShape(GradientDrawable.RECTANGLE);
+        shape.setCornerRadii(new float[] { 8, 8, 8, 8, 8, 8, 8, 8 });
+        shape.setStroke(3, ContextCompat.getColor(getActivity(), R.color.settings_toolbar_color));
+        scanFrontButton.setBackgroundDrawable(shape);
+
         scanFrontButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -168,6 +186,7 @@ public class DocScannerFragment extends DocumentScannerFragment {
 
         scanBackButton = (Button) view.findViewById(R.id.demogrDocsBackScanButton);
         scanBackButton.setText(documentsScanBackString);
+        scanBackButton.setBackgroundDrawable(shape);
         scanBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -176,15 +195,18 @@ public class DocScannerFragment extends DocumentScannerFragment {
         });
 
         stateLabel = (TextView) view.findViewById(R.id.demogrDocsLicenseStateLabel);
+        stateLabel.setTextSize(17);
+        setProximaNovaRegularTypeface(appCompatActivity, stateLabel);
+
         stateLabel.setText(documentsDlStateString);
 
         idStateClickable = (TextView) view.findViewById(R.id.demogrDocsStateClickable);
         idStateClickable.setText(documentsDlStateString);
-        final String titleSelectState = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsTitleSelectState();
+        idStateClickable.setTextColor(ContextCompat.getColor(getActivity(), R.color.settings_toolbar_color));
         idStateClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showChooseDialog(states, titleSelectState, documentsCancelString, idStateClickable);
+                showChooseDialog(states, documentsDlStateString, documentsCancelString, idStateClickable);
             }
         });
 
@@ -198,11 +220,11 @@ public class DocScannerFragment extends DocumentScannerFragment {
 
         idNumberEdit = (EditText) view.findViewById(R.id.demogrDocsLicenseNumEdit);
         idNumberInputText = (TextInputLayout) view.findViewById(R.id.demogrDocsNumberInputLayout);
+        idNumberEdit.setTextColor(ContextCompat.getColor(getActivity(), R.color.settings_toolbar_color));
 
-        label = StringUtil.captialize(idDocsMetaDTO == null ? CarePayConstants.NOT_DEFINED : idDocsMetaDTO.properties.identityDocumentNumber.getLabel());
-        idNumberInputText.setTag(label);
+        idNumberInputText.setTag(documentsDlNumberString);
         idNumberEdit.setTag(idNumberInputText);
-        idNumberEdit.setHint(label);
+        idNumberEdit.setHint(documentsDlNumberString);
 
         idNumberEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -265,14 +287,14 @@ public class DocScannerFragment extends DocumentScannerFragment {
         if (bitmap != null) {
             if (scanner == scannerFront) {
                 // change button caption to 'rescan'
-                scanFrontButton.setText(R.string.demogr_docs_rescan_front);
+                scanFrontButton.setText(documentsdocumentsScanFirstString);
                 // save from image
                 String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
                 DemographicIdDocPhotoDTO frontDTO = model.getIdDocPhothos().get(0);
                 frontDTO.setIdDocPhoto(imageAsBase64); // create the image dto
             } else if (scanner == scannerBack) {
                 // change button caption to 'rescan'
-                scanBackButton.setText(R.string.demogr_docs_rescan_back);
+                scanBackButton.setText(documentsScanBackString);
                 String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
                 DemographicIdDocPhotoDTO backDTO = model.getIdDocPhothos().get(1);
                 backDTO.setIdDocPhoto(imageAsBase64); // create the image dto
@@ -348,14 +370,13 @@ public class DocScannerFragment extends DocumentScannerFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        String label;
         if (imageCaptureHelper == scannerFront) {
-            label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanFrontLabel();
-            scanFrontButton.setText(label);
+            scanFrontButton.setText(documentsdocumentsScanFirstString);
         } else if (imageCaptureHelper == scannerBack) {
-            label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanBackLabel();
-            scanBackButton.setText(label);
+            scanBackButton.setText(documentsScanBackString);
         }
+        stateLabel.setText(documentsDlStateString);
+
     }
 
     @Override
@@ -394,5 +415,20 @@ public class DocScannerFragment extends DocumentScannerFragment {
 
     public void setIdDocsMetaDTO(DemographicMetadataEntityItemIdDocDTO idDocsMetaDTO) {
         this.idDocsMetaDTO = idDocsMetaDTO;
+    }
+
+    @Override
+    protected void setInsuranceDTO(DemographicInsurancePayloadDTO insuranceDTO, String placeholderBase64) {
+
+    }
+
+    @Override
+    protected void setChangeFocusListeners() {
+
+    }
+
+    @Override
+    protected void enablePlanClickable(boolean enabled) {
+
     }
 }

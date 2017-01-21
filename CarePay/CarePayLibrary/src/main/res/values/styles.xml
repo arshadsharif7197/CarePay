@@ -807,4 +807,18 @@
         <item name="android:layout_marginTop">@dimen/review_lablemargintop</item>
         <item name="android:layout_marginLeft">@dimen/review_textview_leftmargin</item>
     </style>
+
+    <style name="SettingsToolbarStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/settings_toolbar_color</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="DemographicsChooseProfilePicStyle" parent="DemographicsDocsButtonStyle">
+        <item name="android:layout_marginBottom">@dimen/demographicsAddMedInfoBtnBottomMargin</item>
+        <item name="android:layout_marginStart">@dimen/demographics_docs_header_left_right_margin
+        </item>
+        <item name="android:background">@drawable/button_profile_pic</item>
+    </style>
 </resources>

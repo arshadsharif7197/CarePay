@@ -368,7 +368,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
                     camera.setDisplayOrientation(90);
                 } else {
                     camera = Camera.open(getBackFaceCamera());
-                    camera.setDisplayOrientation(HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE)?270:90);
+                    camera.setDisplayOrientation(HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE)?180:90);
                 }
                 // attempt to get a Camera instance
             } catch (Exception e) {

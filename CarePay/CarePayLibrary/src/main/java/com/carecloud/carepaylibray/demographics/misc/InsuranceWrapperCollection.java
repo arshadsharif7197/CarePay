@@ -6,6 +6,8 @@ import android.widget.LinearLayout;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemInsuranceDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,7 @@ import java.util.List;
     private DemographicMetadataEntityItemInsuranceDTO                metadata;
     private DemographicLabelsDTO                                     labels;
     private OnClickRemoveOrAddCallback callback;
+    private DemographicsSettingsDTO demographicsSettingsDTO;
 
     /**
      * Ctor
@@ -42,6 +45,18 @@ import java.util.List;
         this.metadata = metadata;
         this.callback = callback;
         this.labels = labels;
+    }
+
+    public InsuranceWrapperCollection(AppCompatActivity context,
+                                      LinearLayout parent,
+                                      DemographicMetadataEntityItemInsuranceDTO metadata,
+                                      DemographicsSettingsDTO demographicsSettingsDTO,
+                                      OnClickRemoveOrAddCallback callback) {
+        this.wrapperContext = context;
+        this.parent = parent;
+        this.metadata = metadata;
+        this.callback = callback;
+        this.demographicsSettingsDTO = demographicsSettingsDTO;
     }
 
     /**
@@ -67,6 +82,29 @@ import java.util.List;
     }
 
     /**
+     * Adds a new card
+     * @param payloadDTO The payload
+     */
+    public void addCard(DemographicInsurancePayloadDTO payloadDTO) {
+        int count = wrappers.size();
+        if (count < MAX_CARDS) {
+            InsuranceWrapper insuranceWrapper = new InsuranceWrapper(wrapperContext,
+                    demographicsSettingsDTO,
+                    metadata,
+                    payloadDTO,
+                    parent,
+                    new OnClickRemoveListener(InsuranceWrapperCollection.this,
+                            callback));
+            wrappers.add(insuranceWrapper);
+            count++;
+        }
+        if (count >= MAX_CARDS && callback != null) {
+            callback.onAfterAdd();
+        }
+    }
+
+
+    /**
      * For each element i the list, adds a card populated with the payload, or
      * or, if the list is empty, an empty card screen
      * @param payloadDTOs The list of payloads
@@ -74,6 +112,17 @@ import java.util.List;
     public void addAll(List<DemographicInsurancePayloadDTO> payloadDTOs) {
         for (DemographicInsurancePayloadDTO payloadDTO : payloadDTOs) {
             add(payloadDTO);
+        }
+    }
+
+    /**
+     * For each element i the list, adds a card populated with the payload, or
+     * or, if the list is empty, an empty card screen
+     * @param payloadDTOs The list of payloads
+     */
+    public void addAllCards(List<DemographicInsurancePayloadDTO> payloadDTOs) {
+        for (DemographicInsurancePayloadDTO payloadDTO : payloadDTOs) {
+            addCard(payloadDTO);
         }
     }
 

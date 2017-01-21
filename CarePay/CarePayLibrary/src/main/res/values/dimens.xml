@@ -2,6 +2,7 @@
 <resources>
 
     <!-- Default dimens which will be use for any default styling  -->
+    <dimen name="dimen_1dp">1dp</dimen>
     <dimen name="dimen_5dp">5dp</dimen>
     <dimen name="dimen_8dp">8dp</dimen>
     <dimen name="dimen_9dp">9dp</dimen>
@@ -33,6 +34,7 @@
     <dimen name="dimen_390dp">390dp</dimen>
     <dimen name="dimen_130dp">130dp</dimen>
     <dimen name="dimen_114dp">114dp</dimen>
+    <dimen name="dimen_150dp">150dp</dimen>
 
     <dimen name="text_size_11">11sp</dimen>
     <dimen name="text_size_13">13sp</dimen>
@@ -382,6 +384,7 @@
     <dimen name="margin_large">10dp</dimen>
     <dimen name="margin_xlarge">30dp</dimen>
     <dimen name="buy_button_width">300dp</dimen>
-    <dimen name="buy_button_height">48dp</dimen>
+    <dimen name="buy_button_height">40dp</dimen>
     <dimen name="element_space">15dp</dimen>
+    <dimen name="button_confirm_height">58dp</dimen>
 </resources>

@@ -12,10 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carecloud.carepay.patient.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
@@ -29,6 +31,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by arpit_jain1 on 10/10/2016.
@@ -38,7 +41,6 @@ public class AppointmentDateRangeFragment extends Fragment {
 
     private CalendarPickerView calendarPickerView;
     private CustomGothamRoundedMediumButton applyDateRangeButton;
-    private List<Date> dateList;
     private Date previousStartDate;
     private Date previousEndDate;
     private Date newStartDate;
@@ -158,9 +160,10 @@ public class AppointmentDateRangeFragment extends Fragment {
         calendarPickerView=(CalendarPickerView)view.findViewById(R.id.calendarView);
         if(previousStartDate!=null && previousEndDate!=null) {
             /*Instantiate calendar for a date range selected*/
-            Collection<Date> selectedDates = new ArrayList<Date>();
+            Collection<Date> selectedDates = new ArrayList<>();
             selectedDates.add(previousStartDate);
             selectedDates.add(previousEndDate);
+
             calendarPickerView.init(new Date(), getNextSixMonthCalendar().getTime())
                 .inMode(CalendarPickerView.SelectionMode.RANGE)
                 .withSelectedDates(selectedDates);
@@ -171,14 +174,14 @@ public class AppointmentDateRangeFragment extends Fragment {
             Calendar rangeEnd = Calendar.getInstance();
             rangeEnd.add(Calendar.DAY_OF_MONTH, 7);
 
-            Collection<Date> selectedDates = new ArrayList<Date>();
-            selectedDates.add(rangeStart.getTime());
-            selectedDates.add(rangeEnd.getTime());
+//            Collection<Date> selectedDates = new ArrayList<>();
+//            selectedDates.add(rangeStart.getTime());
+//            selectedDates.add(rangeEnd.getTime());
 
             Date today = new Date();
             calendarPickerView.init(today, getNextSixMonthCalendar().getTime())
-                .inMode(CalendarPickerView.SelectionMode.RANGE)
-                .withSelectedDates(selectedDates);
+                .inMode(CalendarPickerView.SelectionMode.RANGE);
+//                .withSelectedDates(selectedDates);
         }
 
         calendarPickerView.setOnDateSelectedListener(onDateSelectListener);
@@ -236,7 +239,7 @@ public class AppointmentDateRangeFragment extends Fragment {
             new CalendarPickerView.OnDateSelectedListener() {
         @Override
         public void onDateSelected(Date date) {
-            dateList = calendarPickerView.getSelectedDates();
+            List<Date> dateList = calendarPickerView.getSelectedDates();
 
             if (dateList.size() > 1) {
                 newStartDate = dateList.get(0);
@@ -250,7 +253,14 @@ public class AppointmentDateRangeFragment extends Fragment {
             }
 
             if(newStartDate != null && newEndDate != null) {
-                applyDateRangeButton.setEnabled(true);
+                long diff = newEndDate.getTime() - newStartDate.getTime();
+                long numOfDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+                if (numOfDays >= 93) {
+                    AppointmentLabelDTO label = resourcesToScheduleDTO.getMetadata().getLabel();
+                    Toast.makeText(getActivity(), label.getAddAppointmentMaxDateRangeMessage(), Toast.LENGTH_LONG).show();
+                } else {
+                    applyDateRangeButton.setEnabled(true);
+                }
             } else {
                 applyDateRangeButton.setEnabled(false);
             }

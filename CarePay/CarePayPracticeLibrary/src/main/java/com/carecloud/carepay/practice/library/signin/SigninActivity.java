@@ -22,6 +22,8 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.signin.dtos.LanguageOptionDTO;
+import com.carecloud.carepay.practice.library.signin.dtos.SignInModelDTO;
+import com.carecloud.carepay.practice.library.signin.dtos.SignInPatientModeModelDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninLabelsDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeDTO;
@@ -268,8 +270,12 @@ public class SigninActivity extends BasePracticeActivity {
                 signinTitle.setText(signinLabelsDTO.getWelcomeSigninText());
                 forgotPasswordButton.setText(signinLabelsDTO.getForgotPassword());
                 gobackButton.setText(signinLabelsDTO.getGobackButton());
-                emailLabel = signinDTO.getMetadata().getDataModels().getSignin().getProperties().getEmail().getLabel();
-                passwordLabel = signinDTO.getMetadata().getDataModels().getSignin().getProperties().getPassword().getLabel();
+
+                SignInModelDTO signInModelDTO = signinDTO.getMetadata().getDataModels().getSignin();
+                if (signInModelDTO != null) {
+                    emailLabel =signInModelDTO.getProperties().getEmail().getLabel();
+                    passwordLabel = signInModelDTO.getProperties().getPassword().getLabel();
+                }
                 passwordEditText.setHint(passwordLabel);
                 emailEditText.setHint(emailLabel);
             }
@@ -280,8 +286,12 @@ public class SigninActivity extends BasePracticeActivity {
                 signinTitle.setText(labelsDTO.getCarepaySigninTitle());
                 forgotPasswordButton.setText(labelsDTO.getForgotPassword());
                 gobackButton.setText(labelsDTO.getSiginHowCheckInGoBack());
-                emailLabel = signinPatientModeDTO.getMetadata().getLoginDataModels().getLogin().getProperties().getEmail().getLabel();
-                passwordLabel = signinPatientModeDTO.getMetadata().getLoginDataModels().getLogin().getProperties().getPassword().getLabel();
+
+                SignInPatientModeModelDTO login = signinPatientModeDTO.getMetadata().getLoginDataModels().getLogin();
+                if (login != null) {
+                    emailLabel = login.getProperties().getEmail().getLabel();
+                    passwordLabel = login.getProperties().getPassword().getLabel();
+                }
                 passwordEditText.setHint(passwordLabel);
                 emailEditText.setHint(emailLabel);
             }
