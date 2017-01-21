@@ -1,18 +1,19 @@
 
 package com.carecloud.carepaylibray.demographicsettings.models;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class DemographicsSettingsPayloadDTO {
 
     @SerializedName("languages")
     @Expose
     private List<DemographicsSettingsLanguageDTO> demographicsSettingsLanguageDTOs = null;
-    //@SerializedName("patient_credit_cards")
-//    @Expose
-  //  private List<DemographicsSettingsPatientCreditCardsDTO> patientCreditCards;
+    @SerializedName("patient_credit_cards")
+    @Expose
+    private List<DemographicsSettingsCreditCardsPayloadDTO> patientCreditCards;
     @SerializedName("demographics")
     @Expose
     private DemographicsSettingsDemographicsDTO demographics;
@@ -34,13 +35,11 @@ public class DemographicsSettingsPayloadDTO {
         this.demographics = demographics;
     }
 
-  /*  public List<DemographicsSettingsPatientCreditCardsDTO> getPatientCreditCards() {
+    public List<DemographicsSettingsCreditCardsPayloadDTO> getPatientCreditCards() {
         return patientCreditCards;
     }
 
-    public void setPatientCreditCards(List<DemographicsSettingsPatientCreditCardsDTO> patientCreditCards) {
+    public void setPatientCreditCards(List<DemographicsSettingsCreditCardsPayloadDTO> patientCreditCards) {
         this.patientCreditCards = patientCreditCards;
-    }*/
-
-
+    }
 }

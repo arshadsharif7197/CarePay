@@ -425,5 +425,6 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <integer name="viewfinder_border_width">4</integer>
     <integer name="viewfinder_border_length">60</integer>
 
+    <string name="action_remove">Remove</string>
 
 </resources>
