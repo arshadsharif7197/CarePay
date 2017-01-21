@@ -16,6 +16,15 @@ public class ConsentFormLabelsDTO implements Serializable {
     @SerializedName("Consent_for_medicare_title")
     @Expose
     private String consentForMedicareTitle;
+    @SerializedName("consent_form_heading")
+    @Expose
+    private String consentFormHeading;
+    @SerializedName("next_form_button_text")
+    @Expose
+    private String nextFormButtonText;
+    @SerializedName("finish_form_button_text")
+    @Expose
+    private String finishFormButtonText;
     @SerializedName("sign_consent_for_medicare_title")
     @Expose
     private String signConsentForMedicareTitle;
@@ -508,5 +517,30 @@ public class ConsentFormLabelsDTO implements Serializable {
      */
     public void setSignConsentCloseLabel(String signConsentCloseLabel) {
         this.signConsentCloseLabel = signConsentCloseLabel;
+    }
+
+
+    public String getConsentFormHeading() {
+        return consentFormHeading;
+    }
+
+    public void setConsentFormHeading(String consentFormHeading) {
+        this.consentFormHeading = consentFormHeading;
+    }
+
+    public String getNextFormButtonText() {
+        return nextFormButtonText;
+    }
+
+    public void setNextFormButtonText(String nextFormButtonText) {
+        this.nextFormButtonText = nextFormButtonText;
+    }
+
+    public String getFinishFormButtonText() {
+        return finishFormButtonText;
+    }
+
+    public void setFinishFormButtonText(String finishFormButtonText) {
+        this.finishFormButtonText = finishFormButtonText;
     }
 }
