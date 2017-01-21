@@ -131,7 +131,7 @@
                 android:layout_marginTop="@dimen/dimen_40dp"
                 android:textAllCaps="true"
                 android:textColor="@color/charcoal"
-                android:textSize="@dimen/payment_method_layout_label_text_size"
+                android:textSize="@dimen/payment_pick_date_label_text_size"
                 app:customAssetFont="proxima_nova_regular" />
 
             <RelativeLayout

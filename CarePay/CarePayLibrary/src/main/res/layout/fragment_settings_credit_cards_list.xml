@@ -10,13 +10,14 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/payment_method_parent_layout_padding">
+        android:padding="@dimen/dimen_10dp">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/creditCardsListRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/addNewCardButton" />
+            android:layout_above="@+id/addNewCardButton"
+            android:layout_alignParentTop="true" />
 
         <Button
             android:id="@+id/addNewCardButton"

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -56,5 +57,15 @@ interface WorkflowService {
     @PUT
     Call<WorkflowDTO> executePut(@Url String url, @Body String jsonString, @QueryMap Map<String,String> queryMap);
 
+    @DELETE
+    Call<WorkflowDTO> executeDelete(@Url String url);
 
+    @DELETE
+    Call<WorkflowDTO> executeDelete(@Url String url, @Body String jsonString);
+
+    @DELETE
+    Call<WorkflowDTO> executeDelete(@Url String url, @QueryMap Map<String,String> queryMap);
+
+    @DELETE
+    Call<WorkflowDTO> executeDelete(@Url String url, @Body String jsonString, @QueryMap Map<String,String> queryMap);
 }

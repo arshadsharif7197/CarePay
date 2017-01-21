@@ -192,6 +192,12 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     @SerializedName("demographics_save_changes_label")
     @Expose
     private String demographicsSaveChangesLabel;
+    @SerializedName("credit_card_add_new")
+    @Expose
+    private String creditCardAddNew;
+    @SerializedName("edit_credit_card_remove_label")
+    @Expose
+    private String editCreditCardRemoveLabel;
 
     /**
      * @return systemNotificationsHeading
@@ -1132,5 +1138,41 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
      */
     public void setDemographicsSaveChangesLabel(String demographicsSaveChangesLabel) {
         this.demographicsSaveChangesLabel = demographicsSaveChangesLabel;
+    }
+
+    /**
+     * Gets credit card add new.
+     *
+     * @return the credit card add new
+     */
+    public String getCreditCardAddNew() {
+        return StringUtil.getLabelForView(creditCardAddNew);
+    }
+
+    /**
+     * Sets credit card add new.
+     *
+     * @param creditCardAddNew the credit card add new
+     */
+    public void setCreditCardAddNew(String creditCardAddNew) {
+        this.creditCardAddNew = creditCardAddNew;
+    }
+
+    /**
+     * Gets edit credit card remove label.
+     *
+     * @return the edit credit card remove label
+     */
+    public String getEditCreditCardRemoveLabel() {
+        return StringUtil.getLabelForView(editCreditCardRemoveLabel);
+    }
+
+    /**
+     * Sets edit credit card remove label.
+     *
+     * @param editCreditCardRemoveLabel the edit credit card remove label
+     */
+    public void setEditCreditCardRemoveLabel(String editCreditCardRemoveLabel) {
+        this.editCreditCardRemoveLabel = editCreditCardRemoveLabel;
     }
 }

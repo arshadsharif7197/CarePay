@@ -289,4 +289,17 @@ public class StringUtil {
         }
         return "";
     }
+
+    /**
+     * Returns formatted credit card number
+     * @param cardType Card Type
+     * @param cardNumber Card Number
+     * @return formatted credit card number
+     */
+    public static String getFormattedCardNumber(String cardType, String cardNumber) {
+        if (!isNullOrEmpty(cardNumber)) {
+            return cardType + " " + cardNumber.substring(cardNumber.length() - 4, cardNumber.length());
+        }
+        return "";
+    }
 }

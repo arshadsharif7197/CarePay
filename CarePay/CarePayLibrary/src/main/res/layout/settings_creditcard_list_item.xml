@@ -51,8 +51,8 @@
                 android:paddingRight="@dimen/dimen_5dp"
                 android:textColor="@color/cadet_gray"
                 android:textSize="@dimen/text_size_14"
-                android:visibility="visible"
-                app:customAssetFont="proxima_nova_regular" />
+                android:textStyle="bold"
+                app:customAssetFont="proxima_nova_semi_bold" />
         </LinearLayout>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -62,10 +62,11 @@
             android:layout_gravity="center_vertical"
             android:layout_margin="@dimen/dimen_10dp"
             android:layout_weight="0.7"
+            android:textStyle="bold"
             android:gravity="end"
             android:textColor="@color/settings_credit_card_details"
             android:textSize="@dimen/text_size_14"
-            app:customAssetFont="proxima_nova_regular" />
+            app:customAssetFont="proxima_nova_semi_bold" />
     </LinearLayout>
 
     <View

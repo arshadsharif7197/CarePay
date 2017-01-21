@@ -15,7 +15,7 @@ public class DemographicsSettingsTransitionsDTO {
     private DemographicsSettingsAddCreditCardDTO demographicsSettingsAddCreditCardDTO;
     @SerializedName("delete_credit_card")
     @Expose
-    private DemographicsSettingsDeleteCreditCardDTO demographicsSettingsDeleteCreditCardDTO;
+    private TransitionDTO demographicsSettingsDeleteCreditCardDTO;
     @SerializedName("update_documents")
     @Expose
     private DemographicsSettingsUpdateDocumentsDTO demographicsSettingsUpdateDocumentsDTO;
@@ -25,6 +25,9 @@ public class DemographicsSettingsTransitionsDTO {
     @SerializedName("update_notifications")
     @Expose
     private DemographicsSettingsUpdateNotificationsDTO demographicsSettingsUpdateNotificationsDTO;
+    @SerializedName("update_credit_card")
+    @Expose
+    private TransitionDTO updateCreditCard;
 
     public DemographicsSettingsUpdateProfileDTO getUpdateProfile() {
         return demographicsSettingsUpdateProfileDTO;
@@ -42,11 +45,11 @@ public class DemographicsSettingsTransitionsDTO {
         this.demographicsSettingsAddCreditCardDTO = demographicsSettingsAddCreditCardDTO;
     }
 
-    public DemographicsSettingsDeleteCreditCardDTO getDeleteCreditCard() {
+    public TransitionDTO getDeleteCreditCard() {
         return demographicsSettingsDeleteCreditCardDTO;
     }
 
-    public void setDeleteCreditCard(DemographicsSettingsDeleteCreditCardDTO demographicsSettingsDeleteCreditCardDTO) {
+    public void setDeleteCreditCard(TransitionDTO demographicsSettingsDeleteCreditCardDTO) {
         this.demographicsSettingsDeleteCreditCardDTO = demographicsSettingsDeleteCreditCardDTO;
     }
 
@@ -74,4 +77,11 @@ public class DemographicsSettingsTransitionsDTO {
         this.demographicsSettingsUpdateNotificationsDTO = demographicsSettingsUpdateNotificationsDTO;
     }
 
+    public TransitionDTO getUpdateCreditCard() {
+        return updateCreditCard;
+    }
+
+    public void setUpdateCreditCard(TransitionDTO updateCreditCard) {
+        this.updateCreditCard = updateCreditCard;
+    }
 }

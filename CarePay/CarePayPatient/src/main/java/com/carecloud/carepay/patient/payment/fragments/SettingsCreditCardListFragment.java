@@ -1,7 +1,7 @@
 package com.carecloud.carepay.patient.payment.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -24,7 +24,6 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPatientCreditCardsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -34,18 +33,15 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SettingsCreditCardListFragment extends Fragment implements SettingsCreditCardListAdapter.IOnCreditCardDetailClickListener{
+public class SettingsCreditCardListFragment extends Fragment implements SettingsCreditCardListAdapter.IOnCreditCardDetailClickListener {
 
     private RecyclerView creditCardsListRecyclerView;
-    private Activity activity;
-
-    private int selectedCreditCard;
     private DemographicsSettingsDTO demographicsSettingsDTO = null;
     private DemographicsSettingsLabelsDTO settingsLabelsDTO;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
         if (arguments != null) {
             Gson gson = new Gson();
@@ -53,10 +49,13 @@ public class SettingsCreditCardListFragment extends Fragment implements Settings
             demographicsSettingsDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsDTO.class);
             settingsLabelsDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getLabels();
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings_credit_cards_list, container, false);
-        activity = getActivity();
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
         title.setText(settingsLabelsDTO.getCreditCardsLabel());
@@ -77,17 +76,17 @@ public class SettingsCreditCardListFragment extends Fragment implements Settings
 
         Button addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
         addNewCardButton.setOnClickListener(addNewCardButtonListener);
-        addNewCardButton.setText(settingsLabelsDTO.getSettingSetAsDefaultLabel());
+        addNewCardButton.setText(settingsLabelsDTO.getCreditCardAddNew());
 
+        loadCreditCardsList(demographicsSettingsDTO);
+    }
+
+    public void loadCreditCardsList(DemographicsSettingsDTO demographicsSettingsDTO) {
         if (demographicsSettingsDTO != null) {
-            DemographicsSettingsPatientCreditCardsDTO patientCreditCards = demographicsSettingsDTO.getPayload()
-                    .getPatientCreditCards();
-
-            if (patientCreditCards != null) {
-                List<DemographicsSettingsCreditCardsPayloadDTO> creditCardList = patientCreditCards.getPayload();
-                creditCardsListRecyclerView.setAdapter(new SettingsCreditCardListAdapter(getActivity(),
-                        creditCardList,settingsLabelsDTO,this));
-            }
+            this.demographicsSettingsDTO = demographicsSettingsDTO;
+            List<DemographicsSettingsCreditCardsPayloadDTO> creditCardList = demographicsSettingsDTO.getPayload().getPatientCreditCards();
+            creditCardsListRecyclerView.setAdapter(new SettingsCreditCardListAdapter(getActivity(),
+                    creditCardList, settingsLabelsDTO, this));
         }
     }
 
@@ -140,7 +139,7 @@ public class SettingsCreditCardListFragment extends Fragment implements Settings
         Bundle bundle = new Bundle();
         Gson gson = new Gson();
         String creditCardsPayloadDTOString = gson.toJson(demographicsSettingsDTO.getPayload()
-                .getPatientCreditCards().getPayload().get(position));
+                .getPatientCreditCards().get(position));
         bundle.putString(CarePayConstants.CREDIT_CARD_BUNDLE, creditCardsPayloadDTOString);
 
         creditCardsPayloadDTOString = gson.toJson(demographicsSettingsDTO);
@@ -154,13 +153,15 @@ public class SettingsCreditCardListFragment extends Fragment implements Settings
         }
 
         //fix for random crashes
-        if(fragment.getArguments() !=null){
+        if (fragment.getArguments() != null) {
             fragment.getArguments().putAll(bundle);
-        }else{
+        } else {
             fragment.setArguments(bundle);
         }
 
-        fm.beginTransaction().replace(com.carecloud.carepay.patient.R.id.activity_demographics_settings, fragment,
-                SettingsCreditCardDetailsFragment.class.getSimpleName()).addToBackStack(null).commit();
+        fm.beginTransaction().replace(com.carecloud.carepay.patient.R.id.activity_demographics_settings,
+                fragment, SettingsCreditCardDetailsFragment.class.getSimpleName())
+                .addToBackStack(SettingsCreditCardDetailsFragment.class.getName()).commit();
+        fm.executePendingTransactions();
     }
 }

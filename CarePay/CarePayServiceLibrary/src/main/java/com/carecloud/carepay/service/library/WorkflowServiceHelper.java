@@ -183,7 +183,17 @@ public class WorkflowServiceHelper {
             } else {
                 call = workflowService.executePost(transitionDTO.getUrl());
             }
-        }else{
+        } else if (transitionDTO.getMethod().equalsIgnoreCase("DELETE")) {
+            if (jsonBody != null && queryMap == null) {
+                call = workflowService.executeDelete(transitionDTO.getUrl(), jsonBody);
+            } else if (jsonBody == null && queryMap != null) {
+                call = workflowService.executeDelete(transitionDTO.getUrl(), queryMap);
+            } else if (jsonBody != null && queryMap.size() > 0) {
+                call = workflowService.executeDelete(transitionDTO.getUrl(), jsonBody, queryMap);
+            } else {
+                call = workflowService.executeDelete(transitionDTO.getUrl());
+            }
+        } else {
             if (jsonBody != null && queryMap == null) {
                 call = workflowService.executePut(transitionDTO.getUrl(), jsonBody);
             } else if (jsonBody == null && queryMap != null) {
