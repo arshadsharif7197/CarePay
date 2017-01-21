@@ -47,11 +47,12 @@ import com.google.gson.Gson;
 import com.marcok.stepprogressbar.StepProgressBar;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
+import org.json.JSONObject;
+
+
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
