@@ -334,7 +334,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
                     authorizationDescription1 = consentFormLabelsDTO.getAuthorizationGrantText();
                     authorizationDescription2 = consentFormLabelsDTO.getAuthorizationLegalText();
                     signMedicareLabel = consentFormLabelsDTO.getSignConsentForMedicareTitle();
-                    navigateToFragment(getConsentForm(), true);
+                    navigateToFragment(getConsentForm(workflowJson), true);
                     Log.d(this.getClass().getSimpleName(), "consent form information");
                 }
             }
@@ -357,12 +357,13 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     }
 
 
-    private Fragment getConsentForm() {
+    private Fragment getConsentForm(String jsonResponse) {
 
         if (showingForm == FormId.FORM1) {
             consentFormIndex = 1;
             Bundle bundle = new Bundle();
             bundle.putSerializable(CarePayConstants.FORM_DATA, getConsentFormData("form1"));
+            bundle.putString(CarePayConstants.INTAKE_BUNDLE, jsonResponse);
             CheckinConsentForm1Fragment consentForm1Fragment = new CheckinConsentForm1Fragment();
             consentForm1Fragment.setArguments(bundle);
             return consentForm1Fragment;
@@ -414,7 +415,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     private Fragment getNextConsentForm() {
         showingForm = showingForm.next();
         if (showingForm != FormId.NONE) {
-            return getConsentForm();
+            return getConsentForm("");
         }
         return null;
     }
@@ -631,5 +632,19 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         } else {
             super.onBackPressed();
         }
+    }
+
+
+
+    /**
+     * Launch intake forms
+     * @param workflowJson workflowJson
+     *
+     */
+    public void startIntakeForms(String workflowJson) {
+        Intent intent = new Intent();
+        intent.setAction("NEW_CHECKEDIN_NOTIFICATION");
+        intent.putExtra("INTAKE_WORKFLOW", workflowJson);
+        sendBroadcast(intent);
     }
 }
