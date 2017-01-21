@@ -37,11 +37,6 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity{
         practiceMgmt =paymentsDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPracticeMgmt();
         patientId = paymentsDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPatientId();
 
-        transitionBalance = paymentsDTO.getPaymentsMetadata().getPaymentsLinks().getPaymentsPatientBalances();
-        transitionAppointments = paymentsDTO.getPaymentsMetadata().getPaymentsLinks().getAppointments();
-        //transitionLogout = paymentsDTO.getPaymentsMetadata().getPaymentsTransitions().getLogout();
-        transitionProfile = paymentsDTO.getPaymentsMetadata().getPaymentsLinks().getPaymentsDemographics();
-
         TextView toolbarText = (TextView) findViewById(R.id.balance_history_toolbar_title);
         String toolBarTitle = paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPatientBalanceToolbar();
         toolbarText.setText(StringUtil.isNullOrEmpty(toolBarTitle)? CarePayConstants.NOT_DEFINED : toolBarTitle);

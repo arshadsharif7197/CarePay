@@ -9,10 +9,13 @@ import android.view.ViewGroup;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,14 +24,17 @@ import java.util.List;
 
 public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalancesAdapter.PaymentHistoryViewHolder> {
     private Context context;
-    private List<PaymentsPatientBalancessDTO> paymentsPatientBalances;
+    private List<PatiencePayloadDTO> paymentsPatientBalances = new ArrayList<>();
     OnBalanceListItemClickListener listener;
     PaymentsModel paymentDTO;
 
     public PaymentBalancesAdapter(Context context, PaymentsModel paymentDTO, OnBalanceListItemClickListener listener) {
         this.paymentDTO = paymentDTO;
         this.context = context;
-        this.paymentsPatientBalances = paymentDTO.getPaymentPayload().getPatientBalances();
+        if (paymentDTO.getPaymentPayload().getPatientBalances().size()>0 &&
+                paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().size()>0) {
+            this.paymentsPatientBalances = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
+        }
         this.listener = listener;
     }
 
@@ -41,11 +47,11 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
 
     @Override
     public void onBindViewHolder(final PaymentBalancesAdapter.PaymentHistoryViewHolder holder, int position) {
-        final PaymentsPatientBalancessDTO charge = paymentsPatientBalances.get(position);
+        final PatiencePayloadDTO charge = paymentsPatientBalances.get(position);
         String locationName= CarePayConstants.NOT_DEFINED;
         holder.shortName.setText(StringUtil.onShortDrName(locationName));
         holder.locationName.setText(locationName);
-        holder.amount.setText(StringUtil.getFormattedBalanceAmount(Double.parseDouble(charge.getPendingRepsonsibility())));
+        holder.amount.setText(StringUtil.getFormattedBalanceAmount(charge.getAmount()));
         holder.payNow.setText(paymentDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentDetailsPayNow());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
