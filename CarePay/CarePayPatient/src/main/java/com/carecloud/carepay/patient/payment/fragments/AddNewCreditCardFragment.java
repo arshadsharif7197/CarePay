@@ -672,7 +672,7 @@ public class AddNewCreditCardFragment extends Fragment implements
 
     private void authorizeCreditCard()
     {
-        String amount="1";
+        String amount="1"; //Change this to actual amount.
         String currency="USD";
         String paymentMethod="credit_card";
         String cvv=verificationCodeEditText.getText().toString();

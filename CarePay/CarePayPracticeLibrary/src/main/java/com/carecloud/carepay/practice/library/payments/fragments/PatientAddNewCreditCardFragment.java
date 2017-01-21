@@ -696,7 +696,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
 
     private void authorizeCreditCard()
     {
-        String amount="1";
+        String amount="1"; //Change this to actual amount.
         String currency="USD";
         String paymentMethod="credit_card";
         String cvv=verificationCodeEditText.getText().toString();
@@ -774,7 +774,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
 
         PaymentCreditCardsPayloadDTO creditCardsPayloadDTO = new PaymentCreditCardsPayloadDTO();
         PaymentsCreditCardBillingInformationDTO billingInformation = new PaymentsCreditCardBillingInformationDTO();
-        creditCardsPayloadDTO.setCardNumber(getCardNumber());
+        creditCardsPayloadDTO.setCardNumber(getLastFour());
         creditCardsPayloadDTO.setNameOnCard(nameOnCardEditText.getText().toString().trim());
         creditCardsPayloadDTO.setCvv(verificationCodeEditText.getText().toString().trim());
         creditCardsPayloadDTO.setExpireDt(pickDateTextView.getText().toString().trim());
