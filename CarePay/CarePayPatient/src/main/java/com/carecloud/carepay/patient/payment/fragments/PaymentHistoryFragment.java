@@ -36,7 +36,7 @@ import java.util.Map;
 
 public class PaymentHistoryFragment extends Fragment implements PaymentBalancesAdapter.OnBalanceListItemClickListener, PaymentDetailsDialog.PayNowClickListener{
 
-    private String LOG = PaymentHistoryFragment.class.getSimpleName();
+    public String LOG = PaymentHistoryFragment.class.getSimpleName();
     private PaymentsModel paymentDTO;
     private ProgressBar progressBar;
     private RecyclerView historyRecyclerView;
