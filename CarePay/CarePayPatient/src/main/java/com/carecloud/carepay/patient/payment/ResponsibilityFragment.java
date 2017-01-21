@@ -124,6 +124,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
                     Log.e(LOG_TAG, ex.getMessage());
                 }
             }
+            
             totalResponsibility.setText(totalResponsibilityString);
 
             payTotalAmountButton.setText(payTotalAmountString);
@@ -131,7 +132,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
             payLaterButton.setText(payLaterString);
          }
         }catch(Exception e){
-            e.printStackTrace();
+
         }
 
         payTotalAmountButton.setOnClickListener(new View.OnClickListener() {
