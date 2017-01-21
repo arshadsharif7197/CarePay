@@ -34,10 +34,10 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
     protected String practiceMgmt;
     protected String patientId;
     //transitions
-    protected TransitionDTO transitionBalance;
-    protected TransitionDTO transitionProfile;
-    protected TransitionDTO transitionAppointments;
-    protected TransitionDTO transitionLogout;
+    private static TransitionDTO transitionBalance;
+    private static TransitionDTO transitionProfile;
+    private static TransitionDTO transitionAppointments;
+    private static TransitionDTO transitionLogout;
 
     protected TextView appointmentsDrawerUserIdTextView;
     protected NavigationView navigationView;
@@ -164,4 +164,20 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+    public static void setTransitionBalance(TransitionDTO transitionBalance) {
+        MenuPatientActivity.transitionBalance = transitionBalance;
+    }
+
+    public static void setTransitionProfile(TransitionDTO transitionProfile) {
+        MenuPatientActivity.transitionProfile = transitionProfile;
+    }
+
+    public static void setTransitionAppointments(TransitionDTO transitionAppointments) {
+        MenuPatientActivity.transitionAppointments = transitionAppointments;
+    }
+
+    public static void setTransitionLogout(TransitionDTO transitionLogout) {
+        MenuPatientActivity.transitionLogout = transitionLogout;
+    }
 }
