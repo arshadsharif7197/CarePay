@@ -284,14 +284,17 @@ public class DemographicsSettingsFragment extends Fragment {
     }
 
     private String getUserName() {
-        DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
-        DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-        DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
-        DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
-        String firstName = demographicsPersonalDetails.getFirstName();
-        String lastName = demographicsPersonalDetails.getLastName();
-        String userName = firstName + " " + lastName;
-        return userName;
+        if(demographicsSettingsDTO!=null) {
+            DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
+            DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
+            DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
+            DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+            String firstName = demographicsPersonalDetails.getFirstName();
+            String lastName = demographicsPersonalDetails.getLastName();
+            String userName = firstName + " " + lastName;
+            return userName;
+        }
+        return "";
     }
 
     WorkflowServiceCallback logOutCall = new WorkflowServiceCallback() {
