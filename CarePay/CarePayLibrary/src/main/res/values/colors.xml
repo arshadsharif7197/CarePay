@@ -87,5 +87,7 @@
     <!--Demographuics Settings-->
     <color name="settings_toolbar_color">#5BC5D0</color>
     <color name="settings_edit_text_color">#5BD063</color>
+    <color name="settings_credit_card_details">#5BC5D0</color>
+    <color name="settings_set_as_default">#5BD063</color>
 
 </resources>

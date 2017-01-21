@@ -120,6 +120,63 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     @SerializedName("settings_repeat_new_password")
     @Expose
     private String settingRepeatNewPasswordLabel;
+    @SerializedName("setting_set_as_default")
+    @Expose
+    private String settingSetAsDefaultLabel;
+    @SerializedName("setting_default")
+    @Expose
+    private String settingDefaultLabel;
+    @SerializedName("setting_details")
+    @Expose
+    private String settingDetailsLabel;
+    @SerializedName("setting_address")
+    @Expose
+    private String settingAddressLabel;
+    @SerializedName("setting_use_profile_address")
+    @Expose
+    private String settingUseProfileAddressLabel;
+    @SerializedName("new_credit_card_heading")
+    @Expose
+    private String newCreditCardHeadingLabel;
+    @SerializedName("credit_card_name_label")
+    @Expose
+    private String creditCardNameLabel;
+    @SerializedName("credit_card_number_label")
+    @Expose
+    private String creditCardNumberLabel;
+    @SerializedName("credit_card_cvc_label")
+    @Expose
+    private String creditCardCvcLabel;
+    @SerializedName("credit_card_expiration_label")
+    @Expose
+    private String creditCardExpirationLabel;
+    @SerializedName("credit_card_pick_date_label")
+    @Expose
+    private String creditCardPickDateLabel;
+    @SerializedName("credit_card_save_card_label")
+    @Expose
+    private String creditCardSaveCardLabel;
+    @SerializedName("credit_card_billing_address_label")
+    @Expose
+    private String creditCardBillingAddressLabel;
+    @SerializedName("address1_label")
+    @Expose
+    private String address1Label;
+    @SerializedName("address2_label")
+    @Expose
+    private String address2Label;
+    @SerializedName("zipcode_label")
+    @Expose
+    private String zipcodeLabel;
+    @SerializedName("city_label")
+    @Expose
+    private String cityLabel;
+    @SerializedName("state_label")
+    @Expose
+    private String stateLabel;
+    @SerializedName("country_label")
+    @Expose
+    private String countryLabel;
     @SerializedName("demographics_select_document")
     @Expose
     private String demographicsSelectDocumentLabel;
@@ -135,6 +192,12 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     @SerializedName("demographics_save_changes_label")
     @Expose
     private String demographicsSaveChangesLabel;
+    @SerializedName("credit_card_add_new")
+    @Expose
+    private String creditCardAddNew;
+    @SerializedName("edit_credit_card_remove_label")
+    @Expose
+    private String editCreditCardRemoveLabel;
     @SerializedName("remove_link")
     @Expose
     private String demographicsRemoveLabel;
@@ -164,7 +227,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     private String demographicsIdentityLabel;
 
     /**
-     *
      * @return systemNotificationsHeading
      */
     public String getSystemNotificationsHeading() {
@@ -172,7 +234,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param systemNotificationsHeading The systemNotificationsHeading
      */
     public void setSystemNotificationsHeading(String systemNotificationsHeading) {
@@ -180,7 +241,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return settingsHeading
      */
     public String getSettingsHeading() {
@@ -188,7 +248,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param settingsHeading The settingsHeading
      */
     public void setSettingsHeading(String settingsHeading) {
@@ -196,7 +255,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return editButtonLabel
      */
     public String getEditButtonLabel() {
@@ -204,7 +262,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param editButtonLabel The editButtonLabel
      */
     public void setEditButtonLabel(String editButtonLabel) {
@@ -212,7 +269,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return demographicsLabel
      */
     public String getDemographicsLabel() {
@@ -220,7 +276,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param demographicsLabel The demographicsLabel
      */
     public void setDemographicsLabel(String demographicsLabel) {
@@ -228,7 +283,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return documentsLabel
      */
     public String getDocumentsLabel() {
@@ -236,7 +290,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param documentsLabel The documentsLabel
      */
     public void setDocumentsLabel(String documentsLabel) {
@@ -244,7 +297,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return notificationsHeading
      */
     public String getNotificationsHeading() {
@@ -252,7 +304,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param notificationsHeading The notificationsHeading
      */
     public void setNotificationsHeading(String notificationsHeading) {
@@ -260,7 +311,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return inAppNotificationsLabel
      */
     public String getInAppNotificationsLabel() {
@@ -268,7 +318,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param inAppNotificationsLabel The inAppNotificationsLabel
      */
     public void setInAppNotificationsLabel(String inAppNotificationsLabel) {
@@ -276,7 +325,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return emailLabel
      */
     public String getEmailLabel() {
@@ -284,7 +332,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param emailLabel The emailLabel
      */
     public void setEmailLabel(String emailLabel) {
@@ -292,7 +339,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return signOutLabel
      */
     public String getSignOutLabel() {
@@ -300,7 +346,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param signOutLabel The signOutLabel
      */
     public void setSignOutLabel(String signOutLabel) {
@@ -308,7 +353,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return creditCardsLabel
      */
     public String getCreditCardsLabel() {
@@ -316,7 +360,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param creditCardsLabel The creditCardsLabel
      */
     public void setCreditCardsLabel(String creditCardsLabel) {
@@ -324,7 +367,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return profileHeadingLabel
      */
     public String getProfileHeadingLabel() {
@@ -332,7 +374,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param profileHeadingLabel The profileHeadingLabel
      */
     public void setProfileHeadingLabel(String profileHeadingLabel) {
@@ -340,7 +381,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return demographics_personal_info_Label
      */
     public String getDemographics_personal_info_Label() {
@@ -348,7 +388,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param demographics_personal_info_Label The demographics_personal_info_Label
      */
     public void setDemographics_personal_info_Label(String demographics_personal_info_Label) {
@@ -356,7 +395,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return demographics_driver_license_Label
      */
     public String getDemographics_driver_license_Label() {
@@ -364,7 +402,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param demographics_driver_license_Label The demographics_driver_license_Label
      */
     public void setDemographics_driver_license_Label(String demographics_driver_license_Label) {
@@ -372,7 +409,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return demographicsCaptureOptionsTitle
      */
     public String getDemographicsCaptureOptionsTitle() {
@@ -380,7 +416,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param demographicsCaptureOptionsTitle The demographicsCaptureOptionsTitle
      */
     public void setDemographicsCaptureOptionsTitle(String demographicsCaptureOptionsTitle) {
@@ -388,7 +423,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return demographicsTakePhotoOption
      */
     public String getDemographicsTakePhotoOption() {
@@ -396,7 +430,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param demographicsTakePhotoOption The demographicsTakePhotoOption
      */
     public void setDemographicsTakePhotoOption(String demographicsTakePhotoOption) {
@@ -404,7 +437,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return demographicsChooseFromLibraryOption
      */
     public String getDemographicsChooseFromLibraryOption() {
@@ -412,7 +444,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param demographicsChooseFromLibraryOption The demographicsChooseFromLibraryOption
      */
     public void setDemographicsChooseFromLibraryOption(String demographicsChooseFromLibraryOption) {
@@ -420,7 +451,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return demographicsCancelLabel
      */
     public String getDemographicsCancelLabel() {
@@ -429,7 +459,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param demographicsCancelLabel The demographicsCancelLabel
      */
     public void setDemographicsCancelLabel(String demographicsCancelLabel) {
@@ -437,7 +466,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return demographicssectionLabel
      */
     public String getDemographicSctionLabel() {
@@ -445,7 +473,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param demographicssectionLabel demographicssectionLabel
      */
     public void setDemographicssectionLabel(String demographicssectionLabel) {
@@ -453,7 +480,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return demographicsAddressLabel
      */
     public String getDemographicsAddressLabel() {
@@ -461,7 +487,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param demographicsAddressLabel demographicsAddressLabel
      */
     public void setDemographicsAddressLabel(String demographicsAddressLabel) {
@@ -469,7 +494,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return demographicsGenderLabel
      */
     public String getDemographicsGenderLabel() {
@@ -477,7 +501,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param demographicsGenderLabel demographicsGenderLabel
      */
     public void setDemographicsGenderLabel(String demographicsGenderLabel) {
@@ -485,7 +508,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return demographicsRaceLabel
      */
     public String getDemographicsRaceLabel() {
@@ -493,7 +515,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param demographicsRaceLabel demographicsRaceLabel
      */
     public void setDemographicsRaceLabel(String demographicsRaceLabel) {
@@ -501,7 +522,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return demographicsEthnicityLabel
      */
     public String getDemographicsEthnicityLabel() {
@@ -509,7 +529,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param demographicsEthnicityLabel demographicsEthnicityLabel
      */
     public void setDemographicsEthnicityLabel(String demographicsEthnicityLabel) {
@@ -517,7 +536,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return demographicsLanguageLabel
      */
     public String getDemographicsLanguageLabel() {
@@ -525,7 +543,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param demographicsLanguageLabel demographicsLanguageLabel
      */
     public void setDemographicsLanguageLabel(String demographicsLanguageLabel) {
@@ -533,7 +550,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return documentsTypeLabel
      */
     public String getDocumentsTypeLabel() {
@@ -541,7 +557,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param documentsTypeLabel The documentsTypeLabel
      */
     public void setDocumentsTypeLabel(String documentsTypeLabel) {
@@ -549,7 +564,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return documentsScanFirstLabel
      */
     public String getDocumentsScanFirstLabel() {
@@ -557,7 +571,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param documentsScanFirstLabel The documentsScanFirstLabel
      */
     public void setDocumentsScanFirstLabel(String documentsScanFirstLabel) {
@@ -565,7 +578,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return documentsScanBackLabel
      */
     public String getDocumentsScanBackLabel() {
@@ -573,7 +585,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param documentsScanBackLabel The documentsScanBackLabel
      */
     public void setDocumentsScanBackLabel(String documentsScanBackLabel) {
@@ -581,7 +592,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return documentsDlNumberLabel
      */
     public String getDocumentsDlNumberLabel() {
@@ -589,7 +599,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param documentsDlNumberLabel The documentsDlNumberLabel
      */
     public void setDocumentsDlNumberLabel(String documentsDlNumberLabel) {
@@ -597,7 +606,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return documentsDlStateLabel
      */
     public String getDocumentsDlStateLabel() {
@@ -605,7 +613,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param documentsDlStateLabel The documentsDlStateLabel
      */
     public void setDocumentsDlStateLabel(String documentsDlStateLabel) {
@@ -613,7 +620,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return documentsHealthInsuranceLabel
      */
     public String getDocumentsHealthInsuranceLabel() {
@@ -621,7 +627,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param documentsHealthInsuranceLabel The documentsHealthInsuranceLabel
      */
     public void setDocumentsHealthInsuranceLabel(String documentsHealthInsuranceLabel) {
@@ -629,7 +634,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return documentsHaveHealthInsuranceLabel
      */
     public String getDocumentsHaveHealthInsuranceLabel() {
@@ -637,7 +641,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param documentsHaveHealthInsuranceLabel The documentsHaveHealthInsuranceLabel
      */
     public void setDocumentsHaveHealthInsuranceLabel(String documentsHaveHealthInsuranceLabel) {
@@ -645,7 +648,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return documentsAddnotherInsuranceLabel
      */
     public String getDocumentsAddnotherInsuranceLabel() {
@@ -653,7 +655,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param documentsAddnotherInsuranceLabel The documentsAddnotherInsuranceLabel
      */
     public void setDocumentsAddnotherInsuranceLabel(String documentsAddnotherInsuranceLabel) {
@@ -661,7 +662,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return documentsGoldenCrossLabel
      */
     public String getDocumentsGoldenCrossLabel() {
@@ -669,7 +669,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param documentsGoldenCrossLabel The documentsGoldenCrossLabel
      */
     public void setDocumentsGoldenCrossLabel(String documentsGoldenCrossLabel) {
@@ -677,7 +676,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return settingschangePasswordLabel
      */
     public String getSettingschangePasswordLabel() {
@@ -685,7 +683,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param settingschangePasswordLabel The settingschangePasswordLabel
      */
     public void setSettingschangePasswordLabel(String settingschangePasswordLabel) {
@@ -693,7 +690,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return settingsMessagesLabel
      */
     public String getSettingsMessagesLabel() {
@@ -701,7 +697,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param settingsMessagesLabel The settingsMessagesLabel
      */
     public void setSettingsMessagesLabel(String settingsMessagesLabel) {
@@ -709,7 +704,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return settingsCurrentPasswordLabel
      */
     public String getSettingsCurrentPasswordLabel() {
@@ -717,7 +711,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param settingsCurrentPasswordLabel The settingsCurrentPasswordLabel
      */
     public void setSettingsCurrentPasswordLabel(String settingsCurrentPasswordLabel) {
@@ -725,7 +718,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return settingsNewPasswordLabel
      */
     public String getSettingsNewPasswordLabel() {
@@ -733,7 +725,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param settingsNewPasswordLabel The settingsNewPasswordLabel
      */
     public void setSettingsNewPasswordLabel(String settingsNewPasswordLabel) {
@@ -741,7 +732,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return settingRepeatNewPasswordLabel
      */
     public String getSettingRepeatNewPasswordLabel() {
@@ -749,7 +739,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param settingRepeatNewPasswordLabel The settingRepeatNewPasswordLabel
      */
     public void setSettingRepeatNewPasswordLabel(String settingRepeatNewPasswordLabel) {
@@ -757,16 +746,366 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
+     * <<<<<<< HEAD
+     * Gets setting set as default label.
      *
-     * @return demographicsSelectDocumentLabel
+     * @return the setting set as default label
      */
+    public String getSettingSetAsDefaultLabel() {
+        return StringUtil.getLabelForView(settingSetAsDefaultLabel);
+    }
+
+    /**
+     * Sets setting set as default label.
+     *
+     * @param settingSetAsDefaultLabel the setting set as default label
+     */
+    public void setSettingSetAsDefaultLabel(String settingSetAsDefaultLabel) {
+        this.settingSetAsDefaultLabel = settingSetAsDefaultLabel;
+    }
+
+    /**
+     * Gets setting default label.
+     *
+     * @return the setting default label
+     */
+    public String getSettingDefaultLabel() {
+        return StringUtil.getLabelForView(settingDefaultLabel);
+    }
+
+    /**
+     * Sets setting default label.
+     *
+     * @param settingDefaultLabel the setting default label
+     */
+    public void setSettingDefaultLabel(String settingDefaultLabel) {
+        this.settingDefaultLabel = settingDefaultLabel;
+    }
+
+    /**
+     * Gets setting details label.
+     *
+     * @return the setting details label
+     */
+    public String getSettingDetailsLabel() {
+        return StringUtil.getLabelForView(settingDetailsLabel);
+    }
+
+    /**
+     * Sets setting details label.
+     *
+     * @param settingDetailsLabel the setting details label
+     */
+    public void setSettingDetailsLabel(String settingDetailsLabel) {
+        this.settingDetailsLabel = settingDetailsLabel;
+    }
+
+    /**
+     * Gets demographicssection label.
+     *
+     * @return the demographicssection label
+     */
+    public String getDemographicssectionLabel() {
+        return StringUtil.getLabelForView(demographicssectionLabel);
+    }
+
+    /**
+     * Gets setting address label.
+     *
+     * @return the setting address label
+     */
+    public String getSettingAddressLabel() {
+        return StringUtil.getLabelForView(settingAddressLabel);
+    }
+
+    /**
+     * Sets setting address label.
+     *
+     * @param settingAddressLabel the setting address label
+     */
+    public void setSettingAddressLabel(String settingAddressLabel) {
+        this.settingAddressLabel = settingAddressLabel;
+    }
+
+    /**
+     * Gets setting use profile address label.
+     *
+     * @return the setting use profile address label
+     */
+    public String getSettingUseProfileAddressLabel() {
+        return StringUtil.getLabelForView(settingUseProfileAddressLabel);
+    }
+
+    /**
+     * Sets setting use profile address label.
+     *
+     * @param settingUseProfileAddressLabel the setting use profile address label
+     */
+    public void setSettingUseProfileAddressLabel(String settingUseProfileAddressLabel) {
+        this.settingUseProfileAddressLabel = settingUseProfileAddressLabel;
+    }
+
+    /**
+     * Gets new credit card heading label.
+     *
+     * @return the new credit card heading label
+     */
+    public String getNewCreditCardHeadingLabel() {
+        return StringUtil.getLabelForView(newCreditCardHeadingLabel);
+    }
+
+    /**
+     * Sets new credit card heading label.
+     *
+     * @param newCreditCardHeadingLabel the new credit card heading label
+     */
+    public void setNewCreditCardHeadingLabel(String newCreditCardHeadingLabel) {
+        this.newCreditCardHeadingLabel = newCreditCardHeadingLabel;
+    }
+
+    /**
+     * Gets credit card name label.
+     *
+     * @return the credit card name label
+     */
+    public String getCreditCardNameLabel() {
+        return StringUtil.getLabelForView(creditCardNameLabel);
+    }
+
+    /**
+     * Sets credit card name label.
+     *
+     * @param creditCardNameLabel the credit card name label
+     */
+    public void setCreditCardNameLabel(String creditCardNameLabel) {
+        this.creditCardNameLabel = creditCardNameLabel;
+    }
+
+    /**
+     * Gets credit card number label.
+     *
+     * @return the credit card number label
+     */
+    public String getCreditCardNumberLabel() {
+        return StringUtil.getLabelForView(creditCardNumberLabel);
+    }
+
+    /**
+     * Sets credit card number label.
+     *
+     * @param creditCardNumberLabel the credit card number label
+     */
+    public void setCreditCardNumberLabel(String creditCardNumberLabel) {
+        this.creditCardNumberLabel = creditCardNumberLabel;
+    }
+
+    /**
+     * Gets credit card cvc label.
+     *
+     * @return the credit card cvc label
+     */
+    public String getCreditCardCvcLabel() {
+        return StringUtil.getLabelForView(creditCardCvcLabel);
+    }
+
+    /**
+     * Sets credit card cvc label.
+     *
+     * @param creditCardCvcLabel the credit card cvc label
+     */
+    public void setCreditCardCvcLabel(String creditCardCvcLabel) {
+        this.creditCardCvcLabel = creditCardCvcLabel;
+    }
+
+    /**
+     * Gets credit card expiration label.
+     *
+     * @return the credit card expiration label
+     */
+    public String getCreditCardExpirationLabel() {
+        return StringUtil.getLabelForView(creditCardExpirationLabel);
+    }
+
+    /**
+     * Sets credit card expiration label.
+     *
+     * @param creditCardExpirationLabel the credit card expiration label
+     */
+    public void setCreditCardExpirationLabel(String creditCardExpirationLabel) {
+        this.creditCardExpirationLabel = creditCardExpirationLabel;
+    }
+
+    /**
+     * Gets credit card pick date label.
+     *
+     * @return the credit card pick date label
+     */
+    public String getCreditCardPickDateLabel() {
+        return StringUtil.getLabelForView(creditCardPickDateLabel);
+    }
+
+    /**
+     * Sets credit card pick date label.
+     *
+     * @param creditCardPickDateLabel the credit card pick date label
+     */
+    public void setCreditCardPickDateLabel(String creditCardPickDateLabel) {
+        this.creditCardPickDateLabel = creditCardPickDateLabel;
+    }
+
+    /**
+     * Gets credit card save card label.
+     *
+     * @return the credit card save card label
+     */
+    public String getCreditCardSaveCardLabel() {
+        return StringUtil.getLabelForView(creditCardSaveCardLabel);
+    }
+
+    /**
+     * Sets credit card save card label.
+     *
+     * @param creditCardSaveCardLabel the credit card save card label
+     */
+    public void setCreditCardSaveCardLabel(String creditCardSaveCardLabel) {
+        this.creditCardSaveCardLabel = creditCardSaveCardLabel;
+    }
+
+    /**
+     * Gets credit card billing address label.
+     *
+     * @return the credit card billing address label
+     */
+    public String getCreditCardBillingAddressLabel() {
+        return StringUtil.getLabelForView(creditCardBillingAddressLabel);
+    }
+
+    /**
+     * Sets credit card billing address label.
+     *
+     * @param creditCardBillingAddressLabel the credit card billing address label
+     */
+    public void setCreditCardBillingAddressLabel(String creditCardBillingAddressLabel) {
+        this.creditCardBillingAddressLabel = creditCardBillingAddressLabel;
+    }
+
+    /**
+     * Gets address 1 label.
+     *
+     * @return the address 1 label
+     */
+    public String getAddress1Label() {
+        return StringUtil.getLabelForView(address1Label);
+    }
+
+    /**
+     * Sets address 1 label.
+     *
+     * @param address1Label the address 1 label
+     */
+    public void setAddress1Label(String address1Label) {
+        this.address1Label = address1Label;
+    }
+
+    /**
+     * Gets address 2 label.
+     *
+     * @return the address 2 label
+     */
+    public String getAddress2Label() {
+        return StringUtil.getLabelForView(address2Label);
+    }
+
+    /**
+     * Sets address 2 label.
+     *
+     * @param address2Label the address 2 label
+     */
+    public void setAddress2Label(String address2Label) {
+        this.address2Label = address2Label;
+    }
+
+    /**
+     * Gets zipcode label.
+     *
+     * @return the zipcode label
+     */
+    public String getZipcodeLabel() {
+        return StringUtil.getLabelForView(zipcodeLabel);
+    }
+
+    /**
+     * Sets zipcode label.
+     *
+     * @param zipcodeLabel the zipcode label
+     */
+    public void setZipcodeLabel(String zipcodeLabel) {
+        this.zipcodeLabel = zipcodeLabel;
+    }
+
+    /**
+     * Gets city label.
+     *
+     * @return the city label
+     */
+    public String getCityLabel() {
+        return StringUtil.getLabelForView(cityLabel);
+    }
+
+    /**
+     * Sets city label.
+     *
+     * @param cityLabel the city label
+     */
+    public void setCityLabel(String cityLabel) {
+        this.cityLabel = cityLabel;
+    }
+
+    /**
+     * Gets state label.
+     *
+     * @return the state label
+     */
+    public String getStateLabel() {
+        return StringUtil.getLabelForView(stateLabel);
+    }
+
+    /**
+     * Sets state label.
+     *
+     * @param stateLabel the state label
+     */
+    public void setStateLabel(String stateLabel) {
+        this.stateLabel = stateLabel;
+    }
+
+    /**
+     * Gets country label.
+     *
+     * @return the country label
+     */
+    public String getCountryLabel() {
+        return StringUtil.getLabelForView(countryLabel);
+    }
+
+    /**
+     * Sets country label.
+     *
+     * @param countryLabel the country label
+     */
+    public void setCountryLabel(String countryLabel) {
+        this.countryLabel = countryLabel;
+    }
+
+    /*
+    * @return demographicsSelectDocumentLabel
+    */
     public String getDemographicsSelectDocumentLabel() {
         return StringUtil.getLabelForView(demographicsSelectDocumentLabel);
 
     }
 
     /**
-     *
      * @param demographicsSelectDocumentLabel The demographicsSelectDocumentLabel
      */
     public void setDemographicsSelectDocumentLabel(String demographicsSelectDocumentLabel) {
@@ -774,7 +1113,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return demographicsHaveInsurancesLabel
      */
     public String getDemographicsHaveInsurancesLabel() {
@@ -783,7 +1121,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param demographicsHaveInsurancesLabel The demographicsHaveInsurancesLabel
      */
     public void setDemographicsHaveInsurancesLabel(String demographicsHaveInsurancesLabel) {
@@ -791,7 +1128,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return demographicsMultipleInsurancesLabel
      */
     public String getDemographicsMultipleInsurancesLabel() {
@@ -799,7 +1135,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param demographicsMultipleInsurancesLabel The demographicsMultipleInsurancesLabel
      */
     public void setDemographicsMultipleInsurancesLabel(String demographicsMultipleInsurancesLabel) {
@@ -807,7 +1142,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return demographicsLicenseLabel
      */
     public String getDemographicsLicenseLabel() {
@@ -815,7 +1149,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param demographicsLicenseLabel The demographicsLicenseLabel
      */
     public void setDemographicsLicenseLabel(String demographicsLicenseLabel) {
@@ -823,7 +1156,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return demographicsSaveChangesLabel
      */
     public String getDemographicsSaveChangesLabel() {
@@ -832,7 +1164,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param demographicsSaveChangesLabel demographicsSaveChangesLabel
      */
     public void setDemographicsSaveChangesLabel(String demographicsSaveChangesLabel) {
@@ -840,7 +1171,42 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
+     * Gets credit card add new.
      *
+     * @return the credit card add new
+     */
+    public String getCreditCardAddNew() {
+        return StringUtil.getLabelForView(creditCardAddNew);
+    }
+
+    /**
+     * Sets credit card add new.
+     *
+     * @param creditCardAddNew the credit card add new
+     */
+    public void setCreditCardAddNew(String creditCardAddNew) {
+        this.creditCardAddNew = creditCardAddNew;
+    }
+
+    /**
+     * Gets edit credit card remove label.
+     *
+     * @return the edit credit card remove label
+     */
+    public String getEditCreditCardRemoveLabel() {
+        return StringUtil.getLabelForView(editCreditCardRemoveLabel);
+    }
+
+    /**
+     * Sets edit credit card remove label.
+     *
+     * @param editCreditCardRemoveLabel the edit credit card remove label
+     */
+    public void setEditCreditCardRemoveLabel(String editCreditCardRemoveLabel) {
+        this.editCreditCardRemoveLabel = editCreditCardRemoveLabel;
+    }
+
+    /**
      * @return demographicsRemoveLabel
      */
     public String getDemographicsRemoveLabel() {
@@ -849,7 +1215,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param demographicsRemoveLabel The demographicsRemoveLabel
      */
     public void setDemographicsRemoveLabel(String demographicsRemoveLabel) {
@@ -857,7 +1222,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return demographicsProviderLabel
      */
     public String getDemographicsProviderLabel() {
@@ -865,7 +1229,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param demographicsProviderLabel The demographicsProviderLabel
      */
     public void setDemographicsProviderLabel(String demographicsProviderLabel) {
@@ -873,7 +1236,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return demographicsPlanLabel
      */
     public String getDemographicsPlanLabel() {
@@ -881,7 +1243,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param demographicsPlanLabel The demographicsPlanLabel
      */
     public void setDemographicsPlanLabel(String demographicsPlanLabel) {
@@ -889,7 +1250,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return demographicsCardTypeLabel
      */
     public String getDemographicsCardTypeLabel() {
@@ -897,7 +1257,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param demographicsCardTypeLabel The demographicsCardTypeLabel
      */
     public void setDemographicsCardTypeLabel(String demographicsCardTypeLabel) {
@@ -905,7 +1264,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return demographicsCardNumberLabel
      */
     public String getDemographicsCardNumberLabel() {
@@ -913,7 +1271,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param demographicsCardNumberLabel The demographicsCardNumberLabel
      */
     public void setDemographicsCardNumberLabel(String demographicsCardNumberLabel) {
@@ -921,7 +1278,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return demographicsChangeNameLabel
      */
     public String getDemographicsChangeNameLabel() {
@@ -929,7 +1285,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param demographicsChangeNameLabel The demographicsChangeNameLabel
      */
     public void setDemographicsChangeNameLabel(String demographicsChangeNameLabel) {
@@ -937,7 +1292,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return demographicsChangeEmailLabel
      */
     public String getDemographicsChangeEmailLabel() {
@@ -945,7 +1299,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param demographicsChangeEmailLabel demographicsChangeEmailLabel
      */
     public void setDemographicsChangeEmailLabel(String demographicsChangeEmailLabel) {
@@ -953,7 +1306,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return demographicsChangePhotoLabel
      */
     public String getDemographicsChangePhotoLabel() {
@@ -961,7 +1313,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param demographicsChangePhotoLabel the demographicsChangePhotoLabel
      */
     public void setDemographicsChangePhotoLabel(String demographicsChangePhotoLabel) {
@@ -969,7 +1320,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @return demographicsIdentityLabel
      */
     public String getDemographicsIdentityLabel() {
@@ -977,11 +1327,9 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     }
 
     /**
-     *
      * @param demographicsIdentityLabel the demographicsIdentityLabel
      */
     public void setDemographicsIdentityLabel(String demographicsIdentityLabel) {
         this.demographicsIdentityLabel = demographicsIdentityLabel;
     }
-
 }
