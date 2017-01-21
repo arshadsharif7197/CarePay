@@ -14,9 +14,6 @@ public class DemographicsSettingsCreditCardsPayloadDTO {
     @SerializedName("payload")
     @Expose
     private DemographicsSettingsPayloadPropertiesDTO payload;
-    @SerializedName("default")
-    @Expose
-    private boolean isDefault;
 
     public DemographicsSettingsCreditCardMetadataDTO getMetadata() {
         return metadata;
@@ -32,13 +29,5 @@ public class DemographicsSettingsCreditCardsPayloadDTO {
 
     public void setPayload(DemographicsSettingsPayloadPropertiesDTO payload) {
         this.payload = payload;
-    }
-
-    public boolean isDefault() {
-        return isDefault;
-    }
-
-    public void setDefault(boolean aDefault) {
-        isDefault = aDefault;
     }
 }
