@@ -27,6 +27,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
     private Context context;
     private ArrayList<AppointmentPayloadDTO> appointmentArrayList;
     private boolean isWaitingroom;
+
     /**
      * Constructor.
      *

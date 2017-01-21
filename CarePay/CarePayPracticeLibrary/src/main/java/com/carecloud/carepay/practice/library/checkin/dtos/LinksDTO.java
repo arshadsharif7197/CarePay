@@ -19,6 +19,7 @@ public class LinksDTO {
     @SerializedName("queue_status")
     @Expose
     private TransitionDTO queueStatus;
+
     /**
      * @return The self
      */
