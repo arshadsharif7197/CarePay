@@ -1,10 +1,5 @@
 package com.carecloud.carepay.practice.library.checkin.dialog;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
@@ -48,6 +43,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
 import org.joda.time.DateTime;
 
