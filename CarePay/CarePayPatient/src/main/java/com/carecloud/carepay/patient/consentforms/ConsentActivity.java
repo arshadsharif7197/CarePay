@@ -9,9 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,7 +27,7 @@ import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.consentforms.fragments.ConsentForm1Fragment;
 import com.carecloud.carepay.patient.consentforms.fragments.ConsentForm2Fragment;
 import com.carecloud.carepay.patient.consentforms.interfaces.IFragmentCallback;
-import com.carecloud.carepay.patient.intakeforms.activities.InTakeWebViewActivity;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -40,19 +37,11 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormMetadataDTO;
-import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.Payload;
-import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormAppoPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormAppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormPayloadDTO;
-import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepaylibray.intake.models.IntakeFormPayloadModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
-
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.marcok.stepprogressbar.StepProgressBar;
@@ -61,11 +50,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
+
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 
 public class ConsentActivity extends BasePatientActivity implements IFragmentCallback {
@@ -113,10 +101,10 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
     private String authForm;
     static int numberofforms = 0;
 
-    private WebView mWebView;
+    private WebView webView;
     private ProgressBar progressBar;
     private Button nextButton;
-    private StepProgressBar mStepProgressBar;
+    private StepProgressBar stepProgressBar;
     private int totalForms;
     private int indexForms;
     private String[] jsonAnswers;
@@ -137,7 +125,7 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
         nextButton.setEnabled(false);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 validateForm();
             }
         });
@@ -161,9 +149,9 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
         }
 
 
-        mStepProgressBar = (StepProgressBar) findViewById(com.carecloud.carepaylibrary.R.id.stepProgressBarConsent);
-        mStepProgressBar.setCumulativeDots(true);
-        mStepProgressBar.setNumDots(totalForms);
+        stepProgressBar = (StepProgressBar) findViewById(com.carecloud.carepaylibrary.R.id.stepProgressBarConsent);
+        stepProgressBar.setCumulativeDots(true);
+        stepProgressBar.setNumDots(totalForms);
         progressBar = (ProgressBar) findViewById(com.carecloud.carepaylibrary.R.id.progressBarConsent);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -171,7 +159,7 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
         Toolbar toolbar = (Toolbar) findViewById(R.id.consentform_toolbar);
         toolbar.setTitle("");
         title = (TextView) toolbar.findViewById(R.id.consentform_toolbar_title);
-        title.setText(String.format(consentFormDTO.getMetadata().getLabel().getConsentFormHeading(), mStepProgressBar.getCurrentProgressDot() + 1, mStepProgressBar.getNumDots()));
+        title.setText(String.format(consentFormDTO.getMetadata().getLabel().getConsentFormHeading(), stepProgressBar.getCurrentProgressDot() + 1, stepProgressBar.getNumDots()));
         toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.icn_patient_mode_nav_back));
         setSupportActionBar(toolbar);
         initWebView();
@@ -185,29 +173,29 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
     public void initWebView() {
 
         //init webview
-        mWebView = (WebView) findViewById(com.carecloud.carepaylibrary.R.id.activity_main_webview_consent);
-        mWebView.getSettings().setJavaScriptEnabled(true);
+        webView = (WebView) findViewById(com.carecloud.carepaylibrary.R.id.activity_main_webview_consent);
+        webView.getSettings().setJavaScriptEnabled(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true);
         }
-        WebSettings settings = mWebView.getSettings();
+        WebSettings settings = webView.getSettings();
         settings.setAllowFileAccessFromFileURLs(true);
         settings.setAllowUniversalAccessFromFileURLs(true);
 
         //speed webview loading
         if (Build.VERSION.SDK_INT >= 19) {
-            mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+            webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         } else {
-            mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
         //mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         //load pages and links inside webview
-        mWebView.setWebViewClient(new WebViewClient());
-        mWebView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
+        webView.setWebViewClient(new WebViewClient());
+        webView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
         //Interface that receive calls from javascript
-        mWebView.addJavascriptInterface(new WebViewJavaScriptInterface(this), "FormInterface");
+        webView.addJavascriptInterface(new WebViewJavaScriptInterface(this), "FormInterface");
         //show progress bar
-        mWebView.setWebChromeClient(new WebChromeClient() {
+        webView.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {
                 if (progress < 100) {
                     progressBar.setVisibility(View.VISIBLE);
@@ -218,7 +206,7 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
                 }
             }
         });
-        mWebView.loadUrl("file:///android_asset/carecloud-forms/app/index.html");
+        webView.loadUrl("file:///android_asset/carecloud-forms/app/index.html");
 
     }
 
@@ -244,7 +232,7 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
         if (indexForms < totalForms) {
 
             String payload = jsonAnswers[indexForms];
-            mWebView.loadUrl("javascript:angular.element(document.getElementsByClassName('forms')).scope().load_form(JSON.parse('" + payload + "'))");
+            webView.loadUrl("javascript:angular.element(document.getElementsByClassName('forms')).scope().load_form(JSON.parse('" + payload + "'))");
             nextButton.setEnabled(true);
             ++indexForms;
         } else {
@@ -260,7 +248,7 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
     public void validateForm() {
 
         nextButton.setClickable(true);
-        mWebView.loadUrl("javascript:angular.element(document.getElementsByClassName('forms')).scope().save_form()");
+        webView.loadUrl("javascript:angular.element(document.getElementsByClassName('forms')).scope().save_form()");
 
     }
 
@@ -277,8 +265,9 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
         }
 
 
-
-        // start loading form
+        /**
+         * start loading form
+         */
         @JavascriptInterface
         public void webviewReady(String message) {
             Log.d(LOG_TAG, "FORMS SAVED -" + message);
@@ -292,21 +281,23 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
 
         }
 
+        /**
+         * save form
+         */
         @JavascriptInterface
         public void savedForm(final String response) {
             ConsentActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    // your stuff to update the UI
-                    System.out.println("##### inside savedForm...");
+
                     if (indexForms < totalForms) {
                         jsonResponse[indexForms] = response;
-                        if (mStepProgressBar.getCurrentProgressDot() < mStepProgressBar.getNumDots() - 1) {
-                            mStepProgressBar.next();
-                            title.setText(String.format(consentFormDTO.getMetadata().getLabel().getConsentFormHeading(), mStepProgressBar.getCurrentProgressDot() + 1, mStepProgressBar.getNumDots()));
+                        if (stepProgressBar.getCurrentProgressDot() < stepProgressBar.getNumDots() - 1) {
+                            stepProgressBar.next();
+                            title.setText(String.format(consentFormDTO.getMetadata().getLabel().getConsentFormHeading(), stepProgressBar.getCurrentProgressDot() + 1, stepProgressBar.getNumDots()));
                         }
 
-                        if (mStepProgressBar.getCurrentProgressDot() == mStepProgressBar.getNumDots() - 1) {
+                        if (stepProgressBar.getCurrentProgressDot() == stepProgressBar.getNumDots() - 1) {
                             nextButton.setText(consentFormDTO.getMetadata().getLabel().getFinishFormButtonText());
                         } else {
                             nextButton.setText(consentFormDTO.getMetadata().getLabel().getNextFormButtonText());
@@ -325,6 +316,9 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
 
         }
 
+        /**
+         * send message to user
+         */
         @JavascriptInterface
         public void makeToast(String message, boolean lengthLong) {
             if(context!=null) {

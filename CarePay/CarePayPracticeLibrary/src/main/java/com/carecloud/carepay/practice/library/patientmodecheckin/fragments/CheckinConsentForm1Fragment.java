@@ -26,7 +26,6 @@ import android.widget.Toast;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
-import com.carecloud.carepay.practice.library.patientmodecheckin.consentform.FormData;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -34,23 +33,22 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
-import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.google.gson.Gson;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.practice.FlowStateInfo;
+import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
 
 import static com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity.SUBFLOW_CONSENT;
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
 
 
 /**
@@ -81,7 +79,7 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
     };
     private int formIndex;
 
-    private WebView mWebView;
+    private WebView webView;
     private ProgressBar progressBar;
     private Button nextButton;
     private int totalForms;
@@ -95,6 +93,16 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_checkin_consent_form_dynamic, container, false);
+        nextButton = (Button) view.findViewById(com.carecloud.carepaylibrary.R.id.consentButtonNext);
+        nextButton.setEnabled(false);
+        nextButton.setText(consentFormDTO.getMetadata().getLabel().getNextFormButtonText());
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                validateForm();
+            }
+        });
+
         Bundle bundle = getArguments();
         Gson gson = new Gson();
         String jsonString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
@@ -109,15 +117,6 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
 
         ((PatientModeCheckinActivity) getActivity()).updateSection(flowStateInfo);
 
-        nextButton = (Button) view.findViewById(com.carecloud.carepaylibrary.R.id.consentButtonNext);
-        nextButton.setEnabled(false);
-        nextButton.setText(consentFormDTO.getMetadata().getLabel().getNextFormButtonText());
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                validateForm();
-            }
-        });
 
 
         try {
@@ -136,7 +135,7 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
         }
 
 
-        mWebView = (WebView) view.findViewById(com.carecloud.carepaylibrary.R.id.activity_main_webview_consent);
+        webView = (WebView) view.findViewById(com.carecloud.carepaylibrary.R.id.activity_main_webview_consent);
         progressBar = (ProgressBar) view.findViewById(com.carecloud.carepaylibrary.R.id.progressBarConsent);
         progressBar.setVisibility(View.VISIBLE);
         initWebView();
@@ -151,26 +150,26 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
     public void initWebView() {
 
 
-        mWebView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setJavaScriptEnabled(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true);
         }
-        WebSettings settings = mWebView.getSettings();
+        WebSettings settings = webView.getSettings();
         settings.setAllowFileAccessFromFileURLs(true);
         settings.setAllowUniversalAccessFromFileURLs(true);
 
         //speed webview loading
         if (Build.VERSION.SDK_INT >= 19) {
-            mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+            webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         } else {
-            mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
-        mWebView.setWebViewClient(new WebViewClient());
-        mWebView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
+        webView.setWebViewClient(new WebViewClient());
+        webView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
         //named interface that receive calls from javascript
-        mWebView.addJavascriptInterface(new WebViewJavaScriptInterface(getActivity()), "FormInterface");
+        webView.addJavascriptInterface(new WebViewJavaScriptInterface(getActivity()), "FormInterface");
         //show progress bar
-        mWebView.setWebChromeClient(new WebChromeClient() {
+        webView.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {
                 if (progress < 100) {
                     progressBar.setVisibility(View.VISIBLE);
@@ -181,7 +180,7 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
                 }
             }
         });
-        mWebView.loadUrl("file:///android_asset/carecloud-forms/app/index.html");
+        webView.loadUrl("file:///android_asset/carecloud-forms/app/index.html");
     }
 
     /**
@@ -203,7 +202,7 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
         if (indexForms < totalForms) {
 
             String payload = jsonAnswers[indexForms];
-            mWebView.loadUrl("javascript:angular.element(document.getElementsByClassName('forms')).scope().load_form(JSON.parse('" + payload + "'))");
+            webView.loadUrl("javascript:angular.element(document.getElementsByClassName('forms')).scope().load_form(JSON.parse('" + payload + "'))");
             nextButton.setEnabled(true);
             ++indexForms;
             flowStateInfo.fragmentIndex = indexForms;
@@ -218,7 +217,7 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
      */
     public void validateForm() {
         nextButton.setClickable(false);
-        mWebView.loadUrl("javascript:angular.element(document.getElementsByClassName('forms')).scope().save_form()");
+        webView.loadUrl("javascript:angular.element(document.getElementsByClassName('forms')).scope().save_form()");
 
 
     }
@@ -234,7 +233,10 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
             this.context = context;
         }
 
-        //start displaying content once interface is ready
+
+        /**
+         * start displaying content once interface is ready
+         */
         @JavascriptInterface
         public void webviewReady(String message) {
 
@@ -250,12 +252,9 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
         }
 
 
-        @JavascriptInterface
-        public String load_form() {
-            return "";
-        }
-
-        //called from interface once consent form is ready to be saved
+        /**
+         * called from interface once consent form is ready to be saved
+         */
         @JavascriptInterface
         public void savedForm(final String response) {
             Log.d(LOG_TAG, "FORMS SAVED -" + response);
@@ -287,6 +286,9 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
 
         }
 
+        /**
+         * called from interface to send a user a message
+         */
         @JavascriptInterface
         public void makeToast(String message, boolean lengthLong) {
             if(context!=null) {

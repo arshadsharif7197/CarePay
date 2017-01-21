@@ -635,6 +635,12 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     }
 
 
+
+    /**
+     * Launch intake forms
+     * @param workflowJson workflowJson
+     *
+     */
     public void startIntakeForms(String workflowJson) {
         Intent intent = new Intent();
         intent.setAction("NEW_CHECKEDIN_NOTIFICATION");
