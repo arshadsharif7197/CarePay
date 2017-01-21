@@ -141,8 +141,8 @@ public class DemographicsSettingsPayloadPropertiesDTO {
         return isDefault;
     }
 
-    public void setDefault(boolean aDefault) {
-        isDefault = aDefault;
+    public void setDefault(boolean isDefault) {
+        isDefault = isDefault;
     }
 
     public String getPaymentProfileId() {

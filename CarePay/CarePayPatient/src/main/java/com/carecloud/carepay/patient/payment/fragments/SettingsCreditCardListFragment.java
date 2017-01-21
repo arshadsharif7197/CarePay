@@ -81,6 +81,11 @@ public class SettingsCreditCardListFragment extends Fragment implements Settings
         loadCreditCardsList(demographicsSettingsDTO);
     }
 
+    /**
+     * Load credit cards list.
+     *
+     * @param demographicsSettingsDTO the demographics settings dto
+     */
     public void loadCreditCardsList(DemographicsSettingsDTO demographicsSettingsDTO) {
         if (demographicsSettingsDTO != null) {
             this.demographicsSettingsDTO = demographicsSettingsDTO;
@@ -135,7 +140,7 @@ public class SettingsCreditCardListFragment extends Fragment implements Settings
     };
 
     @Override
-    public void OnCreditCardDetailClickListener(int position) {
+    public void onCreditCardDetailClickListener(int position) {
         Bundle bundle = new Bundle();
         Gson gson = new Gson();
         String creditCardsPayloadDTOString = gson.toJson(demographicsSettingsDTO.getPayload()

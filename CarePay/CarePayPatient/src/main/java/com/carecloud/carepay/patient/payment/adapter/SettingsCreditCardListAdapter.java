@@ -17,7 +17,7 @@ import java.util.List;
 public class SettingsCreditCardListAdapter extends RecyclerView.Adapter<SettingsCreditCardListAdapter.SettingsCreditCardListViewHolder> {
 
     public interface IOnCreditCardDetailClickListener {
-        void OnCreditCardDetailClickListener(int position);
+        void onCreditCardDetailClickListener(int position);
     }
 
     private Context context;
@@ -25,6 +25,14 @@ public class SettingsCreditCardListAdapter extends RecyclerView.Adapter<Settings
     private DemographicsSettingsLabelsDTO settingsLabelsDTO;
     private IOnCreditCardDetailClickListener onCreditCardDetailClickListener;
 
+    /**
+     * Instantiates a new Settings credit card list adapter.
+     *
+     * @param context           the context
+     * @param creditCardList    the credit card list
+     * @param settingsLabelsDTO the settings labels dto
+     * @param callback          the callback
+     */
     public SettingsCreditCardListAdapter(Context context, List<DemographicsSettingsCreditCardsPayloadDTO> creditCardList,
                                          DemographicsSettingsLabelsDTO settingsLabelsDTO, IOnCreditCardDetailClickListener callback) {
         this.context = context;
@@ -57,7 +65,7 @@ public class SettingsCreditCardListAdapter extends RecyclerView.Adapter<Settings
         holder.detailsTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onCreditCardDetailClickListener.OnCreditCardDetailClickListener(position);
+                onCreditCardDetailClickListener.onCreditCardDetailClickListener(position);
             }
         });
     }
