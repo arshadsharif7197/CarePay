@@ -1,5 +1,10 @@
 package com.carecloud.carepay.practice.library.checkin.dialog;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
@@ -25,14 +30,14 @@ import com.carecloud.carepay.practice.library.checkin.dtos.CheckInMetadataDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInStatusDataPayloadValueDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInStatusPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.PatientBalanceDTO;
+import com.carecloud.carepay.practice.library.checkin.dtos.QueueDTO;
+import com.carecloud.carepay.practice.library.checkin.dtos.QueueStatusPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.QueryStrings;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.practice.library.checkin.dtos.QueueDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.QueueStatusPayloadDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
@@ -46,10 +51,6 @@ import com.squareup.picasso.RequestCreator;
 
 import org.joda.time.DateTime;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
 
 /**
  * Created by sudhir_pingale on 10/26/2016.
@@ -453,14 +454,15 @@ public class AppointmentDetailDialog extends Dialog {
         String rd = labels.getPracticeCheckinDetailDialogOrdinalRd();
         return new String[] { th, st, nd, rd, th, th, th, th, th, th };
     }
-    private String ordinal(int i, String[] sufixes) {
-        switch (i % 100) {
+
+    private String ordinal(int number, String[] sufixes) {
+        switch (number % 100) {
             case 11:
             case 12:
             case 13:
-                return i + sufixes[0];
+                return number + sufixes[0];
             default:
-                return i + sufixes[i % 10];
+                return number + sufixes[number % 10];
 
         }
     }
