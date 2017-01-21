@@ -54,7 +54,24 @@ public class CheckInLabelDTO {
     @SerializedName("practice_checkin_filter_locations")
     @Expose
     private String practiceCheckinFilterLocations;
-
+    @SerializedName("practice_checkin_detail_dialog_ordinal_th")
+    @Expose
+    private String practiceCheckinDetailDialogOrdinalTh;
+    @SerializedName("practice_checkin_detail_dialog_ordinal_st")
+    @Expose
+    private String practiceCheckinDetailDialogOrdinalSt;
+    @SerializedName("practice_checkin_detail_dialog_ordinal_nd")
+    @Expose
+    private String practiceCheckinDetailDialogOrdinalNd;
+    @SerializedName("practice_checkin_detail_dialog_ordinal_rd")
+    @Expose
+    private String practiceCheckinDetailDialogOrdinalRd;
+    @SerializedName("practice_checkin_detail_dialog_waiting_room")
+    @Expose
+    private String practiceCheckinDetailDialogWaitingRoom;
+    @SerializedName("practice_checkin_detail_dialog_in_queue")
+    @Expose
+    private String practiceCheckinDetailDialogQueue;
     @SerializedName("practice_checkin_waiting_room")
     @Expose
     private String practiceCheckinWaitingRoom;
@@ -283,5 +300,53 @@ public class CheckInLabelDTO {
 
     public void setPracticeCheckinFilterOn(String practiceCheckinFilterOn) {
         this.practiceCheckinFilterOn = practiceCheckinFilterOn;
+    }
+
+    public String getPracticeCheckinDetailDialogOrdinalTh() {
+        return practiceCheckinDetailDialogOrdinalTh;
+    }
+
+    public void setPracticeCheckinDetailDialogOrdinalTh(String practiceCheckinDetailDialogOrdinalTh) {
+        this.practiceCheckinDetailDialogOrdinalTh = practiceCheckinDetailDialogOrdinalTh;
+    }
+
+    public String getPracticeCheckinDetailDialogOrdinalSt() {
+        return practiceCheckinDetailDialogOrdinalSt;
+    }
+
+    public void setPracticeCheckinDetailDialogOrdinalSt(String practiceCheckinDetailDialogOrdinalSt) {
+        this.practiceCheckinDetailDialogOrdinalSt = practiceCheckinDetailDialogOrdinalSt;
+    }
+
+    public String getPracticeCheckinDetailDialogOrdinalNd() {
+        return practiceCheckinDetailDialogOrdinalNd;
+    }
+
+    public void setPracticeCheckinDetailDialogOrdinalNd(String practiceCheckinDetailDialogOrdinalNd) {
+        this.practiceCheckinDetailDialogOrdinalNd = practiceCheckinDetailDialogOrdinalNd;
+    }
+
+    public String getPracticeCheckinDetailDialogOrdinalRd() {
+        return practiceCheckinDetailDialogOrdinalRd;
+    }
+
+    public void setPracticeCheckinDetailDialogOrdinalRd(String practiceCheckinDetailDialogOrdinalRd) {
+        this.practiceCheckinDetailDialogOrdinalRd = practiceCheckinDetailDialogOrdinalRd;
+    }
+
+    public String getPracticeCheckinDetailDialogWaitingRoom() {
+        return practiceCheckinDetailDialogWaitingRoom;
+    }
+
+    public void setPracticeCheckinDetailDialogWaitingRoom(String practiceCheckinDetailDialogWaitingRoom) {
+        this.practiceCheckinDetailDialogWaitingRoom = practiceCheckinDetailDialogWaitingRoom;
+    }
+
+    public String getPracticeCheckinDetailDialogQueue() {
+        return practiceCheckinDetailDialogQueue;
+    }
+
+    public void setPracticeCheckinDetailDialogQueue(String practiceCheckinDetailDialogQueue) {
+        this.practiceCheckinDetailDialogQueue = practiceCheckinDetailDialogQueue;
     }
 }

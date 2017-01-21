@@ -111,7 +111,7 @@
 
     <!-- Custom Appointment details dialog -->
     <dimen name="appointment_detail_dialog_width">714dp</dimen>
-    <dimen name="appointment_detail_dialog_height">465dp</dimen>
+    <dimen name="appointment_detail_dialog_height">475dp</dimen>
     <dimen name="custom_appointment_dialog_view_margin">9dp</dimen>
     <dimen name="custom_appointment_dialog_view_padding">10dp</dimen>
     <dimen name="custom_appointment_dialog_view_textsize_small">14sp</dimen>
@@ -195,6 +195,7 @@
     <dimen name="checkin_back_height">45dp</dimen>
     <dimen name="checkin_logo_width">150dp</dimen>
     <dimen name="checkin_logo_height">46dp</dimen>
+    <dimen name="checkin_info_label_width">150dp</dimen>
 
     <!--Provider lists-->
     <dimen name="provider_list_title_margin">34dp</dimen>

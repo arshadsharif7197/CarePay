@@ -195,10 +195,10 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         checkingInCounterTextview.setText(String.valueOf(checkingInAppointments.size()));
         waitingCounterTextview.setText(String.valueOf(waitingRoomAppointments.size()));
 
-        checkedInAdapter = new CheckedInAppointmentAdapter(CheckInActivity.this, checkingInAppointments);
+        checkedInAdapter = new CheckedInAppointmentAdapter(CheckInActivity.this, checkingInAppointments, false);
         checkinginRecyclerView.setAdapter(checkedInAdapter);
 
-        waitingRoomAdapter = new CheckedInAppointmentAdapter(CheckInActivity.this, waitingRoomAppointments);
+        waitingRoomAdapter = new CheckedInAppointmentAdapter(CheckInActivity.this, waitingRoomAppointments, true);
         waitingRoomRecyclerView.setAdapter(waitingRoomAdapter);
     }
 
@@ -430,10 +430,10 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
      *
      * @param appointmentPayloadDTO the appointment payload dto
      */
-    public void onCheckInItemClick(AppointmentPayloadDTO appointmentPayloadDTO) {
+    public void onCheckInItemClick(AppointmentPayloadDTO appointmentPayloadDTO, boolean isWaitingroom) {
         AppointmentDetailDialog dialog = new AppointmentDetailDialog(context,
                 checkInDTO, getPatientBalanceDTOs(appointmentPayloadDTO.getPatient().getId()),
-                appointmentPayloadDTO);
+                appointmentPayloadDTO, isWaitingroom);
         dialog.show();
     }
 
