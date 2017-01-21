@@ -265,6 +265,12 @@ public class AddNewCreditCardFragment extends Fragment implements
         return creditCardNoEditText.getText().toString().replace(" ", "").trim();
     }
 
+    private String getLastFour()
+    {
+        String fullCard = creditCardNoEditText.getText().toString().replace(" ", "").trim();
+        return fullCard.substring(fullCard.length() - 4, fullCard.length()) ;
+    }
+
     private void initilizeViews(View view) {
         creditCardNoTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.creditCardNoTextInputLayout);
         creditCardNoTextInput.setTag(paymentsLabelDTO.getPaymentCreditCardNumber());
@@ -294,7 +300,6 @@ public class AddNewCreditCardFragment extends Fragment implements
 
         saveCardOnFileCheckBox = (CheckBox) view.findViewById(com.carecloud.carepaylibrary.R.id.saveCardOnFileCheckBox);
         saveCardOnFileCheckBox.setText(paymentsLabelDTO.getPaymentSaveCardOnFile());
-        saveCardOnFileCheckBox.setOnCheckedChangeListener(saveCardOnFileCheckBoxListener);
 
         setAsDefaultCheckBox = (CheckBox) view.findViewById(com.carecloud.carepaylibrary.R.id.setAsDefaultCheckBox);
         setAsDefaultCheckBox.setText(paymentsLabelDTO.getPaymentSetAsDefaultCreditCard());
@@ -311,35 +316,30 @@ public class AddNewCreditCardFragment extends Fragment implements
         address1EditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.addressEditTextId);
         address1EditText.setHint(paymentsLabelDTO.getPaymentAddressLine1Text());
         address1EditText.setTag(address1TextInput);
-        address1EditText.setText(addressPayloadDTO.getAddress1());
 
         address2TextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.address2TextInputLayout);
         address2TextInput.setTag(paymentsLabelDTO.getPaymentAddressLine2Text());
         address2EditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.addressEditText2Id);
         address2EditText.setHint(paymentsLabelDTO.getPaymentAddressLine2Text());
         address2EditText.setTag(address2TextInput);
-        address2EditText.setText(addressPayloadDTO.getAddress2());
 
         zipCodeTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.zipCodeTextInputLayout);
         zipCodeTextInput.setTag(paymentsLabelDTO.getPaymentZipcode());
         zipCodeEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.zipCodeId);
         zipCodeEditText.setHint(paymentsLabelDTO.getPaymentZipcode());
         zipCodeEditText.setTag(zipCodeTextInput);
-        zipCodeEditText.setText(addressPayloadDTO.getZipcode());
 
         cityTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.cityTextInputLayout);
         cityTextInput.setTag(paymentsLabelDTO.getPaymentCity());
         cityEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.cityId);
         cityEditText.setHint(paymentsLabelDTO.getPaymentCity());
         cityEditText.setTag(cityTextInput);
-        cityEditText.setText(addressPayloadDTO.getCity());
 
         stateTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.stateTextInputLayout);
         stateTextInput.setTag(paymentsLabelDTO.getPaymentState());
         stateEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.stateAutoCompleteTextView);
         stateEditText.setHint(paymentsLabelDTO.getPaymentState());
         stateEditText.setTag(stateTextInput);
-        stateEditText.setText(addressPayloadDTO.getState());
 
         nextButton = (Button) view.findViewById(com.carecloud.carepaylibrary.R.id.nextButton);
         nextButton.setText(paymentsLabelDTO.getPaymentPayText());
@@ -360,11 +360,32 @@ public class AddNewCreditCardFragment extends Fragment implements
 
         saveCardOnFileCheckBox.setChecked(false);
         setAsDefaultCheckBox.setChecked(false);
-        billingAddressLayout.setVisibility(View.GONE);
+
         useProfileAddressCheckBox.setChecked(true);
         setAddressFiledsEnabled(false);
         nextButton.setEnabled(false);
         nextButton.setClickable(false);
+
+        //billingAddressLayout.setVisibility(View.GONE); SHMRK-1077
+        useProfileAddressCheckBox.setChecked(true);
+        setAddressFiledsEnabled(false);
+        setDefaultBillingAddressTexts();
+    }
+
+    private void setDefaultBillingAddressTexts()
+    {
+        try{
+            address1EditText.setText(addressPayloadDTO.getAddress1());
+            address2EditText.setText(addressPayloadDTO.getAddress2());
+            zipCodeEditText.setText(addressPayloadDTO.getZipcode());
+            cityEditText.setText(addressPayloadDTO.getCity());
+            stateEditText.setText(addressPayloadDTO.getState());
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     private void setTypefaces() {
@@ -505,26 +526,13 @@ public class AddNewCreditCardFragment extends Fragment implements
         });
     }
 
-    private CompoundButton.OnCheckedChangeListener saveCardOnFileCheckBoxListener = new CompoundButton.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            validateCreditCardDetails();
-            if (isChecked) {
-                billingAddressLayout.setVisibility(View.VISIBLE);
-                useProfileAddressCheckBox.setChecked(true);
-                setAddressFiledsEnabled(false);
-            } else {
-                billingAddressLayout.setVisibility(View.GONE);
-            }
-        }
-    };
-
     private CompoundButton.OnCheckedChangeListener useProfileAddressListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             validateCreditCardDetails();
             if (isChecked) {
                 setAddressFiledsEnabled(false);
+                setDefaultBillingAddressTexts();
             } else {
                 setAddressFiledsEnabled(true);
             }
@@ -640,7 +648,7 @@ public class AddNewCreditCardFragment extends Fragment implements
             return false;
         }
 
-        if (saveCardOnFileCheckBox.isChecked() && !useProfileAddressCheckBox.isChecked()) {
+        if (!useProfileAddressCheckBox.isChecked()) {
             if (!(address1EditText.getText().toString().trim().length() > 0) ||
                     !(zipCodeEditText.getText().toString().trim().length() > 0) ||
                     !(cityEditText.getText().toString().trim().length() > 0) ||
@@ -748,7 +756,7 @@ public class AddNewCreditCardFragment extends Fragment implements
         creditCardsPayloadDTO.setExpireDt(pickDateTextView.getText().toString().trim());
         creditCardsPayloadDTO.setCardType(getCreditCardType(getCardNumber()));
         creditCardsPayloadDTO.setToken(tokenValue);
-        if (saveCardOnFileCheckBox.isChecked() && useProfileAddressCheckBox.isChecked()) {
+        if (useProfileAddressCheckBox.isChecked()) {
             billingInformation.setLine1(address1EditText.getText().toString().trim());
             billingInformation.setLine2(address2EditText.getText().toString().trim());
             billingInformation.setZip(zipCodeEditText.getText().toString().trim());
@@ -779,11 +787,12 @@ public class AddNewCreditCardFragment extends Fragment implements
             creditCard.put("save", saveCardOnFileCheckBox.isChecked());
             //creditCard.put("credit_card_id", creditCardPayload.getCreditCardsId());
             creditCard.put("card_type", getCreditCardType(getCardNumber()));
-            creditCard.put("card_number", getCardNumber());
+            creditCard.put("card_number", getLastFour());
             creditCard.put("name_on_card", nameOnCardEditText.getText().toString().trim());
             creditCard.put("expire_dt", pickDateTextView.getText().toString().trim());
             creditCard.put("cvv", verificationCodeEditText.getText().toString().trim());
             creditCard.put("papi_pay", true);
+            creditCard.put("token", tokenValue) ;
             JSONObject billingInformation = new JSONObject();
             billingInformation.put("same_as_patient", useProfileAddressCheckBox.isChecked());
             creditCard.put("billing_information", billingInformation);
