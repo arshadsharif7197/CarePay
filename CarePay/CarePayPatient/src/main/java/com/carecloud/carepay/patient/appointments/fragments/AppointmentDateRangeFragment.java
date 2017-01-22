@@ -21,11 +21,11 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
+import com.carecloud.carepaylibray.customcomponents.CustomCalendarCellDecorator;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.squareup.timessquare.CalendarCellDecorator;
-import com.squareup.timessquare.CalendarCellView;
 import com.squareup.timessquare.CalendarPickerView;
 
 import java.util.ArrayList;
@@ -188,17 +188,8 @@ public class AppointmentDateRangeFragment extends Fragment {
 
         calendarPickerView.setOnDateSelectedListener(onDateSelectListener);
         List<CalendarCellDecorator> decorators = new ArrayList<>();
-
-        decorators.add(new CalendarCellDecorator() {
-            @Override
-            public void decorate(CalendarCellView cellView, Date date) {
-                if (cellView.isCurrentMonth()){
-                    cellView.setTextColor(ContextCompat.getColor(AppointmentDateRangeFragment.this.getContext(), R.color.white));
-                }else{
-                    cellView.setTextColor(ContextCompat.getColor(AppointmentDateRangeFragment.this.getContext(), R.color.payne_gray));
-                }
-            }
-        });
+        decorators.add(new CustomCalendarCellDecorator(ContextCompat.getColor(getContext(), R.color.white),
+                                                       ContextCompat.getColor(getContext(), R.color.payne_gray)));
         calendarPickerView.setDecorators(decorators);
 
         applyDateRangeButton = (CustomGothamRoundedMediumButton)
