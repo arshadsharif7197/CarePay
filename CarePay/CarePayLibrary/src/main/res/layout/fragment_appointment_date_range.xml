@@ -90,7 +90,6 @@
         android:layout_weight="5"
         android:background="@color/payne_gray"
         app:tsquare_dayBackground="@drawable/custom_calendar_bg_selector"
-        app:tsquare_dayTextColor="@color/white"
         app:tsquare_dividerColor="@color/transparent_apt"
         app:tsquare_headerTextColor="@color/transparent_apt"
         app:tsquare_titleTextColor="@color/white" />
