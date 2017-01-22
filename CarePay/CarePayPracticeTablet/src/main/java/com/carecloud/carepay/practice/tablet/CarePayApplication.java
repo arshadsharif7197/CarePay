@@ -26,6 +26,13 @@ public class CarePayApplication extends Application implements Application.Activ
     @Override
     public void onCreate() {
         super.onCreate();
+        start();
+    }
+
+    /**
+     * init app
+     */
+    public void start(){
         setHttpConstants();
         ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
         PracticeNavigationHelper.initInstance(this);
@@ -80,8 +87,8 @@ public class CarePayApplication extends Application implements Application.Activ
         if(activity instanceof SigninActivity) {
             // log out previous user from Cognito
             Log.v(this.getClass().getSimpleName(), "sign out Cognito");
-            CognitoAppHelper.getPool().getUser().signOut();
-            CognitoAppHelper.setUser(null);
+            //CognitoAppHelper.getPool().getUser().signOut();
+            //CognitoAppHelper.setUser(null);
         }
     }
 }
