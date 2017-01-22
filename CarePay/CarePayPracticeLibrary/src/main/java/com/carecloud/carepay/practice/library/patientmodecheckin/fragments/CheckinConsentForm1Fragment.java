@@ -96,6 +96,10 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_checkin_consent_form_dynamic, container, false);
+        Bundle bundle = getArguments();
+        Gson gson = new Gson();
+        String jsonString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
+        consentFormDTO = gson.fromJson(jsonString, ConsentFormDTO.class);
         nextButton = (Button) view.findViewById(com.carecloud.carepaylibrary.R.id.consentButtonNext);
         nextButton.setEnabled(false);
         nextButton.setText(consentFormDTO.getMetadata().getLabel().getNextFormButtonText());
@@ -106,10 +110,6 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
             }
         });
 
-        Bundle bundle = getArguments();
-        Gson gson = new Gson();
-        String jsonString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
-        consentFormDTO = gson.fromJson(jsonString, ConsentFormDTO.class);
         totalForms = consentFormDTO.getMetadata().getDataModels().getPracticeForms() != null ? consentFormDTO.getMetadata().getDataModels().getPracticeForms().size() : 0;
         jsonAnswers = new String[totalForms];
         jsonResponse = new String[totalForms];
