@@ -281,7 +281,7 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
     private ArrayList<Object> getAvailableHoursListWithHeader(){
         ArrayList<Object> timeSlotsListWithHeaders = new ArrayList<>();
 
-        if(availabilityDTO!=null){
+        if(availabilityDTO!=null && availabilityDTO.getPayload().getAppointmentAvailability().getPayload().size()>0) {
             List<AppointmentsSlotsDTO> appointmentsSlotsDTOList = availabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getSlots();
             if(appointmentsSlotsDTOList!=null && appointmentsSlotsDTOList.size()>0){
                 // To sort appointment time slots list based on time
