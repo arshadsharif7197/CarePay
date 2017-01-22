@@ -128,9 +128,8 @@ public class PracticeNavigationHelper {
             }
 
             case PracticeNavigationStateConstants.INTAKE_FORMS: {
-                if (context instanceof PracticeAppSignatureActivity) {
-                    ((PracticeAppSignatureActivity) context).launchIntake(workflowDTO.toString());
-                    ((PracticeAppSignatureActivity) context).finish();
+                if (context instanceof PatientModeCheckinActivity) {
+                    ((PatientModeCheckinActivity) context).startIntakeForms(workflowDTO.toString());
                     return;
                 }
                 break;

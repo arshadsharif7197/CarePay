@@ -79,9 +79,10 @@ public class AppointmentsActivity extends MenuPatientActivity {
             patientId = appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPatientId();
         }
 
-        transitionBalance = appointmentsDTO.getMetadata().getLinks().getPatientBalances();
-        transitionLogout = appointmentsDTO.getMetadata().getTransitions().getLogout();
-        transitionProfile = appointmentsDTO.getMetadata().getLinks().getProfileUpdate();
+        setTransitionBalance(appointmentsDTO.getMetadata().getLinks().getPatientBalances());
+        setTransitionLogout(appointmentsDTO.getMetadata().getTransitions().getLogout());
+        setTransitionProfile(appointmentsDTO.getMetadata().getLinks().getProfileUpdate());
+        setTransitionAppointments(appointmentsDTO.getMetadata().getLinks().getAppointments());
 
         inflateDrawer();
         gotoAppointmentFragment();

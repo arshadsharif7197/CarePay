@@ -89,7 +89,6 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
                 {
 
                     dialogCloseHeader = (ImageView) findViewById(R.id.payment_close_button);
-                    dialogCloseHeader.setVisibility(View.VISIBLE);
                     dialogCloseHeader.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -99,7 +98,7 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
 
                     closeLabel=((TextView) findViewById(R.id.payment_close_label));
                     closeLabel.setText(paymentsLabel.getPaymentCloseButton());
-                    closeLabel.setVisibility(View.VISIBLE);
+                    findViewById(R.id.payment_close_Layout).setVisibility(View.VISIBLE);
                     size = 0.53;
                 }else{
                     dialogCloseHeader = (ImageView) findViewById(com.carecloud.carepaylibrary.R.id.dialog_close_header);
