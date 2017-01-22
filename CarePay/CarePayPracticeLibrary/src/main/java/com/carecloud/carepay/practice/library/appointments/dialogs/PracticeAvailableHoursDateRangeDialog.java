@@ -15,8 +15,10 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.customdialog.BasePracticeDialog;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
+import com.carecloud.carepaylibray.customcomponents.CustomCalendarCellDecorator;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.squareup.timessquare.CalendarCellDecorator;
 import com.squareup.timessquare.CalendarPickerView;
 
 import java.util.ArrayList;
@@ -173,7 +175,10 @@ public class PracticeAvailableHoursDateRangeDialog extends BasePracticeDialog {
         }
 
         calendarPickerView.setOnDateSelectedListener(onDateSelectListener);
-
+        List<CalendarCellDecorator> decorators = new ArrayList<>();
+        decorators.add(new CustomCalendarCellDecorator(ContextCompat.getColor(getContext(), R.color.white),
+                                                       ContextCompat.getColor(getContext(), R.color.payne_gray)));
+        calendarPickerView.setDecorators(decorators);
         applyDateRangeButton = (CustomGothamRoundedMediumButton)
                 view.findViewById(com.carecloud.carepaylibrary.R.id.applyDateRangeButton);
         applyDateRangeButton.setOnClickListener(applyButtonClickListener);

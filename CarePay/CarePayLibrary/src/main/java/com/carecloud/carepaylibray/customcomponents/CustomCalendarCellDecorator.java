@@ -1,0 +1,31 @@
+package com.carecloud.carepaylibray.customcomponents;
+
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
+
+import com.squareup.timessquare.CalendarCellDecorator;
+import com.squareup.timessquare.CalendarCellView;
+
+import java.util.Date;
+
+/**
+ * Created by jorge on 21/01/17.
+ */
+
+public class CustomCalendarCellDecorator implements CalendarCellDecorator {
+    private int colorDayCurrentMonth;
+    private int colorDayNotCurrentMonth;
+
+    public CustomCalendarCellDecorator(int colorDayCurrentMonth, int colorDayNotCurrentMonth) {
+        this.colorDayNotCurrentMonth = colorDayNotCurrentMonth;
+        this.colorDayCurrentMonth = colorDayCurrentMonth;
+    }
+
+    public void decorate(CalendarCellView cellView, Date date) {
+        if (cellView.isCurrentMonth()){
+            cellView.setTextColor(colorDayCurrentMonth);
+        }else{
+            cellView.setTextColor(colorDayNotCurrentMonth);
+        }
+    }
+}
