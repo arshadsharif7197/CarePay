@@ -21,6 +21,11 @@ public class CustomCalendarCellDecorator implements CalendarCellDecorator {
         this.colorDayCurrentMonth = colorDayCurrentMonth;
     }
 
+    /**
+     * Method to decorate each cell in the calendar
+     * @param cellView the cellView
+     * @param date the date of cell
+     */
     public void decorate(CalendarCellView cellView, Date date) {
         if (cellView.isCurrentMonth()){
             cellView.setTextColor(colorDayCurrentMonth);
