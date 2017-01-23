@@ -392,14 +392,24 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         }, new ChangeModeDialog.LogoutClickListener() {
             @Override
             public void onLogoutSelected() {
-                Map<String, String> query = new HashMap<>();
-                Map<String, String> headers = new HashMap<>();
-                headers.put("x-api-key", HttpConstants.getApiStartKey());
-                headers.put("Authorization", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
-                query.put("transition", "true");
-                WorkflowServiceHelper.getInstance().execute(transitionsDTO.getLogout(), logOutCall, query, headers);
+                logOut(transitionsDTO.getLogout());
             }
         }, modeSwitchOptions);
+    }
+
+    /**
+     * Log out transition
+     * @param transitionsDTO the transitionsDTO
+     */
+    private void logOut(TransitionDTO transitionsDTO){
+
+        Map<String, String> query = new HashMap<>();
+        Map<String, String> headers = new HashMap<>();
+        headers.put("x-api-key", HttpConstants.getApiStartKey());
+        headers.put("Authorization", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
+        query.put("transition", "true");
+        WorkflowServiceHelper.getInstance().execute(transitionsDTO, logOutCall, query, headers);
+
     }
 
     WorkflowServiceCallback checkInCallback = new WorkflowServiceCallback() {
@@ -532,10 +542,20 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+
         // log out previous user from Cognito
         Log.v(this.getClass().getSimpleName(), "sign out Cognito");
         CognitoAppHelper.getPool().getUser().signOut();
         CognitoAppHelper.setUser(null);
+        ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
+
+        if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
+            Gson gson = new Gson();
+            JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
+            final PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
+            logOut(transitionsDTO.getLogout());
+        }
+
+        super.onBackPressed();
     }
 }

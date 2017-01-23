@@ -21,6 +21,7 @@ import com.carecloud.carepay.practice.library.signin.dtos.LanguageOptionDTO;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -163,4 +164,15 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        // log out previous user from Cognito
+        Log.v(this.getClass().getSimpleName(), "sign out Cognito");
+        CognitoAppHelper.getPool().getUser().signOut();
+        CognitoAppHelper.setUser(null);
+        ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
+    }
 }

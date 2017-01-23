@@ -67,10 +67,12 @@ public class SigninActivity extends BasePracticeActivity {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
+            signInButton.setClickable(true);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            signInButton.setClickable(true);
             SystemUtil.showFaultDialog(SigninActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -84,10 +86,12 @@ public class SigninActivity extends BasePracticeActivity {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
+            signInButton.setClickable(true);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            signInButton.setClickable(true);
             SystemUtil.showFaultDialog(SigninActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -135,6 +139,7 @@ public class SigninActivity extends BasePracticeActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
+            signInButton.setClickable(true);
             SystemUtil.showFaultDialog(SigninActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -166,6 +171,7 @@ public class SigninActivity extends BasePracticeActivity {
 
         @Override
         public void onLoginFailure(String exceptionMessage) {
+            signInButton.setClickable(true);
             SystemUtil.showDialogMessage(SigninActivity.this,
                     "Sign-in failed",
                     "Invalid user id or password");
@@ -192,6 +198,7 @@ public class SigninActivity extends BasePracticeActivity {
         } else if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             signinPatientModeDTO = getConvertedDTO(SigninPatientModeDTO.class);
             if (signinPatientModeDTO != null && signinPatientModeDTO.getPayload() != null
+                    && signinPatientModeDTO.getPayload().getPatientModeSigninData() != null
                     && signinPatientModeDTO.getPayload().getPatientModeSigninData().getCognito() != null) {
                 ApplicationMode.getInstance().setCognitoDTO(signinPatientModeDTO.getPayload().getPatientModeSigninData().getCognito());
                 CognitoAppHelper.init(getApplicationContext());
@@ -314,6 +321,7 @@ public class SigninActivity extends BasePracticeActivity {
             @Override
             public void onClick(View v) {
                 if (areAllValid()) {
+                    signInButton.setClickable(false);
                     signInUser();
                 }
             }
@@ -508,4 +516,14 @@ public class SigninActivity extends BasePracticeActivity {
             onBackPressed();
         }
     };
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        // log out previous user from Cognito
+        Log.v(this.getClass().getSimpleName(), "sign out Cognito");
+        CognitoAppHelper.getPool().getUser().signOut();
+        CognitoAppHelper.setUser(null);
+        ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
+    }
 }
