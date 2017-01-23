@@ -613,15 +613,14 @@ public class SettingAddCreditCardFragment extends Fragment implements
             return false;
         }
 
-        if (!useProfileAddressCheckBox.isChecked()) {
-            if (!(address1EditText.getText().toString().trim().length() > 0) ||
-                    !(zipCodeEditText.getText().toString().trim().length() > 0) ||
-                    !(cityEditText.getText().toString().trim().length() > 0) ||
-                    !(stateEditText.getText().toString().trim().length() > 0)) {
-                nextButton.setEnabled(false);
-                nextButton.setClickable(false);
-                return false;
-            }
+        if (!useProfileAddressCheckBox.isChecked() &&
+                (!(address1EditText.getText().toString().trim().length() > 0) ||
+                        !(zipCodeEditText.getText().toString().trim().length() > 0) ||
+                        !(cityEditText.getText().toString().trim().length() > 0) ||
+                        !(stateEditText.getText().toString().trim().length() > 0))) {
+            nextButton.setEnabled(false);
+            nextButton.setClickable(false);
+            return false;
         }
 
         if (!pickDateTextView.getText().toString().equalsIgnoreCase(settingsLabelsDTO.getCreditCardPickDateLabel())) {
