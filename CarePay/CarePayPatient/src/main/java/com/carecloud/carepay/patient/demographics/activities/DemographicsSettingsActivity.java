@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.R;
@@ -91,5 +92,21 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
                 }
             }
         }
+    }
+
+    /**
+     * Helper method to replace fragments
+     *
+     * @param fragment       The fragment
+     * @param addToBackStack Whether to add the transaction to back-stack
+     */
+    public void navigateToFragment(final Fragment fragment, final boolean addToBackStack) {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.replace(R.id.activity_demographics_settings, fragment, fragment.getClass().getSimpleName());
+        if (addToBackStack) {
+            transaction.addToBackStack(fragment.getClass().getName());
+        }
+        transaction.commitAllowingStateLoss();
     }
 }

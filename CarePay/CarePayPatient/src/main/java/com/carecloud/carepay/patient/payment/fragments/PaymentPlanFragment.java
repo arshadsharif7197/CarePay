@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,6 +20,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
+import com.carecloud.carepay.patient.payment.PaymentActivity;
+import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.patient.payment.dialogs.ChooseCreditCardDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -33,7 +35,6 @@ import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPayloadPlansDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -109,7 +110,7 @@ public class PaymentPlanFragment extends Fragment {
         if (arguments != null) {
             Gson gson = new Gson();
             arguments = getArguments();
-            String paymentsDTOString  = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
+            String paymentsDTOString = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
             paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
         }
 
@@ -232,7 +233,7 @@ public class PaymentPlanFragment extends Fragment {
 
 
         List<PaymentsPatientsCreditCardsPayloadListDTO> payload = paymentsModel.getPaymentPayload().getPatientCreditCards();
-        if (payload.size()>0) {
+        if (payload.size() > 0) {
             if (payload != null && payload.size() > 0) {
                 // Get default credit card
                 PaymentCreditCardsPayloadDTO creditCard = payload.get(0).getPayload();
@@ -532,10 +533,13 @@ public class PaymentPlanFragment extends Fragment {
         args.putSerializable(CarePayConstants.INTAKE_BUNDLE, paymentsModel);
         fragment.setArguments(args);
 
-        FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
-        fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
-        fragmentTransaction.addToBackStack(AddNewCreditCardFragment.class.getSimpleName());
-        fragmentTransaction.commit();
+        if (getActivity() instanceof PaymentActivity) {
+            ((PaymentActivity) getActivity()).navigateToFragment(fragment, true);
+        } else if (getActivity() instanceof DemographicsSettingsActivity) {
+            ((DemographicsSettingsActivity) getActivity()).navigateToFragment(fragment, true);
+        } else if (getActivity() instanceof ViewPaymentBalanceHistoryActivity) {
+            ((ViewPaymentBalanceHistoryActivity) getActivity()).navigateToFragment(fragment, true);
+        }
     }
 
     private void createPaymentPlan() {

@@ -59,7 +59,7 @@ import java.util.Map;
  * A simple {@link Fragment} subclass.
  */
 public class PatientAddNewCreditCardFragment extends BaseCheckinFragment implements
-        SimpleDatePickerDialog.OnDateSetListener , RequestTask.AuthorizeCreditCardCallback {
+        SimpleDatePickerDialog.OnDateSetListener, RequestTask.AuthorizeCreditCardCallback {
 
     private TextInputLayout nameOnCardTextInputLayout;
     private TextInputLayout creditCardNoTextInput;
@@ -98,6 +98,8 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
     private double amountToMakePayment;
     private String paymentDTOString;
     private DemographicAddressPayloadDTO addressPayloadDTO;
+    private PaymentCreditCardsPayloadDTO creditCardsPayloadDTO;
+    private PaymentsCreditCardBillingInformationDTO billingInformationDTO;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -119,8 +121,8 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
             amountToMakePayment = arguments.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
             String addressPayloadString = ApplicationPreferences.Instance.readStringFromSharedPref(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE);
             addressPayloadDTO = new DemographicAddressPayloadDTO();
-            if(addressPayloadString.length()>1){
-                addressPayloadDTO = gson.fromJson(addressPayloadString,DemographicAddressPayloadDTO.class);
+            if (addressPayloadString.length() > 1) {
+                addressPayloadDTO = gson.fromJson(addressPayloadString, DemographicAddressPayloadDTO.class);
             }
         }
         Toolbar toolbar = (Toolbar) addNewCreditCardView.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
@@ -263,14 +265,9 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
         return creditCardNoEditText.getText().toString().replace(" ", "").trim();
     }
 
-    private String getLastFour()
-    {
+    private String getLastFour() {
         String fullCard = creditCardNoEditText.getText().toString().replace(" ", "").trim();
-        System.out.print( fullCard.length() - 4);
-        System.out.print(fullCard.length());
-        System.out.print(fullCard.substring(fullCard.length() - 4, fullCard.length()));
-        return fullCard.substring(fullCard.length() - 4, fullCard.length()) ;
-
+        return fullCard.substring(fullCard.length() - 4, fullCard.length());
     }
 
     private void initilizeViews(View view) {
@@ -314,35 +311,34 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
         useProfileAddressCheckBox.setOnCheckedChangeListener(useProfileAddressListener);
 
         address1TextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.address1TextInputLayout);
-        address1EditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.addressEditTextId);
-        address1EditText.setTag(address1TextInput);
         address1TextInput.setTag(paymentsLabelDTO.getPaymentAddressLine1Text());
+        address1EditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.addressEditTextId);
         address1EditText.setHint(paymentsLabelDTO.getPaymentAddressLine1Text());
-        //String addressPayloadString = ApplicationPreferences.Instance.readStringFromSharedPref(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE);
+        address1EditText.setTag(address1TextInput);
 
         address2TextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.address2TextInputLayout);
-        address2EditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.addressEditText2Id);
-        address2EditText.setTag(address2TextInput);
         address2TextInput.setTag(paymentsLabelDTO.getPaymentAddressLine2Text());
+        address2EditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.addressEditText2Id);
         address2EditText.setHint(paymentsLabelDTO.getPaymentAddressLine2Text());
+        address2EditText.setTag(address2TextInput);
 
         zipCodeTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.zipCodeTextInputLayout);
-        zipCodeEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.zipCodeId);
-        zipCodeEditText.setTag(zipCodeTextInput);
         zipCodeTextInput.setTag(paymentsLabelDTO.getPaymentZipcode());
+        zipCodeEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.zipCodeId);
         zipCodeEditText.setHint(paymentsLabelDTO.getPaymentZipcode());
+        zipCodeEditText.setTag(zipCodeTextInput);
 
         cityTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.cityTextInputLayout);
-        cityEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.cityId);
-        cityEditText.setTag(cityTextInput);
         cityTextInput.setTag(paymentsLabelDTO.getPaymentCity());
+        cityEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.cityId);
         cityEditText.setHint(paymentsLabelDTO.getPaymentCity());
+        cityEditText.setTag(cityTextInput);
 
         stateTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.stateTextInputLayout);
-        stateEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.stateAutoCompleteTextView);
-        stateEditText.setTag(stateTextInput);
         stateTextInput.setTag(paymentsLabelDTO.getPaymentState());
+        stateEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.stateAutoCompleteTextView);
         stateEditText.setHint(paymentsLabelDTO.getPaymentState());
+        stateEditText.setTag(stateTextInput);
 
         nextButton = (Button) view.findViewById(com.carecloud.carepaylibrary.R.id.nextButton);
         nextButton.setText(paymentsLabelDTO.getPaymentPayText());
@@ -366,27 +362,27 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
 
         useProfileAddressCheckBox.setChecked(true);
         setAddressFieldsEnabled(false);
+
         nextButton.setEnabled(false);
         nextButton.setClickable(false);
 
         //billingAddressLayout.setVisibility(View.GONE); //SHMRK-1080
         useProfileAddressCheckBox.setChecked(true);
         setAddressFieldsEnabled(false);
+
         setDefaultBillingAddressTexts();
     }
 
-    private void setDefaultBillingAddressTexts()
-    {
-        try{
+    private void setDefaultBillingAddressTexts() {
+        try {
+
             address1EditText.setText(addressPayloadDTO.getAddress1());
             address2EditText.setText(addressPayloadDTO.getAddress2());
             zipCodeEditText.setText(addressPayloadDTO.getZipcode());
             cityEditText.setText(addressPayloadDTO.getCity());
             stateEditText.setText(addressPayloadDTO.getState());
 
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -588,6 +584,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
     private View.OnClickListener nextButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            setDTOs();
             authorizeCreditCard();
         }
     };
@@ -600,8 +597,8 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            Log.d("addNewCreditCard","=========================>\nworkflowDTO="+workflowDTO.toString());
-            makePaymentCall("");
+            Log.d("addNewCreditCard", "=========================>\nworkflowDTO=" + workflowDTO.toString());
+            makePaymentCall();
         }
 
         @Override
@@ -619,10 +616,10 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            Log.d("makePaymentCallback","=========================>\nworkflowDTO="+workflowDTO.toString());
+            Log.d("makePaymentCallback", "=========================>\nworkflowDTO=" + workflowDTO.toString());
             Gson gson = new Gson();
             PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(getActivity(),
-                    gson.fromJson(workflowDTO.toString(), PaymentsModel.class),paymentsModel);
+                    gson.fromJson(workflowDTO.toString(), PaymentsModel.class), paymentsModel);
             receiptDialog.show();
         }
 
@@ -695,22 +692,39 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
         }
     }
 
-    private void authorizeCreditCard()
-    {
-        String amount="1"; //Change this to actual amount.
-        String currency="USD";
-        String paymentMethod="credit_card";
-        String cvv=verificationCodeEditText.getText().toString();
-        String expiryDate=pickDateTextView.getText().toString();
-        expiryDate=expiryDate.substring(0,2)+expiryDate.substring(expiryDate.length()-2);
-        String name=nameOnCardEditText.getText().toString();
-        String type=getCreditCardType(creditCardNoEditText.getText().toString());
-        String number=creditCardNoEditText.getText().toString().trim().replaceAll(" ","");
-        String state=stateEditText.getText().toString();
-        String addressline1=address1EditText.getText().toString();
-        String zip=zipCodeEditText.getText().toString();
-        String country="US";
-        String city=cityEditText.getText().toString();
+    private void setDTOs() {
+        creditCardsPayloadDTO = new PaymentCreditCardsPayloadDTO();
+        billingInformationDTO = new PaymentsCreditCardBillingInformationDTO();
+        billingInformationDTO.setSameAsPatient(useProfileAddressCheckBox.isChecked());
+        creditCardsPayloadDTO.setCardNumber(getLastFour());
+        creditCardsPayloadDTO.setNameOnCard(nameOnCardEditText.getText().toString().trim());
+        creditCardsPayloadDTO.setCvv(Integer.parseInt(verificationCodeEditText.getText().toString().trim()));
+        String expiryDate = pickDateTextView.getText().toString();
+        expiryDate = expiryDate.substring(0, 2) + expiryDate.substring(expiryDate.length() - 2);
+        creditCardsPayloadDTO.setExpireDt(expiryDate);
+        creditCardsPayloadDTO.setCardType(getCreditCardType(getCardNumber()));
+        billingInformationDTO.setLine1(address1EditText.getText().toString().trim());
+        billingInformationDTO.setLine2(address2EditText.getText().toString().trim());
+        billingInformationDTO.setZip(zipCodeEditText.getText().toString().trim());
+        billingInformationDTO.setCity(cityEditText.getText().toString().trim());
+        billingInformationDTO.setState(stateEditText.getText().toString().trim());
+        creditCardsPayloadDTO.setBillingInformation(billingInformationDTO);
+    }
+
+    private void authorizeCreditCard() {
+        String amount = String.valueOf(amountToMakePayment);
+        String currency = "USD";
+        String paymentMethod = "credit_card";
+        String cvv = creditCardsPayloadDTO.getCvv() + "";
+        String expiryDate = creditCardsPayloadDTO.getExpireDt();
+        String name = creditCardsPayloadDTO.getNameOnCard();
+        String type = creditCardsPayloadDTO.getCardType();
+        String number = getCardNumber();
+        String state = billingInformationDTO.getState();
+        String addressline1 = billingInformationDTO.getLine1();
+        String zip = billingInformationDTO.getZip();
+        String country = "US";
+        String city = billingInformationDTO.getCity();
 
         try {
             RequestTask requestTask = new RequestTask(getActivity(), PatientAddNewCreditCardFragment.this);
@@ -725,24 +739,25 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
     @Override
     public void onAuthorizeCreditCard(String resString) {
 
-        if(resString!=null && resString.length()>800){
+        if (resString != null && resString.length() > 800) {
             int startIndex = resString.indexOf("value");
-            startIndex=resString.indexOf("=",startIndex+1);
+            startIndex = resString.indexOf("=", startIndex + 1);
             int endIndex = resString.indexOf(",", startIndex);
             String tokenValue = resString.substring(startIndex, endIndex);
-            tokenValue=tokenValue.replace(" ", "");
-            tokenValue=tokenValue.replace(":", "");
-            tokenValue=tokenValue.replace("=", "");
-            tokenValue=tokenValue.replace("}", "");
+            tokenValue = tokenValue.replace(" ", "");
+            tokenValue = tokenValue.replace(":", "");
+            tokenValue = tokenValue.replace("=", "");
+            tokenValue = tokenValue.replace("}", "");
+            creditCardsPayloadDTO.setToken(tokenValue);
 
-            if(saveCardOnFileCheckBox.isChecked()){
-                makePaymentCall(tokenValue);
+            if (saveCardOnFileCheckBox.isChecked()) {
+                addNewCreditCardCall();
             } else {
-                addNewCreditCardCall(tokenValue);
+                makePaymentCall();
             }
 
         } else {
-            new LargeAlertDialog(getActivity(), paymentsLabelDTO.getPaymentFailedErrorMessage(), paymentsLabelDTO.getPaymentChangeMethodButton(),R.color.Feldgrau, R.drawable.icn_card_error, new LargeAlertDialog.LargeAlertInterface() {
+            new LargeAlertDialog(getActivity(), paymentsLabelDTO.getPaymentFailedErrorMessage(), paymentsLabelDTO.getPaymentChangeMethodButton(), R.color.Feldgrau, R.drawable.icn_card_error, new LargeAlertDialog.LargeAlertInterface() {
                 @Override
                 public void onActionButton() {
                     FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -756,9 +771,9 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
                     Gson gson = new Gson();
                     bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentDTOString);
 
-                    if(fragment.getArguments() !=null){
+                    if (fragment.getArguments() != null) {
                         fragment.getArguments().putAll(bundle);
-                    }else{
+                    } else {
                         fragment.setArguments(bundle);
                     }
                     ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
@@ -767,26 +782,8 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
         }
     }
 
-    private void addNewCreditCardCall(String tokenValue){
-
-        PaymentCreditCardsPayloadDTO creditCardsPayloadDTO = new PaymentCreditCardsPayloadDTO();
-        PaymentsCreditCardBillingInformationDTO billingInformation = new PaymentsCreditCardBillingInformationDTO();
-        creditCardsPayloadDTO.setCardNumber(getLastFour());
-        creditCardsPayloadDTO.setNameOnCard(nameOnCardEditText.getText().toString().trim());
-        creditCardsPayloadDTO.setCvv(verificationCodeEditText.getText().toString().trim());
-        creditCardsPayloadDTO.setExpireDt(pickDateTextView.getText().toString().trim());
-        creditCardsPayloadDTO.setCardType(getCreditCardType(getCardNumber()));
-        creditCardsPayloadDTO.setToken(tokenValue);
-        if (useProfileAddressCheckBox.isChecked()) {
-            billingInformation.setLine1(address1EditText.getText().toString().trim());
-            billingInformation.setLine2(address2EditText.getText().toString().trim());
-            billingInformation.setZip(zipCodeEditText.getText().toString().trim());
-            billingInformation.setCity(cityEditText.getText().toString().trim());
-            billingInformation.setState(stateEditText.getText().toString().trim());
-            creditCardsPayloadDTO.setBillingInformation(billingInformation);
-        }
+    private void addNewCreditCardCall() {
         Gson gson = new Gson();
-
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
         queryMap.put("practice_mgmt", intakePaymentModel.getPaymentPayload().getPaymentSettings().getMetadata().getPracticeMgmt());
@@ -797,7 +794,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
         WorkflowServiceHelper.getInstance().execute(transitionDTO, addNewCreditCardCallback, body, queryMap, WorkflowServiceHelper.getPreferredLanguageHeader());
     }
 
-    private void makePaymentCall(String tokenValue) {
+    private void makePaymentCall() {
 
         JSONObject payload = new JSONObject();
         try {
@@ -807,15 +804,17 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
             JSONObject creditCard = new JSONObject();
             creditCard.put("save", saveCardOnFileCheckBox.isChecked());
             //creditCard.put("credit_card_id", creditCardPayload.getCreditCardsId());
-            creditCard.put("card_type", getCreditCardType(getCardNumber()));
-            creditCard.put("card_number", getLastFour());
-            creditCard.put("name_on_card", nameOnCardEditText.getText().toString().trim());
-            creditCard.put("expire_dt", pickDateTextView.getText().toString().trim());
-            creditCard.put("cvv", verificationCodeEditText.getText().toString().trim());
+            creditCard.put("card_type", creditCardsPayloadDTO.getCardType());
+            creditCard.put("card_number", creditCardsPayloadDTO.getCardNumber());
+            creditCard.put("name_on_card", creditCardsPayloadDTO.getNameOnCard());
+            creditCard.put("expire_dt", creditCardsPayloadDTO.getExpireDt());
+            creditCard.put("cvv", creditCardsPayloadDTO.getCvv());
             creditCard.put("papi_pay", true);
-            creditCard.put("token", tokenValue) ;
-            JSONObject billingInformation = new JSONObject();
-            billingInformation.put("same_as_patient", useProfileAddressCheckBox.isChecked());
+            creditCard.put("token", creditCardsPayloadDTO.getToken());
+
+            Gson gson = new Gson();
+            JSONObject billingInformation;
+            billingInformation = new JSONObject(gson.toJson(billingInformationDTO, PaymentsCreditCardBillingInformationDTO.class));
             creditCard.put("billing_information", billingInformation);
             paymentMethod.put("credit_card", creditCard);
             paymentMethod.put("type", "credit_card");

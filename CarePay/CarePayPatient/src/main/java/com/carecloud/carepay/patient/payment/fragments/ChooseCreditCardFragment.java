@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,6 +18,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
+import com.carecloud.carepay.patient.payment.PaymentActivity;
+import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -30,7 +32,6 @@ import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -123,24 +124,24 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
         addNewCardButton.setOnClickListener(addNewCardButtonListener);
 
         if (paymentsModel != null) {
-                List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = paymentsModel.getPaymentPayload().getPatientCreditCards();
+            List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = paymentsModel.getPaymentPayload().getPatientCreditCards();
 
-                for (int i = 0; i < creditCardList.size(); i++) {
-                    PaymentCreditCardsPayloadDTO creditCardItem = creditCardList.get(i).getPayload();
-                    String creditCardName = creditCardItem.getCardType();
-                    chooseCreditCardRadioGroup.addView(getCreditCardRadioButton(
-                            StringUtil.getEncodedCardNumber(creditCardName,
-                                    creditCardItem.getCardNumber()), i), radioGroupLayoutParam);
+            for (int i = 0; i < creditCardList.size(); i++) {
+                PaymentCreditCardsPayloadDTO creditCardItem = creditCardList.get(i).getPayload();
+                String creditCardName = creditCardItem.getCardType();
+                chooseCreditCardRadioGroup.addView(getCreditCardRadioButton(
+                        StringUtil.getEncodedCardNumber(creditCardName,
+                                creditCardItem.getCardNumber()), i), radioGroupLayoutParam);
 
-                    View dividerLineView = new View(activity);
-                    dividerLineView.setLayoutParams(new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT, 1
-                    ));
+                View dividerLineView = new View(activity);
+                dividerLineView.setLayoutParams(new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT, 1
+                ));
 
-                    dividerLineView.setBackgroundColor(ContextCompat.getColor(activity, R.color.cadet_gray));
-                    chooseCreditCardRadioGroup.addView(dividerLineView);
-                    onSetRadioButtonRegularTypeFace();
-                }
+                dividerLineView.setBackgroundColor(ContextCompat.getColor(activity, R.color.cadet_gray));
+                chooseCreditCardRadioGroup.addView(dividerLineView);
+                onSetRadioButtonRegularTypeFace();
+            }
 
 
             PaymentsLabelDTO paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
@@ -195,58 +196,58 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
     private View.OnClickListener nextButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-                List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = paymentsModel.getPaymentPayload().getPatientCreditCards();
+            List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = paymentsModel.getPaymentPayload().getPatientCreditCards();
 
-                if (creditCardList != null) {
-                    PaymentCreditCardsPayloadDTO creditCardPayload = creditCardList.get(selectedCreditCard).getPayload();
+            if (creditCardList != null) {
+                PaymentCreditCardsPayloadDTO creditCardPayload = creditCardList.get(selectedCreditCard).getPayload();
 
-                    JSONObject payload = new JSONObject();
-                    double totalAmountToPay = getArguments().getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
+                JSONObject payload = new JSONObject();
+                double totalAmountToPay = getArguments().getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
 
-                    try {
-                        payload.put("amount", totalAmountToPay);
+                try {
+                    payload.put("amount", totalAmountToPay);
 
-                        JSONObject paymentMethod = new JSONObject();
-                        paymentMethod.put("amount", totalAmountToPay);
+                    JSONObject paymentMethod = new JSONObject();
+                    paymentMethod.put("amount", totalAmountToPay);
 
-                        JSONObject creditCard = new JSONObject();
-                        creditCard.put("save", false);
-                        creditCard.put("credit_card_id", creditCardPayload.getCreditCardsId());
-                        creditCard.put("card_type", creditCardPayload.getCardType());
-                        creditCard.put("card_number", creditCardPayload.getCardNumber());
-                        creditCard.put("name_on_card", creditCardPayload.getNameOnCard());
-                        creditCard.put("expire_dt", creditCardPayload.getExpireDt());
-                        creditCard.put("cvv", creditCardPayload.getCvv());
-                        creditCard.put("papi_pay", true);
+                    JSONObject creditCard = new JSONObject();
+                    creditCard.put("save", false);
+                    creditCard.put("credit_card_id", creditCardPayload.getCreditCardsId());
+                    creditCard.put("card_type", creditCardPayload.getCardType());
+                    creditCard.put("card_number", creditCardPayload.getCardNumber());
+                    creditCard.put("name_on_card", creditCardPayload.getNameOnCard());
+                    creditCard.put("expire_dt", creditCardPayload.getExpireDt());
+                    creditCard.put("cvv", creditCardPayload.getCvv());
+                    creditCard.put("papi_pay", true);
 
-                        JSONObject billingInformation = new JSONObject();
-                        billingInformation.put("same_as_patient", true);
-                        creditCard.put("billing_information", billingInformation);
+                    JSONObject billingInformation = new JSONObject();
+                    billingInformation.put("same_as_patient", true);
+                    creditCard.put("billing_information", billingInformation);
 
-                        paymentMethod.put("credit_card", creditCard);
-                        paymentMethod.put("type", "credit_card");
+                    paymentMethod.put("credit_card", creditCard);
+                    paymentMethod.put("type", "credit_card");
 
-                        JSONArray paymentMethods = new JSONArray();
-                        paymentMethods.put(paymentMethod);
-                        payload.put("payment_methods", paymentMethods);
+                    JSONArray paymentMethods = new JSONArray();
+                    paymentMethods.put(paymentMethod);
+                    payload.put("payment_methods", paymentMethods);
 
-                        PaymentPayloadMetaDataDTO metadata = intakePaymentModel.getPaymentPayload()
-                                .getPatientBalances().get(0).getBalances().get(0).getMetadata();
+                    PaymentPayloadMetaDataDTO metadata = intakePaymentModel.getPaymentPayload()
+                            .getPatientBalances().get(0).getBalances().get(0).getMetadata();
 
-                        Map<String, String> queries = new HashMap<>();
-                        queries.put("practice_mgmt", metadata.getPracticeMgmt());
-                        queries.put("practice_id", metadata.getPracticeId());
-                        queries.put("patient_id", metadata.getPatientId());
+                    Map<String, String> queries = new HashMap<>();
+                    queries.put("practice_mgmt", metadata.getPracticeMgmt());
+                    queries.put("practice_id", metadata.getPracticeId());
+                    queries.put("patient_id", metadata.getPatientId());
 
-                        Map<String, String> header = new HashMap<>();
-                        header.put("transition", "true");
+                    Map<String, String> header = new HashMap<>();
+                    header.put("transition", "true");
 
-                        TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment();
-                        WorkflowServiceHelper.getInstance().execute(transitionDTO, makePaymentCallback, payload.toString(), queries, header);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment();
+                    WorkflowServiceHelper.getInstance().execute(transitionDTO, makePaymentCallback, payload.toString(), queries, header);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+            }
 
         }
     };
@@ -275,7 +276,7 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
         public void onClick(View view) {
             FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
             AddNewCreditCardFragment fragment = (AddNewCreditCardFragment)
-                fragmentmanager.findFragmentByTag(AddNewCreditCardFragment.class.getSimpleName());
+                    fragmentmanager.findFragmentByTag(AddNewCreditCardFragment.class.getSimpleName());
             if (fragment == null) {
                 fragment = new AddNewCreditCardFragment();
             }
@@ -288,10 +289,13 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
             bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, getArguments().getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE));
             fragment.setArguments(bundle);
 
-            FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
-            fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
-            fragmentTransaction.addToBackStack(AddNewCreditCardFragment.class.getSimpleName());
-            fragmentTransaction.commit();
+            if (getActivity() instanceof PaymentActivity) {
+                ((PaymentActivity) getActivity()).navigateToFragment(fragment, true);
+            } else if (getActivity() instanceof DemographicsSettingsActivity) {
+                ((DemographicsSettingsActivity) getActivity()).navigateToFragment(fragment, true);
+            } else if (getActivity() instanceof ViewPaymentBalanceHistoryActivity) {
+                ((ViewPaymentBalanceHistoryActivity) getActivity()).navigateToFragment(fragment, true);
+            }
         }
     };
 }
