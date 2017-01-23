@@ -2,6 +2,7 @@
 <resources>
     <color name="colorPrimary">#1F9BDE</color>
     <color name="colorPrimaryDark">#066699</color>
+
     <color name="colorAccent">#acacac</color>
     <color name="white">#ffffff</color>
     <color name="lightSlateGray">#78909C</color>
@@ -89,5 +90,7 @@
     <color name="settings_edit_text_color">#5BD063</color>
     <color name="settings_credit_card_details">#5BC5D0</color>
     <color name="settings_set_as_default">#5BD063</color>
+
+    <color name="emerald">#5BD063</color>
 
 </resources>

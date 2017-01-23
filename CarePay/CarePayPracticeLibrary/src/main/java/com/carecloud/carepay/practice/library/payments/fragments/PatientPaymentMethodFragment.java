@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,6 +61,13 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
     private String paymentCreatePlanString;
     private PaymentsModel paymentsDTO;
 
+    private Boolean isCloverDevice;
+    private LinearLayout swipeCreditCardNowLayout ;
+    private Button swipeCreditCarNowButton ;
+    private TextView swipeCardSeparatorLabel ;
+    private String swipeCardNowString;
+    private String swipeCardSeparatorString;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -77,6 +85,8 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
             paymentsDTO = gson.fromJson(paymentInfo, PaymentsModel.class);
         }
         View view = inflater.inflate(R.layout.fragment_payment_method, container, false);
+        isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals("Clover") ;
+
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
@@ -93,6 +103,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
 
         title.setText(titlePaymentMethodString);
         toolbar.setTitle(titlePaymentMethodString);
+
         return view;
     }
 
@@ -154,7 +165,38 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
             paymentMethodRadioGroup.addView(dividerLineView);
             onSetRadioButtonRegularTypeFace();
         }
+
+        setSwipeCardNowVisibility(view);
     }
+
+    private void setSwipeCardNowVisibility(View view)
+    {
+        swipeCreditCardNowLayout = (LinearLayout) view.findViewById(R.id.swipeCreditCardNowLayout);
+        if(isCloverDevice)
+        {
+            swipeCreditCardNowLayout.setVisibility(View.VISIBLE);
+
+            swipeCreditCarNowButton = (Button) view.findViewById(R.id.swipeCreditCarNowButton);
+            swipeCreditCarNowButton.setText(swipeCardNowString);
+            swipeCreditCarNowButton.setOnClickListener(swipeCreditCarNowButtonClickListener);
+
+            swipeCardSeparatorLabel = (TextView) view.findViewById(R.id.swipeCardSeparatorLabel);
+            swipeCardSeparatorLabel.setText(swipeCardSeparatorString);
+        }
+        else
+        {
+            swipeCreditCardNowLayout.setVisibility(View.GONE);
+        }
+
+    }
+
+    private View.OnClickListener swipeCreditCarNowButtonClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            setCloverPayment();
+        }
+    };
+
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -176,9 +218,6 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CHECK)){
                     paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.blue_cerulian));
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_GIFT_CARD)){
-                    if (HttpConstants.getDeviceInformation().getDeviceType().equals("Clover")) {
-                        setCloverPayment();
-                    }
                     paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.blue_cerulian));
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_PAYPAL)){
                     paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.dark_green));
@@ -283,7 +322,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
     };
 
     /**
-     * partial payment labels
+     * payment labels
      */
     public void getLabels() {
         if (paymentsModel != null) {
@@ -298,6 +337,9 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                     titlePaymentMethodString = paymentsLabelsDTO.getPaymentMethodTitle();
                     paymentChooseMethodString = paymentsLabelsDTO.getPaymentChooseMethodButton();
                     paymentCreatePlanString = paymentsLabelsDTO.getPaymentCreatePlanButton();
+                    swipeCardNowString = paymentsLabelsDTO.getPaymentCloverSwipeNowButtonLabel();
+                    swipeCardSeparatorString = paymentsLabelsDTO.getPaymentCloverSwipeNowSeparatorText();
+
                 }
             }
         }
