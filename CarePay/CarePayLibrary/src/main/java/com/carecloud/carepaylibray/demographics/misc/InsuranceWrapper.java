@@ -155,6 +155,10 @@ public class InsuranceWrapper {
         return wrapperScannerFragment.getInsuranceDTO();
     }
 
+    public DemographicInsurancePayloadDTO getWrapperPayloadDTO(String insurance) {
+        return scanInsuranceFragment.getInsuranceDTO();
+    }
+
     public LinearLayout getHolderWrapperView() {
         return holderWrapperView;
     }
