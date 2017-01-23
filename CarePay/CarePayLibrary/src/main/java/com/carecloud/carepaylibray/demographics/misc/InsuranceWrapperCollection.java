@@ -105,6 +105,18 @@ import java.util.List;
 
 
     /**
+     * Collects the payloads of the wrappers in a list
+     * @return The list of payloads
+     */
+    public List<DemographicInsurancePayloadDTO> sendPayloads() {
+        List<DemographicInsurancePayloadDTO> payloads = new ArrayList<>();
+        for (InsuranceWrapper insuranceWrapper : wrappers) {
+            payloads.add(insuranceWrapper.getWrapperPayloadDTO(""));
+        }
+        return payloads;
+    }
+
+    /**
      * For each element i the list, adds a card populated with the payload, or
      * or, if the list is empty, an empty card screen
      * @param payloadDTOs The list of payloads

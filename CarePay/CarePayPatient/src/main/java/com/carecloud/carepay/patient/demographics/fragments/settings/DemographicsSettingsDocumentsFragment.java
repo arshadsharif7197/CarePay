@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 
+import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -36,6 +37,7 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePhotoDTO;
 import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapper;
 import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapperCollection;
 import com.carecloud.carepaylibray.demographics.misc.OnClickRemoveOrAddCallback;
@@ -321,13 +323,18 @@ public class DemographicsSettingsDocumentsFragment extends Fragment {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               //insuranceDTOsList.size();
+                insuranceDTOsList.clear();
+                for (DemographicInsurancePayloadDTO payloadDTO : wrapperCollection1.sendPayloads()) {
+                    if (isInsuaranceNonTrivial(payloadDTO)) {
+                        insuranceDTOsList.add(payloadDTO);
+                    }
+                }
+
                 if (demographicsSettingsDTO != null) {
                     DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
                     if (demographicsSettingsMetadataDTO != null) {
                         DemographicsSettingsTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
-                        TransitionDTO demographicsSettingsUpdateDemographicsDTO = demographicsSettingsTransitionsDTO.getUpdateDocuments();
-                        JSONObject payload = new JSONObject();
+                        TransitionDTO demographicsSettingsUpdateDemographicsDTO = demographicsSettingsTransitionsDTO.getUpdateDemographics();
                         Map<String, String> queries = null;
                         Map<String, String> header = null;
                         try {
@@ -336,11 +343,16 @@ public class DemographicsSettingsDocumentsFragment extends Fragment {
                                 if (demographicsSettingsPayloadDTO != null) {
                                     DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
                                     DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
-                                    demographicPayload.getIdentityDocuments().get(0).setIdNumber("abcd");
-                                    //List<DemographicInsurancePayloadDTO> demographicsInsuranceDetailsPayloadDTO = insuranceDTOsList;//demographicPayload.getInsurances();
+
                                     List<DemographicInsurancePayloadDTO> demographicsInsuranceDetailsPayloadDTO = demographicPayload.getInsurances();
-                                    for(int i = 0; i<=demographicsInsuranceDetailsPayloadDTO.size();i++){
-                                        demographicsInsuranceDetailsPayloadDTO.get(0).setInsurancePlan("Primary");
+                                    for(int i = 0; i<=demographicsInsuranceDetailsPayloadDTO.size()-1;i++){
+                                        List<DemographicInsurancePhotoDTO> demographicInsurancePhotoDTOs = insuranceDTOsList.get(i).getInsurancePhotos();
+                                        demographicsInsuranceDetailsPayloadDTO.get(i).setInsurancePhotos(demographicInsurancePhotoDTOs);
+                                        demographicsInsuranceDetailsPayloadDTO.get(i).setInsuranceProvider(insuranceDTOsList.get(i).getInsuranceProvider());
+                                        demographicsInsuranceDetailsPayloadDTO.get(i).setInsurancePlan(insuranceDTOsList.get(i).getInsurancePlan());
+                                        demographicsInsuranceDetailsPayloadDTO.get(i).setInsuranceMemberId(insuranceDTOsList.get(i).getInsuranceMemberId());
+                                        demographicsInsuranceDetailsPayloadDTO.get(i).setInsuranceType(insuranceDTOsList.get(i).getInsuranceType());
+
                                     }
                                     Gson gson = new Gson();
                                     String jsonInString = gson.toJson(demographicsSettingsPayloadDTO);
@@ -349,23 +361,12 @@ public class DemographicsSettingsDocumentsFragment extends Fragment {
                             }
                             header = new HashMap<>();
                             header.put("transition", "true");
-                        } catch (Exception e) {
+                       } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
                 }
-                // clear the list
-               /* insuranceDTOsList.clear();
-
-                for (DemographicInsurancePayloadDTO payloadDTO : wrapperCollection1.exportPayloadsAsList()) {
-                    if (isInsuaranceNonTrivial(payloadDTO)) {
-                        insuranceDTOsList.add(payloadDTO);
-                    }
-                }*/
-
-                // set the list in activity
-                //((DemographicsActivity) getActivity()).setInsuranceModelList(insuranceDTOsList);
-                   }
+             }
         });
 
         // add button

@@ -55,9 +55,13 @@ public class AddressUtil {
         }
 
         Result result = lookup.getResult();
-        if(result != null && result.isValid())
-        {
+        try{
+         if(result != null && result.isValid() )
+         {
             city = result.getCity(0);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
         }
         return city;
 
