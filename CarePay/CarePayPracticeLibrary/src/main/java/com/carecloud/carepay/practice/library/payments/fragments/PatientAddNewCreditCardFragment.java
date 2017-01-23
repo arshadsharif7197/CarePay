@@ -712,7 +712,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
     }
 
     private void authorizeCreditCard() {
-        String amount = String.valueOf(amountToMakePayment);
+        String amount = "1";//String.valueOf(amountToMakePayment); // to be changed later to avoid 400 bad request
         String currency = "USD";
         String paymentMethod = "credit_card";
         String cvv = creditCardsPayloadDTO.getCvv() + "";
