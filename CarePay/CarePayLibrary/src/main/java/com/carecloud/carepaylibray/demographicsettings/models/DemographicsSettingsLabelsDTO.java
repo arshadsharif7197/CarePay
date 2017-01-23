@@ -225,6 +225,9 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     @SerializedName("document_identity_label")
     @Expose
     private String demographicsIdentityLabel;
+    @SerializedName("edit_credit_card_default_label")
+    @Expose
+    private String editCreditCardDefaultLabel;
 
     /**
      * @return systemNotificationsHeading
@@ -1331,5 +1334,23 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
      */
     public void setDemographicsIdentityLabel(String demographicsIdentityLabel) {
         this.demographicsIdentityLabel = demographicsIdentityLabel;
+    }
+
+    /**
+     * Gets edit credit card default label.
+     *
+     * @return the edit credit card default label
+     */
+    public String getEditCreditCardDefaultLabel() {
+        return StringUtil.getLabelForView(editCreditCardDefaultLabel);
+    }
+
+    /**
+     * Sets edit credit card default label.
+     *
+     * @param editCreditCardDefaultLabel the edit credit card default label
+     */
+    public void setEditCreditCardDefaultLabel(String editCreditCardDefaultLabel) {
+        this.editCreditCardDefaultLabel = editCreditCardDefaultLabel;
     }
 }

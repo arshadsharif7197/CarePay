@@ -5,13 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.payment.androidpay.ConfirmationActivity;
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.gms.wallet.MaskedWallet;
@@ -21,8 +22,8 @@ import com.google.gson.Gson;
 public class PaymentActivity extends BasePatientActivity {
     PaymentsModel paymentsDTO;
     private String paymentsDTOString;
-    public Bundle bundle ;
-    
+    public Bundle bundle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,15 +44,15 @@ public class PaymentActivity extends BasePatientActivity {
         Gson gson = new Gson();
         paymentsDTOString = gson.toJson(paymentsDTO);
         bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
-            //fix for random crashes
-            if(fragment.getArguments() !=null){
-                fragment.getArguments().putAll(bundle);
-            }else{
-                fragment.setArguments(bundle);
-            }
+        //fix for random crashes
+        if (fragment.getArguments() != null) {
+            fragment.getArguments().putAll(bundle);
+        } else {
+            fragment.setArguments(bundle);
+        }
 
-            fm.beginTransaction().replace(R.id.payment_frag_holder, fragment,
-                    ResponsibilityFragment.class.getSimpleName()).commit();
+        fm.beginTransaction().replace(R.id.payment_frag_holder, fragment,
+                ResponsibilityFragment.class.getSimpleName()).commit();
 
 
     }
@@ -78,7 +79,7 @@ public class PaymentActivity extends BasePatientActivity {
      *
      * @param //requestCode The code that was set in the Masked Wallet Request
      * @param //resultCode  The result of the request execution
-     * @param //data  Intent carrying the results
+     * @param //data        Intent carrying the results
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -94,8 +95,7 @@ public class PaymentActivity extends BasePatientActivity {
                         MaskedWallet maskedWallet =
                                 data.getParcelableExtra(WalletConstants.EXTRA_MASKED_WALLET);
                         Fragment fragment = getSupportFragmentManager().findFragmentByTag(ResponsibilityFragment.class.getSimpleName());
-                        if(fragment != null)
-                        {
+                        if (fragment != null) {
                             getSupportFragmentManager().beginTransaction().remove(fragment).commit();
                         }
                         //setTitle("Confirmation");
@@ -123,7 +123,7 @@ public class PaymentActivity extends BasePatientActivity {
     private void launchConfirmationPage(MaskedWallet maskedWallet) {
         //setTitle("");
         Intent intent = ConfirmationActivity.newIntent(this, maskedWallet, paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPendingRepsonsibility(), "CERT", bundle, new Gson().toJson(paymentsDTO.getPaymentsMetadata().getPaymentsLabel()));// .getPayload().get(0).getTotal(), "CERT");
-       // intent.putExtra(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, paymentsDTOString);
+        // intent.putExtra(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, paymentsDTOString);
         startActivity(intent);
     }
 
@@ -147,5 +147,21 @@ public class PaymentActivity extends BasePatientActivity {
                 Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
                 break;
         }
+    }
+
+    /**
+     * Helper method to replace fragments
+     *
+     * @param fragment       The fragment
+     * @param addToBackStack Whether to add the transaction to back-stack
+     */
+    public void navigateToFragment(final Fragment fragment, final boolean addToBackStack) {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.replace(com.carecloud.carepay.patient.R.id.payment_frag_holder, fragment, fragment.getClass().getSimpleName());
+        if (addToBackStack) {
+            transaction.addToBackStack(fragment.getClass().getName());
+        }
+        transaction.commitAllowingStateLoss();
     }
 }

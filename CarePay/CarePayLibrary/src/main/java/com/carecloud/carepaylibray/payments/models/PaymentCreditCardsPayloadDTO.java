@@ -23,7 +23,7 @@ public class PaymentCreditCardsPayloadDTO {
     private String expireDt;
     @SerializedName("cvv")
     @Expose
-    private String cvv;
+    private int cvv;
     @SerializedName("hash_credit_cards_id")
     @Expose
     private String creditCardsId;
@@ -35,133 +35,104 @@ public class PaymentCreditCardsPayloadDTO {
     private PaymentsCreditCardBillingInformationDTO billingInformation;
 
     /**
-     *
-     * @return
-     * The cardType
+     * @return The cardType
      */
     public String getCardType() {
         return cardType;
     }
 
     /**
-     *
-     * @param cardType
-     * The card_type
+     * @param cardType The card_type
      */
     public void setCardType(String cardType) {
         this.cardType = cardType;
     }
 
     /**
-     *
-     * @return
-     * The cardNumber
+     * @return The cardNumber
      */
     public String getCardNumber() {
         return cardNumber;
     }
 
     /**
-     *
-     * @param cardNumber
-     * The card_number
+     * @param cardNumber The card_number
      */
     public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
     }
 
     /**
-     *
-     * @return
-     * The nameOnCard
+     * @return The nameOnCard
      */
     public String getNameOnCard() {
         return nameOnCard;
     }
 
     /**
-     *
-     * @param nameOnCard
-     * The name_on_card
+     * @param nameOnCard The name_on_card
      */
     public void setNameOnCard(String nameOnCard) {
         this.nameOnCard = nameOnCard;
     }
 
     /**
-     *
-     * @return
-     * The expireDt
+     * @return The expireDt
      */
     public String getExpireDt() {
         return expireDt;
     }
 
     /**
-     *
-     * @param expireDt
-     * The expire_dt
+     * @param expireDt The expire_dt
      */
     public void setExpireDt(String expireDt) {
         this.expireDt = expireDt;
     }
 
     /**
-     *
-     * @return
-     * The cvv
+     * @return The cvv
      */
-    public String getCvv() {
+    public int getCvv() {
         return cvv;
     }
 
     /**
-     *
-     * @param cvv
-     * The cvv
+     * @param cvv The cvv
      */
-    public void setCvv(String cvv) {
+    public void setCvv(int cvv) {
         this.cvv = cvv;
     }
 
     /**
-     *
-     * @return
-     * The token
+     * @return The token
      */
     public String getToken() {
         return token;
     }
 
     /**
-     *
-     * @param token
-     * The token
+     * @param token The token
      */
     public void setToken(String token) {
         this.token = token;
     }
 
     /**
-     *
-     * @return
-     * The billingInformation
+     * @return The billingInformation
      */
     public PaymentsCreditCardBillingInformationDTO getBillingInformation() {
         return billingInformation;
     }
 
     /**
-     *
-     * @param billingInformation
-     * The billing_information
+     * @param billingInformation The billing_information
      */
     public void setBillingInformation(PaymentsCreditCardBillingInformationDTO billingInformation) {
         this.billingInformation = billingInformation;
     }
 
     /**
-     *
      * @return creditCardsId
      */
     public String getCreditCardsId() {
@@ -169,7 +140,6 @@ public class PaymentCreditCardsPayloadDTO {
     }
 
     /**
-     *
      * @param creditCardsId creditCardsId
      */
     public void setCreditCardsId(String creditCardsId) {

@@ -12,7 +12,7 @@ public class DemographicsSettingsTransitionsDTO {
     private DemographicsSettingsUpdateProfileDTO demographicsSettingsUpdateProfileDTO;
     @SerializedName("add_credit_card")
     @Expose
-    private DemographicsSettingsAddCreditCardDTO demographicsSettingsAddCreditCardDTO;
+    private TransitionDTO demographicsSettingsAddCreditCardDTO;
     @SerializedName("delete_credit_card")
     @Expose
     private TransitionDTO demographicsSettingsDeleteCreditCardDTO;
@@ -37,11 +37,11 @@ public class DemographicsSettingsTransitionsDTO {
         this.demographicsSettingsUpdateProfileDTO = demographicsSettingsUpdateProfileDTO;
     }
 
-    public DemographicsSettingsAddCreditCardDTO getAddCreditCard() {
+    public TransitionDTO getAddCreditCard() {
         return demographicsSettingsAddCreditCardDTO;
     }
 
-    public void setAddCreditCard(DemographicsSettingsAddCreditCardDTO demographicsSettingsAddCreditCardDTO) {
+    public void setAddCreditCard(TransitionDTO demographicsSettingsAddCreditCardDTO) {
         this.demographicsSettingsAddCreditCardDTO = demographicsSettingsAddCreditCardDTO;
     }
 
