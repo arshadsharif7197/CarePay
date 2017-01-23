@@ -10,6 +10,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.carecloud.carepay.practice.clover.R;
+import com.carecloud.carepay.practice.library.appointments.AppointmentsActivity;
+import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -352,8 +354,8 @@ public class CloverPaymentActivity extends AppCompatActivity {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            //TODO Go back to start
-            finish();
+            CloverPaymentActivity.this.finish();
+            PracticeNavigationHelper.getInstance().navigateToWorkflow(CloverPaymentActivity.this, workflowDTO);
         }
 
         @Override
