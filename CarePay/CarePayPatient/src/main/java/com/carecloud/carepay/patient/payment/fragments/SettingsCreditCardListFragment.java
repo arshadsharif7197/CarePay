@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,16 +16,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.adapter.SettingsCreditCardListAdapter;
-import com.carecloud.carepay.patient.payment.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -95,47 +92,25 @@ public class SettingsCreditCardListFragment extends Fragment implements Settings
         }
     }
 
-    private WorkflowServiceCallback makePaymentCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            Gson gson = new Gson();
-            PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(getActivity(),
-                    gson.fromJson(workflowDTO.toString(), PaymentsModel.class));
-            receiptDialog.show();
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            System.out.print(exceptionMessage);
-        }
-    };
-
     private View.OnClickListener addNewCardButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            /*FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
-            AddNewCreditCardFragment fragment = (AddNewCreditCardFragment)
-                fragmentmanager.findFragmentByTag(AddNewCreditCardFragment.class.getSimpleName());
+            FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
+            SettingAddCreditCardFragment fragment = (SettingAddCreditCardFragment)
+                    fragmentmanager.findFragmentByTag(SettingAddCreditCardFragment.class.getSimpleName());
             if (fragment == null) {
-                fragment = new AddNewCreditCardFragment();
+                fragment = new SettingAddCreditCardFragment();
             }
 
             Bundle bundle = new Bundle();
             Gson gson = new Gson();
-            String paymentsDTOString = gson.toJson(paymentsModel);
-            bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
-            bundle.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(intakePaymentModel));
-            bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, getArguments().getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE));
+            bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, gson.toJson(demographicsSettingsDTO));
             fragment.setArguments(bundle);
 
             FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
-            fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
-            fragmentTransaction.addToBackStack(AddNewCreditCardFragment.class.getSimpleName());
-            fragmentTransaction.commit();*/
+            fragmentTransaction.replace(com.carecloud.carepay.patient.R.id.activity_demographics_settings, fragment);
+            fragmentTransaction.addToBackStack(SettingAddCreditCardFragment.class.getSimpleName());
+            fragmentTransaction.commit();
         }
     };
 
