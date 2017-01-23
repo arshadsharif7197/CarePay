@@ -300,7 +300,7 @@ public class PaymentsLabelDTO {
      * @return the payment clover swipe now button label
      */
     public String getPaymentCloverSwipeNowButtonLabel() {
-        return paymentCloverSwipeNowButtonLabel;
+        return StringUtil.getLabelForView(paymentCloverSwipeNowButtonLabel);
     }
 
     /**
