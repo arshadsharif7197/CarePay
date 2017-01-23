@@ -81,13 +81,13 @@ public class PracticeNavigationHelper {
 
             case PracticeNavigationStateConstants.PRACTICE_HOME: {
                 intent = new Intent(context, CloverMainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 break;
             }
 
             case PracticeNavigationStateConstants.PATIENT_HOME: {
                 intent = new Intent(context, CloverMainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 break;
             }
 

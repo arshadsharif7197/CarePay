@@ -279,6 +279,38 @@ public class PaymentsLabelDTO {
     @SerializedName("practice_payments_filter_clear_filters")
     @Expose
     private String practicePaymentsFilterClearFilters;
+    @SerializedName("payment_clover_swipe_now_button_label")
+    @Expose
+    private String paymentCloverSwipeNowButtonLabel;
+    @SerializedName("payment_clover_swipe_now_separator_text")
+    @Expose
+    private String paymentCloverSwipeNowSeparatorText;
+
+    public String getPaymentCloverSwipeNowSeparatorText() {
+        return StringUtil.getLabelForView(paymentCloverSwipeNowSeparatorText);
+    }
+
+    public void setPaymentCloverSwipeNowSeparatorText(String paymentCloverSwipeNowSeparatorText) {
+        this.paymentCloverSwipeNowSeparatorText = paymentCloverSwipeNowSeparatorText;
+    }
+
+    /**
+     * Gets payment clover swipe now button label.
+     *
+     * @return the payment clover swipe now button label
+     */
+    public String getPaymentCloverSwipeNowButtonLabel() {
+        return StringUtil.getLabelForView(paymentCloverSwipeNowButtonLabel);
+    }
+
+    /**
+     * Sets payment clover swipe now button label.
+     *
+     * @param paymentCloverSwipeNowButtonLabel the payment clover swipe now button label
+     */
+    public void setPaymentCloverSwipeNowButtonLabel(String paymentCloverSwipeNowButtonLabel) {
+        this.paymentCloverSwipeNowButtonLabel = paymentCloverSwipeNowButtonLabel;
+    }
 
     /**
      * @return The demographicsCheckinHeading
