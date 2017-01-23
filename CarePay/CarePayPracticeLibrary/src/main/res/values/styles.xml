@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppThemePractice" parent="@style/AppThemeNoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="android:overScrollMode">never</item>
+        <item name="android:textViewStyle">@style/DefaultTextViewStyle</item>
+
+        <!-- Hint color and labelMeta color in FALSE state -->
+        <item name="android:textColorHint">@color/payne_gray</item> <!-- hint color when no focus -->
+
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorControlNormal">@color/light_gray</item> <!-- color of the underlying bar when no focus -->
+        <item name="colorControlActivated">@color/light_gray</item>
+    </style>
+
+    <style name="ChangeModeDialogOptions">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/home_alert_font_size</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="Theme.MyDialog" parent="@style/Theme.AppCompat.Light.Dialog">
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <!-- Home Screen -->
+    <style name="HomeScreenAlertStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/home_alert_font_size</item>
+    </style>
+
+    <style name="HomeButtonTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">bottom|center_horizontal</item>
+        <item name="android:textColor">@color/charcoal</item>
+        <item name="android:textSize">@dimen/home_button_font_size</item>
+    </style>
+
+    <style name="HomeButtonIconStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">bottom|center_horizontal</item>
+    </style>
+
+    <style name="HomeSpinnerItemStyle">
+        <item name="android:textSize">@dimen/home_alert_font_size</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!-- Checkin styles -->
+
+
+    <style name="CheckinContainerStyle">
+        <item name="android:background">@color/white</item>
+    </style>
+
+</resources>

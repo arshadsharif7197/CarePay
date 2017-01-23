@@ -3,23 +3,59 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.carecloud.carepaylibray.appointments.fragments.AvailableHoursFragment">
+    tools:context="com.carecloud.carepay.patient.appointments.fragments.AvailableHoursFragment">
 
     <include layout="@layout/add_appointment_toolbar" />
 
-    <Button
-        android:id="@+id/add_appointment_date_pick"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/add_apt_available_hours_edit_range_height"
+        android:orientation="horizontal"
         android:background="@color/payne_gray"
-        android:paddingBottom="@dimen/apt_available_hours_date_picker_padding"
-        android:paddingTop="@dimen/apt_available_hours_date_picker_padding"
-        android:textColor="@color/white" />
+        android:weightSum="3">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/date_range_custom_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/glitter"
+            android:textSize="@dimen/checked_in_label_font"
+            android:layout_marginLeft="@dimen/apt_dl_image_radius"
+            android:layout_gravity="center_vertical"
+            android:maxLines="1"
+            android:layout_weight="2"/>
+
+        <Button
+            android:id="@+id/add_appointment_date_pick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent_apt"
+            android:text="@string/edit_range_button_label"
+            android:textColor="@color/white"
+            android:layout_gravity="center_vertical|right"
+            android:layout_alignParentRight="true"
+            android:textSize="@dimen/apt_list_upcoming_month_txt_size"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/available_hours_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:paddingLeft="@dimen/apt_available_hours_list_padding"
-        android:paddingRight="@dimen/apt_available_hours_list_padding" />
+        android:paddingRight="@dimen/apt_available_hours_list_padding"
+        android:layout_weight="4"/>
+
+    <Button
+        android:id="@+id/edit_date_range_button"
+        android:background="@drawable/button_blue_border"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/add_apt_available_hours_edit_range_height"
+        android:text="@string/edit_date_range_button_label"
+        android:textColor="@color/bright_cerulean"
+        android:textSize="@dimen/apt_list_upcoming_month_txt_size"
+        android:layout_margin="@dimen/apt_available_hours_list_padding"
+        android:visibility="gone"/>
+
 </LinearLayout>

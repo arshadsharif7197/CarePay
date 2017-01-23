@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:bottomLeftRadius="10dp"
+                             android:topLeftRadius="10dp"/>
+                    <solid android:color="@color/home_button_pressed_shadow_margin"/>
+                </shape>
+            </item>
+
+            <item android:drawable="@drawable/home_hover_shadow_vd"
+                  android:left="3dp"
+                  android:top="2dp"
+                  android:bottom="2dp"/>
+        </layer-list>
+    </item>
+
+    <item android:drawable="@drawable/home_left_rounded_background"/>
+
+</selector>

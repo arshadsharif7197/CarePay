@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/demographicsReviewRootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:descendantFocusability="beforeDescendants"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar_demographics_settings" />
+
+    <ProgressBar
+        android:id="@+id/demographicReviewProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-8dp"
+        android:indeterminate="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/dimen_17dp"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:layout_marginRight="@dimen/dimen_17dp"
+        android:layout_marginBottom="@dimen/dimen_40dp"
+         >
+
+        <ImageView
+             android:id="@+id/providerPicImageView"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:contentDescription="@string/profile_picture"
+             android:src="@drawable/icn_placeholder_user_profile_png" />
+
+        <Button
+            android:id="@+id/changeCurrentPhotoButton"
+            style="@style/DemographicsChooseProfilePicStyle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textColor="@color/settings_toolbar_color" />
+
+    </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/adddemoLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:layout_marginRight="@dimen/dimen_10dp"
+            android:orientation="vertical">
+
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginStart="@dimen/dimen_25dp"
+                android:layout_marginEnd="@dimen/dimen_25dp"
+                android:layout_marginBottom="@dimen/dimen_15dp">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/patientNameTextView"
+                    android:layout_width="@dimen/dimen_150dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:padding="2dp"
+                    android:textSize="@dimen/textview_default_textsize"
+                    android:textStyle="bold"
+                    android:textColor="@color/textview_default_textcolor"
+                    app:customAssetFont="proxima_nova_regular"/>
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/patientChangeNameTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/patientTitleTextView"
+                    android:gravity="right"
+                    android:layout_alignParentRight="true"
+                    android:padding="2dp"
+                    android:textSize="@dimen/text_size_14"
+                    android:textStyle="bold"
+                    android:textColor="@color/settings_toolbar_color"
+                    app:customAssetFont="proxima_nova_regular"/>/>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/list_apt_padding_right"
+                android:layout_marginRight="@dimen/list_apt_padding_right"
+                android:background="@color/gray"
+                android:layout_marginBottom="@dimen/dimen_15dp"/>
+
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginStart="@dimen/dimen_25dp"
+                android:layout_marginEnd="@dimen/dimen_25dp"
+                android:layout_marginBottom="@dimen/dimen_15dp">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/patientEmailTextView"
+                    android:layout_width="@dimen/dimen_150dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:padding="2dp"
+                    android:textSize="@dimen/textview_default_textsize"
+                    android:textStyle="bold"
+                    android:textColor="@color/textview_default_textcolor"
+                    app:customAssetFont="proxima_nova_regular"/>
+
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/patientChangeEmailTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/patientEmailTextView"
+                    android:gravity="right"
+                    android:layout_alignParentRight="true"
+                    android:text="sdasd"
+                    android:padding="2dp"
+                    android:textSize="@dimen/text_size_14"
+                    android:textStyle="bold"
+                    android:textColor="@color/settings_toolbar_color"
+                    app:customAssetFont="proxima_nova_regular"/>/>
+
+            </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/list_apt_padding_right"
+                android:layout_marginRight="@dimen/list_apt_padding_right"
+                android:layout_marginBottom="@dimen/dimen_15dp"
+                android:background="@color/gray" />
+
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginStart="@dimen/dimen_25dp"
+                android:layout_marginEnd="@dimen/dimen_25dp"
+                android:layout_marginBottom="@dimen/dimen_15dp">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/patientPasswordTextView"
+                    android:layout_width="@dimen/dimen_150dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:padding="2dp"
+                    android:textSize="@dimen/textview_default_textsize"
+                    android:textStyle="bold"
+                    android:inputType="textPassword"
+                    app:customAssetFont="proxima_nova_regular"/>
+
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/patientChangePasswordTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/patientPasswordTextView"
+                    android:gravity="right"
+                    android:layout_alignParentRight="true"
+                    android:text="sdasd"
+                    android:padding="2dp"
+                    android:textSize="@dimen/text_size_14"
+                    android:textStyle="bold"
+                    android:textColor="@color/settings_toolbar_color"
+                    app:customAssetFont="proxima_nova_regular"/>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/list_apt_padding_right"
+                android:layout_marginRight="@dimen/list_apt_padding_right"
+                android:background="@color/gray" />
+
+        </LinearLayout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+    <Button
+        android:id="@+id/buttonAddDemographicInfo"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@drawable/settings_button_selector"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:textColor="@color/white" />
+    </RelativeLayout>
+</LinearLayout>

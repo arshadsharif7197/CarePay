@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layoutAddAppointment"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -8,25 +8,30 @@
 
     <include layout="@layout/add_appointment_toolbar" />
 
-    <TextView
-        android:id="@+id/choose_provider_section_title_recent"
-        style="@style/ChooseProviderSectionTitle"
-        android:text="@string/choose_provider_recent_title" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/choose_provider_recycler_view_recent"
+    <ProgressBar
+        android:id="@+id/providers_progress_bar"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/choose_provider_list_margin_top" />
+        android:layout_marginTop="-8dp"
+        android:indeterminate="true" />
 
-    <TextView
-        android:id="@+id/choose_provider_section_title_all"
-        style="@style/ChooseProviderSectionTitle"
-        android:text="@string/choose_provider_all_title" />
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/providers_sticky_header_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/apt_skicky_header_height"
+        android:layout_gravity="center_vertical"
+        android:background="@color/light_gray"
+        android:gravity="center_vertical"
+        android:paddingEnd="0dp"
+        android:paddingStart="@dimen/list_apt_padding_right"
+        android:textColor="@color/lightSlateGray"
+        android:textSize="@dimen/textview_textsize"
+        android:visibility="gone"
+        app:customAssetFont="proxima_nova_semi_bold" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/choose_provider_recycler_view_all"
+        android:id="@+id/providers_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/choose_provider_list_margin_top" />
+        android:layout_height="match_parent" />
 </LinearLayout>

@@ -1,28 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-
-    <Button
-        android:id="@+id/signButton"
-        style="@style/Consent_form_Button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/tiltle1_3" />
+    android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/dimen_40dp"
+    android:orientation="vertical">
 
     <ScrollView
         android:id="@+id/consentform_scrollView"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:fillViewport="true"
         android:scrollbars="vertical"
-        android:layout_marginTop="20dp"
-        android:layout_above="@+id/signButton"
-        android:layout_alignParentStart="true">
+        android:layout_weight="3">
 
         <LinearLayout
+            android:id="@+id/consenrform1_mainContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -45,6 +39,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/titleTv"
+                    android:layout_marginTop="@dimen/dimen_5dp"
                     android:text="@string/consentdescrption" />
             </RelativeLayout>
 
@@ -54,16 +49,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="99"
+                android:gravity="left"
                 android:scrollbars="vertical"
+                android:textSize="@dimen/consent_Contentview_textSize"
+                android:layout_weight="3"
                 android:text="@string/constentcontent" />
 
             <TextView
                 android:id="@+id/dateTv"
                 style="@style/ConsentActivityDateStyle"
+                android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
         </LinearLayout>
     </ScrollView>
 
-</RelativeLayout>
+
+    <Button
+        android:id="@+id/signButton"
+        style="@style/Consent_form_Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

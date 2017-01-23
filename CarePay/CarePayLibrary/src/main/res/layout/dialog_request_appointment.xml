@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        app:customAssetFont="proxima_nova_semi_bold"
         android:id="@+id/optionalTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
+        android:layout_gravity="end"
         android:layout_marginTop="@dimen/apt_dl_margin"
-        android:gravity="right"
-        android:text="Optional"
+        android:gravity="end"
         android:textSize="@dimen/apt_popup_optional" />
 
     <android.support.design.widget.TextInputLayout
@@ -25,7 +26,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusable="false"
-            android:hint="Reason for visit"
+            android:maxLines="1"
+            android:maxLength="50"
             android:imeOptions="flagNoExtractUi"
             android:textColor="@color/blue_cerulian" />
 
@@ -44,10 +46,8 @@
             android:id="@+id/requestAppointmentButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/apt_dl_btn_margin"
             android:layout_weight="0.5"
             android:background="@drawable/button_green_fill_background"
-            android:text="@string/request_appointment_button_text"
             android:textColor="@color/white"
             android:textSize="@dimen/apt_dl_textview_size" />
     </LinearLayout>

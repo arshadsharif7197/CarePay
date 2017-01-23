@@ -8,33 +8,55 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
+import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-/**
- * Created by prem_mourya on 9/21/2016.
- */
+public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener {
 
-public class BaseDoctorInfoDialog extends Dialog implements
-        View.OnClickListener {
+    private static final String LOG_TAG = BaseDoctorInfoDialog.class.getSimpleName();
+
+    public enum AppointmentType {
+        UPCOMING_APPOINTMENT,
+        MISSED_APPOINTMENT,
+        REQUESTED_APPOINTMENT,
+        CANCEL_APPOINTMENT,
+        CANCELLED_APPOINTMENT
+    }
+
     private Context context;
-    private AppointmentModel appointmentModel;
-    private View addActionlayout, rootLayout;
+    private AppointmentsPayloadDTO payload;
+    private View addActionLayout;
+    private View rootLayout;
 
-    public BaseDoctorInfoDialog(Context context, AppointmentModel appointmentModel) {
+    private String placeName;
+    private String placeAddress;
+    private String phoneNumber;
+
+    /**
+     * Constructor.
+     *
+     * @param context        context
+     * @param appointmentDTO appointment model
+     */
+    public BaseDoctorInfoDialog(Context context, AppointmentDTO appointmentDTO) {
         super(context);
         this.context = context;
-        this.appointmentModel = appointmentModel;
+        if(appointmentDTO != null) {
+            this.payload = appointmentDTO.getPayload();
+        }
     }
 
     @Override
@@ -45,50 +67,58 @@ public class BaseDoctorInfoDialog extends Dialog implements
         setCancelable(false);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         WindowManager.LayoutParams params = getWindow().getAttributes();
+
         params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
         params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.90);
         getWindow().setAttributes(params);
 
-        TextView shortNameTextView = ((TextView) findViewById(R.id.appointShortnameTextView));
-        TextView nameTextView = ((TextView) findViewById(R.id.appointNameTextView));
-        TextView typeTextView = ((TextView) findViewById(R.id.appointTypeTextView));
-        final TextView addressTextView = ((TextView) findViewById(R.id.appointAddressTextView));
-        final TextView addressHeaderTextView = ((TextView) findViewById(R.id.appointAddressHeaderTextView));
-        TextView dateTextView = ((TextView) findViewById(R.id.appointDateTextView));
-        TextView timeTextView = ((TextView) findViewById(R.id.appointTimeTextView));
+        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
+        DateUtil.getInstance().setDateRaw(payload.getStartTime());
 
-        String[] fmtDateAndTime = DateUtil.parseStringToDateTime(
-                context, appointmentModel.getAppointmentDate());
-        dateTextView.setText(fmtDateAndTime[0]);
-        timeTextView.setText(fmtDateAndTime[1]);
+        CarePayTextView dateTextView = ((CarePayTextView) findViewById(R.id.appointDateTextView));
+        dateTextView.setText(DateUtil.getInstance().getDateAsDayMonthDayOrdinal());
 
-        shortNameTextView.setText(StringUtil.onShortDrName(appointmentModel.getDoctorName()));
-        nameTextView.setText(appointmentModel.getDoctorName());
-        typeTextView.setText(appointmentModel.getAppointmentType());
-        addressHeaderTextView.setText(appointmentModel.getPlaceName());
-        addressTextView.setText(appointmentModel.getPlaceAddress());
+        CarePayTextView timeTextView = ((CarePayTextView) findViewById(R.id.appointTimeTextView));
+        timeTextView.setText(DateUtil.getInstance().getTime12Hour());
 
-        SystemUtil.setProximaNovaLightTypeface(context, dateTextView);
-        SystemUtil.setGothamRoundedBoldTypeface(context, timeTextView);
-        SystemUtil.setProximaNovaRegularTypeface(context, shortNameTextView);
-        SystemUtil.setProximaNovaSemiboldTypeface(context, nameTextView);
-        SystemUtil.setProximaNovaRegularTypeface(context, typeTextView);
-        SystemUtil.setProximaNovaRegularTypeface(context, addressTextView);
-        SystemUtil.setProximaNovaExtraboldTypeface(context, addressHeaderTextView);
+        CarePayTextView shortNameTextView = ((CarePayTextView) findViewById(R.id.appointShortnameTextView));
+        shortNameTextView.setText(StringUtil.onShortDrName(payload.getProvider().getName()));
+
+        CarePayTextView nameTextView = ((CarePayTextView) findViewById(R.id.appointNameTextView));
+        nameTextView.setText(payload.getProvider().getName());
+
+        CarePayTextView typeTextView = ((CarePayTextView) findViewById(R.id.appointTypeTextView));
+        typeTextView.setText(payload.getProvider().getSpecialty().getName());
+
+        // Appointment Place name
+        final CarePayTextView addressHeaderTextView = ((CarePayTextView) findViewById(R.id.appointAddressHeaderTextView));
+        placeName = payload.getLocation().getName();
+        addressHeaderTextView.setText(placeName);
+
+        // Appointment Place address
+        final CarePayTextView addressTextView = ((CarePayTextView) findViewById(R.id.appointAddressTextView));
+        if( payload.getLocation().getAddress() !=null) {
+            placeAddress = payload.getLocation().getAddress().getPlaceAddressString();
+            addressTextView.setText(placeAddress);
+        }
 
         findViewById(R.id.dialogAppointHeaderTextView).setOnClickListener(this);
         findViewById(R.id.appointLocationImageView).setOnClickListener(this);
         findViewById(R.id.appointDailImageView).setOnClickListener(this);
-        addActionlayout = findViewById(R.id.actionAddLayout);
+        addActionLayout = findViewById(R.id.actionAddLayout);
         rootLayout = findViewById(R.id.rootDialogAppointLayout);
 
-        if(TextUtils.isEmpty(appointmentModel.getPhoneNumber())){
+        phoneNumber = payload.getProvider().getPhone();
+        if (TextUtils.isEmpty(phoneNumber)) {
             Drawable originalIcon = context.getResources().getDrawable(R.drawable.icn_appointment_card_call);
-            ((ImageView)findViewById(R.id.appointDailImageView)).setImageDrawable(SystemUtil.convertDrawableToGrayScale(originalIcon));
+            ((ImageView) findViewById(R.id.appointDailImageView))
+                    .setImageDrawable(SystemUtil.convertDrawableToGrayScale(originalIcon));
         }
-        if(!SystemUtil.isNotEmptyString(appointmentModel.getPlaceAddress())){
+
+        if (!SystemUtil.isNotEmptyString(placeAddress)) {
             Drawable originalIcon = context.getResources().getDrawable(R.drawable.icn_appointment_card_directions);
-            ((ImageView)findViewById(R.id.appointLocationImageView)).setImageDrawable(SystemUtil.convertDrawableToGrayScale(originalIcon));
+            ((ImageView) findViewById(R.id.appointLocationImageView))
+                    .setImageDrawable(SystemUtil.convertDrawableToGrayScale(originalIcon));
         }
     }
 
@@ -98,11 +128,9 @@ public class BaseDoctorInfoDialog extends Dialog implements
         if (viewId == R.id.dialogAppointHeaderTextView) {
             cancel();
         } else if (viewId == R.id.appointLocationImageView) {
-            onMapView(appointmentModel.getPlaceName(), appointmentModel.getPlaceAddress());
-        } else if (viewId == R.id.appointDailImageView) {
-            if (!TextUtils.isEmpty(appointmentModel.getPhoneNumber())) {
-                onPhoneCall(appointmentModel.getPhoneNumber());
-            }
+            onMapView(placeName, placeAddress);
+        } else if (viewId == R.id.appointDailImageView && !TextUtils.isEmpty(phoneNumber)) {
+            onPhoneCall(phoneNumber);
         }
     }
 
@@ -129,12 +157,12 @@ public class BaseDoctorInfoDialog extends Dialog implements
         try {
             context.startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null)));
         } catch (android.content.ActivityNotFoundException ex) {
-
+            Log.e(LOG_TAG, ex.getMessage());
         }
     }
 
     protected View getAddActionChildView() {
-        return addActionlayout;
+        return addActionLayout;
     }
 
     protected View getRootView() {

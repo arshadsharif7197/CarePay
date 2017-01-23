@@ -1,0 +1,6 @@
+[submodule "CarePay/CarePayLibrary/src/main/assets/intake-forms-webview"]
+	path = CarePay/CarePayLibrary/src/main/assets/intake-forms-webview
+	url = git@github.com:CareCloud/quippe-intake-forms.git
+[submodule "CarePay/CarePayLibrary/src/main/assets/carecloud-forms"]
+	path = CarePay/CarePayLibrary/src/main/assets/carecloud-forms
+	url = git@github.com:CareCloud/carecloud-forms.git

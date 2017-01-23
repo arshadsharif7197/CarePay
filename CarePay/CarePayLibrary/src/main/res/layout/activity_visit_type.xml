@@ -7,12 +7,12 @@
     android:padding="@dimen/visit_type_dialog_padding">
 
     <TextView
+        android:id="@+id/visit_type_header_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/visit_type_vertical_margin"
         android:layout_marginStart="@dimen/visit_type_horizontal_margin"
         android:layout_marginTop="@dimen/visit_type_vertical_margin"
-        android:text="@string/visit_type_label"
         android:textColor="@color/black"
         android:textSize="@dimen/visit_type_label_font" />
 

@@ -1,0 +1,148 @@
+package com.carecloud.carepaylibray.payments.models;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+/**
+ * Created by Rahul on 11/30/16.
+ */
+
+public class PaymentCreditCardsPayloadDTO {
+
+    @SerializedName("card_type")
+    @Expose
+    private String cardType;
+    @SerializedName("card_number")
+    @Expose
+    private String cardNumber;
+    @SerializedName("name_on_card")
+    @Expose
+    private String nameOnCard;
+    @SerializedName("expire_dt")
+    @Expose
+    private String expireDt;
+    @SerializedName("cvv")
+    @Expose
+    private int cvv;
+    @SerializedName("hash_credit_cards_id")
+    @Expose
+    private String creditCardsId;
+    @SerializedName("token")
+    @Expose
+    private String token;
+    @SerializedName("billing_information")
+    @Expose
+    private PaymentsCreditCardBillingInformationDTO billingInformation;
+
+    /**
+     * @return The cardType
+     */
+    public String getCardType() {
+        return cardType;
+    }
+
+    /**
+     * @param cardType The card_type
+     */
+    public void setCardType(String cardType) {
+        this.cardType = cardType;
+    }
+
+    /**
+     * @return The cardNumber
+     */
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    /**
+     * @param cardNumber The card_number
+     */
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    /**
+     * @return The nameOnCard
+     */
+    public String getNameOnCard() {
+        return nameOnCard;
+    }
+
+    /**
+     * @param nameOnCard The name_on_card
+     */
+    public void setNameOnCard(String nameOnCard) {
+        this.nameOnCard = nameOnCard;
+    }
+
+    /**
+     * @return The expireDt
+     */
+    public String getExpireDt() {
+        return expireDt;
+    }
+
+    /**
+     * @param expireDt The expire_dt
+     */
+    public void setExpireDt(String expireDt) {
+        this.expireDt = expireDt;
+    }
+
+    /**
+     * @return The cvv
+     */
+    public int getCvv() {
+        return cvv;
+    }
+
+    /**
+     * @param cvv The cvv
+     */
+    public void setCvv(int cvv) {
+        this.cvv = cvv;
+    }
+
+    /**
+     * @return The token
+     */
+    public String getToken() {
+        return token;
+    }
+
+    /**
+     * @param token The token
+     */
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    /**
+     * @return The billingInformation
+     */
+    public PaymentsCreditCardBillingInformationDTO getBillingInformation() {
+        return billingInformation;
+    }
+
+    /**
+     * @param billingInformation The billing_information
+     */
+    public void setBillingInformation(PaymentsCreditCardBillingInformationDTO billingInformation) {
+        this.billingInformation = billingInformation;
+    }
+
+    /**
+     * @return creditCardsId
+     */
+    public String getCreditCardsId() {
+        return creditCardsId;
+    }
+
+    /**
+     * @param creditCardsId creditCardsId
+     */
+    public void setCreditCardsId(String creditCardsId) {
+        this.creditCardsId = creditCardsId;
+    }
+}

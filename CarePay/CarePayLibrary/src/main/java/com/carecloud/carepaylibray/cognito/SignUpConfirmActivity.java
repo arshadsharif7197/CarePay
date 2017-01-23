@@ -18,7 +18,9 @@ import android.widget.TextView;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserCodeDeliveryDetails;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.GenericHandler;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.VerificationHandler;
+import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
 
 /**
  * Activity used to confirm a signed-up user
@@ -31,6 +33,7 @@ public class SignUpConfirmActivity extends AppCompatActivity {
     private TextView    reqCode;
     private String      userName;
     private AlertDialog userDialog;
+    private SignInLablesDTO signInLablesDTO;
 
 
     @Override
@@ -38,7 +41,7 @@ public class SignUpConfirmActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up_confirm);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
+        signInLablesDTO = (SignInLablesDTO) getIntent().getExtras().get("signInLablesDTO");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
@@ -57,7 +60,7 @@ public class SignUpConfirmActivity extends AppCompatActivity {
 //        });
 
         TextView main_title = (TextView) findViewById(R.id.confirm_toolbar_title);
-        main_title.setText("Confirm");
+        main_title.setText(signInLablesDTO.getConfirm());
 
         init();
     }
@@ -80,16 +83,16 @@ public class SignUpConfirmActivity extends AppCompatActivity {
 
                     TextView screenSubtext = (TextView) findViewById(R.id.textViewConfirmSubtext_1);
                     if(dest != null && delMed != null && dest.length() > 0 && delMed.length() > 0) {
-                        screenSubtext.setText("A confirmation code was sent to "+dest+" via "+delMed);
+                        screenSubtext.setText(String.format(signInLablesDTO.getConfirmCodeSentToWithArgument(),dest,delMed));
                     }
                     else {
-                        screenSubtext.setText("A confirmation code was sent");
+                        screenSubtext.setText(signInLablesDTO.getConfirmConfirmationCodeSent());
                     }
                 }
             }
             else {
                 TextView screenSubtext = (TextView) findViewById(R.id.textViewConfirmSubtext_1);
-                screenSubtext.setText("Request for a confirmation code or confirm with the code you already have.");
+                screenSubtext.setText(signInLablesDTO.getConfirmRequestForConfirmation());
             }
 
         }
@@ -172,7 +175,7 @@ public class SignUpConfirmActivity extends AppCompatActivity {
 
         if(userName == null || userName.length() < 1) {
             TextView label = (TextView) findViewById(R.id.textViewConfirmUserIdMessage);
-            label.setText(username.getHint()+" cannot be empty");
+            label.setText(String.format(signInLablesDTO.getConfirmCannotEmptyWithArgument(),username.getHint()));
             username.setBackground(ContextCompat.getDrawable(SignUpConfirmActivity.this,
                                                              R.drawable.text_border_error));
             return;
@@ -180,7 +183,7 @@ public class SignUpConfirmActivity extends AppCompatActivity {
 
         if(confirmCode == null || confirmCode.length() < 1) {
             TextView label = (TextView) findViewById(R.id.textViewConfirmCodeMessage);
-            label.setText(confCode.getHint()+" cannot be empty");
+            label.setText(String.format(signInLablesDTO.getConfirmCannotEmptyWithArgument(),confCode.getHint()));
             confCode.setBackground(ContextCompat.getDrawable(SignUpConfirmActivity.this,
                                                              R.drawable.text_border_error));
             return;
@@ -193,7 +196,7 @@ public class SignUpConfirmActivity extends AppCompatActivity {
         userName = username.getText().toString();
         if(userName == null || userName.length() < 1) {
             TextView label = (TextView) findViewById(R.id.textViewConfirmUserIdMessage);
-            label.setText(username.getHint()+" cannot be empty");
+            label.setText(String.format(signInLablesDTO.getConfirmCannotEmptyWithArgument(),username.getHint()));
             username.setBackground(ContextCompat.getDrawable(SignUpConfirmActivity.this,
                                                              R.drawable.text_border_error));
             return;
@@ -205,18 +208,19 @@ public class SignUpConfirmActivity extends AppCompatActivity {
     GenericHandler confHandler = new GenericHandler() {
         @Override
         public void onSuccess() {
-            showDialogMessage("Success!",userName+" has been confirmed!", true);
+            showDialogMessage(signInLablesDTO.getConfirmSuccess(),
+                    String.format(signInLablesDTO.getConfirmConfirmedWithArgument(),userName), true);
         }
 
         @Override
         public void onFailure(Exception exception) {
             TextView label = (TextView) findViewById(R.id.textViewConfirmUserIdMessage);
-            label.setText("Confirmation failed!");
+            label.setText(signInLablesDTO.getConfirmConfirmationFailed());
             username.setBackground(ContextCompat.getDrawable(SignUpConfirmActivity.this,
                                                              R.drawable.text_border_error));
 
             label = (TextView) findViewById(R.id.textViewConfirmCodeMessage);
-            label.setText("Confirmation failed!");
+            label.setText(signInLablesDTO.getConfirmConfirmationFailed());
             confCode.setBackground(ContextCompat.getDrawable(SignUpConfirmActivity.this,
                                                              R.drawable.text_border_error));
 
@@ -228,25 +232,27 @@ public class SignUpConfirmActivity extends AppCompatActivity {
         @Override
         public void onSuccess(CognitoUserCodeDeliveryDetails cognitoUserCodeDeliveryDetails) {
             TextView mainTitle = (TextView) findViewById(R.id.textViewConfirmTitle);
-            mainTitle.setText("Confirm your account");
+            mainTitle.setText(signInLablesDTO.getConfirmConfirmYourAccount());
             confCode = (EditText) findViewById(R.id.editTextConfirmCode);
             confCode.requestFocus();
-            showDialogMessage("Confirmation code sent.","Code sent to "+cognitoUserCodeDeliveryDetails.getDestination()+" via "+cognitoUserCodeDeliveryDetails.getDeliveryMedium()+".", false);
+            showDialogMessage(signInLablesDTO.getConfirmConfirmationCodeSent(),
+                    String.format(signInLablesDTO.getConfirmCodeSentToWithArgument(),cognitoUserCodeDeliveryDetails.getDestination(),
+                            cognitoUserCodeDeliveryDetails.getDeliveryMedium()), false);
         }
 
         @Override
         public void onFailure(Exception exception) {
             TextView label = (TextView) findViewById(R.id.textViewConfirmUserIdMessage);
-            label.setText("Confirmation code resend failed");
+            label.setText(signInLablesDTO.getConfirmConfirmationCodeResendFailed());
             username.setBackground(ContextCompat.getDrawable(SignUpConfirmActivity.this,
                                                              R.drawable.text_border_error));
-            showDialogMessage("Confirmation code request has failed", CognitoAppHelper.formatException(exception), false);
+            showDialogMessage(signInLablesDTO.getConfirmConfirmationCodeRequestHasFailed(), CognitoAppHelper.formatException(exception), false);
         }
     };
 
     private void showDialogMessage(String title, String body, final boolean exitActivity) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(title).setMessage(body).setNeutralButton("OK", new DialogInterface.OnClickListener() {
+        builder.setTitle(title).setMessage(body).setNeutralButton(signInLablesDTO.getConfirmOk(), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {

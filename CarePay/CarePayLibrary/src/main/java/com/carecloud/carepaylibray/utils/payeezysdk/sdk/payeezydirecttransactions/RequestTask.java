@@ -1,0 +1,933 @@
+package com.carecloud.carepaylibray.utils.payeezysdk.sdk.payeezydirecttransactions;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.os.AsyncTask;
+
+import com.carecloud.carepaylibray.utils.payeezysdk.firstdata.FirstAPIClientV2Helper;
+import com.carecloud.carepaylibray.utils.payeezysdk.firstdata.domain.TransactionType;
+import com.carecloud.carepaylibray.utils.payeezysdk.firstdata.domain.v2.Address;
+import com.carecloud.carepaylibray.utils.payeezysdk.firstdata.domain.v2.Card;
+import com.carecloud.carepaylibray.utils.payeezysdk.firstdata.domain.v2.Level2;
+import com.carecloud.carepaylibray.utils.payeezysdk.firstdata.domain.v2.Token;
+import com.carecloud.carepaylibray.utils.payeezysdk.firstdata.domain.v2.TransactionRequest;
+import com.carecloud.carepaylibray.utils.payeezysdk.firstdata.domain.v2.TransactionResponse;
+import com.carecloud.carepaylibray.utils.payeezysdk.firstdata.domain.v2.Transarmor;
+import com.carecloud.carepaylibray.utils.payeezysdk.firstdata.domain.v2.UserTransactionResponse;
+import com.carecloud.carepaylibray.utils.payeezysdk.firstdata.domain.v2.ValueLinkCard;
+
+enum CardType {
+	CARD_VISA ,
+	CARD_MASTERCARD ,
+	CARD_AMEX ,
+	CARD_DISCOVER ,
+	CARD_VALUELINK, 
+	CARD_TELECHECK,
+
+}
+
+enum TransactionCategory
+{
+
+	CATEGORY_CVV2,
+	CATEGORY_AVS,
+	CATEGORY_SPLITSHIPMENT,
+	CATEGORY_LEVEL2,
+	CATEGORY_LEVEL3,
+	CATEGORY_SOFTDESCRIPTORS,
+	CATEGORY_NAKEDREFUNDS,
+	CATEGORY_NAKEDVOIDS,
+	CATEGORY_3DS,
+	CATEGORY_TRANSARMOR,
+	CATEGORY_ZERODOLLAR,
+	CATEGORY_RECURRING,
+	CATEGORY_GENERATETOKEN,
+	CATEGORY_FDTOKEN
+}
+
+enum TransactionTypePrimarySecondary
+{
+	AUTHORIZE,
+	PURCHASE,
+	CREDIT,
+	VOID,
+	REFUND,
+	CAPTURE
+
+}
+
+@SuppressLint("DefaultLocale")
+public class RequestTask extends AsyncTask<String, String, String> {
+
+	public interface AuthorizeCreditCardCallback{
+		void onAuthorizeCreditCard(String response);
+	}
+
+	private Context context = null;
+	public static String urlCert = "https://api-cert.payeezy.com/v1";
+
+	CardType cardtype ;
+	CardType cardtypeSecondary = CardType.CARD_VISA;
+	TransactionCategory category;
+	AuthorizeCreditCardCallback authorizeCreditCardCallback;
+
+	FirstAPIClientV2Helper clientHelper = new FirstAPIClientV2Helper();
+
+	public RequestTask(Context pcontext, AuthorizeCreditCardCallback callback)
+	{
+		context = pcontext;
+		this.authorizeCreditCardCallback = callback;
+	}
+	private String statusString = "";
+	private String splitter = "~~~~~~~~";
+	
+    @Override
+    protected String doInBackground(String... uri) {
+    	
+    	if(uri[0].toLowerCase().equalsIgnoreCase("authorize"))
+    	{
+			AuthorizePurchase(TransactionTypePrimarySecondary.AUTHORIZE,uri);
+    		return "authorize";
+    	}
+    	if(uri[0].toLowerCase().equalsIgnoreCase( "purchase"))
+    	{
+			AuthorizePurchase(TransactionTypePrimarySecondary.PURCHASE,uri);
+    		return "purchase";
+    	}
+    	if(uri[0].toLowerCase().equalsIgnoreCase(  "capture"))
+    	{
+			AuthorizePurchase(TransactionTypePrimarySecondary.AUTHORIZE,uri);
+			CaptureRefundVoid(TransactionTypePrimarySecondary.CAPTURE);
+    		return "capture";
+    	}
+    	if(uri[0].toLowerCase().equalsIgnoreCase( "refund")) {
+			AuthorizePurchase(TransactionTypePrimarySecondary.PURCHASE,uri);
+			CaptureRefundVoid(TransactionTypePrimarySecondary.REFUND);
+    		return "refund";
+    	}
+    	if(uri[0].toLowerCase().equalsIgnoreCase( "void"))
+    	{
+			AuthorizePurchase(TransactionTypePrimarySecondary.AUTHORIZE,uri);
+			CaptureRefundVoid(TransactionTypePrimarySecondary.VOID);
+    		return "void";
+    	}
+
+		if(uri[0].toLowerCase().equalsIgnoreCase("authorizeavs"))
+		{
+
+			AvsSdL2L3Ta3dsZdSpShRec(TransactionCategory.CATEGORY_AVS, uri);
+			return "authorizeavs";
+		}
+
+
+    	if(uri[0].toLowerCase().equalsIgnoreCase("authorizesoftdescriptors"))
+    	{
+
+			AvsSdL2L3Ta3dsZdSpShRec(TransactionCategory.CATEGORY_SOFTDESCRIPTORS, uri);
+    		return "authorizesoftdescriptors";
+    	}
+
+		if(uri[0].toLowerCase().equalsIgnoreCase("authorizesplitshipments"))
+		{
+
+			AvsSdL2L3Ta3dsZdSpShRec(TransactionCategory.CATEGORY_SPLITSHIPMENT, uri);
+			return "authorizesplitshipments";
+		}
+
+    	if(uri[0].toLowerCase().equalsIgnoreCase("authorize3ds"))
+    	{
+
+			AvsSdL2L3Ta3dsZdSpShRec(TransactionCategory.CATEGORY_3DS, uri);
+    		return "authorize3ds";
+    	}
+
+    	if(uri[0].toLowerCase().equalsIgnoreCase("recurring"))
+    	{
+
+    		//Recurring();
+			AvsSdL2L3Ta3dsZdSpShRec(TransactionCategory.CATEGORY_RECURRING, uri);
+
+    		return "authorizerecurring";
+    	}
+
+		if(uri[0].toLowerCase().equalsIgnoreCase("authorizelevel2"))
+		{
+
+			AvsSdL2L3Ta3dsZdSpShRec(TransactionCategory.CATEGORY_LEVEL2, uri);
+			return "authorizelevel2";
+		}
+
+		if(uri[0].toLowerCase().equalsIgnoreCase("authorizelevel3"))
+		{
+
+			AvsSdL2L3Ta3dsZdSpShRec(TransactionCategory.CATEGORY_LEVEL3, uri);
+			return "authorizelevel3";
+		}
+
+
+    	if(uri[0].toLowerCase().equalsIgnoreCase("zerodollar"))
+    	{
+			AvsSdL2L3Ta3dsZdSpShRec(TransactionCategory.CATEGORY_ZERODOLLAR, uri);
+    		return "zerodollar";
+    	}
+
+
+    	return "Authorize";
+
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+        super.onPostExecute(result);
+        System.out.println("===============================>\n Authorize CreditCard Response" + result);
+		authorizeCreditCardCallback.onAuthorizeCreditCard(result + statusString);
+    }
+    
+
+    private void CallTelecheckCards()
+    {
+   // 	CallPurchaseTelecheck();
+
+    }
+    
+    private void CallValueLinkCards()
+    {
+    /*	CallActivationValueLink();
+    	CallPurchaseValueLink();
+    	CallRefundValueLink();
+    	CallSplitPurchaseValueLink();
+    	CallVoidValueLink();
+    	CallReloadValueLink();
+    	CallCashoutValueLink();
+    	CallDeactivationValueLink();
+    	CallBalanceEnquiryValueLink();
+    */
+    }
+
+	//Initialise method: for initialising the CardType, appId,SecretKey, token and Url
+	private void Initialise() {
+		cardtype = CardType.CARD_VISA ;
+		/*clientHelper.setAppId(TransactionDataProvider.appIdCert);
+		clientHelper.setSecuredSecret(TransactionDataProvider.secureIdCert);
+		clientHelper.setToken(TransactionDataProvider.tokenCert);
+		clientHelper.setUrl(TransactionDataProvider.urlCert);*/
+		clientHelper.setAppId("E66y09GJ71wdjc84q6EvA955qtMqYNAM");
+		clientHelper.setSecuredSecret("7d5b00c61b300c4ef7ee16e249169652e490696069ecb0ff588e31df34724d93");
+		clientHelper.setToken("fdoa-daad1ac2944ca1d97c16bf762ac12604daad1ac2944ca1d9");
+		clientHelper.setUrl(urlCert);
+	}
+
+    private void AuthorizePurchase(TransactionTypePrimarySecondary transactionType,String[] uri)
+	{
+		try
+		{
+
+			Initialise();
+		//	TransactionRequest trans = getPrimaryTransaction(uri);
+			TransactionRequest trans = getPrimaryTransactionForTransType(uri);
+			if(transactionType == TransactionTypePrimarySecondary.PURCHASE) {
+				trans.setTransactionType(TransactionType.PURCHASE.name().toLowerCase());
+			}
+			else {
+				trans.setTransactionType(TransactionType.AUTHORIZE.name().toLowerCase());
+			}
+
+			Object responseObject = clientHelper.doPrimaryTransaction(trans);
+			System.out.println("=====================================>\nResponse : " + responseObject.toString());
+
+			String resString = ((UserTransactionResponse) responseObject).getResponseString();
+			System.out.println("=====================================>\nResponse String: " + resString);
+			stringParser(resString);
+
+			statusString = statusString + ((UserTransactionResponse)responseObject).getResponseString() + splitter;
+
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+		}
+	}
+
+	/*********************************capture   REFUND   Void****************************/
+
+	//Secondary transaction payload formation
+	public void CaptureRefundVoid(TransactionTypePrimarySecondary transactiontype)
+	{
+		Initialise();
+		System.out.println("In secondary\n");
+		try{
+
+
+			TransactionRequest trans=new TransactionRequest();
+
+
+			if (transactiontype.equals( TransactionTypePrimarySecondary.CAPTURE))
+				trans.setTransactionType(TransactionType.CAPTURE.name().toLowerCase());
+
+
+			else if (transactiontype.equals( TransactionTypePrimarySecondary.REFUND))
+				trans.setTransactionType(TransactionType.REFUND.name().toLowerCase());
+
+			else
+				trans.setTransactionType(TransactionType.VOID.name().toLowerCase());
+			System.out.println("method="+ TransactionResponse.getMethod());
+			System.out.println("amount="+TransactionResponse.getAmount());
+			System.out.println("currency="+TransactionResponse.getCurrency());
+			System.out.println("Tr-tag=" + TransactionResponse.getTransactionTag());
+
+		trans.setPaymentMethod(TransactionResponse.getMethod());
+			trans.setAmount(TransactionResponse.getAmount());
+			trans.setCurrency(TransactionResponse.getCurrency());
+			trans.setTransactionTag(TransactionResponse.getTransactionTag());
+trans.setTransactionId(TransactionResponse.getTransactionId());
+
+			Object responseObject2 = clientHelper.doSecondaryTransaction(trans);
+			statusString = statusString + ((UserTransactionResponse) responseObject2).getResponseString() + splitter;
+		}
+		catch(Exception e){
+			System.out.println(e.getMessage());
+		}
+
+
+	}
+
+
+	//String Parser
+	public void stringParser(String resString)
+	{
+
+		int startIndex = resString.indexOf("transaction_tag");
+		startIndex=resString.indexOf("=",startIndex+1);
+		int endIndex = resString.indexOf(",", startIndex);
+		String transaction_tid = resString.substring(startIndex, endIndex);
+		transaction_tid=transaction_tid.replace(" ", "");
+		transaction_tid=transaction_tid.replace(":", "");
+		transaction_tid=transaction_tid.replace("=", "");
+		TransactionResponse.transactionTag=transaction_tid;
+
+		startIndex=resString.indexOf("method");
+		startIndex=resString.indexOf("=", startIndex + 1);
+		endIndex=resString.indexOf(",", startIndex);
+		String method = resString.substring(startIndex, endIndex);
+		method=method.replace(" ","");
+		method=method.replace(":","");
+		method=method.replace("=", "");
+		TransactionResponse.method=method;
+
+		startIndex=resString.indexOf("amount");
+		startIndex=resString.indexOf("=", startIndex + 1);
+		endIndex=resString.indexOf(",", startIndex);
+		String amount = resString.substring(startIndex, endIndex);
+		amount=amount.replace(" ","");
+		amount=amount.replace(":","");
+		amount=amount.replace("=", "");
+		TransactionResponse.amount=amount;
+		startIndex=resString.indexOf("currency");
+		startIndex=resString.indexOf("=",startIndex+1);
+		endIndex=resString.indexOf(",", startIndex);
+		String currency = resString.substring(startIndex, endIndex);
+		currency=currency.replace(" ","");
+		currency=currency.replace(":","");
+		currency=currency.replace("=", "");
+		TransactionResponse.currency=currency;
+
+
+		startIndex=resString.indexOf("transaction_id");
+		startIndex=resString.indexOf("=",startIndex+1);
+		endIndex=resString.indexOf(",", startIndex);
+		String transaction_id = resString.substring(startIndex, endIndex);
+		transaction_id=transaction_id.replace(" ","");
+		transaction_id=transaction_id.replace(":","");
+		transaction_id=transaction_id.replace("=","");
+		TransactionResponse.transactionId=transaction_id;
+	}
+
+	private void AvsSdL2L3Ta3dsZdSpShRec(TransactionCategory transactionCategory,String[] uri)
+	{
+		TransactionRequest trans =new TransactionRequest();
+		Object responseObject=new Object();
+		try
+		{
+			Initialise();
+			switch(transactionCategory)
+			{
+				case CATEGORY_AVS:
+					category = TransactionCategory.CATEGORY_AVS;
+					break;
+				case CATEGORY_LEVEL2:
+					category = TransactionCategory.CATEGORY_LEVEL2;
+					break;
+				case CATEGORY_LEVEL3:
+					category = TransactionCategory.CATEGORY_LEVEL3;
+					break;
+				case CATEGORY_TRANSARMOR:
+					category = TransactionCategory.CATEGORY_TRANSARMOR;
+					break;
+				case CATEGORY_SOFTDESCRIPTORS:
+					category=TransactionCategory.CATEGORY_SOFTDESCRIPTORS;
+					break;
+				case CATEGORY_3DS:
+					category=TransactionCategory.CATEGORY_3DS;
+					break;
+				case CATEGORY_SPLITSHIPMENT:
+					category=TransactionCategory.CATEGORY_SPLITSHIPMENT;
+					trans = getPrimaryTransactionForTransType(uri);
+					responseObject = clientHelper.doPrimaryTransaction(trans);
+					String resString = ((UserTransactionResponse) responseObject).getResponseString();
+					stringParser(resString);
+					SplitShipments(trans);
+					//statusString = statusString + ((UserTransactionResponse)responseObject).getResponseString() + splitter;
+
+					break;
+				case CATEGORY_ZERODOLLAR:
+					category=TransactionCategory.CATEGORY_ZERODOLLAR;
+				//	trans = getPrimaryTransaction(uri);
+				/*	trans=getPrimaryTransactionForTransType(uri);
+					responseObject = clientHelper.doPrimaryTransaction(trans);
+					statusString = statusString + ((UserTransactionResponse) responseObject).getResponseString() + splitter;
+*/
+					break;
+				case CATEGORY_RECURRING:
+					category=TransactionCategory.CATEGORY_RECURRING;
+					trans = getPrimaryTransactionForTransType(uri);
+
+					trans.setTransactionType(TransactionType.AUTHORIZE.name().toLowerCase());
+
+					TransactionResponse responseObject1 = clientHelper.doPrimaryTransaction(trans);
+					 resString = ((UserTransactionResponse) responseObject1).getResponseString();
+					stringParser(resString);
+					trans = getPrimaryTransactionForTransType(uri);
+					trans.setTransactionType(TransactionType.PURCHASE.name().toLowerCase());
+					Object responseObject2 = clientHelper.doPrimaryTransaction(trans);
+
+					statusString = statusString + ((UserTransactionResponse)responseObject2).getResponseString() + splitter;
+				default:
+					break;
+			}
+
+			if((transactionCategory!=TransactionCategory.CATEGORY_SPLITSHIPMENT)
+					||transactionCategory!=TransactionCategory.CATEGORY_RECURRING){
+				trans = getPrimaryTransactionForTransType(uri);
+				responseObject = clientHelper.doPrimaryTransaction(trans);
+				String resString = ((UserTransactionResponse) responseObject).getResponseString();
+				stringParser(resString);
+				statusString = statusString + ((UserTransactionResponse) responseObject).getResponseString() + splitter;
+			}
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	private void SplitShipments(TransactionRequest trans2)
+	{
+		try
+		{
+
+			String splitShipment = trans2.getSplitShipment();
+			String[] ss = splitShipment.split("/");
+			int count = Integer.parseInt(ss[0]);
+			int total = Integer.parseInt(ss[1]);
+			for(int i=count; i<=total;i++)
+			{	String split = String.valueOf(i) + "/" + String.valueOf(total);
+				trans2.setSplitShipment(split);
+
+				trans2.setTransactionId(null);
+
+				trans2.setTransactionTag(TransactionResponse.getTransactionTag());
+				trans2.setTransactionId(TransactionResponse.getTransactionId());
+
+				if(i==1)
+				{
+					trans2.setAmount("0009");
+				}
+				if(i==2)
+				{
+					trans2.setAmount("0021");
+				}
+				if(i==3)
+				{
+					trans2.setAmount("0109");
+				}
+
+				trans2.setPaymentMethod(TransactionResponse.getMethod());
+				trans2.setCurrency(TransactionResponse.getCurrency());
+				trans2.setReferenceNo("abc1412096293369");
+
+
+				Object responseObject2 =clientHelper.doSecondaryTransaction(trans2);
+				statusString = statusString + ((UserTransactionResponse)responseObject2).getResponseString() + splitter;
+
+				//check if last of the split
+				if(((UserTransactionResponse)responseObject2).getResponseString().toLowerCase().contains("split_shipment"))
+				{
+					int start = ((UserTransactionResponse)responseObject2).getResponseString().indexOf("split_shipment");
+					start = ((UserTransactionResponse)responseObject2).getResponseString().indexOf("=", start + 1);
+					int end = ((UserTransactionResponse)responseObject2).getResponseString().indexOf(",", start);
+					System.out.println("start : " + Integer.toString(start) + "end : " + Integer.toString(end) );
+					String splitShip = ((UserTransactionResponse)responseObject2).getResponseString().substring(start, end);
+					splitShip = splitShip.replace(" ", "");
+					splitShip = splitShip.replace(":", "");
+					splitShip = splitShip.replace("=", "");
+					
+					String[] completedSplits = splitShip.split("/");
+
+					int totalComplete = Integer.parseInt(completedSplits[1]);
+
+
+					if(totalComplete >= i)
+					{
+						break;
+					}
+				}
+			}
+			
+		}catch(Exception e)
+		{
+
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public TransactionRequest getPrimaryTransactionForTransType(String[] uri) {
+		TransactionRequest request = new TransactionRequest();
+		//TransactionDataProviderL3 tdpl3 = new TransactionDataProviderL3();
+
+		request.setAmount(uri[1]);
+
+		request.setCurrency(uri[2]);
+
+		request.setPaymentMethod(uri[3]);
+
+		request.setTransactionType(TransactionType.AUTHORIZE.name().toLowerCase());
+		Card card=new Card();
+		card.setCvv(uri[4]);
+		card.setExpiryDt(uri[5]);
+		card.setName(uri[6]);
+		card.setType(uri[7]);
+		card.setNumber(uri[8]);
+
+		request.setCard(card);
+
+		if(category == TransactionCategory.CATEGORY_ZERODOLLAR)
+		{
+			request.setBilling(null);
+			request.setAmount(uri[1]);
+			return  request;
+		}
+		Address address=new Address();
+		request.setBilling(address);
+		address.setState(uri[9]);
+		address.setAddressLine1(uri[10]);
+		address.setZip(uri[11]);
+		address.setCountry(uri[12]);
+		address.setCity(uri[13]);
+
+
+		if(category == TransactionCategory.CATEGORY_RECURRING)
+		{
+			request.setEciindicator("2");
+			request.setBilling(null);
+		}
+
+
+	/*	if (cardtypeSecondary == CardType.CARD_TELECHECK) {
+			Telecheck tc = new Telecheck();
+			tc.setAccount_number("123");
+			tc.setAccountholder_name("Tom Eck");
+			tc.setCheck_number("4788250000028291");
+			tc.setCheck_type("C");
+			tc.setClerk_id("RVK_001");
+			tc.setClient_email("rajan.veeramani@firstdata.com");
+			tc.setCustomer_id_number("7623786df");
+			tc.setCustomer_id_type("1");
+			tc.setDate_of_birth("01012010");
+			tc.setDevice_id("jkhsdfjkhsk");
+			tc.setGift_card_amount("100");
+			tc.setRegistration_date("01012014");
+			tc.setRegistration_number("12345");
+			tc.setRelease_type("X");
+			tc.setRouting_number("123456789");
+			tc.setVip("n");
+			tc.setMicr("jkhjkh");
+			request.setCheck(tc);
+		}
+
+		if (cardtypeSecondary == CardType.CARD_VALUELINK) {
+			ValueLinkCard giftcard = new ValueLinkCard();
+			giftcard.setCardholder_name("Joe Smith");
+			giftcard.setCc_number("7777045839985463");
+			giftcard.setCc_number(null);
+			giftcard.setCredit_card_type("Gift");
+			request.setGiftcard(giftcard);
+
+			request.setCard(null);
+			request.setBilling(null);
+			//request.setTransactionType(TransactionType.PURCHASE.getValue());
+		}
+*/
+		// category specific
+		if (category == TransactionCategory.CATEGORY_AVS) {
+
+			Address.Phone phone = new Address.Phone();
+			phone.setNumber(uri[14]);
+			phone.setType(uri[15]);
+			address.setPhone(phone);
+			request.setBilling(address);
+		}
+
+
+		// category specific
+		/*if (category == TransactionCategory.CATEGORY_3DS) {
+			request.setPaymentMethod("3DS");
+			card.setCavv(tdpl3.ThreeDS_cavv);
+			card.setXid(tdpl3.ThreeDS_xid);
+			card.setName(tdpl3.ThreeDS_cardholder_name);
+			card.setNumber(tdpl3.ThreeDS_card_number);
+			card.setType(tdpl3.ThreeDS_type);
+			card.setExpiryDt(tdpl3.ThreeDS_exp_date);
+			card.setCvv(tdpl3.ThreeDS_cvv);
+			ThreeDomainSecureToken threeDST = new ThreeDomainSecureToken();
+			//threeDST.setAsymmetricKeyInfo(asymmetricKeyInfo);
+			threeDST.setCard_number(tdpl3.ThreeDS_card_number);
+			threeDST.setCardholder_name(tdpl3.ThreeDS_cardholder_name);
+			threeDST.setCavv(tdpl3.ThreeDS_cavv);
+			threeDST.setCvv(tdpl3.ThreeDS_cvv);
+			//threeDST.setEciIndicator(tdpl3.eci_indicator);
+			//threeDST.setEncryptedData(encryptedData);
+			threeDST.setExp_date(tdpl3.ThreeDS_exp_date);
+			//threeDST.setMerchantIdentifier(merchantIdentifier);
+			//threeDST.setPkcs7Signature(pkcs7Signature);
+			//threeDST.setPublicKeyHash(publicKeyHash);
+			//threeDST.setSignatureAlgInfo(signatureAlgInfo);
+			//threeDST.setSymmetricKeyInfo(symmetricKeyInfo);
+			//threeDST.setTransactionId(transactionId);
+			threeDST.setType(tdpl3.ThreeDS_type);
+			//threeDST.setWrappedKey(wrappedKey);
+			threeDST.setXid(tdpl3.ThreeDS_xid);
+
+			request.setThreeDomainSecureToken(threeDST);
+			request.setEciindicator(tdpl3.eci_indicator);
+			request.setCard(null);
+
+
+		}*/
+
+		//category specific
+/*		if(category == TransactionCategory.CATEGORY_TRANSARMOR)
+		{
+			request.setPaymentMethod("token");
+			com.firstdata.firstapi.client.domain.v2.Token token = new com.firstdata.firstapi.client.domain.v2.Token();
+			token.setToken_type(tdpl3.token_type);
+			Token_data token_data = new Token_data();
+			//token.setToken_data(token_data);
+			token.setTokenData( new Transarmor() );//()token_data);
+			token_data.setCardholder_name(tdpl3.td_cardholder_name);
+			token_data.setCvv(tdpl3.td_cvv);
+			token_data.setExp_date(tdpl3.td_exp_date);
+			token_data.setType(tdpl3.td_type);
+			token_data.setValue(tdpl3.td_value);
+			//token.setToken_data(token_data);
+			token.setTokenData( new Transarmor() );//()token_data);
+			request.setToken(token);
+
+			request.setAmount("0733");
+			request.setReferenceNo("GODADDY");
+			request.setCard(null);
+			request.setBilling(null);
+        	/*token.getToken_data().setCardholder_name(tdpl3.td_cardholder_name);
+        	token.getToken_data().setCvv(tdpl3.td_cvv);
+        	token.getToken_data().setExp_date(tdpl3.td_exp_date);
+        	token.getToken_data().setType(tdpl3.td_type);
+        	token.getToken_data().setValue(tdpl3.td_value);
+        	token.setToken_data(token.getToken_data());
+
+			request.setTo(card);
+		}*/
+
+		/*if(category == TransactionCategory.CATEGORY_SOFTDESCRIPTORS)
+		{
+			//request.setDescriptor(descriptor);
+			SoftDescriptor descriptor = new SoftDescriptor();
+			descriptor.setCity(tdpl3.sdescriptor_sd_city);
+			descriptor.setCountryCode(tdpl3.sdescriptor_countryCode);
+			descriptor.setDba_name(tdpl3.sdescriptor_dba_name);
+			descriptor.setMcc(tdpl3.sdescriptor_mcc);
+			descriptor.setMerchantContactInfo(tdpl3.sdescriptor_merchantContactInfo);
+			descriptor.setMid(tdpl3.sdescriptor_mid);
+			descriptor.setPostalCode(tdpl3.sdescriptor_postalCode);
+			descriptor.setRegion(tdpl3.sdescriptor_region);
+			descriptor.setStreet(tdpl3.sdescriptor_street);
+			request.setDescriptor(descriptor);
+		}*/
+		//level2
+		if(category == TransactionCategory.CATEGORY_LEVEL2)
+		{
+
+			//request.setDescriptor(descriptor);
+			Level2 l2 = new Level2();
+			l2.setCustomer_ref(uri[18]);
+			l2.setTax1_amount(uri[17]);
+			l2.setTax1_number(uri[16]);
+			l2.setTax2_amount(uri[15]);
+			l2.setTax2_number(uri[14]);
+
+			request.setLevel2(l2);
+		}
+
+		/*if(category == TransactionCategory.CATEGORY_LEVEL3)
+
+
+		{
+
+			//request.setDescriptor(descriptor);
+			Level3 l3 = new Level3();
+			l3.setAlt_tax_amount(tdpl3.level3_alt_tax_amount);
+			l3.setAlt_tax_amount(uri[25]);
+			l3.setAlt_tax_id(tdpl3.level3_alt_tax_id);
+			l3.setAlt_tax_id(uri[24]);
+			l3.setDiscount_amount(tdpl3.level3_discount_amount);
+			l3.setDiscount_amount(uri[28]);
+			l3.setDuty_amount(tdpl3.level3_duty_amount);
+			l3.setDuty_amount(uri[14]);
+			l3.setFreight_amount(tdpl3.level3_freight_amount);
+			l3.setFreight_amount(uri[26]);
+			l3.setShip_from_zip(tdpl3.level3_ship_from_zip);
+			l3.setShip_from_zip(uri[27]);
+
+			Ship_to_address level3_shiptoaddress = new Ship_to_address();
+			level3_shiptoaddress.setAddress_1(tdpl3.level3_shiptoaddress_Address_1);
+			level3_shiptoaddress.setAddress_1(uri[21]);
+			level3_shiptoaddress.setCity(tdpl3.level3_shiptoaddress_City);
+			level3_shiptoaddress.setCity(uri[23]);
+			level3_shiptoaddress.setCountry(tdpl3.level3_shiptoaddress_Country);
+			level3_shiptoaddress.setCountry(uri[22]);
+			level3_shiptoaddress.setCustomer_number(tdpl3.level3_shiptoaddress_Cust_number);
+			level3_shiptoaddress.setCustomer_number(uri[15]);
+			level3_shiptoaddress.setEmail(tdpl3.level3_shiptoaddress_Email);
+			level3_shiptoaddress.setEmail(uri[17]);
+			level3_shiptoaddress.setName(tdpl3.level3_shiptoaddress_Name);
+			level3_shiptoaddress.setName(uri[18]);
+			level3_shiptoaddress.setPhone(tdpl3.level3_shiptoaddress_Phone);
+			level3_shiptoaddress.setPhone(uri[16]);
+			level3_shiptoaddress.setState(tdpl3.level3_shiptoaddress_State);
+			level3_shiptoaddress.setState(uri[19]);
+			level3_shiptoaddress.setZip(tdpl3.level3_shiptoaddress_Zip);
+			level3_shiptoaddress.setZip(uri[20]);
+			l3.setShip_to_address(level3_shiptoaddress);
+
+
+
+		Line_item lineitem1 = new Line_item();
+			lineitem1.setCommodity_code(tdpl3.litem_commodity_code);
+			lineitem1.setCommodity_code(uri[37]);
+			lineitem1.setDescription(tdpl3.litem_description);
+		lineitem1.setDescription(uri[36]);
+			lineitem1.setDiscount_amount(tdpl3.litem_discount_amount);
+			lineitem1.setDiscount_amount(uri[31]);
+			lineitem1.setDiscount_indicator(tdpl3.litem_discount_indicator);
+			lineitem1.setDiscount_indicator(uri[34]);
+			lineitem1.setGross_net_indicator(tdpl3.litem_gross_net_indicator);
+			lineitem1.setGross_net_indicator(uri[35]);
+			lineitem1.setLine_item_total(tdpl3.litem_line_item_total);
+			lineitem1.setLine_item_total(uri[32]);
+			lineitem1.setProduct_code(tdpl3.litem_product_code);
+			lineitem1.setProduct_code(uri[38]);
+			lineitem1.setQuantity(tdpl3.litem_quantity);
+			lineitem1.setQuantity(uri[40]);
+			lineitem1.setTax_amount(tdpl3.litem_tax_amount);
+			lineitem1.setTax_amount(uri[39]);
+			lineitem1.setTax_rate(tdpl3.litem_tax_rate);
+			lineitem1.setTax_rate(uri[41]);
+			lineitem1.setTax_type(tdpl3.litem_tax_type);
+			lineitem1.setTax_type(uri[42]);
+			lineitem1.setUnit_cost(tdpl3.litem_unit_cost);
+			lineitem1.setUnit_cost(uri[43]);
+			lineitem1.setUnit_of_measure(tdpl3.litem_unit_of_measure);
+			lineitem1.setUnit_of_measure(uri[46]);
+
+			int lineItemCount1 = 1;
+			Line_item[] lineitems1 = new Line_item[lineItemCount1];
+			for(int i=0;i<lineItemCount1 ; i++)
+			{
+				lineitems1[i] = lineitem1;
+			}
+			l3.setLineitems(lineitems1);
+			request.setLevel3(l3);
+
+
+		Level2 l2 = new Level2();
+			l2.setCustomer_ref(tdpl3.level2_customer_ref);
+			l2.setCustomer_ref(uri[59]);
+			l2.setTax1_amount(tdpl3.level2_tax1_amount);
+			l2.setTax1_amount(uri[58]);
+			l2.setTax1_number(tdpl3.level2_tax1_number);
+			l2.setTax1_number(uri[57]);
+			l2.setTax2_amount(tdpl3.level2_tax2_amount);
+			l2.setTax2_amount(uri[56]);
+			l2.setTax2_number(tdpl3.level2_tax2_number);
+			l2.setTax2_number(uri[55]);
+
+			request.setLevel2(l2);
+
+
+
+			Line_item lineitem = new Line_item();
+			lineitem.setCommodity_code(tdpl3.litem_commodity_code);
+			lineitem.setCommodity_code(uri[50]);
+			lineitem.setDescription(tdpl3.litem_description);
+			lineitem.setDescription(uri[49]);
+			lineitem.setDiscount_amount(tdpl3.litem_discount_amount);
+			lineitem.setDiscount_amount(uri[44]);
+			lineitem.setDiscount_indicator(tdpl3.litem_discount_indicator);
+			lineitem.setDiscount_indicator(uri[47]);
+			lineitem.setGross_net_indicator(tdpl3.litem_gross_net_indicator);
+			lineitem.setGross_net_indicator(uri[48]);
+			lineitem.setLine_item_total(tdpl3.litem_line_item_total);
+			lineitem.setLine_item_total(uri[45]);
+			lineitem.setProduct_code(tdpl3.litem_product_code);
+			lineitem.setProduct_code(uri[51]);
+			lineitem.setQuantity(tdpl3.litem_quantity);
+			lineitem.setQuantity(uri[53]);
+			lineitem.setTax_amount(tdpl3.litem_tax_amount);
+			lineitem.setTax_amount(uri[52]);
+			lineitem.setTax_rate(tdpl3.litem_tax_rate);
+			lineitem.setTax_rate(uri[54]);
+			lineitem.setTax_type(tdpl3.litem_tax_type);
+			lineitem.setTax_type(uri[41]);
+			lineitem.setUnit_cost(tdpl3.litem_unit_cost);
+			lineitem.setUnit_cost(uri[42]);
+			lineitem.setUnit_of_measure(tdpl3.litem_unit_of_measure);
+			lineitem.setUnit_of_measure(uri[45]);
+
+			int lineItemCount = 1;
+			Line_item[] lineitems = new Line_item[lineItemCount];
+			for(int i=0;i<lineItemCount ; i++)
+			{
+				lineitems[i] = lineitem;
+			}
+			//request.setLineitems(lineitems);
+
+			//request.getLevel3().setLineitems(lineitems);
+			request.setReferenceNo(tdpl3.referenceNo);
+			request.setBilling(null);
+
+		}*/
+
+		/*if((category == TransactionCategory.CATEGORY_NAKEDREFUNDS )||(category == TransactionCategory.CATEGORY_NAKEDVOIDS ))
+		{
+			//request.setDescriptor(descriptor);
+			request.setEciindicator(tdpl3.eci_indicator);
+			card.setType(tdpl3.nakedrefundcardtype);
+			card.setNumber(tdpl3.nakedrefundcardnumber);
+			card.setName(tdpl3.nakedrefundcardholdername);
+			card.setExpiryDt(tdpl3.nakedrefundcardexpdate);
+			card.setCavv(null);
+			card.setCvv(null);
+			card.setCvv2(null);
+			card.setXid(null);
+
+			request.setCard(card);
+			request.setBilling(null);
+		}*/
+		if(category == TransactionCategory.CATEGORY_NAKEDVOIDS )
+		{
+			//request.setBilling(null);
+		}
+
+		if(category == TransactionCategory.CATEGORY_SPLITSHIPMENT)
+		{
+
+			//request.setDescriptor(descriptor);
+			request.setEciindicator(uri[15]);
+			request.setSplitShipment(uri[14]);
+
+		}
+
+		/*if(category == TransactionCategory.CATEGORY_CVV2)
+		{
+			card.setCvv2(tdpl3.Cvv2);
+			request.setCard(card);
+		}*/
+		//request.setAmount(tdpl3.Amount);
+		if(cardtype == CardType.CARD_VALUELINK)
+		{
+			ValueLinkCard giftcard = new ValueLinkCard();
+			giftcard.setCardholder_name("Joe Smith");
+			//giftcard.setCc_number("7777045839985463");
+			giftcard.setCc_number("7777061906912522");
+			giftcard.setCredit_card_type("Gift");
+			giftcard.setCard_cost("5");
+			request.setGiftcard(giftcard);
+
+			request.setCard(null);
+			request.setBilling(null);
+			request.setTransactionType(TransactionType.PURCHASE.getValue());
+		}
+
+		if(category == TransactionCategory.CATEGORY_GENERATETOKEN)
+		{
+			request.setType("FDToken");
+
+			request.setCard(card) ;
+			request.getCard().setNumber("5424180279791732");
+			request.getCard().setName("John Smith");
+			request.getCard().setExpiryDt("0416");
+			request.getCard().setCvv("123");
+			request.getCard().setType("mastercard");
+
+			request.setAuth("false");
+			request.setTa_token("NOIW");
+
+			request.setToken(null);
+			request.setBilling(null);
+			request.setTransactionType(null);
+			request.setPaymentMethod(null);
+			request.setAmount(null);
+			request.setCurrency(null);
+
+		}
+
+		if(category == TransactionCategory.CATEGORY_FDTOKEN)
+		{
+			request.setType("FDToken");
+
+			request.setReferenceNo("abc1412096293369");
+			request.setTransactionType("authorize");
+			request.setPaymentMethod("token");
+			request.setAmount("0");
+			request.setCurrency("USD");
+
+			Token token = new Token();
+			Transarmor ta = new Transarmor();
+
+			ta.setValue("2833693264441732");
+			ta.setName("John Smith");
+			ta.setExpiryDt("0416");
+			ta.setType("mastercard");
+
+			token.setTokenData(ta);
+			token.setToken_type("FDToken");
+			request.setToken(token);
+
+			request.setCard(null);
+			request.setBilling(null);
+			request.setAuth("false");
+			request.setTa_token("NOIW");
+
+			//request.setToken(null);
+			request.setBilling(null);
+			request.setTransactionType(null);
+			request.setPaymentMethod(null);
+			request.setAmount(null);
+			request.setCurrency(null);
+
+		}
+
+		return request;
+	}
+
+
+
+}

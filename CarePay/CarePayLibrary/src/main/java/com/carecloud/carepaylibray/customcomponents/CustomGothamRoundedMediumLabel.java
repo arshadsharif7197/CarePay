@@ -2,13 +2,19 @@ package com.carecloud.carepaylibray.customcomponents;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.carecloud.carepaylibrary.R;
 
 
 /**
  * Created by harshal_patil on 9/22/2016.
+ * @Deprecated use CarePayTextView
  */
+@Deprecated
 public class CustomGothamRoundedMediumLabel extends TextView {
 
     Context context;
@@ -30,7 +36,16 @@ public class CustomGothamRoundedMediumLabel extends TextView {
     }
 
     private void init() {
+        ViewGroup.LayoutParams layoutParams=new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        this.setLayoutParams(layoutParams);
         Typeface tf = Typeface.createFromAsset(getContext().getAssets(), "fonts/gotham_rounded_medium.otf");
-        setTypeface(tf);
+        this.setTypeface(tf);
+        //this.setGravity(TEXT_ALIGNMENT_CENTER);
+        if (Build.VERSION.SDK_INT < 23) {
+            this.setTextAppearance(context, R.style.DefaultTextAppearanceGothamRoundedMediumLabel);
+        } else{
+            this.setTextAppearance(R.style.DefaultTextAppearanceGothamRoundedMediumLabel);
+        }
+        this.setClickable(false);
     }
 }

@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout android:id="@+id/demographicsDocsRootContainer"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/demographicsDocsRootContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
 
     <LinearLayout
         style="@style/DemographicsDocsHeaderStyle"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/dimen_8dp"
+        >
 
         <TextView
             android:id="@+id/demographicsDocsHeaderTitle"
             style="@style/DemographicsDocsHeaderTitleStyle"
-            android:text="@string/demogr_docs_logo_title"/>
+            android:text="@string/demogr_docs_logo_title" />
 
         <TextView
             android:id="@+id/demographicsDocsHeaderSubtitle"
             style="@style/DemographicsDocsHeaderSubtitleStyle"
-            android:text="@string/demogr_docs_logo_message"/>
+            android:text="@string/demogr_docs_logo_message" />
 
     </LinearLayout>
 
@@ -27,8 +31,8 @@
         android:id="@+id/demographicsDocsScroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
         android:layout_marginBottom="@dimen/top_bottom_scroll_padding"
+        android:layout_weight="1"
         android:paddingTop="@dimen/top_bottom_scroll_padding">
 
         <LinearLayout
@@ -36,56 +40,78 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/demogrDocTypeLabel"
+                    style="@style/DemographicsDocsDocumentLabelStyle"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/demogr_docs_document_type" />
+
+                <TextView
+                    android:id="@+id/demogrDocTypeClickable"
+                    style="@style/DemographicsDocsClickableTextStyle"
+                    android:text="@string/demographicsChooseLabel" />
+            </LinearLayout>
+
             <FrameLayout
                 android:id="@+id/demographicsDocsLicense"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
 
             <android.support.v7.widget.SwitchCompat
-                android:id="@+id/demographicsInsuranceSwitch"
+                android:id="@+id/demographicsDocumentsInsuranceSwitch"
                 style="@style/DemographicsDocsLabelStyle"
                 android:layout_width="match_parent"
+                android:layout_marginStart="0dp"
                 android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
                 android:checked="false"
-                android:text="@string/demogr_insurance_switch_text"/>
+                android:text="@string/demogr_insurance_switch_text"
+                android:theme="@style/HaveHealthInsurance" />
 
-            <FrameLayout
-                android:id="@+id/demographicsDocsInsurance1"
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/demo_view_height"
+                android:layout_marginBottom="@dimen/divider_margin_bottom"
+                android:layout_marginTop="@dimen/divider_margin_top"
+                android:background="@color/light_gray" />
+
+            <LinearLayout
+                android:id="@+id/demographicsDocsInsHoldersContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"/>
-
-            <FrameLayout
-                android:id="@+id/demographicsDocsInsurance2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"/>
-
-            <FrameLayout
-                android:id="@+id/demographicsDocsInsurance3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:layout_marginBottom="4dp"/>
+                android:layout_marginBottom="4dp"
+                android:orientation="vertical"
+                android:visibility="gone" />
 
             <View
                 android:id="@+id/demographicsDocsBottomView"
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="10dp" />
         </LinearLayout>
 
     </ScrollView>
 
-    <Button
-        android:id="@+id/demographicsAddMedInfoButton"
-        style="@style/DemographicsAddRemoveInsuranceStyle"
+    <TextView
+        android:id="@+id/demographicsDocumentsMultipleInsClickable"
+        style="@style/SigninSignupClickableTextView"
         android:layout_width="match_parent"
-        android:text="@string/demogr_docs_add_card"/>
+        android:layout_marginBottom="@dimen/demographics_docs_header_top_margin"
+        android:layout_marginEnd="7dp"
+        android:layout_marginTop="7dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:text="@string/demogr_docs_add_card" />
 
     <Button
         android:id="@+id/demographicsDocsNextButton"
         style="@style/DemographicsNextButtonStyle"
-        android:text="@string/demogr_next"/>
+        android:layout_marginTop="5dp"
+        android:text="@string/demogr_next" />
 
 </LinearLayout>

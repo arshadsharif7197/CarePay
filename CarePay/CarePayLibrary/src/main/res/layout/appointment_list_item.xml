@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -11,7 +12,7 @@
         android:orientation="vertical"
         android:visibility="gone">
 
-        <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/appointments_section_header_title"
             android:layout_width="match_parent"
             android:layout_height="@dimen/apt_skicky_header_height"
@@ -21,7 +22,8 @@
             android:paddingEnd="0dp"
             android:paddingStart="@dimen/list_apt_padding_right"
             android:textColor="@color/lightSlateGray"
-            android:textSize="@dimen/textview_textsize" />
+            android:textSize="@dimen/textview_textsize"
+            app:customAssetFont="gotham_rounded_medium" />
     </LinearLayout>
 
     <LinearLayout
@@ -56,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:elevation="@dimen/apt_lst_img_elevation"
-                    android:src="@drawable/cell_avatar_badge_pending" />
+                    android:src="@drawable/icn_cell_avatar_badge_pending" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -70,7 +72,7 @@
                         android:layout_alignParentTop="true"
                         android:visibility="gone" />
 
-                    <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/avatarTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -79,7 +81,8 @@
                         android:gravity="center_vertical|center_horizontal"
                         android:src="@drawable/icn_placeholder_user_profile_png"
                         android:textColor="@color/lightSlateGray"
-                        android:textSize="@dimen/apt_dl_text_big" />
+                        android:textSize="@dimen/apt_dl_text_big"
+                        app:customAssetFont="gotham_rounded_medium" />
                 </RelativeLayout>
             </RelativeLayout>
 
@@ -92,22 +95,24 @@
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
-                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaSemiBoldLabel
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/doctor_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:textColor="@color/bright_cerulean"
                     android:textSize="@dimen/textview_default_textsize"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:customAssetFont="proxima_nova_semi_bold" />
 
-                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/doctor_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:textColor="@color/lightSlateGray"
-                    android:textSize="@dimen/textview_textsize" />
+                    android:textSize="@dimen/textview_textsize"
+                    app:customAssetFont="proxima_nova_regular" />
             </LinearLayout>
 
             <LinearLayout
@@ -117,18 +122,28 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:orientation="vertical"
+                android:paddingEnd="@dimen/default_title_indicator_title_padding"
+                android:paddingStart="0dp"
                 android:visibility="gone">
 
-                <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/missed_appointment_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="bottom|end"
+                    android:textSize="@dimen/apt_list_missing_txt_size"
+                    android:visibility="gone"
+                    app:customAssetFont="proxima_nova_semi_bold" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/todayTimeTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginTop="2dp"
                     android:gravity="center"
-                    android:paddingEnd="@dimen/default_title_indicator_title_padding"
-                    android:paddingStart="0dp"
-                    android:paddingTop="@dimen/default_title_indicator_title_padding"
-                    android:textSize="@dimen/button_textsize_medium" />
+                    android:textSize="@dimen/button_textsize_medium"
+                    app:customAssetFont="gotham_rounded_bold" />
             </LinearLayout>
 
             <LinearLayout
@@ -140,7 +155,7 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <TextView
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/upcomingDateTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -150,9 +165,10 @@
                     android:paddingStart="0dp"
                     android:paddingTop="@dimen/default_title_indicator_title_padding"
                     android:textColor="@color/Feldgrau"
-                    android:textSize="@dimen/apt_list_upcoming_date_txt_size" />
+                    android:textSize="@dimen/apt_list_upcoming_date_txt_size"
+                    app:customAssetFont="proxima_nova_light" />
 
-                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/upcomingMonthTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -161,9 +177,10 @@
                     android:paddingEnd="@dimen/default_title_indicator_title_padding"
                     android:paddingStart="0dp"
                     android:textColor="@color/cadet_gray"
-                    android:textSize="@dimen/apt_list_upcoming_month_txt_size" />
+                    android:textSize="@dimen/apt_list_upcoming_month_txt_size"
+                    app:customAssetFont="proxima_nova_regular" />
 
-                <TextView
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/separatorTextView"
                     android:layout_width="62dp"
                     android:layout_height="1dp"
@@ -173,9 +190,10 @@
                     android:paddingEnd="@dimen/default_title_indicator_title_padding"
                     android:paddingStart="0dp"
                     android:paddingTop="@dimen/default_title_indicator_title_padding"
-                    android:textSize="@dimen/button_textsize_medium" />
+                    android:textSize="@dimen/button_textsize_medium"
+                    app:customAssetFont="proxima_nova_regular" />
 
-                <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/upcomingTimeTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -185,11 +203,13 @@
                     android:paddingStart="0dp"
                     android:paddingTop="@dimen/default_title_indicator_title_padding"
                     android:textColor="@color/cadet_gray"
-                    android:textSize="@dimen/button_textsize_medium" />
+                    android:textSize="@dimen/button_textsize_medium"
+                    app:customAssetFont="proxima_nova_regular" />
             </LinearLayout>
         </LinearLayout>
 
-        <TextView
+        <View
+            android:id="@+id/appointment_list_item_divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="@dimen/list_apt_padding_right"

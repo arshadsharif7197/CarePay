@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/munsell"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/titleTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:paddingBottom="@dimen/dimen_22dp"
+            android:paddingTop="@dimen/dimen_22dp"
+            android:text="Sign Consent For Medical Care"
+            android:textColor="@color/consent_title"
+            android:textSize="@dimen/text_size_28sp"
+            app:customAssetFont="gotham_rounded_medium" />
+
+
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/switchButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/beforesignwarnigTextView"
+            android:layout_marginLeft="@dimen/marginleftright"
+            android:paddingStart="@dimen/dimen_14dp"
+            android:paddingEnd="@dimen/dimen_14dp"
+            android:layout_marginRight="@dimen/marginleftright"
+            android:layout_marginTop="@dimen/dimen_60dp"
+            android:layout_marginBottom="@dimen/dimen_60dp"
+            android:textColor="@color/black"
+            android:text="I'm unable to sign"
+            android:textSize="@dimen/dimen_22dp" />
+        <View
+            android:layout_below="@+id/switchButton"
+            android:layout_height="1dp"
+            android:layout_width="match_parent"
+            android:background="@color/dark_gray"
+            android:layout_marginTop="@dimen/dimen_5dp"
+            android:layout_marginLeft="@dimen/dimen_22dp"
+            android:layout_marginRight="@dimen/dimen_22dp"
+            android:layout_marginBottom="@dimen/dimen_60dp"
+            />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/legalFirstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/switchButton"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            app:hintTextAppearance="@style/FloatingLabelStyle"
+            style="@style/TextInputLayoutStyle"
+            android:visibility="gone">
+            <EditText
+                android:id="@+id/legalFirstNameET"
+                style="@style/SigninSignupEditStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/switchButton"
+                android:layout_marginStart="@dimen/marginleftright"
+                android:layout_marginEnd="@dimen/marginleftright"
+                android:imeOptions="actionNext"
+                app:customAssetFont="proxima_nova_regular"
+                android:inputType="textPersonName"
+                android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ "
+                android:visibility="gone"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/legalLastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/legalFirstName"
+            style="@style/TextInputLayoutStyle"
+            app:hintTextAppearance="@style/FloatingLabelStyle"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/consentform_textinput_margintop">
+            <EditText
+                android:id="@+id/legalLastNameET"
+                style="@style/SigninSignupEditStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/marginleftright"
+                android:layout_marginEnd="@dimen/marginleftright"
+                app:customAssetFont="proxima_nova_regular"
+                android:inputType="textPersonName"
+                android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ "
+                android:layout_below="@+id/legalFirstName"
+                android:imeOptions="actionDone"
+                android:visibility="gone"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <include
+            android:id="@+id/signature_view"
+            layout="@layout/signatures_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/legalLastName"
+            android:textColorHint="@color/pastelblue"
+            android:layout_marginLeft="@dimen/marginleftright"
+            android:layout_marginRight="@dimen/marginleftright"
+            android:layout_marginTop="@dimen/consent_top" />
+
+
+        <Button
+            android:id="@+id/agreeBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/marginleftright"
+            android:layout_marginRight="@dimen/marginleftright"
+            android:layout_marginBottom="@dimen/marginleftright"
+            android:background="@drawable/button_selector"
+            android:enabled="false"
+            android:text="Yes, This is my signature"
+            android:textColor="@color/white" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/beforesignwarnigTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/lightSlateGray"
+            android:layout_marginTop="@dimen/dimen_30dp"
+            android:textSize="@dimen/text_size_16sp"
+            android:text="Make sure you have read the whole consent form and sign in the box below. If you're unable to sign, you can ask for a legal representative to sign for you. "
+            android:paddingLeft="170dp"
+            android:paddingRight="170dp"
+            android:layout_below="@+id/titleTv"
+            android:layout_alignStart="@+id/titleTv"
+            app:customAssetFont="proxima_nova_regular" />
+        />
+    </RelativeLayout>
+</LinearLayout>

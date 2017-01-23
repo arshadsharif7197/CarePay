@@ -2,65 +2,97 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
-    android:orientation="vertical">
+    android:descendantFocusability="beforeDescendants"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:id="@+id/scanIdRootLayout">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/demo_view_height"
+        android:layout_marginBottom="@dimen/divider_margin_bottom"
+        android:layout_marginTop="@dimen/divider_margin_top"
+        android:background="@color/light_gray"/>
 
     <LinearLayout
         style="@style/DemographicsDocsImageButtonContainerStyle">
 
         <ImageView
-            android:id="@+id/demogr_license_image"
+            android:id="@+id/demogrDocsFrontScanImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/scanned_id_doc"
             android:src="@drawable/icn_camera"/>
 
         <Button
-            android:id="@+id/demogr_docs_scan_license_btn"
+            android:id="@+id/demogrDocsFrontScanButton"
             style="@style/DemographicsDocsButtonStyle"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="@string/demogr_docs_scan_label"/>
+            android:text="@string/demogr_docs_scan_insurance_front_label"/>
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
-        android:orientation="vertical">
+        style="@style/DemographicsDocsImageButtonContainerStyle"
+        android:layout_marginBottom="@dimen/demogr_details_container_top"
+        android:layout_marginTop="@dimen/demogr_details_container_top">
 
-        <TextView
-            android:id="@+id/demogr_license_scan_label"
-            style="@style/DemographicsDocsDocumentLabelStyle"
+        <ImageView
+            android:id="@+id/demogrDocsBackScanImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/scanned_id_doc"
+            android:src="@drawable/icn_camera"/>
+
+        <Button
+            android:id="@+id/demogrDocsBackScanButton"
+            style="@style/DemographicsDocsButtonStyle"
+            android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="@string/demogr_license_scan_label"/>
+            android:text="@string/demogr_docs_scan_insurance_backlabel"/>
 
-        <TextView
-            android:id="@+id/demogr_docs_license_num"
-            style="@style/DemographicsDocsNumberStyle"
-            android:visibility="gone"/>
     </LinearLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/demogrDocsNumberInputLayout"
+        style="@style/TextInputLayoutStyle"
+        app:hintTextAppearance="@style/FloatingLabelStyle">
+
+        <EditText
+            android:id="@+id/demogrDocsLicenseNumEdit"
+            style="@style/SigninSignupEditStyle"
+            android:imeOptions="actionNone"
+            android:nextFocusDown="@+id/scanIdRootLayout"/>
+    </android.support.design.widget.TextInputLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
+        android:layout_marginTop="@dimen/demographics_docs_label_margin_top"
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/demogr_license_state_label"
-            style="@style/DemographicsDocsLabelStyle"
+            android:id="@+id/demogrDocsLicenseStateLabel"
+            style="@style/DemographicsDocsDocumentLabelStyle"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:text="@string/demogr_docs_license_number_label"/>
 
         <TextView
-            android:id="@+id/demogr_tv_state"
+            android:id="@+id/demogrDocsStateClickable"
             style="@style/DemographicsDocsClickableTextStyle"
-            android:text="@string/demogr_tv_choose_label"/>
-
+            android:text="@string/demographicsChooseLabel"/>
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/demo_view_height"
+        android:layout_marginBottom="@dimen/divider_margin_bottom"
+        android:layout_marginTop="@dimen/divider_margin_top"
+        android:background="@color/light_gray"/>
 
 </LinearLayout>

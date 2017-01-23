@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.customdialogs;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,36 +10,47 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.AppointmentModel;
-import com.carecloud.carepaylibray.demographics.activities.DemographicReviewActivity;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 
-/**
- * Created by prem_mourya on 9/22/2016.
- */
+public class CheckInAtOfficeAppointmentDialog extends BaseDoctorInfoDialog {
 
-public class CheckInAtOfficeAppointmentDialog  extends BaseDoctorInfoDialog {
-
-    private LinearLayout mainLayout;
     private Context context;
-    private AppointmentModel appointmentModel;
-    public CheckInAtOfficeAppointmentDialog(Context context, AppointmentModel appointmentModel) {
-        super(context, appointmentModel);
+    private LinearLayout mainLayout;
+    private AppointmentLabelDTO appointmentLabels;
+    private Class nextActivityClass;
+
+    /**
+     * Constructor.
+     * @param context context
+     * @param appointmentDTO appointment Item
+     * @param appointmentLabels Screen labels
+     */
+    public CheckInAtOfficeAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
+                                            AppointmentLabelDTO appointmentLabels,
+                                            Class nextActivity) {
+        super(context, appointmentDTO);
         this.context = context;
-        this.appointmentModel = appointmentModel;
+        this.appointmentLabels = appointmentLabels;
+        this.nextActivityClass = nextActivity;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainLayout = (LinearLayout)getAddActionChildView();
+        mainLayout = (LinearLayout) getAddActionChildView();
         setActionButton();
     }
-    private void setActionButton(){
+
+    @SuppressLint("InflateParams")
+    private void setActionButton() {
         LayoutInflater inflater = (LayoutInflater) this.context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View childActionView = inflater.inflate(R.layout.dialog_checkin_at_office_appointment, null);
-        Button checkinAtofficeButton = (Button) childActionView.findViewById(R.id.checkAtOfficeButton);
-        checkinAtofficeButton.setOnClickListener(this);
+
+        Button checkInAtOfficeButton = (Button) childActionView.findViewById(R.id.checkAtOfficeButton);
+        checkInAtOfficeButton.setText(appointmentLabels.getAppointmentsCheckInAtOffice());
+        checkInAtOfficeButton.setOnClickListener(this);
 
         mainLayout.addView(childActionView);
     }
@@ -47,7 +59,7 @@ public class CheckInAtOfficeAppointmentDialog  extends BaseDoctorInfoDialog {
     public void onClick(View view) {
         super.onClick(view);
         int viewId = view.getId();
-        if(viewId == R.id.checkAtOfficeButton){
+        if (viewId == R.id.checkAtOfficeButton) {
             onCheckInAtOffice();
             cancel();
         }
@@ -56,8 +68,8 @@ public class CheckInAtOfficeAppointmentDialog  extends BaseDoctorInfoDialog {
     /**
      * call check-in at office api.
      */
-    private void onCheckInAtOffice(){
-        Intent demographicReviewIntent = new Intent(context, DemographicReviewActivity.class);
+    private void onCheckInAtOffice() {
+        Intent demographicReviewIntent = new Intent(context, nextActivityClass) ; //DemographicReviewActivity.class);
         context.startActivity(demographicReviewIntent);
     }
 

@@ -7,22 +7,22 @@
               android:descendantFocusability="beforeDescendants"
               android:focusable="true"
               android:focusableInTouchMode="true"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         style="@style/DemographicsDocsHeaderStyle"
         android:layout_marginBottom="@dimen/demographics_docs_header_top_margin"
+        android:layout_marginTop="@dimen/dimen_8dp"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/addressHeading"
-            style="@style/DemographicsDocsHeaderTitleStyle"
-            android:text="@string/AddressHeadingTextView"/>
+            style="@style/DemographicsDocsHeaderTitleStyle"/>
 
         <TextView
             android:id="@+id/addressSubHeading"
-            style="@style/DemographicsDocsHeaderSubtitleStyle"
-            android:text="@string/AddressSubHeadingTextView"/>
+            style="@style/DemographicsDocsHeaderSubtitleStyle"/>
 
     </LinearLayout>
 
@@ -34,121 +34,97 @@
 
         <LinearLayout
             android:id="@+id/demographicsAddressDetContainer"
-            style="@style/DemographicsDocsHeaderStyle"
+            style="@style/DemographicsContainerStyle"
             android:layout_marginTop="0dp"
             android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/reviewdemoPersonalInfoLabel"
-                android:text="@string/demogr_section_name_label"
-                style="@style/DemographicsSectionLabelStyle"/>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/demogrAddressFirstNameTextInput"
-                style="@style/SigninSignupTextInputStyle">
-
-                <EditText
-                    android:id="@+id/demogrAddressFirstNameEdit"
-                    style="@style/SigninSignupEditStyle"
-                    android:hint="@string/firstname_text"
-                    android:nextFocusForward="@+id/middleNameEditText"/>
-            </android.support.design.widget.TextInputLayout>
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <android.support.design.widget.TextInputLayout
-                    android:id="@+id/demogrAddressMiddleNameTextInputLayout"
-                    style="@style/SigninSignupTextInputStyle">
+                    android:id="@+id/demogrAddressFirstNameTextInput"
+                    style="@style/SigninSignupTextInputStyle"
+                    app:hintTextAppearance="@style/FloatingLabelStyle">
 
                     <EditText
-                        android:id="@+id/reviewdemogrMiddleNameEditText"
+                        android:id="@+id/demogrAddressFirstNameEdit"
                         style="@style/SigninSignupEditStyle"
-                        android:hint="@string/middlename_text"
+                        android:nextFocusForward="@+id/middleNameEditText"
+                        android:inputType="text"
+                        android:maxLength="100"
+                        android:digits="@string/restrict_letters_space"/>
+                </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/demogrAddressFirstNameReqHint"
+                    style="@style/SignupRequireHintStyle"/>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/demogrAddressLastNameTextInput"
+                    style="@style/SigninSignupTextInputStyle"
+                    app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                    <EditText
+                        android:id="@+id/demogrAddressLastNameEdit"
+                        style="@style/SigninSignupEditStyle"
                         android:imeOptions="actionNext"
-                        android:maxLength="25"
-                        android:nextFocusForward="@+id/lastNameEditText"
-                        android:paddingTop="0dp"/>
+                        android:nextFocusForward="@+id/addressEditTextId"
+                        android:maxLength="100"
+                        android:digits="@string/restrict_letters_space"/>
 
                 </android.support.design.widget.TextInputLayout>
 
                 <TextView
-                    android:id="@+id/demogrAddresssMiddleNameOptionalLabel"
-                    style="@style/SignupOptionalLabelStyle"
-                    android:text="Optional"/>
-
+                    android:id="@+id/demogrAddressLastNameReqHint"
+                    style="@style/SignupRequireHintStyle"/>
             </FrameLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/demogrAddressLastNameTextInput"
-                style="@style/SigninSignupTextInputStyle">
-
-                <EditText
-                    android:id="@+id/demogrAddressLastNameEdit"
-                    style="@style/SigninSignupEditStyle"
-                    android:hint="@string/lastname_text"
-                    android:imeOptions="actionNext"
-                    android:nextFocusForward="@+id/addressEditTextId"/>
-
-            </android.support.design.widget.TextInputLayout>
-
-            <TextView
-                style="@style/DemographicsSectionLabelStyle"
-                android:id="@+id/demographicsAddressAddressSectionLabel"
-                android:text="@string/demogr_section_address_label"
-                android:layout_marginTop="@dimen/demographics_docs_header_top_margin"/>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/address1TextInputLayout"
                 style="@style/TextInputLayoutStyle"
-                android:layout_weight="1">
+                app:hintTextAppearance="@style/FloatingLabelStyle">
 
                 <EditText
                     android:id="@+id/addressEditTextId"
                     style="@style/SigninSignupEditStyle"
-                    android:hint="@string/Address1EditText"
                     android:imeOptions="actionNext"
-                    android:nextFocusForward="@+id/addressEditText2Id"/>
+                    android:nextFocusForward="@+id/addressEditText2Id"
+                    android:maxLength="50"
+                    android:digits="@string/restrict_digits_letters_space"/>
 
             </android.support.design.widget.TextInputLayout>
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/address2TextInputLayout"
+                style="@style/TextInputLayoutStyle"
+                app:hintTextAppearance="@style/FloatingLabelStyle">
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/address2TextInputLayout"
-                    style="@style/TextInputLayoutStyle"
-                    android:layout_weight="1">
-
-                    <EditText
-                        android:id="@+id/addressEditText2Id"
-                        style="@style/SigninSignupEditStyle"
-                        android:hint="@string/Address2EditText"
-                        android:imeOptions="actionNext"
-                        android:nextFocusForward="@+id/zipCodeId"/>
-                </android.support.design.widget.TextInputLayout>
-
-                <TextView
-                    android:id="@+id/demogrAddressOptionalLabel"
-                    style="@style/SignupOptionalLabelStyle"
-                    android:text="Optional"/>
-
-            </FrameLayout>
+                <EditText
+                    android:id="@+id/addressEditText2Id"
+                    style="@style/SigninSignupEditStyle"
+                    android:imeOptions="actionNext"
+                    android:nextFocusForward="@+id/zipCodeId"
+                    android:maxLength="50"
+                    android:digits="@string/restrict_digits_letters_space"/>
+            </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/zipCodeTextInputLayout"
                 style="@style/TextInputLayoutStyle"
-                android:layout_weight="1">
+                app:hintTextAppearance="@style/FloatingLabelStyle">
 
                 <EditText
                     android:id="@+id/zipCodeId"
                     style="@style/SigninSignupEditStyle"
-                    android:digits="0123456789"
-                    android:hint="@string/ZipCodeEditText"
+                    android:digits="0123456789-"
                     android:imeOptions="actionNext"
-                    android:maxLength="9"
+                    android:maxLength="10"
                     android:nextFocusForward="@+id/cityId"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -156,33 +132,38 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:baselineAligned="false">
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/cityTextInputLayout"
                     style="@style/TextInputLayoutStyle"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    app:hintTextAppearance="@style/FloatingLabelStyle"
+                    android:maxLength="30">
 
                     <EditText
                         android:id="@+id/cityId"
                         style="@style/CityEditTextStyle"
-                        android:nextFocusRight="@+id/stateAutoCompleteTextView"/>
+                        android:nextFocusRight="@+id/stateAutoCompleteTextView"
+                        android:labelFor="@+id/cityId"
+                        android:digits="@string/restrict_letters_space"/>
 
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/stateTextInputLayout"
                     style="@style/TextInputLayoutStyle"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    app:hintTextAppearance="@style/FloatingLabelStyle">
 
                     <AutoCompleteTextView
                         android:id="@+id/stateAutoCompleteTextView"
                         style="@style/EditTextStyle"
-                        android:hint="@string/StateEditText"
                         android:imeOptions="actionNext"
                         android:inputType="textAutoComplete"
                         android:maxLength="2"
+                        android:digits="@string/restrict_letters"
                         android:nextFocusForward="@+id/phNoEditText"/>
 
                 </android.support.design.widget.TextInputLayout>
@@ -191,15 +172,15 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/phNoTextInputLayout"
                 style="@style/TextInputLayoutStyle"
-                android:layout_weight="1">
+                app:hintTextAppearance="@style/FloatingLabelStyle">
 
                 <EditText
                     android:id="@+id/phNoEditText"
                     style="@style/SigninSignupEditStyle"
-                    android:hint="@string/PhoneNumberEditText"
                     android:imeOptions="actionDone"
                     android:inputType="phone"
-                    android:maxLength="10"/>
+                    android:maxLength="12"
+                    android:digits="1234567890-"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -209,7 +190,6 @@
     <Button
         android:id="@+id/demographicsAddressNextButton"
         style="@style/DemographicsNextButtonStyle"
-        android:layout_gravity="bottom"
         android:text="@string/next_Button"/>
 
 </LinearLayout>
