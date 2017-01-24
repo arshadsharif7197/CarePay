@@ -74,6 +74,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         setContentView(R.layout.activity_check_in);
         patientFiltered=false;
         this.context = this;
+        setNavigationBarVisibility();
         initializationView();
         populateList();
     }

@@ -68,6 +68,8 @@ public class HowToCheckInActivity extends BasePracticeActivity {
 
         setContentView(R.layout.activity_how_to_check_in);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        setNavigationBarVisibility();
+
 
         /*Initialise views*/
         initViews();
@@ -177,8 +179,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
     View.OnClickListener homeImageViewListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(HowToCheckInActivity.this, CloverMainActivity.class);
-            startActivity(intent);
+            onBackPressed();
         }
     };
 

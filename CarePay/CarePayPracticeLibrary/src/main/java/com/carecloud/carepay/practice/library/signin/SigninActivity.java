@@ -439,6 +439,7 @@ public class SigninActivity extends BasePracticeActivity {
             homeButton.setVisibility(View.VISIBLE);
             gobackButton.setVisibility(View.VISIBLE);
             langSpinner.setVisibility(View.GONE);
+            setNavigationBarVisibility();
         } else {
             homeButton.setVisibility(View.GONE);
             gobackButton.setVisibility(View.GONE);
@@ -523,6 +524,9 @@ public class SigninActivity extends BasePracticeActivity {
         Log.v(this.getClass().getSimpleName(), "sign out Cognito");
         CognitoAppHelper.getPool().getUser().signOut();
         CognitoAppHelper.setUser(null);
-        ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
+        if (!(ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)){
+            ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
+        }
+
     }
 }

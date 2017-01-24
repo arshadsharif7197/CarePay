@@ -60,7 +60,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         signinPatientModeDTO = getConvertedDTO(SigninPatientModeDTO.class);
         labelsDTO = signinPatientModeDTO.getMetadata().getLabels();
         setContentView(R.layout.activity_personal_information);
-        
+        setNavigationBarVisibility();
         /*Initialise views*/
         initViews();
     }
@@ -328,8 +328,8 @@ public class PersonalInformationActivity extends BasePracticeActivity {
     View.OnClickListener homeImageViewListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(PersonalInformationActivity.this, CloverMainActivity.class);
-            startActivity(intent);
+            //Intent intent = new Intent(PersonalInformationActivity.this, CloverMainActivity.class);
+            //startActivity(intent);
         }
     };
 
