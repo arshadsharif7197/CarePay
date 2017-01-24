@@ -764,18 +764,16 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
                     FragmentManager fm = getActivity().getSupportFragmentManager();
                     List<Fragment> backStackFragmentList = fm.getFragments();
                     if(backStackFragmentList!=null && backStackFragmentList.size()>0){
-                        int i;
-                        for(i=0;i<backStackFragmentList.size();i++){
-                            if(backStackFragmentList.get(i) instanceof PatientChooseCreditCardFragment){
-                                fm.beginTransaction().remove(backStackFragmentList.get(i)).commit();
+                        int index;
+                        for(index=0;index<backStackFragmentList.size();index++){
+                            if(backStackFragmentList.get(index) instanceof PatientChooseCreditCardFragment){
+                                fm.beginTransaction().remove(backStackFragmentList.get(index)).commit();
                                 fm.popBackStack();
                                 fm.popBackStack();
                                 break;
-                            } else {
-
                             }
                         }
-                        if(i==backStackFragmentList.size()){
+                        if(index==backStackFragmentList.size()){
                             fm.popBackStack();
                         }
                     }

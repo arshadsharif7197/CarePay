@@ -103,26 +103,26 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         partialPaymentPayingToday.setTextColor(context.getResources().getColor(R.color.glitter));
         SystemUtil.setGothamRoundedMediumTypeface(context, enterPartialAmountEditText);
 
-        if (paymentsDTO != null) {
-            List<PatiencePayloadDTO> paymentList
-                    = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
+        try {
+            if (paymentsDTO != null) {
+                List<PatiencePayloadDTO> paymentList
+                        = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
 
-            if (paymentList != null && paymentList.size() > 0) {
-                for (PatiencePayloadDTO payment : paymentList) {
-                    if (payment.getType().equalsIgnoreCase(CarePayConstants.PATIENT_BALANCE)) {
-                        patientBalance = payment.getAmount();
-                    } else if (payment.getType().equalsIgnoreCase(CarePayConstants.INSURANCE_COPAY)) {
-                        insuranceCopay = payment.getAmount();
+                if (paymentList != null && paymentList.size() > 0) {
+                    for (PatiencePayloadDTO payment : paymentList) {
+                        if (payment.getType().equalsIgnoreCase(CarePayConstants.PATIENT_BALANCE)) {
+                            patientBalance = payment.getAmount();
+                        } else if (payment.getType().equalsIgnoreCase(CarePayConstants.INSURANCE_COPAY)) {
+                            insuranceCopay = payment.getAmount();
+                        }
                     }
-                }
 
-                try {
                     fullAmount = patientBalance+insuranceCopay;
                     partialPaymentTotalAmountTitle.setText(pendingAmountLabel + " " + StringUtil.getFormattedBalanceAmount(fullAmount));
-                } catch (NumberFormatException ex) {
-                    ex.printStackTrace();
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
