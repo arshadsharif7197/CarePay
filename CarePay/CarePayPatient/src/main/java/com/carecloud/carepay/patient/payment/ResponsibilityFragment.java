@@ -87,6 +87,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
             getPaymentLabels();
             List<PatiencePayloadDTO> paymentList =  paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
 
+            total=0;
             if (paymentList != null && paymentList.size() > 0) {
                 fillDetailAdapter(view, paymentList);
                 for (PatiencePayloadDTO payment : paymentList) {

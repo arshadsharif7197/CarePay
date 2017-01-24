@@ -48,6 +48,7 @@ import com.carecloud.carepaylibray.utils.payeezysdk.sdk.payeezydirecttransaction
 import com.google.gson.Gson;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -689,7 +690,7 @@ public class AddNewCreditCardFragment extends Fragment implements
     }
 
     private void authorizeCreditCard() {
-        String amount = "1";//String.valueOf(amountToMakePayment); // to be changed later to avoid 400 bad request
+        String amount = String.valueOf((int)amountToMakePayment);
         String currency = "USD";
         String paymentMethod = "credit_card";
         String cvv = creditCardsPayloadDTO.getCvv() + "";
@@ -738,25 +739,23 @@ public class AddNewCreditCardFragment extends Fragment implements
                 @Override
                 public void onActionButton() {
                     FragmentManager fm = getActivity().getSupportFragmentManager();
-                    PaymentMethodFragment fragment = (PaymentMethodFragment)
-                            fm.findFragmentByTag(PaymentMethodFragment.class.getSimpleName());
-                    if (fragment == null) {
-                        fragment = new PaymentMethodFragment();
+                    List<Fragment> backStackFragmentList = fm.getFragments();
+                    if(backStackFragmentList!=null && backStackFragmentList.size()>0){
+                        int i;
+                        for(i=0;i<backStackFragmentList.size();i++){
+                            if(backStackFragmentList.get(i) instanceof ChooseCreditCardFragment){
+                                fm.beginTransaction().remove(backStackFragmentList.get(i)).commit();
+                                fm.popBackStack();
+                                fm.popBackStack();
+                                break;
+                            } else {
+
+                            }
+                        }
+                        if(i==backStackFragmentList.size()){
+                            fm.popBackStack();
+                        }
                     }
-                    Bundle bundle = new Bundle();
-
-                    Gson gson = new Gson();
-                    bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
-                    //fix for random crashes
-                    if (fragment.getArguments() != null) {
-                        fragment.getArguments().putAll(bundle);
-                    } else {
-                        fragment.setArguments(bundle);
-                    }
-
-                    fm.beginTransaction().replace(R.id.payment_frag_holder, fragment,
-                            PaymentMethodFragment.class.getSimpleName()).commit();
-
                 }
             }).show();
             //SystemUtil.showDialogMessage(getActivity(),paymentsLabelDTO.getPaymentFailedErrorMessage(),"Failed to authorize Credit Card");

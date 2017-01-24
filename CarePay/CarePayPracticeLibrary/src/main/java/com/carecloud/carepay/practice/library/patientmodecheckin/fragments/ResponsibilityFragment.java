@@ -81,23 +81,15 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
                // List<PaymentPatientBalancesPayloadDTO> paymentList =
              List<PatiencePayloadDTO> paymentList =       paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
                                 //.getPayload().getSummaryBalance();
-
+                total=0;
                 if (paymentList != null && paymentList.size() > 0) {
                     for (PatiencePayloadDTO payment : paymentList) {
-                        if (payment.getType().equalsIgnoreCase("Patient Balance")) {
-                            previousBalanceStr = payment.getAmount().toString();   //.getTotal();
-                        } else if (payment.getType().equalsIgnoreCase(CarePayConstants.COPAY)) {
-                            copayStr = payment.getAmount().toString();
-                        }
+                        total+= payment.getAmount();
                     }
 
                     fillDetailAdapter(view, paymentList);
 
                     try {
-                        double copay = Double.parseDouble(copayStr!=null &&  !copayStr.isEmpty()?copayStr : "0.0" );
-                        double previousBalance = Double.parseDouble(previousBalanceStr);
-                        total = copay + previousBalance;
-
                         if (total > 0) {
                             payTotalButton.setClickable(true);
                             payTotalButton.setEnabled(true);
