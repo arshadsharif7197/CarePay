@@ -49,6 +49,7 @@ import com.carecloud.carepaylibray.utils.payeezysdk.sdk.payeezydirecttransaction
 import com.google.gson.Gson;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -712,7 +713,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
     }
 
     private void authorizeCreditCard() {
-        String amount = "1";//String.valueOf(amountToMakePayment); // to be changed later to avoid 400 bad request
+        String amount = String.valueOf((int)amountToMakePayment);
         String currency = "USD";
         String paymentMethod = "credit_card";
         String cvv = creditCardsPayloadDTO.getCvv() + "";
@@ -761,22 +762,21 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
                 @Override
                 public void onActionButton() {
                     FragmentManager fm = getActivity().getSupportFragmentManager();
-                    PatientPaymentMethodFragment fragment = (PatientPaymentMethodFragment)
-                            fm.findFragmentByTag(PatientPaymentMethodFragment.class.getSimpleName());
-                    if (fragment == null) {
-                        fragment = new PatientPaymentMethodFragment();
+                    List<Fragment> backStackFragmentList = fm.getFragments();
+                    if(backStackFragmentList!=null && backStackFragmentList.size()>0){
+                        int index;
+                        for(index=0;index<backStackFragmentList.size();index++){
+                            if(backStackFragmentList.get(index) instanceof PatientChooseCreditCardFragment){
+                                fm.beginTransaction().remove(backStackFragmentList.get(index)).commit();
+                                fm.popBackStack();
+                                fm.popBackStack();
+                                break;
+                            }
+                        }
+                        if(index==backStackFragmentList.size()){
+                            fm.popBackStack();
+                        }
                     }
-                    Bundle bundle = new Bundle();
-
-                    Gson gson = new Gson();
-                    bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentDTOString);
-
-                    if (fragment.getArguments() != null) {
-                        fragment.getArguments().putAll(bundle);
-                    } else {
-                        fragment.setArguments(bundle);
-                    }
-                    ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
                 }
             }).show();
         }
