@@ -157,19 +157,20 @@ public class AppointmentsActivity extends MenuPatientActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        } else if (id == R.id.action_launch_demogr_review) {
-            Map<String, String> queries = new HashMap<>();
-            queries.put("practice_mgmt", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeMgmt());
-            queries.put("practice_id", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeId());
-            queries.put("appointment_id", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getAppointmentId());
-
-            Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
-            header.put("transition", "true");
-            WorkflowServiceHelper.getInstance().execute(appointmentsDTO.getMetadata().getTransitions().getCheckingIn(),
-                    transitionToDemographicsVerifyCallback, queries, header);
-        }
+//        Changed for SHMRK-1715
+//        if (id == R.id.action_settings) {
+//            return true;
+//        } else if (id == R.id.action_launch_demogr_review) {
+//            Map<String, String> queries = new HashMap<>();
+//            queries.put("practice_mgmt", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeMgmt());
+//            queries.put("practice_id", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeId());
+//            queries.put("appointment_id", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getAppointmentId());
+//
+//            Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
+//            header.put("transition", "true");
+//            WorkflowServiceHelper.getInstance().execute(appointmentsDTO.getMetadata().getTransitions().getCheckingIn(),
+//                    transitionToDemographicsVerifyCallback, queries, header);
+//        }
 
         return super.onOptionsItemSelected(item);
     }
