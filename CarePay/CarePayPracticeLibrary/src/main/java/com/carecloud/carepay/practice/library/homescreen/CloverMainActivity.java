@@ -238,22 +238,41 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         int viewId = view.getId();
 
         if (viewId == R.id.homeModeSwitchClickable) {
+            findViewById(R.id.homeModeSwitchClickable).setEnabled(false);
             navigateToPatientHome();
         } else if (viewId == R.id.homeCheckinClickable) {
+            findViewById(R.id.homeCheckinClickable).setEnabled(false);
             navigateToCheckIn();
         } else if (viewId == R.id.homePaymentsClickable) {
+            findViewById(R.id.homePaymentsClickable).setEnabled(false);
             navigateToPayments();
         } else if (viewId == R.id.homeAppointmentsClickable) {
+            findViewById(R.id.homeAppointmentsClickable).setEnabled(false);
             navigateToAppointments();
         } else if (viewId == R.id.homeCheckoutClickable) {
+            findViewById(R.id.homeCheckoutClickable).setEnabled(false);
             checkOut();
         } else if (viewId == R.id.homeShopClickable) {
+            findViewById(R.id.homeShopClickable).setEnabled(false);
             navigateToShop();
         } else if (viewId == R.id.homeNewsClickable) {
+            findViewById(R.id.homeNewsClickable).setEnabled(false);
             getNews();
         } else if (viewId == R.id.homeLockIcon) {
             unlockPracticeMode();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        findViewById(R.id.homeModeSwitchClickable).setEnabled(true);
+        findViewById(R.id.homeCheckinClickable).setEnabled(true);
+        findViewById(R.id.homePaymentsClickable).setEnabled(true);
+        findViewById(R.id.homeAppointmentsClickable).setEnabled(true);
+        findViewById(R.id.homeCheckoutClickable).setEnabled(true);
+        findViewById(R.id.homeShopClickable).setEnabled(true);
+        findViewById(R.id.homeNewsClickable).setEnabled(true);
     }
 
     private void unlockPracticeMode() {
@@ -425,6 +444,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         @Override
         public void onFailure(String exceptionMessage) {
+            findViewById(R.id.homeCheckinClickable).setEnabled(true);
+            findViewById(R.id.homeAppointmentsClickable).setEnabled(true);
             SystemUtil.showFaultDialog(CloverMainActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -464,6 +485,11 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         @Override
         public void onFailure(String exceptionMessage) {
+            findViewById(R.id.homeCheckinClickable).setEnabled(true);
+            findViewById(R.id.homeModeSwitchClickable).setEnabled(true);
+            findViewById(R.id.homePaymentsClickable).setEnabled(true);
+            findViewById(R.id.homeCheckoutClickable).setEnabled(true);
+            findViewById(R.id.homeShopClickable).setEnabled(true);
             SystemUtil.showFaultDialog(CloverMainActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -518,6 +544,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
             @Override
             public void onFailure(Call<DemographicDTO> call, Throwable throwable) {
+                findViewById(R.id.homeNewsClickable).setEnabled(true);
                 SystemUtil.showFaultDialog(CloverMainActivity.this);
                 Log.e(LOG_TAG, "failed fetching demogr info", throwable);
             }

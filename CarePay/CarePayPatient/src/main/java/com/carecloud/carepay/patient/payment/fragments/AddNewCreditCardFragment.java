@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.payment.PaymentActivity;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -747,19 +748,14 @@ public class AddNewCreditCardFragment extends Fragment implements
 
                     Gson gson = new Gson();
                     bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
-                    //fix for random crashes
                     if (fragment.getArguments() != null) {
                         fragment.getArguments().putAll(bundle);
                     } else {
                         fragment.setArguments(bundle);
                     }
-
-                    fm.beginTransaction().replace(R.id.payment_frag_holder, fragment,
-                            PaymentMethodFragment.class.getSimpleName()).commit();
-
+                    ((PaymentActivity) getActivity()).navigateToFragment(fragment, true);
                 }
             }).show();
-            //SystemUtil.showDialogMessage(getActivity(),paymentsLabelDTO.getPaymentFailedErrorMessage(),"Failed to authorize Credit Card");
         }
     }
 
