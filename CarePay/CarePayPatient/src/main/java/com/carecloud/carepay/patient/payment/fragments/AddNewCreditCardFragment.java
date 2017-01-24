@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.payment.PaymentActivity;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -758,7 +759,6 @@ public class AddNewCreditCardFragment extends Fragment implements
                     }
                 }
             }).show();
-            //SystemUtil.showDialogMessage(getActivity(),paymentsLabelDTO.getPaymentFailedErrorMessage(),"Failed to authorize Credit Card");
         }
     }
 
