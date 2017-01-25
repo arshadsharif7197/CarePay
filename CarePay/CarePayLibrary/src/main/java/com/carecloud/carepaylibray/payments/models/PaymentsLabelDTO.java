@@ -39,7 +39,7 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_choose_method_button")
     @Expose
     private String paymentChooseMethodButton;
-    @SerializedName("payment_create_plan_button")
+    @SerializedName("payment_create_plan_text")
     @Expose
     private String paymentCreatePlanButton;
     @SerializedName("payment_choose_credit_card_button")
@@ -285,6 +285,9 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_clover_swipe_now_separator_text")
     @Expose
     private String paymentCloverSwipeNowSeparatorText;
+    @SerializedName("payment_button")
+    @Expose
+    private String paymentButtonLabel;
 
     public String getPaymentCloverSwipeNowSeparatorText() {
         return StringUtil.getLabelForView(paymentCloverSwipeNowSeparatorText);
@@ -1741,5 +1744,21 @@ public class PaymentsLabelDTO {
      */
     public void setPracticePaymentsFilterClearFilters(String practicePaymentsFilterClearFilters) {
         this.practicePaymentsFilterClearFilters = practicePaymentsFilterClearFilters;
+    }
+
+    /**
+     *
+     * @return paymentButtonLabel
+     */
+    public String getPaymentButtonLabel() {
+        return StringUtil.getLabelForView(paymentButtonLabel);
+    }
+
+    /**
+     *
+     * @param paymentButtonLabel paymentButtonLabel
+     */
+    public void setPaymentButtonLabel(String paymentButtonLabel) {
+        this.paymentButtonLabel = paymentButtonLabel;
     }
 }

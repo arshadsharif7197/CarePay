@@ -26,24 +26,24 @@ android {
     productFlavors {
         development {
             applicationId "com.carecloud.carepay.practice.tablet.development"
-            buildConfigField 'String', 'API_BASE_URL', '"https://g8r79tifa4.execute-api.us-east-1.amazonaws.com"'
-            buildConfigField 'String', 'API_START_URL', '"https://g8r79tifa4.execute-api.us-east-1.amazonaws.com/dev/workflow/carepay/practice_mode/practice_mode_signin/start"'
-            buildConfigField 'String', 'X_API_KEY', '"VXlNfYaZYk4sxti0C4caw1v0J0dEDHXH9oQ3bPsA"'
+            buildConfigField 'String', 'API_BASE_URL', '"https://breeze-entry.development.carecloud.com"'
+            buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.development.carecloud.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
+            buildConfigField 'String', 'X_API_KEY', '"PhrvB0D7Bw9EbQ3aEXTCj3FvYtPDzbGr7X71uYJT"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
         }
         development_test {
             applicationId "com.carecloud.carepay.practice.tablet.test"
-            buildConfigField 'String', 'API_BASE_URL', '"https://g8r79tifa4.execute-api.us-east-1.amazonaws.com"'
-            buildConfigField 'String', 'API_START_URL', '"https://g8r79tifa4.execute-api.us-east-1.amazonaws.com/dev/workflow/carepay/practice_mode/practice_mode_signin/start"'
-            buildConfigField 'String', 'X_API_KEY', '"VXlNfYaZYk4sxti0C4caw1v0J0dEDHXH9oQ3bPsA"'
+            buildConfigField 'String', 'API_BASE_URL', '"https://breeze-entry.development.carecloud.com"'
+            buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.development.carecloud.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
+            buildConfigField 'String', 'X_API_KEY', '"PhrvB0D7Bw9EbQ3aEXTCj3FvYtPDzbGr7X71uYJT"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
         }
 
         production {
             applicationId "com.carecloud.carepay.practice"
-            buildConfigField 'String', 'API_BASE_URL', '"https://g8r79tifa4.execute-api.us-east-1.amazonaws.com"'
-            buildConfigField 'String', 'API_START_URL', '"https://g8r79tifa4.execute-api.us-east-1.amazonaws.com/dev/workflow/carepay/practice_mode/practice_mode_signin/start"'
-            buildConfigField 'String', 'X_API_KEY', '"VXlNfYaZYk4sxti0C4caw1v0J0dEDHXH9oQ3bPsA"'
+            buildConfigField 'String', 'API_BASE_URL', '"https://breeze-entry.development.carecloud.com"'
+            buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.development.carecloud.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
+            buildConfigField 'String', 'X_API_KEY', '"PhrvB0D7Bw9EbQ3aEXTCj3FvYtPDzbGr7X71uYJT"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
         }
     }
