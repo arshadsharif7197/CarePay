@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:paddingBottom="@dimen/dimen_16dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/dimen_14dp">
 
     <include layout="@layout/toolbar_responsibility" />
 
@@ -15,143 +15,142 @@
         android:layout_height="match_parent"
         android:fillViewport="true"-->
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical"
-            >
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:background="@color/blue_cerulian"
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:background="@color/blue_cerulian"
-                android:gravity="center"
-                android:orientation="vertical">
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/respons_total_label"
+                style="@style/ResponsTotalLabelStyle"
+                android:layout_marginTop="@dimen/dimen_30dp"
+                app:customAssetFont="gotham_rounded_book" />
 
-                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                    android:id="@+id/respons_total_label"
-                    style="@style/ResponsTotalLabelStyle"
-                    app:customAssetFont="gotham_rounded_book" />
-
-                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                    android:id="@+id/respons_total"
-                    style="@style/ResponsTotalStyle"
-                    app:customAssetFont="gotham_rounded_medium" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="@dimen/respons_button_margin_left_right"
-                android:layout_marginStart="@dimen/respons_button_margin_left_right"
-                android:layout_marginTop="@dimen/dimen_5dp"
-                android:orientation="vertical"
-                >
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/responsibility_line_item_recycle_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
-                <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginBottom="@dimen/respons_detail_margin_bottom"-->
-                <!--android:layout_marginTop="@dimen/respons_detail_margin_bottom"-->
-                <!--android:orientation="horizontal">-->
-
-                <!--<com.carecloud.carepaylibray.customcomponents.CarePayTextView-->
-                <!--android:id="@+id/respons_prev_balance_label"-->
-                <!--style="@style/ResponsDetailLabelStyle"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="0.65"-->
-                <!--android:gravity="start"-->
-                <!--app:customAssetFont="proxima_nova_regular" />-->
-
-                <!--<com.carecloud.carepaylibray.customcomponents.CarePayTextView-->
-                <!--android:id="@+id/response_payment_details"-->
-                <!--style="@style/ResponsDetailStyle"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="0.15"-->
-                <!--android:gravity="end"-->
-                <!--android:textColor="@color/colorPrimary"-->
-                <!--app:customAssetFont="proxima_nova_semi_bold" />-->
-
-                <!--<com.carecloud.carepaylibray.customcomponents.CarePayTextView-->
-                <!--android:id="@+id/respons_prev_balance"-->
-                <!--style="@style/ResponsDetailStyle"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="0.2"-->
-                <!--android:gravity="end"-->
-                <!--app:customAssetFont="proxima_nova_semi_bold" />-->
-                <!--</LinearLayout>-->
-
-                <!--<View-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="1dp"-->
-                <!--android:background="@color/gray" />-->
-
-                <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginBottom="@dimen/respons_detail_margin_bottom"-->
-                <!--android:layout_marginTop="@dimen/respons_detail_margin_bottom"-->
-                <!--android:orientation="horizontal"-->
-                <!--android:weightSum="2">-->
-
-                <!--<com.carecloud.carepaylibray.customcomponents.CarePayTextView-->
-                <!--android:id="@+id/respons_copay_label"-->
-                <!--style="@style/ResponsDetailLabelStyle"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="1"-->
-                <!--android:gravity="start"-->
-                <!--app:customAssetFont="proxima_nova_regular" />-->
-
-                <!--<com.carecloud.carepaylibray.customcomponents.CarePayTextView-->
-                <!--android:id="@+id/respons_copay"-->
-                <!--style="@style/ResponsDetailStyle"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="1"-->
-                <!--android:gravity="end"-->
-                <!--app:customAssetFont="proxima_nova_semi_bold" />-->
-                <!--</LinearLayout>-->
-
-                <!--<View-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="1dp"-->
-                <!--android:background="@color/gray" />-->
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:orientation="vertical">
-
-                <Button
-                    android:id="@+id/pay_total_amount_button"
-                    style="@style/ResponsButtonStyle" />
-
-                <Button
-                    android:id="@+id/make_partial_payment_button"
-                    style="@style/ResponsButtonStyle"
-                    android:layout_marginTop="@dimen/apt_popup_parent_padding"
-                    android:background="@drawable/button_blue_border" />
-
-                <Button
-                    android:id="@+id/pay_later_button"
-                    style="@style/ResponsButtonStyle"
-                    android:layout_marginTop="@dimen/apt_popup_parent_padding"
-                    android:background="@drawable/button_blue_border" />
-            </LinearLayout>
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/respons_total"
+                style="@style/ResponsTotalStyle"
+                android:layout_marginBottom="@dimen/dimen_30dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                app:customAssetFont="gotham_rounded_medium" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/responsibility_line_item_recycle_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/dimen_26dp" />
+
+            <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginBottom="@dimen/respons_detail_margin_bottom"-->
+            <!--android:layout_marginTop="@dimen/respons_detail_margin_bottom"-->
+            <!--android:orientation="horizontal">-->
+
+            <!--<com.carecloud.carepaylibray.customcomponents.CarePayTextView-->
+            <!--android:id="@+id/respons_prev_balance_label"-->
+            <!--style="@style/ResponsDetailLabelStyle"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="0.65"-->
+            <!--android:gravity="start"-->
+            <!--app:customAssetFont="proxima_nova_regular" />-->
+
+            <!--<com.carecloud.carepaylibray.customcomponents.CarePayTextView-->
+            <!--android:id="@+id/response_payment_details"-->
+            <!--style="@style/ResponsDetailStyle"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="0.15"-->
+            <!--android:gravity="end"-->
+            <!--android:textColor="@color/colorPrimary"-->
+            <!--app:customAssetFont="proxima_nova_semi_bold" />-->
+
+            <!--<com.carecloud.carepaylibray.customcomponents.CarePayTextView-->
+            <!--android:id="@+id/respons_prev_balance"-->
+            <!--style="@style/ResponsDetailStyle"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="0.2"-->
+            <!--android:gravity="end"-->
+            <!--app:customAssetFont="proxima_nova_semi_bold" />-->
+            <!--</LinearLayout>-->
+
+            <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:background="@color/gray" />-->
+
+            <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginBottom="@dimen/respons_detail_margin_bottom"-->
+            <!--android:layout_marginTop="@dimen/respons_detail_margin_bottom"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:weightSum="2">-->
+
+            <!--<com.carecloud.carepaylibray.customcomponents.CarePayTextView-->
+            <!--android:id="@+id/respons_copay_label"-->
+            <!--style="@style/ResponsDetailLabelStyle"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:gravity="start"-->
+            <!--app:customAssetFont="proxima_nova_regular" />-->
+
+            <!--<com.carecloud.carepaylibray.customcomponents.CarePayTextView-->
+            <!--android:id="@+id/respons_copay"-->
+            <!--style="@style/ResponsDetailStyle"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:gravity="end"-->
+            <!--app:customAssetFont="proxima_nova_semi_bold" />-->
+            <!--</LinearLayout>-->
+
+            <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:background="@color/gray" />-->
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/pay_total_amount_button"
+                style="@style/ResponsButtonStyle" />
+
+            <Button
+                android:id="@+id/make_partial_payment_button"
+                style="@style/ResponsButtonStyle"
+                android:layout_marginTop="@dimen/apt_popup_parent_padding"
+                android:background="@drawable/button_blue_border" />
+
+            <Button
+                android:id="@+id/pay_later_button"
+                style="@style/ResponsButtonStyle"
+                android:layout_marginTop="@dimen/apt_popup_parent_padding"
+                android:background="@drawable/button_blue_border" />
+        </LinearLayout>
+    </LinearLayout>
     <!--/ScrollView-->
 </LinearLayout>
