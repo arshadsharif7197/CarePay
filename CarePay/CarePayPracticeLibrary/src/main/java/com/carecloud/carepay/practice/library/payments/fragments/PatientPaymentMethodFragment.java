@@ -2,6 +2,7 @@ package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -84,14 +85,15 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
             paymentInfo = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
             paymentsDTO = gson.fromJson(paymentInfo, PaymentsModel.class);
         }
-        View view = inflater.inflate(R.layout.fragment_payment_method, container, false);
+        View view = inflater.inflate(R.layout.fragment_payment_method_practice, container, false);
         isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals("Clover") ;
+        TextView title = (TextView) view.findViewById(R.id.paymentMethodTitleLabel);
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
-        TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
+       // Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        //TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
-        toolbar.setTitle("");
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        //toolbar.setTitle("");
+        //((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         radioGroupLayoutParam = new RadioGroup.LayoutParams(
                 RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.MATCH_PARENT);
@@ -100,9 +102,10 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
 
         getLabels();
         initializeViews(view);
-
         title.setText(titlePaymentMethodString);
-        toolbar.setTitle(titlePaymentMethodString);
+
+        //title.setText(titlePaymentMethodString);
+        //toolbar.setTitle(titlePaymentMethodString);
 
         return view;
     }
@@ -204,6 +207,8 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
         onSetRadioButtonRegularTypeFace();
         RadioButton selectedRadioButton = (RadioButton) group.findViewById(checkedId);
         onSetRadioButtonSemiBoldTypeFace(selectedRadioButton);
+        GradientDrawable shape = new GradientDrawable();
+        shape.setCornerRadius(50.0f);
 
         for (int i = 0; i < paymentList.size(); i++) {
             if (selectedRadioButton.getText().toString().equalsIgnoreCase(paymentList.get(i).getLabel())) {
@@ -211,20 +216,20 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                 paymentChoiceButton.setText(paymentList.get(i).getButtonLabel());
                 paymentChoiceButton.setTag(paymentList.get(i).getType());
                 if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CASH)){
-                    paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.dark_green));
+                    shape.setColor(getActivity().getResources().getColor(R.color.dark_green));
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CREDIT_CARD)){
-                    paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.blue_cerulian));
+                    shape.setColor(getActivity().getResources().getColor(R.color.blue_cerulian));
                     paymentChoiceButton.setText(paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentChooseCreditCardButton());
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CHECK)){
-                    paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.blue_cerulian));
+                    shape.setColor(getActivity().getResources().getColor(R.color.blue_cerulian));
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_GIFT_CARD)){
-                    paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.blue_cerulian));
+                    shape.setColor(getActivity().getResources().getColor(R.color.blue_cerulian));
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_PAYPAL)){
-                    paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.dark_green));
+                    shape.setColor(getActivity().getResources().getColor(R.color.dark_green));
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_HSA)){
-                    paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.blue_cerulian));
+                    shape.setColor(getActivity().getResources().getColor(R.color.blue_cerulian));
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_FSA)){
-                    paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.blue_cerulian));
+                    shape.setColor(getActivity().getResources().getColor(R.color.blue_cerulian));
                 }
             }
         }
