@@ -10,6 +10,6 @@ import retrofit2.http.GET;
  */
 
 public interface PracticeSettingService {
-    @GET(value = "dev/workflow/carepay/practice_mode/practice_settings/information")
+    @GET(value = "dev/workflow/shamrock/practice_mode/practice_settings/information")
     Call<PracticeSettingDTO> getPracticeSettingInformation();
 }

@@ -17,28 +17,28 @@ import retrofit2.http.QueryMap;
  * Created by Jahirul Bhuiyan on 9/20/2016.
  */
 public interface DemographicService {
-    @GET(value = "dev/workflow/carepay/patient_checkin/demographics/information")
+    @GET(value = "dev/workflow/shamrock/patient_app/demographics/information")
     Call<DemographicDTO> fetchDemographicInformation( );
 
-    @GET(value = "dev/workflow/carepay/patient_checkin/demographics")
+    @GET(value = "dev/workflow/shamrock/patient_app/demographics")
     Call<DemographicDTO> fetchDemographics( );
 
-    @GET(value = "dev/workflow/carepay/patient_checkin/demographics_verify")
+    @GET(value = "dev/workflow/shamrock/patient_app/demographics_verify")
     Call<DemographicDTO> fetchDemographicsVerify( );
 
-    @GET(value = "dev/workflow/carepay/patient_checkin/demographics_verify")
+    @GET(value = "dev/workflow/shamrock/patient_app/demographics_verify")
     Call<DemographicDTO> fetchDemographicsVerify(@QueryMap Map<String, String> queries);
 
 
-    @POST(value = "dev/workflow/carepay/patient_checkin/demographics/confirm")
+    @POST(value = "dev/workflow/shamrock/patient_app/demographics/confirm")
     Call<ResponseBody> confirmDemographicInformation(
             @Body DemographicPayloadDTO demographicModel);
 
-    @POST(value = "dev/workflow/carepay/patient_checkin/demographics/update_demographics")
+    @POST(value = "dev/workflow/shamrock/patient_app/demographics/update_demographics")
     Call<ResponseBody> updateDemographicInformation(
             @Body DemographicPayloadDTO demographicModel);
 
-    @POST(value = "dev/workflow/carepay/patient_checkin/demographics/update_demographics")
+    @POST(value = "dev/workflow/shamrock/patient_app/demographics/update_demographics")
     Call<ResponseBody> updateDemographicInsurances(
             @Body DemographicsInsurancesListDTO demInsuranceList);
 
