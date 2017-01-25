@@ -134,7 +134,7 @@
                     <EditText
                         android:id="@+id/verificationCodeEditText"
                         style="@style/PaymentEditTextStyle"
-                        android:digits="@string/restrict_digits_slash"
+                        android:digits="@string/restrict_digits"
                         android:imeOptions="actionDone"
                         android:inputType="number"
                         android:maxLength="4" />
