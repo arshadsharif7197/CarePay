@@ -10,6 +10,6 @@ import retrofit2.http.POST;
  */
 
 public interface InTakeService {
-    @POST(value = "dev/workflow/carepay/patient_checkin/intake_forms/confirm")
+    @POST(value = "dev/workflow/shamrock/patient_app/intake_forms/confirm")
     Call<IntakeResponseModel> confirmInTakeInformation();
 }

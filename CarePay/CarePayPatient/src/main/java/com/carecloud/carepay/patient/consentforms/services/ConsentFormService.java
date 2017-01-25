@@ -11,10 +11,10 @@ import retrofit2.http.GET;
 import retrofit2.http.QueryMap;
 
 public interface ConsentFormService {
-    @GET(value = "dev/workflow/carepay/patient_checkin/consent_forms/information")
+    @GET(value = "dev/workflow/shamrock/patient_app/consent_forms/information")
     Call<ConsentFormDTO> fetchConnsentFormInformation();
 
-    @GET(value = "dev/workflow/carepay/patient_checkin/consent_forms/information")
+    @GET(value = "dev/workflow/shamrock/patient_app/consent_forms/information")
     Call<ConsentFormDTO> fetchConnsentFormInformation(@QueryMap Map<String, String> queries);
 
 }
