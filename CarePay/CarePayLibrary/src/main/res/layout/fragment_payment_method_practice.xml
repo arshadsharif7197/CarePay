@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ProgressBar
+        android:id="@+id/paymentMethodFragmentProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-8dp"
+        android:indeterminate="true"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/paymentMethodTitleLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_26dp"
+        android:layout_marginBottom="@dimen/dimen_26dp"
+        android:layout_gravity="center"
+        android:textColor="@color/blue_cerulian"
+        android:textSize="@dimen/dimen_30dp"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1dp"
+        android:background="@color/dark_gray"
+        android:paddingRight="2dp"/>
+
+    <LinearLayout
+        android:id="@+id/swipeCreditCardNowLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/swipeCreditCarNowButton"
+            style="@style/PaymentButtonStyle"
+            android:layout_width="@dimen/dimen_500dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/emerald_rounded_button_selector" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/dimen_48dp"
+            android:paddingStart="@dimen/dimen_114dp"
+            android:paddingEnd="@dimen/dimen_114dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical">
+
+
+            <View
+                android:layout_width="@dimen/dimen_390dp"
+                android:layout_weight="1"
+                android:layout_height="@dimen/dimen_1dp"
+                android:background="@color/dark_gray"
+                android:paddingRight="80dp"/>
+
+            <TextView
+                android:id="@+id/swipeCardSeparatorLabel"
+                android:layout_weight="0.45"
+                android:text="@string/swipeCreditCardSeparatorText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_5dp"
+                android:textStyle="bold"
+                android:textSize="@dimen/respons_button_text_size"
+                />
+            <View
+                android:layout_width="@dimen/dimen_390dp"
+                android:layout_weight="1"
+                android:layout_height="@dimen/dimen_1dp"
+                android:paddingLeft="80dp"
+                android:background="@color/dark_gray" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <ScrollView
+        android:id="@+id/scrollview_choices"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:fillViewport="true"
+        android:layout_marginBottom="@dimen/dimen_36dp"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:id="@+id/consenrform1_mainContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="@dimen/demographics_docs_thumbnail_width"
+            android:layout_marginRight="@dimen/demographics_docs_thumbnail_width"
+            android:weightSum="1"
+            android:elevation="17dp">
+
+            <RelativeLayout
+                android:id="@+id/buttonLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/payment_method_parent_layout_padding"
+                android:layout_gravity="center"
+                android:layout_weight="0.17">
+
+                <RadioGroup
+                    android:id="@+id/paymentMethodsRadioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_20dp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"></RadioGroup>
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!--Android Pay-->
+    <FrameLayout
+        android:id="@+id/dynamic_wallet_button_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
+        android:layout_margin="@dimen/dimen_1dp"
+        android:layout_below="@+id/buttonLayout"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:padding="@dimen/dimen_15dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/createPaymentPlanButton"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_blue_border"
+            android:layout_margin="@dimen/dimen_5dp"
+            android:textColor="@color/button_bright_cerulean"/>
+        <Button
+            android:id="@+id/paymentChoiceButton"
+            style="@style/PaymentButtonStyle"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_5dp"
+            android:background="@drawable/bg_yellow_overlay" />
+
+    </LinearLayout>
+
+</LinearLayout>
