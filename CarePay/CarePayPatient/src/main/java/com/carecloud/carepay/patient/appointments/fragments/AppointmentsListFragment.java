@@ -388,8 +388,7 @@ public class AppointmentsListFragment extends Fragment {
                 Gson gson = new Gson();
                 appointmentInfo = gson.fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
                 loadAppointmentList();
-                checkUpcomingAppointments();
-
+//                checkUpcomingAppointments();
             }
         }
 
@@ -500,19 +499,18 @@ public class AppointmentsListFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        checkUpcomingAppointments();
+//        checkUpcomingAppointments();
     }
 
     /**
      * Checks for upcoming appointments
      * */
-    public void checkUpcomingAppointments(){
+    private void checkUpcomingAppointments() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 checkUpcomingAppointmentForReminder();
             }
         }, 1000);
-
     }
 }
