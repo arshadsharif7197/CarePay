@@ -238,7 +238,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         int viewId = view.getId();
 
         if (viewId == R.id.homeModeSwitchClickable) {
-            findViewById(R.id.homeModeSwitchClickable).setEnabled(false);
             navigateToPatientHome();
         } else if (viewId == R.id.homeCheckinClickable) {
             findViewById(R.id.homeCheckinClickable).setEnabled(false);
