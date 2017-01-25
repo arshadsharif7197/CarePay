@@ -1,7 +1,6 @@
 package com.carecloud.carepay.practice.library.checkin.activities;
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -17,9 +16,9 @@ import android.widget.ImageView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
-import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeLabelsDTO;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
@@ -28,16 +27,16 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
+import org.joda.time.LocalDate;
+
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-import org.joda.time.LocalDate;
 
 public class PersonalInformationActivity extends BasePracticeActivity {
     private CarePayButton selectDateButton;
@@ -328,8 +327,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
     View.OnClickListener homeImageViewListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            //Intent intent = new Intent(PersonalInformationActivity.this, CloverMainActivity.class);
-            //startActivity(intent);
+            onBackPressed();
         }
     };
 
