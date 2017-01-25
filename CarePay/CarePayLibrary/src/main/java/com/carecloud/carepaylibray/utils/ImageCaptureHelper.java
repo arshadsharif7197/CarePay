@@ -3,8 +3,8 @@ package com.carecloud.carepaylibray.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
@@ -245,11 +245,32 @@ public class ImageCaptureHelper {
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             // compress
             thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+            thumbnail = rotateBitmap(thumbnail,getImageOrientation(data.getData().getLastPathSegment()));
             return setCapturedImageToTargetView(thumbnail, shape);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private int getImageOrientation(String pathSegment){
+        try {
+            final String[] imageColumns = { MediaStore.Images.Media._ID, MediaStore.Images.ImageColumns.ORIENTATION };
+            final String selection = MediaStore.Images.Media._ID+" = " + pathSegment.split(":")[1];
+            final String imageOrderBy = MediaStore.Images.Media._ID + " DESC";
+            Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageColumns, selection, null, imageOrderBy);
+
+            if(cursor.moveToFirst()){
+                int orientation = cursor.getInt(cursor.getColumnIndex(MediaStore.Images.ImageColumns.ORIENTATION));
+                cursor.close();
+                return (orientation>=90 ? orientation-90 : orientation);
+            } else {
+                return 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 
     /**
@@ -300,8 +321,8 @@ public class ImageCaptureHelper {
      */
     private Bitmap getSquareCroppedBitmap(Bitmap finalBitmap) {
         Bitmap output = Bitmap.createBitmap(finalBitmap.getWidth(),
-                                            finalBitmap.getHeight(),
-                                            Bitmap.Config.ARGB_8888);
+                finalBitmap.getHeight(),
+                Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(output);
 
         final Paint paint = new Paint();
@@ -328,8 +349,8 @@ public class ImageCaptureHelper {
      */
     private Bitmap getRoundedCroppedBitmap(Bitmap finalBitmap) {
         Bitmap output = Bitmap.createBitmap(finalBitmap.getWidth(),
-                                            finalBitmap.getHeight(),
-                                            Bitmap.Config.ARGB_8888);
+                finalBitmap.getHeight(),
+                Bitmap.Config.ARGB_8888);
 
         Canvas canvas = new Canvas(output);
 
@@ -342,9 +363,9 @@ public class ImageCaptureHelper {
         paint.setColor(ContextCompat.getColor(context, R.color.paint_color_thumbnail));
 
         canvas.drawCircle(finalBitmap.getWidth() / 2 + 0.7f,
-                          finalBitmap.getHeight() / 2 + 0.7f,
-                          finalBitmap.getWidth() / 2 + 0.1f,
-                          paint);
+                finalBitmap.getHeight() / 2 + 0.7f,
+                finalBitmap.getWidth() / 2 + 0.1f,
+                paint);
 
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(finalBitmap, rect, rect, paint);
@@ -380,10 +401,10 @@ public class ImageCaptureHelper {
 
         // crop to square
         Bitmap croppedBitmap = Bitmap.createBitmap(thumbnail,
-                                                   xxCoord,
-                                                   yyCoord,
-                                                   croppedWidth,
-                                                   croppedHeight);
+                xxCoord,
+                yyCoord,
+                croppedWidth,
+                croppedHeight);
 
         // compress
         Bitmap bitmap = null;
