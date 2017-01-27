@@ -36,7 +36,9 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ChooseProviderFragment extends Fragment implements ProviderAdapter.OnProviderListItemClickListener,
         VisitTypeDialog.OnDialogListItemClickListener {
@@ -123,8 +125,11 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
     }
 
     private void getResourcesInformation() {
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_mgmt",appointmentsResultModel.getPayload().getAppointments().get(0).getMetadata().getPracticeMgmt());
+        queryMap.put("practice_id", appointmentsResultModel.getPayload().getAppointments().get(0).getMetadata().getPracticeId());
         TransitionDTO resourcesToSchedule = appointmentsResultModel.getMetadata().getLinks().getResourcesToSchedule();
-        WorkflowServiceHelper.getInstance().execute(resourcesToSchedule, scheduleResourcesCallback);
+        WorkflowServiceHelper.getInstance().execute(resourcesToSchedule, scheduleResourcesCallback, queryMap);
     }
 
     private WorkflowServiceCallback scheduleResourcesCallback = new WorkflowServiceCallback() {
