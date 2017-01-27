@@ -4,10 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/toolbar_layout"
-        layout="@layout/toolbar_responsibility" />
-
     <ProgressBar
         android:id="@+id/paymentMethodFragmentProgressBar"
         style="?android:attr/progressBarStyleHorizontal"
@@ -16,6 +12,22 @@
         android:layout_marginTop="-8dp"
         android:indeterminate="true"
         android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/paymentMethodTitleLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_26dp"
+        android:layout_marginBottom="@dimen/dimen_26dp"
+        android:layout_gravity="center"
+        android:textColor="@color/blue_cerulian"
+        android:textSize="@dimen/dimen_30dp"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1dp"
+        android:background="@color/dark_gray"
+        android:paddingRight="2dp"/>
 
     <LinearLayout
         android:id="@+id/swipeCreditCardNowLayout"
@@ -40,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="@dimen/dimen_48dp"
             android:paddingStart="@dimen/dimen_114dp"
             android:paddingEnd="@dimen/dimen_114dp"
             android:layout_gravity="center_horizontal"
@@ -81,6 +93,7 @@
         android:layout_height="0dp"
         android:layout_weight="3"
         android:fillViewport="true"
+        android:layout_marginBottom="@dimen/dimen_36dp"
         android:scrollbars="vertical">
 
         <LinearLayout
@@ -88,6 +101,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:layout_marginLeft="@dimen/demographics_docs_thumbnail_width"
+            android:layout_marginRight="@dimen/demographics_docs_thumbnail_width"
             android:weightSum="1"
             android:elevation="17dp">
 
@@ -96,6 +111,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/payment_method_parent_layout_padding"
+                android:layout_gravity="center"
                 android:layout_weight="0.17">
 
                 <RadioGroup
@@ -109,16 +125,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <Button
-        android:id="@+id/paymentChoiceButton"
-        style="@style/PaymentButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/paymentMethodsRadioGroup"
-        android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
-        android:background="@drawable/button_selector"
-        android:layout_margin="@dimen/dimen_5dp"/>
-
     <!--Android Pay-->
     <FrameLayout
         android:id="@+id/dynamic_wallet_button_fragment"
@@ -126,18 +132,32 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
         android:layout_margin="@dimen/dimen_1dp"
-        android:layout_below="@+id/paymentChoiceButton"/>
+        android:layout_below="@+id/buttonLayout"/>
 
-    <Button
-        android:id="@+id/createPaymentPlanButton"
-        style="@style/PaymentButtonStyle"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/paymentChoiceButton"
-        android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
-        android:background="@drawable/button_blue_border"
-        android:textColor="@color/bright_cerulean"
-        android:layout_margin="@dimen/dimen_5dp"/>
+        android:layout_weight="0"
+        android:padding="@dimen/dimen_15dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/createPaymentPlanButton"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_blue_border"
+            android:layout_margin="@dimen/dimen_5dp"
+            android:textColor="@color/button_bright_cerulean"/>
+        <Button
+            android:id="@+id/paymentChoiceButton"
+            style="@style/PaymentButtonStyle"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_5dp"
+            android:background="@drawable/bg_yellow_overlay" />
+
+    </LinearLayout>
 
 </LinearLayout>

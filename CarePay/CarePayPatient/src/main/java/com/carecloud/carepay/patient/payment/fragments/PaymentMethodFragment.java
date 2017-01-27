@@ -398,14 +398,27 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            Gson gson = new Gson();
+            PaymentsModel paymentsModel = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
+
             FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
-            ChooseCreditCardFragment fragment = (ChooseCreditCardFragment) fragmentmanager
-                    .findFragmentByTag(ChooseCreditCardFragment.class.getSimpleName());
-            if (fragment == null) {
-                fragment = new ChooseCreditCardFragment();
+            Fragment fragment;
+
+            if(paymentsModel!=null && paymentsModel.getPaymentPayload().getPatientCreditCards()!=null
+                    && paymentsModel.getPaymentPayload().getPatientCreditCards().size()>0){
+                fragment = (ChooseCreditCardFragment) fragmentmanager
+                        .findFragmentByTag(ChooseCreditCardFragment.class.getSimpleName());
+                if (fragment == null) {
+                    fragment = new ChooseCreditCardFragment();
+                }
+            } else {
+                fragment = (AddNewCreditCardFragment) fragmentmanager
+                        .findFragmentByTag(AddNewCreditCardFragment.class.getSimpleName());
+                if (fragment == null) {
+                    fragment = new AddNewCreditCardFragment();
+                }
             }
 
-            Gson gson = new Gson();
             Bundle args = new Bundle();
             args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
             args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, getArguments()

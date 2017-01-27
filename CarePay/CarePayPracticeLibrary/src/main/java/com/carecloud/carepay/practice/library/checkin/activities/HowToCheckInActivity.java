@@ -17,7 +17,6 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.checkin.dtos.QRCodeScanResultDTO;
-import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeLabelsDTO;
@@ -30,7 +29,6 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookButton;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
-import com.carecloud.carepaylibray.qrcodescanner.ScannerActivity;
 import com.carecloud.carepaylibray.qrcodescanner.ScannerQRActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -68,6 +66,8 @@ public class HowToCheckInActivity extends BasePracticeActivity {
 
         setContentView(R.layout.activity_how_to_check_in);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        setNavigationBarVisibility();
+
 
         /*Initialise views*/
         initViews();
@@ -132,6 +132,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
             bundle.putSerializable(getApplicationContext().getClass().getSimpleName(), signinPatientModeDTO.toString());
             intent.putExtras(bundle);
             startActivity(intent);
+            finish();
         }
     };
 
@@ -158,6 +159,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
             bundle.putSerializable(getApplicationContext().getClass().getSimpleName(), signinPatientModeDTO.toString());
             intent.putExtras(bundle);
             startActivity(intent);
+            finish();
         }
     };
 
@@ -177,8 +179,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
     View.OnClickListener homeImageViewListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(HowToCheckInActivity.this, CloverMainActivity.class);
-            startActivity(intent);
+            onBackPressed();
         }
     };
 

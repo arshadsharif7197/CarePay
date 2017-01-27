@@ -218,9 +218,8 @@ public class SigninActivity extends BasePracticeActivity {
         isEmptyEmail = true;
         isEmptyPassword = true;
 
-        // TODO: 11/17/2016
-        emailEditText.setText("practice@cc.com");
-        passwordEditText.setText("Practice123!");
+        //emailEditText.setText("practice@cc.com");
+        //passwordEditText.setText("Practice123!");
     }
 
     /**
@@ -244,6 +243,7 @@ public class SigninActivity extends BasePracticeActivity {
 
             int languageListSize = signinDTO.getPayload().getLanguages().size();
             LanguageOptionDTO defaultLangOption = null;
+
             int indexDefault = 0;
             for (int i = 0; i < languageListSize; i++) {
                 LanguageOptionDTO languageOption = signinDTO.getPayload().getLanguages().get(i);
@@ -253,20 +253,32 @@ public class SigninActivity extends BasePracticeActivity {
                     indexDefault = i;
                 }
             }
+
             ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.home_spinner_item, languages);
             spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             langSpinner = (Spinner) findViewById(R.id.signinLangSpinner);
             langSpinner.setAdapter(spinnerArrayAdapter);
-            if (defaultLangOption != null && !ApplicationPreferences.Instance.getUserLanguage().isEmpty()) { // this should be always true, as there's always a default option
+
+            // this should be always true, as there's always a default option
+            if (defaultLangOption != null && !ApplicationPreferences.Instance.getUserLanguage().isEmpty()) {
                 langSpinner.setSelection(spinnerArrayAdapter.getPosition(ApplicationPreferences.Instance.getUserLanguage().toUpperCase()));
-            }else{
+            } else {
                 langSpinner.setSelection(indexDefault);
                 ApplicationPreferences.Instance.setPracticeLanguage(defaultLangOption.getCode());
             }
         }
+
         initializeLebals(signInScreenMode);
+
         // disable sign-in button
         setEnabledSigninButton(false);
+
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
     }
 
     private void initializeLebals(SignInScreenMode signInScreenMode) {
@@ -440,6 +452,7 @@ public class SigninActivity extends BasePracticeActivity {
             homeButton.setVisibility(View.VISIBLE);
             gobackButton.setVisibility(View.VISIBLE);
             langSpinner.setVisibility(View.GONE);
+            setNavigationBarVisibility();
         } else {
             homeButton.setVisibility(View.GONE);
             gobackButton.setVisibility(View.GONE);
@@ -524,6 +537,9 @@ public class SigninActivity extends BasePracticeActivity {
         Log.v(this.getClass().getSimpleName(), "sign out Cognito");
         CognitoAppHelper.getPool().getUser().signOut();
         CognitoAppHelper.setUser(null);
-        ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
+        if (!(ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)){
+            ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
+        }
+
     }
 }

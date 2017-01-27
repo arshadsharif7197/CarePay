@@ -81,8 +81,8 @@ public class CarePayApplication extends MultiDexApplication implements Applicati
         if(activity instanceof SigninActivity) {
             // log out previous user from Cognito
             Log.v(this.getClass().getSimpleName(), "sign out Cognito");
-            CognitoAppHelper.getPool().getUser().signOut();
-            CognitoAppHelper.setUser(null);
+            //CognitoAppHelper.getPool().getUser().signOut();
+            //CognitoAppHelper.setUser(null);
         }
     }
 }

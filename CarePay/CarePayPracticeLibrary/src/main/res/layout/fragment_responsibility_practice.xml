@@ -1,83 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/respons_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:paddingBottom="@dimen/dimen_16dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/dimen_16dp">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:background="@color/blue_cerulian"
+            android:gravity="center"
             android:orientation="vertical">
 
-            <LinearLayout
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/respons_title"
+                style="@style/ResponsTotalLabelStyle"
+                android:layout_marginTop="@dimen/dimen_26dp"
+                android:textColor="@color/white"
+                app:customAssetFont="gotham_rounded_medium" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/respons_total_label"
+                style="@style/ResponsTotalLabelStyle"
+                android:layout_marginTop="@dimen/dimen_40dp"
+                android:textColor="@color/glitter"
+                app:customAssetFont="gotham_rounded_light" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/respons_total"
+                style="@style/ResponsTotalStyle"
+                android:layout_marginBottom="@dimen/dimen_40dp"
+                android:textColor="@color/white"
+                app:customAssetFont="gotham_rounded_medium" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/responsibility_list_margin"
+            android:layout_marginStart="@dimen/responsibility_list_margin"
+            android:layout_marginTop="@dimen/dimen_30dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/responsibility_line_item_recycle_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:background="@color/blue_cerulian"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:layout_height="match_parent" />
+        </LinearLayout>
 
-                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                    android:id="@+id/respons_title"
-                    style="@style/ResponsTotalLabelStyle"
-                    app:customAssetFont="gotham_rounded_medium"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/dimen_15dp">
 
-                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                    android:id="@+id/respons_total_label"
-                    style="@style/ResponsTotalLabelStyle"
-                    app:customAssetFont="gotham_rounded_light" />
-
-                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                    android:id="@+id/respons_total"
-                    style="@style/ResponsTotalStyle"
-                    app:customAssetFont="gotham_rounded_medium" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/make_partial_payment_button"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginEnd="@dimen/respons_button_margin_left_right"
-                android:layout_marginStart="@dimen/respons_button_margin_left_right"
-                android:layout_marginTop="5dp"
-                android:orientation="vertical">
+                android:background="@drawable/round_border_button_bg"
+                android:paddingBottom="@dimen/dimen_14dp"
+                android:paddingTop="@dimen/dimen_14dp"
+                android:textColor="@color/white"
+                tools:ignore="ButtonStyle" />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/responsibility_line_item_recycle_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/pay_total_amount_button"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:padding="@dimen/dimen_15dp"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/make_partial_payment_button"
-                    android:layout_weight="1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_blue_overlay"
-                    android:textColor="@color/white"/>
-
-                <Button
-                    android:id="@+id/pay_total_amount_button"
-                    android:layout_weight="1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/button_green_fill_background"
-                    android:textColor="@color/white"/>
-
-
-
-            </LinearLayout>
+                android:layout_marginStart="@dimen/dimen_18dp"
+                android:layout_weight="1"
+                android:background="@drawable/green_rounded_button_selector"
+                android:paddingBottom="@dimen/dimen_14dp"
+                android:paddingTop="@dimen/dimen_14dp"
+                android:textColor="@color/white"
+                tools:ignore="ButtonStyle" />
         </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

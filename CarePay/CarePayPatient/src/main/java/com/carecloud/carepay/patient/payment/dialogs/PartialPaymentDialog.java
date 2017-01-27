@@ -21,19 +21,14 @@ import com.carecloud.carepay.patient.payment.fragments.PaymentMethodFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-
-import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
+import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
-
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.List;
 
 
@@ -60,8 +55,8 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     private String paymentTitle;
     private String paymentPartialButton;
     private String paymentTotalButton;
-    private String copayStr = "";
-    private String previousBalanceStr = "";
+    private double insuranceCopay;
+    private double patientBalance;
     private boolean amountChangeFlag = true;
     private String balanceBeforeTextChange;
 
@@ -108,34 +103,27 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         partialPaymentPayingToday.setTextColor(context.getResources().getColor(R.color.glitter));
         SystemUtil.setGothamRoundedMediumTypeface(context, enterPartialAmountEditText);
 
-        if (paymentsDTO != null) {
-            List<PaymentPatientBalancesPayloadDTO> paymentList
-                    = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPayload();
+        try {
+            if (paymentsDTO != null) {
+                List<PatiencePayloadDTO> paymentList
+                        = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
 
-            if (paymentList != null && paymentList.size() > 1) {
-                for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
-                    if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PREVIOUS_BALANCE)) {
-                        previousBalanceStr = payment.getTotal();
-                    } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
-                        copayStr = payment.getTotal();
+                if (paymentList != null && paymentList.size() > 0) {
+                    for (PatiencePayloadDTO payment : paymentList) {
+                        if (payment.getType().equalsIgnoreCase(CarePayConstants.PATIENT_BALANCE)) {
+                            patientBalance = payment.getAmount();
+                        } else if (payment.getType().equalsIgnoreCase(CarePayConstants.INSURANCE_COPAY)) {
+                            insuranceCopay = payment.getAmount();
+                        }
                     }
-                }
 
-                try {
-                    double copay = Double.parseDouble(copayStr);
-                    double previousBalance = Double.parseDouble(previousBalanceStr);
-                    double total = copay + previousBalance;
-
-                    NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
-                    fullAmount = total;
+                    fullAmount = patientBalance+insuranceCopay;
                     partialPaymentTotalAmountTitle.setText(pendingAmountLabel + " " + StringUtil.getFormattedBalanceAmount(fullAmount));
-
-                } catch (NumberFormatException ex) {
-                    ex.printStackTrace();
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
     }
 
     @Override

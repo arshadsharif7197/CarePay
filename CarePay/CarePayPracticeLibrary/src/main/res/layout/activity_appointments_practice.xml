@@ -121,11 +121,6 @@
 
     <ImageView
         android:id="@+id/btnHome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:paddingBottom="@dimen/dimen_20dp"
-        android:paddingEnd="0dp"
-        android:paddingStart="@dimen/dimen_24dp"
-        android:src="@drawable/icn_home" />
+        style="@style/HomeButtonIcon"
+        android:layout_alignParentBottom="true" />
 </RelativeLayout>

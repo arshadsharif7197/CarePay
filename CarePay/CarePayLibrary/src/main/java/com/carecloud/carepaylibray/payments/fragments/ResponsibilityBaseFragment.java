@@ -5,10 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
-import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
@@ -18,25 +16,17 @@ import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.services.PaymentsService;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment implements PaymentDetailsDialog.PayNowClickListener {
 
     protected static final String LOG_TAG = ResponsibilityBaseFragment.class.getSimpleName();
     protected AppCompatActivity appCompatActivity;
-    protected String copayStr = "";
-    protected String previousBalanceStr = "";
+//    protected String copayStr = "";
+//    protected String previousBalanceStr = "";
 
     protected PaymentsModel paymentDTO = null;
     protected String totalResponsibilityString;
@@ -56,7 +46,6 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment imp
         appCompatActivity = (AppCompatActivity) getActivity();
     }
 
-
     protected void fillDetailAdapter(View view, List<PatiencePayloadDTO> paymentList){
         RecyclerView paymentDetailsListRecyclerView = ((RecyclerView) view.findViewById(R.id.responsibility_line_item_recycle_view));
         paymentDetailsListRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
@@ -75,7 +64,6 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment imp
         }
     }
 
-
     /**
      * payment labels
      */
@@ -93,7 +81,7 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment imp
                     payTotalAmountString = paymentsLabelsDTO.getPaymentPayTotalAmountButton();
                     payPartialAmountString = paymentsLabelsDTO.getPaymentPartialAmountButton();
                     payLaterString = paymentsLabelsDTO.getPaymentResponsibilityPayLater();
-                    paymentsTitleString = paymentsLabelsDTO.getDemographicsPaymentTitle();
+                    paymentsTitleString = paymentsLabelsDTO.getPaymentButtonLabel();
                 }
             }
         }
