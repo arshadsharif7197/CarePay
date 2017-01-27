@@ -156,6 +156,11 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
         stepProgressBar.setNumDots(totalForms);
         progressBar = (ProgressBar) findViewById(com.carecloud.carepaylibrary.R.id.progressBarConsent);
         progressBar.setVisibility(View.VISIBLE);
+        if (stepProgressBar.getCurrentProgressDot() == stepProgressBar.getNumDots() - 1) {
+            nextButton.setText(consentFormDTO.getMetadata().getLabel().getFinishFormButtonText());
+        } else {
+            nextButton.setText(consentFormDTO.getMetadata().getLabel().getNextFormButtonText());
+        }
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.consentform_toolbar);
@@ -307,7 +312,7 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
                         nextFormDisplayed();
                     } else {
                         nextButton.setClickable(false);
-                        jsonResponse[--indexForms] = response;
+                        jsonResponse[(indexForms-1)] = response;
                         navigateToNext();
                     }
 
@@ -336,6 +341,7 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
         queries.put("practice_mgmt", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getPracticeMgmt());
         queries.put("practice_id", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getPracticeId());
         queries.put("appointment_id", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getAppointmentId());
+        queries.put("patient_id", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getPatientId());
 
         Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
         header.put("transition", "true");
@@ -349,17 +355,22 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
     private WorkflowServiceCallback updateconsentformCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-
+            nextButton.setClickable(false);
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             PatientNavigationHelper.getInstance(ConsentActivity.this).navigateToWorkflow(workflowDTO);
+            nextButton.setClickable(true);
+            progressBar.setVisibility(View.INVISIBLE);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
             SystemUtil.showFaultDialog(ConsentActivity.this);
+            nextButton.setClickable(true);
+            progressBar.setVisibility(View.INVISIBLE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
