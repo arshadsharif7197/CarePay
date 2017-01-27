@@ -247,7 +247,6 @@ public class DemographicsInformationFragment extends Fragment {
         getProfileProperties();
         setEditTexts(view);
 
-        updateDemoGraphicTitleTextView = (TextView) view.findViewById(R.id.detailsReviewHeading);
         peronalInfoSectionTextview = (TextView) view.findViewById(R.id.reviewdemogrPersonalInfoLabel);
         demographicSectionTextView = (TextView) view.findViewById(R.id.demographicsSectionLabel);
         addressSectionTextView = (TextView) view.findViewById(R.id.demographicsAddressSectionLabel);

@@ -21,6 +21,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -40,8 +41,11 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressP
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.utils.AddressUtil;
+import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -55,13 +59,14 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemibol
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.gson.Gson;
 import com.smartystreets.api.us_zipcode.City;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 
-public class CheckinDemographicsFragment extends Fragment implements View.OnClickListener {
+public class CheckinDemographicsFragment extends DocumentScannerFragment implements View.OnClickListener {
 
     private static final String LOG_TAG = CheckinDemographicsFragment.class.getSimpleName();
     int selectedDataArray;
@@ -81,6 +86,11 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
     private List<DemographicInsurancePayloadDTO> insurances;
     private DemographicIdDocPayloadDTO demographicIdDocPayloadDTO;
     private DemographicDTO demographicDTO;
+
+    //profile image
+    private ImageView profileImageview;
+    private Button updateProfileImageButton;
+    //
 
     private EditText phoneNumberEditText;
     private EditText zipCodeEditText;
@@ -116,9 +126,10 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
     private TextView ethnicityLabelTextView;
     private TextView selectGender;
     private TextView genderLabelTextView;
-    private TextView updateDemoGraphicTitleTextView;
     private TextView dateformatLabelTextView;
     private TextView optinalLabelTextView;
+    private TextView reviewTitleTextView;
+    private TextView reviewSubtitileTextView;
 
     private boolean isFirstNameEmpty;
     private boolean isLastNameEmpty;
@@ -161,8 +172,10 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
 
 
         formatEditText();
+
         return view;
     }
+
 
     private void initializeDemographicsDTO() {
         demographicDTO = ((NewReviewDemographicsActivity) getActivity()).getDemographicDTO();
@@ -187,7 +200,12 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
         addDemoLineraLayout = (LinearLayout) view.findViewById(R.id.adddemoLinearLayout);
         addDemoLineraLayout.setPadding(20, 0, 20, 0);
 
-        updateDemoGraphicTitleTextView = (TextView) view.findViewById(R.id.detailsReviewHeading);
+        profileImageview = (ImageView) view.findViewById(R.id.patientPicImageView);
+        imageCaptureHelper = new ImageCaptureHelper(getActivity(), profileImageview, globalLabelsMetaDTO);
+        updateProfileImageButton = (Button) view.findViewById(R.id.updateProfileImageButton);
+
+        reviewTitleTextView = (TextView) view.findViewById(R.id.reviewtitle);
+        reviewSubtitileTextView = (TextView) view.findViewById(R.id.reviewSubtitle);
         peronalInfoSectionTextview = (TextView) view.findViewById(R.id.reviewdemogrPersonalInfoLabel);
         demographicSectionTextView = (TextView) view.findViewById(R.id.demographicsSectionLabel);
         addressSectionTextView = (TextView) view.findViewById(R.id.demographicsAddressSectionLabel);
@@ -271,7 +289,9 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
         lastNameText.setHint(persDetailsMetaDTO.properties.lastName.getLabel());
         middleNameText.setHint(persDetailsMetaDTO.properties.middleName.getLabel());
 
-        updateDemoGraphicTitleTextView.setText(globalLabelsMetaDTO.getDemographicsUpdateDemographicTitle());
+        updateProfileImageButton.setText(globalLabelsMetaDTO.getDemographicsProfileReCaptureCaption());
+        reviewTitleTextView.setText(globalLabelsMetaDTO.getDemographicsReviewScreenTitle());
+        reviewSubtitileTextView.setText(globalLabelsMetaDTO.getDemographicsReviewScreenSubtitle());
         peronalInfoSectionTextview.setText(globalLabelsMetaDTO.getDemographicsReviewPeronsonalinfoSection().toUpperCase());
         demographicSectionTextView.setText(globalLabelsMetaDTO.getDemographicSectionTitle().toUpperCase());
         addressSectionTextView.setHint(globalLabelsMetaDTO.getDemographicsAddressSection().toUpperCase());
@@ -537,7 +557,13 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
             }
         });
 
+        updateProfileImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectImage(imageCaptureHelper, ImageCaptureHelper.CameraType.DEFAULT_CAMERA);
+            }
 
+        });
     }
 
     private boolean isZipCodeValid() {
@@ -823,7 +849,7 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
         setChangeFocusListeners();
     }
 
-    private void setChangeFocusListeners() {
+    protected void setChangeFocusListeners() {
         firstNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean bool) {
@@ -940,6 +966,14 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
     private void initViewFromModels() {
 
         if (demographicPersDetailsPayloadDTO != null) {
+            String imageUrl = demographicPersDetailsPayloadDTO.getProfilePhoto();
+            if (!StringUtil.isNullOrEmpty(imageUrl)) {
+                Picasso.with(getActivity()).load(imageUrl).transform(
+                        new CircleImageTransform()).resize(160, 160).into(this.profileImageview);
+            }else{
+                profileImageview.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.icn_placeholder_user_profile));
+            }
+
             //Personal Details
             String firstName = demographicPersDetailsPayloadDTO.getFirstName();
             if (SystemUtil.isNotEmptyString(firstName)) {
@@ -1082,9 +1116,9 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
     }
 
 
-    private void setTypefaces(View view) {
-        setGothamRoundedMediumTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.detailsReviewHeading));
+    protected void setTypefaces(View view) {
+        setGothamRoundedMediumTypeface(getActivity(), reviewTitleTextView);
+        setProximaNovaRegularTypeface(getActivity(), reviewSubtitileTextView);
 
         if (!StringUtil.isNullOrEmpty(firstNameText.getText().toString())) {
             setProximaNovaExtraboldTypefaceInput(getActivity(), firstNameLabel);
@@ -1200,5 +1234,35 @@ public class CheckinDemographicsFragment extends Fragment implements View.OnClic
 
 
         }.execute(zipcode);
+    }
+
+    @Override
+    public int getImageShape() {
+        return ImageCaptureHelper.ROUND_IMAGE;
+    }
+
+    @Override
+    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner) {
+
+    }
+
+    @Override
+    public void populateViewsFromModel() {
+
+    }
+
+    @Override
+    protected void updateModel(TextView selectionDestination) {
+
+    }
+
+    @Override
+    protected void setInsuranceDTO(DemographicInsurancePayloadDTO insuranceDTO, String placeholderBase64) {
+
+    }
+
+    @Override
+    protected void enablePlanClickable(boolean enabled) {
+
     }
 }
