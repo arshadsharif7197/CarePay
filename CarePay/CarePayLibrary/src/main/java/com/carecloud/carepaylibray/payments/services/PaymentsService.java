@@ -15,10 +15,10 @@ import retrofit2.http.POST;
  */
 
 public interface PaymentsService {
-    @POST(value = "dev/workflow/carepay/patient_checkin/payments")
+    @POST(value = "dev/workflow/shamrock/patient_app/payments")
     Call<Object> updateCarePayPayment(@Body JSONObject carePayPaymentsModel);
 
-    @GET(value = "dev/workflow/carepay/patient_checkin/payments/information")
+    @GET(value = "dev/workflow/shamrock/patient_app/payments/information")
     Call<PaymentsModel> fetchPaymentInformation( );
 
 }

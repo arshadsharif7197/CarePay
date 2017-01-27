@@ -2,6 +2,7 @@ package com.carecloud.carepay.practice.library.appointments.dialogs;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -119,8 +120,20 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         CarePayTextView appointmentNewPatientTextView = (CarePayTextView)view.findViewById(R.id.optionalTextView);
         appointmentNewPatientTextView.setText(appointmentsResultModel.getMetadata().getLabel().getRequestAppointmentNewPatient());
 
+        TextInputLayout reasonInputLayout = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.reasonTextInputLayout);
+        reasonInputLayout.setTag(appointmentsResultModel.getMetadata().getLabel().getVisitTypeHeading());
+
         visitTypeEditText = (EditText)view.findViewById(R.id.reasonEditText);
-        visitTypeEditText.setHint(appointmentsResultModel.getMetadata().getLabel().getVisitTypeHeading());
+        visitTypeEditText.setTag(reasonInputLayout);
+
+        String visitReason = ((ScheduleAppointmentActivity)context).getSelectedVisitTypeDTO().getName();
+        if (SystemUtil.isNotEmptyString(visitReason)) {
+            visitTypeEditText.setText(visitReason);
+        }
+
+        SystemUtil.handleHintChange(visitTypeEditText, true);
+        visitTypeEditText.clearFocus();
+
         visitTypeEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
@@ -164,16 +177,11 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         appointmentJSONObj.addProperty("start_time", appointmentsSlotsDTO.getStartTime());
         appointmentJSONObj.addProperty("end_time", appointmentsSlotsDTO.getEndTime());
         appointmentJSONObj.addProperty("appointment_status_id", "5");
-        appointmentJSONObj.addProperty("location_id", appointmentAvailabilityDTO.getPayload().getAppointmentAvailability()
-                .getPayload().get(0).getLocation().getId());
-        appointmentJSONObj.addProperty("provider_id", ((ScheduleAppointmentActivity)context).getSelectedResource()
-                .getResource().getProvider().getId());
-        appointmentJSONObj.addProperty("visit_reason_id", ((ScheduleAppointmentActivity)context).getSelectedVisitTypeDTO()
-                .getId());
-        appointmentJSONObj.addProperty("resource_id", ((ScheduleAppointmentActivity)context).getSelectedResource()
-                .getResource().getId());
-        appointmentJSONObj.addProperty("chief_complaint", ((ScheduleAppointmentActivity)context).getSelectedVisitTypeDTO()
-                .getName());
+        appointmentJSONObj.addProperty("location_id", appointmentAvailabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getLocation().getId());
+        appointmentJSONObj.addProperty("provider_id", ((ScheduleAppointmentActivity)context).getSelectedResource().getResource().getProvider().getId());
+        appointmentJSONObj.addProperty("visit_reason_id", ((ScheduleAppointmentActivity)context).getSelectedVisitTypeDTO().getId());
+        appointmentJSONObj.addProperty("resource_id", ((ScheduleAppointmentActivity)context).getSelectedResource().getResource().getId());
+        appointmentJSONObj.addProperty("chief_complaint", ((ScheduleAppointmentActivity)context).getSelectedVisitTypeDTO().getName());
         appointmentJSONObj.addProperty("comments", visitTypeEditText.getText().toString().trim());
         appointmentJSONObj.add("patient", patientJSONObj);
 

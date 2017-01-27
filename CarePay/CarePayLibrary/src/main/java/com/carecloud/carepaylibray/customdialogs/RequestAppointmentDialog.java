@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.customdialogs;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,7 +35,8 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
     private LinearLayout mainLayout;
     private AppointmentsResultModel appointmentsResultModel;
     private AppointmentDTO appointmentDTO;
-    public static boolean isAppointmentAdded=false;
+    public static boolean isAppointmentAdded = false;
+
     private EditText reasonEditText;
 
     /**
@@ -53,6 +55,7 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         isAppointmentAdded=false;
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,8 +79,20 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
                 childActionView.findViewById(R.id.optionalTextView);
         optionalTextView.setText(appointmentsResultModel.getMetadata().getLabel().getAppointmentsOptionalHeading());
 
+        TextInputLayout reasonInputLayout = (TextInputLayout) childActionView.findViewById(R.id.reasonTextInputLayout);
+        reasonInputLayout.setTag(appointmentsResultModel.getMetadata().getLabel().getAppointmentsReasonForVisitHeading());
+
         reasonEditText = (EditText) childActionView.findViewById(R.id.reasonEditText);
-        reasonEditText.setHint(appointmentsResultModel.getMetadata().getLabel().getAppointmentsReasonForVisitHeading());
+        reasonEditText.setTag(reasonInputLayout);
+
+        String visitReason = (String) appointmentDTO.getPayload().getChiefComplaint();
+        if (SystemUtil.isNotEmptyString(visitReason)) {
+            reasonEditText.setText(visitReason);
+        }
+
+        SystemUtil.handleHintChange(reasonEditText, true);
+        reasonEditText.clearFocus();
+
         reasonEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {

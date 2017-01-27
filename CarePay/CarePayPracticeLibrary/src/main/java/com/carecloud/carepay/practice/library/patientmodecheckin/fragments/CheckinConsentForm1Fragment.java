@@ -114,6 +114,13 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
         jsonAnswers = new String[totalForms];
         jsonResponse = new String[totalForms];
 
+        if (indexForms == (totalForms - 1)) {
+            nextButton.setText(consentFormDTO.getMetadata().getLabel().getFinishFormButtonText());
+        } else {
+            nextButton.setText(consentFormDTO.getMetadata().getLabel().getNextFormButtonText());
+        }
+
+
         formIndex = ((PatientModeCheckinActivity) getActivity()).getConsentFormIndex();
         flowStateInfo = new FlowStateInfo(SUBFLOW_CONSENT,
                 formIndex, totalForms);
@@ -219,7 +226,7 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
      * Call java script functions to validate consent form on screen
      */
     public void validateForm() {
-        nextButton.setClickable(false);
+
         webView.loadUrl("javascript:angular.element(document.getElementsByClassName('forms')).scope().save_form()");
 
 
@@ -276,10 +283,11 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
                         }
 
                         nextFormDisplayed();
-                        nextButton.setClickable(true);
+
 
                     } else {
-                        jsonResponse[--indexForms] = response;
+                        jsonResponse[(indexForms-1)] = response;
+
                         navigateToNext();
                     }
 
@@ -307,6 +315,7 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
         queries.put("practice_mgmt", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getPracticeMgmt());
         queries.put("practice_id", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getPracticeId());
         queries.put("appointment_id", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getAppointmentId());
+        queries.put("patient_id", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getAppointmentId());
 
 
         Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
@@ -323,17 +332,19 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
     private WorkflowServiceCallback updateconsentformCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-
+            nextButton.setClickable(false);
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             PracticeNavigationHelper.getInstance().navigateToWorkflow(getActivity(), workflowDTO);
+            nextButton.setClickable(true);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
             SystemUtil.showFaultDialog(getActivity());
+            nextButton.setClickable(true);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
