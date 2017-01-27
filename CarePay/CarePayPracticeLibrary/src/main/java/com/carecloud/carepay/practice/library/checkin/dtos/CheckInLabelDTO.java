@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.checkin.dtos;
 
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -86,7 +87,7 @@ public class CheckInLabelDTO {
      * @return The practiceCheckinDetailDialogCheckingIn
      */
     public String getPracticeCheckinDetailDialogCheckingIn() {
-        return practiceCheckinDetailDialogCheckingIn;
+        return StringUtil.getLabelForView(practiceCheckinDetailDialogCheckingIn);
     }
 
     /**
@@ -212,7 +213,7 @@ public class CheckInLabelDTO {
      * @return The practiceCheckinFilter
      */
     public String getPracticeCheckinFilter() {
-        return practiceCheckinFilter;
+        return StringUtil.getLabelForView(practiceCheckinFilter);
     }
 
     /**
@@ -279,7 +280,7 @@ public class CheckInLabelDTO {
     }
 
     public String getPracticeCheckinWaitingRoom() {
-        return practiceCheckinWaitingRoom;
+        return StringUtil.getLabelForView(practiceCheckinWaitingRoom);
     }
 
     public void setPracticeCheckinWaitingRoom(String practiceCheckinWaitingRoom) {
@@ -287,7 +288,7 @@ public class CheckInLabelDTO {
     }
 
     public String getGoBack() {
-        return goBack;
+        return StringUtil.getLabelForView(goBack);
     }
 
     public void setGoBack(String goBack) {
@@ -295,7 +296,7 @@ public class CheckInLabelDTO {
     }
 
     public String getPracticeCheckinFilterOn() {
-        return practiceCheckinFilterOn;
+        return StringUtil.getLabelForView(practiceCheckinFilterOn);
     }
 
     public void setPracticeCheckinFilterOn(String practiceCheckinFilterOn) {
