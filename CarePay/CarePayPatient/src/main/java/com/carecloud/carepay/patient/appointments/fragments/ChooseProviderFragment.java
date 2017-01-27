@@ -126,8 +126,11 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
 
     private void getResourcesInformation() {
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("practice_mgmt",appointmentsResultModel.getPayload().getAppointments().get(0).getMetadata().getPracticeMgmt());
-        queryMap.put("practice_id", appointmentsResultModel.getPayload().getAppointments().get(0).getMetadata().getPracticeId());
+        if (appointmentsResultModel.getPayload().getAppointments() != null && appointmentsResultModel.getPayload().getAppointments().size() > 0) {
+            queryMap.put("practice_mgmt", appointmentsResultModel.getPayload().getAppointments().get(0).getMetadata().getPracticeMgmt());
+            queryMap.put("practice_id", appointmentsResultModel.getPayload().getAppointments().get(0).getMetadata().getPracticeId());
+        }
+
         TransitionDTO resourcesToSchedule = appointmentsResultModel.getMetadata().getLinks().getResourcesToSchedule();
         WorkflowServiceHelper.getInstance().execute(resourcesToSchedule, scheduleResourcesCallback, queryMap);
     }
@@ -202,8 +205,7 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
 
     @Override
     public void onProviderListItemClickListener(int position) {
-        AppointmentResourcesDTO model = resources.get(position - 1);
-        selectedResource = model;
+        selectedResource = resources.get(position - 1);
         loadVisitTypeScreen(selectedResource);
     }
 
@@ -235,5 +237,4 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
         fragmentManager.beginTransaction().replace(R.id.add_appointments_frag_holder, visitTypeFragment,
                 AvailableHoursFragment.class.getSimpleName()).commit();
     }
-
 }
