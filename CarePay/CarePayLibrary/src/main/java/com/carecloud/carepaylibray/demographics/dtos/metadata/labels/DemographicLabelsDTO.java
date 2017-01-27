@@ -57,6 +57,10 @@ public class DemographicLabelsDTO {
     @SerializedName("demographics_update_demographic_title")
     @Expose
     private String demographicsUpdateDemographicTitle;
+    @SerializedName("demographics_identity_text")
+    @Expose
+    private String demographicsIdentityText;
+
     @SerializedName("demographics_update_button")
     @Expose
     private String demographicsUpdateButton;
@@ -1058,5 +1062,13 @@ public class DemographicLabelsDTO {
 
     public void setDemographicsInsuranceClear(String demographicsInsuranceClear) {
         this.demographicsInsuranceClear = demographicsInsuranceClear;
+    }
+
+    public String getDemographicsIdentityText() {
+        return demographicsIdentityText;
+    }
+
+    public void setDemographicsIdentityText(String demographicsIdentityText) {
+        this.demographicsIdentityText = demographicsIdentityText;
     }
 }

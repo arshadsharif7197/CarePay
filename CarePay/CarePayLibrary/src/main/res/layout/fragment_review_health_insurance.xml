@@ -32,12 +32,11 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/demographicsDocsHeaderTitle"
-                style="@style/DemographicsDocsHeaderTitleStyle" />
-
-            <TextView
-                android:id="@+id/demographicsDocsHeaderSubtitle"
-                style="@style/DemographicsDocsHeaderSubtitleStyle"/>
+                android:id="@+id/insurancesTitleLabel"
+                style="@style/reviewDemographicBlue."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_36dp" />
 
 
 

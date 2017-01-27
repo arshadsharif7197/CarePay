@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -28,12 +29,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.demographics.activities.NewReviewDemographicsActivity;
+import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsDocumentsFragmentWthWrapper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
@@ -41,6 +44,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressP
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.demographics.fragments.DemographicsCheckInDocumentsFragment;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
@@ -83,7 +87,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     private DemographicLabelsDTO globalLabelsMetaDTO;
     private DemographicPersDetailsPayloadDTO demographicPersDetailsPayloadDTO;
     private DemographicAddressPayloadDTO demographicAddressPayloadDTO;
-    private List<DemographicInsurancePayloadDTO> insurances;
     private DemographicIdDocPayloadDTO demographicIdDocPayloadDTO;
     private DemographicDTO demographicDTO;
 
@@ -98,7 +101,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     private EditText address2EditText;
     private EditText dobEditText;
     private EditText stateEditText;
-    private EditText driverlicenseEditText;
     private EditText cityEditText;
     private EditText firstNameText;
     private EditText middleNameText;
@@ -110,7 +112,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     private TextInputLayout phoneNumberLabel;
     private TextInputLayout address1Label;
     private TextInputLayout address2Label;
-    private TextInputLayout driverLicenseLabel;
     private TextInputLayout cityLabel;
     private TextInputLayout stateLabel;
     private TextInputLayout zipcodeLabel;
@@ -193,6 +194,9 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             }
         }
 
+        if(demographicIdDocPayloadDTO == null){
+            demographicIdDocPayloadDTO = new DemographicIdDocPayloadDTO();
+        }
     }
 
     private void initialiseUIFields() {
@@ -227,7 +231,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         stateEditText = (EditText) view.findViewById(R.id.stateAutoCompleteTextView);
         stateEditText.setHint(addressMetaDTO.properties.state.getLabel());
 
-        driverlicenseEditText = (EditText) view.findViewById(R.id.driverLicenseEditText);
         demographicProgressBar = (ProgressBar) view.findViewById(R.id.demographicReviewProgressBar);
         demographicProgressBar.setVisibility(View.GONE);
 
@@ -247,7 +250,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         lastNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrLastNameTextInput);
         doblabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
         phoneNumberLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
-        driverLicenseLabel = (TextInputLayout) view.findViewById(R.id.reviewDriverLicenseLabel);
         address1Label = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
         address2Label = (TextInputLayout) view.findViewById(R.id.address2TextInputLayout);
         zipcodeLabel = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
@@ -256,6 +258,33 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         initializeLabels();
         initializeOptionsArray();
 
+
+    }
+
+    private void initializeDocumentFragment(){
+
+        String tag = DemographicsCheckInDocumentsFragment.class.getSimpleName();
+        FragmentManager fm = getChildFragmentManager();
+        DemographicsCheckInDocumentsFragment demographicsDocumentsFragment = new DemographicsCheckInDocumentsFragment();
+        demographicsDocumentsFragment.setIdDocsMetaDTO(idDocsMetaDTO);
+        demographicsDocumentsFragment.setGlobalLabelsMetaDTO(globalLabelsMetaDTO);
+        demographicsDocumentsFragment.setDemPayloadIdDocDTO(demographicIdDocPayloadDTO);
+        fm.beginTransaction()
+                .replace(R.id.documentCapturer, demographicsDocumentsFragment, tag)
+                .commit();
+
+    }
+
+    private void initializeInsurancesFragment(){
+        String tag = CheckinInsurancesSummaryFragment.class.getSimpleName();
+        FragmentManager fm = getChildFragmentManager();
+        CheckinInsurancesSummaryFragment checkinInsurancesSummaryFragment = new CheckinInsurancesSummaryFragment();
+        demographicsDocumentsFragment.setIdDocsMetaDTO(idDocsMetaDTO);
+        demographicsDocumentsFragment.setGlobalLabelsMetaDTO(globalLabelsMetaDTO);
+        demographicsDocumentsFragment.setDemPayloadIdDocDTO(demographicIdDocPayloadDTO);
+        fm.beginTransaction()
+                .replace(R.id.insuranceCapturer, checkinInsurancesSummaryFragment, tag)
+                .commit();
 
     }
 
@@ -305,8 +334,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         address2EditText.setHint(addressMetaDTO.properties.address2.getLabel());
         cityEditText.setHint(addressMetaDTO.properties.city.getLabel());
         zipCodeEditText.setHint(addressMetaDTO.properties.zipcode.getLabel());
-
-        driverlicenseEditText.setHint(idDocsMetaDTO.properties.items.identityDocument.properties.identityDocumentType.options.get(0).getLabel());
 
         selectGender.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
         selectGender.setOnClickListener(this);
@@ -755,10 +782,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         if (demographicIdDocPayloadDTO == null) {
             demographicIdDocPayloadDTO = new DemographicIdDocPayloadDTO();
         }
-        String driverLicense = driverlicenseEditText.getText().toString();
-        if (!StringUtil.isNullOrEmpty(driverLicense)) {
-            demographicIdDocPayloadDTO.setIdNumber(driverLicense);
-        }
+
         List<DemographicIdDocPayloadDTO> ids = new ArrayList<>();
         ids.add(demographicIdDocPayloadDTO);
         demographicDTO.getPayload().getDemographics().getPayload().setIdDocuments(ids);
@@ -798,6 +822,8 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         // update gson in the activity
         Gson gson = new Gson();
         ((NewReviewDemographicsActivity) getActivity()).resetDemographicDTO(gson.toJson(demographicDTO));
+
+
     }
 
     private void setEditTexts(View view) {
@@ -821,9 +847,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         phoneNumberLabel.setTag(addressMetaDTO.properties.phone.getLabel());
         phoneNumberEditText.setTag(phoneNumberLabel);
 
-
-        driverLicenseLabel.setTag(idDocsMetaDTO.properties.items.identityDocument.properties.identityDocumentType.options.get(0).getLabel());
-        driverlicenseEditText.setTag(driverLicenseLabel);
 
 
         address1Label.setTag(addressMetaDTO.properties.address1.getLabel());
@@ -899,15 +922,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             }
         });
 
-        driverlicenseEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
 
         address1EditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -964,6 +978,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     }
 
     private void initViewFromModels() {
+        initializeDocumentFragment();
 
         if (demographicPersDetailsPayloadDTO != null) {
             String imageUrl = demographicPersDetailsPayloadDTO.getProfilePhoto();
@@ -971,7 +986,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                 Picasso.with(getActivity()).load(imageUrl).transform(
                         new CircleImageTransform()).resize(160, 160).into(this.profileImageview);
             }else{
-                profileImageview.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.icn_placeholder_user_profile));
+                profileImageview.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.icn_placeholder_user_profile_png));
             }
 
             //Personal Details
@@ -1028,15 +1043,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             Log.v(LOG_TAG, "demographic personal details is empty");
         }
 
-        if (demographicIdDocPayloadDTO != null) {
-            String driverlicense = demographicIdDocPayloadDTO.getIdNumber();
-            if (driverlicense != null) {
-                driverlicenseEditText.setText(driverlicense);
-                driverlicenseEditText.requestFocus();
-            }
-        } else {
-            Log.v(LOG_TAG, "demographic personal details is empty");
-        }
 
         if (demographicAddressPayloadDTO != null) {
             //Address
@@ -1180,11 +1186,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             setProximaNovaExtraboldTypefaceInput(getActivity(), stateLabel);
         } else {
             setProximaNovaRegularTypefaceLayout(getActivity(), stateLabel);
-        }
-        if (!StringUtil.isNullOrEmpty(driverlicenseEditText.getText().toString())) {
-            setProximaNovaExtraboldTypefaceInput(getActivity(), driverLicenseLabel);
-        } else {
-            setProximaNovaRegularTypefaceLayout(getActivity(), driverLicenseLabel);
         }
 
 
