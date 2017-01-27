@@ -31,17 +31,17 @@ android {
     }
     productFlavors {
         development {
-            applicationId "com.carecloud.carepay.patient.development"
+            applicationId "com.carecloud.carepay.patient"
             buildConfigField 'String', 'API_BASE_URL', '"https://breeze-entry.development.carecloud.com"'
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.development.carecloud.com/workflow/shamrock/patient_app/language_selection/start"'
             buildConfigField 'String', 'X_API_KEY', '"PhrvB0D7Bw9EbQ3aEXTCj3FvYtPDzbGr7X71uYJT"'
-            buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
+            buildConfigField 'String', 'WEBCLIENT_URL', '"WSS://STAR-CLUSTER.DEVELOPMENT.CARECLOUD.COM"'
         }
-        development_test {
-            applicationId "com.carecloud.carepay.patient.test"
-            buildConfigField 'String', 'API_BASE_URL', '"https://breeze-entry.development.carecloud.com"'
-            buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.development.carecloud.com/workflow/shamrock/patient_app/language_selection/start"'
-            buildConfigField 'String', 'X_API_KEY', '"PhrvB0D7Bw9EbQ3aEXTCj3FvYtPDzbGr7X71uYJT"'
+        qa {
+            applicationId "com.carecloud.carepay.patient"
+            buildConfigField 'String', 'API_BASE_URL', '"https://breeze-entry.qa.carecloud.com"'
+            buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.qa.carecloud.com/workflow/shamrock/patient_app/language_selection/start"'
+            buildConfigField 'String', 'X_API_KEY', '"VMGQTfHsuP5PSi3UbyXWh7xGWMflwZtHa55LZyXr"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
         }
 
