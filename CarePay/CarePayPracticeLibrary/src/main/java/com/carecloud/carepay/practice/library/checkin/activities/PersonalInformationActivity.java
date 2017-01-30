@@ -317,6 +317,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
     View.OnClickListener findMyAppointmentButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            findMyAppointmentButton.setEnabled(false);
             callGetFindMyAppointments();
         }
     };
@@ -353,6 +354,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            findMyAppointmentButton.setEnabled(true);
             Map<String, String> queryMap = new HashMap<>();
             TransitionDTO transitionDTO;
             Gson gson = new Gson();
@@ -374,6 +376,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
+            findMyAppointmentButton.setEnabled(true);
             SystemUtil.showFaultDialog(PersonalInformationActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -387,11 +390,13 @@ public class PersonalInformationActivity extends BasePracticeActivity {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            findMyAppointmentButton.setEnabled(true);
             PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            findMyAppointmentButton.setEnabled(true);
             SystemUtil.showFaultDialog(PersonalInformationActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

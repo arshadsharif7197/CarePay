@@ -104,6 +104,8 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
         getStartedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                getStartedButton.setEnabled(false);
+
                 Map<String, String> queryMap = new HashMap<>();
                 queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
                 queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
@@ -155,11 +157,13 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            getStartedButton.setEnabled(true);
             PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            getStartedButton.setEnabled(true);
             SystemUtil.showFaultDialog(PatientModeSplashActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
