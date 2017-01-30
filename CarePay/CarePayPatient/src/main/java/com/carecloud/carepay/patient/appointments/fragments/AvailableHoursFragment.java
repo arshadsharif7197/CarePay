@@ -342,11 +342,9 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
                     }
                     timeSlotsDTO = timSlotsDTO;
                 }
-                if(!StringUtil.isNullOrEmpty(headerTitle) && headerTitle.contains(",")) {
-                    //rangeEndDateString = headerTitle.split(", ")[1];
+                if(!StringUtil.isNullOrEmpty(headerTitle) && headerTitle.contains(",") && timeSlotsDTO != null) {
                     DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
                     rangeEndDateString = DateUtil.getInstance().setDateRaw(timeSlotsDTO.getStartTime()).getDateAsMonthLiteralDayOrdinal();
-
                 } else {
                     rangeEndDateString = headerTitle.toLowerCase();
                 }
