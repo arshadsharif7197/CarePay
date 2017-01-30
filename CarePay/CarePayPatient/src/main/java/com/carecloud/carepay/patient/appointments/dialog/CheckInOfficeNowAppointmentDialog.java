@@ -46,7 +46,7 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
      */
     public CheckInOfficeNowAppointmentDialog(Context context, Boolean enableCheckin, AppointmentDTO appointmentDTO,
                                              AppointmentsResultModel appointmentInfo) {
-        super(context, appointmentDTO);
+        super(context, appointmentDTO, false);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
         this.appointmentInfo = appointmentInfo;

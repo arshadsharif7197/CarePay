@@ -39,7 +39,7 @@ public class CheckInEarlyAppointmentDialog extends BaseDoctorInfoDialog {
     public CheckInEarlyAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
                                          AppointmentLabelDTO appointmentLabels,
                                          TransitionDTO transitionDTO) {
-        super(context, appointmentDTO);
+        super(context, appointmentDTO, false);
         this.context = context;
         this.appointmentLabels = appointmentLabels;
         this.appointmentDTO = appointmentDTO;

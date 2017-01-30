@@ -3,15 +3,12 @@ package com.carecloud.carepaylibray.customdialogs;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
@@ -37,8 +34,6 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
     private AppointmentDTO appointmentDTO;
     public static boolean isAppointmentAdded = false;
 
-    private EditText reasonEditText;
-
     /**
      * Constructor.
      * @param context activity context
@@ -48,7 +43,7 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
     public RequestAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
                                     AppointmentsResultModel appointmentsResultModel) {
 
-        super(context, appointmentDTO);
+        super(context, appointmentDTO, true);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
         this.appointmentsResultModel = appointmentsResultModel;
@@ -75,32 +70,19 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         appointmentRequestButton.setOnClickListener(this);
         appointmentRequestButton.requestFocus();
 
-        CarePayTextView optionalTextView = (CarePayTextView)
-                childActionView.findViewById(R.id.optionalTextView);
-        optionalTextView.setText(appointmentsResultModel.getMetadata().getLabel().getAppointmentsOptionalHeading());
+        CarePayTextView reasonTypeTextView = (CarePayTextView)
+                childActionView.findViewById(R.id.reasonTypeTextView);
+        SystemUtil.setProximaNovaRegularTypeface(context, reasonTypeTextView);
+        reasonTypeTextView.setText(appointmentsResultModel.getMetadata().getLabel().getVisitTypeHeading());
 
-        TextInputLayout reasonInputLayout = (TextInputLayout) childActionView.findViewById(R.id.reasonTextInputLayout);
-        reasonInputLayout.setTag(appointmentsResultModel.getMetadata().getLabel().getAppointmentsReasonForVisitHeading());
-
-        reasonEditText = (EditText) childActionView.findViewById(R.id.reasonEditText);
-        reasonEditText.setTag(reasonInputLayout);
+        CarePayTextView reasonTextView = (CarePayTextView)
+                childActionView.findViewById(R.id.reasonTextView);
+        SystemUtil.setProximaNovaRegularTypeface(context, reasonTextView);
 
         String visitReason = (String) appointmentDTO.getPayload().getChiefComplaint();
         if (SystemUtil.isNotEmptyString(visitReason)) {
-            reasonEditText.setText(visitReason);
+            reasonTextView.setText(visitReason);
         }
-
-        SystemUtil.handleHintChange(reasonEditText, true);
-        reasonEditText.clearFocus();
-
-        reasonEditText.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                view.setFocusable(true);
-                view.setFocusableInTouchMode(true);
-                return false;
-            }
-        });
 
         mainLayout.addView(childActionView);
     }
@@ -137,7 +119,7 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         appointmentJSONObj.addProperty("visit_reason_id", appointmentDTO.getPayload().getVisitReasonId());
         appointmentJSONObj.addProperty("resource_id", appointmentDTO.getPayload().getResourceId());
         appointmentJSONObj.addProperty("chief_complaint", appointmentDTO.getPayload().getChiefComplaint().toString());
-        appointmentJSONObj.addProperty("comments", reasonEditText.getText().toString().trim());
+        appointmentJSONObj.addProperty("comments", "");
         appointmentJSONObj.add("patient", patientJSONObj);
 
         JsonObject makeAppointmentJSONObj = new JsonObject();

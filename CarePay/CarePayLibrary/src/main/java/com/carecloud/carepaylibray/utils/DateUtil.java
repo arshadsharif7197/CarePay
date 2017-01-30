@@ -149,7 +149,7 @@ public class DateUtil {
     public String getDateAsMonthLiteralDayOrdinal() {
         String ordinal = instance.getOrdinalSuffix(day); // fetch the ordinal
         return String.format(Locale.getDefault(), "%s %s%s",
-                monthLiteral, day, ordinal);
+                monthLiteralAbbr, day, ordinal);
     }
 
     /**
