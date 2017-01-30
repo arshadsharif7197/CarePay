@@ -329,7 +329,7 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
 
                 // To create appointment time slots list data structure along with headers
                 String headerTitle = "";
-
+                AppointmentsSlotsDTO timeSlotsDTO = null;
                 for (AppointmentsSlotsDTO timSlotsDTO : appointmentsSlotsDTOList) {
 
                     String title = getSectionHeaderTitle(timSlotsDTO.getStartTime());
@@ -340,9 +340,13 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
                         timeSlotsListWithHeaders.add(headerTitle);
                         timeSlotsListWithHeaders.add(timSlotsDTO);
                     }
+                    timeSlotsDTO = timSlotsDTO;
                 }
                 if(!StringUtil.isNullOrEmpty(headerTitle) && headerTitle.contains(",")) {
-                    rangeEndDateString = headerTitle.split(", ")[1];
+                    //rangeEndDateString = headerTitle.split(", ")[1];
+                    DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
+                    rangeEndDateString = DateUtil.getInstance().setDateRaw(timeSlotsDTO.getStartTime()).getDateAsMonthLiteralDayOrdinal();
+
                 } else {
                     rangeEndDateString = headerTitle.toLowerCase();
                 }
