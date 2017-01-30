@@ -28,7 +28,7 @@ public class QueueAppointmentDialog extends BaseDoctorInfoDialog {
      */
     public QueueAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
                                   AppointmentLabelDTO appointmentLabels) {
-        super(context, appointmentDTO);
+        super(context, appointmentDTO, false);
         this.context = context;
         this.appointmentLabels = appointmentLabels;
     }
