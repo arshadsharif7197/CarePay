@@ -73,26 +73,31 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
         int section_number = getArguments().getInt(CarePayConstants.TAB_SECTION_NUMBER);
         Map<String, String> queryString = new HashMap<>();
         PaymentsLinksDTO paymentsLinks = paymentDTO.getPaymentsMetadata().getPaymentsLinks();
-        PaymentPayloadMetaDataDTO metadata = paymentDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges().getMetadata();
 
-        switch (section_number) {
-            case 1:
-                queryString.put("practice_id",  metadata.getPracticeId() );
-                queryString.put("practice_mgmt", metadata.getPracticeMgmt());
-                queryString.put("patient_id", metadata.getPatientId());
-                WorkflowServiceHelper.getInstance().execute(
-                        paymentsLinks.getPaymentsPatientBalances(), balancesCallback, queryString);
-                break;
+        if(paymentDTO.getPaymentPayload().getPatientHistory() != null && paymentDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges() != null)
+        {
+            PaymentPayloadMetaDataDTO metadata = paymentDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges().getMetadata();
 
-            case 2:
-                queryString.put("practice_id",  metadata.getPracticeId() );
-                queryString.put("practice_mgmt", metadata.getPracticeMgmt());
-                queryString.put("patient_id", metadata.getPatientId());
-                queryString.put("start_date", "2015-01-01");
-                queryString.put("end_date", "2030-01-01");
-                WorkflowServiceHelper.getInstance().execute(
-                        paymentsLinks.getPaymentsHistory(), historyCallback, queryString);
-                break;
+
+            switch (section_number) {
+                case 1:
+                    queryString.put("practice_id",  metadata.getPracticeId() );
+                    queryString.put("practice_mgmt", metadata.getPracticeMgmt());
+                    queryString.put("patient_id", metadata.getPatientId());
+                    WorkflowServiceHelper.getInstance().execute(
+                            paymentsLinks.getPaymentsPatientBalances(), balancesCallback, queryString);
+                    break;
+
+                case 2:
+                    queryString.put("practice_id",  metadata.getPracticeId() );
+                    queryString.put("practice_mgmt", metadata.getPracticeMgmt());
+                    queryString.put("patient_id", metadata.getPatientId());
+                    queryString.put("start_date", "2015-01-01");
+                    queryString.put("end_date", "2030-01-01");
+                    WorkflowServiceHelper.getInstance().execute(
+                            paymentsLinks.getPaymentsHistory(), historyCallback, queryString);
+                    break;
+            }
         }
     }
 
