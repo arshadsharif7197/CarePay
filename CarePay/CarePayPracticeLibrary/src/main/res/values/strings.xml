@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">CarePay</string>
+    <string name="app_name">Breeze</string>
     <string name="signin">Sign-in</string>
     <string name="forgot_password">Forgot Password</string>
     <string name="go_back">&#160;&#160;&#160;Go Back</string>
