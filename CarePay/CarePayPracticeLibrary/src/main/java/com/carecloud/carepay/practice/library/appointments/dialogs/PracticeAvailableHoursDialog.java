@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.appointments.dialogs;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -47,7 +48,6 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
 
     private Context context;
     private LayoutInflater inflater;
-    private View view;
     private AppointmentAvailabilityDTO availabilityDTO;
     private RecyclerView availableHoursRecycleView;
     private Date startDate;
@@ -82,9 +82,10 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
         getAvailableHoursTimeSlots();
     }
 
+    @SuppressLint("InflateParams")
     @Override
     protected void onAddContentView(LayoutInflater inflater) {
-        view = inflater.inflate(R.layout.dialog_available_hours_slots, null);
+        View view = inflater.inflate(R.layout.dialog_available_hours_slots, null);
         ((FrameLayout) findViewById(R.id.base_dialog_content_layout)).addView(view);
         inflateUIComponents(view);
     }
@@ -112,10 +113,10 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     /**
      * Click listener for edit range and edit date range button
      */
-    View.OnClickListener dateRangeClickListener = new View.OnClickListener() {
+    private View.OnClickListener dateRangeClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            new PracticeAvailableHoursDateRangeDialog(context, availabilityDTO, "").show();
+            new PracticeAvailableHoursDateRangeDialog(context, availabilityDTO, "", startDate, endDate).show();
             dismiss();
         }
     };
@@ -165,8 +166,8 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
             Calendar rangeEnd = Calendar.getInstance();
             rangeEnd.add(Calendar.DAY_OF_MONTH, 6);
 
-            startDate = rangeStart.getTime();
-            endDate = rangeEnd.getTime();
+//            startDate = rangeStart.getTime();
+//            endDate = rangeEnd.getTime();
             DateUtil.getInstance().setDate(endDate);
 
             String formattedEndDate = getFormattedDate();

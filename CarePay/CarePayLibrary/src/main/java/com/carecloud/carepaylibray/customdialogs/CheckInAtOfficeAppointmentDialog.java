@@ -29,7 +29,7 @@ public class CheckInAtOfficeAppointmentDialog extends BaseDoctorInfoDialog {
     public CheckInAtOfficeAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
                                             AppointmentLabelDTO appointmentLabels,
                                             Class nextActivity) {
-        super(context, appointmentDTO);
+        super(context, appointmentDTO,false);
         this.context = context;
         this.appointmentLabels = appointmentLabels;
         this.nextActivityClass = nextActivity;

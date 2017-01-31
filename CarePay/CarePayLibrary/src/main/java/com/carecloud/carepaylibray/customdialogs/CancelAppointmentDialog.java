@@ -41,7 +41,7 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
                                    AppointmentType appointmentType,
                                    RefreshAppointmentListCallback listCallback) {
 
-        super(context, appointmentDTO);
+        super(context, appointmentDTO,false);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
         this.appointmentInfo = appointmentInfo;

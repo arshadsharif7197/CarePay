@@ -1,16 +1,15 @@
 package com.carecloud.carepay.practice.library.appointments.dialogs;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.ScheduleAppointmentActivity;
@@ -40,12 +39,11 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
 
     private Context context;
     private LayoutInflater inflater;
-    private View view;
     private AppointmentsResultModel appointmentsResultModel;
     private AppointmentsSlotsDTO appointmentsSlotsDTO;
     private AppointmentAvailabilityDTO appointmentAvailabilityDTO;
-    private EditText visitTypeEditText;
-    public static boolean isAppointmentAdded=false;
+    private TextView visitTypeTextView;
+    public static boolean isAppointmentAdded = false;
 
     /**
      * Constructor.
@@ -60,10 +58,12 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         this.context = context;
         this.appointmentsSlotsDTO = appointmentsSlotsDTO;
         this.appointmentAvailabilityDTO = appointmentAvailabilityDTO;
+
         inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        isAppointmentAdded=false;
+        isAppointmentAdded = false;
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,9 +72,10 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         onAddContentView(inflater);
     }
 
+    @SuppressLint("InflateParams")
     @Override
     protected void onAddContentView(LayoutInflater inflater) {
-        view = inflater.inflate(R.layout.dialog_request_appointment_summary, null);
+        View view = inflater.inflate(R.layout.dialog_request_appointment_summary, null);
         ((FrameLayout)findViewById(com.carecloud.carepay.practice.library.R.id.base_dialog_content_layout)).addView(view);
         inflateUIComponents(view);
     }
@@ -117,31 +118,28 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         appointmentPlaceNameTextView.setText(location.getName());
         CarePayTextView appointmentAddressTextView = (CarePayTextView)view.findViewById(R.id.provider_place_address);
         appointmentAddressTextView.setText(location.getAddress().getPlaceAddressString());
-        CarePayTextView appointmentNewPatientTextView = (CarePayTextView)view.findViewById(R.id.optionalTextView);
-        appointmentNewPatientTextView.setText(appointmentsResultModel.getMetadata().getLabel().getRequestAppointmentNewPatient());
+        CarePayTextView visitTypeLabel = (CarePayTextView)view.findViewById(R.id.visitTypeLabel);
+        visitTypeLabel.setText(appointmentsResultModel.getMetadata().getLabel().getVisitTypeHeading());
 
-        TextInputLayout reasonInputLayout = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.reasonTextInputLayout);
-        reasonInputLayout.setTag(appointmentsResultModel.getMetadata().getLabel().getVisitTypeHeading());
-
-        visitTypeEditText = (EditText)view.findViewById(R.id.reasonEditText);
-        visitTypeEditText.setTag(reasonInputLayout);
+        visitTypeTextView = (TextView)view.findViewById(R.id.reasonTextView);
+//        visitTypeTextView.setTag(reasonInputLayout);
 
         String visitReason = ((ScheduleAppointmentActivity)context).getSelectedVisitTypeDTO().getName();
         if (SystemUtil.isNotEmptyString(visitReason)) {
-            visitTypeEditText.setText(visitReason);
+            visitTypeTextView.setText(visitReason);
         }
 
-        SystemUtil.handleHintChange(visitTypeEditText, true);
-        visitTypeEditText.clearFocus();
+//        SystemUtil.handleHintChange(visitTypeTextView, true);
+//        visitTypeTextView.clearFocus();
 
-        visitTypeEditText.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                view.setFocusable(true);
-                view.setFocusableInTouchMode(true);
-                return false;
-            }
-        });
+//        visitTypeTextView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent event) {
+//                view.setFocusable(true);
+//                view.setFocusableInTouchMode(true);
+//                return false;
+//            }
+//        });
 
         //setDialogTitle("");
         setCancelImage(R.drawable.icn_arrow_up);
@@ -151,7 +149,7 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
     /**
      *Click listener for request appointment button
      */
-    View.OnClickListener requestAppointmentClickListener = new View.OnClickListener() {
+    private View.OnClickListener requestAppointmentClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             // Call request appointment endpoint from here
@@ -182,7 +180,7 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         appointmentJSONObj.addProperty("visit_reason_id", ((ScheduleAppointmentActivity)context).getSelectedVisitTypeDTO().getId());
         appointmentJSONObj.addProperty("resource_id", ((ScheduleAppointmentActivity)context).getSelectedResource().getResource().getId());
         appointmentJSONObj.addProperty("chief_complaint", ((ScheduleAppointmentActivity)context).getSelectedVisitTypeDTO().getName());
-        appointmentJSONObj.addProperty("comments", visitTypeEditText.getText().toString().trim());
+        appointmentJSONObj.addProperty("comments", visitTypeTextView.getText().toString().trim());
         appointmentJSONObj.add("patient", patientJSONObj);
 
         JsonObject makeAppointmentJSONObj = new JsonObject();

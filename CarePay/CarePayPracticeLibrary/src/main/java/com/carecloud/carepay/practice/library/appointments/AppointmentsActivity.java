@@ -111,6 +111,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         int viewId = view.getId();
 
         if (viewId == R.id.logoutTextview) {
+            findViewById(R.id.logoutTextview).setEnabled(false);
             Map<String, String> query = new HashMap<>();
             Map<String, String> headers = new HashMap<>();
             headers.put("x-api-key", HttpConstants.getApiStartKey());
@@ -118,6 +119,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
             WorkflowServiceHelper.getInstance().execute(appointmentsResultModel.getMetadata()
                     .getTransitions().getLogout(), logOutCall, query, headers);
         } else if (viewId == R.id.btnHome) {
+            findViewById(R.id.btnHome).setEnabled(false);
             WorkflowServiceHelper.getInstance().execute(appointmentsResultModel.getMetadata()
                     .getTransitions().getLogout(), homeCall);
         }
@@ -131,12 +133,14 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            findViewById(R.id.logoutTextview).setEnabled(true);
             AppointmentsActivity.this.finish();
             PracticeNavigationHelper.getInstance().navigateToWorkflow(AppointmentsActivity.this, workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            findViewById(R.id.logoutTextview).setEnabled(true);
             SystemUtil.showFaultDialog(AppointmentsActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -150,12 +154,14 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            findViewById(R.id.btnHome).setEnabled(true);
             AppointmentsActivity.this.finish();
             PracticeNavigationHelper.getInstance().navigateToWorkflow(AppointmentsActivity.this, workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            findViewById(R.id.btnHome).setEnabled(false);
             SystemUtil.showFaultDialog(AppointmentsActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

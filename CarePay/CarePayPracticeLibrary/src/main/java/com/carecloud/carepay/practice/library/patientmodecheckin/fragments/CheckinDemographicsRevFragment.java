@@ -65,12 +65,14 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            correctInformationButton.setEnabled(true);
             demographicProgressBar.setVisibility(View.GONE);
             PracticeNavigationHelper.getInstance().navigateToWorkflow(getContext(), workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            correctInformationButton.setEnabled(true);
             SystemUtil.showFaultDialog(getActivity());
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -146,11 +148,11 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
     @Override
     public void onResume() {
         super.onResume();
+        updateInformationUpdate.setEnabled(true);
         populateViewsFromModel();
     }
 
     @Override
-
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_insurance_review, container, false);
 
@@ -479,6 +481,7 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
     @Override
     public void onClick(View view) {
         if (view == correctInformationButton) {
+            correctInformationButton.setEnabled(false);
             Map<String, String> queries = new HashMap<>();
             queries.put("practice_mgmt", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
             queries.put("practice_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
@@ -497,6 +500,7 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
             WorkflowServiceHelper.getInstance().execute(transitionDTO, consentformcallback, demogrPayloadString, queries, header);
 
         } else if (view == updateInformationUpdate) {
+            updateInformationUpdate.setEnabled(false);
             // transition
             CheckinDemographicsFragment fragment = new CheckinDemographicsFragment();
             ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
