@@ -22,7 +22,7 @@ public class ApplicationMode {
 
     // use for seting practice maganement information
     private UserPracticeDTO userPracticeDTO;
-
+    private String patientId;
     public UserPracticeDTO getUserPracticeDTO() {
         return userPracticeDTO;
     }
@@ -63,5 +63,11 @@ public class ApplicationMode {
         this.cognitoDTO = cognitoDTO;
     }
 
+    public String getPatientId() {
+        return patientId;
+    }
 
+    public void setPatientId(String patientId) {
+        this.patientId = patientId;
+    }
 }
