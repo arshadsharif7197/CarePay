@@ -130,6 +130,7 @@ public class SigninActivity extends BasePracticeActivity {
             queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
             queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
             queryMap.put("patient_id", signinPatientModeDTOLocal.getPayload().getPatientModeLoginData().getPatientModeLoginDataMetadata().getPatientId());
+            ApplicationMode.getInstance().setPatientId(signinPatientModeDTOLocal.getPayload().getPatientModeLoginData().getPatientModeLoginDataMetadata().getPatientId());
             Map<String, String> headers = new HashMap<>();
             headers.put("transition", "false");
             TransitionDTO transitionDTO;
@@ -218,8 +219,13 @@ public class SigninActivity extends BasePracticeActivity {
         isEmptyEmail = true;
         isEmptyPassword = true;
 
-        //emailEditText.setText("practice@cc.com");
-        //passwordEditText.setText("Practice123!");
+        // TODO: 11/17/2016
+        emailEditText.setText("practice@cc.com");
+        passwordEditText.setText("Test123!");
+        if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            emailEditText.setText("jiz@jiz.com");
+            passwordEditText.setText("Test123!");
+        }
     }
 
     /**

@@ -153,7 +153,7 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
         queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
 
         AppointmentsResultModel appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
-        setPatientId(appointmentsResultModel.getPayload().getAppointments().get(0).getMetadata().getPatientId());
+        setPatientId(ApplicationMode.getInstance().getPatientId()==null?"":ApplicationMode.getInstance().getPatientId());
         TransitionDTO resourcesToSchedule = appointmentsResultModel.getMetadata().getLinks().getResourcesToSchedule();
         WorkflowServiceHelper.getInstance().execute(resourcesToSchedule, scheduleResourcesCallback, queryMap);
     }
