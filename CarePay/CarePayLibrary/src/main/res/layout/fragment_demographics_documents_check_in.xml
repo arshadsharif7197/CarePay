@@ -18,14 +18,6 @@
         android:layout_marginTop="@dimen/dimen_30dp"
         android:layout_marginBottom="@dimen/dimen_30dp"/>
 
-    <!--ScrollView
-        android:id="@+id/demographicsDocsScroll"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/top_bottom_scroll_padding"
-        android:layout_weight="1"
-        android:paddingTop="@dimen/top_bottom_scroll_padding"-->
-
         <LinearLayout
             style="@style/DemographicsDocsHeaderStyle"
             android:layout_width="match_parent"
@@ -62,49 +54,7 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone" />
 
-            <!--android.support.v7.widget.SwitchCompat
-                android:id="@+id/demographicsDocumentsInsuranceSwitch"
-                style="@style/DemographicsDocsLabelStyle"
-                android:layout_width="match_parent"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
-                android:checked="false"
-                android:text="@string/demogr_insurance_switch_text"
-                android:theme="@style/HaveHealthInsurance" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/demo_view_height"
-                android:layout_marginBottom="@dimen/divider_margin_bottom"
-                android:layout_marginTop="@dimen/divider_margin_top"
-                android:background="@color/light_gray" />
-
-            <LinearLayout
-                android:id="@+id/demographicsDocsInsHoldersContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:orientation="vertical"
-                android:visibility="gone" />
-
-            <View
-                android:id="@+id/demographicsDocsBottomView"
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:layout_marginTop="10dp" /-->
         </LinearLayout>
-
-    <!--/ScrollView-->
-
-    <!--TextView
-        android:id="@+id/demographicsDocumentsMultipleInsClickable"
-        style="@style/SigninSignupClickableTextView"
-        android:layout_width="match_parent"
-        android:layout_marginBottom="@dimen/demographics_docs_header_top_margin"
-        android:layout_marginEnd="7dp"
-        android:layout_marginTop="7dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:text="@string/demogr_docs_add_card" /-->
 
 
 </LinearLayout>

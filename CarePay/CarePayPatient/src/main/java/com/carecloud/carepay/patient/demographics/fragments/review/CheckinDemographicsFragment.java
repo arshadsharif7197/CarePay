@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.appointments.utils.CustomPopupNotification;
@@ -182,7 +183,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
 
         formatEditText();
-
+        ((ScrollView)view.findViewById(R.id.adddemoScrollview)).smoothScrollTo(0,0);
         return view;
     }
 
@@ -723,17 +724,17 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             }
         } else if (view == selectGender) {
             selectedDataArray = 1;
-            final String title = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsTitleSelectGender();
+            final String title = globalLabelsMetaDTO.getDemographicsTitleSelectGender();
             showAlertDialogWithListview(gender, title, cancelLabel);
 
         } else if (view == raceDataTextView) {
             selectedDataArray = 2;
-            final String title = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsTitleSelectRace();
+            final String title = globalLabelsMetaDTO.getDemographicsTitleSelectRace();
             showAlertDialogWithListview(race, title, cancelLabel);
 
         } else if (view == ethnicityDataTextView) {
             selectedDataArray = 3;
-            final String title = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsTitleSelectEthnicity();
+            final String title = globalLabelsMetaDTO.getDemographicsTitleSelectEthnicity();
             showAlertDialogWithListview(ethnicity, title, cancelLabel);
 
         }

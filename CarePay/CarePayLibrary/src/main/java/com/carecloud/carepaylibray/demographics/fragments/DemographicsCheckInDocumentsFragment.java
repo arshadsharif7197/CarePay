@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -39,7 +38,6 @@ public class DemographicsCheckInDocumentsFragment extends Fragment {
 
     private FragmentManager                        fm;
     private View                                   view;
-    private ScrollView                             mainScrollView;
     private FrameLayout                            idCardContainer;
     private DemographicIdDocPayloadDTO             demPayloadIdDocDTO;
     private DemographicMetadataEntityIdDocsDTO     idDocsMetaDTO;
@@ -58,8 +56,6 @@ public class DemographicsCheckInDocumentsFragment extends Fragment {
         // create the view
         view = inflater.inflate(R.layout.fragment_demographics_documents_check_in, container, false);
 
-        // fetch the scroll view
-        mainScrollView = (ScrollView) view.findViewById(R.id.demographicsDocsScroll);
 
         initializeUIFields();
 

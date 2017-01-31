@@ -72,6 +72,10 @@ public class DemographicLabelsDTO {
     @Expose
     private String demographicsUpdateProfilePhotoLink;
 
+    @SerializedName("demographics_drivers_license_add_state_label")
+    @Expose
+    private String demographicsDriversLicenseAddStateLabel;
+
     @SerializedName("demographics_update_email_and_password_link")
     @Expose
     private String demographicsUpdateEmailAndPasswordLink;
@@ -296,7 +300,8 @@ public class DemographicLabelsDTO {
      * @return The demographicsUpdateButton
      */
     public String getDemographicsUpdateButton() {
-        return demographicsUpdateButton;
+
+        return StringUtil.getLabelForView(demographicsUpdateButton);
     }
 
     /**
@@ -310,7 +315,7 @@ public class DemographicLabelsDTO {
      * @return The demographicsUpdateProfilePhotoLink
      */
     public String getDemographicsUpdateProfilePhotoLink() {
-        return demographicsUpdateProfilePhotoLink;
+        return StringUtil.getLabelForView(demographicsUpdateProfilePhotoLink);
     }
 
     /**
@@ -324,7 +329,7 @@ public class DemographicLabelsDTO {
      * @return The demographicsUpdateEmailAndPasswordLink
      */
     public String getDemographicsUpdateEmailAndPasswordLink() {
-        return demographicsUpdateEmailAndPasswordLink;
+        return StringUtil.getLabelForView(demographicsUpdateEmailAndPasswordLink);
     }
 
     /**
@@ -338,8 +343,7 @@ public class DemographicLabelsDTO {
      * @return The demographicsAddressSection
      */
     public String getDemographicsAddressSection() {
-        return StringUtil.isNullOrEmpty(demographicsAddressSection) ?
-                CarePayConstants.NOT_DEFINED : demographicsAddressSection;
+        return StringUtil.getLabelForView(demographicsAddressSection);
     }
 
     /**
@@ -353,8 +357,7 @@ public class DemographicLabelsDTO {
      * @return The demographicsDetailsSection
      */
     public String getDemographicsDetailsSection() {
-        return StringUtil.isNullOrEmpty(demographicsDetailsSection) ?
-                CarePayConstants.NOT_DEFINED : demographicsDetailsSection;
+        return StringUtil.getLabelForView(demographicsDetailsSection);
     }
 
     /**
@@ -368,8 +371,7 @@ public class DemographicLabelsDTO {
      * @return The demographicsDocumentsSection
      */
     public String getDemographicsDocumentsSection() {
-        return StringUtil.isNullOrEmpty(demographicsDocumentsSection) ?
-                CarePayConstants.NOT_DEFINED : demographicsDocumentsSection;
+        return StringUtil.getLabelForView(demographicsDocumentsSection);
     }
 
     /**
@@ -383,8 +385,7 @@ public class DemographicLabelsDTO {
      * @return The demographicsAllSetSection
      */
     public String getDemographicsAllSetSection() {
-        return StringUtil.isNullOrEmpty(demographicsAllSetSection) ?
-                CarePayConstants.NOT_DEFINED : demographicsAllSetSection;
+        return StringUtil.getLabelForView(demographicsAllSetSection);
     }
 
     /**
@@ -398,7 +399,7 @@ public class DemographicLabelsDTO {
      * @return The demographicsAddAnotherInsuranceLink
      */
     public String getDemographicsAddAnotherInsuranceLink() {
-        return demographicsAddAnotherInsuranceLink;
+        return StringUtil.getLabelForView(demographicsAddAnotherInsuranceLink);
     }
 
     /**
@@ -409,7 +410,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsNext() {
-        return StringUtil.isNullOrEmpty(demographicsNext) ? CarePayConstants.NOT_DEFINED : demographicsNext;
+        return StringUtil.getLabelForView(demographicsNext);
     }
 
     public void setDemographicsNext(String demographicsNext) {
@@ -417,8 +418,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsAddressHeader() {
-        return StringUtil.isNullOrEmpty(demographicsAddressHeader) ?
-                CarePayConstants.NOT_DEFINED : demographicsAddressHeader;
+        return StringUtil.getLabelForView(demographicsAddressHeader);
     }
 
     public void setDemographicsAddressHeader(String demographicsAddressHeader) {
@@ -426,8 +426,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsAddressSubheader() {
-        return StringUtil.isNullOrEmpty(demographicsAddressSubheader) ?
-                CarePayConstants.NOT_DEFINED : demographicsAddressSubheader;
+        return StringUtil.getLabelForView(demographicsAddressSubheader);
     }
 
     public void setDemographicsAddressSubheader(String demographicsAddressSubheader) {
@@ -435,8 +434,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsRequired() {
-        return StringUtil.isNullOrEmpty(demographicsRequired)
-                ? CarePayConstants.NOT_DEFINED : demographicsRequired;
+        return StringUtil.getLabelForView(demographicsRequired);
     }
 
     public void setDemographicsRequired(String demographicsRequired) {
@@ -444,8 +442,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsDetailsHeader() {
-        return StringUtil.isNullOrEmpty(demographicsDetailsHeader) ?
-                CarePayConstants.NOT_DEFINED : demographicsDetailsHeader;
+        return StringUtil.getLabelForView(demographicsDetailsHeader);
     }
 
     public void setDemographicsDetailsHeader(String demographicsDetailsHeader) {
@@ -453,8 +450,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsDetailsSubheader() {
-        return StringUtil.isNullOrEmpty(demographicsDetailsSubheader) ?
-                CarePayConstants.NOT_DEFINED : demographicsDetailsSubheader;
+        return StringUtil.getLabelForView(demographicsDetailsSubheader);
     }
 
     public void setDemographicsDetailsSubheader(String demographicsDetailsSubheader) {
@@ -462,8 +458,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsDetailsDobHint() {
-        return StringUtil.isNullOrEmpty(demographicsDetailsDobHint) ?
-                CarePayConstants.NOT_DEFINED : demographicsDetailsDobHint;
+        return StringUtil.getLabelForView(demographicsDetailsDobHint);
     }
 
     public void setDemographicsDetailsDobHint(String demographicsDetailsDobHint) {
@@ -471,7 +466,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsChooseLabel() {
-        return StringUtil.isNullOrEmpty(demographicsChooseLabel) ? CarePayConstants.NOT_DEFINED : demographicsChooseLabel;
+        return StringUtil.getLabelForView(demographicsChooseLabel);
     }
 
     public void setDemographicsChooseLabel(String demographicsChooseLabel) {
@@ -479,8 +474,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsProfileCaptureCaption() {
-        return StringUtil.isNullOrEmpty(demographicsProfileCaptureCaption) ?
-                CarePayConstants.NOT_DEFINED : demographicsProfileCaptureCaption;
+        return StringUtil.getLabelForView(demographicsProfileCaptureCaption);
     }
 
     public void setDemographicsProfileCaptureCaption(String demographicsProfileCaptureCaption) {
@@ -488,8 +482,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsProfileReCaptureCaption() {
-        return StringUtil.isNullOrEmpty(demographicsProfileReCaptureCaption) ?
-                CarePayConstants.NOT_DEFINED : demographicsProfileReCaptureCaption;
+        return StringUtil.getLabelForView(demographicsProfileReCaptureCaption);
     }
 
     public void setDemographicsProfileReCaptureCaption(String demographicsProfileReCaptureCaption) {
@@ -497,8 +490,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsDetailsAllergiesSection() {
-        return StringUtil.isNullOrEmpty(demographicsDetailsAllergiesSection) ?
-                CarePayConstants.NOT_DEFINED : demographicsDetailsAllergiesSection;
+        return StringUtil.getLabelForView(demographicsDetailsAllergiesSection);
     }
 
     public void setDemographicsDetailsAllergiesSection(String demographicsDetailsAllergiesSection) {
@@ -506,8 +498,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsDetailsOptionalHint() {
-        return StringUtil.isNullOrEmpty(demographicsDetailsOptionalHint) ?
-                CarePayConstants.NOT_DEFINED : demographicsDetailsOptionalHint;
+        return StringUtil.getLabelForView(demographicsDetailsOptionalHint);
     }
 
     public void setDemographicsDetailsOptionalHint(String demographicsDetailsOptionalHint) {
@@ -515,8 +506,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsDetailsMedicationsSection() {
-        return StringUtil.isNullOrEmpty(demographicsDetailsMedicationsSection) ?
-                CarePayConstants.NOT_DEFINED : demographicsDetailsMedicationsSection;
+        return StringUtil.getLabelForView(demographicsDetailsMedicationsSection);
     }
 
     public void setDemographicsDetailsMedicationsSection(String demographicsDetailsMedicationsSection) {
@@ -524,8 +514,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsDetailAllergyLabel() {
-        return StringUtil.isNullOrEmpty(demographicsDetailAllergyLabel) ?
-                CarePayConstants.NOT_DEFINED : demographicsDetailAllergyLabel;
+        return StringUtil.getLabelForView(demographicsDetailAllergyLabel);
     }
 
     public void setDemographicsDetailAllergyLabel(String demographicsDetailAllergyLabel) {
@@ -533,8 +522,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsDetailMedicationLabel() {
-        return StringUtil.isNullOrEmpty(demographicsDetailMedicationLabel) ?
-                CarePayConstants.NOT_DEFINED : demographicsDetailMedicationLabel;
+        return StringUtil.getLabelForView(demographicsDetailMedicationLabel);
     }
 
     public void setDemographicsDetailMedicationLabel(String demographicsDetailMedicationLabel) {
@@ -542,8 +530,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsDetailsAllergyAddUnlistedLabel() {
-        return StringUtil.isNullOrEmpty(demographicsDetailsAllergyAddUnlistedLabel) ?
-                CarePayConstants.NOT_DEFINED : demographicsDetailsAllergyAddUnlistedLabel;
+        return StringUtil.getLabelForView(demographicsDetailsAllergyAddUnlistedLabel);
     }
 
     public void setDemographicsDetailsAllergyAddUnlistedLabel(String demographicsDetailsAllergyAddUnlistedLabel) {
@@ -551,8 +538,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsDetailsMedAddUnlistedLabel() {
-        return StringUtil.isNullOrEmpty(demographicsDetailsMedAddUnlistedLabel) ?
-                CarePayConstants.NOT_DEFINED : demographicsDetailsMedAddUnlistedLabel;
+        return StringUtil.getLabelForView(demographicsDetailsMedAddUnlistedLabel);
     }
 
     public void setDemographicsDetailsMedAddUnlistedLabel(String demographicsDetailsMedAddUnlistedLabel) {
@@ -560,8 +546,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsDocumentsSwitchLabel() {
-        return StringUtil.isNullOrEmpty(demographicsDocumentsSwitchLabel) ?
-                CarePayConstants.NOT_DEFINED : demographicsDocumentsSwitchLabel;
+        return StringUtil.getLabelForView(demographicsDocumentsSwitchLabel);
     }
 
     public void setDemographicsDocumentsSwitchLabel(String demographicsDocumentsSwitchLabel) {
@@ -569,8 +554,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsDocumentsHeader() {
-        return StringUtil.isNullOrEmpty(demographicsDocumentsHeader) ?
-                CarePayConstants.NOT_DEFINED : demographicsDocumentsHeader;
+        return StringUtil.getLabelForView(demographicsDocumentsHeader);
     }
 
     public void setDemographicsDocumentsHeader(String demographicsDocumentsHeader) {
@@ -578,8 +562,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsDocumentsSubheader() {
-        return StringUtil.isNullOrEmpty(demographicsDocumentsSubheader) ?
-                CarePayConstants.NOT_DEFINED : demographicsDocumentsSubheader;
+        return StringUtil.getLabelForView(demographicsDocumentsSubheader);
     }
 
     public void setDemographicsDocumentsSubheader(String demographicsDocumentsSubheader) {
@@ -587,8 +570,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsDocumentsMultiInsLabel() {
-        return StringUtil.isNullOrEmpty(demographicsDocumentsMultiInsLabel) ?
-                CarePayConstants.NOT_DEFINED : demographicsDocumentsMultiInsLabel;
+        return StringUtil.getLabelForView(demographicsDocumentsMultiInsLabel);
     }
 
     public void setDemographicsDocumentsMultiInsLabel(String demographicsDocumentsMultiInsLabel) {
@@ -596,8 +578,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsDocumentsScanFrontLabel() {
-        return StringUtil.isNullOrEmpty(demographicsDocumentsScanFrontLabel) ?
-                CarePayConstants.NOT_DEFINED : demographicsDocumentsScanFrontLabel;
+        return StringUtil.getLabelForView(demographicsDocumentsScanFrontLabel);
     }
 
     public void setDemographicsDocumentsScanFrontLabel(String demographicsDocumentsScanFrontLabel) {
@@ -605,8 +586,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsDocumentsScanBackLabel() {
-        return StringUtil.isNullOrEmpty(demographicsDocumentsScanBackLabel) ?
-                CarePayConstants.NOT_DEFINED : demographicsDocumentsScanBackLabel;
+        return StringUtil.getLabelForView(demographicsDocumentsScanBackLabel);
     }
 
     public void setDemographicsDocumentsScanBackLabel(String demographicsDocumentsScanBackLabel) {
@@ -614,8 +594,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsDocumentsRescanFrontLabel() {
-        return StringUtil.isNullOrEmpty(demographicsDocumentsRescanFrontLabel) ?
-                CarePayConstants.NOT_DEFINED : demographicsDocumentsRescanFrontLabel;
+        return StringUtil.getLabelForView(demographicsDocumentsRescanFrontLabel);
     }
 
     public void setDemographicsDocumentsRescanFrontLabel(String demographicsDocumentsRescanFrontLabel) {
@@ -623,8 +602,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsDocumentsRescanBackLabel() {
-        return StringUtil.isNullOrEmpty(demographicsDocumentsRescanBackLabel) ?
-                CarePayConstants.NOT_DEFINED : demographicsDocumentsRescanBackLabel;
+        return StringUtil.getLabelForView(demographicsDocumentsRescanBackLabel);
     }
 
     public void setDemographicsDocumentsRescanBackLabel(String demographicsDocumentsRescanBackLabel) {
@@ -632,8 +610,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsCancelLabel() {
-        return StringUtil.isNullOrEmpty(demographicsCancelLabel) ?
-                CarePayConstants.NOT_DEFINED : demographicsCancelLabel;
+        return StringUtil.getLabelForView(demographicsCancelLabel);
     }
 
     public void setDemographicsCancelLabel(String demographicsCancelLabel) {
@@ -641,8 +618,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsTitleSelectState() {
-        return StringUtil.isNullOrEmpty(demographicsTitleSelectState) ?
-                CarePayConstants.NOT_DEFINED : demographicsTitleSelectState;
+        return StringUtil.getLabelForView(demographicsTitleSelectState);
     }
 
     public void setDemographicsTitleSelectState(String demographicsTitleSelectState) {
@@ -650,8 +626,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsTitleSelectPlan() {
-        return StringUtil.isNullOrEmpty(demographicsTitleSelectPlan) ?
-                CarePayConstants.NOT_DEFINED : demographicsTitleSelectPlan;
+        return StringUtil.getLabelForView(demographicsTitleSelectPlan);
     }
 
     public void setDemographicsTitleSelectPlan(String demographicsTitleSelectPlan) {
@@ -659,8 +634,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsTitleSelectProvider() {
-        return StringUtil.isNullOrEmpty(demographicsTitleSelectProvider) ?
-                CarePayConstants.NOT_DEFINED : demographicsTitleSelectProvider;
+        return StringUtil.getLabelForView(demographicsTitleSelectProvider);
     }
 
     public void setDemographicsTitleSelectProvider(String demographicsTitleSelectProvider) {
@@ -668,8 +642,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsTitleSelectGender() {
-        return StringUtil.isNullOrEmpty(demographicsTitleSelectGender) ?
-                CarePayConstants.NOT_DEFINED : demographicsTitleSelectGender;
+        return StringUtil.getLabelForView(demographicsTitleSelectGender);
     }
 
     public void setDemographicsTitleSelectGender(String demographicsTitleSelectGender) {
@@ -677,8 +650,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsTitleSelectEthnicity() {
-        return StringUtil.isNullOrEmpty(demographicsTitleSelectEthnicity) ?
-                CarePayConstants.NOT_DEFINED : demographicsTitleSelectEthnicity;
+        return StringUtil.getLabelForView(demographicsTitleSelectEthnicity);
     }
 
     public void setDemographicsTitleSelectEthnicity(String demographicsTitleSelectEthnicity) {
@@ -686,8 +658,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsTitleSelectRace() {
-        return StringUtil.isNullOrEmpty(demographicsTitleSelectRace) ?
-                CarePayConstants.NOT_DEFINED : demographicsTitleSelectRace;
+        return StringUtil.getLabelForView(demographicsTitleSelectRace);
     }
 
     public void setDemographicsTitleSelectRace(String demographicsTitleSelectRace) {
@@ -695,8 +666,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsTitleSelectIdType() {
-        return StringUtil.isNullOrEmpty(demographicsTitleSelectIdType) ?
-                CarePayConstants.NOT_DEFINED : demographicsTitleSelectIdType;
+        return StringUtil.getLabelForView(demographicsTitleSelectIdType);
     }
 
     public void setDemographicsTitleSelectIdType(String demographicsTitleSelectIdType) {
@@ -704,8 +674,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsDocumentsChoosePlanLabel() {
-        return StringUtil.isNullOrEmpty(demographicsDocumentsChoosePlanLabel) ?
-                CarePayConstants.NOT_DEFINED : demographicsDocumentsChoosePlanLabel;
+        return StringUtil.getLabelForView(demographicsDocumentsChoosePlanLabel);
     }
 
     public void setDemographicsDocumentsChoosePlanLabel(String demographicsDocumentsChoosePlanLabel) {
@@ -713,8 +682,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsDocumentsInsTypeLabel() {
-        return StringUtil.isNullOrEmpty(demographicsDocumentsInsTypeLabel) ?
-                CarePayConstants.NOT_DEFINED : demographicsDocumentsInsTypeLabel;
+        return StringUtil.getLabelForView(demographicsDocumentsInsTypeLabel);
     }
 
     public void setDemographicsDocumentsInsTypeLabel(String demographicsDocumentsInsTypeLabel) {
@@ -722,8 +690,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsTitleCardType() {
-        return StringUtil.isNullOrEmpty(demographicsTitleCardType) ?
-                CarePayConstants.NOT_DEFINED : demographicsTitleCardType;
+        return StringUtil.getLabelForView(demographicsTitleCardType);
     }
 
     public void setDemographicsTitleCardType(String demographicsTitleCardType) {
@@ -731,8 +698,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsAllSetHeader() {
-        return StringUtil.isNullOrEmpty(demographicsAllSetHeader) ?
-                CarePayConstants.NOT_DEFINED : demographicsAllSetHeader;
+        return StringUtil.getLabelForView(demographicsAllSetHeader);
     }
 
     public void setDemographicsAllSetHeader(String demographicsAllSetHeader) {
@@ -740,8 +706,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsAllSetGoButton() {
-        return StringUtil.isNullOrEmpty(demographicsAllSetGoButton) ?
-                CarePayConstants.NOT_DEFINED : demographicsAllSetGoButton;
+        return StringUtil.getLabelForView(demographicsAllSetGoButton);
     }
 
     public void setDemographicsAllSetGoButton(String demographicsAllSetGoButton) {
@@ -752,8 +717,7 @@ public class DemographicLabelsDTO {
      * @return The demographicsReviewToolbarTitle
      */
     public String getDemographicsReviewToolbarTitle() {
-        return StringUtil.isNullOrEmpty(demographicsReviewToolbarTitle) ?
-                CarePayConstants.NOT_DEFINED : demographicsReviewToolbarTitle;
+        return StringUtil.getLabelForView(demographicsReviewToolbarTitle);
     }
 
     /**
@@ -767,8 +731,7 @@ public class DemographicLabelsDTO {
      * @return The demographicsUpdateInsuranceToolbarTitle
      */
     public String getDemographicsUpdateInsuranceToolbarTitle() {
-        return StringUtil.isNullOrEmpty(demographicsUpdateInsuranceToolbarTitle) ?
-                CarePayConstants.NOT_DEFINED : demographicsUpdateInsuranceToolbarTitle;
+        return StringUtil.getLabelForView(demographicsUpdateInsuranceToolbarTitle);
     }
 
     /**
@@ -782,8 +745,7 @@ public class DemographicLabelsDTO {
      * @return The demographicsReviewUpdateButton
      */
     public String getDemographicsReviewUpdateButton() {
-        return StringUtil.isNullOrEmpty(demographicsReviewUpdateButton) ?
-                CarePayConstants.NOT_DEFINED : demographicsReviewUpdateButton;
+        return StringUtil.getLabelForView(demographicsReviewUpdateButton);
     }
 
     /**
@@ -797,8 +759,7 @@ public class DemographicLabelsDTO {
      * @return The demographicsInsuranceUpdateButton
      */
     public String getDemographicsInsuranceUpdateButton() {
-        return StringUtil.isNullOrEmpty(demographicsInsuranceUpdateButton) ?
-                CarePayConstants.NOT_DEFINED : demographicsInsuranceUpdateButton;
+        return StringUtil.getLabelForView(demographicsInsuranceUpdateButton);
     }
 
     /**
@@ -812,8 +773,7 @@ public class DemographicLabelsDTO {
      * @return The demographicsReviewCorrectButton
      */
     public String getDemographicsReviewCorrectButton() {
-        return StringUtil.isNullOrEmpty(demographicsReviewCorrectButton) ?
-                CarePayConstants.NOT_DEFINED : demographicsReviewCorrectButton;
+        return StringUtil.getLabelForView(demographicsReviewCorrectButton);
     }
 
     /**
@@ -827,8 +787,7 @@ public class DemographicLabelsDTO {
      * @return The demographicsUpdateInsuranceButton
      */
     public String getDemographicsUpdateInsuranceButton() {
-        return StringUtil.isNullOrEmpty(demographicsUpdateInsuranceButton) ?
-                CarePayConstants.NOT_DEFINED : demographicsUpdateInsuranceButton;
+        return StringUtil.getLabelForView(demographicsUpdateInsuranceButton);
     }
 
     /**
@@ -842,8 +801,7 @@ public class DemographicLabelsDTO {
      * @return The demographicsReviewPeronsonalinfoSection
      */
     public String getDemographicsReviewPeronsonalinfoSection() {
-        return StringUtil.isNullOrEmpty(demographicsReviewPeronsonalinfoSection) ?
-                CarePayConstants.NOT_DEFINED : demographicsReviewPeronsonalinfoSection;
+        return StringUtil.getLabelForView(demographicsReviewPeronsonalinfoSection);
     }
 
     /**
@@ -857,8 +815,7 @@ public class DemographicLabelsDTO {
      * @return The demographicsReviewScreenTitle
      */
     public String getDemographicsReviewScreenTitle() {
-        return StringUtil.isNullOrEmpty(demographicsReviewScreenTitle) ?
-                CarePayConstants.NOT_DEFINED : demographicsReviewScreenTitle;
+        return StringUtil.getLabelForView(demographicsReviewScreenTitle);
     }
 
     /**
@@ -872,8 +829,7 @@ public class DemographicLabelsDTO {
      * @return The demographicsUpadteInsuranceScreenTitle
      */
     public String getDemographicsUpdateInsuranceScreenTitle() {
-        return StringUtil.isNullOrEmpty(demographicsUpdateInsuranceScreenTitle) ?
-                CarePayConstants.NOT_DEFINED : demographicsUpdateInsuranceScreenTitle;
+        return StringUtil.getLabelForView(demographicsUpdateInsuranceScreenTitle);
     }
 
     /**
@@ -887,8 +843,7 @@ public class DemographicLabelsDTO {
      * @return The demographicsReviewScreenSubtitle
      */
     public String getDemographicsReviewScreenSubtitle() {
-        return StringUtil.isNullOrEmpty(demographicsReviewScreenSubtitle) ?
-                CarePayConstants.NOT_DEFINED : demographicsReviewScreenSubtitle;
+        return StringUtil.getLabelForView(demographicsReviewScreenSubtitle);
     }
 
     /**
@@ -902,8 +857,7 @@ public class DemographicLabelsDTO {
      * @return The demographicsHelathinsurance1Section
      */
     public String getDemographicsHealthinsurance1Section() {
-        return StringUtil.isNullOrEmpty(demographicsHealthinsurance1Section) ?
-                CarePayConstants.NOT_DEFINED : demographicsHealthinsurance1Section;
+        return StringUtil.getLabelForView(demographicsHealthinsurance1Section) ;
     }
 
     /**
@@ -917,8 +871,7 @@ public class DemographicLabelsDTO {
      * @return The demographicsHelathinsurance2Section
      */
     public String getDemographicsHealthinsurance2Section() {
-        return StringUtil.isNullOrEmpty(demographicsHealthinsurance2Section) ?
-                CarePayConstants.NOT_DEFINED : demographicsHealthinsurance2Section;
+        return StringUtil.getLabelForView(demographicsHealthinsurance2Section);
     }
 
     /**
@@ -932,8 +885,7 @@ public class DemographicLabelsDTO {
      * @return The demographicsHelathinsurance3Section
      */
     public String getDemographicsHealthinsurance3Section() {
-        return StringUtil.isNullOrEmpty(demographicsHealthinsurance3Section) ?
-                CarePayConstants.NOT_DEFINED : demographicsHealthinsurance3Section;
+        return StringUtil.getLabelForView(demographicsHealthinsurance3Section);
     }
 
     /**
@@ -947,8 +899,7 @@ public class DemographicLabelsDTO {
      * @return The demographicsUpdateDemographicTitle
      */
     public String getDemographicsUpdateDemographicTitle() {
-        return StringUtil.isNullOrEmpty(demographicsUpdateDemographicTitle) ?
-                CarePayConstants.NOT_DEFINED : demographicsUpdateDemographicTitle;
+        return StringUtil.getLabelForView(demographicsUpdateDemographicTitle);
     }
 
     /**
@@ -962,8 +913,7 @@ public class DemographicLabelsDTO {
      * @return The section title
      */
     public String getDemographicSectionTitle() {
-        return StringUtil.isNullOrEmpty(demographicSectionTitle) ?
-                CarePayConstants.NOT_DEFINED : demographicSectionTitle;
+        return StringUtil.getLabelForView(demographicSectionTitle);
     }
 
     /**
@@ -977,8 +927,7 @@ public class DemographicLabelsDTO {
      * @return The label
      */
     public String getDocumentsRemove() {
-        return StringUtil.isNullOrEmpty(documentsRemove) ?
-                CarePayConstants.NOT_DEFINED : documentsRemove;
+        return StringUtil.getLabelForView(documentsRemove);
 
     }
 
@@ -994,8 +943,7 @@ public class DemographicLabelsDTO {
       * @return The label
      */
     public String getDemographicsTakePhotoOption() {
-        return StringUtil.isNullOrEmpty(demographicsTakePhotoOption) ?
-                CarePayConstants.NOT_DEFINED : demographicsTakePhotoOption;
+        return StringUtil.getLabelForView(demographicsTakePhotoOption) ;
     }
 
     /**
@@ -1009,8 +957,7 @@ public class DemographicLabelsDTO {
      * @return The label
      */
     public String getDemographicsChooseFromLibraryOption() {
-        return StringUtil.isNullOrEmpty(demographicsChooseFromLibraryOption) ?
-                CarePayConstants.NOT_DEFINED : demographicsChooseFromLibraryOption;
+        return StringUtil.getLabelForView(demographicsChooseFromLibraryOption);
     }
 
     /**
@@ -1024,8 +971,7 @@ public class DemographicLabelsDTO {
      * @return The label
      */
     public String getDemographicsCaptureOptionsTitle() {
-        return StringUtil.isNullOrEmpty(demographicsCaptureOptionsTitle) ?
-                CarePayConstants.NOT_DEFINED : demographicsCaptureOptionsTitle;
+        return StringUtil.getLabelForView(demographicsCaptureOptionsTitle);
     }
 
     /**
@@ -1076,7 +1022,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsIdentityText() {
-        return demographicsIdentityText;
+        return StringUtil.getLabelForView(demographicsIdentityText);
     }
 
     public void setDemographicsIdentityText(String demographicsIdentityText) {
@@ -1084,7 +1030,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsMissingInformation() {
-        return demographicsMissingInformation;
+        return StringUtil.getLabelForView(demographicsMissingInformation);
     }
 
     public void setDemographicsMissingInformation(String demographicsMissingInformation) {
@@ -1092,7 +1038,7 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsHealthInsurance() {
-        return demographicsHealthInsurance;
+        return StringUtil.getLabelForView(demographicsHealthInsurance);
     }
 
     public void setDemographicsHealthInsurance(String demographicsHealthInsurance) {
@@ -1100,10 +1046,18 @@ public class DemographicLabelsDTO {
     }
 
     public String getDemographicsDriversLicenseNumber() {
-        return demographicsDriversLicenseNumber;
+        return StringUtil.getLabelForView(demographicsDriversLicenseNumber);
     }
 
     public void setDemographicsDriversLicenseNumber(String demographicsDriversLicenseNumber) {
         this.demographicsDriversLicenseNumber = demographicsDriversLicenseNumber;
+    }
+
+    public String getDemographicsDriversLicenseAddStateLabel() {
+        return StringUtil.getLabelForView(demographicsDriversLicenseAddStateLabel);
+    }
+
+    public void setDemographicsDriversLicenseAddStateLabel(String demographicsDriversLicenseAddStateLabel) {
+        this.demographicsDriversLicenseAddStateLabel = demographicsDriversLicenseAddStateLabel;
     }
 }
