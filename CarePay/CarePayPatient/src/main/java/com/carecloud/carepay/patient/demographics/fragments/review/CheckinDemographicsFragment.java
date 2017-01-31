@@ -272,12 +272,12 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
     private void initializeDocumentFragment(){
 
-        String tag = DemographicsCheckInDocumentsFragment.class.getSimpleName();
-        FragmentManager fm = getChildFragmentManager();
         demographicsDocumentsFragment = new DemographicsCheckInDocumentsFragment();
         demographicsDocumentsFragment.setIdDocsMetaDTO(idDocsMetaDTO);
         demographicsDocumentsFragment.setGlobalLabelsMetaDTO(globalLabelsMetaDTO);
         demographicsDocumentsFragment.setDemPayloadIdDocDTO(demographicIdDocPayloadDTO);
+        String tag = DemographicsCheckInDocumentsFragment.class.getSimpleName();
+        FragmentManager fm = getChildFragmentManager();
         fm.beginTransaction()
                 .replace(R.id.documentCapturer, demographicsDocumentsFragment, tag)
                 .commit();

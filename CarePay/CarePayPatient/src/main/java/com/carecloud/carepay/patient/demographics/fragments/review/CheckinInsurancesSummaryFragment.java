@@ -127,6 +127,10 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
         });
     }
 
+    /**
+     * Get the data payload
+     * @return the data payload
+     */
     public List<DemographicInsurancePayloadDTO> getInsurancePayloadDTOs() {
         // build the new payload
         insurancePayloadDTOs.clear();
