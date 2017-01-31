@@ -31,7 +31,7 @@
                     android:gravity="center"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/text_size_30sp"
-                    app:customAssetFont="proxima_nova_regular" />
+                    app:customAssetFont="proxima_nova_semi_bold" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/appointment_time"
@@ -41,9 +41,9 @@
                     android:layout_marginTop="3dp"
                     android:gravity="center"
                     android:textColor="@color/white_opacity_60"
-                    android:textSize="@dimen/text_size_30sp"
+                    android:textSize="@dimen/text_size_40sp"
                     android:textStyle="bold"
-                    app:customAssetFont="gotham_rounded_medium" />
+                    app:customAssetFont="gotham_rounded_bold" />
             </LinearLayout>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
