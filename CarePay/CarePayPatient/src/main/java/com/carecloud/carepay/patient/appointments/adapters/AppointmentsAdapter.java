@@ -106,7 +106,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             boolean isPending = item.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.PENDING);
             boolean isCheckedIn = item.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.CHECKED_IN);
             boolean isCanceled = item.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.CANCELLED);
-            boolean isRequested = item.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.REQUESTED);
+            final boolean isRequested = item.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.REQUESTED);
 
             if (sectionHeaderTitle.equals(appointmentLabels.getUpcomingAppointmentsHeading())) {
                 if (isCheckedIn) {
