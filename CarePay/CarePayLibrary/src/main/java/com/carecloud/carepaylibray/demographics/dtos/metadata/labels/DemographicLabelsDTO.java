@@ -48,6 +48,9 @@ public class DemographicLabelsDTO {
     @SerializedName("demographics_healthinsurance_1_section")
     @Expose
     private String demographicsHealthinsurance1Section;
+    @SerializedName("demographics_missing_information")
+    @Expose
+    private String demographicsMissingInformation;
     @SerializedName("demographics_healthinsurance_2_section")
     @Expose
     private String demographicsHealthinsurance2Section;
@@ -72,6 +75,10 @@ public class DemographicLabelsDTO {
     @SerializedName("demographics_update_email_and_password_link")
     @Expose
     private String demographicsUpdateEmailAndPasswordLink;
+
+    @SerializedName("demographics_drivers_license_number")
+    @Expose
+    private String demographicsDriversLicenseNumber;
 
     @SerializedName("demographics_address_section")
     @Expose
@@ -132,6 +139,10 @@ public class DemographicLabelsDTO {
     @SerializedName("demographics_details_recapture_picture_caption")
     @Expose
     private String demographicsProfileReCaptureCaption;
+
+    @SerializedName("demographics_health_insurance")
+    @Expose
+    private String demographicsHealthInsurance;
 
     @SerializedName("demographics_details_allergies_section")
     @Expose
@@ -1070,5 +1081,29 @@ public class DemographicLabelsDTO {
 
     public void setDemographicsIdentityText(String demographicsIdentityText) {
         this.demographicsIdentityText = demographicsIdentityText;
+    }
+
+    public String getDemographicsMissingInformation() {
+        return demographicsMissingInformation;
+    }
+
+    public void setDemographicsMissingInformation(String demographicsMissingInformation) {
+        this.demographicsMissingInformation = demographicsMissingInformation;
+    }
+
+    public String getDemographicsHealthInsurance() {
+        return demographicsHealthInsurance;
+    }
+
+    public void setDemographicsHealthInsurance(String demographicsHealthInsurance) {
+        this.demographicsHealthInsurance = demographicsHealthInsurance;
+    }
+
+    public String getDemographicsDriversLicenseNumber() {
+        return demographicsDriversLicenseNumber;
+    }
+
+    public void setDemographicsDriversLicenseNumber(String demographicsDriversLicenseNumber) {
+        this.demographicsDriversLicenseNumber = demographicsDriversLicenseNumber;
     }
 }

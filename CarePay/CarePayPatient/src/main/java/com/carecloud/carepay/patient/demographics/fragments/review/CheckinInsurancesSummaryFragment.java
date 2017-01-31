@@ -48,8 +48,7 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
     private List<DemographicInsurancePayloadDTO> insurancePayloadDTOs;
     private DemographicDTO                       demographicDTO;
 
-    private Button      addInsuranceaInfoButton;
-    private ProgressBar demographicProgressBar;
+//    private Button      addInsuranceaInfoButton;
 
     private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
     private DemographicLabelsDTO                   globalLabelsMetaDTO;
@@ -60,7 +59,6 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
     private boolean                    isThirdCardAdded;
     private LinearLayout               insContainersWrapper;
     private InsuranceWrapperCollection wrapperCollection1;
-    private ScrollView                 detailsScrollView;
 
     public CheckinInsurancesSummaryFragment() {
     }
@@ -74,11 +72,6 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
 
         fm = getChildFragmentManager();
 
-        // hide the toolbar in practice app
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.healthinsurance_review_toolbar);
-        toolbar.setVisibility(View.GONE);
-
-        demographicProgressBar.setVisibility(View.GONE);
         setCardContainers();
 
         setButtons();
@@ -91,11 +84,9 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
     }
 
     private void initViewsHandlers() {
-        demographicProgressBar = (ProgressBar) view.findViewById(R.id.demographichealthinsuranceReviewProgressBar);
-        detailsScrollView = (ScrollView) view.findViewById(R.id.updateInsuranceDocsScroll);
-        healthInsuranceTitleTextView = (TextView) view.findViewById(R.id.demographicsDocsHeaderTitle);
-        healthInsuranceTitleTextView.setText(globalLabelsMetaDTO.getDemographicsUpdateInsuranceScreenTitle());
-        addInsuranceaInfoButton = (Button) view.findViewById(R.id.demographicsDocsNextButton);
+        healthInsuranceTitleTextView = (TextView) view.findViewById(R.id.insurancesTitleLabel);
+        healthInsuranceTitleTextView.setText(globalLabelsMetaDTO.getDemographicsUpdateInsuranceToolbarTitle().toUpperCase());
+        //addInsuranceaInfoButton = (Button) view.findViewById(R.id.demographicsDocsNextButton);
         haveMultipleHealthInsuranceTextView = (TextView) view.findViewById(R.id.multipleInsurancesClickable);
         insContainersWrapper = (LinearLayout) view.findViewById(R.id.insuranceHoldersContainer);
         doYouHaveInsuranceSwitch = (SwitchCompat) view.findViewById(R.id.demographicsInsuranceSwitch);
@@ -127,13 +118,6 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
     }
 
     private void setButtons() {
-        addInsuranceaInfoButton.setText(globalLabelsMetaDTO.getDemographicsInsuranceUpdateButton().toUpperCase());
-        addInsuranceaInfoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                postUpdates();
-            }
-        });
         haveMultipleHealthInsuranceTextView.setText(globalLabelsMetaDTO.getDemographicsDocumentsMultiInsLabel());
         haveMultipleHealthInsuranceTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,9 +127,7 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
         });
     }
 
-    private void postUpdates() {
-        demographicProgressBar.setVisibility(View.VISIBLE);
-
+    public List<DemographicInsurancePayloadDTO> getInsurancePayloadDTOs() {
         // build the new payload
         insurancePayloadDTOs.clear();
         for (DemographicInsurancePayloadDTO payloadDTO : wrapperCollection1.exportPayloadsAsList()) {
@@ -153,21 +135,7 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
                 insurancePayloadDTOs.add(payloadDTO);
             }
         }
-        DemographicPayloadDTO postPayloadModel = new DemographicPayloadDTO();
-        postPayloadModel.setInsurances(insurancePayloadDTOs);
-        demographicDTO.getPayload().getDemographics().getPayload().setInsurances(insurancePayloadDTOs);
-
-
-        final Gson gson = new Gson();
-        ((NewReviewDemographicsActivity) getActivity()).resetDemographicDTO(gson.toJson(demographicDTO));
-
-        // move to demographics review
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        CheckinDemographicsRevFragment demInsRevFrag = (CheckinDemographicsRevFragment) fm.findFragmentByTag(CheckinDemographicsRevFragment.class.getSimpleName());
-        if (demInsRevFrag == null) {
-            demInsRevFrag = new CheckinDemographicsRevFragment();
-        }
-        ((NewReviewDemographicsActivity) getActivity()).navigateToFragment(demInsRevFrag, true);
+        return insurancePayloadDTOs;
     }
 
     private boolean isInsuaranceNonTrivial(DemographicInsurancePayloadDTO insModel) {
@@ -245,10 +213,15 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
 
     protected void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(), healthInsuranceTitleTextView);
-        setProximaNovaRegularTypeface(getActivity(),
-                                      (TextView) view.findViewById(R.id.demographicsDocsHeaderSubtitle));
+//        setProximaNovaRegularTypeface(getActivity(),
+//                                      (TextView) view.findViewById(R.id.demographicsDocsHeaderSubtitle));
         setProximaNovaRegularTypeface(getActivity(),
                                       (TextView) view.findViewById(R.id.demographicsInsuranceSwitch));
-        setGothamRoundedMediumTypeface(getActivity(), addInsuranceaInfoButton);
+ //       setGothamRoundedMediumTypeface(getActivity(), addInsuranceaInfoButton);
     }
+
+    public void setDemographicDTO(DemographicDTO demographicDTO) {
+        this.demographicDTO = demographicDTO;
+    }
+
 }

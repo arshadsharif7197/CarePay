@@ -5,37 +5,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="0dp"
+    android:layout_margin="0dp"
     android:focusable="true"
     android:focusableInTouchMode="true">
 
-    <include layout="@layout/toolbar_health_insurance" />
-
-    <ProgressBar
-        android:id="@+id/demographichealthinsuranceReviewProgressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-8dp"
-        android:indeterminate="true"/>
 
     <ScrollView
         android:id="@+id/updateInsuranceDocsScroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:padding="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
         android:layout_marginBottom="@dimen/top_bottom_scroll_padding"
         android:paddingTop="@dimen/top_bottom_scroll_padding">
 
         <LinearLayout
             style="@style/DemographicsDocsHeaderStyle"
             android:layout_height="wrap_content"
+            android:padding="0dp"
+            android:layout_margin="0dp"
+            android:layout_width="match_parent"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/insurancesTitleLabel"
                 style="@style/reviewDemographicBlue."
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textAlignment="textStart"
                 android:layout_marginTop="@dimen/dimen_36dp" />
 
 
@@ -43,6 +43,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="0dp"
+            android:layout_margin="0dp"
             android:orientation="vertical">
 
 
@@ -56,7 +58,6 @@
                 style="@style/DemographicsDocsLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
-                android:layout_marginStart="14dp"
                 android:checked="false"
                 android:layout_marginEnd="15dp"
                 android:theme="@style/HaveHealthInsurance"
@@ -70,27 +71,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
+                android:padding="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
                 android:orientation="vertical"
                 android:visibility="gone" />
-
-
-           <!-- <FrameLayout
-                android:id="@+id/insuranceDocument1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"/>
-            <FrameLayout
-                android:id="@+id/insuranceDocument2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"/>
-
-            <FrameLayout
-                android:id="@+id/insuranceDocument3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:visibility="gone"/>-->
 
 
             <View
@@ -108,11 +93,6 @@
         android:layout_width="match_parent"
         android:layout_marginBottom="@dimen/demographics_docs_header_top"
         android:layout_marginEnd="@dimen/demo_scorllview_margin_right_left" />
-    <Button
-        android:id="@+id/demographicsDocsNextButton"
-        android:layout_width="match_parent"
-        android:layout_height="52.0dp"
-        android:background="@drawable/language_button_selector"
-        android:textColor="@color/white" />
+
 
 </LinearLayout>

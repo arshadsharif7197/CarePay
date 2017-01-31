@@ -1,10 +1,10 @@
 package com.carecloud.carepay.patient.demographics.fragments.review;
 
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -28,15 +28,20 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.appointments.utils.CustomPopupNotification;
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.demographics.activities.NewReviewDemographicsActivity;
-import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsDocumentsFragmentWthWrapper;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
@@ -67,14 +72,16 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class CheckinDemographicsFragment extends DocumentScannerFragment implements View.OnClickListener {
 
     private static final String LOG_TAG = CheckinDemographicsFragment.class.getSimpleName();
     int selectedDataArray;
-    private Button buttonAddDemographicInfo;
+    private Button buttonConfirmData;
     private View view;
     private String[] gender;
     private String[] race;
@@ -90,6 +97,8 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     private DemographicIdDocPayloadDTO demographicIdDocPayloadDTO;
     private DemographicDTO demographicDTO;
 
+    private CheckinInsurancesSummaryFragment checkinInsurancesSummaryFragment;
+    private DemographicsCheckInDocumentsFragment demographicsDocumentsFragment;
     //profile image
     private ImageView profileImageview;
     private Button updateProfileImageButton;
@@ -189,7 +198,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             demographicPersDetailsPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
             demographicAddressPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getAddress();
             int size = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().size();
-            for (int i = 0; i > size; i++) {
+            for (int i = 0; i < size; i++) {
                 demographicIdDocPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(i);
             }
         }
@@ -234,7 +243,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         demographicProgressBar = (ProgressBar) view.findViewById(R.id.demographicReviewProgressBar);
         demographicProgressBar.setVisibility(View.GONE);
 
-        buttonAddDemographicInfo = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
+        buttonConfirmData = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
 
 
         raceDataTextView = (TextView) view.findViewById(R.id.raceListDataTextView);
@@ -265,7 +274,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
         String tag = DemographicsCheckInDocumentsFragment.class.getSimpleName();
         FragmentManager fm = getChildFragmentManager();
-        DemographicsCheckInDocumentsFragment demographicsDocumentsFragment = new DemographicsCheckInDocumentsFragment();
+        demographicsDocumentsFragment = new DemographicsCheckInDocumentsFragment();
         demographicsDocumentsFragment.setIdDocsMetaDTO(idDocsMetaDTO);
         demographicsDocumentsFragment.setGlobalLabelsMetaDTO(globalLabelsMetaDTO);
         demographicsDocumentsFragment.setDemPayloadIdDocDTO(demographicIdDocPayloadDTO);
@@ -278,10 +287,8 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     private void initializeInsurancesFragment(){
         String tag = CheckinInsurancesSummaryFragment.class.getSimpleName();
         FragmentManager fm = getChildFragmentManager();
-        CheckinInsurancesSummaryFragment checkinInsurancesSummaryFragment = new CheckinInsurancesSummaryFragment();
-        demographicsDocumentsFragment.setIdDocsMetaDTO(idDocsMetaDTO);
-        demographicsDocumentsFragment.setGlobalLabelsMetaDTO(globalLabelsMetaDTO);
-        demographicsDocumentsFragment.setDemPayloadIdDocDTO(demographicIdDocPayloadDTO);
+        checkinInsurancesSummaryFragment = new CheckinInsurancesSummaryFragment();
+        checkinInsurancesSummaryFragment.setDemographicDTO(demographicDTO);
         fm.beginTransaction()
                 .replace(R.id.insuranceCapturer, checkinInsurancesSummaryFragment, tag)
                 .commit();
@@ -317,8 +324,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         firstNameText.setHint(persDetailsMetaDTO.properties.firstName.getLabel());
         lastNameText.setHint(persDetailsMetaDTO.properties.lastName.getLabel());
         middleNameText.setHint(persDetailsMetaDTO.properties.middleName.getLabel());
-
-        updateProfileImageButton.setText(globalLabelsMetaDTO.getDemographicsProfileReCaptureCaption());
+        updateProfileImageButton.setText(globalLabelsMetaDTO.getDemographicsProfileReCaptureCaption().toUpperCase());
         reviewTitleTextView.setText(globalLabelsMetaDTO.getDemographicsReviewScreenTitle());
         reviewSubtitileTextView.setText(globalLabelsMetaDTO.getDemographicsReviewScreenSubtitle());
         peronalInfoSectionTextview.setText(globalLabelsMetaDTO.getDemographicsReviewPeronsonalinfoSection().toUpperCase());
@@ -348,8 +354,8 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         raceDataTextView.setOnClickListener(this);
 
         raceLabelTextView.setText(persDetailsMetaDTO.properties.primaryRace.getLabel());
-        buttonAddDemographicInfo.setOnClickListener(this);
-        buttonAddDemographicInfo.setText(globalLabelsMetaDTO.getDemographicsUpdateButton().toUpperCase());
+        buttonConfirmData.setOnClickListener(this);
+        buttonConfirmData.setText(globalLabelsMetaDTO.getDemographicsReviewCorrectButton().toUpperCase());
 
     }
 
@@ -657,10 +663,45 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
     }
 
+    private void openNextFragment(){
+        Map<String, String> queries = new HashMap<>();
+        queries.put("practice_mgmt", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
+        queries.put("practice_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
+        queries.put("appointment_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId());
+
+        Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
+        header.put("transition", "true");
+
+        Gson gson = new Gson();
+        String demogrPayloadString = gson.toJson(demographicDTO.getPayload().getDemographics().getPayload());
+        TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getUpdateDemographics();
+        ApplicationPreferences.Instance.saveObjectToSharedPreference(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE,
+                demographicDTO.getPayload().getDemographics().getPayload().getAddress());
+        WorkflowServiceHelper.getInstance().execute(transitionDTO, consentformcallback, demogrPayloadString, queries, header);
+    }
+
+    private WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            demographicProgressBar.setVisibility(View.GONE);
+            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            SystemUtil.showFaultDialog(getActivity());
+            Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
     @Override
     public void onClick(View view) {
         String cancelLabel = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsCancelLabel();
-        if (view == buttonAddDemographicInfo) {
+        if (view == buttonConfirmData) {
 
             //   openNewFragment();
             if (isAllFieldsValid()) {
@@ -671,12 +712,15 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 //                postUpdates();
 
                 // next
-                openNewFragment();
+                openNextFragment();
 
                 // hide the keyboard
                 SystemUtil.hideSoftKeyboard(getActivity());
+            } else {
+                CustomPopupNotification popup = new CustomPopupNotification(getActivity(), getActivity().getWindow().getCurrentFocus(),
+                        globalLabelsMetaDTO.getDemographicsMissingInformation(), CustomPopupNotification.TYPE_ERROR_NOTIFICATION);
+                    popup.showPopWindow();
             }
-
         } else if (view == selectGender) {
             selectedDataArray = 1;
             final String title = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsTitleSelectGender();
@@ -823,7 +867,14 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         Gson gson = new Gson();
         ((NewReviewDemographicsActivity) getActivity()).resetDemographicDTO(gson.toJson(demographicDTO));
 
+        if (bitmap != null) {
+            String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
+            demographicPersDetailsPayloadDTO.setProfilePhoto(imageAsBase64);
+        }
 
+        demographicDTO.getPayload().getDemographics().getPayload().setInsurances(checkinInsurancesSummaryFragment.getInsurancePayloadDTOs());
+        demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().clear();
+        demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().add(demographicsDocumentsFragment.getDemPayloadIdDocDTO());
     }
 
     private void setEditTexts(View view) {
@@ -979,12 +1030,13 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
     private void initViewFromModels() {
         initializeDocumentFragment();
-
+        initializeInsurancesFragment();
         if (demographicPersDetailsPayloadDTO != null) {
             String imageUrl = demographicPersDetailsPayloadDTO.getProfilePhoto();
             if (!StringUtil.isNullOrEmpty(imageUrl)) {
                 Picasso.with(getActivity()).load(imageUrl).transform(
                         new CircleImageTransform()).resize(160, 160).into(this.profileImageview);
+
             }else{
                 profileImageview.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.icn_placeholder_user_profile_png));
             }
@@ -1091,11 +1143,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
     }
 
-    private void openNewFragment() {
-        CheckinInsurancesSummaryFragment fragment = new CheckinInsurancesSummaryFragment();
-        ((NewReviewDemographicsActivity) getActivity()).navigateToFragment(fragment, true);
-
-    }
 
     public DemographicMetadataEntityIdDocsDTO getIdDocsMetaDTO() {
         return idDocsMetaDTO;

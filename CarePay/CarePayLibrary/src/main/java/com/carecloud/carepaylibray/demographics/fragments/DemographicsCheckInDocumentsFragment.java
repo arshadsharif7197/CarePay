@@ -30,6 +30,7 @@ import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapper;
 import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapperCollection;
 import com.carecloud.carepaylibray.demographics.misc.OnClickRemoveOrAddCallback;
 import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
@@ -78,8 +79,6 @@ public class DemographicsCheckInDocumentsFragment extends Fragment {
     private void initializeUIFields() {
         getOptions();
 
-        setButtons();
-
         // set the fragment
         setCardContainers();
 
@@ -97,7 +96,13 @@ public class DemographicsCheckInDocumentsFragment extends Fragment {
         idDocTypeLabel.setText(label);
 
         idTypeClickable = (TextView) view.findViewById(R.id.demogrDocTypeClickable);
-        label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsChooseLabel();
+        if(StringUtil.isNullOrEmpty(demPayloadIdDocDTO.getIdType())){
+            label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsChooseLabel();
+        } else {
+            label = demPayloadIdDocDTO.getIdType();
+            showCard(idCardContainer, true);
+        }
+
         idTypeClickable.setText(label);
         final String titleSelIdDoc = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsChooseLabel();
         idTypeClickable.setOnClickListener(new View.OnClickListener() {
@@ -134,41 +139,6 @@ public class DemographicsCheckInDocumentsFragment extends Fragment {
             docTypesStrings.add(o.getLabel());
         }
         docTypes = docTypesStrings.toArray(new String[0]);
-    }
-
-    /*private void getPayloadDTOs() {
-        demPayloadIdDocDTO = ((DemographicsActivity) getActivity()).getIdDocModel();
-
-        if (demPayloadIdDocDTO == null) {
-            demPayloadIdDocDTO = new DemographicIdDocPayloadDTO();
-        }
-
-    }*/
-
-    private void setButtons() {
-        String label;
-
-
-        /*nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((DemographicsActivity) getActivity()).setIdDocModel(demPayloadIdDocDTO);
-                // clear the list
-                insuranceDTOsList.clear();
-
-                for (DemographicInsurancePayloadDTO payloadDTO : wrapperCollection1.exportPayloadsAsList()) {
-                    if (isInsuaranceNonTrivial(payloadDTO)) {
-                        insuranceDTOsList.add(payloadDTO);
-                    }
-                }
-
-                // set the list in activity
-                ((DemographicsActivity) getActivity()).setInsuranceModelList(insuranceDTOsList);
-                // move to next tab
-                ((DemographicsActivity) getActivity()).setCurrentItem(3, true);
-            }
-        });*/
-
     }
 
 
@@ -212,11 +182,16 @@ public class DemographicsCheckInDocumentsFragment extends Fragment {
         this.idDocsMetaDTO = idDocsMetaDTO;
     }
 
+
     public void setGlobalLabelsMetaDTO(DemographicLabelsDTO globalLabelsMetaDTO) {
         this.globalLabelsMetaDTO = globalLabelsMetaDTO;
     }
 
     public void setDemPayloadIdDocDTO(DemographicIdDocPayloadDTO demPayloadIdDocDTO) {
         this.demPayloadIdDocDTO = demPayloadIdDocDTO;
+    }
+
+    public DemographicIdDocPayloadDTO getDemPayloadIdDocDTO() {
+        return demPayloadIdDocDTO;
     }
 }
