@@ -15,7 +15,7 @@
         android:background="@color/payne_gray"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/add_apt_calendar_day_title_padding_bottom"
-        android:paddingLeft="@dimen/add_apt_calendar_day_title_padding_left"
+        android:paddingLeft="@dimen/dimen_1dp"
         android:paddingRight="@dimen/add_apt_calendar_day_title_padding_right"
         android:paddingTop="@dimen/add_apt_calendar_day_title_padding_top"
         android:weightSum="7">
@@ -24,7 +24,7 @@
             android:id="@+id/sundayTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1.1"
+            android:layout_weight="1"
             android:text="@string/sunday_text_view_label"
             android:textSize="@dimen/add_apt_calendar_day_title_text_size" />
 
@@ -32,7 +32,7 @@
             android:id="@+id/mondayTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1.1"
+            android:layout_weight="1"
             android:text="@string/monday_text_view_label"
             android:textColor="@color/white"
             android:textSize="@dimen/add_apt_calendar_day_title_text_size" />
@@ -50,7 +50,7 @@
             android:id="@+id/wednesdayTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1.1"
+            android:layout_weight="1"
             android:text="@string/wednesday_text_view_label"
             android:textColor="@color/white"
             android:textSize="@dimen/add_apt_calendar_day_title_text_size" />
@@ -59,7 +59,7 @@
             android:id="@+id/thursdayTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1.1"
+            android:layout_weight="1"
             android:text="@string/thursday_text_view_label"
             android:textColor="@color/white"
             android:textSize="@dimen/add_apt_calendar_day_title_text_size" />
@@ -68,7 +68,7 @@
             android:id="@+id/fridayTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1.1"
+            android:layout_weight="1"
             android:text="@string/friday_text_view_label"
             android:textColor="@color/white"
             android:textSize="@dimen/add_apt_calendar_day_title_text_size" />
@@ -77,7 +77,7 @@
             android:id="@+id/saturdayTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1.1"
+            android:layout_weight="1"
             android:text="@string/saturday_text_view_label"
             android:textSize="@dimen/add_apt_calendar_day_title_text_size" />
 

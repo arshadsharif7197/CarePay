@@ -101,6 +101,7 @@ public class SigninFragment extends Fragment {
 
         @Override
         public void onLoginFailure(String exceptionMessage) {
+            signinButton.setEnabled(true);
             SystemUtil.showDialogMessage(getContext(),
                     "Sign-in failed",
                     "Invalid user id or password");
@@ -161,6 +162,7 @@ public class SigninFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (areAllValid()) {
+                    signinButton.setEnabled(false);
                     signInUser();
                 }
             }

@@ -9,29 +9,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="2"
+        android:paddingBottom="@dimen/dimen_15dp"
         android:paddingTop="@dimen/dimen_15dp">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/reasonTypeTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_marginTop="@dimen/apt_dl_margin"
-            android:layout_weight="1"
-            android:gravity="start"
+            android:layout_marginStart="@dimen/dimen_14dp"
+            android:layout_weight="0.3"
+            android:gravity="start|center_vertical"
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/apt_available_hours_list_row_text"
             app:customAssetFont="proxima_nova_regular" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/reasonTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginTop="@dimen/apt_dl_margin"
-            android:layout_weight="1"
-            android:gravity="end"
+            android:layout_marginEnd="@dimen/dimen_14dp"
+            android:layout_weight="0.7"
+            android:gravity="end|center_vertical"
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/apt_available_hours_list_header_text"
             app:customAssetFont="proxima_nova_regular" />
