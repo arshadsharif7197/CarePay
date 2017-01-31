@@ -54,6 +54,7 @@ public class DemographicsAddressFragment extends Fragment {
     private LinearLayout rootLayout;
 
     private TextInputLayout firstNameInputLayout;
+    private TextInputLayout middleNameInputLayout;
     private TextInputLayout lastNameInputLayout;
     private TextInputLayout phNoTextInputLayout;
     private TextInputLayout address1TextInputLayout;
@@ -68,6 +69,7 @@ public class DemographicsAddressFragment extends Fragment {
     private EditText address2EditText;
     private EditText cityEditText;
     private EditText firstNameText;
+    private EditText middleNameText;
     private EditText lastNameText;
     private TextView firstNameReqHint;
     private TextView lastNameReqHint;
@@ -80,6 +82,7 @@ public class DemographicsAddressFragment extends Fragment {
     private City smartyStreetsResponse;
 
     private boolean isFirstNameEmpty;
+    private boolean isMiddleNameEmpty;
     private boolean isLastNameEmpty;
     private boolean isPhoneEmpty;
     private boolean isAddressEmpty;
@@ -125,6 +128,7 @@ public class DemographicsAddressFragment extends Fragment {
         rootLayout = (LinearLayout) view.findViewById(R.id.demographicsAddressRootContainer);
 
         isFirstNameEmpty = true;
+        isMiddleNameEmpty = true;
         isLastNameEmpty = true;
         isAddressEmpty = true;
         isZipEmpty = true;
@@ -155,6 +159,7 @@ public class DemographicsAddressFragment extends Fragment {
         String reqLabel = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsRequired();
         firstNameReqHint = (TextView) view.findViewById(R.id.demogrAddressFirstNameReqHint);
         firstNameReqHint.setText(reqLabel);
+
         lastNameReqHint = (TextView) view.findViewById(R.id.demogrAddressLastNameReqHint);
         lastNameReqHint.setText(reqLabel);
 
@@ -166,6 +171,13 @@ public class DemographicsAddressFragment extends Fragment {
         firstNameInputLayout.setTag(hint);
         firstNameText.setTag(firstNameInputLayout);
         firstNameText.setHint(hint);
+
+        hint = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.middleName.getLabel();
+        middleNameText = (EditText) view.findViewById(R.id.demogrAddressMiddleNameEdit);
+        middleNameInputLayout = (TextInputLayout) view.findViewById(R.id.demogrAddressMiddleNameTextInput);
+        middleNameInputLayout.setTag(hint);
+        middleNameText.setTag(middleNameInputLayout);
+        middleNameText.setHint(hint);
 
         hint = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.lastName.getLabel();
         lastNameText = (EditText) view.findViewById(R.id.demogrAddressLastNameEdit);
@@ -238,6 +250,7 @@ public class DemographicsAddressFragment extends Fragment {
                 if (checkReadyForNext()) { // if all valid...
                     // update personal details
                     persDetailsDTO.setFirstName(firstNameText.getText().toString());
+                    persDetailsDTO.setMiddleName(middleNameText.getText().toString());
                     persDetailsDTO.setLastName(lastNameText.getText().toString());
                     // update the addressDTO with values from UI
                     addressDTO.setAddress1(address1EditText.getText().toString());
@@ -289,6 +302,13 @@ public class DemographicsAddressFragment extends Fragment {
                 firstNameText.setText(firstName);
                 firstNameText.requestFocus();
                 isFirstNameEmpty = false;
+            }
+
+            String middleName = persDetailsDTO.getMiddleName();
+            if (!StringUtil.isNullOrEmpty(middleName)) {
+                middleNameText.setText(middleName);
+                middleNameText.requestFocus();
+                isMiddleNameEmpty = false;
             }
 
             String lastName = persDetailsDTO.getLastName();
@@ -532,6 +552,16 @@ public class DemographicsAddressFragment extends Fragment {
                 return false;
             }
         });
+        middleNameText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int inputType, KeyEvent keyEvent) {
+                if (inputType == EditorInfo.IME_ACTION_NEXT) {
+                    middleNameText.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
         lastNameText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int inputType, KeyEvent keyEvent) {
@@ -614,6 +644,15 @@ public class DemographicsAddressFragment extends Fragment {
      */
     private void setFocusChangeListeners() {
         firstNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) { // show the keyboard
+                    SystemUtil.showSoftKeyboard(getActivity());
+                }
+                SystemUtil.handleHintChange(view, hasFocus);
+            }
+        });
+        middleNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if (hasFocus) { // show the keyboard
@@ -759,6 +798,13 @@ public class DemographicsAddressFragment extends Fragment {
             setProximaNovaRegularTypefaceLayout(getActivity(), firstNameInputLayout);
         }
         setProximaNovaRegularTypeface(getActivity(), firstNameText);
+
+        if (!StringUtil.isNullOrEmpty(middleNameText.getText().toString())) {
+            setProximaNovaExtraboldTypefaceInput(getActivity(), middleNameInputLayout);
+        } else {
+            setProximaNovaRegularTypefaceLayout(getActivity(), middleNameInputLayout);
+        }
+        setProximaNovaRegularTypeface(getActivity(), middleNameText);
 
         if (!StringUtil.isNullOrEmpty(lastNameText.getText().toString())) {
             setProximaNovaExtraboldTypefaceInput(getActivity(), lastNameInputLayout);

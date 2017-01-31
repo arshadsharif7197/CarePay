@@ -106,6 +106,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             boolean isPending = item.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.PENDING);
             boolean isCheckedIn = item.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.CHECKED_IN);
             boolean isCanceled = item.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.CANCELLED);
+            final boolean isRequested = item.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.REQUESTED);
 
             if (sectionHeaderTitle.equals(appointmentLabels.getUpcomingAppointmentsHeading())) {
                 if (isCheckedIn) {
@@ -175,6 +176,11 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 holder.doctorName.setTextColor(ContextCompat.getColor(view.getContext(), R.color.optionl_gray));
                 holder.cellAvatar.setImageDrawable(context.getResources()
                         .getDrawable(R.drawable.icn_cell_avatar_badge_canceled));
+            } else if (isRequested) {
+                holder.cellAvatar.setVisibility(View.VISIBLE);
+                holder.doctorName.setTextColor(ContextCompat.getColor(view.getContext(), R.color.bright_cerulean));
+                holder.cellAvatar.setImageDrawable(context.getResources()
+                        .getDrawable(R.drawable.icn_cell_avatar_badge_pending));
             } else {
                 holder.cellAvatar.setVisibility(View.INVISIBLE);
                 holder.missedAppointmentTextView.setVisibility(View.GONE);
