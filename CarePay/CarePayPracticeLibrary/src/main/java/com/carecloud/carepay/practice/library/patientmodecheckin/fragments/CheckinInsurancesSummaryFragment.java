@@ -68,7 +68,7 @@ public class CheckinInsurancesSummaryFragment extends BaseCheckinFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_review_health_insurance, container, false);
+        view = inflater.inflate(R.layout.fragment_review_health_insurance_tmp, container, false);
 
         initDTOs();
         initViewsHandlers();
