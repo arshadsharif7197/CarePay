@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
+import com.carecloud.carepay.patient.demographics.fragments.review.CheckinDemographicsFragment;
 import com.carecloud.carepay.patient.demographics.fragments.review.CheckinDemographicsRevFragment;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
@@ -31,7 +32,7 @@ public class NewReviewDemographicsActivity extends BasePatientActivity implement
         demographicDTO = getConvertedDTO(DemographicDTO.class);
 
         // place the initial fragment
-        CheckinDemographicsRevFragment fragment = new CheckinDemographicsRevFragment();
+        CheckinDemographicsFragment fragment = new CheckinDemographicsFragment();
         navigateToFragment(fragment, false);
         Log.v(NewReviewDemographicsActivity.class.getSimpleName(), "NewReviewDemographicsActivity");
     }
