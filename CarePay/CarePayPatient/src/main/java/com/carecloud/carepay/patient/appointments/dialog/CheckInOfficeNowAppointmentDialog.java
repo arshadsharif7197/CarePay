@@ -38,6 +38,8 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
     private AppointmentDTO appointmentDTO;
     private AppointmentsResultModel appointmentInfo;
     private Boolean enableCheckin;
+    private Button checkInNowButton;
+    private Button checkInAtOfficeButton;
 
     /**
      * @param context           context
@@ -68,11 +70,11 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View childActionView = inflater.inflate(R.layout.dialog_checkin_office_now_appointment, null);
 
-        Button checkInAtOfficeButton = (Button) childActionView.findViewById(R.id.checkInAtOfficeButton);
+        checkInAtOfficeButton = (Button) childActionView.findViewById(R.id.checkInAtOfficeButton);
         checkInAtOfficeButton.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsCheckInAtOfficeButtonText()));
         checkInAtOfficeButton.setOnClickListener(this);
 
-        Button checkInNowButton = (Button) childActionView.findViewById(R.id.checkInNowButton);
+        checkInNowButton = (Button) childActionView.findViewById(R.id.checkInNowButton);
         checkInNowButton.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsCheckInNow()));
         checkInNowButton.setOnClickListener(this);
         if(enableCheckin == true){
@@ -98,9 +100,12 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         super.onClick(view);
         int viewId = view.getId();
         if (viewId == R.id.checkInAtOfficeButton) {
+            checkInAtOfficeButton.setEnabled(false);
             new QrCodeViewDialog(context, appointmentDTO, appointmentInfo.getMetadata()).show();
+            checkInAtOfficeButton.setEnabled(true);
             cancel();
         } else if (viewId == R.id.checkInNowButton) {
+            checkInNowButton.setEnabled(false);
             TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCheckingIn();
             doTransition(transitionDTO, demographicsVerifyCallback);
             cancel();
@@ -133,11 +138,13 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            checkInNowButton.setEnabled(true);
             PatientNavigationHelper.getInstance(context).navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            checkInNowButton.setEnabled(true);
             SystemUtil.showFaultDialog(getContext());
             Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
