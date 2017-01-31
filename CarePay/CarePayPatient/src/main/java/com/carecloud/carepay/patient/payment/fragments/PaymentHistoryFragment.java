@@ -116,14 +116,14 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
                 progressBar.setVisibility(View.GONE);
             } catch (Exception e){
                 Log.e(LOG, e.getMessage());
-                SystemUtil.showFaultDialog(getActivity());
+                SystemUtil.showDefaultFailureDialog(getActivity());
             }
             progressBar.setVisibility(View.GONE);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(getActivity());
+            SystemUtil.showDefaultFailureDialog(getActivity());
             progressBar.setVisibility(View.GONE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -146,14 +146,14 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
                 historyRecyclerView.setAdapter(historyAdapter);
             } catch (Exception e){
                 Log.e(LOG, e.getMessage());
-                SystemUtil.showFaultDialog(getActivity());
+                SystemUtil.showDefaultFailureDialog(getActivity());
             }
             progressBar.setVisibility(View.GONE);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(getActivity());
+            SystemUtil.showDefaultFailureDialog(getActivity());
             progressBar.setVisibility(View.GONE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

@@ -115,7 +115,7 @@ public class AppointmentsListFragment extends Fragment {
 //
 //        @Override
 //        public void onFailure(String exceptionMessage) {
-//            SystemUtil.showFaultDialog(getActivity());
+//            SystemUtil.showDefaultFailureDialog(getActivity());
 //            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
 //        }
 //    };
@@ -130,6 +130,7 @@ public class AppointmentsListFragment extends Fragment {
         super.onResume();
         if(RequestAppointmentDialog.isAppointmentAdded){
             refreshAppointmentList();
+            showAppointmentConfirmation();
             RequestAppointmentDialog.isAppointmentAdded = false;
         }
     }
@@ -388,7 +389,7 @@ public class AppointmentsListFragment extends Fragment {
         @Override
         public void onFailure(String exceptionMessage) {
             appointmentProgressBar.setVisibility(View.GONE);
-            SystemUtil.showFaultDialog(getActivity());
+            SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -487,6 +488,17 @@ public class AppointmentsListFragment extends Fragment {
             headerText = appointmentInfo.getMetadata().getLabel().getTodayAppointmentsHeading();
         }
         return headerText;
+    }
+
+    private void showAppointmentConfirmation() {
+        String appointmentRequestSuccessMessage = "";
+
+        if (appointmentInfo != null) {
+            appointmentRequestSuccessMessage = appointmentInfo.getMetadata().getLabel()
+                    .getAppointmentRequestSuccessMessage();
+        }
+
+        SystemUtil.showSuccessDialogMessage(getActivity(), "", appointmentRequestSuccessMessage);
     }
 
     @Override

@@ -135,7 +135,7 @@ public class InTakeActivity extends KeyboardHolderActivity {
                         @Override
                         public void onFailure(Call<IntakeResponseModel> call, Throwable t) {
                             intakeProgressBar.setVisibility(View.GONE);
-                            SystemUtil.showFaultDialog(InTakeActivity.this);
+                            SystemUtil.showDefaultFailureDialog(InTakeActivity.this);
                             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), "");
                         }
                     });

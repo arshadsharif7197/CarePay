@@ -73,7 +73,7 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
         @Override
         public void onFailure(String exceptionMessage) {
             correctInformationButton.setEnabled(true);
-            SystemUtil.showFaultDialog(getActivity());
+            SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
