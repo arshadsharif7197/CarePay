@@ -219,13 +219,6 @@ public class SigninActivity extends BasePracticeActivity {
         isEmptyEmail = true;
         isEmptyPassword = true;
 
-        // TODO: 11/17/2016
-        emailEditText.setText("practice@cc.com");
-        passwordEditText.setText("Test123!");
-        if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
-            emailEditText.setText("jiz@jiz.com");
-            passwordEditText.setText("Test123!");
-        }
     }
 
     /**
