@@ -763,7 +763,7 @@
     </style>
 
     <style name="DefaultTextAppearanceGothamRoundedBoldLabel">
-        <item name="android:textColor">@color/bermudagrey</item>
+        <item name="android:textColor">@color/lightSlateGray</item>
     </style>
 
     <style name="DefaultTextAppearance">

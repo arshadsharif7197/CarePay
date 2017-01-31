@@ -22,7 +22,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
 import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog;
 import com.carecloud.carepaylibray.customdialogs.QrCodeViewDialog;
-import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -83,8 +82,8 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
             checkInNowButton.setEnabled(false);
             checkInNowButton.setClickable(false);
             checkInAtOfficeButton.setTextColor(Color.WHITE);
-            checkInAtOfficeButton.setBackgroundColor(getContext().getResources().getColor(R.color.silver));
-            checkInNowButton.setBackgroundColor(getContext().getResources().getColor(R.color.silver));
+            checkInAtOfficeButton.setBackgroundColor(getContext().getResources().getColor(R.color.light_gray));
+            checkInNowButton.setBackgroundColor(getContext().getResources().getColor(R.color.light_gray));
         }else{
             checkInAtOfficeButton.setEnabled(true);
             checkInAtOfficeButton.setClickable(true);

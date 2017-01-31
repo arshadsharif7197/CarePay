@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#1F9BDE</color>
-    <color name="colorPrimaryDark">#066699</color>
+    <color name="colorPrimary">#5BC5D0</color>
+    <color name="colorPrimaryDark">#489DA6</color>
+
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
 
     <color name="colorAccent">#acacac</color>
-    <color name="white">#ffffff</color>
     <color name="lightSlateGray">#78909C</color>
     <color name="charcoal">#ff37474f</color>
     <color name="cadet_gray">#ff90a4ae</color>
@@ -24,11 +26,9 @@
     <color name="payne_gray">#FF546E7A</color>
     <color name="Matisse">#176D9C</color>
     <color name="harvard_crimson">#d0021b</color>
-    <color name="black">#000000</color>
     <color name="overlay_green">#7ED321</color>
     <color name="Munsell">#eceff1</color>
     <color name="paint_color_thumbnail">#BAB399</color>
-    <color name="silver">#cfd8dc</color>
 
     <color name="grayRound">#546e7a</color>
     <color name="light_gray_dialog">#eceff1</color>
@@ -57,11 +57,11 @@
     <color name="grey_600">#303232</color>
     <color name="grey_700">#1D1E1E</color>
 
-    <color name="bermudagrey">#78909c</color>
+    <!--<color name="bermudagrey">#78909c</color>-->
+    <!--<color name="light_gray">#cfd8dc</color>-->
+
     <color name="lightningyellow">#f5a623</color>
-
     <color name="divider_color">#c4c4c4</color>
-
     <color name="checked_in_appointment_bg">#fffdea</color>
     <color name="cardinal">#c31e30</color>
 

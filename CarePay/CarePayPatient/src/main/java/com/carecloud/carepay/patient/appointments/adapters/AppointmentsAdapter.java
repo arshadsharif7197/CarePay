@@ -113,7 +113,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                     holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
                     holder.upcomingDateLinearLayout.setVisibility(View.GONE);
                     holder.todayTimeTextView.setText(appointmentLabels.getAppointmentsCheckedInLabel());
-                    holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
+                    holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
                 } else {
                     holder.todayTimeLinearLayout.setVisibility(View.GONE);
                     holder.upcomingDateLinearLayout.setVisibility(View.VISIBLE);
@@ -129,7 +129,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 if (isCheckedIn) {
                     holder.todayTimeTextView.setText(StringUtil.getLabelForView(
                             appointmentLabels.getAppointmentsCheckedInLabel()));
-                    holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
+                    holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
                 } else {
                     holder.todayTimeTextView.setText(time12Hour);
                     holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.dark_green));
