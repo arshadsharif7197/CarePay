@@ -558,7 +558,7 @@
         <item name="android:layout_marginRight">@dimen/consentform_relativeLayout_margin</item>
         <item name="android:layout_marginTop">@dimen/consent_view_margin_top_bottom</item>
         <item name="android:layout_marginBottom">@dimen/consent_view_margin_top_bottom</item>
-        <item name="android:background">@color/payne_gray</item>
+        <item name="android:background">@color/light_gray</item>
     </style>
 
     <style name="Consent_form_Button">
