@@ -33,6 +33,8 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
     protected String practiceId;
     protected String practiceMgmt;
     protected String patientId;
+    protected String prefix;
+    protected String userId;
     //transitions
     private static TransitionDTO transitionBalance;
     private static TransitionDTO transitionProfile;

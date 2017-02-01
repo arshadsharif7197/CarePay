@@ -24,6 +24,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.IdsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -70,14 +71,23 @@ public class AppointmentsActivity extends MenuPatientActivity {
 
         appointmentsDTO = getConvertedDTO(AppointmentsResultModel.class);
 
-        if (appointmentsDTO.getPayload() != null && appointmentsDTO.getPayload().getAppointments() != null
+        if (appointmentsDTO.getPayload() != null && appointmentsDTO.getPayload().getAppointments() != null){
+            IdsDTO idsDTO = appointmentsDTO.getPayload().getPractice_patient_ids().get(0);
+            practiceId = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPracticeId();
+            practiceMgmt = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPracticeManagement();
+            patientId = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPatientId();
+            prefix = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPrefix();
+            userId = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getUserId();
+        }
+
+      /*  if (appointmentsDTO.getPayload() != null && appointmentsDTO.getPayload().getAppointments() != null
                 && appointmentsDTO.getPayload().getAppointments().size() > 0) {
 
             appointmentDTO = appointmentsDTO.getPayload().getAppointments().get(0);
             practiceId = appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeId();
             practiceMgmt = appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeMgmt();
             patientId = appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPatientId();
-        }
+        }*/
 
         setTransitionBalance(appointmentsDTO.getMetadata().getLinks().getPatientBalances());
         setTransitionLogout(appointmentsDTO.getMetadata().getTransitions().getLogout());
