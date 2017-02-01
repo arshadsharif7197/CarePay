@@ -87,6 +87,10 @@ public class ApplicationPreferences {
         return sharedPreferences.getString(CarePayConstants.PREFERENCE_PATIENT_ID, patientId);
     }
 
+    /**
+     *
+     * @param practiceId practiceId
+     */
     public void setPracticeId(String practiceId) {
         this.practiceId=practiceId;
         editor.putString(CarePayConstants.PREFERENCE_PRACTICE_ID, practiceId);
