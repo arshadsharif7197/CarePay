@@ -18,7 +18,6 @@ import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.demographics.activities.NewReviewDemographicsActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
@@ -28,9 +27,6 @@ import com.carecloud.carepaylibray.appointments.models.IdsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class AppointmentsActivity extends MenuPatientActivity {
 
@@ -52,7 +48,7 @@ public class AppointmentsActivity extends MenuPatientActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(AppointmentsActivity.this);
+            SystemUtil.showDefaultFailureDialog(AppointmentsActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

@@ -23,7 +23,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.payment.PaymentActivity;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -581,7 +580,7 @@ public class AddNewCreditCardFragment extends Fragment implements
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(getActivity());
+            SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -603,7 +602,7 @@ public class AddNewCreditCardFragment extends Fragment implements
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(getActivity());
+            SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

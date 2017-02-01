@@ -98,7 +98,7 @@ public class CheckInEarlyAppointmentDialog extends BaseDoctorInfoDialog {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(context);
+            SystemUtil.showDefaultFailureDialog(context);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

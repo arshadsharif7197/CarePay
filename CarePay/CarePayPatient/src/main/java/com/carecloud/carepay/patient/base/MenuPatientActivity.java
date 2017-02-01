@@ -1,6 +1,5 @@
 package com.carecloud.carepay.patient.base;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -128,7 +127,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
 
         @Override
         public void onFailure(String exceptionMessage) {
-            //SystemUtil.showFaultDialog(InTakeWebViewActivity.this);
+            //SystemUtil.showDefaultFailureDialog(InTakeWebViewActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -162,7 +161,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(MenuPatientActivity.this);
+            SystemUtil.showDefaultFailureDialog(MenuPatientActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

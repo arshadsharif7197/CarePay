@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.carecloud.carepay.practice.library.customdialog.IConfirmPracticeAppPin;
-import com.carecloud.carepay.practice.library.practicesetting.models.PracticeSettingDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
@@ -94,5 +93,17 @@ public abstract class BasePracticeActivity extends AppCompatActivity implements 
         decorView.setSystemUiVisibility(uiOptions);
     }
 
+    protected boolean isVisible = false;
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isVisible = false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isVisible = true;
+    }
 }

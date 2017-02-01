@@ -7,7 +7,6 @@ import android.util.Log;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.payment.ResponsibilityFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodFragment;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -59,7 +58,7 @@ public class PaymentMethodActivity extends BasePatientActivity {
 
             @Override
             public void onFailure(Call<PaymentsModel> call, Throwable throwable) {
-                SystemUtil.showFaultDialog(PaymentMethodActivity.this);
+                SystemUtil.showDefaultFailureDialog(PaymentMethodActivity.this);
                 Log.e(PaymentMethodActivity.this.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), "");
             }
         });

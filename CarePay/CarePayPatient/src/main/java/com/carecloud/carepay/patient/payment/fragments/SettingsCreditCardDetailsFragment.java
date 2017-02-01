@@ -215,7 +215,7 @@ public class SettingsCreditCardDetailsFragment extends Fragment {
         public void onFailure(String exceptionMessage) {
             System.out.print(exceptionMessage);
             ProgressDialogUtil.getInstance(getActivity()).dismiss();
-            SystemUtil.showFaultDialog(getActivity());
+            SystemUtil.showDefaultFailureDialog(getActivity());
         }
     };
 

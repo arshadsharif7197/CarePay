@@ -205,7 +205,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(HowToCheckInActivity.this);
+            SystemUtil.showDefaultFailureDialog(HowToCheckInActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -241,7 +241,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
                 String scanResult = intent.getStringExtra("SCAN_RESULT");
                 processScannedQRCOde(scanResult);
             } catch (JsonSyntaxException ex) {
-                SystemUtil.showDialogMessage(this,
+                SystemUtil.showFailureDialogMessage(this,
                         signinPatientModeDTO.getMetadata().getLabels().getInvalidQRCodeTitle(),
                         signinPatientModeDTO.getMetadata().getLabels().getInvalidQRCodeMessage());
                 dismissDialog();
@@ -271,7 +271,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
                             .getTransitions().getAction(), appointmentCallBack, queryMap);
 
         }else{
-            SystemUtil.showDialogMessage(this,"Invalid QR Code","This QR code is not valid for this practice.");
+            SystemUtil.showFailureDialogMessage(this,"Invalid QR Code","This QR code is not valid for this practice.");
         }
     }
 
@@ -305,7 +305,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(HowToCheckInActivity.this);
+            SystemUtil.showDefaultFailureDialog(HowToCheckInActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
