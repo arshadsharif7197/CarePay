@@ -144,7 +144,7 @@ public class ChooseCreditCardDialog extends Dialog implements RadioGroup.OnCheck
 
     private void onSetRadioButtonSemiBoldTypeFace(RadioButton radioButton) {
         SystemUtil.setProximaNovaRegularTypeface(context, radioButton);
-        radioButton.setTextColor(ContextCompat.getColor(context, R.color.bright_cerulean));
+        radioButton.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
     }
 
     @Override

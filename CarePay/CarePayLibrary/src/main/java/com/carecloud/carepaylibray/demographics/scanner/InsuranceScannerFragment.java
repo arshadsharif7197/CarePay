@@ -509,7 +509,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         if (enabled) {
             String label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsChooseLabel();
             planTextView.setText(label);
-            planTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.bright_cerulean));
+            planTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
             planTextView.setEnabled(true);
         } else {
             planTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.light_gray));

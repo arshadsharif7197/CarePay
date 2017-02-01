@@ -250,7 +250,7 @@
     <!-- Demographics onboarding -->
 
     <style name="DemographicsDocsButtonStyle" parent="android:Widget.TextView">
-        <item name="android:textColor">@color/rich_electric_blue</item>
+        <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textSize">@dimen/demographics_docs_button_text_size</item>
         <item name="android:textStyle">normal</item>
         <item name="android:layout_height">30dp</item>
@@ -334,7 +334,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:clickable">true</item>
-        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textSize">@dimen/demographics_docs_clickable_text_size</item>
         <item name="android:layout_marginEnd">@dimen/signup_optional_label_margin_left_right</item>
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>

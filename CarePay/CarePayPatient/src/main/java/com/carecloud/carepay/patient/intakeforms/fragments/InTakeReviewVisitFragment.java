@@ -113,7 +113,7 @@ public class InTakeReviewVisitFragment extends InTakeFragment {
 
     private void onCheckBoxtextColor(CheckBox checkBox) {
         if (checkBox.isChecked()) {
-            checkBox.setTextColor(ContextCompat.getColor(context, R.color.bright_cerulean));
+            checkBox.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
         } else {
             checkBox.setTextColor(ContextCompat.getColor(context, R.color.slateGray));
         }

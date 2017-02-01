@@ -449,7 +449,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         AppointmentViewHolder(View itemView) {
             super(itemView);
             doctorName = (CarePayTextView) itemView.findViewById(R.id.doctor_name);
-            doctorName.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.bright_cerulean));
+            doctorName.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.colorPrimary));
 
             doctorType = (CarePayTextView) itemView.findViewById(R.id.doctor_type);
             doctorType.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.lightSlateGray));
