@@ -86,7 +86,7 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
     }
 
     public void showAppointmentConfirmation() {
-        if (scheduleResourcesModel != null && isVisible) {
+        if (scheduleResourcesModel != null && isVisible()) {
             String appointmentRequestSuccessMessage = scheduleResourcesModel.getMetadata()
                     .getLabel().getAppointmentRequestSuccessMessage();
 
@@ -102,6 +102,8 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
                         }
                     })
                     .show();
+        } else {
+            logout();
         }
     }
 

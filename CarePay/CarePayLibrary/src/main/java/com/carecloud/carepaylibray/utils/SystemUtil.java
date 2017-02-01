@@ -33,6 +33,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
+import com.carecloud.carepaylibray.base.BaseVisibilityHintActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
@@ -236,6 +237,12 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
     }
 
     private static void showSweetDialog(Context context, int alertType, String title, String body) {
+        // Skip if activity is in the background
+        if (null == context || (context instanceof BaseVisibilityHintActivity &&
+                !((BaseVisibilityHintActivity) context).isVisible())) {
+            return;
+        }
+
         new SweetAlertDialog(context, alertType)
                 .setTitleText(title)
                 .setContentText(body)
