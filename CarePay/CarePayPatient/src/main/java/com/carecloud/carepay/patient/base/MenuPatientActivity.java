@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
@@ -32,6 +33,8 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
     protected String practiceId;
     protected String practiceMgmt;
     protected String patientId;
+    protected String prefix;
+    protected String userId;
     //transitions
     private static TransitionDTO transitionBalance;
     private static TransitionDTO transitionProfile;
@@ -60,6 +63,9 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         } else {
             appointmentsDrawerUserIdTextView.setText("");
         }
+        patientId = ApplicationPreferences.Instance.getPatientId();
+        practiceId = ApplicationPreferences.Instance.getPracticeId();
+        practiceMgmt = ApplicationPreferences.Instance.getPracticeManagement();
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -67,12 +73,11 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
         if (id == com.carecloud.carepaylibrary.R.id.nav_appointments && transitionAppointments != null) {
                 Map<String, String> queryString = new HashMap<>();
-                queryString.put("practice_id", practiceId);
-                queryString.put("practice_mgmt", practiceMgmt);
-                queryString.put("patient_id", patientId);
+                queryString.put("practice_id", practiceId == null ? "" : practiceId);
+                queryString.put("practice_mgmt", practiceMgmt == null ? "" : practiceMgmt);
+                queryString.put("patient_id", patientId == null ? "" : patientId);
                 WorkflowServiceHelper.getInstance().execute(transitionAppointments, appointmentsWorkflowCallback, queryString);
 
         } else if (id == com.carecloud.carepaylibrary.R.id.nav_payments && transitionBalance != null) {
@@ -84,9 +89,9 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
 
         } else if (id == com.carecloud.carepaylibrary.R.id.nav_settings && transitionProfile != null) {
                 Map<String, String> queryString = new HashMap<>();
-                queryString.put("practice_id", practiceId);
-                queryString.put("practice_mgmt", practiceMgmt);
-                queryString.put("patient_id", patientId);
+                queryString.put("practice_id", practiceId == null ? "" : practiceId);
+                queryString.put("practice_mgmt", practiceMgmt == null ? "" : practiceMgmt);
+                queryString.put("patient_id", patientId == null ? "" : patientId);
                 WorkflowServiceHelper.getInstance().execute(transitionProfile, demographicsSettingsCallBack, queryString);
 
         } else if (id == com.carecloud.carepaylibrary.R.id.nav_logout && transitionLogout != null) {
