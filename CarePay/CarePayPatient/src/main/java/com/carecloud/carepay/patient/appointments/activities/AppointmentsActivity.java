@@ -16,6 +16,7 @@ import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFrag
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.demographics.activities.NewReviewDemographicsActivity;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
@@ -74,6 +75,11 @@ public class AppointmentsActivity extends MenuPatientActivity {
             patientId = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPatientId();
             prefix = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPrefix();
             userId = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getUserId();
+            ApplicationPreferences.Instance.setPatientId(patientId);
+            ApplicationPreferences.Instance.setPracticeManagement(practiceMgmt);
+            ApplicationPreferences.Instance.setPracticeId(practiceId);
+            ApplicationPreferences.Instance.setUserId(userId);
+            ApplicationPreferences.Instance.setPrefix(prefix);
         }
 
       /*  if (appointmentsDTO.getPayload() != null && appointmentsDTO.getPayload().getAppointments() != null
