@@ -42,6 +42,10 @@ public class ApplicationPreferences {
         return sharedPreferences.getString(CarePayConstants.PREFERENCE_USER_SELECTED_LANGUAGE, "en");
     }
 
+    /**
+     *
+     * @param language language
+     */
     public void setPracticeLanguage(String language) {
         editor.putString(CarePayConstants.PREFERENCE_PRACTICE_SELECTED_LANGUAGE, language);
         editor.apply();
@@ -65,12 +69,20 @@ public class ApplicationPreferences {
         editor.apply();
     }
 
+    /**
+     *
+     * @param patientId patientId
+     */
     public void setPatientId(String patientId) {
         this.patientId=patientId;
         editor.putString(CarePayConstants.PREFERENCE_PATIENT_ID, patientId);
         editor.apply();
     }
 
+    /**
+     *
+     * @return patientId
+     */
     public String getPatientId() {
         return sharedPreferences.getString(CarePayConstants.PREFERENCE_PATIENT_ID, patientId);
     }
@@ -81,36 +93,64 @@ public class ApplicationPreferences {
         editor.apply();
     }
 
+    /**
+     *
+     * @return practiceId
+     */
     public String getPracticeId() {
         return sharedPreferences.getString(CarePayConstants.PREFERENCE_PRACTICE_ID, practiceId);
     }
 
+    /**
+     *
+     * @param practiceManagement practiceManagement
+     */
     public void setPracticeManagement(String practiceManagement) {
         this.practiceManagement=practiceManagement;
         editor.putString(CarePayConstants.PREFERENCE_PRACTICE_MANAGEMENT, practiceManagement);
         editor.apply();
     }
 
+    /**
+     *
+     * @return practiceManagement
+     */
     public String getPracticeManagement() {
         return sharedPreferences.getString(CarePayConstants.PREFERENCE_PRACTICE_MANAGEMENT, practiceManagement);
     }
 
+    /**
+     *
+     * @param userId the userId
+     */
     public void setUserId(String userId) {
         this.userId=userId;
         editor.putString(CarePayConstants.PREFERENCE_USER_ID, userId);
         editor.apply();
     }
 
+    /**
+     *
+     * @return userId
+     */
     public String getUserId() {
         return sharedPreferences.getString(CarePayConstants.PREFERENCE_USER_ID, userId);
     }
 
+    /**
+     *
+     * @param prefix the prefix
+     */
     public void setPrefix(String prefix) {
         this.prefix=prefix;
         editor.putString(CarePayConstants.PREFERENCE_PREFIX, prefix);
         editor.apply();
     }
 
+    /**
+     *
+     * @return prefix
+     */
     public String getPrefix() {
         return sharedPreferences.getString(CarePayConstants.PREFERENCE_PREFIX, prefix);
     }
