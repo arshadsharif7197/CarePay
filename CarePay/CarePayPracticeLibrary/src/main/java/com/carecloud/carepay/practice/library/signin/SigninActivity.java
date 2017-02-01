@@ -73,7 +73,7 @@ public class SigninActivity extends BasePracticeActivity {
         @Override
         public void onFailure(String exceptionMessage) {
             signInButton.setClickable(true);
-            SystemUtil.showFaultDialog(SigninActivity.this);
+            SystemUtil.showDefaultFailureDialog(SigninActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -92,7 +92,7 @@ public class SigninActivity extends BasePracticeActivity {
         @Override
         public void onFailure(String exceptionMessage) {
             signInButton.setClickable(true);
-            SystemUtil.showFaultDialog(SigninActivity.this);
+            SystemUtil.showDefaultFailureDialog(SigninActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -130,6 +130,7 @@ public class SigninActivity extends BasePracticeActivity {
             queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
             queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
             queryMap.put("patient_id", signinPatientModeDTOLocal.getPayload().getPatientModeLoginData().getPatientModeLoginDataMetadata().getPatientId());
+            ApplicationMode.getInstance().setPatientId(signinPatientModeDTOLocal.getPayload().getPatientModeLoginData().getPatientModeLoginDataMetadata().getPatientId());
             Map<String, String> headers = new HashMap<>();
             headers.put("transition", "false");
             TransitionDTO transitionDTO;
@@ -140,7 +141,7 @@ public class SigninActivity extends BasePracticeActivity {
         @Override
         public void onFailure(String exceptionMessage) {
             signInButton.setClickable(true);
-            SystemUtil.showFaultDialog(SigninActivity.this);
+            SystemUtil.showDefaultFailureDialog(SigninActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -172,7 +173,7 @@ public class SigninActivity extends BasePracticeActivity {
         @Override
         public void onLoginFailure(String exceptionMessage) {
             signInButton.setClickable(true);
-            SystemUtil.showDialogMessage(SigninActivity.this,
+            SystemUtil.showFailureDialogMessage(SigninActivity.this,
                     "Sign-in failed",
                     "Invalid user id or password");
 
@@ -218,8 +219,6 @@ public class SigninActivity extends BasePracticeActivity {
         isEmptyEmail = true;
         isEmptyPassword = true;
 
-        //emailEditText.setText("practice@cc.com");
-        //passwordEditText.setText("Practice123!");
     }
 
     /**

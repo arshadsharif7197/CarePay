@@ -438,7 +438,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(getActivity());
+            SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

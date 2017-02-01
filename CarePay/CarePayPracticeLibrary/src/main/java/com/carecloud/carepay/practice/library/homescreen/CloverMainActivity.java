@@ -182,7 +182,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             ApplicationMode.getInstance().setUserPracticeDTO(practiceHomeScreenPayloadDTO.getUserPractices().get(0));
         } else {
             showUnAuthorizedDialog();
-            //SystemUtil.showDialogMessage(CloverMainActivity.this,getString(R.string.unauthorized),getString(R.string.unauthorized_practice_user));
+            //SystemUtil.showSuccessDialogMessage(CloverMainActivity.this,getString(R.string.unauthorized),getString(R.string.unauthorized_practice_user));
         }
     }
 
@@ -445,7 +445,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         public void onFailure(String exceptionMessage) {
             findViewById(R.id.homeCheckinClickable).setEnabled(true);
             findViewById(R.id.homeAppointmentsClickable).setEnabled(true);
-            SystemUtil.showFaultDialog(CloverMainActivity.this);
+            SystemUtil.showDefaultFailureDialog(CloverMainActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -467,7 +467,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(CloverMainActivity.this);
+            SystemUtil.showDefaultFailureDialog(CloverMainActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -489,7 +489,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             findViewById(R.id.homePaymentsClickable).setEnabled(true);
             findViewById(R.id.homeCheckoutClickable).setEnabled(true);
             findViewById(R.id.homeShopClickable).setEnabled(true);
-            SystemUtil.showFaultDialog(CloverMainActivity.this);
+            SystemUtil.showDefaultFailureDialog(CloverMainActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -520,7 +520,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(CloverMainActivity.this);
+            SystemUtil.showDefaultFailureDialog(CloverMainActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -544,7 +544,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             @Override
             public void onFailure(Call<DemographicDTO> call, Throwable throwable) {
                 findViewById(R.id.homeNewsClickable).setEnabled(true);
-                SystemUtil.showFaultDialog(CloverMainActivity.this);
+                SystemUtil.showDefaultFailureDialog(CloverMainActivity.this);
                 Log.e(LOG_TAG, "failed fetching demogr info", throwable);
             }
         });

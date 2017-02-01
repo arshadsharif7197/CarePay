@@ -134,7 +134,7 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        view = inflater.inflate(R.layout.fragment_review_demographic, container, false);
+        view = inflater.inflate(R.layout.fragment_review_demographic_tmp, container, false);
 
         initializeDemographicsDTO();
         //initModels();

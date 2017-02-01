@@ -1,7 +1,6 @@
 package com.carecloud.carepay.patient.intakeforms.activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -22,7 +21,6 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.eligibility.activities.EligibilityActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -288,7 +286,7 @@ public class InTakeWebViewActivity extends BasePatientActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(InTakeWebViewActivity.this);
+            SystemUtil.showDefaultFailureDialog(InTakeWebViewActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -311,7 +309,7 @@ public class InTakeWebViewActivity extends BasePatientActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(InTakeWebViewActivity.this);
+            SystemUtil.showDefaultFailureDialog(InTakeWebViewActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

@@ -197,6 +197,12 @@ public class AppointmentLabelDTO implements Serializable {
     @SerializedName("add_appointment_max_date_range_message")
     @Expose
     private String addAppointmentMaxDateRangeMessage;
+    @SerializedName("appointment_request_success_message")
+    @Expose
+    private String appointmentRequestSuccessMessage;
+    @SerializedName("appointment_request_failure_message")
+    @Expose
+    private String appointmentRequestFailureMessage;
 
     /**
      * @return The appointmentsHeading
@@ -1110,5 +1116,21 @@ public class AppointmentLabelDTO implements Serializable {
      */
     public void setAddAppointmentMaxDateRangeMessage(String addAppointmentMaxDateRangeMessage) {
         this.addAppointmentMaxDateRangeMessage = addAppointmentMaxDateRangeMessage;
+    }
+
+    public String getAppointmentRequestSuccessMessage() {
+        return appointmentRequestSuccessMessage;
+    }
+
+    public void setAppointmentRequestSuccessMessage(String appointmentRequestSuccessMessage) {
+        this.appointmentRequestSuccessMessage = appointmentRequestSuccessMessage;
+    }
+
+    public String getAppointmentRequestFailureMessage() {
+        return appointmentRequestFailureMessage;
+    }
+
+    public void setAppointmentRequestFailureMessage(String appointmentRequestFailureMessage) {
+        this.appointmentRequestFailureMessage = appointmentRequestFailureMessage;
     }
 }

@@ -147,7 +147,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         });
 
         stateLabel = (TextView) view.findViewById(R.id.demogrDocsLicenseStateLabel);
-        label = idDocsMetaDTO == null ? CarePayConstants.NOT_DEFINED : idDocsMetaDTO.properties.identityDocumentState.getLabel();
+        label = idDocsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDriversLicenseAddStateLabel();
         stateLabel.setText(label);
 
         idStateClickable = (TextView) view.findViewById(R.id.demogrDocsStateClickable);
@@ -172,7 +172,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         idNumberEdit = (EditText) view.findViewById(R.id.demogrDocsLicenseNumEdit);
         idNumberInputText = (TextInputLayout) view.findViewById(R.id.demogrDocsNumberInputLayout);
 
-        label = StringUtil.captialize(idDocsMetaDTO == null ? CarePayConstants.NOT_DEFINED : idDocsMetaDTO.properties.identityDocumentNumber.getLabel());
+        label = StringUtil.captialize(globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDriversLicenseNumber());
         idNumberInputText.setTag(label);
         idNumberEdit.setTag(idNumberInputText);
         idNumberEdit.setHint(label);

@@ -144,7 +144,7 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         @Override
         public void onFailure(String exceptionMessage) {
             checkInNowButton.setEnabled(true);
-            SystemUtil.showFaultDialog(getContext());
+            SystemUtil.showDefaultFailureDialog(getContext());
             Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
