@@ -190,7 +190,7 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
 
     private void onSetRadioButtonSemiBoldTypeFace(RadioButton radioButton) {
         SystemUtil.setProximaNovaSemiboldTypeface(this.activity, radioButton);
-        radioButton.setTextColor(ContextCompat.getColor(activity, R.color.blue_cerulian));
+        radioButton.setTextColor(ContextCompat.getColor(activity, R.color.bright_cerulean));
     }
 
     private View.OnClickListener nextButtonListener = new View.OnClickListener() {

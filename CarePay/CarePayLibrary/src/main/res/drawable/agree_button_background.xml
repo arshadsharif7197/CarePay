@@ -2,5 +2,5 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- disabled state -->
     <item android:state_enabled="false" android:drawable="@color/cadet_gray" />
-    <item android:drawable="@color/blue_cerulian"/>
+    <item android:drawable="@color/bright_cerulean"/>
 </selector>

@@ -82,8 +82,8 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
             checkInNowButton.setEnabled(false);
             checkInNowButton.setClickable(false);
             checkInAtOfficeButton.setTextColor(Color.WHITE);
-            checkInAtOfficeButton.setBackgroundColor(getContext().getResources().getColor(R.color.silver));
-            checkInNowButton.setBackgroundColor(getContext().getResources().getColor(R.color.silver));
+            checkInAtOfficeButton.setBackgroundColor(getContext().getResources().getColor(R.color.light_gray));
+            checkInNowButton.setBackgroundColor(getContext().getResources().getColor(R.color.light_gray));
         }else{
             checkInAtOfficeButton.setEnabled(true);
             checkInAtOfficeButton.setClickable(true);

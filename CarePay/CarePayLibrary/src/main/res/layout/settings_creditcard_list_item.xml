@@ -64,7 +64,7 @@
             android:layout_weight="0.7"
             android:textStyle="bold"
             android:gravity="end"
-            android:textColor="@color/settings_credit_card_details"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_14"
             app:customAssetFont="proxima_nova_semi_bold" />
     </LinearLayout>

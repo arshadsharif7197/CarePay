@@ -43,7 +43,7 @@
             style="@style/DemographicsChooseProfilePicStyle"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:textColor="@color/settings_toolbar_color" />
+            android:textColor="@color/colorPrimary" />
 
     </LinearLayout>
 
@@ -84,7 +84,7 @@
                     android:padding="2dp"
                     android:textSize="@dimen/text_size_14"
                     android:textStyle="bold"
-                    android:textColor="@color/settings_toolbar_color"
+                    android:textColor="@color/colorPrimary"
                     app:customAssetFont="proxima_nova_regular"/>/>
 
             </RelativeLayout>
@@ -128,7 +128,7 @@
                     android:padding="2dp"
                     android:textSize="@dimen/text_size_14"
                     android:textStyle="bold"
-                    android:textColor="@color/settings_toolbar_color"
+                    android:textColor="@color/colorPrimary"
                     app:customAssetFont="proxima_nova_regular"/>/>
 
             </RelativeLayout>
@@ -171,7 +171,7 @@
                     android:padding="2dp"
                     android:textSize="@dimen/text_size_14"
                     android:textStyle="bold"
-                    android:textColor="@color/settings_toolbar_color"
+                    android:textColor="@color/colorPrimary"
                     app:customAssetFont="proxima_nova_regular"/>
 
             </RelativeLayout>

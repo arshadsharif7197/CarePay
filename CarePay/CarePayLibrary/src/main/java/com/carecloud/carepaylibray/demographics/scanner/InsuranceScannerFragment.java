@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -510,7 +509,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         if (enabled) {
             String label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsChooseLabel();
             planTextView.setText(label);
-            planTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.blue_cerulian));
+            planTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.bright_cerulean));
             planTextView.setEnabled(true);
         } else {
             planTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.light_gray));
