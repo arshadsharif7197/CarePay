@@ -22,7 +22,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
 import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog;
 import com.carecloud.carepaylibray.customdialogs.QrCodeViewDialog;
-import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -145,7 +144,7 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         @Override
         public void onFailure(String exceptionMessage) {
             checkInNowButton.setEnabled(true);
-            SystemUtil.showFaultDialog(getContext());
+            SystemUtil.showDefaultFailureDialog(getContext());
             Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

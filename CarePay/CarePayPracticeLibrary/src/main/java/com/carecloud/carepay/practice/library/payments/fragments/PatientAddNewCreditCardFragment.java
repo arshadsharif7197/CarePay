@@ -22,7 +22,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -604,7 +603,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(getActivity());
+            SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -626,7 +625,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(getActivity());
+            SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

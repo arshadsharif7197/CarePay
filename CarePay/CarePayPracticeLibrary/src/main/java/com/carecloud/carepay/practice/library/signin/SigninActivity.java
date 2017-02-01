@@ -73,7 +73,7 @@ public class SigninActivity extends BasePracticeActivity {
         @Override
         public void onFailure(String exceptionMessage) {
             signInButton.setClickable(true);
-            SystemUtil.showFaultDialog(SigninActivity.this);
+            SystemUtil.showDefaultFailureDialog(SigninActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -92,7 +92,7 @@ public class SigninActivity extends BasePracticeActivity {
         @Override
         public void onFailure(String exceptionMessage) {
             signInButton.setClickable(true);
-            SystemUtil.showFaultDialog(SigninActivity.this);
+            SystemUtil.showDefaultFailureDialog(SigninActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -141,7 +141,7 @@ public class SigninActivity extends BasePracticeActivity {
         @Override
         public void onFailure(String exceptionMessage) {
             signInButton.setClickable(true);
-            SystemUtil.showFaultDialog(SigninActivity.this);
+            SystemUtil.showDefaultFailureDialog(SigninActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -173,7 +173,7 @@ public class SigninActivity extends BasePracticeActivity {
         @Override
         public void onLoginFailure(String exceptionMessage) {
             signInButton.setClickable(true);
-            SystemUtil.showDialogMessage(SigninActivity.this,
+            SystemUtil.showFailureDialogMessage(SigninActivity.this,
                     "Sign-in failed",
                     "Invalid user id or password");
 

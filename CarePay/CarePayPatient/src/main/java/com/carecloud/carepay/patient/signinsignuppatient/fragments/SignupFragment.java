@@ -88,7 +88,7 @@ public class SignupFragment extends Fragment {
             progressBar.setVisibility(View.INVISIBLE);
             String errorMsg = CognitoAppHelper.formatException(exception);
 
-            SystemUtil.showDialogMessage(getActivity(),
+            SystemUtil.showFailureDialogMessage(getActivity(),
                                          "Sign up failed!",
                                          errorMsg);
         }
@@ -105,7 +105,7 @@ public class SignupFragment extends Fragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(getActivity());
+            SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -124,7 +124,7 @@ public class SignupFragment extends Fragment {
 
         @Override
         public void onLoginFailure(String exceptionMessage) {
-            SystemUtil.showDialogMessage(getContext(),
+            SystemUtil.showFailureDialogMessage(getContext(),
                                          "Sign-in failed",
                                          exceptionMessage);
 

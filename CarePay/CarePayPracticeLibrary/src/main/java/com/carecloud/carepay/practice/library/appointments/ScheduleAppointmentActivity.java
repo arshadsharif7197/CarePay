@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.adapters.ProvidersListAdapter;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAvailableHoursDialog;
+import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeRequestAppointmentDialog;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -35,6 +36,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class ScheduleAppointmentActivity extends BasePracticeActivity implements View.OnClickListener,
         ProvidersListAdapter.OnProviderListItemClickListener, VisitTypeDialog.OnDialogListItemClickListener  {
@@ -82,7 +85,27 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
         }
     }
 
-    public void logout(){
+    public void showAppointmentConfirmation() {
+        if (scheduleResourcesModel != null && isVisible) {
+            String appointmentRequestSuccessMessage = scheduleResourcesModel.getMetadata()
+                    .getLabel().getAppointmentRequestSuccessMessage();
+
+            new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                    .setTitleText("")
+                    .setContentText(appointmentRequestSuccessMessage)
+                    .setConfirmText(getString(R.string.alert_ok))
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            sDialog.dismissWithAnimation();
+                            logout();
+                        }
+                    })
+                    .show();
+        }
+    }
+
+    private void logout(){
         Map<String, String> headers = new HashMap<>();
         headers.put("x-api-key", HttpConstants.getApiStartKey());
 
@@ -108,7 +131,7 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(ScheduleAppointmentActivity.this);
+            SystemUtil.showDefaultFailureDialog(ScheduleAppointmentActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -128,7 +151,7 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(ScheduleAppointmentActivity.this);
+            SystemUtil.showDefaultFailureDialog(ScheduleAppointmentActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -208,7 +231,7 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(ScheduleAppointmentActivity.this);
+            SystemUtil.showDefaultFailureDialog(ScheduleAppointmentActivity.this);
             appointmentProgressBar.setVisibility(View.GONE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

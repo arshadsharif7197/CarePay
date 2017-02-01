@@ -341,7 +341,7 @@ public class AppointmentDetailDialog extends Dialog {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(context);
+            SystemUtil.showDefaultFailureDialog(context);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -358,7 +358,7 @@ public class AppointmentDetailDialog extends Dialog {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(context);
+            SystemUtil.showDefaultFailureDialog(context);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -403,7 +403,7 @@ public class AppointmentDetailDialog extends Dialog {
                 }
             }
         }catch (Exception ex){
-           SystemUtil.showFaultDialog(context);
+           SystemUtil.showDefaultFailureDialog(context);
            Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), ex.getMessage());
             ex.printStackTrace();
         }
@@ -432,7 +432,7 @@ public class AppointmentDetailDialog extends Dialog {
                         .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
             }
         }catch (Exception ex){
-           SystemUtil.showFaultDialog(context);
+           SystemUtil.showDefaultFailureDialog(context);
            Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), ex.getMessage());
         }
     }
