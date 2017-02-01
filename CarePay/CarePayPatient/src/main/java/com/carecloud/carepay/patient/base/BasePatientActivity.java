@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.BaseVisibilityHintActivity;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
@@ -15,7 +16,7 @@ import com.google.gson.Gson;
  * Use for holding the common DTO which will be converted to the desire DTO using getConvertedDTO
  */
 
-public abstract class BasePatientActivity extends AppCompatActivity {
+public abstract class BasePatientActivity extends BaseVisibilityHintActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
