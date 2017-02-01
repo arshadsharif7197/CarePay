@@ -105,7 +105,7 @@ public class InTakeCardiacSymptomsFragment extends InTakeFragment {
 
     private void onCheckBoxtextColor(CheckBox checkBox) {
         if (checkBox.isChecked()) {
-            checkBox.setTextColor(ContextCompat.getColor(context, R.color.blue_cerulian));
+            checkBox.setTextColor(ContextCompat.getColor(context, R.color.bright_cerulean));
         } else {
             checkBox.setTextColor(ContextCompat.getColor(context, R.color.slateGray));
         }

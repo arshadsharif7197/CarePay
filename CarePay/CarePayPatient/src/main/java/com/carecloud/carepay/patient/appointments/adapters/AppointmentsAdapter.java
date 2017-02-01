@@ -132,7 +132,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                     holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
                 } else {
                     holder.todayTimeTextView.setText(time12Hour);
-                    holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.dark_green));
+                    holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.overlay_green));
                 }
             }
 

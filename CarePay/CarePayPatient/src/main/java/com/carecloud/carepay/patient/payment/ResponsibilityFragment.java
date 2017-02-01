@@ -96,7 +96,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
                             payLaterButton.setEnabled(true);
                             payLaterButton.setEnabled(true);
 
-                            payTotalAmountButton.setBackgroundColor(getResources().getColor(R.color.blue_cerulian));
+                            payTotalAmountButton.setBackgroundColor(getResources().getColor(R.color.bright_cerulean));
                             payTotalAmountButton.setTextColor(Color.WHITE);
                             makePartialPaymentButton.setTextColor(getResources().getColor(R.color.bright_cerulean));
                             makePartialPaymentButton.setBackgroundColor(Color.WHITE);

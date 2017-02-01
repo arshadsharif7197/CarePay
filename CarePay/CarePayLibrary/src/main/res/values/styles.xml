@@ -146,7 +146,7 @@
     </style>
 
     <style name="EditTextStyle" parent="android:Widget.EditText">
-        <item name="android:textColor">@color/blue_cerulian</item>
+        <item name="android:textColor">@color/bright_cerulean</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/textview_default_textsize</item>
@@ -170,7 +170,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerInParent">true</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/blue_cerulian</item>
+        <item name="android:textColor">@color/bright_cerulean</item>
         <item name="android:textSize">@dimen/signup_textview_existing_account_size</item>
         <item name="android:textStyle">bold</item>
         <item name="android:layout_marginTop">@dimen/margintop</item>
@@ -188,7 +188,7 @@
     <style name="CustomToolbarStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@color/blue_cerulian</item>
+        <item name="android:background">@color/bright_cerulean</item>
         <item name="android:gravity">center</item>
     </style>
 
@@ -306,7 +306,7 @@
     <style name="DemographicsDocsNumberStyle" parent="android:Widget.TextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/blue_cerulian</item>
+        <item name="android:textColor">@color/bright_cerulean</item>
         <item name="android:textSize">@dimen/demographics_docs_number_text_size</item>
     </style>
 
@@ -334,7 +334,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:clickable">true</item>
-        <item name="android:textColor">@color/blue_cerulian</item>
+        <item name="android:textColor">@color/bright_cerulean</item>
         <item name="android:textSize">@dimen/demographics_docs_clickable_text_size</item>
         <item name="android:layout_marginEnd">@dimen/signup_optional_label_margin_left_right</item>
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
@@ -440,7 +440,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">20dp</item>
         <item name="android:background">@drawable/button_default_background</item>
-        <item name="android:textColor">@color/blue_cerulian</item>
+        <item name="android:textColor">@color/bright_cerulean</item>
     </style>
 
     <style name="SignupInstructionsStyle">
@@ -719,7 +719,7 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/respons_button_text_size</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:background">@color/blue_cerulian</item>
+        <item name="android:background">@color/bright_cerulean</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:gravity">center</item>
     </style>
@@ -728,16 +728,16 @@
         <item name="colorAccent">@android:color/white</item>
         <item name="android:textColorHint">@color/payne_gray</item>
         <item name="colorControlNormal">@color/lightSlateGray</item>
-        <item name="colorControlActivated">@color/blue_cerulian</item>
+        <item name="colorControlActivated">@color/bright_cerulean</item>
         <item name="android:textAllCaps">true</item>
-        <item name="colorControlHighlight">@color/blue_cerulian</item>
+        <item name="colorControlHighlight">@color/bright_cerulean</item>
         <item name="android:textSize">10sp</item>
         <item name="android:fontFamily">ProximaNova-Extrabld</item>
     </style>
 
     <style name="PaymentEditTextStyle" parent="android:Widget.EditText">
         <item name="android:textColorHint">@color/payne_gray</item>
-        <item name="android:textColor">@color/blue_cerulian</item>
+        <item name="android:textColor">@color/bright_cerulean</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">16sp</item>
@@ -811,7 +811,7 @@
     <style name="SettingsToolbarStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@color/settings_toolbar_color</item>
+        <item name="android:background">@color/colorPrimary</item>
         <item name="android:gravity">center</item>
     </style>
 

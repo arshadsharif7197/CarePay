@@ -58,7 +58,7 @@
                     android:id="@+id/reasonTextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColorHint="@color/Munsell"
+                    android:textColorHint="@color/light_gray_dialog"
                     android:visibility="gone">
 
                     <EditText
@@ -70,7 +70,7 @@
                         android:enabled="false"
                         android:focusable="false"
                         android:imeOptions="flagNoExtractUi"
-                        android:textColor="@color/blue_cerulian"
+                        android:textColor="@color/bright_cerulean"
                         android:textSize="@dimen/cancel_edittext_size" />
 
                 </android.support.design.widget.TextInputLayout>

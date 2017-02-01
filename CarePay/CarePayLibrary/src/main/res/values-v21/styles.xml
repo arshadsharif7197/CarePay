@@ -15,7 +15,7 @@
     <style name="CustomToolbarStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@color/blue_cerulian</item>
+        <item name="android:background">@color/bright_cerulean</item>
         <item name="android:gravity">center</item>
         <item name="android:elevation">@dimen/respons_toolbar_elevation</item>
     </style>

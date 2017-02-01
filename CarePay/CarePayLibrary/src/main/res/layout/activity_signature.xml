@@ -125,7 +125,7 @@
                     android:layout_marginLeft="@dimen/marginleftright"
                     android:layout_marginRight="@dimen/marginleftright"
                     android:layout_marginTop="@dimen/consent_top"
-                    android:textColorHint="@color/pastelblue" />
+                    android:textColorHint="@color/gray" />
             </LinearLayout>
 
             <Button

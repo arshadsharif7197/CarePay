@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/settings_set_as_default"
+        android:background="@color/emerald"
         android:gravity="center"
         android:textAllCaps="true"
         android:textColor="@color/white"
