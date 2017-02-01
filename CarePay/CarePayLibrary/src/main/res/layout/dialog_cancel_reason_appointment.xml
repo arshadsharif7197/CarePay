@@ -18,7 +18,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@drawable/bg_cardview">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/heading_text"
@@ -82,12 +82,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_margin="@dimen/apt_dl_margin"
-            android:background="@drawable/button_munsell_border"
+            android:background="@drawable/button_red_selector"
             android:enabled="false"
             android:paddingBottom="@dimen/cancel_appointment_button_padding"
             android:paddingTop="@dimen/cancel_appointment_button_padding"
-            android:textColor="@color/munsell"
+            android:textColor="@color/white"
             android:textSize="@dimen/apt_dl_textview_size" />
     </RelativeLayout>
 </LinearLayout>

@@ -182,16 +182,16 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
     @SuppressWarnings("deprecation")
     private void onSelectionRadioCancel(boolean isSelected) {
         if (isSelected) {
-            cancelAppointmentButton.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.button_red_border));
+//            cancelAppointmentButton.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.button_red_border));
             cancelAppointmentButton.setEnabled(true);
-            cancelAppointmentButton.setTextColor(ContextCompat.getColor(context, R.color.harvard_crimson));
+//            cancelAppointmentButton.setTextColor(ContextCompat.getColor(context, R.color.harvard_crimson));
         }
 
         // Check for other cancellation reason
         if (cancellationReasons.get(cancellationReasons.size() - 1).getAppointmentCancellationReason().getId() == selectedReasonId) {
             reasonTextInputLayout.setVisibility(View.VISIBLE);
             reasonEditText.setEnabled(true);
-            reasonEditText.setTextColor(ContextCompat.getColor(context, R.color.bright_cerulean));
+            reasonEditText.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
         } else {
             reasonTextInputLayout.setVisibility(View.GONE);
             reasonEditText.setEnabled(false);
@@ -207,7 +207,7 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
                 },
                 new int[]{
                         ContextCompat.getColor(context, R.color.lightSlateGray),
-                        ContextCompat.getColor(context, R.color.bright_cerulean),
+                        ContextCompat.getColor(context, R.color.colorPrimary),
                 }
         );
         appCompatRadioButton.setSupportButtonTintList(colorStateList);

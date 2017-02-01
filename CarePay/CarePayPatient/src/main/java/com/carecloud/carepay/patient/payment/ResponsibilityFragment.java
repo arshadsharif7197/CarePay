@@ -96,16 +96,16 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
                             payLaterButton.setEnabled(true);
                             payLaterButton.setEnabled(true);
 
-                            payTotalAmountButton.setBackgroundColor(getResources().getColor(R.color.bright_cerulean));
+                            payTotalAmountButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                             payTotalAmountButton.setTextColor(Color.WHITE);
-                            makePartialPaymentButton.setTextColor(getResources().getColor(R.color.bright_cerulean));
+                            makePartialPaymentButton.setTextColor(getResources().getColor(R.color.colorPrimary));
                             makePartialPaymentButton.setBackgroundColor(Color.WHITE);
-                            payLaterButton.setTextColor(getResources().getColor(R.color.bright_cerulean));
+                            payLaterButton.setTextColor(getResources().getColor(R.color.colorPrimary));
                             payLaterButton.setBackgroundColor(Color.WHITE);
 
                             GradientDrawable border = new GradientDrawable();
                             border.setColor(Color.WHITE);
-                            border.setStroke(1, getResources().getColor(R.color.bright_cerulean));
+                            border.setStroke(1, getResources().getColor(R.color.colorPrimary));
                             makePartialPaymentButton.setBackground(border);
                             payLaterButton.setBackground(border);
                         }

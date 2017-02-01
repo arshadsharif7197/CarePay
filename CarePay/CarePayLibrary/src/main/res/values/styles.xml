@@ -132,7 +132,7 @@
     <!-- Common -->
 
     <style name="TextInputLayoutStyle" parent="TextAppearence.App.TextInputLayout">
-        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="errorTextAppearance">@style/errorTextAppearance</item>
@@ -146,7 +146,7 @@
     </style>
 
     <style name="EditTextStyle" parent="android:Widget.EditText">
-        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/textview_default_textsize</item>
@@ -188,7 +188,7 @@
     <style name="CustomToolbarStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@color/bright_cerulean</item>
+        <item name="android:background">@color/colorPrimary</item>
         <item name="android:gravity">center</item>
     </style>
 
@@ -440,7 +440,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">20dp</item>
         <item name="android:background">@drawable/button_default_background</item>
-        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
     <style name="SignupInstructionsStyle">
@@ -719,7 +719,7 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/respons_button_text_size</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:background">@color/bright_cerulean</item>
+        <item name="android:background">@color/colorPrimary</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:gravity">center</item>
     </style>
