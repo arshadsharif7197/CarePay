@@ -52,7 +52,7 @@
                 android:id="@+id/responsibility_line_item_recycle_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/dimen_26dp" />
+                android:layout_marginTop="@dimen/dimen_10dp" />
 
             <!--<LinearLayout-->
             <!--android:layout_width="match_parent"-->

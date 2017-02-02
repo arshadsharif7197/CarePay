@@ -79,11 +79,6 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
                 }
             });
         }
-        else if(holder.lineItemNameLabelDetails.getVisibility() == View.VISIBLE)
-        {
-            holder.lineItemNameLabelDetails.setVisibility(View.GONE);
-        }
-
 
     }
 
