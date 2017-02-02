@@ -556,7 +556,11 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
                 setDefaultBillingAddressTexts();
             } else {
                 setAddressFieldsEnabled(true);
-                //clearBillingAddressTexts();
+                address1EditText.setText("");
+                address2EditText.setText("");
+                zipCodeEditText.setText("");
+                cityEditText.setText("");
+                stateEditText.setText("");
             }
         }
     };
@@ -665,7 +669,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
             return false;
         }
 
-        if (!(verificationCodeEditText.getText().toString().length() > 0)) {
+        if (!(verificationCodeEditText.getText().toString().length() > 2)) {
             nextButton.setEnabled(false);
             nextButton.setClickable(false);
             return false;
