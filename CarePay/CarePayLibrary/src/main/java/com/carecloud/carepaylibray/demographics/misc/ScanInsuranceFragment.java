@@ -1,14 +1,9 @@
 package com.carecloud.carepaylibray.demographics.misc;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.RectShape;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -28,9 +23,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemInsuranceDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
@@ -182,18 +175,18 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
 
         insuranceCardNumEditText = (EditText) view.findViewById(R.id.reviewinsurncecardnum);
         insuranceCardNumEditText.setHint(documentsCardNumberString);
-        insuranceCardNumEditText.setTextColor(ContextCompat.getColor(getActivity(), R.color.settings_toolbar_color));
+        insuranceCardNumEditText.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
 
         frontInsuranceImageView = (ImageView) view.findViewById(R.id.demogr_insurance_frontimage);
         insuranceFrontScanHelper = new ImageCaptureHelper(getActivity(), frontInsuranceImageView, demographicsSettingsLabelsDTO);
 
         btnScanFrontInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_frontbtn);
         btnScanFrontInsurance.setText(documentsdocumentsScanFirstString);
-        btnScanFrontInsurance.setTextColor(ContextCompat.getColor(getActivity(), R.color.settings_toolbar_color));
+        btnScanFrontInsurance.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
         GradientDrawable shape = new GradientDrawable();
         shape.setShape(GradientDrawable.RECTANGLE);
         shape.setCornerRadii(new float[] { 8, 8, 8, 8, 8, 8, 8, 8 });
-        shape.setStroke(3, ContextCompat.getColor(getActivity(), R.color.settings_toolbar_color));
+        shape.setStroke(3, ContextCompat.getColor(getActivity(), R.color.colorPrimary));
         btnScanFrontInsurance.setBackgroundDrawable(shape);
 
         btnScanFrontInsurance.setOnClickListener(new View.OnClickListener() {
@@ -207,7 +200,7 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
         insuranceBackScanHelper = new ImageCaptureHelper(getActivity(), backInsuranceImageView, demographicsSettingsLabelsDTO);
         btnScanBackInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_backbtn);
         btnScanBackInsurance.setText(documentsScanBackString);
-        btnScanBackInsurance.setTextColor(ContextCompat.getColor(getActivity(), R.color.settings_toolbar_color));
+        btnScanBackInsurance.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
         btnScanBackInsurance.setBackgroundDrawable(shape);
 
         btnScanBackInsurance.setOnClickListener(new View.OnClickListener() {
@@ -221,7 +214,7 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
 
         providerTextView = (TextView) view.findViewById(R.id.demogr_docs_provider);
         providerTextView.setText(documentsProviderString);
-        providerTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.settings_toolbar_color));
+        providerTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
 
         providerTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -232,7 +225,7 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
 
         cardTypeTextView = (TextView) view.findViewById(R.id.demogr_insurance_card_type_textview);
         cardTypeTextView.setText(documentsCardTypeString);
-        cardTypeTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.settings_toolbar_color));
+        cardTypeTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
         cardTypeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -243,7 +236,7 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
         planTextView = (TextView) view.findViewById(R.id.demogr_docs_plan);
         enablePlanClickable(false);
         planTextView.setText(documentsPlanString);
-        planTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.settings_toolbar_color));
+        planTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
         planTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -512,10 +505,10 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
 
         if (imageCaptureHelper == insuranceFrontScanHelper) {
             btnScanFrontInsurance.setText(documentsdocumentsScanFirstString);
-            btnScanFrontInsurance.setTextColor(ContextCompat.getColor(getActivity(), R.color.settings_toolbar_color));
+            btnScanFrontInsurance.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
         } else if (imageCaptureHelper == insuranceBackScanHelper) {
             btnScanBackInsurance.setText(documentsScanBackString);
-            btnScanBackInsurance.setTextColor(ContextCompat.getColor(getActivity(), R.color.settings_toolbar_color));
+            btnScanBackInsurance.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
 
         }
     }
@@ -578,7 +571,7 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
     public void enablePlanClickable(boolean enabled) {
         if (enabled) {
             planTextView.setText(documentsPlanString);
-            planTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.settings_toolbar_color));
+            planTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
             planTextView.setEnabled(true);
         } else {
             planTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.light_gray));

@@ -566,7 +566,7 @@ public class SettingAddCreditCardFragment extends Fragment implements
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(getActivity());
+            SystemUtil.showDefaultFailureDialog(getActivity());
             ProgressDialogUtil.getInstance(getActivity()).dismiss();
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -694,7 +694,7 @@ public class SettingAddCreditCardFragment extends Fragment implements
 
             addNewCreditCardCall();
         } else {
-            SystemUtil.showFaultDialog(getActivity());
+            SystemUtil.showDefaultFailureDialog(getActivity());
             ProgressDialogUtil.getInstance(getActivity()).dismiss();
         }
     }

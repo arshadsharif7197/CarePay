@@ -317,6 +317,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
     View.OnClickListener findMyAppointmentButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            findMyAppointmentButton.setEnabled(false);
             callGetFindMyAppointments();
         }
     };
@@ -353,6 +354,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            findMyAppointmentButton.setEnabled(true);
             Map<String, String> queryMap = new HashMap<>();
             TransitionDTO transitionDTO;
             Gson gson = new Gson();
@@ -367,14 +369,15 @@ public class PersonalInformationActivity extends BasePracticeActivity {
                 transitionDTO = signinPatientModeDTO.getMetadata().getTransitions().getAction();
                 WorkflowServiceHelper.getInstance().execute(transitionDTO, patientModeAppointmentsCallback, queryMap, headers);
             } else {
-                SystemUtil.showDialogMessage(PersonalInformationActivity.this, StringUtil.getLabelForView(labelsDTO.getSignInFailed()),
+                SystemUtil.showFailureDialogMessage(PersonalInformationActivity.this, StringUtil.getLabelForView(labelsDTO.getSignInFailed()),
                         StringUtil.getLabelForView(labelsDTO.getPersonalInfoIncorrectDetails()));
             }
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(PersonalInformationActivity.this);
+            findMyAppointmentButton.setEnabled(true);
+            SystemUtil.showDefaultFailureDialog(PersonalInformationActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -387,12 +390,14 @@ public class PersonalInformationActivity extends BasePracticeActivity {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            findMyAppointmentButton.setEnabled(true);
             PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(PersonalInformationActivity.this);
+            findMyAppointmentButton.setEnabled(true);
+            SystemUtil.showDefaultFailureDialog(PersonalInformationActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

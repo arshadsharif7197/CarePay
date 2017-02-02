@@ -16,20 +16,18 @@ import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFrag
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.demographics.activities.NewReviewDemographicsActivity;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.IdsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class AppointmentsActivity extends MenuPatientActivity {
 
@@ -51,7 +49,7 @@ public class AppointmentsActivity extends MenuPatientActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(AppointmentsActivity.this);
+            SystemUtil.showDefaultFailureDialog(AppointmentsActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -70,14 +68,28 @@ public class AppointmentsActivity extends MenuPatientActivity {
 
         appointmentsDTO = getConvertedDTO(AppointmentsResultModel.class);
 
-        if (appointmentsDTO.getPayload() != null && appointmentsDTO.getPayload().getAppointments() != null
+        if (appointmentsDTO.getPayload() != null && appointmentsDTO.getPayload().getAppointments() != null){
+            IdsDTO idsDTO = appointmentsDTO.getPayload().getPractice_patient_ids().get(0);
+            practiceId = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPracticeId();
+            practiceMgmt = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPracticeManagement();
+            patientId = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPatientId();
+            prefix = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPrefix();
+            userId = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getUserId();
+            ApplicationPreferences.Instance.setPatientId(patientId);
+            ApplicationPreferences.Instance.setPracticeManagement(practiceMgmt);
+            ApplicationPreferences.Instance.setPracticeId(practiceId);
+            ApplicationPreferences.Instance.setUserId(userId);
+            ApplicationPreferences.Instance.setPrefix(prefix);
+        }
+
+      /*  if (appointmentsDTO.getPayload() != null && appointmentsDTO.getPayload().getAppointments() != null
                 && appointmentsDTO.getPayload().getAppointments().size() > 0) {
 
             appointmentDTO = appointmentsDTO.getPayload().getAppointments().get(0);
             practiceId = appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeId();
             practiceMgmt = appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeMgmt();
             patientId = appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPatientId();
-        }
+        }*/
 
         setTransitionBalance(appointmentsDTO.getMetadata().getLinks().getPatientBalances());
         setTransitionLogout(appointmentsDTO.getMetadata().getTransitions().getLogout());

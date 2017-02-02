@@ -21,7 +21,6 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 
 import java.io.ByteArrayOutputStream;
@@ -189,7 +188,7 @@ public class ScanDocDialog extends BasePracticeDialog implements  CarePayCameraC
 
     private void onClearButtonTextColor(){
         if(scanClearImageButton.isEnabled()){
-            scanClearImageButton.setTextColor(ContextCompat.getColor(context, R.color.blue_cerulian));
+            scanClearImageButton.setTextColor(ContextCompat.getColor(context, R.color.bright_cerulean));
         }else{
             scanClearImageButton.setTextColor(ContextCompat.getColor(context, R.color.white));
         }

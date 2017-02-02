@@ -70,7 +70,7 @@ public class SigninFragment extends Fragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(getActivity());
+            SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -101,7 +101,8 @@ public class SigninFragment extends Fragment {
 
         @Override
         public void onLoginFailure(String exceptionMessage) {
-            SystemUtil.showDialogMessage(getContext(),
+            signinButton.setEnabled(true);
+            SystemUtil.showFailureDialogMessage(getContext(),
                     "Sign-in failed",
                     "Invalid user id or password");
 
@@ -161,6 +162,7 @@ public class SigninFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (areAllValid()) {
+                    signinButton.setEnabled(false);
                     signInUser();
                 }
             }

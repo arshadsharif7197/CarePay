@@ -106,7 +106,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/legalLastName"
-            android:textColorHint="@color/pastelblue"
+            android:textColorHint="@color/gray"
             android:layout_marginLeft="@dimen/marginleftright"
             android:layout_marginRight="@dimen/marginleftright"
             android:layout_marginTop="@dimen/consent_top" />

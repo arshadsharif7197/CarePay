@@ -128,7 +128,7 @@
 
         <EditText
             android:id="@+id/reviewinsurncecardnum"
-            android:textColor="@color/blue_cerulian"
+            android:textColor="@color/bright_cerulean"
             style="@style/SigninSignupEditStyle"
             android:imeOptions="actionNone"
             android:inputType="textFilter" />

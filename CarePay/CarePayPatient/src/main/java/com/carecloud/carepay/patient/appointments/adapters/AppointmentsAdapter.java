@@ -106,13 +106,14 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             boolean isPending = item.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.PENDING);
             boolean isCheckedIn = item.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.CHECKED_IN);
             boolean isCanceled = item.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.CANCELLED);
+            final boolean isRequested = item.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.REQUESTED);
 
             if (sectionHeaderTitle.equals(appointmentLabels.getUpcomingAppointmentsHeading())) {
                 if (isCheckedIn) {
                     holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
                     holder.upcomingDateLinearLayout.setVisibility(View.GONE);
                     holder.todayTimeTextView.setText(appointmentLabels.getAppointmentsCheckedInLabel());
-                    holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
+                    holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
                 } else {
                     holder.todayTimeLinearLayout.setVisibility(View.GONE);
                     holder.upcomingDateLinearLayout.setVisibility(View.VISIBLE);
@@ -128,10 +129,10 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 if (isCheckedIn) {
                     holder.todayTimeTextView.setText(StringUtil.getLabelForView(
                             appointmentLabels.getAppointmentsCheckedInLabel()));
-                    holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
+                    holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
                 } else {
                     holder.todayTimeTextView.setText(time12Hour);
-                    holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.dark_green));
+                    holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.overlay_green));
                 }
             }
 
@@ -175,10 +176,15 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 holder.doctorName.setTextColor(ContextCompat.getColor(view.getContext(), R.color.optionl_gray));
                 holder.cellAvatar.setImageDrawable(context.getResources()
                         .getDrawable(R.drawable.icn_cell_avatar_badge_canceled));
+            } else if (isRequested) {
+                holder.cellAvatar.setVisibility(View.VISIBLE);
+                holder.doctorName.setTextColor(ContextCompat.getColor(view.getContext(), R.color.colorPrimary));
+                holder.cellAvatar.setImageDrawable(context.getResources()
+                        .getDrawable(R.drawable.icn_cell_avatar_badge_pending));
             } else {
                 holder.cellAvatar.setVisibility(View.INVISIBLE);
                 holder.missedAppointmentTextView.setVisibility(View.GONE);
-                holder.doctorName.setTextColor(ContextCompat.getColor(view.getContext(), R.color.bright_cerulean));
+                holder.doctorName.setTextColor(ContextCompat.getColor(view.getContext(), R.color.colorPrimary));
             }
 
             if (isCheckedIn) {
@@ -443,7 +449,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         AppointmentViewHolder(View itemView) {
             super(itemView);
             doctorName = (CarePayTextView) itemView.findViewById(R.id.doctor_name);
-            doctorName.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.bright_cerulean));
+            doctorName.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.colorPrimary));
 
             doctorType = (CarePayTextView) itemView.findViewById(R.id.doctor_type);
             doctorType.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.lightSlateGray));

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,9 +15,7 @@ import android.widget.Toast;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepaylibray.intake.models.PaymentModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.google.android.gms.wallet.MaskedWallet;
 import com.google.android.gms.wallet.WalletConstants;
 import com.google.android.gms.wallet.fragment.SupportWalletFragment;
@@ -94,10 +91,10 @@ public class ConfirmationActivity extends AppCompatActivity {
                 .setMaskedWalletDetailsHeaderTextAppearance(
                         R.style.WalletFragmentDetailsHeaderTextAppearance)
                 .setMaskedWalletDetailsBackgroundColor(
-                        R.color.blue_cerulian)
+                        R.color.bright_cerulean)
                 .setMaskedWalletDetailsButtonTextAppearance(R.drawable.cell_checkbox_on)
                 .setMaskedWalletDetailsButtonBackgroundResource(R.drawable.button_blue)
-                .setMaskedWalletDetailsBackgroundResource(R.color.blue_cerulian);
+                .setMaskedWalletDetailsBackgroundResource(R.color.bright_cerulean);
 
         WalletFragmentOptions walletFragmentOptions = WalletFragmentOptions.newBuilder()
                 .setEnvironment(PaymentConstants.WALLET_ENVIRONMENT)

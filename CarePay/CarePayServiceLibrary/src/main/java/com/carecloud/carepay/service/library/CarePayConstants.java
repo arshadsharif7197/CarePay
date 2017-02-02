@@ -12,6 +12,16 @@ public class CarePayConstants {
 
     public static final String PREFERENCE_PRACTICE_SELECTED_LANGUAGE = "practice_user_selected_language";
 
+    public static final String PREFERENCE_PATIENT_ID = "patient_id";
+
+    public static final String PREFERENCE_PRACTICE_ID = "practice_id";
+
+    public static final String PREFERENCE_PRACTICE_MANAGEMENT = "practice_management";
+
+    public static final String PREFERENCE_PREFIX = "prefix";
+
+    public static final String PREFERENCE_USER_ID = "user_id";
+
 
     // Default data
 

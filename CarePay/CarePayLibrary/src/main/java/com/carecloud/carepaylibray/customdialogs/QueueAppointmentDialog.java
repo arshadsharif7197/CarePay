@@ -28,7 +28,7 @@ public class QueueAppointmentDialog extends BaseDoctorInfoDialog {
      */
     public QueueAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
                                   AppointmentLabelDTO appointmentLabels) {
-        super(context, appointmentDTO);
+        super(context, appointmentDTO, false);
         this.context = context;
         this.appointmentLabels = appointmentLabels;
     }
@@ -54,7 +54,7 @@ public class QueueAppointmentDialog extends BaseDoctorInfoDialog {
         CarePayTextView queueValue = (CarePayTextView)
                 childActionView.findViewById(R.id.appointRequestQueueTextView);
         queueValue.setText(StringUtil.getLabelForView("You are 3rd")); // Remove once available in endpoint
-        queueValue.setTextColor(ContextCompat.getColor(context, R.color.dark_green));
+        queueValue.setTextColor(ContextCompat.getColor(context, R.color.overlay_green));
 
         mainLayout.addView(childActionView);
     }

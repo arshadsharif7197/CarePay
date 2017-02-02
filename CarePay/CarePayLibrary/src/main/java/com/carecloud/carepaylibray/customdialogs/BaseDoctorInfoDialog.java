@@ -15,10 +15,10 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -44,6 +44,7 @@ public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener
     private String placeName;
     private String placeAddress;
     private String phoneNumber;
+    private boolean isRequestAppointmentDialog;
 
     /**
      * Constructor.
@@ -51,9 +52,10 @@ public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener
      * @param context        context
      * @param appointmentDTO appointment model
      */
-    public BaseDoctorInfoDialog(Context context, AppointmentDTO appointmentDTO) {
+    public BaseDoctorInfoDialog(Context context, AppointmentDTO appointmentDTO, boolean isRequestAppointDialog) {
         super(context);
         this.context = context;
+        this.isRequestAppointmentDialog = isRequestAppointDialog;
         if(appointmentDTO != null) {
             this.payload = appointmentDTO.getPayload();
         }
@@ -76,10 +78,15 @@ public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener
         DateUtil.getInstance().setDateRaw(payload.getStartTime());
 
         CarePayTextView dateTextView = ((CarePayTextView) findViewById(R.id.appointDateTextView));
-        dateTextView.setText(DateUtil.getInstance().getDateAsDayMonthDayOrdinal());
-
         CarePayTextView timeTextView = ((CarePayTextView) findViewById(R.id.appointTimeTextView));
-        timeTextView.setText(DateUtil.getInstance().getTime12Hour());
+
+        if(isRequestAppointmentDialog) {
+            timeTextView.setText(DateUtil.getInstance().getDateAsDayMonthDayOrdinal());
+            dateTextView.setText(DateUtil.getInstance().getTime12Hour());
+        } else {
+            dateTextView.setText(DateUtil.getInstance().getDateAsDayMonthDayOrdinal());
+            timeTextView.setText(DateUtil.getInstance().getTime12Hour());
+        }
 
         CarePayTextView shortNameTextView = ((CarePayTextView) findViewById(R.id.appointShortnameTextView));
         shortNameTextView.setText(StringUtil.onShortDrName(payload.getProvider().getName()));

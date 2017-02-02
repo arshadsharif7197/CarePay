@@ -138,7 +138,7 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
 
         initializeDemographicsDTO();
         //initModels();
-        rootview = (LinearLayout) view.findViewById(R.id.demographicsReviewRootLayout);
+        rootview = (LinearLayout) view.findViewById(R.id.demographicsReviewRoot);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.demographics_review_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.demographics_review_toolbar_title);
@@ -1044,6 +1044,7 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
     }
 
     private void openNewFragment() {
+        buttonAddDemographicInfo.setEnabled(false);
         CheckinInsurancesSummaryFragment fragment = new CheckinInsurancesSummaryFragment();
         ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
         ((PatientModeCheckinActivity) getActivity()).toggleVisibleBackButton(true);
@@ -1182,5 +1183,12 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
 
 
         }.execute(zipcode);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        buttonAddDemographicInfo.setEnabled(true);
+
     }
 }

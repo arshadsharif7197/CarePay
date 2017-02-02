@@ -97,7 +97,7 @@
                         android:id="@+id/demogrDetailsEthnicityListTextView"
                         style="@style/DemographicsDocsClickableTextStyle"
                         android:text="@string/chooseTextView"
-                        android:textColor="@color/bright_cerulean"/>
+                        android:textColor="@color/colorPrimary"/>
 
                 </LinearLayout>
 
@@ -125,7 +125,7 @@
                         android:id="@+id/demogrDetailsGenderClickable"
                         style="@style/DemographicsDocsClickableTextStyle"
                         android:text="@string/chooseTextView"
-                        android:textColor="@color/bright_cerulean"/>
+                        android:textColor="@color/colorPrimary"/>
 
                 </LinearLayout>
 

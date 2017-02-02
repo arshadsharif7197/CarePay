@@ -38,13 +38,6 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
     private AppointmentsResultModel appointmentsResultModel;
     private ProgressBar appointmentProgressBar;
     private List<AppointmentDTO> appointmentsItems;
-    /**
-     * Getting single appointment from make_appointment endpoint
-     * hence added this flag to differentiate app flow,
-     * whether call is from Check-in or Schedule Appointments screen.
-     * Remove this flag dependency once all appointments received from endpoint.
-     */
-    private static boolean isNewAppointmentScheduled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,21 +56,12 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         appointmentProgressBar.setVisibility(View.GONE);
         try {
             appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
-            if(isNewAppointmentScheduled){
-                isNewAppointmentScheduled = false;
-                refreshAppointmentList();
-            } else {
-                getAppointmentList();
-            }
+            getAppointmentList();
         } catch (JsonSyntaxException ex) {
-            SystemUtil.showDialogMessage(this, getString(R.string.alert_title_server_error),
+            SystemUtil.showFailureDialogMessage(this, getString(R.string.alert_title_server_error),
                     getString(R.string.alert_title_server_error));
             ex.printStackTrace();
         }
-    }
-
-    public static void setIsNewAppointmentScheduled(boolean isNewAppointmentScheduled) {
-        AppointmentsActivity.isNewAppointmentScheduled = isNewAppointmentScheduled;
     }
 
     private String getToday(String appointmentRawDate) {
@@ -111,6 +95,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         int viewId = view.getId();
 
         if (viewId == R.id.logoutTextview) {
+            findViewById(R.id.logoutTextview).setEnabled(false);
             Map<String, String> query = new HashMap<>();
             Map<String, String> headers = new HashMap<>();
             headers.put("x-api-key", HttpConstants.getApiStartKey());
@@ -118,6 +103,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
             WorkflowServiceHelper.getInstance().execute(appointmentsResultModel.getMetadata()
                     .getTransitions().getLogout(), logOutCall, query, headers);
         } else if (viewId == R.id.btnHome) {
+            findViewById(R.id.btnHome).setEnabled(false);
             WorkflowServiceHelper.getInstance().execute(appointmentsResultModel.getMetadata()
                     .getTransitions().getLogout(), homeCall);
         }
@@ -131,13 +117,15 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            findViewById(R.id.logoutTextview).setEnabled(true);
             AppointmentsActivity.this.finish();
             PracticeNavigationHelper.getInstance().navigateToWorkflow(AppointmentsActivity.this, workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(AppointmentsActivity.this);
+            findViewById(R.id.logoutTextview).setEnabled(true);
+            SystemUtil.showDefaultFailureDialog(AppointmentsActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -150,13 +138,15 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            findViewById(R.id.btnHome).setEnabled(true);
             AppointmentsActivity.this.finish();
             PracticeNavigationHelper.getInstance().navigateToWorkflow(AppointmentsActivity.this, workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(AppointmentsActivity.this);
+            findViewById(R.id.btnHome).setEnabled(false);
+            SystemUtil.showDefaultFailureDialog(AppointmentsActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -237,7 +227,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         @Override
         public void onFailure(String exceptionMessage) {
             appointmentProgressBar.setVisibility(View.GONE);
-            SystemUtil.showFaultDialog(AppointmentsActivity.this);
+            SystemUtil.showDefaultFailureDialog(AppointmentsActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

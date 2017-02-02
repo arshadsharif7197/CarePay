@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.appointments.dialogs;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -45,10 +46,14 @@ public class PracticeAvailableHoursDateRangeDialog extends BasePracticeDialog {
      * @param context      the context
      * @param cancelString the cancel string
      */
-    public PracticeAvailableHoursDateRangeDialog(Context context, AppointmentAvailabilityDTO availabilityDTO, String cancelString) {
+    public PracticeAvailableHoursDateRangeDialog(Context context, AppointmentAvailabilityDTO availabilityDTO,
+                                                 String cancelString, Date startDate, Date endDate) {
+
         super(context, cancelString, false);
         this.context = context;
         this.availabilityDTO = availabilityDTO;
+        this.newStartDate = startDate;
+        this.newEndDate = endDate;
         inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -100,6 +105,7 @@ public class PracticeAvailableHoursDateRangeDialog extends BasePracticeDialog {
     };
 
 
+    @SuppressLint("InflateParams")
     @Override
     protected void onAddContentView(LayoutInflater inflater) {
         view = inflater.inflate(R.layout.dialog_edit_date_range, null);

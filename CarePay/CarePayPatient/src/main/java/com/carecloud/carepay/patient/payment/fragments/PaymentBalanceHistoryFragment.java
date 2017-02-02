@@ -46,7 +46,7 @@ public class PaymentBalanceHistoryFragment  extends Fragment  {
 
         TabLayout tabs = (TabLayout) balanceHistoryView.findViewById (R.id.balance_history_tabs);
         tabs.setSelectedTabIndicatorColor(Color.WHITE);
-        tabs.setTabTextColors(Color.WHITE, Color.LTGRAY);
+        tabs.setTabTextColors(Color.LTGRAY, Color.WHITE);
         tabs.setupWithViewPager(viewPager);
 
         return balanceHistoryView;

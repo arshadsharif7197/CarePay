@@ -28,9 +28,11 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.picasso.Picasso;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -84,10 +86,12 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         String startDay = StringUtils.substringBefore(DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal(), ",");
         String endDay = DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal()
                 .substring(DateUtil.getInstance().getDateAsDayMonthDayOrdinal().indexOf(","));
-
+        boolean isToday;
         if (DateUtil.getInstance().isToday()) {
+            isToday = true;
             strToday = startDay.replace(startDay, appointmentLabels.getAppointmentsTodayHeadingSmall()) + endDay;
         } else {
+            isToday = false;
             strToday = startDay + endDay;
         }
         holder.appointmentDate.setText(strToday);
@@ -95,13 +99,26 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         holder.appointmentTime.setText(DateUtil.getInstance().getTime12Hour());
         holder.startCheckIn.setText(appointmentLabels.getAppointmentsPracticeCheckin());
 
+        Date appointmentTime = DateUtil.getInstance().setDateRaw(item.getEndTime()).getDate();
+        // Get current date/time in required format
+        String currentTime = DateUtil.getDateRaw(DateUtil.getInstance().setToCurrent().getDate());
+        Date currentDate = DateUtil.getInstance().setDateRaw(currentTime).getDate();
+        boolean isMissed = false;
+        if (appointmentTime != null && currentDate != null) {
+            long differenceInMilli = appointmentTime.getTime() - currentDate.getTime();
+            long differenceInMinutes = TimeUnit.MILLISECONDS.toMinutes(differenceInMilli);
+            if (differenceInMinutes < 0) {
+                isMissed = true;
+            }
+        }
+
         boolean isPending = item.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.PENDING);
-        if (!isPending) {
-            holder.startCheckIn.setClickable(false);
-            holder.startCheckIn.setEnabled(false);
-        } else {
+        if (isPending && isToday && !isMissed) {
             holder.startCheckIn.setClickable(true);
             holder.startCheckIn.setEnabled(true);
+        } else {
+            holder.startCheckIn.setClickable(false);
+            holder.startCheckIn.setEnabled(false);
         }
 
 //        GradientDrawable bgShape = (GradientDrawable) holder.headerView.getBackground();
@@ -156,7 +173,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(context);
+            SystemUtil.showDefaultFailureDialog(context);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

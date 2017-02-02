@@ -29,7 +29,7 @@ public class PendingAppointmentRequestDialog extends BaseDoctorInfoDialog {
      */
     public PendingAppointmentRequestDialog(Context context, AppointmentDTO appointmentDTO,
                                            AppointmentLabelDTO appointmentLabels) {
-        super(context, appointmentDTO);
+        super(context, appointmentDTO, false);
         this.context = context;
         this.appointmentLabels = appointmentLabels;
     }
