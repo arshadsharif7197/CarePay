@@ -295,13 +295,13 @@ public class DemographicsSettingsDocumentsFragment extends Fragment {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            Log.d("TEST", workflowDTO.toString());
+            nextButton.setEnabled(true);
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-
+            nextButton.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -316,6 +316,7 @@ public class DemographicsSettingsDocumentsFragment extends Fragment {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                nextButton.setEnabled(false);
                 insuranceDTOsList.clear();
                 for (DemographicInsurancePayloadDTO payloadDTO : wrapperCollection1.sendPayloads()) {
                     if (isInsuaranceNonTrivial(payloadDTO)) {

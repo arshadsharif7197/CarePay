@@ -164,6 +164,7 @@ public class DemographicsSettingsFragment extends Fragment {
         signOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                signOutButton.setEnabled(false);
                 WorkflowServiceHelper.getInstance().executeApplicationStartRequest(logOutCall);
 
             }
@@ -305,6 +306,7 @@ public class DemographicsSettingsFragment extends Fragment {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            signOutButton.setEnabled(true);
             // log out previous user from Cognito
             CognitoAppHelper.getPool().getUser().signOut();
             CognitoAppHelper.setUser(null);
@@ -313,6 +315,7 @@ public class DemographicsSettingsFragment extends Fragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
+            signOutButton.setEnabled(true);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

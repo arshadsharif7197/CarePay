@@ -821,4 +821,12 @@
         </item>
         <item name="android:background">@drawable/button_profile_pic</item>
     </style>
+
+    <style name="PaymentMethodButtonStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/respons_button_text_size</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:gravity">center</item>
+    </style>
 </resources>

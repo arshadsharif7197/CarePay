@@ -208,6 +208,7 @@ public class DemographicsSettingUpdateEmailFragment extends Fragment {
             public void onClick(View view) {
                 try {
                     if (isEmailValid() ) {
+                        updateEmailButton.setEnabled(false);
                         if (demographicsSettingsDTO != null) {
                             DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
                             if (demographicsSettingsMetadataDTO != null) {
@@ -252,13 +253,13 @@ public class DemographicsSettingUpdateEmailFragment extends Fragment {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-
+            updateEmailButton.setEnabled(true);
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-
+            updateEmailButton.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
