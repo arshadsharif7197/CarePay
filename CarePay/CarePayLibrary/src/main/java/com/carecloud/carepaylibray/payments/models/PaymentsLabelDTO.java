@@ -36,7 +36,7 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_method_title")
     @Expose
     private String paymentMethodTitle;
-    @SerializedName("payment_choose_method_button")
+    @SerializedName("payment_chooce_method")
     @Expose
     private String paymentChooseMethodButton;
     @SerializedName("payment_create_plan_text")
