@@ -22,6 +22,13 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
     private PaymentsModel paymentReceiptModel;
     private PaymentDetailsDialog.PayNowClickListener payListener;
 
+    /**
+     * Constructor
+     * @param context context
+     * @param paymentReceiptModel payment model
+     * @param detailsList details list
+     * @param payListener listener
+     */
     public PaymentLineItemsListAdapter(Context context, PaymentsModel paymentReceiptModel,
                                        List<PatiencePayloadDTO> detailsList,
                                        PaymentDetailsDialog.PayNowClickListener payListener) {
