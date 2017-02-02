@@ -15,14 +15,24 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.List;
 
-public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLineItemsListAdapter.PaymentDetailsListViewHolder>{
+public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLineItemsListAdapter.PaymentDetailsListViewHolder> {
 
     private Context context;
     private List<PatiencePayloadDTO> detailsList;
     private PaymentsModel paymentReceiptModel;
     private PaymentDetailsDialog.PayNowClickListener payListener;
 
-    public PaymentLineItemsListAdapter(Context context, PaymentsModel paymentReceiptModel, List<PatiencePayloadDTO> detailsList, PaymentDetailsDialog.PayNowClickListener payListener) {
+    /**
+     * Constructor
+     * @param context context
+     * @param paymentReceiptModel payment model
+     * @param detailsList details list
+     * @param payListener listener
+     */
+    public PaymentLineItemsListAdapter(Context context, PaymentsModel paymentReceiptModel,
+                                       List<PatiencePayloadDTO> detailsList,
+                                       PaymentDetailsDialog.PayNowClickListener payListener) {
+
         this.context = context;
         this.detailsList = detailsList;
         this.payListener = payListener;
@@ -35,8 +45,6 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
                 R.layout.payment_line_item, parent, false);
         return new PaymentDetailsListViewHolder(paymentDetailsListItemView);
     }
-
-
 
     @Override
     public int getItemCount() {
@@ -55,7 +63,6 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
             paymentDetailLabel = (CarePayTextView) itemView.findViewById(R.id.lineItemNameLabel);
             paymentDetailAmount = (CarePayTextView) itemView.findViewById(R.id.lineItemAmountLabel);
             lineItemNameLabelDetails = (CarePayTextView) itemView.findViewById(R.id.lineItemNameLabelDetails);
-
         }
     }
 
@@ -67,19 +74,20 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
 
         if (paymentLineItem.getDetails() != null && paymentLineItem.getDetails().size() > 0) {
             holder.lineItemNameLabelDetails.setVisibility(View.VISIBLE);
-            holder.lineItemNameLabelDetails.setText(paymentReceiptModel.getPaymentsMetadata().getPaymentsLabel().getPaymentResponsibilityDetails());
+            holder.lineItemNameLabelDetails.setText(paymentReceiptModel.getPaymentsMetadata()
+                    .getPaymentsLabel().getPaymentResponsibilityDetails());
 
             holder.lineItemNameLabelDetails.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     // Call for payment details dialog
-                    PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(context ,
+                    PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(context,
                             paymentReceiptModel, paymentLineItem, payListener);
-                   detailsDialog.show();
+                    detailsDialog.show();
                 }
             });
+        } else if (holder.lineItemNameLabelDetails.getVisibility() == View.VISIBLE) {
+            holder.lineItemNameLabelDetails.setVisibility(View.GONE);
         }
-
     }
-
 }
