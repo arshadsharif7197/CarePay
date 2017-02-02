@@ -138,7 +138,7 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
 
         initializeDemographicsDTO();
         //initModels();
-        rootview = (LinearLayout) view.findViewById(R.id.demographicsReviewRootLayout);
+        rootview = (LinearLayout) view.findViewById(R.id.demographicsReviewRoot);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.demographics_review_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.demographics_review_toolbar_title);
