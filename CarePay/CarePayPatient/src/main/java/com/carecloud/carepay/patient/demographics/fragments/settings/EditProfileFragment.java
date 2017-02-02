@@ -232,6 +232,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
         updateProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                updateProfileButton.setEnabled(false);
                 try{
                     if (demographicsSettingsDTO != null) {
                         DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
@@ -365,6 +366,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            updateProfileButton.setEnabled(true);
             progressBar.setVisibility(View.GONE);
 
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
@@ -372,6 +374,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
+            updateProfileButton.setEnabled(true);
             progressBar.setVisibility(View.GONE);
 
             SystemUtil.showDefaultFailureDialog(getActivity());

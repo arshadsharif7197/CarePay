@@ -387,6 +387,7 @@ public class DemographicsSettingsUpdateNameFragment extends Fragment {
             public void onClick(View view) {
                 try{
                 if (isAllFieldsValid()) {
+                    updateProfileButton.setEnabled(false);
                     if (demographicsSettingsDTO != null) {
                         DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
                         if (demographicsSettingsMetadataDTO != null) {
@@ -434,6 +435,7 @@ public class DemographicsSettingsUpdateNameFragment extends Fragment {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            updateProfileButton.setEnabled(true);
             progressBar.setVisibility(View.GONE);
 
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
@@ -441,6 +443,7 @@ public class DemographicsSettingsUpdateNameFragment extends Fragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
+            updateProfileButton.setEnabled(true);
             progressBar.setVisibility(View.GONE);
 
             SystemUtil.showDefaultFailureDialog(getActivity());
