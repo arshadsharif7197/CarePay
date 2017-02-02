@@ -150,8 +150,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     private boolean isStateEmtpy;
     private boolean isZipEmpty;
 
-    private LinearLayout addDemoLineraLayout;
-
     private String stateAbbr = null;
     private City smartyStreetsResponse;
 
@@ -174,19 +172,17 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        toolbar.setVisibility(view.GONE);
+        toolbar.setVisibility(View.GONE);
 
         initialiseUIFields();
         setEditTexts(view);
         setTypefaces(view);
         initViewFromModels();
 
-
         formatEditText();
         ((ScrollView)view.findViewById(R.id.adddemoScrollview)).smoothScrollTo(0,0);
         return view;
     }
-
 
     private void initializeDemographicsDTO() {
         demographicDTO = ((NewReviewDemographicsActivity) getActivity()).getDemographicDTO();
@@ -211,7 +207,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
     private void initialiseUIFields() {
 
-        addDemoLineraLayout = (LinearLayout) view.findViewById(R.id.adddemoLinearLayout);
+        LinearLayout addDemoLineraLayout = (LinearLayout) view.findViewById(R.id.adddemoLinearLayout);
         addDemoLineraLayout.setPadding(20, 0, 20, 0);
 
         profileImageview = (ImageView) view.findViewById(R.id.patientPicImageView);
@@ -267,7 +263,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         stateLabel = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);
         initializeLabels();
         initializeOptionsArray();
-
 
     }
 
@@ -810,7 +805,8 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         if (!StringUtil.isNullOrEmpty(dateOfBirth)) {
             // the date is DateUtil as
             demographicPersDetailsPayloadDTO.setDateOfBirth(
-                    DateUtil.getDateRaw(DateUtil.parseFromDateAsMMddyyyy(dateOfBirth)));
+                    DateUtil.getInstance().setDateRaw(dateOfBirth).toStringWithFormatYyyyDashMmDashDd()
+            );
         }
         String gender = selectGender.getText().toString();
         if (!StringUtil.isNullOrEmpty(gender)) {
@@ -1068,7 +1064,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             }
             String datetime = demographicPersDetailsPayloadDTO.getDateOfBirth();
             if (datetime != null) {
-                String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).getDateAsMMddyyyyWithSlash();
+                String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).toStringWithFormatMmSlashDdSlashYyyy();
                 dobEditText.setText(dateOfBirthString);
                 dobEditText.requestFocus();
             } else {

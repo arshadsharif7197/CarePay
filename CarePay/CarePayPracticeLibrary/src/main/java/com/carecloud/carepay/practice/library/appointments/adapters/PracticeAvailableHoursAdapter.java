@@ -82,7 +82,6 @@ public class PracticeAvailableHoursAdapter extends RecyclerView.Adapter<Recycler
             final AppointmentsSlotsDTO appointmentsSlotsDTO = ((AppointmentsSlotsDTO) appointmentSlotItem);
 
             String upcomingStartTime = appointmentsSlotsDTO.getStartTime();
-            DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
             DateUtil.getInstance().setDateRaw(upcomingStartTime);
             String time12Hour = DateUtil.getInstance().getTime12Hour();
             vhTimeSlot.getTextView().setText(time12Hour);

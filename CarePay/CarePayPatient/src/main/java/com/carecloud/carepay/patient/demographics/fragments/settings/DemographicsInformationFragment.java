@@ -256,7 +256,7 @@ public class DemographicsInformationFragment extends Fragment {
         demographicSectionTextView.setText(demographicsHeaderString);
         addressSectionTextView.setText(addressHeaderString);
 
-        String dateOfBirthString = DateUtil.getInstance().setDateRaw(dobValString).getDateAsMMddyyyyWithSlash();
+        String dateOfBirthString = DateUtil.getInstance().setDateRaw(dobValString).toStringWithFormatMmSlashDdSlashYyyy();
         if (SystemUtil.isNotEmptyString(dateOfBirthString)) {
             dobEditText.setText(dateOfBirthString);
             dobEditText.requestFocus();

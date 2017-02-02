@@ -1,6 +1,5 @@
 package com.carecloud.carepay.patient;
 
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import java.util.Calendar;
 import java.util.Date;
@@ -8,7 +7,6 @@ import java.util.Date;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 
@@ -26,11 +24,6 @@ public class DateUtilTest {
     final private String[] monthsAbbr = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
     final private String[] amPm = {"AM", "PM"};
     final private String rawDate = "2016-10-03T16:30:00-04:00";
-
-    @BeforeClass
-    public static void setFormatforTests() {
-        DateUtil.getInstance().setFormat(CarePayConstants.RAW_DATE_FORMAT_FOR_TESTS);
-    }
 
     @Test
     public void hasDefaultAllFieldsValid() {
@@ -106,14 +99,14 @@ public class DateUtilTest {
         String dateString = DateUtil
                 .getInstance()
                 .setDateRaw(rawDate)
-                .getDateAsMMddyyyy();
+                .toStringWithFormatMmDashDdDashYyyy();
         assertThat("error format MM-dd-yyyy...", dateString, is("10-03-2016"));
     }
 
     @Test
     public void doesReturnRawDate() {
         DateUtil.getInstance().setDateRaw(rawDate); // set some date
-        String dateString = DateUtil.getDateRaw(DateUtil.getInstance().getDate()); // generate raw
+        String dateString = DateUtil.getInstance().toStringWithFormatIso8601(); // generate raw
         assertThat("error convert back to raw", dateString, is(rawDate));
     }
 
@@ -160,24 +153,5 @@ public class DateUtilTest {
         DateUtil.getInstance().setDate(yesterday);
         assertThat("error test tommorrow", DateUtil.getInstance().isTomorrowOrAfter(), is(true));
 
-    }
-
-
-    @Test
-    public void doesChangeTheFormat() {
-        DateUtil.getInstance()
-                .setFormat("MM/dd/yy'T'HH:mm:ssX"); // change the format
-        DateUtil.getInstance().setDateRaw("10/03/16T16:30:00-04:00"); // set a date in the new format
-
-        assertThat("invalid day", DateUtil.getInstance().getDay(), is(3));
-        assertThat("invalid month", DateUtil.getInstance().getMonth(), is(Calendar.OCTOBER));
-        assertThat("invalid year", DateUtil.getInstance().getYear(), is(2016));
-        assertThat("invalid day literal", DateUtil.getInstance().getDayLiteral(), is("Monday"));
-        assertThat("invalid month literal", DateUtil.getInstance().getMonthLiteral(), is("October"));
-        assertThat("invalid day abbr", DateUtil.getInstance().getDayLiteralAbbr(), is("Mon"));
-        assertThat("invalid month abbr", DateUtil.getInstance().getMonthLiteralAbbr(), is("Oct"));
-        assertThat("invalid am or pm", DateUtil.getInstance().getAmPm(), is("PM"));
-        assertThat("invalid hour", DateUtil.getInstance().getHour12(), is(4));
-        assertThat("invalid minute", DateUtil.getInstance().getMinute(), is(30));
     }
 }

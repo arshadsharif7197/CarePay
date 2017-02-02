@@ -336,8 +336,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
             TransitionDTO transitionDTO = transitionsDTO.getPracticeCheckin();
             Map<String, String> queryMap = new HashMap<>();
-            queryMap.put("start_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
-            queryMap.put("end_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
+            queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
+            queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
             WorkflowServiceHelper.getInstance().execute(transitionDTO, checkInCallback, queryMap);
 
         } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
@@ -345,8 +345,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
             TransitionDTO transitionDTO = transitionsDTO.getPatientAppointments();
             Map<String, String> queryMap = new HashMap<>();
-            queryMap.put("start_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
-            queryMap.put("end_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
+            queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
+            queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
             WorkflowServiceHelper.getInstance().execute(transitionDTO, checkInCallback, queryMap);
         }
     }
@@ -373,16 +373,16 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
             TransitionDTO transitionDTO = transitionsDTO.getPracticeCheckin();
             Map<String, String> queryMap = new HashMap<>();
-            queryMap.put("start_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
-            queryMap.put("end_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
+            queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
+            queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
             WorkflowServiceHelper.getInstance().execute(transitionDTO, checkInCallback, queryMap);
         } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
             PracticeNavigationHelper.getInstance().setIsPatientModeAppointments(false);
             PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
             TransitionDTO transitionDTO = transitionsDTO.getPatientCheckin();
             Map<String, String> queryMap = new HashMap<>();
-            queryMap.put("start_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
-            queryMap.put("end_date", DateUtil.toDateStringAsYYYYMMDD(new Date()));
+            queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
+            queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
             WorkflowServiceHelper.getInstance().execute(transitionDTO, checkInCallback, queryMap);
         }
     }
