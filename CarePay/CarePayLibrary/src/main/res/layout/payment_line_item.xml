@@ -10,7 +10,7 @@
     <LinearLayout
         android:id="@+id/history_item_linear_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -38,13 +38,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textAlignment="textEnd"
+                android:layout_marginRight="@dimen/dimen_5dp"
                 android:textColor="@color/bright_cerulean"
                 android:textSize="@dimen/textview_textsize"
                 app:customAssetFont="proxima_nova_regular" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/lineItemAmountLabel"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:textAlignment="textEnd"
