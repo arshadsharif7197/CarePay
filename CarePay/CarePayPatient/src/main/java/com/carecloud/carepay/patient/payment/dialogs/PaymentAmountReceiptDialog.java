@@ -81,7 +81,7 @@ public class PaymentAmountReceiptDialog extends Dialog implements View.OnClickLi
             ((TextView) findViewById(R.id.receipt_no_label)).setText(paymentsLabel.getPaymentReceiptNoLabel());
             ((TextView) findViewById(R.id.payment_receipt_type_label)).setText(paymentsLabel.getPaymentReceiptPaymentType());
 
-            String receiptDate = DateUtil.getInstance().setDateRaw(new Date().toString()).getDateAsMMddyyyyWithSlash();
+            String receiptDate = DateUtil.getInstance().setDateRaw(new Date().toString()).toStringWithFormatMmSlashDdSlashYyyy();
             ((TextView) findViewById(R.id.payment_receipt_date_label)).setText(receiptDate);
 
             ((TextView) findViewById(R.id.payment_receipt_title)).setText(paymentsLabel.getPaymentReceiptTitle());

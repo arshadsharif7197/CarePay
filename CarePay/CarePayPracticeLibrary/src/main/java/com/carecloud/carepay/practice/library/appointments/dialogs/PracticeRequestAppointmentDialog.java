@@ -92,7 +92,6 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         requestAppointmentButton.requestFocus();
         SystemUtil.setGothamRoundedBoldTypeface(context,requestAppointmentButton);
 
-        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
         DateUtil.getInstance().setDateRaw(appointmentsSlotsDTO.getStartTime());
         CarePayTextView appointmentDateTextView = (CarePayTextView)view.findViewById(R.id.appointment_date);
         appointmentDateTextView.setText(DateUtil.getInstance().getDateAsDayMonthDayOrdinal());

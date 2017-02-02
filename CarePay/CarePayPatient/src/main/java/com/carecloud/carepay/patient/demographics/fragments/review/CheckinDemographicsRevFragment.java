@@ -229,8 +229,7 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
 
             String datetime = demographicPersDetailsPayloadDTO.getDateOfBirth();
             if (SystemUtil.isNotEmptyString(datetime)) {
-                DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_FILTER_DATE_FORMAT);
-                String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).getDateAsMMddyyyyWithSlash();
+                String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).toStringWithFormatMmSlashDdSlashYyyy();
                 dobTExtView.setText(dateOfBirthString);
             }
 

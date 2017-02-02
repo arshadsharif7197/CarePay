@@ -78,7 +78,6 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
 //        holder.placeName.setText("Place Name");
 //        holder.placeAddress.setText("2645 SW 37th Ave #502, Miami, FL 33133, USA");
 
-        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
         DateUtil.getInstance().setDateRaw(item.getStartTime());
         holder.appointmentDate.setText(DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal());
 
@@ -101,8 +100,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
 
         Date appointmentTime = DateUtil.getInstance().setDateRaw(item.getEndTime()).getDate();
         // Get current date/time in required format
-        String currentTime = DateUtil.getDateRaw(DateUtil.getInstance().setToCurrent().getDate());
-        Date currentDate = DateUtil.getInstance().setDateRaw(currentTime).getDate();
+        Date currentDate = DateUtil.getInstance().setToCurrent().getDate();
         boolean isMissed = false;
         if (appointmentTime != null && currentDate != null) {
             long differenceInMilli = appointmentTime.getTime() - currentDate.getTime();

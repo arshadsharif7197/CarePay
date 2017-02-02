@@ -301,7 +301,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
                 public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                     LocalDate date = new LocalDate(year, month + 1, day);
                     DateUtil.getInstance().setDate(date.toDate());
-                    selectDateButton.setText(DateUtil.getInstance().getDateAsMMddyyyyWithSlash());
+                    selectDateButton.setText(DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
                 }
             }, year, month, day);
 

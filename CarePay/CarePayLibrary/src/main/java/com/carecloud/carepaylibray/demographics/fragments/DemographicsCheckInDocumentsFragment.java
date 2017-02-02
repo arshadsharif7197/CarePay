@@ -56,7 +56,6 @@ public class DemographicsCheckInDocumentsFragment extends Fragment {
         // create the view
         view = inflater.inflate(R.layout.fragment_demographics_documents_check_in, container, false);
 
-
         initializeUIFields();
 
         return view;
