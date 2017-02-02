@@ -51,12 +51,14 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            languageConfirmButton.setEnabled(true);
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
 
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            languageConfirmButton.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -88,6 +90,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
         languageConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View onClickListener) {
+                languageConfirmButton.setEnabled(false);
                 ApplicationPreferences.Instance.setUserLanguage(languageId);
                 Map<String, String> query = new HashMap<>();
                 //   WorkflowServiceHelper.getInstance().executeApplicationStartRequest(signinscreencallback);

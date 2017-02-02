@@ -15,8 +15,8 @@
         android:background="@color/payne_gray"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/add_apt_calendar_day_title_padding_bottom"
-        android:paddingLeft="@dimen/dimen_1dp"
-        android:paddingRight="@dimen/add_apt_calendar_day_title_padding_right"
+        android:paddingStart="@dimen/dimen_1dp"
+        android:paddingEnd="@dimen/add_apt_calendar_day_title_padding_right"
         android:paddingTop="@dimen/add_apt_calendar_day_title_padding_top"
         android:weightSum="7">
 

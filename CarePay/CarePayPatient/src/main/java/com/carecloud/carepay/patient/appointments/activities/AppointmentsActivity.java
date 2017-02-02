@@ -68,18 +68,24 @@ public class AppointmentsActivity extends MenuPatientActivity {
 
         appointmentsDTO = getConvertedDTO(AppointmentsResultModel.class);
 
-        if (appointmentsDTO.getPayload() != null && appointmentsDTO.getPayload().getAppointments() != null){
-            IdsDTO idsDTO = appointmentsDTO.getPayload().getPractice_patient_ids().get(0);
-            practiceId = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPracticeId();
-            practiceMgmt = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPracticeManagement();
-            patientId = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPatientId();
-            prefix = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPrefix();
-            userId = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getUserId();
-            ApplicationPreferences.Instance.setPatientId(patientId);
-            ApplicationPreferences.Instance.setPracticeManagement(practiceMgmt);
-            ApplicationPreferences.Instance.setPracticeId(practiceId);
-            ApplicationPreferences.Instance.setUserId(userId);
-            ApplicationPreferences.Instance.setPrefix(prefix);
+        if (appointmentsDTO.getPayload() != null ){
+           try{
+               IdsDTO idsDTO = appointmentsDTO.getPayload().getPractice_patient_ids().get(0);
+                practiceId = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPracticeId();
+                practiceMgmt = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPracticeManagement();
+                patientId = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPatientId();
+                prefix = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPrefix();
+                userId = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getUserId();
+                ApplicationPreferences.Instance.setPatientId(patientId);
+                ApplicationPreferences.Instance.setPracticeManagement(practiceMgmt);
+                ApplicationPreferences.Instance.setPracticeId(practiceId);
+                ApplicationPreferences.Instance.setUserId(userId);
+                ApplicationPreferences.Instance.setPrefix(prefix);
+           }catch(Exception e){
+               e.printStackTrace();
+               System.out.println(e.getMessage());
+           }
+
         }
 
       /*  if (appointmentsDTO.getPayload() != null && appointmentsDTO.getPayload().getAppointments() != null

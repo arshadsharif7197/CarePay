@@ -688,12 +688,14 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            buttonConfirmData.setEnabled(true);
             demographicProgressBar.setVisibility(View.GONE);
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            buttonConfirmData.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -706,6 +708,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
             //   openNewFragment();
             if (isAllFieldsValid()) {
+                buttonConfirmData.setEnabled(false);
                 // update the model
                 updateModels();
 

@@ -50,6 +50,7 @@
                         style="@style/PaymentEditTextStyle"
                         android:imeOptions="actionNext"
                         android:inputType="textPersonName"
+                        android:maxLength="200"
                         android:maxLines="1"
                         android:nextFocusForward="@+id/creditCardNoEditText" />
 

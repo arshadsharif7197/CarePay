@@ -10,7 +10,7 @@
     <LinearLayout
         android:id="@+id/history_item_linear_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -24,9 +24,9 @@
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/lineItemNameLabel"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
+                android:layout_weight="0.6"
                 android:textAlignment="viewStart"
                 android:textColor="@color/grey_300"
                 android:textSize="@dimen/textview_default_textsize"
@@ -34,9 +34,9 @@
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/lineItemNameLabelDetails"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="0.2"
                 android:textAlignment="textEnd"
                 android:textColor="@color/bright_cerulean"
                 android:textSize="@dimen/textview_textsize"
@@ -44,9 +44,9 @@
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/lineItemAmountLabel"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
+                android:layout_weight="0.2"
                 android:textAlignment="textEnd"
                 android:textColor="@color/grey_400"
                 android:textSize="@dimen/textview_textsize"

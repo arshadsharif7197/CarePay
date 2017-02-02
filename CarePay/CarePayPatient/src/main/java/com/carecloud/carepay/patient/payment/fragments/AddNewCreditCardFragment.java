@@ -534,6 +534,11 @@ public class AddNewCreditCardFragment extends Fragment implements
                 setDefaultBillingAddressTexts();
             } else {
                 setAddressFiledsEnabled(true);
+                address1EditText.setText("");
+                address2EditText.setText("");
+                zipCodeEditText.setText("");
+                cityEditText.setText("");
+                stateEditText.setText("");
             }
         }
     };
@@ -561,6 +566,7 @@ public class AddNewCreditCardFragment extends Fragment implements
     private View.OnClickListener nextButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            nextButton.setEnabled(false);
             setDTOs();
             authorizeCreditCard();
         }
@@ -574,12 +580,14 @@ public class AddNewCreditCardFragment extends Fragment implements
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            nextButton.setEnabled(true);
             Log.d("addNewCreditCard", "=========================>\nworkflowDTO=" + workflowDTO.toString());
             makePaymentCall();
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            nextButton.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -593,6 +601,7 @@ public class AddNewCreditCardFragment extends Fragment implements
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            nextButton.setEnabled(true);
             Log.d("makePaymentCallback", "=========================>\nworkflowDTO=" + workflowDTO.toString());
             Gson gson = new Gson();
             PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(getActivity(),
@@ -602,6 +611,7 @@ public class AddNewCreditCardFragment extends Fragment implements
 
         @Override
         public void onFailure(String exceptionMessage) {
+            nextButton.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -642,7 +652,7 @@ public class AddNewCreditCardFragment extends Fragment implements
             return false;
         }
 
-        if (!(verificationCodeEditText.getText().toString().length() > 0)) {
+        if (!(verificationCodeEditText.getText().toString().length() > 2)) {
             nextButton.setEnabled(false);
             nextButton.setClickable(false);
             return false;
@@ -735,6 +745,7 @@ public class AddNewCreditCardFragment extends Fragment implements
             }
 
         } else {
+            nextButton.setEnabled(true);
             new LargeAlertDialog(getActivity(), paymentsLabelDTO.getPaymentFailedErrorMessage(), paymentsLabelDTO.getPaymentChangeMethodButton(), R.color.Feldgrau, R.drawable.icn_card_error, new LargeAlertDialog.LargeAlertInterface() {
                 @Override
                 public void onActionButton() {
