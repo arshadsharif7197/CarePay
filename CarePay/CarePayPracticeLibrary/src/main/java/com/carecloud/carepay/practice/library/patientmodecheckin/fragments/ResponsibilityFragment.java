@@ -16,6 +16,7 @@ import com.carecloud.carepay.practice.library.patientmodecheckin.activities.Pati
 import com.carecloud.carepay.practice.library.payments.dialogs.PartialPaymentDialog;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.practice.FlowStateInfo;
@@ -27,7 +28,7 @@ import java.util.List;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
-public class ResponsibilityFragment extends ResponsibilityBaseFragment implements com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog.PayNowClickListener {
+public class ResponsibilityFragment extends ResponsibilityBaseFragment implements PaymentDetailsDialog.PayNowClickListener {
 
 
     @Override
@@ -43,77 +44,58 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
         View view = inflater.inflate(R.layout.fragment_responsibility_practice, container, false);
 
         TextView responseTotal = (TextView) view.findViewById(R.id.respons_total);
-        //TextView paymentDetails = (TextView) view.findViewById(R.id.response_payment_details);
-        //TextView responseCopay = (TextView) view.findViewById(R.id.respons_copay);
-        //TextView responsePreviousBalance = (TextView) view.findViewById(R.id.respons_prev_balance);
         TextView totalResponsibility = (TextView) view.findViewById(R.id.respons_total_label);
-        //TextView prevBalanceResponsibility = (TextView) view.findViewById(R.id.respons_prev_balance_label);
-        //TextView coPayResponsibility = (TextView) view.findViewById(R.id.respons_copay_label);
+
         Button payTotalButton = (Button) view.findViewById(R.id.pay_total_amount_button);
         payTotalButton.setClickable(false);
         payTotalButton.setEnabled(false);
         setGothamRoundedMediumTypeface(appCompatActivity, payTotalButton);
-//        payTotalButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
 
         Button payPartialButton = (Button) view.findViewById(R.id.make_partial_payment_button);
         payPartialButton.setClickable(false);
         payPartialButton.setEnabled(false);
         setGothamRoundedMediumTypeface(appCompatActivity, payPartialButton);
-//        payPartialButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
-
 
         getPaymentInformation();
+
         if (paymentDTO != null) {
             getPaymentLabels();
-            ((TextView)view.findViewById(R.id.respons_title)).setText(paymentsTitleString);
-/*
-                List<PaymentPatientBalancesPayloadDTO> paymentList2 =
-                        paymentsModel.getPaymentPayload().getPatientBalances().get(0) .getPayload();
-*/
-               // List<PaymentPatientBalancesPayloadDTO> paymentList =
-             List<PatiencePayloadDTO> paymentList =       paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
-                                //.getPayload().getSummaryBalance();
-                total=0;
-                if (paymentList != null && paymentList.size() > 0) {
-                    for (PatiencePayloadDTO payment : paymentList) {
-                        total+= payment.getAmount();
-                    }
 
-                    fillDetailAdapter(view, paymentList);
+            ((TextView) view.findViewById(R.id.respons_title)).setText(paymentsTitleString);
 
-                    try {
-                        if (total > 0) {
-                            payTotalButton.setClickable(true);
-                            payTotalButton.setEnabled(true);
-                            payPartialButton.setEnabled(true);
-                            payPartialButton.setClickable(true);
+            List<PatiencePayloadDTO> paymentList = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
 
-//                            payTotalButton.setBackgroundColor(getResources().getColor(R.color.yellowGreen));
-                            payTotalButton.setTextColor(Color.WHITE);
-                            payPartialButton.setTextColor(getResources().getColor(R.color.bright_cerulean));
-//                            payPartialButton.setBackgroundColor(Color.WHITE);
-                            GradientDrawable border = new GradientDrawable();
-                            border.setColor(Color.WHITE);
-                            border.setStroke(1, getResources().getColor(R.color.bright_cerulean));
-//                            payPartialButton.setBackground(border);
-                        }
-
-                        NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
-                        responseTotal.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));
-                        //responseCopay.setText(CarePayConstants.DOLLAR.concat(copayStr));
-                        //responsePreviousBalance.setText(CarePayConstants.DOLLAR.concat(previousBalanceStr));
-                    } catch (NumberFormatException ex) {
-                        ex.printStackTrace();
-                        Log.e(LOG_TAG, ex.getMessage());
-                    }
+            total = 0;
+            if (paymentList != null && paymentList.size() > 0) {
+                for (PatiencePayloadDTO payment : paymentList) {
+                    total += payment.getAmount();
                 }
 
+                fillDetailAdapter(view, paymentList);
 
-            //paymentDetails.setText(paymentDetailsString);
+                try {
+                    if (total > 0) {
+                        payTotalButton.setClickable(true);
+                        payTotalButton.setEnabled(true);
+                        payPartialButton.setEnabled(true);
+                        payPartialButton.setClickable(true);
+
+                        payTotalButton.setTextColor(Color.WHITE);
+                        payPartialButton.setTextColor(getResources().getColor(R.color.bright_cerulean));
+                        GradientDrawable border = new GradientDrawable();
+                        border.setColor(Color.WHITE);
+                        border.setStroke(1, getResources().getColor(R.color.bright_cerulean));
+                    }
+
+                    NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
+                    responseTotal.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));
+                } catch (NumberFormatException ex) {
+                    ex.printStackTrace();
+                    Log.e(LOG_TAG, ex.getMessage());
+                }
+            }
+
             totalResponsibility.setText(totalResponsibilityString);
-            //prevBalanceResponsibility.setText(previousBalanceString);
-            //coPayResponsibility.setText(insuranceCopayString);
-
             payTotalButton.setText(payTotalAmountString);
             payPartialButton.setText(payPartialAmountString);
         }
@@ -135,15 +117,12 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
         return view;
     }
 
-
     protected void doPayment() {
         Bundle bundle = new Bundle();
         Gson gson = new Gson();
         String paymentsDTOString = gson.toJson(paymentDTO);
-        bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
-                paymentsDTOString);
-        bundle.putString(CarePayConstants.INTAKE_BUNDLE,
-                paymentsDTOString);
+        bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
+        bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
         bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, total);
 
         PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
@@ -151,12 +130,9 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
         ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
     }
 
-
     @Override
     public void onStart() {
         super.onStart();
         ((PatientModeCheckinActivity) getActivity()).updateSection(flowStateInfo);
     }
-
-
 }
