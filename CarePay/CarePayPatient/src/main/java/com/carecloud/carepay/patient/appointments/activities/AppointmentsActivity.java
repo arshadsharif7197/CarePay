@@ -68,7 +68,9 @@ public class AppointmentsActivity extends MenuPatientActivity {
 
         appointmentsDTO = getConvertedDTO(AppointmentsResultModel.class);
 
-        if (appointmentsDTO.getPayload() != null && appointmentsDTO.getPayload().getAppointments() != null){
+        if (appointmentsDTO.getPayload() != null && appointmentsDTO.getPayload().getAppointments() != null
+                && appointmentsDTO.getPayload().getPractice_patient_ids().size() > 0) {
+
             IdsDTO idsDTO = appointmentsDTO.getPayload().getPractice_patient_ids().get(0);
             practiceId = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPracticeId();
             practiceMgmt = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPracticeManagement();
