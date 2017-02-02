@@ -85,6 +85,7 @@ public class AppointmentsActivity extends MenuPatientActivity {
                e.printStackTrace();
                System.out.println(e.getMessage());
            }
+
         }
 
       /*  if (appointmentsDTO.getPayload() != null && appointmentsDTO.getPayload().getAppointments() != null

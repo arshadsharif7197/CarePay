@@ -534,6 +534,11 @@ public class AddNewCreditCardFragment extends Fragment implements
                 setDefaultBillingAddressTexts();
             } else {
                 setAddressFiledsEnabled(true);
+                address1EditText.setText("");
+                address2EditText.setText("");
+                zipCodeEditText.setText("");
+                cityEditText.setText("");
+                stateEditText.setText("");
             }
         }
     };
@@ -647,7 +652,7 @@ public class AddNewCreditCardFragment extends Fragment implements
             return false;
         }
 
-        if (!(verificationCodeEditText.getText().toString().length() > 0)) {
+        if (!(verificationCodeEditText.getText().toString().length() > 2)) {
             nextButton.setEnabled(false);
             nextButton.setClickable(false);
             return false;

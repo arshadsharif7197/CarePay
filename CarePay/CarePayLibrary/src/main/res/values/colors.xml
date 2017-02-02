@@ -56,6 +56,7 @@
     <color name="divider_color">#c4c4c4</color>
     <color name="checked_in_appointment_bg">#fffdea</color>
     <color name="cardinal">#c31e30</color>
+    <color name="date_range_header">#2B6369</color>
 
     <color name="optionl_gray">#90a4ae</color>
     <color name="pastel_blue">#b0bec5</color>
