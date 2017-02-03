@@ -256,7 +256,7 @@ public class DemographicsInformationFragment extends Fragment {
         demographicSectionTextView.setText(demographicsHeaderString);
         addressSectionTextView.setText(addressHeaderString);
 
-        String dateOfBirthString = DateUtil.getInstance().setDateRaw(dobValString).getDateAsMMddyyyyWithSlash();
+        String dateOfBirthString = DateUtil.getInstance().setDateRaw(dobValString).toStringWithFormatMmSlashDdSlashYyyy();
         if (SystemUtil.isNotEmptyString(dateOfBirthString)) {
             dobEditText.setText(dateOfBirthString);
             dobEditText.requestFocus();
@@ -983,6 +983,7 @@ public class DemographicsInformationFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (isAllFieldsValid()) {
+                    updateProfileButton.setEnabled(false);
                     if (demographicsSettingsDTO != null) {
                         DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
                         if (demographicsSettingsMetadataDTO != null) {
@@ -1038,12 +1039,14 @@ public class DemographicsInformationFragment extends Fragment {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            updateProfileButton.setEnabled(true);
             progressBar.setVisibility(View.GONE);
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            updateProfileButton.setEnabled(true);
             progressBar.setVisibility(View.GONE);
 
             SystemUtil.showDefaultFailureDialog(getActivity());

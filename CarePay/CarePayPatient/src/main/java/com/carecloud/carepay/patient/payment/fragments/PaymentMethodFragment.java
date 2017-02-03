@@ -379,7 +379,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                     break;
 
                 case CarePayConstants.TYPE_CREDIT_CARD:
-
+                    paymentChoiceButton.setEnabled(false);
                     TransitionDTO transitionDTO = paymentsDTO.getPaymentsMetadata()
                             .getPaymentsLinks().getPaymentsCreditCards();
                     WorkflowServiceHelper.getInstance().execute(transitionDTO, getCreditCardsCallback);
@@ -398,6 +398,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            paymentChoiceButton.setEnabled(true);
             Gson gson = new Gson();
             PaymentsModel paymentsModel = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
 
@@ -438,6 +439,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
         @Override
         public void onFailure(String exceptionMessage) {
+            paymentChoiceButton.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
