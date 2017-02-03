@@ -56,7 +56,8 @@ public class CarePayTextView extends TextView {
     public CarePayTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
-        init(attrs);
+        if (!isInEditMode())
+            init(attrs);
     }
 
     /**
@@ -72,7 +73,8 @@ public class CarePayTextView extends TextView {
     public CarePayTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
-        init(attrs);
+        if (!isInEditMode())
+            init(attrs);
     }
 
     /**
@@ -150,4 +152,5 @@ public class CarePayTextView extends TextView {
         Typeface tf = Typeface.createFromAsset(getContext().getAssets(), assetFontName);
         this.setTypeface(tf);
     }
+
 }
