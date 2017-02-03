@@ -33,7 +33,6 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsuranc
 import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapper;
 import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapperCollection;
 import com.carecloud.carepaylibray.demographics.misc.OnClickRemoveOrAddCallback;
-import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 
@@ -71,7 +70,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment {
     private LinearLayout                           insContainersWrapper;
     private InsuranceWrapperCollection             wrapperCollection1;
 
-    DemographicsDocumentsFragmentWthWrapperListener mCallback;
+    DemographicsDocumentsFragmentWthWrapperListener activityCallback;
 
     public interface DemographicsDocumentsFragmentWthWrapperListener {
         void initializeIdDocScannerFragment(DemographicIdDocPayloadDTO demPayloadIdDocDTO,
@@ -85,7 +84,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment {
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            mCallback = (DemographicsDocumentsFragmentWthWrapperListener) context;
+            activityCallback = (DemographicsDocumentsFragmentWthWrapperListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement DemographicsDocumentsFragmentWthWrapperListener");
@@ -248,7 +247,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment {
 
     private void setCardContainers() {
 
-        mCallback.initializeIdDocScannerFragment(demPayloadIdDocDTO, idDocsMetaDTO == null ? null : idDocsMetaDTO.properties.items.identityDocument);
+        activityCallback.initializeIdDocScannerFragment(demPayloadIdDocDTO, idDocsMetaDTO == null ? null : idDocsMetaDTO.properties.items.identityDocument);
 
         insContainersWrapper = (LinearLayout) view.findViewById(R.id.demographicsDocsInsHoldersContainer);
         createInsuranceFragments(insContainersWrapper);

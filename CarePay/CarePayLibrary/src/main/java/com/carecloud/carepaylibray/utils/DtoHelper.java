@@ -40,6 +40,12 @@ public class DtoHelper {
         return null;
     }
 
+    /**
+     * Converts DTO object to String
+     *
+     * @param dto object to be converted to String
+     * @return String represention of the DTO object
+     */
     public static String getStringDTO(Object dto) {
         Gson gson = new Gson();
 

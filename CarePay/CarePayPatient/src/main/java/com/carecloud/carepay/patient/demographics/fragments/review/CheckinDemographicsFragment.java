@@ -1,13 +1,11 @@
 package com.carecloud.carepay.patient.demographics.fragments.review;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -149,11 +147,13 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     private String stateAbbr = null;
     private City smartyStreetsResponse;
 
-    CheckinDemographicsFragmentListener mCallback;
+    CheckinDemographicsFragmentListener activityCallback;
 
     public interface CheckinDemographicsFragmentListener {
         void onDemographicDtoChanged(DemographicDTO demographicDTO);
+
         void initializeDocumentFragment();
+
         void initializeInsurancesFragment();
     }
 
@@ -164,7 +164,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            mCallback = (CheckinDemographicsFragmentListener) context;
+            activityCallback = (CheckinDemographicsFragmentListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement CheckinDemographicsFragmentListener");
@@ -856,7 +856,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         demographicDTO.getPayload().getDemographics().getPayload().setAddress(demographicAddressPayloadDTO);
 
         // update DTO in the activity
-        mCallback.onDemographicDtoChanged(demographicDTO);
+        activityCallback.onDemographicDtoChanged(demographicDTO);
 
         if (bitmap != null) {
             String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
@@ -1015,8 +1015,8 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     }
 
     private void initViewFromModels() {
-        mCallback.initializeDocumentFragment();
-        mCallback.initializeInsurancesFragment();
+        activityCallback.initializeDocumentFragment();
+        activityCallback.initializeInsurancesFragment();
         if (demographicPersDetailsPayloadDTO != null) {
             String imageUrl = demographicPersDetailsPayloadDTO.getProfilePhoto();
             if (!StringUtil.isNullOrEmpty(imageUrl)) {

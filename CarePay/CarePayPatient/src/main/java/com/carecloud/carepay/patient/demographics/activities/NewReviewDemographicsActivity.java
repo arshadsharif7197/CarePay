@@ -102,7 +102,6 @@ public class NewReviewDemographicsActivity extends BasePatientActivity
 
     @Override
     public void initializeDocumentFragment(){
-        String tag = DemographicsCheckInDocumentsFragment.class.getSimpleName();
 
         DemographicsCheckInDocumentsFragment fragment = new DemographicsCheckInDocumentsFragment();
         Bundle args = new Bundle();
@@ -112,7 +111,7 @@ public class NewReviewDemographicsActivity extends BasePatientActivity
         fragment.setArguments(args);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.documentCapturer, fragment, tag);
+        transaction.replace(R.id.documentCapturer, fragment, DemographicsCheckInDocumentsFragment.class.getSimpleName());
         transaction.commit();
 
     }

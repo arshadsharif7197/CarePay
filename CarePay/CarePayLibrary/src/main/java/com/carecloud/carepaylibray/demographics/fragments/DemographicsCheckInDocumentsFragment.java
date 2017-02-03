@@ -4,12 +4,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -18,7 +16,6 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entitie
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
-import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -45,7 +42,7 @@ public class DemographicsCheckInDocumentsFragment extends Fragment {
     private TextView                               header;
     private String[]                               docTypes;
 
-    DemographicsCheckInDocumentsFragmentListener mCallback;
+    DemographicsCheckInDocumentsFragmentListener activityCallback;
 
     public interface DemographicsCheckInDocumentsFragmentListener {
         void initializeIdDocScannerFragment();
@@ -58,7 +55,7 @@ public class DemographicsCheckInDocumentsFragment extends Fragment {
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            mCallback = (DemographicsCheckInDocumentsFragmentListener) context;
+            activityCallback = (DemographicsCheckInDocumentsFragmentListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement DemographicsCheckInDocumentsFragmentListener");
@@ -85,7 +82,7 @@ public class DemographicsCheckInDocumentsFragment extends Fragment {
         getOptions();
 
         // set the fragment
-        mCallback.initializeIdDocScannerFragment();
+        activityCallback.initializeIdDocScannerFragment();
 
         // fetch nested fragments containers
         final FrameLayout idCardContainer = (FrameLayout) view.findViewById(R.id.demographicsDocsLicense);
