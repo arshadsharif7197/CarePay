@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -49,6 +50,14 @@ public class PaymentBalanceHistoryFragment  extends Fragment  {
         tabs.setTabTextColors(Color.LTGRAY, Color.WHITE);
         tabs.setupWithViewPager(viewPager);
 
+        if (ViewPaymentBalanceHistoryActivity.isPaymentDone()) {
+            TabLayout.Tab tab = tabs.getTabAt(1);
+            if (tab != null) {
+                tab.select();
+            }
+            ViewPaymentBalanceHistoryActivity.setIsPaymentDone(false);
+        }
+
         return balanceHistoryView;
     }
 
@@ -61,6 +70,7 @@ public class PaymentBalanceHistoryFragment  extends Fragment  {
         adapter.addFragment(PaymentHistoryFragment.newInstance(2, paymentDTO), StringUtil.isNullOrEmpty(historyTabTitle)?
                 CarePayConstants.NOT_DEFINED : historyTabTitle);
         viewPager.setAdapter(adapter);
+
     }
 
     @Override
