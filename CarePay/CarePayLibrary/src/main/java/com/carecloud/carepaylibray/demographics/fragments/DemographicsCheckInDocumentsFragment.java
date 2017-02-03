@@ -84,13 +84,10 @@ public class DemographicsCheckInDocumentsFragment extends Fragment {
         // set the fragment
         activityCallback.initializeIdDocScannerFragment();
 
-        // fetch nested fragments containers
-        final FrameLayout idCardContainer = (FrameLayout) view.findViewById(R.id.demographicsDocsLicense);
 
-        String label;
         // set primary views on parent fragment (ie, all views except sub-fragments)
         header = (TextView) view.findViewById(R.id.documentsTitleLabel);
-        label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsIdentityText().toUpperCase();
+        String label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsIdentityText().toUpperCase();
         header.setText(label);
 
 
@@ -99,6 +96,9 @@ public class DemographicsCheckInDocumentsFragment extends Fragment {
         idDocTypeLabel = (TextView) view.findViewById(R.id.demogrDocTypeLabel);
         label = idDocsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsTitleSelectIdType();
         idDocTypeLabel.setText(label);
+
+        // fetch nested fragments containers
+        final FrameLayout idCardContainer = (FrameLayout) view.findViewById(R.id.demographicsDocsLicense);
 
         idTypeClickable = (TextView) view.findViewById(R.id.demogrDocTypeClickable);
         if(StringUtil.isNullOrEmpty(demPayloadIdDocDTO.getIdType())){

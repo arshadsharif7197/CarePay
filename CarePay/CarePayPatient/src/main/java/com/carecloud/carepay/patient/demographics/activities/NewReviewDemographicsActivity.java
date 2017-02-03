@@ -103,11 +103,12 @@ public class NewReviewDemographicsActivity extends BasePatientActivity
     @Override
     public void initializeDocumentFragment(){
 
-        DemographicsCheckInDocumentsFragment fragment = new DemographicsCheckInDocumentsFragment();
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, demographicDTO.getMetadata().getDataModels().demographic.identityDocuments);
         DtoHelper.bundleDto(args, demographicDTO.getMetadata().getLabels());
         DtoHelper.bundleDto(args, getDemographicIdDocPayloadDTO());
+
+        DemographicsCheckInDocumentsFragment fragment = new DemographicsCheckInDocumentsFragment();
         fragment.setArguments(args);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
