@@ -703,7 +703,8 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
         if (!StringUtil.isNullOrEmpty(dateOfBirth)) {
             // the date is DateUtil as
             demographicPersDetailsPayloadDTO.setDateOfBirth(
-                    DateUtil.getDateRaw(DateUtil.parseFromDateAsMMddyyyy(dateOfBirth)));
+                            DateUtil.getInstance().setDateRaw(dateOfBirth).toStringWithFormatIso8601()
+                    );
         }
         String gender = selectGender.getText().toString();
         if (!StringUtil.isNullOrEmpty(gender)) {
@@ -957,7 +958,7 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
             }
             String datetime = demographicPersDetailsPayloadDTO.getDateOfBirth();
             if (datetime != null) {
-                String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).getDateAsMMddyyyyWithSlash();
+                String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).toStringWithFormatMmSlashDdSlashYyyy();
                 dobEditText.setText(dateOfBirthString);
                 dobEditText.requestFocus();
             } else {

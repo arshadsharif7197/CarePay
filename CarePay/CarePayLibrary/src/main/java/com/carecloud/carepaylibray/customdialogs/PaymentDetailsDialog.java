@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.customdialogs;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,7 +23,6 @@ import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
-
 public class PaymentDetailsDialog extends Dialog implements View.OnClickListener {
 
     private Context context;
@@ -34,11 +34,12 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
     /**
      * Constructor.
      *
-     * @param context             context
+     * @param context        context
      * @param paymentPayload model
-     * @param listener listener
+     * @param listener       listener
      */
-    public PaymentDetailsDialog(Context context, PaymentsModel paymentReceiptModel, PatiencePayloadDTO paymentPayload, PayNowClickListener listener) {
+    public PaymentDetailsDialog(Context context, PaymentsModel paymentReceiptModel,
+                                PatiencePayloadDTO paymentPayload, PayNowClickListener listener) {
         super(context);
         this.context = context;
         this.paymentReceiptModel = paymentReceiptModel;
@@ -54,39 +55,33 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
         setContentView(R.layout.dialog_payment_details);
         onInitialization();
         setCancelable(false);
-        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
         params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * size);
         getWindow().setAttributes(params);
-
-
     }
 
     private void onInitialization() {
 
-
-        Button payNowButton = (Button) findViewById(com.carecloud.carepaylibrary.R.id.payment_details_pay_now_button);
+        Button payNowButton = (Button) findViewById(R.id.payment_details_pay_now_button);
         payNowButton.setOnClickListener(this);
 
         if (paymentReceiptModel != null) {
             PaymentsLabelDTO paymentsLabel = paymentReceiptModel.getPaymentsMetadata().getPaymentsLabel();
             if (paymentsLabel != null) {
                 String totalAmount = StringUtil.getFormattedBalanceAmount(paymentPayload.getAmount());
-                ((TextView) findViewById(com.carecloud.carepaylibrary.R.id.payment_details_total_paid)).setText(totalAmount);
-
-                ((TextView) findViewById(com.carecloud.carepaylibrary.R.id.payment_receipt_title))
-                        .setText(paymentsLabel.getPaymentReceiptTitle());
-                ((TextView) findViewById(com.carecloud.carepaylibrary.R.id.payment_receipt_total_label))
-                        .setText(paymentsLabel.getPaymentDetailsPatientBalanceLabel());
-                ((TextView) findViewById(com.carecloud.carepaylibrary.R.id.payment_receipt_total_value)).setText(totalAmount);
+                ((TextView) findViewById(R.id.payment_details_total_paid)).setText(totalAmount);
+                ((TextView) findViewById(R.id.payment_receipt_title)).setText(paymentsLabel.getPaymentReceiptTitle());
+                ((TextView) findViewById(R.id.payment_receipt_total_label)).setText(paymentsLabel.getPaymentDetailsPatientBalanceLabel());
+                ((TextView) findViewById(R.id.payment_receipt_total_value)).setText(totalAmount);
 
                 payNowButton.setText(paymentsLabel.getPaymentDetailsPayNow());
 
                 ImageView dialogCloseHeader;
                 TextView closeLabel;
-                if(ApplicationMode.getInstance().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE))
-                {
+
+                if (ApplicationMode.getInstance().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)) {
 
                     dialogCloseHeader = (ImageView) findViewById(R.id.payment_close_button);
                     dialogCloseHeader.setOnClickListener(new View.OnClickListener() {
@@ -96,12 +91,12 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
                         }
                     });
 
-                    closeLabel=((TextView) findViewById(R.id.payment_close_label));
+                    closeLabel = ((TextView) findViewById(R.id.payment_close_label));
                     closeLabel.setText(paymentsLabel.getPaymentCloseButton());
                     findViewById(R.id.payment_close_Layout).setVisibility(View.VISIBLE);
                     size = 0.53;
-                }else{
-                    dialogCloseHeader = (ImageView) findViewById(com.carecloud.carepaylibrary.R.id.dialog_close_header);
+                } else {
+                    dialogCloseHeader = (ImageView) findViewById(R.id.dialog_close_header);
                     dialogCloseHeader.setVisibility(View.VISIBLE);
                     dialogCloseHeader.setOnClickListener(this);
                     size = 0.90;
@@ -109,8 +104,7 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
             }
         }
 
-
-        RecyclerView paymentDetailsRecyclerView = ((RecyclerView) findViewById(com.carecloud.carepaylibrary.R.id.payment_receipt_details_view));
+        RecyclerView paymentDetailsRecyclerView = ((RecyclerView) findViewById(R.id.payment_receipt_details_view));
         paymentDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 
         PaymentItemsListAdapter adapter = new PaymentItemsListAdapter(context, paymentPayload.getDetails());
@@ -120,9 +114,9 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
     @Override
     public void onClick(View view) {
         int viewId = view.getId();
-        if (viewId == com.carecloud.carepaylibrary.R.id.dialog_close_header) {
+        if (viewId == R.id.dialog_close_header) {
             cancel();
-        } else if (viewId == com.carecloud.carepaylibrary.R.id.payment_details_pay_now_button) {
+        } else if (viewId == R.id.payment_details_pay_now_button) {
             listener.onPayNowButtonClicked();
             dismiss();
         }

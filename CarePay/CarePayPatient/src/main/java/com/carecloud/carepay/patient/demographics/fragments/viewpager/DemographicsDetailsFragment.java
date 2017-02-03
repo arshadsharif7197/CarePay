@@ -34,7 +34,6 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
@@ -319,7 +318,7 @@ public class DemographicsDetailsFragment extends Fragment
             String unformattedDob = persDetailsDTO.getDateOfBirth(); // date from persDetailsDTO is excepted to be unformatted
             if (!StringUtil.isNullOrEmpty(unformattedDob)) {
                 // format date as mm/dd/yyyy
-                String dateOfBirthString = DateUtil.getInstance().setDateRaw(unformattedDob).getDateAsMMddyyyyWithSlash();
+                String dateOfBirthString = DateUtil.getInstance().setDateRaw(unformattedDob).toStringWithFormatMmSlashDdSlashYyyy();
                 dobEdit.setText(dateOfBirthString);
                 dobEdit.requestFocus();
             }
@@ -376,9 +375,8 @@ public class DemographicsDetailsFragment extends Fragment
         // at this point date of birth has been validated (if not empty nor null)
         String formattedDob = dobEdit.getText().toString();
         if (!StringUtil.isNullOrEmpty(formattedDob)) { // simply test if empty (or null)
-            // convert back to raw format
-            Date dob = DateUtil.parseFromDateAsMMddyyyy(formattedDob);
-            persDetailsDTO.setDateOfBirth(DateUtil.getDateRaw(dob));
+            String rawDob = DateUtil.getInstance().setDateRaw(formattedDob).toStringWithFormatIso8601();
+            persDetailsDTO.setDateOfBirth(rawDob);
         }
 
         ((DemographicsActivity) getActivity()).setDetailsModel(persDetailsDTO); // save the updated persDetailsDTO in the activity
