@@ -31,6 +31,7 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.Demogra
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemIdDocDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
@@ -40,6 +41,8 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadD
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
+import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
@@ -49,7 +52,8 @@ import java.util.List;
  * Created by Jahirul Bhuiyan on 8/31/2016.
  * Main activity for Demographics sign-up sub-flow
  */
-public class DemographicsActivity extends BasePatientActivity implements DemographicsLabelsHolder {
+public class DemographicsActivity extends BasePatientActivity
+        implements DemographicsLabelsHolder, DemographicsDocumentsFragmentWthWrapper.DemographicsDocumentsFragmentWthWrapperListener {
 
     private int       currentPageIndex;
     // views
@@ -373,5 +377,28 @@ public class DemographicsActivity extends BasePatientActivity implements Demogra
         public int getCount() {
             return PAGE_COUNT;
         }
+    }
+
+    @Override
+    public void initializeIdDocScannerFragment(DemographicIdDocPayloadDTO demPayloadIdDocDTO,
+                                               DemographicMetadataEntityItemIdDocDTO demographicMetadataEntityItemIdDocDTO) {
+        String tag = "license";
+
+        FragmentManager fm = getSupportFragmentManager();
+        // add license fragment
+        IdDocScannerFragment fragment = (IdDocScannerFragment) fm.findFragmentByTag(tag);
+        if (fragment == null) {
+            fragment = new IdDocScannerFragment();
+            Bundle args = new Bundle();
+            DtoHelper.bundleDto(args, demPayloadIdDocDTO);
+
+            if (null != demographicMetadataEntityItemIdDocDTO) {
+                DtoHelper.bundleDto(args, demographicMetadataEntityItemIdDocDTO);
+            }
+
+            fragment.setArguments(args);
+        }
+
+        fm.beginTransaction().replace(R.id.demographicsDocsLicense, fragment, tag).commit();
     }
 }

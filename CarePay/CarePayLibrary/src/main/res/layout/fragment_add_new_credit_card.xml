@@ -275,7 +275,7 @@
                             android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789 "
                             android:imeOptions="actionNext"
                             android:inputType="textPostalAddress"
-                            android:maxLength="50"
+                            android:maxLength="256"
                             android:nextFocusForward="@+id/addressEditText2Id" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -306,7 +306,7 @@
                                 android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789 "
                                 android:imeOptions="actionNext"
                                 android:inputType="textPostalAddress"
-                                android:maxLength="50"
+                                android:maxLength="256"
                                 android:nextFocusForward="@+id/zipCodeId" />
 
                         </android.support.design.widget.TextInputLayout>
@@ -369,6 +369,7 @@
                                 style="@style/PaymentEditTextStyle"
                                 android:imeOptions="actionNext"
                                 android:inputType="textCapCharacters"
+                                android:maxLength="255"
                                 android:maxLines="1"
                                 android:nextFocusRight="@+id/stateAutoCompleteTextView" />
 
@@ -385,13 +386,13 @@
                             android:layout_weight="1"
                             android:textColorHint="@color/payne_gray">
 
-                            <EditText
+                            <AutoCompleteTextView
                                 android:id="@+id/stateAutoCompleteTextView"
-                                style="@style/PaymentEditTextStyle"
-                                android:digits="ABCDEFGHIJKLMNOPQURSTUVWXYZ"
+                                style="@style/EditTextStyle"
                                 android:imeOptions="actionDone"
-                                android:inputType="textCapCharacters"
-                                android:maxLength="2" />
+                                android:inputType="textAutoComplete"
+                                android:maxLength="2"
+                                android:digits="@string/restrict_letters"/>
 
                         </android.support.design.widget.TextInputLayout>
                     </LinearLayout>

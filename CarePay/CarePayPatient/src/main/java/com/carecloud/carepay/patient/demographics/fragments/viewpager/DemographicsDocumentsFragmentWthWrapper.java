@@ -24,6 +24,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemIdDocDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemInsuranceDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
@@ -32,7 +33,6 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsuranc
 import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapper;
 import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapperCollection;
 import com.carecloud.carepaylibray.demographics.misc.OnClickRemoveOrAddCallback;
-import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 
@@ -70,6 +70,27 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment {
     private LinearLayout                           insContainersWrapper;
     private InsuranceWrapperCollection             wrapperCollection1;
 
+    DemographicsDocumentsFragmentWthWrapperListener activityCallback;
+
+    public interface DemographicsDocumentsFragmentWthWrapperListener {
+        void initializeIdDocScannerFragment(DemographicIdDocPayloadDTO demPayloadIdDocDTO,
+                                            DemographicMetadataEntityItemIdDocDTO demographicMetadataEntityItemIdDocDTO);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            activityCallback = (DemographicsDocumentsFragmentWthWrapperListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement DemographicsDocumentsFragmentWthWrapperListener");
+        }
+    }
+
 
     @Nullable
     @Override
@@ -94,6 +115,9 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment {
         getOptions();
 
         setButtons();
+
+        // fetch nested fragments containers
+        idCardContainer = (FrameLayout) view.findViewById(R.id.demographicsDocsLicense);
 
         // set the fragment
         setCardContainers();
@@ -223,18 +247,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment {
 
     private void setCardContainers() {
 
-        // fetch nested fragments containers
-        idCardContainer = (FrameLayout) view.findViewById(R.id.demographicsDocsLicense);
-
-        fm = getChildFragmentManager();
-        // add license fragment
-        IdDocScannerFragment idDocFragment = (IdDocScannerFragment) fm.findFragmentByTag("license");
-        if (idDocFragment == null) {
-            idDocFragment = new IdDocScannerFragment();
-            idDocFragment.setModel(demPayloadIdDocDTO); // set the model
-            idDocFragment.setIdDocsMetaDTO(idDocsMetaDTO == null ? null : idDocsMetaDTO.properties.items.identityDocument);
-        }
-        fm.beginTransaction().replace(R.id.demographicsDocsLicense, idDocFragment, "license").commit();
+        activityCallback.initializeIdDocScannerFragment(demPayloadIdDocDTO, idDocsMetaDTO == null ? null : idDocsMetaDTO.properties.items.identityDocument);
 
         insContainersWrapper = (LinearLayout) view.findViewById(R.id.demographicsDocsInsHoldersContainer);
         createInsuranceFragments(insContainersWrapper);

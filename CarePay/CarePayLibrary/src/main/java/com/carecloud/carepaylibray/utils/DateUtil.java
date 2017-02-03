@@ -78,7 +78,7 @@ public class DateUtil {
 
                 return this;
             } catch (ParseException ignored) {
-                Log.e(TAG, "Date string '" + dateString + "' is not in format " + format);
+                Log.i(TAG, "Date string '" + dateString + "' is not in format " + format);
             }
         }
 

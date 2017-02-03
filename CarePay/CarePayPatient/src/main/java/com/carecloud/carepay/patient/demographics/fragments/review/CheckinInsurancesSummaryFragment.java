@@ -12,7 +12,6 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.demographics.activities.NewReviewDemographicsActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
@@ -25,12 +24,11 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadI
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
 import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapperCollection;
 import com.carecloud.carepaylibray.demographics.misc.OnClickRemoveOrAddCallback;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,9 +53,6 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
     private boolean                    isThirdCardAdded;
     private LinearLayout               insContainersWrapper;
     private InsuranceWrapperCollection wrapperCollection1;
-
-    public CheckinInsurancesSummaryFragment() {
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -89,7 +84,7 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
     }
 
     private void initDTOs() {
-        demographicDTO = ((NewReviewDemographicsActivity) getActivity()).getDemographicDTO();
+        demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
 
         insurancesMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.insurances;
         globalLabelsMetaDTO = demographicDTO.getMetadata().getLabels();
@@ -106,11 +101,6 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
                 }
             }
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
     }
 
     private void setButtons() {
@@ -131,14 +121,14 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
         // build the new payload
         insurancePayloadDTOs.clear();
         for (DemographicInsurancePayloadDTO payloadDTO : wrapperCollection1.exportPayloadsAsList()) {
-            if (isInsuaranceNonTrivial(payloadDTO)) {
+            if (isInsuranceNonTrivial(payloadDTO)) {
                 insurancePayloadDTOs.add(payloadDTO);
             }
         }
         return insurancePayloadDTOs;
     }
 
-    private boolean isInsuaranceNonTrivial(DemographicInsurancePayloadDTO insModel) {
+    private boolean isInsuranceNonTrivial(DemographicInsurancePayloadDTO insModel) {
         return insModel.getInsurancePlan() != null &&
                 insModel.getInsuranceProvider() != null &&
                 insModel.getInsuranceMemberId() != null;
@@ -219,9 +209,4 @@ public class CheckinInsurancesSummaryFragment extends Fragment {
                                       (TextView) view.findViewById(R.id.demographicsInsuranceSwitch));
  //       setGothamRoundedMediumTypeface(getActivity(), addInsuranceaInfoButton);
     }
-
-    public void setDemographicDTO(DemographicDTO demographicDTO) {
-        this.demographicDTO = demographicDTO;
-    }
-
 }
