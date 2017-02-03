@@ -1,5 +1,7 @@
 package com.carecloud.carepay.patient.demographics.fragments.review;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -31,7 +33,6 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.appointments.utils.CustomPopupNotification;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.demographics.activities.NewReviewDemographicsActivity;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -42,7 +43,6 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
@@ -50,11 +50,11 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressP
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
-import com.carecloud.carepaylibray.demographics.fragments.DemographicsCheckInDocumentsFragment;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -91,19 +91,15 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
     private DemographicMetadataEntityAddressDTO addressMetaDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
-    private DemographicMetadataEntityIdDocsDTO idDocsMetaDTO;
     private DemographicLabelsDTO globalLabelsMetaDTO;
     private DemographicPersDetailsPayloadDTO demographicPersDetailsPayloadDTO;
     private DemographicAddressPayloadDTO demographicAddressPayloadDTO;
     private DemographicIdDocPayloadDTO demographicIdDocPayloadDTO;
     private DemographicDTO demographicDTO;
 
-    private CheckinInsurancesSummaryFragment checkinInsurancesSummaryFragment;
-    private DemographicsCheckInDocumentsFragment demographicsDocumentsFragment;
     //profile image
     private ImageView profileImageview;
     private Button updateProfileImageButton;
-    //
 
     private EditText phoneNumberEditText;
     private EditText zipCodeEditText;
@@ -153,6 +149,27 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     private String stateAbbr = null;
     private City smartyStreetsResponse;
 
+    CheckinDemographicsFragmentListener mCallback;
+
+    public interface CheckinDemographicsFragmentListener {
+        void onDemographicDtoChanged(DemographicDTO demographicDTO);
+        void initializeDocumentFragment();
+        void initializeInsurancesFragment();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (CheckinDemographicsFragmentListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement CheckinDemographicsFragmentListener");
+        }
+    }
 
     public CheckinDemographicsFragment() {
     }
@@ -163,7 +180,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         view = inflater.inflate(R.layout.fragment_review_demographic, container, false);
 
         initializeDemographicsDTO();
-        //initModels();
+
         rootview = (LinearLayout) view.findViewById(R.id.demographicsReviewRootLayout);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.demographics_review_toolbar);
@@ -185,11 +202,10 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     }
 
     private void initializeDemographicsDTO() {
-        demographicDTO = ((NewReviewDemographicsActivity) getActivity()).getDemographicDTO();
+        demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
         globalLabelsMetaDTO = demographicDTO.getMetadata().getLabels();
         addressMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.address;
         persDetailsMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.personalDetails;
-        idDocsMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.identityDocuments;
 
         if (demographicDTO.getPayload().getDemographics() != null) {
             demographicPersDetailsPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
@@ -266,30 +282,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
     }
 
-    private void initializeDocumentFragment(){
 
-        demographicsDocumentsFragment = new DemographicsCheckInDocumentsFragment();
-        demographicsDocumentsFragment.setIdDocsMetaDTO(idDocsMetaDTO);
-        demographicsDocumentsFragment.setGlobalLabelsMetaDTO(globalLabelsMetaDTO);
-        demographicsDocumentsFragment.setDemPayloadIdDocDTO(demographicIdDocPayloadDTO);
-        String tag = DemographicsCheckInDocumentsFragment.class.getSimpleName();
-        FragmentManager fm = getChildFragmentManager();
-        fm.beginTransaction()
-                .replace(R.id.documentCapturer, demographicsDocumentsFragment, tag)
-                .commit();
-
-    }
-
-    private void initializeInsurancesFragment(){
-        String tag = CheckinInsurancesSummaryFragment.class.getSimpleName();
-        FragmentManager fm = getChildFragmentManager();
-        checkinInsurancesSummaryFragment = new CheckinInsurancesSummaryFragment();
-        checkinInsurancesSummaryFragment.setDemographicDTO(demographicDTO);
-        fm.beginTransaction()
-                .replace(R.id.insuranceCapturer, checkinInsurancesSummaryFragment, tag)
-                .commit();
-
-    }
 
     private void initializeOptionsArray() {
 
@@ -601,11 +594,10 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             return true;
         }
         // apply validate from backend
-        boolean isValidFormat = ValidationHelper.applyPatternValidationToWrappedEdit(zipCodeEditText,
+        return ValidationHelper.applyPatternValidationToWrappedEdit(zipCodeEditText,
                 zipcodeLabel,
                 addressMetaDTO.properties.zipcode,
                 null);
-        return isValidFormat;
     }
 
     private boolean isPhoneNumberValid() {
@@ -863,18 +855,13 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         }
         demographicDTO.getPayload().getDemographics().getPayload().setAddress(demographicAddressPayloadDTO);
 
-        // update gson in the activity
-        Gson gson = new Gson();
-        ((NewReviewDemographicsActivity) getActivity()).resetDemographicDTO(gson.toJson(demographicDTO));
+        // update DTO in the activity
+        mCallback.onDemographicDtoChanged(demographicDTO);
 
         if (bitmap != null) {
             String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
             demographicPersDetailsPayloadDTO.setProfilePhoto(imageAsBase64);
         }
-
-        demographicDTO.getPayload().getDemographics().getPayload().setInsurances(checkinInsurancesSummaryFragment.getInsurancePayloadDTOs());
-        demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().clear();
-        demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().add(demographicsDocumentsFragment.getDemPayloadIdDocDTO());
     }
 
     private void setEditTexts(View view) {
@@ -897,7 +884,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
         phoneNumberLabel.setTag(addressMetaDTO.properties.phone.getLabel());
         phoneNumberEditText.setTag(phoneNumberLabel);
-
 
 
         address1Label.setTag(addressMetaDTO.properties.address1.getLabel());
@@ -1029,8 +1015,8 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     }
 
     private void initViewFromModels() {
-        initializeDocumentFragment();
-        initializeInsurancesFragment();
+        mCallback.initializeDocumentFragment();
+        mCallback.initializeInsurancesFragment();
         if (demographicPersDetailsPayloadDTO != null) {
             String imageUrl = demographicPersDetailsPayloadDTO.getProfilePhoto();
             if (!StringUtil.isNullOrEmpty(imageUrl)) {
@@ -1142,32 +1128,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         hideSoftKeyboard(getActivity());
 
     }
-
-
-    public DemographicMetadataEntityIdDocsDTO getIdDocsMetaDTO() {
-        return idDocsMetaDTO;
-    }
-
-    public void setIdDocsMetaDTO(DemographicMetadataEntityIdDocsDTO idDocsMetaDTO) {
-        this.idDocsMetaDTO = idDocsMetaDTO;
-    }
-
-    public DemographicMetadataEntityPersDetailsDTO getPersDetailsMetaDTO() {
-        return persDetailsMetaDTO;
-    }
-
-    public void setPersDetailsMetaDTO(DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO) {
-        this.persDetailsMetaDTO = persDetailsMetaDTO;
-    }
-
-    public DemographicMetadataEntityAddressDTO getAddressMetaDTO() {
-        return addressMetaDTO;
-    }
-
-    public void setAddressMetaDTO(DemographicMetadataEntityAddressDTO addressMetaDTO) {
-        this.addressMetaDTO = addressMetaDTO;
-    }
-
 
     protected void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(), reviewTitleTextView);

@@ -31,7 +31,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPay
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPhotoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
-import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHolder;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -77,8 +77,6 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         Activity activity = getActivity();
         if (activity instanceof DemographicsLabelsHolder) {
             globalLabelsDTO = ((DemographicsLabelsHolder) getActivity()).getLabelsDTO();
-        } else if (activity instanceof DemographicsReviewLabelsHolder) {
-            // instantiate the global labels here
         }
 
         // create the view
@@ -111,6 +109,10 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
     }
 
     private void initializeUIFields() {
+        model = DtoHelper.getConvertedDTO(DemographicIdDocPayloadDTO.class, getArguments());
+        idDocsMetaDTO = DtoHelper.getConvertedDTO(DemographicMetadataEntityItemIdDocDTO.class, getArguments());
+
+        initializePhotos();
         // fetch the options
         getOptions();
 
@@ -340,13 +342,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         return model;
     }
 
-    /**
-     * Sets the DTO for this fragment; it creates the required child DTO if they are null
-     *
-     * @param model The model
-     */
-    public void setModel(@NonNull DemographicIdDocPayloadDTO model) {
-        this.model = model;
+    private void initializePhotos() {
         List<DemographicIdDocPhotoDTO> photoDTOs = model.getIdDocPhothos();
         if (photoDTOs == null) { // create the list of photos (front and back) if null
             photoDTOs = new ArrayList<>();
@@ -363,10 +359,6 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                 photoDTOs.add(1, new DemographicIdDocPhotoDTO()); // create the second
             }
         }
-    }
-
-    public void setIdDocsMetaDTO(DemographicMetadataEntityItemIdDocDTO idDocsMetaDTO) {
-        this.idDocsMetaDTO = idDocsMetaDTO;
     }
 
     @Override

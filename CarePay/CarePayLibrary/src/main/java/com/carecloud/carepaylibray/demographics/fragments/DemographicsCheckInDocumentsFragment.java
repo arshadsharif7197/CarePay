@@ -19,6 +19,7 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -36,18 +37,33 @@ import java.util.List;
  */
 public class DemographicsCheckInDocumentsFragment extends Fragment {
 
-    private FragmentManager                        fm;
     private View                                   view;
-    private FrameLayout                            idCardContainer;
     private DemographicIdDocPayloadDTO             demPayloadIdDocDTO;
     private DemographicMetadataEntityIdDocsDTO     idDocsMetaDTO;
-    private DemographicLabelsDTO                   globalLabelsMetaDTO;
     private TextView                               idTypeClickable;
     private TextView                               idDocTypeLabel;
     private TextView                               header;
     private String[]                               docTypes;
-    private LinearLayout                           insContainersWrapper;
 
+    DemographicsCheckInDocumentsFragmentListener mCallback;
+
+    public interface DemographicsCheckInDocumentsFragmentListener {
+        void initializeIdDocScannerFragment();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (DemographicsCheckInDocumentsFragmentListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement DemographicsCheckInDocumentsFragmentListener");
+        }
+    }
 
     @Nullable
     @Override
@@ -62,10 +78,17 @@ public class DemographicsCheckInDocumentsFragment extends Fragment {
     }
 
     private void initializeUIFields() {
+        demPayloadIdDocDTO = DtoHelper.getConvertedDTO(DemographicIdDocPayloadDTO.class, getArguments());
+        idDocsMetaDTO = DtoHelper.getConvertedDTO(DemographicMetadataEntityIdDocsDTO.class, getArguments());
+        DemographicLabelsDTO globalLabelsMetaDTO = DtoHelper.getConvertedDTO(DemographicLabelsDTO.class, getArguments());
+
         getOptions();
 
         // set the fragment
-        setCardContainers();
+        mCallback.initializeIdDocScannerFragment();
+
+        // fetch nested fragments containers
+        final FrameLayout idCardContainer = (FrameLayout) view.findViewById(R.id.demographicsDocsLicense);
 
         String label;
         // set primary views on parent fragment (ie, all views except sub-fragments)
@@ -126,26 +149,6 @@ public class DemographicsCheckInDocumentsFragment extends Fragment {
         docTypes = docTypesStrings.toArray(new String[0]);
     }
 
-
-    private void setCardContainers() {
-
-        // fetch nested fragments containers
-        idCardContainer = (FrameLayout) view.findViewById(R.id.demographicsDocsLicense);
-
-        fm = getChildFragmentManager();
-        // add license fragment
-        IdDocScannerFragment idDocFragment = (IdDocScannerFragment) fm.findFragmentByTag("license");
-        if (idDocFragment == null) {
-            idDocFragment = new IdDocScannerFragment();
-            idDocFragment.setModel(demPayloadIdDocDTO); // set the model
-            idDocFragment.setIdDocsMetaDTO(idDocsMetaDTO == null ? null : idDocsMetaDTO.properties.items.identityDocument);
-        }
-        fm.beginTransaction().replace(R.id.demographicsDocsLicense, idDocFragment, "license").commit();
-
-        insContainersWrapper = (LinearLayout) view.findViewById(R.id.demographicsDocsInsHoldersContainer);
-    }
-
-
     private void showCard(FrameLayout cardContainer, boolean isVisible) {
         if (isVisible) {
             cardContainer.setVisibility(View.VISIBLE);
@@ -160,20 +163,6 @@ public class DemographicsCheckInDocumentsFragment extends Fragment {
         setProximaNovaSemiboldTypeface(context, idTypeClickable);
 
         setProximaNovaSemiboldTypeface(context, header);
-    }
-
-
-    public void setIdDocsMetaDTO(DemographicMetadataEntityIdDocsDTO idDocsMetaDTO) {
-        this.idDocsMetaDTO = idDocsMetaDTO;
-    }
-
-
-    public void setGlobalLabelsMetaDTO(DemographicLabelsDTO globalLabelsMetaDTO) {
-        this.globalLabelsMetaDTO = globalLabelsMetaDTO;
-    }
-
-    public void setDemPayloadIdDocDTO(DemographicIdDocPayloadDTO demPayloadIdDocDTO) {
-        this.demPayloadIdDocDTO = demPayloadIdDocDTO;
     }
 
     public DemographicIdDocPayloadDTO getDemPayloadIdDocDTO() {
