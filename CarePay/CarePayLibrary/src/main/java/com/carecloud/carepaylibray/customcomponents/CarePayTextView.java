@@ -57,7 +57,9 @@ public class CarePayTextView extends TextView {
         super(context, attrs);
         this.context = context;
         if (!isInEditMode())
+        {
             init(attrs);
+        }
     }
 
     /**
@@ -74,7 +76,9 @@ public class CarePayTextView extends TextView {
         super(context, attrs, defStyleAttr);
         this.context = context;
         if (!isInEditMode())
+        {
             init(attrs);
+        }
     }
 
     /**
