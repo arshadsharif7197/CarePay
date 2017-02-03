@@ -93,11 +93,9 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
             // Date of Upcoming appointment
             String appointmentStartTime = item.getStartTime();
-            DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
             DateUtil.getInstance().setDateRaw(appointmentStartTime);
             String time12Hour = DateUtil.getInstance().getTime12Hour();
 
-            DateUtil.getInstance().setFormat("EEE dd MMM");
             String dayLiteralAbbr = DateUtil.getInstance().getDayLiteralAbbr();
             String monthLiteralAbbr = DateUtil.getInstance().getMonthLiteralAbbr();
             int day = DateUtil.getInstance().getDay();
@@ -271,12 +269,10 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     private boolean isAppointmentCancellable(AppointmentDTO item) {
         // Get appointment date/time in required format
         String appointmentTimeStr = item.getPayload().getStartTime();
-        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
         Date appointmentTime = DateUtil.getInstance().setDateRaw(appointmentTimeStr).getDate();
 
         // Get current date/time in required format
-        String currentTime = DateUtil.getDateRaw(DateUtil.getInstance().setToCurrent().getDate());
-        Date currentDate = DateUtil.getInstance().setDateRaw(currentTime).getDate();
+        Date currentDate = DateUtil.getInstance().setToCurrent().getDate();
 
         if (appointmentTime != null && currentDate != null) {
             long differenceInMilli = appointmentTime.getTime() - currentDate.getTime();
@@ -313,14 +309,11 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
     private String getSectionHeaderTitle(String appointmentStartTime, String appointmentEndTime) {
         // Current date
-        String currentDate = DateUtil.getInstance().setToCurrent().getDateAsMMddyyyy();
-        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_HEADER_DATE_FORMAT);
+        String currentDate = DateUtil.getInstance().setToCurrent().toStringWithFormatMmDashDdDashYyyy();
         Date convertedCurrentDate = DateUtil.getInstance().setDateRaw(currentDate).getDate();
 
         // Appointment start date
-        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
-        String appointmentDate = DateUtil.getInstance().setDateRaw(appointmentStartTime).getDateAsMMddyyyy();
-        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_HEADER_DATE_FORMAT);
+        String appointmentDate = DateUtil.getInstance().setDateRaw(appointmentStartTime).toStringWithFormatMmDashDdDashYyyy();
         Date convertedAppointmentDate = DateUtil.getInstance().setDateRaw(appointmentDate).getDate();
 
         if (convertedAppointmentDate.after(convertedCurrentDate)
@@ -332,12 +325,10 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             return CarePayConstants.DAY_OVER;
         } else {
             // Get appointment date/time in required format
-            DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
-            Date appointmentTime = DateUtil.getInstance().setDateRaw(appointmentEndTime ).getDate();
+            Date appointmentTime = DateUtil.getInstance().setDateRaw(appointmentEndTime).getDate();
 
             // Get current date/time in required format
-            String currentTime = DateUtil.getDateRaw(DateUtil.getInstance().setToCurrent().getDate());
-            Date currentDateTemp = DateUtil.getInstance().setDateRaw(currentTime).getDate();
+            Date currentDateTemp = DateUtil.getInstance().setToCurrent().getDate();
 
             if (appointmentTime != null && currentDate != null) {
                 long differenceInMilli = appointmentTime.getTime() - currentDateTemp.getTime();
