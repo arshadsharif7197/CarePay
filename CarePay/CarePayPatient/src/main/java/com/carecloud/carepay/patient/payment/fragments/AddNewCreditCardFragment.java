@@ -675,15 +675,14 @@ public class AddNewCreditCardFragment extends Fragment implements
             return false;
         }
 
-        if (!useProfileAddressCheckBox.isChecked()) {
-            if (!(address1EditText.getText().toString().trim().length() > 0) ||
-                    !(zipCodeEditText.getText().toString().trim().length() > 0) ||
-                    !(cityEditText.getText().toString().trim().length() > 0) ||
-                    !(stateAutoCompleteTextView.getText().toString().trim().length() > 0)) {
+        if (!useProfileAddressCheckBox.isChecked() &&
+             (!(address1EditText.getText().toString().trim().length() > 0) ||
+             !(zipCodeEditText.getText().toString().trim().length() > 0) ||
+             !(cityEditText.getText().toString().trim().length() > 0) ||
+             !(stateAutoCompleteTextView.getText().toString().trim().length() > 0))) {
                 nextButton.setEnabled(false);
                 nextButton.setClickable(false);
                 return false;
-            }
         }
 
         if (!pickDateTextView.getText().toString().equalsIgnoreCase(paymentsLabelDTO.getPaymentPickDate())) {
