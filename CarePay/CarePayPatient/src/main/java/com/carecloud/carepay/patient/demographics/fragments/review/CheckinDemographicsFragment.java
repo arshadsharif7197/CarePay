@@ -166,18 +166,25 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         //initModels();
         rootview = (LinearLayout) view.findViewById(R.id.demographicsReviewRootLayout);
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.demographics_review_toolbar);
-        TextView title = (TextView) toolbar.findViewById(R.id.demographics_review_toolbar_title);
-        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
-        toolbar.setTitle("");
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        toolbar.setVisibility(View.GONE);
 
         initialiseUIFields();
         setEditTexts(view);
         setTypefaces(view);
         initViewFromModels();
+
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.demographics_review_toolbar);
+        TextView title = (TextView) toolbar.findViewById(R.id.demographics_review_toolbar_title);
+        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
+        title.setText(globalLabelsMetaDTO.getDemographicsReviewToolbarTitle());
+        toolbar.setTitle("");
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().finish();
+            }
+        });
 
         formatEditText();
         ((ScrollView)view.findViewById(R.id.adddemoScrollview)).smoothScrollTo(0,0);
