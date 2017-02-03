@@ -31,8 +31,17 @@ import com.google.gson.Gson;
 
 public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity {
 
+    private static boolean isPaymentDone;
     private PaymentsModel paymentsDTO;
     public Bundle bundle;
+
+    public static boolean isPaymentDone() {
+        return isPaymentDone;
+    }
+
+    public static void setIsPaymentDone(boolean isPaymentDone) {
+        ViewPaymentBalanceHistoryActivity.isPaymentDone = isPaymentDone;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

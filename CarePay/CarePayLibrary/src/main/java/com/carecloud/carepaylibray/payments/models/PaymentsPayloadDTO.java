@@ -48,6 +48,17 @@ public class PaymentsPayloadDTO implements Serializable {
     @SerializedName("locations")
     @Expose
     private List<LocationDTO> locations = null;
+    @SerializedName("patient_payments")
+    @Expose
+    private PatientPaymentsDTO patientPayments;
+
+    public PatientPaymentsDTO getPatientPayments() {
+        return patientPayments;
+    }
+
+    public void setPatientPayments(PatientPaymentsDTO patientPayments) {
+        this.patientPayments = patientPayments;
+    }
 
     /**
      *

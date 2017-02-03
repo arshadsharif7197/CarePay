@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -14,16 +15,25 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.patient.payment.adapter.PaymentDetailsListAdapter;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.models.PaymentDetailsItemDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PaymentAmountReceiptDialog extends Dialog implements View.OnClickListener {
 
@@ -111,6 +121,38 @@ public class PaymentAmountReceiptDialog extends Dialog implements View.OnClickLi
     }
 
     private void onSaveButton() {
-
+        showPaymentHistory();
+        dismiss();
     }
+
+    private void showPaymentHistory() {
+        PaymentPayloadMetaDataDTO metadata = paymentReceiptModel.getPaymentPayload()
+                .getPatientPayments().getPayload().get(0).getMetadata();
+        Map<String, String> queryString = new HashMap<>();
+        queryString.put("practice_id", metadata.getPracticeId());
+        queryString.put("practice_mgmt", metadata.getPracticeMgmt());
+        queryString.put("patient_id", metadata.getPatientId());
+
+        TransitionDTO transitionBalance = paymentReceiptModel.getPaymentsMetadata().getPaymentsLinks().getPaymentsPatientBalances();
+        WorkflowServiceHelper.getInstance().execute(transitionBalance, paymentsCallBack, queryString);
+    }
+
+    private WorkflowServiceCallback paymentsCallBack = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            ViewPaymentBalanceHistoryActivity.setIsPaymentDone(true);
+            PatientNavigationHelper.setAccessPaymentsBalances(true);
+            PatientNavigationHelper.getInstance(context).navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            //SystemUtil.showDefaultFailureDialog(InTakeWebViewActivity.this);
+            Log.e(context.getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
 }
