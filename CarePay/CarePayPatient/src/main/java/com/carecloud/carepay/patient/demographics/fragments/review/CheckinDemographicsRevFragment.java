@@ -38,6 +38,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDeta
 
 
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -162,9 +163,9 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        toolbar.setVisibility(view.GONE);
+        toolbar.setVisibility(View.GONE);
 
-        initializeDemographicsDTO();
+        initializeDemographicsDTO(savedInstanceState);
         initialiseUIFields();
         setTypefaces(view);
 
@@ -174,9 +175,9 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
     /**
      * Initialize the models from main Demographic Review Activity
      */
-    private void initializeDemographicsDTO() {
+    private void initializeDemographicsDTO(Bundle bundle) {
         // fetch the main DTO
-        demographicDTO = ((NewReviewDemographicsActivity) getActivity()).getDemographicDTO();
+        demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, bundle);
 
         // fetch the metadata
         globalLabelsMetaDTO = demographicDTO.getMetadata().getLabels();
