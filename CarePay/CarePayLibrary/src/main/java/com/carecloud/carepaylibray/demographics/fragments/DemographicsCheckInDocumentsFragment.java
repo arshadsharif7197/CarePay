@@ -27,14 +27,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 /**
  * Created by lsoco_user on 9/2/2016.
  * Demographics documents scanning (driver's license and insurance card)
  */
 public class DemographicsCheckInDocumentsFragment extends Fragment {
 
-    private View                                   view;
     private DemographicIdDocPayloadDTO             demPayloadIdDocDTO;
     private DemographicMetadataEntityIdDocsDTO     idDocsMetaDTO;
     private String[]                               docTypes;
@@ -64,14 +62,14 @@ public class DemographicsCheckInDocumentsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable final Bundle savedInstanceState) {
         // create the view
-        view = inflater.inflate(R.layout.fragment_demographics_documents_check_in, container, false);
+        View view = inflater.inflate(R.layout.fragment_demographics_documents_check_in, container, false);
 
-        initializeUIFields();
+        initializeUIFields(view);
 
         return view;
     }
 
-    private void initializeUIFields() {
+    private void initializeUIFields(View view) {
         demPayloadIdDocDTO = DtoHelper.getConvertedDTO(DemographicIdDocPayloadDTO.class, getArguments());
         idDocsMetaDTO = DtoHelper.getConvertedDTO(DemographicMetadataEntityIdDocsDTO.class, getArguments());
         DemographicLabelsDTO globalLabelsMetaDTO = DtoHelper.getConvertedDTO(DemographicLabelsDTO.class, getArguments());
@@ -80,7 +78,6 @@ public class DemographicsCheckInDocumentsFragment extends Fragment {
 
         // set the fragment
         activityCallback.initializeIdDocScannerFragment();
-
 
         // set primary views on parent fragment (ie, all views except sub-fragments)
         String label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsIdentityText().toUpperCase();
