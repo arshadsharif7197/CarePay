@@ -24,6 +24,7 @@
     <dimen name="dimen_40dp">40dp</dimen>
     <dimen name="dimen_42dp">42dp</dimen>
     <dimen name="dimen_24dp">24dp</dimen>
+    <dimen name="dimen_88dp">88dp</dimen>
     <dimen name="dimen_200dp">200dp</dimen>
     <dimen name="dimen_500dp">500dp</dimen>
     <dimen name="dimen_400dp">400dp</dimen>

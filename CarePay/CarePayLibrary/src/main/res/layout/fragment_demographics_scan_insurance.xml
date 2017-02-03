@@ -62,7 +62,7 @@
         <TextView
             android:id="@+id/demogr_insurance_provider_label"
             style="@style/DemographicsDocsLabelStyle"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_marginEnd="15dp"
             android:layout_marginTop="15dp"
             android:layout_weight="1"
