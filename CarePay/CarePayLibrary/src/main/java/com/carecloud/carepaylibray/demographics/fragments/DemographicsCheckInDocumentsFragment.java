@@ -37,9 +37,6 @@ public class DemographicsCheckInDocumentsFragment extends Fragment {
     private View                                   view;
     private DemographicIdDocPayloadDTO             demPayloadIdDocDTO;
     private DemographicMetadataEntityIdDocsDTO     idDocsMetaDTO;
-    private TextView                               idTypeClickable;
-    private TextView                               idDocTypeLabel;
-    private TextView                               header;
     private String[]                               docTypes;
 
     DemographicsCheckInDocumentsFragmentListener activityCallback;
@@ -86,21 +83,21 @@ public class DemographicsCheckInDocumentsFragment extends Fragment {
 
 
         // set primary views on parent fragment (ie, all views except sub-fragments)
-        header = (TextView) view.findViewById(R.id.documentsTitleLabel);
         String label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsIdentityText().toUpperCase();
+        TextView header = (TextView) view.findViewById(R.id.documentsTitleLabel);
         header.setText(label);
 
 
         final String labelCancel = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsCancelLabel();
 
-        idDocTypeLabel = (TextView) view.findViewById(R.id.demogrDocTypeLabel);
+        TextView idDocTypeLabel = (TextView) view.findViewById(R.id.demogrDocTypeLabel);
         label = idDocsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsTitleSelectIdType();
         idDocTypeLabel.setText(label);
 
         // fetch nested fragments containers
         final FrameLayout idCardContainer = (FrameLayout) view.findViewById(R.id.demographicsDocsLicense);
 
-        idTypeClickable = (TextView) view.findViewById(R.id.demogrDocTypeClickable);
+        final TextView idTypeClickable = (TextView) view.findViewById(R.id.demogrDocTypeClickable);
         if(StringUtil.isNullOrEmpty(demPayloadIdDocDTO.getIdType())){
             label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsChooseLabel();
         } else {
@@ -126,9 +123,8 @@ public class DemographicsCheckInDocumentsFragment extends Fragment {
             }
         });
 
-
         // set the fonts
-        setTypefaces();
+        setTypefaces(header, idDocTypeLabel, idTypeClickable);
     }
 
     private void getOptions() {
@@ -154,7 +150,7 @@ public class DemographicsCheckInDocumentsFragment extends Fragment {
         }
     }
 
-    private void setTypefaces() {
+    private void setTypefaces(TextView header, TextView idDocTypeLabel, TextView idTypeClickable) {
         Context context = getActivity();
         setProximaNovaRegularTypeface(context, idDocTypeLabel);
         setProximaNovaSemiboldTypeface(context, idTypeClickable);
