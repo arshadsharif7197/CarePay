@@ -48,7 +48,7 @@
                 android:id="@+id/patient_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/settings_toolbar_color"
+                android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/textview_default_textsize"
                 android:textStyle="bold"
                 app:customAssetFont="proxima_nova_semi_bold" />
@@ -78,7 +78,7 @@
                 android:layout_marginTop="@dimen/divider_margin_bottom"
                 android:text="Edit"
                 android:textSize="@dimen/button_textsize_medium"
-                android:textColor="@color/settings_edit_text_color"
+                android:textColor="@color/emerald"
                 app:customAssetFont="gotham_rounded_bold" />
         </LinearLayout>
 
@@ -240,7 +240,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/button_green_border"
-            android:textColor="@color/settings_toolbar_color"
+            android:textColor="@color/colorPrimary"
             android:layout_marginBottom="@dimen/dimen_36dp"
             android:layout_alignParentBottom="true"
             android:layout_margin="@dimen/dimen_20dp"/>

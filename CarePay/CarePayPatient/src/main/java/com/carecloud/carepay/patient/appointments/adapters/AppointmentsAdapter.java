@@ -93,11 +93,9 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
             // Date of Upcoming appointment
             String appointmentStartTime = item.getStartTime();
-            DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
             DateUtil.getInstance().setDateRaw(appointmentStartTime);
             String time12Hour = DateUtil.getInstance().getTime12Hour();
 
-            DateUtil.getInstance().setFormat("EEE dd MMM");
             String dayLiteralAbbr = DateUtil.getInstance().getDayLiteralAbbr();
             String monthLiteralAbbr = DateUtil.getInstance().getMonthLiteralAbbr();
             int day = DateUtil.getInstance().getDay();
@@ -106,13 +104,14 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             boolean isPending = item.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.PENDING);
             boolean isCheckedIn = item.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.CHECKED_IN);
             boolean isCanceled = item.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.CANCELLED);
+            final boolean isRequested = item.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.REQUESTED);
 
             if (sectionHeaderTitle.equals(appointmentLabels.getUpcomingAppointmentsHeading())) {
                 if (isCheckedIn) {
                     holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
                     holder.upcomingDateLinearLayout.setVisibility(View.GONE);
                     holder.todayTimeTextView.setText(appointmentLabels.getAppointmentsCheckedInLabel());
-                    holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
+                    holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
                 } else {
                     holder.todayTimeLinearLayout.setVisibility(View.GONE);
                     holder.upcomingDateLinearLayout.setVisibility(View.VISIBLE);
@@ -128,10 +127,10 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 if (isCheckedIn) {
                     holder.todayTimeTextView.setText(StringUtil.getLabelForView(
                             appointmentLabels.getAppointmentsCheckedInLabel()));
-                    holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.bermudagrey));
+                    holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
                 } else {
                     holder.todayTimeTextView.setText(time12Hour);
-                    holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.dark_green));
+                    holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.overlay_green));
                 }
             }
 
@@ -175,10 +174,15 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 holder.doctorName.setTextColor(ContextCompat.getColor(view.getContext(), R.color.optionl_gray));
                 holder.cellAvatar.setImageDrawable(context.getResources()
                         .getDrawable(R.drawable.icn_cell_avatar_badge_canceled));
+            } else if (isRequested) {
+                holder.cellAvatar.setVisibility(View.VISIBLE);
+                holder.doctorName.setTextColor(ContextCompat.getColor(view.getContext(), R.color.colorPrimary));
+                holder.cellAvatar.setImageDrawable(context.getResources()
+                        .getDrawable(R.drawable.icn_cell_avatar_badge_pending));
             } else {
                 holder.cellAvatar.setVisibility(View.INVISIBLE);
                 holder.missedAppointmentTextView.setVisibility(View.GONE);
-                holder.doctorName.setTextColor(ContextCompat.getColor(view.getContext(), R.color.bright_cerulean));
+                holder.doctorName.setTextColor(ContextCompat.getColor(view.getContext(), R.color.colorPrimary));
             }
 
             if (isCheckedIn) {
@@ -265,12 +269,10 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     private boolean isAppointmentCancellable(AppointmentDTO item) {
         // Get appointment date/time in required format
         String appointmentTimeStr = item.getPayload().getStartTime();
-        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
         Date appointmentTime = DateUtil.getInstance().setDateRaw(appointmentTimeStr).getDate();
 
         // Get current date/time in required format
-        String currentTime = DateUtil.getDateRaw(DateUtil.getInstance().setToCurrent().getDate());
-        Date currentDate = DateUtil.getInstance().setDateRaw(currentTime).getDate();
+        Date currentDate = DateUtil.getInstance().setToCurrent().getDate();
 
         if (appointmentTime != null && currentDate != null) {
             long differenceInMilli = appointmentTime.getTime() - currentDate.getTime();
@@ -307,14 +309,11 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
     private String getSectionHeaderTitle(String appointmentStartTime, String appointmentEndTime) {
         // Current date
-        String currentDate = DateUtil.getInstance().setToCurrent().getDateAsMMddyyyy();
-        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_HEADER_DATE_FORMAT);
+        String currentDate = DateUtil.getInstance().setToCurrent().toStringWithFormatMmDashDdDashYyyy();
         Date convertedCurrentDate = DateUtil.getInstance().setDateRaw(currentDate).getDate();
 
         // Appointment start date
-        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
-        String appointmentDate = DateUtil.getInstance().setDateRaw(appointmentStartTime).getDateAsMMddyyyy();
-        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_HEADER_DATE_FORMAT);
+        String appointmentDate = DateUtil.getInstance().setDateRaw(appointmentStartTime).toStringWithFormatMmDashDdDashYyyy();
         Date convertedAppointmentDate = DateUtil.getInstance().setDateRaw(appointmentDate).getDate();
 
         if (convertedAppointmentDate.after(convertedCurrentDate)
@@ -326,12 +325,10 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             return CarePayConstants.DAY_OVER;
         } else {
             // Get appointment date/time in required format
-            DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
-            Date appointmentTime = DateUtil.getInstance().setDateRaw(appointmentEndTime ).getDate();
+            Date appointmentTime = DateUtil.getInstance().setDateRaw(appointmentEndTime).getDate();
 
             // Get current date/time in required format
-            String currentTime = DateUtil.getDateRaw(DateUtil.getInstance().setToCurrent().getDate());
-            Date currentDateTemp = DateUtil.getInstance().setDateRaw(currentTime).getDate();
+            Date currentDateTemp = DateUtil.getInstance().setToCurrent().getDate();
 
             if (appointmentTime != null && currentDate != null) {
                 long differenceInMilli = appointmentTime.getTime() - currentDateTemp.getTime();
@@ -443,7 +440,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         AppointmentViewHolder(View itemView) {
             super(itemView);
             doctorName = (CarePayTextView) itemView.findViewById(R.id.doctor_name);
-            doctorName.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.bright_cerulean));
+            doctorName.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.colorPrimary));
 
             doctorType = (CarePayTextView) itemView.findViewById(R.id.doctor_type);
             doctorType.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.lightSlateGray));

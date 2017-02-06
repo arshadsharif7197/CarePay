@@ -27,7 +27,7 @@
             style="@style/InTakeDottedProgressBarStyle"
             app:cumulativeDots="false"
             app:activeDotIndex="0"
-            app:activeDotColor="@color/pastelblue"
+            app:activeDotColor="@color/gray"
             app:inactiveDotColor="@color/bright_cerulean"
             app:activeDotIcon="@drawable/circle_indicator_blue"
             app:inactiveDotIcon="@drawable/circle_indicator_gray"

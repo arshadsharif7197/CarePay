@@ -310,7 +310,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
     private void onSetRadioButtonSemiBoldTypeFace(RadioButton radioButton) {
         SystemUtil.setProximaNovaSemiboldTypeface(this.activity, radioButton);
-        radioButton.setTextColor(ContextCompat.getColor(activity, R.color.blue_cerulian));
+        radioButton.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimary));
     }
 
     private View.OnClickListener createPaymentPlanButtonListener = new View.OnClickListener() {
@@ -379,7 +379,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                     break;
 
                 case CarePayConstants.TYPE_CREDIT_CARD:
-
+                    paymentChoiceButton.setEnabled(false);
                     TransitionDTO transitionDTO = paymentsDTO.getPaymentsMetadata()
                             .getPaymentsLinks().getPaymentsCreditCards();
                     WorkflowServiceHelper.getInstance().execute(transitionDTO, getCreditCardsCallback);
@@ -398,6 +398,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            paymentChoiceButton.setEnabled(true);
             Gson gson = new Gson();
             PaymentsModel paymentsModel = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
 
@@ -438,7 +439,8 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(getActivity());
+            paymentChoiceButton.setEnabled(true);
+            SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -498,26 +500,26 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                     paymentChoiceButton.setText(paymentMethodsList.get(i).getButtonLabel());
                     paymentChoiceButton.setTag(paymentMethodsList.get(i).getType());
                     if (paymentMethodsList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CASH)) {
-                        paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.dark_green));
+                        paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.overlay_green));
                     }
                     if (paymentMethodsList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CREDIT_CARD)) {
-                        paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.blue_cerulian));
+                        paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
                         paymentChoiceButton.setText(paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentChooseCreditCardButton());
                     }
                     if (paymentMethodsList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CHECK)) {
-                        paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.blue_cerulian));
+                        paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
                     }
                     if (paymentMethodsList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_GIFT_CARD)) {
-                        paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.blue_cerulian));
+                        paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
                     }
                     if (paymentMethodsList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_PAYPAL)) {
-                        paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.dark_green));
+                        paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.overlay_green));
                     }
                     if (paymentMethodsList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_HSA)) {
-                        paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.blue_cerulian));
+                        paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
                     }
                     if (paymentMethodsList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_FSA)) {
-                        paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.blue_cerulian));
+                        paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
                     }
                 }
 

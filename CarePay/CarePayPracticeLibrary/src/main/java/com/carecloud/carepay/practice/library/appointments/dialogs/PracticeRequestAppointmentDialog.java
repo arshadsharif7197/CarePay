@@ -43,7 +43,6 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
     private AppointmentsSlotsDTO appointmentsSlotsDTO;
     private AppointmentAvailabilityDTO appointmentAvailabilityDTO;
     private TextView visitTypeTextView;
-    public static boolean isAppointmentAdded = false;
 
     /**
      * Constructor.
@@ -60,7 +59,6 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         this.appointmentAvailabilityDTO = appointmentAvailabilityDTO;
 
         inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        isAppointmentAdded = false;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -94,7 +92,6 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         requestAppointmentButton.requestFocus();
         SystemUtil.setGothamRoundedBoldTypeface(context,requestAppointmentButton);
 
-        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
         DateUtil.getInstance().setDateRaw(appointmentsSlotsDTO.getStartTime());
         CarePayTextView appointmentDateTextView = (CarePayTextView)view.findViewById(R.id.appointment_date);
         appointmentDateTextView.setText(DateUtil.getInstance().getDateAsDayMonthDayOrdinal());
@@ -202,16 +199,13 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(context).dismiss();
-            ((ScheduleAppointmentActivity) context).logout();
-//            AppointmentsActivity.setIsNewAppointmentScheduled(true);
-//            PracticeNavigationHelper.getInstance().setIsPatientModeAppointments(false);
-//            PracticeNavigationHelper.getInstance().navigateToWorkflow(context, workflowDTO);
+            ((ScheduleAppointmentActivity) context).showAppointmentConfirmation();
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
             ProgressDialogUtil.getInstance(context).dismiss();
-            SystemUtil.showFaultDialog(context);
+            SystemUtil.showDefaultFailureDialog(context);
             Log.e(context.getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };

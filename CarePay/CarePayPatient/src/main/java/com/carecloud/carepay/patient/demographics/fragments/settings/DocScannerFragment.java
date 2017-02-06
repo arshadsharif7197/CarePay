@@ -1,6 +1,5 @@
 package com.carecloud.carepay.patient.demographics.fragments.settings;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -32,8 +31,6 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.Demographic
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPhotoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
-import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
-import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHolder;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
@@ -174,7 +171,7 @@ public class DocScannerFragment extends DocumentScannerFragment {
         GradientDrawable shape = new GradientDrawable();
         shape.setShape(GradientDrawable.RECTANGLE);
         shape.setCornerRadii(new float[] { 8, 8, 8, 8, 8, 8, 8, 8 });
-        shape.setStroke(3, ContextCompat.getColor(getActivity(), R.color.settings_toolbar_color));
+        shape.setStroke(3, ContextCompat.getColor(getActivity(), R.color.colorPrimary));
         scanFrontButton.setBackgroundDrawable(shape);
 
         scanFrontButton.setOnClickListener(new View.OnClickListener() {
@@ -202,7 +199,7 @@ public class DocScannerFragment extends DocumentScannerFragment {
 
         idStateClickable = (TextView) view.findViewById(R.id.demogrDocsStateClickable);
         idStateClickable.setText(documentsDlStateString);
-        idStateClickable.setTextColor(ContextCompat.getColor(getActivity(), R.color.settings_toolbar_color));
+        idStateClickable.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
         idStateClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -220,7 +217,7 @@ public class DocScannerFragment extends DocumentScannerFragment {
 
         idNumberEdit = (EditText) view.findViewById(R.id.demogrDocsLicenseNumEdit);
         idNumberInputText = (TextInputLayout) view.findViewById(R.id.demogrDocsNumberInputLayout);
-        idNumberEdit.setTextColor(ContextCompat.getColor(getActivity(), R.color.settings_toolbar_color));
+        idNumberEdit.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
 
         idNumberInputText.setTag(documentsDlNumberString);
         idNumberEdit.setTag(idNumberInputText);

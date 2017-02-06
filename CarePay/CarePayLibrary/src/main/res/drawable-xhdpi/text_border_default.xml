@@ -4,7 +4,7 @@
     <solid android:color="@android:color/transparent" />
     <stroke
         android:width="@dimen/activity_text_border"
-        android:color="@color/text_border_default" />
+        android:color="@color/grey_600" />
     <corners
         android:radius="@dimen/activity_text_radius"/>
 

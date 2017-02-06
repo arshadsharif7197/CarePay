@@ -17,7 +17,6 @@ import com.carecloud.carepay.practice.library.appointments.ScheduleAppointmentAc
 import com.carecloud.carepay.practice.library.appointments.adapters.PracticeAvailableHoursAdapter;
 import com.carecloud.carepay.practice.library.customdialog.BasePracticeDialog;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -143,8 +142,6 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
         SystemUtil.setProximaNovaRegularTypeface(context, dateRangeCustomTextView);
         dateRangeCustomTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.glitter));
 
-        DateUtil.getInstance().setFormat(CarePayConstants.RAW_DATE_FORMAT_FOR_CALENDAR_DATE_RANGE);
-
         String selectedRangeLabel = ((ScheduleAppointmentActivity) context).getResourcesToSchedule().getMetadata().getLabel().getAddAppointmentFromToText();
 
         if (startDate != null && endDate != null) {
@@ -207,12 +204,12 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
 
         if (startDate != null) {
             DateUtil.getInstance().setDate(startDate);
-            queryMap.put("start_date", DateUtil.getInstance().getDateAsyyyyMMdd());
+            queryMap.put("start_date", DateUtil.getInstance().toStringWithFormatYyyyDashMmDashDd());
         }
 
         if (endDate != null) {
             DateUtil.getInstance().setDate(endDate);
-            queryMap.put("end_date", DateUtil.getInstance().getDateAsyyyyMMdd());
+            queryMap.put("end_date", DateUtil.getInstance().toStringWithFormatYyyyDashMmDashDd());
         }
 
         TransitionDTO transitionDTO = ((ScheduleAppointmentActivity) context).getResourcesToSchedule().getMetadata().getLinks().getAppointmentAvailability();
@@ -239,7 +236,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
         @Override
         public void onFailure(String exceptionMessage) {
             ProgressDialogUtil.getInstance(context).dismiss();
-            SystemUtil.showFaultDialog(context);
+            SystemUtil.showDefaultFailureDialog(context);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -256,9 +253,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
                         String dateO1 = obj1.getStartTime();
                         String dateO2 = obj2.getStartTime();
 
-                        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
                         Date date1 = DateUtil.getInstance().setDateRaw(dateO1).getDate();
-                        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
                         Date date2 = DateUtil.getInstance().setDateRaw(dateO2).getDate();
 
                         long time1 = 0;
@@ -285,9 +280,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
                         String date01 = obj1.getStartTime();
                         String date02 = obj2.getStartTime();
 
-                        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
                         Date date2 = DateUtil.getInstance().setDateRaw(date02).getDate();
-                        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
                         DateUtil.getInstance().setDateRaw(date01);
                         return DateUtil.getInstance().compareTo(date2);
                     }
@@ -319,19 +312,15 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
 
     private String getSectionHeaderTitle(String timeSlotRawDate) {
         // Current date
-        String currentDate = DateUtil.getInstance().setToCurrent().getDateAsMMddyyyy();
-        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_HEADER_DATE_FORMAT);
+        String currentDate = DateUtil.getInstance().setToCurrent().toStringWithFormatMmDashDdDashYyyy();
         final Date currentConvertedDate = DateUtil.getInstance().setDateRaw(currentDate).getDate();
 
         // day after tomorrow date
-        String dayAfterTomorrowDate = DateUtil.getInstance().setToDayAfterTomorrow().getDateAsMMddyyyy();
-        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_HEADER_DATE_FORMAT);
+        String dayAfterTomorrowDate = DateUtil.getInstance().setToDayAfterTomorrow().toStringWithFormatMmDashDdDashYyyy();
         final Date dayAfterTomorrowConvertedDate = DateUtil.getInstance().setDateRaw(dayAfterTomorrowDate).getDate();
 
         // Appointment time slot date
-        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
-        String appointmentDate = DateUtil.getInstance().setDateRaw(timeSlotRawDate).getDateAsMMddyyyy();
-        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_HEADER_DATE_FORMAT);
+        String appointmentDate = DateUtil.getInstance().setDateRaw(timeSlotRawDate).toStringWithFormatMmDashDdDashYyyy();
         final Date convertedAppointmentDate = DateUtil.getInstance().setDateRaw(appointmentDate).getDate();
 
         String headerText;

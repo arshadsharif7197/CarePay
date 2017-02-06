@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -14,15 +15,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -42,11 +44,13 @@ import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.utils.CardPattern;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
+import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.payeezysdk.sdk.payeezydirecttransactions.RequestTask;
 import com.google.gson.Gson;
+import com.smartystreets.api.us_zipcode.City;
 
 import java.util.HashMap;
 import java.util.List;
@@ -79,16 +83,13 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
     private TextView pickDateTextView;
     private CheckBox saveCardOnFileCheckBox;
     private CheckBox setAsDefaultCheckBox;
-
-    private LinearLayout billingAddressLayout;
-    private CarePayTextView billingAddressTextView;
     private CheckBox useProfileAddressCheckBox;
 
     private EditText address1EditText;
     private EditText address2EditText;
     private EditText zipCodeEditText;
     private EditText cityEditText;
-    private EditText stateEditText;
+    private AutoCompleteTextView stateAutoCompleteTextView;
 
     private Button nextButton;
 
@@ -97,10 +98,11 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
     private PaymentsLabelDTO paymentsLabelDTO;
     private PaymentsModel intakePaymentModel;
     private double amountToMakePayment;
-    private String paymentDTOString;
     private DemographicAddressPayloadDTO addressPayloadDTO;
     private PaymentCreditCardsPayloadDTO creditCardsPayloadDTO;
     private PaymentsCreditCardBillingInformationDTO billingInformationDTO;
+    private String stateAbbr = null;
+    private City smartyStreetsResponse;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -112,7 +114,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
         Bundle arguments = getArguments();
         if (arguments != null) {
             Gson gson = new Gson();
-            paymentDTOString = arguments.getString(CarePayConstants.INTAKE_BUNDLE);
+            String paymentDTOString = arguments.getString(CarePayConstants.INTAKE_BUNDLE);
             paymentsModel = gson.fromJson(paymentDTOString, PaymentsModel.class);
 
             paymentDTOString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
@@ -195,7 +197,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
         address1EditText.addTextChangedListener(textWatcher);
         zipCodeEditText.addTextChangedListener(textWatcher);
         cityEditText.addTextChangedListener(textWatcher);
-        stateEditText.addTextChangedListener(textWatcher);
+        stateAutoCompleteTextView.addTextChangedListener(textWatcher);
     }
 
     private TextWatcher textWatcher = new TextWatcher() {
@@ -304,8 +306,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
         setAsDefaultCheckBox = (CheckBox) view.findViewById(com.carecloud.carepaylibrary.R.id.setAsDefaultCheckBox);
         setAsDefaultCheckBox.setText(paymentsLabelDTO.getPaymentSetAsDefaultCreditCard());
 
-        billingAddressLayout = (LinearLayout) view.findViewById(R.id.billingInformationLayout);
-        billingAddressTextView = (CarePayTextView) view.findViewById(R.id.billingAddressTextView);
+        CarePayTextView billingAddressTextView = (CarePayTextView) view.findViewById(R.id.billingAddressTextView);
         billingAddressTextView.setText(paymentsLabelDTO.getPaymentBillingAddressText());
         useProfileAddressCheckBox = (CheckBox) view.findViewById(R.id.useProfileAddressCheckBox);
         useProfileAddressCheckBox.setText(paymentsLabelDTO.getPaymentUseProfileAddress());
@@ -337,9 +338,21 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
 
         stateTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.stateTextInputLayout);
         stateTextInput.setTag(paymentsLabelDTO.getPaymentState());
-        stateEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.stateAutoCompleteTextView);
-        stateEditText.setHint(paymentsLabelDTO.getPaymentState());
-        stateEditText.setTag(stateTextInput);
+        stateAutoCompleteTextView = (AutoCompleteTextView) view.findViewById(R.id.stateAutoCompleteTextView);
+        stateAutoCompleteTextView.setHint(paymentsLabelDTO.getPaymentState());
+        stateAutoCompleteTextView.setTag(stateTextInput);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
+                R.layout.autocomplete_state_item,
+                R.id.text1,
+                AddressUtil.states);
+        stateAutoCompleteTextView.setThreshold(1);
+        stateAutoCompleteTextView.setAdapter(adapter);
+        stateAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                stateAbbr = adapter.getItem(position);
+            }
+        });
 
         nextButton = (Button) view.findViewById(com.carecloud.carepaylibrary.R.id.nextButton);
         nextButton.setText(paymentsLabelDTO.getPaymentPayText());
@@ -356,7 +369,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
         address2EditText.clearFocus();
         zipCodeEditText.clearFocus();
         cityEditText.clearFocus();
-        stateEditText.clearFocus();
+        stateAutoCompleteTextView.clearFocus();
 
         saveCardOnFileCheckBox.setChecked(false);
         setAsDefaultCheckBox.setChecked(false);
@@ -381,7 +394,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
             address2EditText.setText(addressPayloadDTO.getAddress2());
             zipCodeEditText.setText(addressPayloadDTO.getZipcode());
             cityEditText.setText(addressPayloadDTO.getCity());
-            stateEditText.setText(addressPayloadDTO.getState());
+            stateAutoCompleteTextView.setText(addressPayloadDTO.getState());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -419,7 +432,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
         SystemUtil.setProximaNovaRegularTypeface(getActivity(), address2EditText);
         SystemUtil.setProximaNovaRegularTypeface(getActivity(), zipCodeEditText);
         SystemUtil.setProximaNovaRegularTypeface(getActivity(), cityEditText);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), stateEditText);
+        SystemUtil.setProximaNovaRegularTypeface(getActivity(), stateAutoCompleteTextView);
 
 
         SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), creditCardNoTextInput);
@@ -491,6 +504,9 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
                 SystemUtil.handleHintChange(view, flag);
+                if (!flag) { // for SmartyStreets
+                    getCityAndState(zipCodeEditText.getText().toString());
+                }
             }
         });
         cityEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -502,7 +518,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
                 SystemUtil.handleHintChange(view, flag);
             }
         });
-        stateEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        stateAutoCompleteTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean flag) {
                 if (flag) {
@@ -557,7 +573,11 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
                 setDefaultBillingAddressTexts();
             } else {
                 setAddressFieldsEnabled(true);
-                //clearBillingAddressTexts();
+                address1EditText.setText("");
+                address2EditText.setText("");
+                zipCodeEditText.setText("");
+                cityEditText.setText("");
+                stateAutoCompleteTextView.setText("");
             }
         }
     };
@@ -571,8 +591,8 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
         zipCodeEditText.setClickable(isEnabled);
         cityEditText.setEnabled(isEnabled);
         cityEditText.setClickable(isEnabled);
-        stateEditText.setEnabled(isEnabled);
-        stateEditText.setClickable(isEnabled);
+        stateAutoCompleteTextView.setEnabled(isEnabled);
+        stateAutoCompleteTextView.setClickable(isEnabled);
     }
 
     private View.OnClickListener pickDateListener = new View.OnClickListener() {
@@ -604,7 +624,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(getActivity());
+            SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -626,7 +646,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(getActivity());
+            SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -666,7 +686,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
             return false;
         }
 
-        if (!(verificationCodeEditText.getText().toString().length() > 0)) {
+        if (!(verificationCodeEditText.getText().toString().length() > 2)) {
             nextButton.setEnabled(false);
             nextButton.setClickable(false);
             return false;
@@ -676,7 +696,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
             (!(address1EditText.getText().toString().trim().length() > 0) ||
             !(zipCodeEditText.getText().toString().trim().length() > 0) ||
             !(cityEditText.getText().toString().trim().length() > 0) ||
-            !(stateEditText.getText().toString().trim().length() > 0))) {
+            !(stateAutoCompleteTextView.getText().toString().trim().length() > 0))) {
                 nextButton.setEnabled(false);
                 nextButton.setClickable(false);
                 return false;
@@ -708,7 +728,7 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
         billingInformationDTO.setLine2(address2EditText.getText().toString().trim());
         billingInformationDTO.setZip(zipCodeEditText.getText().toString().trim());
         billingInformationDTO.setCity(cityEditText.getText().toString().trim());
-        billingInformationDTO.setState(stateEditText.getText().toString().trim());
+        billingInformationDTO.setState(stateAutoCompleteTextView.getText().toString().trim());
         creditCardsPayloadDTO.setBillingInformation(billingInformationDTO);
     }
 
@@ -835,5 +855,34 @@ public class PatientAddNewCreditCardFragment extends BaseCheckinFragment impleme
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Background task to call smarty streets zip code lookup.
+     * The response is a com.smartystreets.api.us_zipcode.City object,
+     * that contains city, mailableCity, stateAbbreviation and state.
+     */
+    private void getCityAndState(String zipcode) {
+
+        new AsyncTask<String, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(String... params) {
+                smartyStreetsResponse = AddressUtil.getCityAndStateByZipCode(params[0]);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                super.onPostExecute(result);
+
+                if (smartyStreetsResponse != null) {
+                    cityEditText.setText(smartyStreetsResponse.getCity());
+
+                    stateAbbr = smartyStreetsResponse.getStateAbbreviation();
+                    stateAutoCompleteTextView.setText(stateAbbr);
+                }
+            }
+        }.execute(zipcode);
     }
 }

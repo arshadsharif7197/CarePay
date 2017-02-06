@@ -164,7 +164,7 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
         @Override
         public void onFailure(String exceptionMessage) {
             getStartedButton.setEnabled(true);
-            SystemUtil.showFaultDialog(PatientModeSplashActivity.this);
+            SystemUtil.showDefaultFailureDialog(PatientModeSplashActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

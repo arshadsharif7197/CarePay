@@ -301,7 +301,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
                 public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                     LocalDate date = new LocalDate(year, month + 1, day);
                     DateUtil.getInstance().setDate(date.toDate());
-                    selectDateButton.setText(DateUtil.getInstance().getDateAsMMddyyyyWithSlash());
+                    selectDateButton.setText(DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
                 }
             }, year, month, day);
 
@@ -369,7 +369,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
                 transitionDTO = signinPatientModeDTO.getMetadata().getTransitions().getAction();
                 WorkflowServiceHelper.getInstance().execute(transitionDTO, patientModeAppointmentsCallback, queryMap, headers);
             } else {
-                SystemUtil.showDialogMessage(PersonalInformationActivity.this, StringUtil.getLabelForView(labelsDTO.getSignInFailed()),
+                SystemUtil.showFailureDialogMessage(PersonalInformationActivity.this, StringUtil.getLabelForView(labelsDTO.getSignInFailed()),
                         StringUtil.getLabelForView(labelsDTO.getPersonalInfoIncorrectDetails()));
             }
         }
@@ -377,7 +377,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         @Override
         public void onFailure(String exceptionMessage) {
             findMyAppointmentButton.setEnabled(true);
-            SystemUtil.showFaultDialog(PersonalInformationActivity.this);
+            SystemUtil.showDefaultFailureDialog(PersonalInformationActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -397,7 +397,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         @Override
         public void onFailure(String exceptionMessage) {
             findMyAppointmentButton.setEnabled(true);
-            SystemUtil.showFaultDialog(PersonalInformationActivity.this);
+            SystemUtil.showDefaultFailureDialog(PersonalInformationActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

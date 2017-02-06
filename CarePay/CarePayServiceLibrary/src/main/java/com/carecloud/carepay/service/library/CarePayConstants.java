@@ -12,6 +12,16 @@ public class CarePayConstants {
 
     public static final String PREFERENCE_PRACTICE_SELECTED_LANGUAGE = "practice_user_selected_language";
 
+    public static final String PREFERENCE_PATIENT_ID = "patient_id";
+
+    public static final String PREFERENCE_PRACTICE_ID = "practice_id";
+
+    public static final String PREFERENCE_PRACTICE_MANAGEMENT = "practice_management";
+
+    public static final String PREFERENCE_PREFIX = "prefix";
+
+    public static final String PREFERENCE_USER_ID = "user_id";
+
 
     // Default data
 
@@ -67,13 +77,10 @@ public class CarePayConstants {
     public static final String PAYMENT_CREDIT_CARD_INFO = "payment_credit_card_info";
     public static final String TAB_SECTION_NUMBER = "section_number";
 
-    public static final String APPOINTMENT_DATE_TIME_FORMAT            = "yyyy-MM-dd'T'HH:mm:ssz";
     public static final String RAW_DATE_FORMAT_FOR_TESTS               = "yyyy-MM-dd'T'HH:mm:ssX";
     public static final String RAW_DATE_FORMAT_FOR_CALENDAR_DATE_RANGE = "EEE, MMM d, ''yy";
     public static final String NOT_DEFINED                             = "Not Defined";
 
-    public static final String APPOINTMENT_FILTER_DATE_FORMAT            = "yyyy-MM-dd";
-    public static final String APPOINTMENT_HEADER_DATE_FORMAT            = "MM-dd-yyyy";
     public static final String PRACTICE_APP_MODE_DEFAULT_PIN = "1234";
     public static final String ZERO_BALANCE  = "$0.00";
 

@@ -72,7 +72,6 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
         //holder.appointmentStatusCartView.setAmount(patientModel.getTotalBalance());
         //holder.appointmentStatusCartView.setPatientImage(patientModel.getPhoto());
         holder.appointmentStatusCartView.setProviderName(appointmentItem.getProvider().getName());
-        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
         holder.appointmentStatusCartView.setAppointmentTime(DateUtil.getInstance().setDateRaw(appointmentItem.getStartTime()).getDate().getTime());
         holder.appointmentStatusCartView.setTag(appointmentItem);
         holder.appointmentStatusCartView.setShortName(StringUtil.onShortDrName(patientModel.getFirstName() + " " + patientModel.getLastName()));

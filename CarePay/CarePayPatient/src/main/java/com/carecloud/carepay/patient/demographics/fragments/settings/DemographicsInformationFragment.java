@@ -65,7 +65,6 @@ import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.gson.Gson;
 import com.smartystreets.api.us_zipcode.City;
 
@@ -247,7 +246,6 @@ public class DemographicsInformationFragment extends Fragment {
         getProfileProperties();
         setEditTexts(view);
 
-        updateDemoGraphicTitleTextView = (TextView) view.findViewById(R.id.detailsReviewHeading);
         peronalInfoSectionTextview = (TextView) view.findViewById(R.id.reviewdemogrPersonalInfoLabel);
         demographicSectionTextView = (TextView) view.findViewById(R.id.demographicsSectionLabel);
         addressSectionTextView = (TextView) view.findViewById(R.id.demographicsAddressSectionLabel);
@@ -258,7 +256,7 @@ public class DemographicsInformationFragment extends Fragment {
         demographicSectionTextView.setText(demographicsHeaderString);
         addressSectionTextView.setText(addressHeaderString);
 
-        String dateOfBirthString = DateUtil.getInstance().setDateRaw(dobValString).getDateAsMMddyyyyWithSlash();
+        String dateOfBirthString = DateUtil.getInstance().setDateRaw(dobValString).toStringWithFormatMmSlashDdSlashYyyy();
         if (SystemUtil.isNotEmptyString(dateOfBirthString)) {
             dobEditText.setText(dateOfBirthString);
             dobEditText.requestFocus();
@@ -985,6 +983,7 @@ public class DemographicsInformationFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (isAllFieldsValid()) {
+                    updateProfileButton.setEnabled(false);
                     if (demographicsSettingsDTO != null) {
                         DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
                         if (demographicsSettingsMetadataDTO != null) {
@@ -1040,15 +1039,17 @@ public class DemographicsInformationFragment extends Fragment {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            updateProfileButton.setEnabled(true);
             progressBar.setVisibility(View.GONE);
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            updateProfileButton.setEnabled(true);
             progressBar.setVisibility(View.GONE);
 
-            SystemUtil.showFaultDialog(getActivity());
+            SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

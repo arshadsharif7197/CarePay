@@ -74,7 +74,6 @@ public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener
         params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.90);
         getWindow().setAttributes(params);
 
-        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
         DateUtil.getInstance().setDateRaw(payload.getStartTime());
 
         CarePayTextView dateTextView = ((CarePayTextView) findViewById(R.id.appointDateTextView));

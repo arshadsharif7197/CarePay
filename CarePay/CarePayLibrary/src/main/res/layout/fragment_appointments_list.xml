@@ -107,5 +107,5 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/default_title_indicator_title_padding"
         android:src="@drawable/ic_add_white"
-        app:backgroundTint="@color/dark_green" />
+        app:backgroundTint="@color/overlay_green" />
 </FrameLayout>

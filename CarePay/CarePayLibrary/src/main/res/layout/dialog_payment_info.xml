@@ -21,7 +21,7 @@
             android:paddingLeft="@dimen/apt_dl_margin"
             android:textStyle="bold"
             android:text="Patient Balance "
-            android:textColor="@color/bermudagrey"
+            android:textColor="@color/lightSlateGray"
             android:textSize="@dimen/payment_text_balance_size" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -35,7 +35,7 @@
             android:textStyle="bold"
             android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
             android:paddingRight="@dimen/apt_dl_margin"
-            android:textColor="@color/bermudagrey"
+            android:textColor="@color/lightSlateGray"
             android:textSize="@dimen/payment_text_balance_size" />
     </LinearLayout>
 

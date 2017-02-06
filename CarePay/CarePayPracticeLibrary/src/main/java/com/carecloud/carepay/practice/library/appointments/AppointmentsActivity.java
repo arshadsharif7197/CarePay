@@ -38,13 +38,6 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
     private AppointmentsResultModel appointmentsResultModel;
     private ProgressBar appointmentProgressBar;
     private List<AppointmentDTO> appointmentsItems;
-    /**
-     * Getting single appointment from make_appointment endpoint
-     * hence added this flag to differentiate app flow,
-     * whether call is from Check-in or Schedule Appointments screen.
-     * Remove this flag dependency once all appointments received from endpoint.
-     */
-    private static boolean isNewAppointmentScheduled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,33 +56,21 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         appointmentProgressBar.setVisibility(View.GONE);
         try {
             appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
-            if(isNewAppointmentScheduled){
-                isNewAppointmentScheduled = false;
-                refreshAppointmentList();
-            } else {
-                getAppointmentList();
-            }
+            getAppointmentList();
         } catch (JsonSyntaxException ex) {
-            SystemUtil.showDialogMessage(this, getString(R.string.alert_title_server_error),
+            SystemUtil.showFailureDialogMessage(this, getString(R.string.alert_title_server_error),
                     getString(R.string.alert_title_server_error));
             ex.printStackTrace();
         }
     }
 
-    public static void setIsNewAppointmentScheduled(boolean isNewAppointmentScheduled) {
-        AppointmentsActivity.isNewAppointmentScheduled = isNewAppointmentScheduled;
-    }
-
     private String getToday(String appointmentRawDate) {
         // Current date
-        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
-        String currentDate = DateUtil.getInstance().setToCurrent().getDateAsMMddyyyy();
-        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_HEADER_DATE_FORMAT);
+        String currentDate = DateUtil.getInstance().setToCurrent().toStringWithFormatMmDashDdDashYyyy();
         Date currentConvertedDate = DateUtil.getInstance().setDateRaw(currentDate).getDate();
 
         // Appointment date
-        String appointmentDate = DateUtil.getInstance().setDateRaw(appointmentRawDate).getDateAsMMddyyyy();
-        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_HEADER_DATE_FORMAT);
+        String appointmentDate = DateUtil.getInstance().setDateRaw(appointmentRawDate).toStringWithFormatMmDashDdDashYyyy();
         Date convertedAppointmentDate = DateUtil.getInstance().setDateRaw(appointmentDate).getDate();
 
         String strDay;
@@ -141,7 +122,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         @Override
         public void onFailure(String exceptionMessage) {
             findViewById(R.id.logoutTextview).setEnabled(true);
-            SystemUtil.showFaultDialog(AppointmentsActivity.this);
+            SystemUtil.showDefaultFailureDialog(AppointmentsActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -162,7 +143,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         @Override
         public void onFailure(String exceptionMessage) {
             findViewById(R.id.btnHome).setEnabled(false);
-            SystemUtil.showFaultDialog(AppointmentsActivity.this);
+            SystemUtil.showDefaultFailureDialog(AppointmentsActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -243,7 +224,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         @Override
         public void onFailure(String exceptionMessage) {
             appointmentProgressBar.setVisibility(View.GONE);
-            SystemUtil.showFaultDialog(AppointmentsActivity.this);
+            SystemUtil.showDefaultFailureDialog(AppointmentsActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

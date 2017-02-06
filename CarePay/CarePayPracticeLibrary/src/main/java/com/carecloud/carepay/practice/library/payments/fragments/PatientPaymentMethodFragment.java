@@ -6,8 +6,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -17,7 +15,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -216,20 +213,20 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                 paymentChoiceButton.setText(paymentList.get(i).getButtonLabel());
                 paymentChoiceButton.setTag(paymentList.get(i).getType());
                 if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CASH)){
-                    shape.setColor(getActivity().getResources().getColor(R.color.dark_green));
+                    shape.setColor(getActivity().getResources().getColor(R.color.overlay_green));
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CREDIT_CARD)){
-                    shape.setColor(getActivity().getResources().getColor(R.color.blue_cerulian));
+                    shape.setColor(getActivity().getResources().getColor(R.color.bright_cerulean));
                     paymentChoiceButton.setText(paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentChooseCreditCardButton());
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CHECK)){
-                    shape.setColor(getActivity().getResources().getColor(R.color.blue_cerulian));
+                    shape.setColor(getActivity().getResources().getColor(R.color.bright_cerulean));
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_GIFT_CARD)){
-                    shape.setColor(getActivity().getResources().getColor(R.color.blue_cerulian));
+                    shape.setColor(getActivity().getResources().getColor(R.color.bright_cerulean));
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_PAYPAL)){
-                    shape.setColor(getActivity().getResources().getColor(R.color.dark_green));
+                    shape.setColor(getActivity().getResources().getColor(R.color.overlay_green));
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_HSA)){
-                    shape.setColor(getActivity().getResources().getColor(R.color.blue_cerulian));
+                    shape.setColor(getActivity().getResources().getColor(R.color.bright_cerulean));
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_FSA)){
-                    shape.setColor(getActivity().getResources().getColor(R.color.blue_cerulian));
+                    shape.setColor(getActivity().getResources().getColor(R.color.bright_cerulean));
                 }
             }
         }
@@ -248,7 +245,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
 
     private void onSetRadioButtonSemiBoldTypeFace(RadioButton radioButton) {
         SystemUtil.setProximaNovaSemiboldTypeface(this.activity, radioButton);
-        radioButton.setTextColor(ContextCompat.getColor(activity, R.color.blue_cerulian));
+        radioButton.setTextColor(ContextCompat.getColor(activity, R.color.bright_cerulean));
     }
 
     private View.OnClickListener createPaymentPlanButtonListener = new View.OnClickListener() {

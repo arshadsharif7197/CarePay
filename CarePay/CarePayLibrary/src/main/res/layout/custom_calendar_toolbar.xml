@@ -3,7 +3,7 @@
     android:id="@+id/add_appointment_toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/blue_cerulian"
+    android:background="@color/colorPrimary"
     android:gravity="center">
 
     <TextView
@@ -11,17 +11,17 @@
         style="@style/ResponsibilityToolbarTextStyle"
         android:layout_width="wrap_content"
         android:layout_gravity="center_vertical"
-        android:text="@string/pick_a_date_label"/>
+        android:text="@string/pick_a_date_label" />
 
     <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
         android:id="@+id/today_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="center_vertical|end"
         android:background="@color/transparent_apt"
         android:text="@string/apt_day_today"
         android:textColor="@color/white"
-        android:layout_gravity="center_vertical|right"
-        android:layout_alignParentRight="true"
-        android:textSize="@dimen/textview_textsize"/>
+        android:textSize="@dimen/textview_textsize" />
 
 </android.support.v7.widget.Toolbar>

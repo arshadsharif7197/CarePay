@@ -73,7 +73,7 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
         @Override
         public void onFailure(String exceptionMessage) {
             correctInformationButton.setEnabled(true);
-            SystemUtil.showFaultDialog(getActivity());
+            SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -229,8 +229,7 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
 
             String datetime = demographicPersDetailsPayloadDTO.getDateOfBirth();
             if (SystemUtil.isNotEmptyString(datetime)) {
-                DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_FILTER_DATE_FORMAT);
-                String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).getDateAsMMddyyyyWithSlash();
+                String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).toStringWithFormatMmSlashDdSlashYyyy();
                 dobTExtView.setText(dateOfBirthString);
             }
 

@@ -38,6 +38,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDeta
 
 
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -65,13 +66,15 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            correctInformationButton.setEnabled(true);
             demographicProgressBar.setVisibility(View.GONE);
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(getActivity());
+            correctInformationButton.setEnabled(true);
+            SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -160,9 +163,9 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        toolbar.setVisibility(view.GONE);
+        toolbar.setVisibility(View.GONE);
 
-        initializeDemographicsDTO();
+        initializeDemographicsDTO(savedInstanceState);
         initialiseUIFields();
         setTypefaces(view);
 
@@ -172,9 +175,9 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
     /**
      * Initialize the models from main Demographic Review Activity
      */
-    private void initializeDemographicsDTO() {
+    private void initializeDemographicsDTO(Bundle bundle) {
         // fetch the main DTO
-        demographicDTO = ((NewReviewDemographicsActivity) getActivity()).getDemographicDTO();
+        demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, bundle);
 
         // fetch the metadata
         globalLabelsMetaDTO = demographicDTO.getMetadata().getLabels();
@@ -227,8 +230,7 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
 
             String datetime = demographicPersDetailsPayloadDTO.getDateOfBirth();
             if (SystemUtil.isNotEmptyString(datetime)) {
-                DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_FILTER_DATE_FORMAT);
-                String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).getDateAsMMddyyyyWithSlash();
+                String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).toStringWithFormatMmSlashDdSlashYyyy();
                 dobTExtView.setText(dateOfBirthString);
             }
 
@@ -481,6 +483,7 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
     @Override
     public void onClick(View view) {
         if (view == correctInformationButton) {
+            correctInformationButton.setEnabled(false);
             Map<String, String> queries = new HashMap<>();
             queries.put("practice_mgmt", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
             queries.put("practice_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());

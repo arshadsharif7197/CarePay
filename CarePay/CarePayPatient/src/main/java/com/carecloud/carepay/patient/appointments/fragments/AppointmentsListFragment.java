@@ -115,7 +115,7 @@ public class AppointmentsListFragment extends Fragment {
 //
 //        @Override
 //        public void onFailure(String exceptionMessage) {
-//            SystemUtil.showFaultDialog(getActivity());
+//            SystemUtil.showDefaultFailureDialog(getActivity());
 //            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
 //        }
 //    };
@@ -130,6 +130,7 @@ public class AppointmentsListFragment extends Fragment {
         super.onResume();
         if(RequestAppointmentDialog.isAppointmentAdded){
             refreshAppointmentList();
+            showAppointmentConfirmation();
             RequestAppointmentDialog.isAppointmentAdded = false;
         }
     }
@@ -388,7 +389,7 @@ public class AppointmentsListFragment extends Fragment {
         @Override
         public void onFailure(String exceptionMessage) {
             appointmentProgressBar.setVisibility(View.GONE);
-            SystemUtil.showFaultDialog(getActivity());
+            SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -402,9 +403,7 @@ public class AppointmentsListFragment extends Fragment {
                     String dateO1 = o1.getPayload().getStartTime();
                     String dateO2 = o2.getPayload().getStartTime();
 
-                    DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
                     Date date1 = DateUtil.getInstance().setDateRaw(dateO1).getDate();
-                    DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
                     Date date2 = DateUtil.getInstance().setDateRaw(dateO2).getDate();
 
                     long time1 = 0;
@@ -431,9 +430,7 @@ public class AppointmentsListFragment extends Fragment {
                     String date01 = o1.getPayload().getStartTime();
 
                     String date02 = o2.getPayload().getStartTime();
-                    DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
                     Date date2 = DateUtil.getInstance().setDateRaw(date02).getDate();
-                    DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
                     DateUtil.getInstance().setDateRaw(date01);
                     return DateUtil.getInstance().compareTo(date2);
                 }
@@ -467,14 +464,11 @@ public class AppointmentsListFragment extends Fragment {
 
     private String getSectionHeaderTitle(String appointmentRawDate) {
         // Current date
-        String currentDate = DateUtil.getInstance().setToCurrent().getDateAsMMddyyyy();
-        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_HEADER_DATE_FORMAT);
+        String currentDate = DateUtil.getInstance().setToCurrent().toStringWithFormatMmDashDdDashYyyy();
         Date currentConvertedDate = DateUtil.getInstance().setDateRaw(currentDate).getDate();
 
         // Appointment date
-        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
-        String appointmentDate = DateUtil.getInstance().setDateRaw(appointmentRawDate).getDateAsMMddyyyy();
-        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_HEADER_DATE_FORMAT);
+        String appointmentDate = DateUtil.getInstance().setDateRaw(appointmentRawDate).toStringWithFormatMmDashDdDashYyyy();
         Date convertedAppointmentDate = DateUtil.getInstance().setDateRaw(appointmentDate).getDate();
 
         String headerText;
@@ -487,6 +481,17 @@ public class AppointmentsListFragment extends Fragment {
             headerText = appointmentInfo.getMetadata().getLabel().getTodayAppointmentsHeading();
         }
         return headerText;
+    }
+
+    private void showAppointmentConfirmation() {
+        String appointmentRequestSuccessMessage = "";
+
+        if (appointmentInfo != null) {
+            appointmentRequestSuccessMessage = appointmentInfo.getMetadata().getLabel()
+                    .getAppointmentRequestSuccessMessage();
+        }
+
+        SystemUtil.showSuccessDialogMessage(getActivity(), "", appointmentRequestSuccessMessage);
     }
 
     @Override

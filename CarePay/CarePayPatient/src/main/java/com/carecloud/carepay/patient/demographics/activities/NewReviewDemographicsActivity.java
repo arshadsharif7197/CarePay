@@ -9,16 +9,25 @@ import android.util.Log;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
-import com.carecloud.carepay.patient.demographics.fragments.review.CheckinDemographicsRevFragment;
+import com.carecloud.carepay.patient.demographics.fragments.review.CheckinDemographicsFragment;
+import com.carecloud.carepay.patient.demographics.fragments.review.CheckinInsurancesSummaryFragment;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
+import com.carecloud.carepaylibray.demographics.fragments.DemographicsCheckInDocumentsFragment;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
+import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 
 /**
  * Created by lsoco_user on 11/28/2016.
  */
 
-public class NewReviewDemographicsActivity extends BasePatientActivity implements DemographicsLabelsHolder {
+public class NewReviewDemographicsActivity extends BasePatientActivity
+        implements DemographicsLabelsHolder,
+        CheckinDemographicsFragment.CheckinDemographicsFragmentListener,
+        DemographicsCheckInDocumentsFragment.DemographicsCheckInDocumentsFragmentListener{
 
     private DemographicDTO demographicDTO;
 
@@ -31,7 +40,11 @@ public class NewReviewDemographicsActivity extends BasePatientActivity implement
         demographicDTO = getConvertedDTO(DemographicDTO.class);
 
         // place the initial fragment
-        CheckinDemographicsRevFragment fragment = new CheckinDemographicsRevFragment();
+        CheckinDemographicsFragment fragment = new CheckinDemographicsFragment();
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, demographicDTO);
+        fragment.setArguments(args);
+
         navigateToFragment(fragment, false);
         Log.v(NewReviewDemographicsActivity.class.getSimpleName(), "NewReviewDemographicsActivity");
     }
@@ -61,20 +74,98 @@ public class NewReviewDemographicsActivity extends BasePatientActivity implement
     }
 
     /**
-     * Getter
-     * @return The main DTO
-     */
-    public DemographicDTO getDemographicDTO() {
-        return demographicDTO;
-    }
-
-    /**
-     * Re-sets the global DTO from a string JSON
+     * Changes the global DTO
      *
-     * @param jsonString The main DTO as string
+     * @param demographicDTO The new DTO
      */
-    public void resetDemographicDTO(String jsonString) {
-        this.demographicDTO = getConvertedDTO(DemographicDTO.class, jsonString);
+    @Override
+    public void onDemographicDtoChanged(DemographicDTO demographicDTO) {
+        this.demographicDTO = demographicDTO;
+
+        CheckinInsurancesSummaryFragment checkinInsurancesSummaryFragment = (CheckinInsurancesSummaryFragment)
+                getSupportFragmentManager().findFragmentById(R.id.insuranceCapturer);
+
+        if (checkinInsurancesSummaryFragment != null) {
+            demographicDTO.getPayload().getDemographics().getPayload()
+                    .setInsurances(checkinInsurancesSummaryFragment.getInsurancePayloadDTOs());
+        }
+
+        DemographicsCheckInDocumentsFragment demographicsCheckInDocumentsFragment = (DemographicsCheckInDocumentsFragment)
+                getSupportFragmentManager().findFragmentById(R.id.documentCapturer);
+
+        if (demographicsCheckInDocumentsFragment != null) {
+            demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().clear();
+            demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments()
+                    .add(demographicsCheckInDocumentsFragment.getDemPayloadIdDocDTO());
+        }
     }
 
+    @Override
+    public void initializeDocumentFragment(){
+
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, demographicDTO.getMetadata().getDataModels().demographic.identityDocuments);
+        DtoHelper.bundleDto(args, demographicDTO.getMetadata().getLabels());
+        DtoHelper.bundleDto(args, getDemographicIdDocPayloadDTO());
+
+        DemographicsCheckInDocumentsFragment fragment = new DemographicsCheckInDocumentsFragment();
+        fragment.setArguments(args);
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.documentCapturer, fragment, DemographicsCheckInDocumentsFragment.class.getSimpleName());
+        transaction.commit();
+
+    }
+
+    @Override
+    public void initializeInsurancesFragment(){
+        String tag = CheckinInsurancesSummaryFragment.class.getSimpleName();
+
+        CheckinInsurancesSummaryFragment fragment = new CheckinInsurancesSummaryFragment();
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, demographicDTO);
+        fragment.setArguments(args);
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.insuranceCapturer, fragment, tag);
+        transaction.commit();
+    }
+
+    @Override
+    public void initializeIdDocScannerFragment() {
+        String tag = "license";
+
+        FragmentManager fm = getSupportFragmentManager();
+        // add license fragment
+        IdDocScannerFragment fragment = (IdDocScannerFragment) fm.findFragmentByTag(tag);
+        if (fragment == null) {
+            fragment = new IdDocScannerFragment();
+            Bundle args = new Bundle();
+            DtoHelper.bundleDto(args, getDemographicIdDocPayloadDTO());
+
+            DemographicMetadataEntityIdDocsDTO idDocsMetaDTO =
+                    demographicDTO.getMetadata().getDataModels().demographic.identityDocuments;
+
+            if (null != idDocsMetaDTO) {
+                DtoHelper.bundleDto(args, idDocsMetaDTO.properties.items.identityDocument);
+            }
+
+            fragment.setArguments(args);
+        }
+
+        fm.beginTransaction().replace(R.id.demographicsDocsLicense, fragment, tag).commit();
+    }
+
+    private DemographicIdDocPayloadDTO getDemographicIdDocPayloadDTO() {
+        DemographicIdDocPayloadDTO demographicIdDocPayloadDTO = new DemographicIdDocPayloadDTO();
+
+        if (demographicDTO.getPayload().getDemographics() != null) {
+            int size = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().size();
+            for (int i = 0; i < size; i++) {
+                demographicIdDocPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(i);
+            }
+        }
+
+        return demographicIdDocPayloadDTO;
+    }
 }

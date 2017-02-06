@@ -100,7 +100,7 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
         reasonTextInputLayout = (TextInputLayout)findViewById(R.id.reasonTextInputLayout);
         reasonEditText = (EditText) findViewById(R.id.reasonEditText);
         reasonEditText.setHint(label.getCancelAppointmentOtherReasonHint());
-        reasonEditText.setHintTextColor(context.getResources().getColor(R.color.Munsell));
+        reasonEditText.setHintTextColor(context.getResources().getColor(R.color.light_gray_dialog));
 
         cancelReasonRadioGroup = (RadioGroup) findViewById(R.id.cancelReasonRadioGroup);
         cancelAppointmentButton = (Button) findViewById(R.id.cancelAppointmentButton);
@@ -182,20 +182,20 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
     @SuppressWarnings("deprecation")
     private void onSelectionRadioCancel(boolean isSelected) {
         if (isSelected) {
-            cancelAppointmentButton.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.button_red_border));
+//            cancelAppointmentButton.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.button_red_border));
             cancelAppointmentButton.setEnabled(true);
-            cancelAppointmentButton.setTextColor(ContextCompat.getColor(context, R.color.harvard_crimson));
+//            cancelAppointmentButton.setTextColor(ContextCompat.getColor(context, R.color.harvard_crimson));
         }
 
         // Check for other cancellation reason
         if (cancellationReasons.get(cancellationReasons.size() - 1).getAppointmentCancellationReason().getId() == selectedReasonId) {
             reasonTextInputLayout.setVisibility(View.VISIBLE);
             reasonEditText.setEnabled(true);
-            reasonEditText.setTextColor(ContextCompat.getColor(context, R.color.blue_cerulian));
+            reasonEditText.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
         } else {
             reasonTextInputLayout.setVisibility(View.GONE);
             reasonEditText.setEnabled(false);
-            reasonEditText.setTextColor(ContextCompat.getColor(context, R.color.Munsell));
+            reasonEditText.setTextColor(ContextCompat.getColor(context, R.color.light_gray_dialog));
         }
     }
 
@@ -207,7 +207,7 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
                 },
                 new int[]{
                         ContextCompat.getColor(context, R.color.lightSlateGray),
-                        ContextCompat.getColor(context, R.color.blue_cerulian),
+                        ContextCompat.getColor(context, R.color.colorPrimary),
                 }
         );
         appCompatRadioButton.setSupportButtonTintList(colorStateList);
@@ -275,7 +275,7 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(context);
+            SystemUtil.showDefaultFailureDialog(context);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

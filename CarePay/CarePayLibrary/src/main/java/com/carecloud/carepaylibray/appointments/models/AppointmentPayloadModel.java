@@ -19,6 +19,9 @@ public class AppointmentPayloadModel implements Serializable {
     @SerializedName("appointments")
     @Expose
     private List<AppointmentDTO> appointments = new ArrayList<>();
+    @SerializedName("practice_patient_ids")
+    @Expose
+    private List<IdsDTO> practicePatientIds = new ArrayList<>();
     @SerializedName("providers")
     @Expose
     private List<AppointmentProvidersDTO> providers = new ArrayList<>();
@@ -169,5 +172,21 @@ public class AppointmentPayloadModel implements Serializable {
      */
     public void setResourcesToSchedule(List<ResourcesToScheduleDTO> resourcesToSchedule) {
         this.resourcesToSchedule = resourcesToSchedule;
+    }
+
+    /**
+     *
+     * @return practice_patent_ids
+     */
+    public List<IdsDTO> getPractice_patient_ids() {
+        return practicePatientIds;
+    }
+
+    /**
+     *
+     * @param practicePatientIds practicePatientIds
+     */
+    public void setPractice_patient_ids(List<IdsDTO> practicePatientIds) {
+        this.practicePatientIds = practicePatientIds;
     }
 }

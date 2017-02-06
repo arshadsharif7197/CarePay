@@ -17,7 +17,6 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -145,7 +144,7 @@ public class ChooseCreditCardDialog extends Dialog implements RadioGroup.OnCheck
 
     private void onSetRadioButtonSemiBoldTypeFace(RadioButton radioButton) {
         SystemUtil.setProximaNovaRegularTypeface(context, radioButton);
-        radioButton.setTextColor(ContextCompat.getColor(context, R.color.blue_cerulian));
+        radioButton.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
     }
 
     @Override

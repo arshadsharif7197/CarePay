@@ -65,12 +65,14 @@ public class SigninFragment extends Fragment {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            signinButton.setEnabled(true);
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showFaultDialog(getActivity());
+            signinButton.setEnabled(true);
+            SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -101,7 +103,8 @@ public class SigninFragment extends Fragment {
 
         @Override
         public void onLoginFailure(String exceptionMessage) {
-            SystemUtil.showDialogMessage(getContext(),
+            signinButton.setEnabled(true);
+            SystemUtil.showFailureDialogMessage(getContext(),
                     "Sign-in failed",
                     "Invalid user id or password");
 
@@ -117,7 +120,7 @@ public class SigninFragment extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_signin, container, false);
-       langaueid=ApplicationPreferences.Instance.getUserLanguage();
+        langaueid=ApplicationPreferences.Instance.getUserLanguage();
         signInLablesDTO = ((SigninSignupActivity) getActivity()).getSignInLablesDTO();
         signInSignUpDTO = ((SigninSignupActivity) getActivity()).getSignInSignUpDTO();
         parentLayout = (LinearLayout) view.findViewById(R.id.signin_layout);
@@ -161,6 +164,7 @@ public class SigninFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (areAllValid()) {
+                    signinButton.setEnabled(false);
                     signInUser();
                 }
             }

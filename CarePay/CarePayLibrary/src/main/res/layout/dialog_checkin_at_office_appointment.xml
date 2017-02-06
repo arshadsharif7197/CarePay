@@ -14,6 +14,6 @@
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/apt_dl_margin"
             android:background="@drawable/button_blue_border"
-            android:textColor="@color/blue_cerulian"
+            android:textColor="@color/bright_cerulean"
             android:textSize="@dimen/apt_dl_textview_size" />
     </LinearLayout>

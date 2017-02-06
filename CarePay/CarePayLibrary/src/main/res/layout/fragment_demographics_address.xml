@@ -60,6 +60,29 @@
                     android:id="@+id/demogrAddressFirstNameReqHint"
                     style="@style/SignupRequireHintStyle"/>
             </FrameLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/demogrAddressMiddleNameTextInput"
+                    style="@style/SigninSignupTextInputStyle"
+                    app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                    <EditText
+                        android:id="@+id/demogrAddressMiddleNameEdit"
+                        style="@style/SigninSignupEditStyle"
+                        android:imeOptions="actionNext"
+                        android:nextFocusForward="@+id/demogrAddressLastNameEdit"
+                        android:maxLength="100"
+                        android:digits="@string/restrict_letters_space"/>
+
+                </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/demogrAddressMidddleNameReqHint"
+                    style="@style/SignupRequireHintStyle"/>
+            </FrameLayout>
 
             <FrameLayout
                 android:layout_width="match_parent"

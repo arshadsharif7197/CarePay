@@ -1,6 +1,6 @@
 package com.carecloud.carepaylibray.utils;
 
-import com.carecloud.carepay.service.library.CarePayConstants;
+import android.util.Log;
 
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
@@ -17,8 +17,14 @@ import java.util.Locale;
  */
 public class DateUtil {
 
+    public static final String TAG = "DateUtil";
+    private static final String FORMAT_ISO_8601 = "yyyy-MM-dd'T'HH:mm:ss";
+    private static final String FORMAT_YYYY_DASH_MM_DASH_DD = "yyyy-MM-dd";
+    private static final String FORMAT_MM_DASH_DD_DASH_YYYY = "MM-dd-yyyy";
+    private static final String FORMAT_MM_SLASH_DD_SLASH_YYYY = "MM/dd/yyyy";
+
     private static DateUtil instance;
-    private String format = CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT;
+    private String[] formats;
     private Date   date;
     private int    day;
     private int    month; // Attention! 0-indexed month
@@ -41,26 +47,43 @@ public class DateUtil {
             instance = new DateUtil();
             // by default set the date to current date
             instance.setDate(Calendar.getInstance(Locale.getDefault()).getTime());
+
+            instance.formats = new String[] {
+                    FORMAT_ISO_8601,
+                    FORMAT_YYYY_DASH_MM_DASH_DD,
+                    FORMAT_MM_DASH_DD_DASH_YYYY,
+                    FORMAT_MM_SLASH_DD_SLASH_YYYY
+            };
         }
         return instance;
     }
 
     /**
      * Set the a date to be formatted;
-     * The expected format is the format previously set for the class with setFormat()
-     * or the default "yyyy-MM-dd'T'HH:mm:ssZ"
+     * The expected format any of the following formats
+     * yyyy-MM-dd'T'HH:mm:ssZ
+     * yyyy-MM-dd
+     * MM-dd-yyyy
+     * MM/dd/yyyy
      *
      * @param dateString The date as string
      * @return The current DateUtil object
      */
     public DateUtil setDateRaw(String dateString) {
-        try {
-            SimpleDateFormat formatter = new SimpleDateFormat(format, Locale.getDefault());
-            Date newDate = formatter.parse(dateString);
-            setDate(newDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        for (String format: formats) {
+            try {
+                SimpleDateFormat formatter = new SimpleDateFormat(format, Locale.getDefault());
+                Date newDate = formatter.parse(dateString);
+                setDate(newDate);
+
+                return this;
+            } catch (ParseException ignored) {
+                Log.i(TAG, "Date string '" + dateString + "' is not in format " + format);
+            }
         }
+
+        Log.e(TAG, "Date string was not formatted in known formats");
+
         return this;
     }
 
@@ -81,24 +104,11 @@ public class DateUtil {
      * @return The instance
      */
     public DateUtil setToDayAfterTomorrow() {
-        //date = Calendar.getInstance().getTime();
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, 2);
         date = calendar.getTime();
         updateFields();
         return this;
-    }
-
-    /**
-     * Set the format of the in-coming date
-     * By default this is "yyyy-MM-dd'T'HH:mm:ssZ".
-     *
-     * @param format The new format
-     */
-    public void setFormat(String format) {
-        if (format != null) {
-            instance.format = format;
-        }
     }
 
     /**
@@ -157,8 +167,8 @@ public class DateUtil {
      *
      * @return The formatted date as string
      */
-    public String getDateAsMMddyyyy() {
-        return String.format(Locale.getDefault(), "%02d-%02d-%4d", month + 1, day, year);
+    public String toStringWithFormatMmDashDdDashYyyy() {
+        return toStringWithFormat(FORMAT_MM_DASH_DD_DASH_YYYY);
     }
 
     /**
@@ -166,8 +176,8 @@ public class DateUtil {
      *
      * @return The formatted date as string
      */
-    public String getDateAsyyyyMMdd() {
-        return String.format(Locale.getDefault(), "%04d-%02d-%02d", year, month + 1, day);
+    public String toStringWithFormatYyyyDashMmDashDd() {
+        return toStringWithFormat(FORMAT_YYYY_DASH_MM_DASH_DD);
     }
 
     /**
@@ -175,78 +185,27 @@ public class DateUtil {
      *
      * @return The formatted date as string
      */
-    public String getDateAsMMddyyyyWithSlash() {
-        return String.format(Locale.getDefault(), "%02d/%02d/%4d", month + 1, day, year);
+    public String toStringWithFormatMmSlashDdSlashYyyy() {
+        return toStringWithFormat(FORMAT_MM_SLASH_DD_SLASH_YYYY);
     }
 
     /**
-     * Transform a date formatted as MM-dd-yyyy into the format set in the class
-     * (default "yyyy-MM-dd'T'HH:mm:ssZ")
+     * Transform date to format "yyyy-MM-dd'T'HH:mm:ssZ"
      *
-     * @param date The date to be formatted
      * @return The string
      */
-    public static String getDateRaw(Date date) {
-        String rawFmt = instance != null ? instance.format : CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT;
-        SimpleDateFormat out = new SimpleDateFormat(rawFmt, Locale.getDefault());
-        return out.format(date);
+    public String toStringWithFormatIso8601() {
+        return toStringWithFormat(FORMAT_ISO_8601);
     }
 
     /**
-     * Get today starting time
-     * @return APPOINTMENT_DATE_TIME_FORMAT formated date string
-     */
-    public static String getTodayStart() {
-        Calendar cal = Calendar.getInstance(); // locale-specific
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        String rawFmt = instance != null ? instance.format : CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT;
-        SimpleDateFormat outDateFormat = new SimpleDateFormat(rawFmt, Locale.getDefault());
-        return outDateFormat.format(new Date(cal.getTimeInMillis()));
-    }
-
-    /**
-     * Get today end time
-     * @return APPOINTMENT_DATE_TIME_FORMAT formated date string
-     */
-    public static String getTodayEnd() {
-        Calendar cal = Calendar.getInstance(); // locale-specific
-        cal.set(Calendar.HOUR_OF_DAY, 23);
-        cal.set(Calendar.MINUTE, 59);
-        cal.set(Calendar.SECOND, 59);
-        cal.set(Calendar.MILLISECOND, 0);
-        String rawFmt = CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT;
-        SimpleDateFormat outDateFormat = new SimpleDateFormat(rawFmt, Locale.getDefault());
-        return outDateFormat.format(new Date(cal.getTimeInMillis()));
-    }
-
-
-    /**
-     * Get today end time
-     * @return APPOINTMENT_DATE_TIME_FORMAT formated date string
-     */
-    public static String toDateStringAsYYYYMMDD(Date date) {
-        String rawFmt = CarePayConstants.APPOINTMENT_FILTER_DATE_FORMAT;
-        SimpleDateFormat outDateFormat = new SimpleDateFormat(rawFmt, Locale.getDefault());
-        return outDateFormat.format(date);
-    }
-
-    /**
-     * Creates a Date object from a string representing a date formatted as MM/dd/yyyy
+     * Transform a date formatted as a format
      *
-     * @param dateString The date (as string)
+     * @param format The date to be formatted
+     * @return The string
      */
-    public static Date parseFromDateAsMMddyyyy(String dateString) {
-        SimpleDateFormat formatted = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
-        Date date = null;
-        try {
-            date = formatted.parse(dateString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return date;
+    private String toStringWithFormat(String format) {
+        return new SimpleDateFormat(format, Locale.getDefault()).format(this.date);
     }
 
     /**
@@ -263,10 +222,6 @@ public class DateUtil {
             return 1;
         }
         return 0;
-    }
-
-    public String getFormat() {
-        return format;
     }
 
     public int getDay() {
@@ -454,26 +409,6 @@ public class DateUtil {
         } catch (IllegalArgumentException e) {
             return false;
         }
-    }
-
-    /**
-     * Verifies if a date has a certain format
-     *
-     * @param formatString The format string
-     * @param dateString The date whose format is to be changed
-     * @return The dat in the new format as a string
-     */
-    public static boolean isValidateStringDate(String dateString, String formatString) {
-        try {
-            SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.getDefault());
-            format.setLenient(false);
-            format.parse(dateString);
-        } catch (ParseException e) {
-            return false;
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
-        return true;
     }
 
     /**

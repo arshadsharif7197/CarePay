@@ -134,11 +134,11 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        view = inflater.inflate(R.layout.fragment_review_demographic, container, false);
+        view = inflater.inflate(R.layout.fragment_review_demographic_tmp, container, false);
 
         initializeDemographicsDTO();
         //initModels();
-        rootview = (LinearLayout) view.findViewById(R.id.demographicsReviewRootLayout);
+        rootview = (LinearLayout) view.findViewById(R.id.demographicsReviewRoot);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.demographics_review_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.demographics_review_toolbar_title);
@@ -703,7 +703,8 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
         if (!StringUtil.isNullOrEmpty(dateOfBirth)) {
             // the date is DateUtil as
             demographicPersDetailsPayloadDTO.setDateOfBirth(
-                    DateUtil.getDateRaw(DateUtil.parseFromDateAsMMddyyyy(dateOfBirth)));
+                            DateUtil.getInstance().setDateRaw(dateOfBirth).toStringWithFormatIso8601()
+                    );
         }
         String gender = selectGender.getText().toString();
         if (!StringUtil.isNullOrEmpty(gender)) {
@@ -957,7 +958,7 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
             }
             String datetime = demographicPersDetailsPayloadDTO.getDateOfBirth();
             if (datetime != null) {
-                String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).getDateAsMMddyyyyWithSlash();
+                String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).toStringWithFormatMmSlashDdSlashYyyy();
                 dobEditText.setText(dateOfBirthString);
                 dobEditText.requestFocus();
             } else {
