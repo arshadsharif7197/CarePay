@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
-    android:background="@drawable/background_default"
+    android:background="@color/colorPrimary"
     android:orientation="vertical">
 
     <FrameLayout
@@ -79,13 +79,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dimen_150dp"
         android:orientation="horizontal">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/signinTitleTextview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dimen_15dp"
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="@dimen/signin_title_textsize"
@@ -97,7 +97,7 @@
         android:layout_width="500.0dp"
         android:layout_height="280dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="21dp"
+        android:layout_marginTop="@dimen/dimen_35dp"
         android:background="@drawable/layout_shadow"
         android:gravity="center"
         android:orientation="vertical"
