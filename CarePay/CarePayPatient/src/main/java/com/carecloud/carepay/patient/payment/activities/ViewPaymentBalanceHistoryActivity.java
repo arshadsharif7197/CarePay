@@ -81,6 +81,11 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity {
 
     }
 
+    /**
+     * Display toolbar.
+     *
+     * @param visibility the visibility
+     */
     public void displayToolbar(boolean visibility){
         toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.balance_history_toolbar);
         TextView toolbarText = (TextView) findViewById(R.id.balance_history_toolbar_title);
