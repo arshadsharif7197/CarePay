@@ -129,11 +129,11 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight=".44"/>
+                    android:layout_weight="1"/>
                 <ImageView
                     style="@style/HomeButtonIconStyle"
                     android:contentDescription="@string/home_icon_check_in"
-                    android:src="@drawable/icn_check_in"/>
+                    android:src="@drawable/icn_check_in_selector"/>
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -163,12 +163,12 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight=".44"/>
+                    android:layout_weight="1"/>
 
                 <ImageView
                     style="@style/HomeButtonIconStyle"
                     android:contentDescription="Payments"
-                    android:src="@drawable/icn_payments"/>
+                    android:src="@drawable/icn_payments_selector"/>
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -197,12 +197,12 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight=".44"/>
+                    android:layout_weight="1"/>
 
                 <ImageView
                     style="@style/HomeButtonIconStyle"
                     android:contentDescription="Appointments"
-                    android:src="@drawable/icn_appointements"/>
+                    android:src="@drawable/icn_appointements_selector"/>
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -240,12 +240,12 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight=".44"/>
+                    android:layout_weight="1"/>
 
                 <ImageView
                     style="@style/HomeButtonIconStyle"
                     android:contentDescription="Check-Out"
-                    android:src="@drawable/icn_checkout"/>
+                    android:src="@drawable/icn_checkout_selector"/>
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -275,12 +275,12 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight=".44"/>
+                    android:layout_weight="1"/>
 
                 <ImageView
                     style="@style/HomeButtonIconStyle"
                     android:contentDescription="Shop"
-                    android:src="@drawable/icn_retail"/>
+                    android:src="@drawable/icn_retail_selector"/>
 
                 <FrameLayout
                     android:layout_width="match_parent"
