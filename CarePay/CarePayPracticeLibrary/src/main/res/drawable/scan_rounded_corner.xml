@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/scan_camera_backgroung_bg"/>
+    <solid android:color="@color/scan_camera_background_bg"/>
 
     <stroke android:width="@dimen/dimen_5dp"
-        android:color="@color/scan_camera_backgroung_bg"/>
+        android:color="@color/scan_camera_background_bg"/>
 
     <padding android:left="@dimen/dimen_5dp"
         android:top="@dimen/dimen_5dp"

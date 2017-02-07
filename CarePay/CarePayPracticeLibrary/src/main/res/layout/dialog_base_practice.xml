@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dimen_5dp"
-            android:textColor="@color/white_opacity_50"
+            android:textColor="@color/gray_white"
             app:customAssetFont="gotham_rounded_bold"
             android:textSize="@dimen/text_size_12sp" />
     </LinearLayout>
