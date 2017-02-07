@@ -39,7 +39,6 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 
 
@@ -48,6 +47,8 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
  * The fragment corresponding to SignUp screen.
  */
 public class SigninFragment extends Fragment {
+
+    public static final String LOG_TAG = SigninFragment.class.getSimpleName();
 
     SignInSignUpDTO signInSignUpDTO;
     WorkflowServiceCallback loginCallback = new WorkflowServiceCallback() {

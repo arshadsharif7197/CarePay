@@ -33,8 +33,9 @@ public class ProgressDialogUtil {
      * Show.
      */
     public void show(){
-        if(progressDialog!=null && progressDialog.isShowing())
+        if(progressDialog!=null && progressDialog.isShowing()) {
             return;
+        }
 
         if(progressDialog == null) {
             progressDialog = new Dialog(mContext, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
