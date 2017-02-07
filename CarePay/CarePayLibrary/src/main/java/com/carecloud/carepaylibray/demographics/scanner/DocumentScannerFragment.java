@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.PermissionsUtil;
@@ -27,19 +28,11 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
  * Created by lsoco_user on 9/13/2016.
  * Generic fragment that incorporates camera scanning functionality
  */
-public abstract class DocumentScannerFragment extends Fragment {
+public abstract class DocumentScannerFragment extends BaseFragment {
 
+    protected boolean hasImageChanged;
     protected ImageCaptureHelper imageCaptureHelper;
-    protected Bitmap bitmap;
     protected ImageCaptureHelper.CameraType cameraType;
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
 
     /**
      * Starts Camera or Gallery to capture/select an image
@@ -159,6 +152,7 @@ public abstract class DocumentScannerFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK) {
+            Bitmap bitmap = null;
             if (requestCode == ImageCaptureHelper.SELECT_FILE) {
                 bitmap = imageCaptureHelper.onSelectFromGalleryResult(data, getImageShape());
             } else if (requestCode == ImageCaptureHelper.REQUEST_CAMERA) {
@@ -169,26 +163,28 @@ public abstract class DocumentScannerFragment extends Fragment {
                     bitmap = imageCaptureHelper.onCaptureImageResult(data, getImageShape());
                 }
             }
-            updateModelAndViewsAfterScan(imageCaptureHelper);
+
+            hasImageChanged = bitmap != null;
+            updateModelAndViewsAfterScan(imageCaptureHelper, bitmap);
         }
     }
 
     /**
      * Gets the shape of the captured image
      *
-     * @return The shape (ImageCaptureHelper.ROUND_IMAGE or RECTANGULAR_IMAGE)
+     * @return The shape (ImageCaptureHelper.ImageShape)
      */
-    public abstract int getImageShape();
+    public abstract ImageCaptureHelper.ImageShape getImageShape();
 
     /**
      * Updates the number the button label and the number textview accoring to doc scanned (license or insurance)
      */
-    protected abstract void updateModelAndViewsAfterScan(ImageCaptureHelper scanner);
+    protected abstract void updateModelAndViewsAfterScan(ImageCaptureHelper scanner, Bitmap bitmap);
 
     /**
      * Populate the views with the date from model
      */
-    public abstract void populateViewsFromModel();
+    public abstract void populateViewsFromModel(View view);
 
     /**
      * Set the typefaces

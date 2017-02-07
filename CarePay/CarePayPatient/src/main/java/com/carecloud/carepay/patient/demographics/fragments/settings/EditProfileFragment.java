@@ -65,13 +65,8 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediu
  */
 public class EditProfileFragment extends DocumentScannerFragment {
     private static final String LOG_TAG = DemographicsSettingsFragment.class.getSimpleName();
-    private AppCompatActivity appCompatActivity;
     private DemographicsSettingsDTO demographicsSettingsDTO = null;
     private String profileString = null;
-    private String firstNameString = null;
-    private String middleNameString = null;
-    private String lastNameString = null;
-    private String emailString = null;
     private String firstNameValString = null;
     private String lastNameValString = null;
     private String middleNameValString = null;
@@ -81,48 +76,21 @@ public class EditProfileFragment extends DocumentScannerFragment {
     private String changePhotoString = null;
     private String saveChangesString = null;
 
-    private Button changeProfilePictureButton = null;
-
-    private Button updateProfileButton = null;
     private DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO = null;
-
-    private LinearLayout rootview;
-
-    private DemographicsSettingsPersonalDetailsDTO demographicsSettingsDetailsDTO = null;
-    private DemographicsSettingsFirstNameDTO demographicsSettingsFirstNameDTO = null;
-    private DemographicsSettingsLastNameDTO demographicsSettingsLastNameDTO = null;
-    private ProgressBar progressBar = null;
-    private ImageView profileImageview = null;
-    private CarePayTextView patientNameLabel = null;
-    private CarePayTextView patientNameValue = null;
-    private CarePayTextView patientEmailLabel = null;
-    private CarePayTextView patientEmailValue = null;
-    private CarePayTextView patientPasswordLabel = null;
-    private CarePayTextView patientPasswordValue = null;
-
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        appCompatActivity = (AppCompatActivity) getActivity();
-    }
-
-    public EditProfileFragment() {
-    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile_update, container, false);
-        rootview = (LinearLayout) view.findViewById(R.id.demographicsReviewRootLayout);
 
         final Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
-        progressBar = (ProgressBar) view.findViewById(R.id.demographicReviewProgressBar);
-        progressBar.setVisibility(View.GONE);
+        disappearViewById(R.id.demographicReviewProgressBar);
+
+        AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
         setGothamRoundedMediumTypeface(appCompatActivity, title);
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(appCompatActivity, R.drawable.icn_patient_mode_nav_back));
+        appCompatActivity.setSupportActionBar(toolbar);
         Bundle bundle = getArguments();
         if (bundle != null) {
             Gson gson = new Gson();
@@ -132,25 +100,17 @@ public class EditProfileFragment extends DocumentScannerFragment {
         }
         getEditProfileLabels();
 
-        patientNameValue = (CarePayTextView) view.findViewById(R.id.patientNameTextView);
-        patientNameLabel = (CarePayTextView) view.findViewById(R.id.patientChangeNameTextView);
-        patientEmailValue = (CarePayTextView) view.findViewById(R.id.patientEmailTextView);
-        patientEmailLabel = (CarePayTextView) view.findViewById(R.id.patientChangeEmailTextView);
-        patientPasswordValue = (CarePayTextView) view.findViewById(R.id.patientPasswordTextView);
-        patientPasswordLabel = (CarePayTextView) view.findViewById(R.id.patientChangePasswordTextView);
-
-        changeProfilePictureButton = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
+        Button changeProfilePictureButton = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
         changeProfilePictureButton.setText(changePhotoString);
-        updateProfileButton = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
+        Button updateProfileButton = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
         updateProfileButton.setText(saveChangesString);
 
-        profileImageview = (ImageView) view.findViewById(R.id.providerPicImageView);
+        ImageView profileImageview = (ImageView) view.findViewById(R.id.providerPicImageView);
 
-        ImageView imageViewDetailsImage = (ImageView) view.findViewById(R.id.providerPicImageView);
         if (demographicsSettingsDTO != null) {
                 DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
                 demographicsSettingsLabelsDTO = demographicsSettingsMetadataDTO.getLabels();
-                imageCaptureHelper = new ImageCaptureHelper(getActivity(), imageViewDetailsImage, demographicsSettingsLabelsDTO);
+                imageCaptureHelper = new ImageCaptureHelper(appCompatActivity, profileImageview, demographicsSettingsLabelsDTO);
         }
 
         getPersonalDetails();
@@ -162,18 +122,28 @@ public class EditProfileFragment extends DocumentScannerFragment {
         DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
         String imageUrl = demographicsPersonalDetails.getProfilePhoto();
         if (!StringUtil.isNullOrEmpty(imageUrl)) {
-            Picasso.with(getActivity()).load(imageUrl).transform(
-                    new CircleImageTransform()).resize(160, 160).into(this.profileImageview);
+            Picasso.with(appCompatActivity).load(imageUrl).transform(
+                    new CircleImageTransform()).resize(160, 160).into(profileImageview);
         }
         String userId = CognitoAppHelper.getCurrUser();
 
+        CarePayTextView patientNameValue = (CarePayTextView) view.findViewById(R.id.patientNameTextView);
         patientNameValue.setText(firstNameValString + " " + middleNameValString+" " + lastNameValString);
+
+        CarePayTextView patientEmailValue = (CarePayTextView) view.findViewById(R.id.patientEmailTextView);
         patientEmailValue.setText(userId);
 
+        CarePayTextView patientNameLabel = (CarePayTextView) view.findViewById(R.id.patientChangeNameTextView);
         patientNameLabel.setText(changeNameString);
+
+        CarePayTextView patientEmailLabel = (CarePayTextView) view.findViewById(R.id.patientChangeEmailTextView);
         patientEmailLabel.setText(changeEmailString);
+
+        CarePayTextView patientPasswordLabel = (CarePayTextView) view.findViewById(R.id.patientChangePasswordTextView);
         patientPasswordLabel.setText(changePasswordString);
-        setClickables(view);
+
+        setClickables(patientNameLabel, patientEmailLabel, changeProfilePictureButton, updateProfileButton);
+
         return view;
 
     }
@@ -188,7 +158,6 @@ public class EditProfileFragment extends DocumentScannerFragment {
                 demographicsSettingsLabelsDTO = demographicsSettingsMetadataDTO.getLabels();
                 if (demographicsSettingsLabelsDTO != null) {
                     profileString = demographicsSettingsLabelsDTO.getProfileHeadingLabel();
-                    emailString = demographicsSettingsLabelsDTO.getEmailLabel();
                     changeNameString = demographicsSettingsLabelsDTO.getDemographicsChangeNameLabel();
                     changeEmailString = demographicsSettingsLabelsDTO.getDemographicsChangeEmailLabel();
                     changePasswordString = demographicsSettingsLabelsDTO.getSettingschangePasswordLabel();
@@ -213,14 +182,12 @@ public class EditProfileFragment extends DocumentScannerFragment {
                 lastNameValString = demographicsPersonalDetails.getLastName();
                 middleNameValString = demographicsPersonalDetails.getMiddleName();
                 hideSoftKeyboard(getActivity());
-
-
             }
         }
 
     }
 
-   private void setClickables(View view) {
+    private void setClickables(CarePayTextView patientNameLabel, CarePayTextView patientEmailLabel, Button changeProfilePictureButton, final Button updateProfileButton) {
         changeProfilePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -239,8 +206,6 @@ public class EditProfileFragment extends DocumentScannerFragment {
                         if (demographicsSettingsMetadataDTO != null) {
                             DemographicsSettingsTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
                             TransitionDTO demographicsSettingsUpdateDemographicsDTO = demographicsSettingsTransitionsDTO.getUpdateDemographics();
-                            JSONObject payload = new JSONObject();
-                            Map<String, String> queries = null;
                             Map<String, String> header = null;
                             try {
                                 if (demographicsSettingsDTO != null) {
@@ -248,7 +213,6 @@ public class EditProfileFragment extends DocumentScannerFragment {
                                     if (demographicsSettingsPayloadDTO != null) {
                                         DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
                                         DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
-                                        DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
 
                                         Gson gson = new Gson();
                                         String jsonInString = gson.toJson(demographicPayload);
@@ -262,7 +226,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
                             }
                         }
                     }
-                 }catch(Exception e){
+                }catch(Exception e){
                     e.printStackTrace();
                 }
 
@@ -270,112 +234,83 @@ public class EditProfileFragment extends DocumentScannerFragment {
 
         });
 
-       patientNameLabel.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               Bundle bundle = new Bundle();
-               Gson gson = new Gson();
-               String demographicsSettingsDTOString = gson.toJson(demographicsSettingsDTO);
-               bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
+        patientNameLabel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                Gson gson = new Gson();
+                String demographicsSettingsDTOString = gson.toJson(demographicsSettingsDTO);
+                bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
 
-               FragmentManager fm = getActivity().getSupportFragmentManager();
-               DemographicsSettingsUpdateNameFragment fragment = (DemographicsSettingsUpdateNameFragment)
-                       fm.findFragmentByTag(DemographicsSettingsUpdateNameFragment.class.getSimpleName());
-               if (fragment == null) {
-                   fragment = new DemographicsSettingsUpdateNameFragment();
-               }
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                DemographicsSettingsUpdateNameFragment fragment = (DemographicsSettingsUpdateNameFragment)
+                        fm.findFragmentByTag(DemographicsSettingsUpdateNameFragment.class.getSimpleName());
+                if (fragment == null) {
+                    fragment = new DemographicsSettingsUpdateNameFragment();
+                }
 
-               //fix for random crashes
-               if (fragment.getArguments() != null) {
-                   fragment.getArguments().putAll(bundle);
-               } else {
-                   fragment.setArguments(bundle);
-               }
+                //fix for random crashes
+                if (fragment.getArguments() != null) {
+                    fragment.getArguments().putAll(bundle);
+                } else {
+                    fragment.setArguments(bundle);
+                }
 
-               fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
-                       DemographicsSettingsUpdateNameFragment.class.getSimpleName()).addToBackStack(null).commit();
+                fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
+                        DemographicsSettingsUpdateNameFragment.class.getSimpleName()).addToBackStack(null).commit();
 
-           }
+            }
 
-       });
+        });
 
-       patientEmailLabel.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               Bundle bundle = new Bundle();
-               Gson gson = new Gson();
-               String demographicsSettingsDTOString = gson.toJson(demographicsSettingsDTO);
-               bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
+        patientEmailLabel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                Gson gson = new Gson();
+                String demographicsSettingsDTOString = gson.toJson(demographicsSettingsDTO);
+                bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
 
-               FragmentManager fm = getActivity().getSupportFragmentManager();
-               DemographicsSettingUpdateEmailFragment fragment = (DemographicsSettingUpdateEmailFragment)
-                       fm.findFragmentByTag(DemographicsSettingUpdateEmailFragment.class.getSimpleName());
-               if (fragment == null) {
-                   fragment = new DemographicsSettingUpdateEmailFragment();
-               }
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                DemographicsSettingUpdateEmailFragment fragment = (DemographicsSettingUpdateEmailFragment)
+                        fm.findFragmentByTag(DemographicsSettingUpdateEmailFragment.class.getSimpleName());
+                if (fragment == null) {
+                    fragment = new DemographicsSettingUpdateEmailFragment();
+                }
 
-               //fix for random crashes
-               if (fragment.getArguments() != null) {
-                   fragment.getArguments().putAll(bundle);
-               } else {
-                   fragment.setArguments(bundle);
-               }
+                //fix for random crashes
+                if (fragment.getArguments() != null) {
+                    fragment.getArguments().putAll(bundle);
+                } else {
+                    fragment.setArguments(bundle);
+                }
 
-               fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
-                       DemographicsSettingUpdateEmailFragment.class.getSimpleName()).addToBackStack(null).commit();
+                fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
+                        DemographicsSettingUpdateEmailFragment.class.getSimpleName()).addToBackStack(null).commit();
 
-           }
+            }
 
-       });
-
-       patientPasswordLabel.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-            /*   Bundle bundle = new Bundle();
-               Gson gson = new Gson();
-               String demographicsSettingsDTOString = gson.toJson(demographicsSettingsDTO);
-               bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
-
-               FragmentManager fm = getActivity().getSupportFragmentManager();
-               DemographicsSettingsChangePasswordFragment fragment = (DemographicsSettingsChangePasswordFragment)
-                       fm.findFragmentByTag(DemographicsSettingsChangePasswordFragment.class.getSimpleName());
-               if (fragment == null) {
-                   fragment = new DemographicsSettingsChangePasswordFragment();
-               }
-
-               //fix for random crashes
-               if (fragment.getArguments() != null) {
-                   fragment.getArguments().putAll(bundle);
-               } else {
-                   fragment.setArguments(bundle);
-               }
-
-               fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
-                       DemographicsSettingsChangePasswordFragment.class.getSimpleName()).addToBackStack(null).commit();*/
-
-           }
-
-       });
+        });
     }
 
     WorkflowServiceCallback updateProfileCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            progressBar.setVisibility(View.VISIBLE);
+            showViewById(R.id.demographicReviewProgressBar);
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            updateProfileButton.setEnabled(true);
-            progressBar.setVisibility(View.GONE);
+            enableViewById(R.id.buttonAddDemographicInfo);
+            disappearViewById(R.id.demographicReviewProgressBar);
 
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            updateProfileButton.setEnabled(true);
-            progressBar.setVisibility(View.GONE);
+            enableViewById(R.id.buttonAddDemographicInfo);
+            disappearViewById(R.id.demographicReviewProgressBar);
 
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
@@ -383,8 +318,8 @@ public class EditProfileFragment extends DocumentScannerFragment {
     };
 
     @Override
-    public int getImageShape() {
-        return ImageCaptureHelper.ROUND_IMAGE;
+    public ImageCaptureHelper.ImageShape getImageShape() {
+        return ImageCaptureHelper.ImageShape.CIRCULAR;
     }
 
     @Override
@@ -392,6 +327,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK) {
+            Bitmap bitmap = null;
             if (requestCode == ImageCaptureHelper.SELECT_FILE) {
                 bitmap = imageCaptureHelper.onSelectFromGalleryResult(data, getImageShape());
             } else if (requestCode == ImageCaptureHelper.REQUEST_CAMERA) {
@@ -402,13 +338,13 @@ public class EditProfileFragment extends DocumentScannerFragment {
                     bitmap = imageCaptureHelper.onCaptureImageResult(data, getImageShape());
                 }
             }
-            updateModelAndViewsAfterScan(imageCaptureHelper);
+            updateModelAndViewsAfterScan(imageCaptureHelper, bitmap);
         }
     }
 
 
     @Override
-    public void populateViewsFromModel() {
+    public void populateViewsFromModel(View view) {
         DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
         if (demographicsSettingsPayloadDTO != null) {
             DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
@@ -444,7 +380,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
     }
 
     @Override
-    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner) {
+    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner, Bitmap bitmap) {
         // save the image as base64 in the model
         if (bitmap != null) {
             String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);

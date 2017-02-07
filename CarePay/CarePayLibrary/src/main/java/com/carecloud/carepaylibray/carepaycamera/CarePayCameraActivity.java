@@ -17,19 +17,17 @@ public class CarePayCameraActivity extends AppCompatActivity implements CarePayC
 
     private static final String LOG_TAG = CarePayCameraActivity.class.getSimpleName();
 
-    private FrameLayout preview;
-    private OrientationEventListener orientationListener;
     private int orientation;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_care_pay_camera);
-        preview = (FrameLayout) findViewById(R.id.camera_preview);
+        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
         CarePayCameraView carePayCameraView = new CarePayCameraView(this);
         preview.addView(carePayCameraView);
 
-        orientationListener = new OrientationEventListener(this,
+        OrientationEventListener orientationListener = new OrientationEventListener(this,
                 SensorManager.SENSOR_DELAY_NORMAL) {
 
             @Override
@@ -38,7 +36,7 @@ public class CarePayCameraActivity extends AppCompatActivity implements CarePayC
             }
         };
 
-        if (orientationListener.canDetectOrientation() == true) {
+        if (orientationListener.canDetectOrientation()) {
             Log.v(LOG_TAG,"Can detect orientation");
             orientationListener.enable();
         } else {

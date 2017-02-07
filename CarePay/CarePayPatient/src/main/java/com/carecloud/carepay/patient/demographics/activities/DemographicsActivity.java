@@ -42,6 +42,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadI
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
+import com.carecloud.carepaylibray.demographics.scanner.ProfilePictureFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -53,7 +54,9 @@ import java.util.List;
  * Main activity for Demographics sign-up sub-flow
  */
 public class DemographicsActivity extends BasePatientActivity
-        implements DemographicsLabelsHolder, DemographicsDocumentsFragmentWthWrapper.DemographicsDocumentsFragmentWthWrapperListener {
+        implements DemographicsLabelsHolder,
+        DemographicsDocumentsFragmentWthWrapper.DemographicsDocumentsFragmentWthWrapperListener,
+        DemographicsDetailsFragment.DemographicsDetailsFragmentListener{
 
     private int       currentPageIndex;
     // views
@@ -351,8 +354,12 @@ public class DemographicsActivity extends BasePatientActivity
             switch (position) {
                 case 0:
                     DemographicsAddressFragment addressFragment = new DemographicsAddressFragment();
-                    addressFragment.setAddressMetaDTO(addressEntityMetaDTO);
                     addressFragment.setPersDetailsMetaDTO(persDetailsMetaDTO);
+
+                    Bundle args = new Bundle();
+                    DtoHelper.bundleDto(args, addressEntityMetaDTO);
+                    addressFragment.setArguments(args);
+
                     return addressFragment;
                 case 1:
                     DemographicsDetailsFragment demographicsDetailsFragment = new DemographicsDetailsFragment();
@@ -400,5 +407,25 @@ public class DemographicsActivity extends BasePatientActivity
         }
 
         fm.beginTransaction().replace(R.id.demographicsDocsLicense, fragment, tag).commit();
+    }
+
+    @Override
+    public void initializeProfilePictureFragment(DemographicLabelsDTO globalLabelDTO,
+                                                 DemographicPersDetailsPayloadDTO persDetailsDTO) {
+
+        FragmentManager fm = getSupportFragmentManager();
+        String tag = ProfilePictureFragment.class.getSimpleName();
+        ProfilePictureFragment fragment = (ProfilePictureFragment) fm.findFragmentByTag(tag);
+        if (fragment == null) {
+            fragment = new ProfilePictureFragment();
+            fragment.setGlobalLabelsDTO(globalLabelDTO);
+
+            Bundle args = new Bundle();
+            DtoHelper.bundleDto(args, persDetailsDTO);
+            fragment.setArguments(args);
+        }
+        fm.beginTransaction()
+                .replace(R.id.demographicsAddressPicCapturer, fragment, tag)
+                .commit();
     }
 }

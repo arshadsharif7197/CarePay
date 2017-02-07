@@ -865,10 +865,10 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         // update DTO in the activity
         activityCallback.onDemographicDtoChanged(demographicDTO);
 
-        if (bitmap != null) {
-            String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
-            demographicPersDetailsPayloadDTO.setProfilePhoto(imageAsBase64);
-        }
+//        if (bitmap != null) {
+//            String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
+//            demographicPersDetailsPayloadDTO.setProfilePhoto(imageAsBase64);
+//        }
     }
 
     private void setEditTexts(View view) {
@@ -1252,17 +1252,17 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     }
 
     @Override
-    public int getImageShape() {
-        return ImageCaptureHelper.ROUND_IMAGE;
+    public ImageCaptureHelper.ImageShape getImageShape() {
+        return ImageCaptureHelper.ImageShape.CIRCULAR;
     }
 
     @Override
-    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner) {
+    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner, Bitmap bitmap) {
 
     }
 
     @Override
-    public void populateViewsFromModel() {
+    public void populateViewsFromModel(View view) {
 
     }
 
