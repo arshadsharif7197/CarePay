@@ -427,40 +427,46 @@ public class ImageCaptureHelper {
     }
 
     private static int getExifOrientation(Context context, Uri uri) {
-        if (Build.VERSION.SDK_INT > 18) {
+        Cursor cursor = null;
+        ContentResolver contentResolver = context.getContentResolver();
+        String selection = null;
+        String[] selectionArgs = null;
+
+        try {
+
+            if (Build.VERSION.SDK_INT > 18) {
+
+                String id = DocumentsContract.getDocumentId(uri);
+                id = id.split(":")[1];
+
+                selectionArgs = new String[]{ id };
+                uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                selection = MediaStore.Images.Media._ID + " = ?";
+
+            } else if (!uri.getScheme().equals("content")) {
+
+                return 0;
+
+            }
+
             String[] projection = new String[]{
                     MediaStore.Images.ImageColumns.ORIENTATION
             };
 
-            ContentResolver contentResolver = context.getContentResolver();
-            Cursor cursor = null;
-            try {
-                String id = DocumentsContract.getDocumentId(uri);
-                id = id.split(":")[1];
-                cursor = contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                        projection, MediaStore.Images.Media._ID + " = ?", new String[]{id}, null);
-                if (cursor == null || !cursor.moveToFirst()) {
-                    return 0;
-                }
-                return cursor.getInt(0);
-            } catch (RuntimeException ignored) {
-                // If the orientation column doesn't exist, assume no rotation.
+            cursor = contentResolver.query(uri, projection, selection, selectionArgs, null);
+
+            if (cursor == null || !cursor.moveToFirst()) {
                 return 0;
-            } finally {
-                if (cursor != null) {
-                    cursor.close();
-                }
             }
-        } else if (uri.getScheme().equals("content")) {
-            String[] projection = { MediaStore.Images.ImageColumns.ORIENTATION };
-            Cursor c = context.getContentResolver().query(uri, projection, null, null, null);
-            if (c.moveToFirst()) {
-                final int rotation = c.getInt(0);
-                c.close();
-                return rotation;
+
+            return cursor.getInt(0);
+        } catch (RuntimeException ignored) {
+            // If the orientation column doesn't exist, assume no rotation.
+            return 0;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
             }
         }
-
-        return 0;
     }
 }
