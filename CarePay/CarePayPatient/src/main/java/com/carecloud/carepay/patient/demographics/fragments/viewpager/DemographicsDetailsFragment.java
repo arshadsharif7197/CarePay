@@ -4,8 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -21,13 +19,13 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataValidationDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
-import com.carecloud.carepaylibray.demographics.scanner.ProfilePictureFragment;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -48,16 +46,14 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemibol
  * Created by lsoco_user on 9/2/2016.
  * Implements demographics details screen
  */
-public class DemographicsDetailsFragment extends Fragment
+public class DemographicsDetailsFragment extends BaseFragment
         implements View.OnClickListener{
 
-    private View     view;
     private String[] raceArray;
     private String[] ethnicityArray;
     private String[] genderArray;
     private int      selectedArray;
 
-    private TextView        raceTextView;
     private TextView        ethnicityTextView;
     private TextView        genderTextView;
     private EditText        dobEdit;
@@ -74,6 +70,26 @@ public class DemographicsDetailsFragment extends Fragment
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
     private DemographicLabelsDTO                    globalLabelDTO;
 
+    DemographicsDetailsFragmentListener activityCallback;
+
+    public interface DemographicsDetailsFragmentListener {
+        void initializeProfilePictureFragment(DemographicLabelsDTO globalLabelDTO, DemographicPersDetailsPayloadDTO persDetailsDTO);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            activityCallback = (DemographicsDetailsFragmentListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement DemographicsDetailsFragmentListener");
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -83,15 +99,15 @@ public class DemographicsDetailsFragment extends Fragment
         persDetailsDTO = ((DemographicsActivity) getActivity()).getDetailsDTO();
 
         // create the view
-        view = inflater.inflate(R.layout.fragment_demographics_details, container, false);
+        View view = inflater.inflate(R.layout.fragment_demographics_details, container, false);
 
         setOptions();
 
         // init view references
-        initialiseUIFields();
+        initialiseUIFields(view);
 
         // set data in view
-        populateViewsFromModel();
+        populateViewsFromModel(view);
 
         return view;
     }
@@ -129,7 +145,7 @@ public class DemographicsDetailsFragment extends Fragment
         genderArray = genders.toArray(new String[0]);
     }
 
-    private void setupEdit() {
+    private void setupEdit(View view) {
         dobInputText = (TextInputLayout) view.findViewById(R.id.demogrDetailsDobInputText);
         dobEdit = (EditText) view.findViewById(R.id.demogrDetailsDobEdit);
         String hint = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.dateOfBirth.getLabel();
@@ -184,7 +200,12 @@ public class DemographicsDetailsFragment extends Fragment
                 if (inputType == EditorInfo.IME_ACTION_NEXT || inputType == EditorInfo.IME_ACTION_DONE) {
                     SystemUtil.hideSoftKeyboard(getActivity());
                     dobEdit.clearFocus();
-                    view.requestFocus();
+
+                    View view = getView();
+                    if (view != null) {
+                        view.requestFocus();
+                    }
+
                     return true;
                 }
                 return false;
@@ -219,7 +240,7 @@ public class DemographicsDetailsFragment extends Fragment
         return isValidFormat;
     }
 
-    private void initialiseUIFields() {
+    private void initialiseUIFields(View view) {
         String label;
 
         header = (TextView) view.findViewById(R.id.detailsHeading);
@@ -249,9 +270,17 @@ public class DemographicsDetailsFragment extends Fragment
         // init click-ables and dob edit
         String chooseCaption = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsChooseLabel();
 
-        raceTextView = (TextView) view.findViewById(R.id.demogrDetailsRaceListTextView);
+        TextView raceTextView = (TextView) view.findViewById(R.id.demogrDetailsRaceListTextView);
         raceTextView.setText(chooseCaption);
-        raceTextView.setOnClickListener(this);
+        raceTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectedArray = 1;
+                String cancelLabel = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsCancelLabel();
+                String title = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsTitleSelectRace();
+                showAlertDialogWithListview(raceArray, title, cancelLabel, (TextView) view);
+            }
+        });
 
         ethnicityTextView = (TextView) view.findViewById(R.id.demogrDetailsEthnicityListTextView);
         ethnicityTextView.setText(chooseCaption);
@@ -261,7 +290,7 @@ public class DemographicsDetailsFragment extends Fragment
         genderTextView.setText(chooseCaption);
         genderTextView.setOnClickListener(this);
 
-        setupEdit();
+        setupEdit(view);
 
         nextButton = (Button) view.findViewById(R.id.demographicsDetailsNextButton);
         label = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsNext();
@@ -269,20 +298,10 @@ public class DemographicsDetailsFragment extends Fragment
         nextButton.setOnClickListener(this);
 
         // add capture picture fragment
-        FragmentManager fm = getChildFragmentManager();
-        String tag = ProfilePictureFragment.class.getSimpleName();
-        ProfilePictureFragment fragment = (ProfilePictureFragment) fm.findFragmentByTag(tag);
-        if (fragment == null) {
-            fragment = new ProfilePictureFragment();
-            fragment.setGlobalLabelsDTO(globalLabelDTO);
-            fragment.setPayloadDTO(persDetailsDTO);
-        }
-        fm.beginTransaction()
-                .replace(R.id.demographicsAddressPicCapturer, fragment, tag)
-                .commit();
+        activityCallback.initializeProfilePictureFragment(globalLabelDTO, persDetailsDTO);
 
         // set the fonts
-        setTypefaces();
+        setTypefaces(raceTextView);
     }
 
     /**
@@ -299,10 +318,11 @@ public class DemographicsDetailsFragment extends Fragment
         return persDetailsDTO;
     }
 
-    private void populateViewsFromModel() {
+    private void populateViewsFromModel(View view) {
         if (persDetailsDTO != null) {
             String race = persDetailsDTO.getPrimaryRace();
             if (!StringUtil.isNullOrEmpty(race)) {
+                TextView raceTextView = (TextView) view.findViewById(R.id.demogrDetailsRaceListTextView);
                 raceTextView.setText(race);
             }
             String ethnicity = persDetailsDTO.getEthnicity();
@@ -332,11 +352,7 @@ public class DemographicsDetailsFragment extends Fragment
     @Override
     public void onClick(View view) {
         final String cancelLabel = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsCancelLabel();
-        if (view == raceTextView) {
-            selectedArray = 1;
-            final String title = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsTitleSelectRace();
-            showAlertDialogWithListview(raceArray, title, cancelLabel, raceTextView);
-        } else if (view == ethnicityTextView) {
+        if (view == ethnicityTextView) {
             selectedArray = 2;
             final String title = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsTitleSelectEthnicity();
             showAlertDialogWithListview(ethnicityArray, title, cancelLabel, ethnicityTextView);
@@ -360,6 +376,7 @@ public class DemographicsDetailsFragment extends Fragment
     }
 
     private void updateViewsFromModel() {
+        TextView raceTextView = (TextView) findViewById(R.id.demogrDetailsRaceListTextView);
         String race = raceTextView.getText().toString();
         if (!StringUtil.isNullOrEmpty(race) && !race.equals(globalLabelDTO.getDemographicsChooseLabel())) {
             persDetailsDTO.setPrimaryRace(race);
@@ -411,7 +428,7 @@ public class DemographicsDetailsFragment extends Fragment
                 });
     }
 
-    private void setTypefaces() {
+    private void setTypefaces(TextView raceTextView) {
         Context context = getActivity();
 
         setGothamRoundedMediumTypeface(context, header);

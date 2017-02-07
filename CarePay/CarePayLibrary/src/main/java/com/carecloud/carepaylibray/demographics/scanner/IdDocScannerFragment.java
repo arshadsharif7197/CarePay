@@ -165,7 +165,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
 
         setTypefaces(view);
 
-        populateViewsFromModel();
+        populateViewsFromModel(view);
     }
 
     private void setEditText() {
@@ -236,7 +236,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
     }
 
     @Override
-    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner) { // license has been scanned
+    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner, Bitmap bitmap) { // license has been scanned
         if (bitmap != null) {
             if (scanner == scannerFront) {
                 // change button caption to 'rescan'
@@ -256,7 +256,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
     }
 
     @Override
-    public void populateViewsFromModel() {
+    public void populateViewsFromModel(View view) {
         if (model != null) {
             String licenseNum = model.getIdNumber();
             if (!StringUtil.isNullOrEmpty(licenseNum)) {
@@ -334,8 +334,8 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
     }
 
     @Override
-    public int getImageShape() {
-        return ImageCaptureHelper.RECTANGULAR_IMAGE;
+    public ImageCaptureHelper.ImageShape getImageShape() {
+        return ImageCaptureHelper.ImageShape.RECTANGULAR;
     }
 
     public DemographicIdDocPayloadDTO getModel() {
