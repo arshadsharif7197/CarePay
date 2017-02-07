@@ -24,6 +24,7 @@ import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLinksDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -99,11 +100,12 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
     private WorkflowServiceCallback balancesCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            progressBar.setVisibility(View.VISIBLE);
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             Gson gson = new Gson();
             try {
                 paymentDTO = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
@@ -113,18 +115,16 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
                 historyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 historyRecyclerView.setAdapter(paymentBalancesAdapter);
 
-                progressBar.setVisibility(View.GONE);
             } catch (Exception e){
                 Log.e(LOG, e.getMessage());
                 SystemUtil.showDefaultFailureDialog(getActivity());
             }
-            progressBar.setVisibility(View.GONE);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             SystemUtil.showDefaultFailureDialog(getActivity());
-            progressBar.setVisibility(View.GONE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -132,11 +132,12 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
     private WorkflowServiceCallback historyCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            progressBar.setVisibility(View.VISIBLE);
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             Gson gson = new Gson();
             try {
                 paymentDTO = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
@@ -148,13 +149,12 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
                 Log.e(LOG, e.getMessage());
                 SystemUtil.showDefaultFailureDialog(getActivity());
             }
-            progressBar.setVisibility(View.GONE);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             SystemUtil.showDefaultFailureDialog(getActivity());
-            progressBar.setVisibility(View.GONE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

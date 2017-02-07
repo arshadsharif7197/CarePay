@@ -27,6 +27,7 @@ import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.consentforms.fragments.ConsentForm1Fragment;
 import com.carecloud.carepay.patient.consentforms.fragments.ConsentForm2Fragment;
 import com.carecloud.carepay.patient.consentforms.interfaces.IFragmentCallback;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -39,21 +40,19 @@ import com.carecloud.carepaylibray.consentforms.models.ConsentFormMetadataDTO;
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormAppoPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormAppointmentsPayloadDTO;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormPayloadDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.marcok.stepprogressbar.StepProgressBar;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
@@ -355,12 +354,14 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
     private WorkflowServiceCallback updateconsentformCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
+            ProgressDialogUtil.getInstance(getContext()).show();
             nextButton.setClickable(false);
             progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             PatientNavigationHelper.getInstance(ConsentActivity.this).navigateToWorkflow(workflowDTO);
             nextButton.setClickable(true);
             progressBar.setVisibility(View.INVISIBLE);
@@ -368,6 +369,7 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             SystemUtil.showDefaultFailureDialog(ConsentActivity.this);
             nextButton.setClickable(true);
             progressBar.setVisibility(View.INVISIBLE);
@@ -645,6 +647,10 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
             }
             return NONE;
         }
+    }
+
+    private Context getContext(){
+        return this;
     }
 
 }

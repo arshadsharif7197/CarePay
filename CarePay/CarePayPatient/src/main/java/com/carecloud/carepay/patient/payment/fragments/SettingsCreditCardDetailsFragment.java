@@ -34,11 +34,11 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -201,20 +201,20 @@ public class SettingsCreditCardDetailsFragment extends Fragment {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getActivity()).dismiss();
             Gson gson = new Gson();
             DemographicsSettingsDTO removeCreditCardResponseDTO = gson.fromJson(workflowDTO.toString(),
                     DemographicsSettingsDTO.class);
             demographicsSettingsDTO.getPayload().setPatientCreditCards(removeCreditCardResponseDTO.getPayload()
                     .getPatientCreditCards());
             ((DemographicsSettingsActivity) getActivity()).onCreditCardOperation(demographicsSettingsDTO);
-            ProgressDialogUtil.getInstance(getActivity()).dismiss();
             getActivity().onBackPressed();
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            System.out.print(exceptionMessage);
             ProgressDialogUtil.getInstance(getActivity()).dismiss();
+            System.out.print(exceptionMessage);
             SystemUtil.showDefaultFailureDialog(getActivity());
         }
     };

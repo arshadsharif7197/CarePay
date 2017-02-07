@@ -31,6 +31,7 @@ import com.carecloud.carepaylibray.payments.models.ProviderDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.CustomFilterPopupWindow;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
@@ -372,14 +373,17 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
     private WorkflowServiceCallback checkInAppointmentCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
         }
     };
 
@@ -493,5 +497,9 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
      */
     public boolean isPatientFiltered(){
         return this.patientFiltered;
+    }
+
+    private Context getContext(){
+        return this;
     }
 }
