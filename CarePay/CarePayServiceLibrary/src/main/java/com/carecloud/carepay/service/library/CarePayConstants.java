@@ -102,5 +102,10 @@ public class CarePayConstants {
     public static final String CREDIT_CARD_BUNDLE  = "credit_card_bundle";
 
     public static final int ANDROID_PAY_BUTTON_HEIGHT= 58;
+    public static final int NAVIGATION_ITEM_INDEX_APPOINTMENTS= 0;
+    public static final int NAVIGATION_ITEM_INDEX_PAYMENTS= 1;
+    public static final int NAVIGATION_ITEM_INDEX_PURCHASE= 2;
+    public static final int NAVIGATION_ITEM_INDEX_NOTIFICATION= 3;
+
 
 }

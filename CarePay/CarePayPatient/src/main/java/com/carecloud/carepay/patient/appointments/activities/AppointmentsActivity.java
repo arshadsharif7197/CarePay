@@ -103,6 +103,7 @@ public class AppointmentsActivity extends MenuPatientActivity {
         setTransitionAppointments(appointmentsDTO.getMetadata().getLinks().getAppointments());
 
         inflateDrawer();
+        navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_APPOINTMENTS).setChecked(true);
         gotoAppointmentFragment();
     }
 

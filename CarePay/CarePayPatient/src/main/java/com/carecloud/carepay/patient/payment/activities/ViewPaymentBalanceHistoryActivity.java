@@ -78,6 +78,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity {
         //include fragment
         fm.beginTransaction().replace(R.id.add_balance_history_frag_holder, paymentBalanceHistoryFragment,
                 PaymentBalanceHistoryFragment.class.getSimpleName()).commit();
+        navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_PAYMENTS).setChecked(true);
 
     }
 
