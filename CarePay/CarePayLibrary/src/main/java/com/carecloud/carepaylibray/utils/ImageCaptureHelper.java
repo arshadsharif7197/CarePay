@@ -320,9 +320,6 @@ public class ImageCaptureHelper {
      * @return The scaled bitmap
      */
     private Bitmap getRoundedCroppedBitmap(Bitmap input, int outSize) {
-        int width = input.getWidth();
-        int height = input.getHeight();
-
         Bitmap output = Bitmap.createBitmap(outSize, outSize, Bitmap.Config.ARGB_8888);
 
         Canvas canvas = new Canvas(output); 
@@ -339,6 +336,8 @@ public class ImageCaptureHelper {
 
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
 
+        int width = input.getWidth();
+        int height = input.getHeight();
         int inSize = Math.min(width, height);
         int left = (width - inSize) / 2;
         int top = (height - inSize) / 2;
