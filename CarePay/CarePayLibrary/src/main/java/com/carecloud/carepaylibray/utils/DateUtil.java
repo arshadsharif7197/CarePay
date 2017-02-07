@@ -122,13 +122,13 @@ public class DateUtil {
     }
 
     /**
-     * Format the date as "EEE, MMM d YYYY" (eg Mon, Oct 10th 2016)
+     * Format the date as "EEEE, MMM d" (eg Monday, Oct 10th)
      *
      * @return A string containing the formatted date
      */
     public String getDateAsDayMonthDayOrdinalYear() {
-        return String.format(Locale.getDefault(), "%s, %s %d%s %s",
-                             dayLiteralAbbr, monthLiteralAbbr, day, getOrdinalSuffix(day), year);
+        return String.format(Locale.getDefault(), "%s, %s %d%s",
+                             dayLiteral, monthLiteralAbbr, day, getOrdinalSuffix(day));
     }
 
     /**

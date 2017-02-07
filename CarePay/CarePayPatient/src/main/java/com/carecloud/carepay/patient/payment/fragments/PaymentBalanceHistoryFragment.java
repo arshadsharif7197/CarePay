@@ -9,7 +9,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,8 +42,13 @@ public class PaymentBalanceHistoryFragment  extends Fragment  {
         String paymentsDTOString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
         PaymentsModel paymentDTO = gson.fromJson(paymentsDTOString, PaymentsModel.class);
 
+        setupViewPager(balanceHistoryView, paymentDTO);
+
+        return balanceHistoryView;
+    }
+
+    private void setupViewPager(View balanceHistoryView, PaymentsModel paymentDTO) {
         ViewPager viewPager = (ViewPager) balanceHistoryView.findViewById(R.id.historyPager);
-        setupViewPager(viewPager, paymentDTO);
 
         TabLayout tabs = (TabLayout) balanceHistoryView.findViewById (R.id.balance_history_tabs);
         tabs.setSelectedTabIndicatorColor(Color.WHITE);
@@ -57,12 +62,7 @@ public class PaymentBalanceHistoryFragment  extends Fragment  {
             }
             ViewPaymentBalanceHistoryActivity.setIsPaymentDone(false);
         }
-
-        return balanceHistoryView;
-    }
-
-    private void setupViewPager(ViewPager viewPager, PaymentsModel paymentDTO) {
-        SectionsPagerAdapter adapter = new SectionsPagerAdapter(context.getSupportFragmentManager());
+        SectionsPagerAdapter adapter = new SectionsPagerAdapter(getChildFragmentManager());
         String pendingTabTitle = paymentDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPatientBalanceTab();
         String historyTabTitle = paymentDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPatientHistoryTab();
         adapter.addFragment(PaymentHistoryFragment.newInstance(1, paymentDTO), StringUtil.isNullOrEmpty(pendingTabTitle)?
@@ -80,7 +80,7 @@ public class PaymentBalanceHistoryFragment  extends Fragment  {
 
     }
 
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
         private final List<Fragment> mFragments = new ArrayList<>();
         private final List<String> mFragmentTitles = new ArrayList<>();
 
@@ -106,6 +106,14 @@ public class PaymentBalanceHistoryFragment  extends Fragment  {
         @Override
         public CharSequence getPageTitle(int position) {
             return mFragmentTitles.get(position);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getActivity() instanceof ViewPaymentBalanceHistoryActivity) {
+            ((ViewPaymentBalanceHistoryActivity)this.getActivity()).displayToolbar(true);
         }
     }
 }

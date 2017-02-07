@@ -98,7 +98,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@color/clear_filter_button_background"
+            android:background="@color/overlay_green"
             android:text="@string/not_defined"
             android:visibility="visible"/>
 
