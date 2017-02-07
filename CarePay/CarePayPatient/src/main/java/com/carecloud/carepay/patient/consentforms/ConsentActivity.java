@@ -47,14 +47,15 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.marcok.stepprogressbar.StepProgressBar;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 
 
 public class ConsentActivity extends BasePatientActivity implements IFragmentCallback {

@@ -53,13 +53,14 @@ import com.carecloud.carepaylibray.utils.payeezysdk.sdk.payeezydirecttransaction
 import com.google.gson.Gson;
 import com.smartystreets.api.us_zipcode.City;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * A simple {@link Fragment} subclass.

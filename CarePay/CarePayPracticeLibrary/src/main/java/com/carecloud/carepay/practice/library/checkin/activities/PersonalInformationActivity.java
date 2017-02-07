@@ -34,11 +34,11 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
-import org.joda.time.LocalDate;
-
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.joda.time.LocalDate;
 
 public class PersonalInformationActivity extends BasePracticeActivity {
     private CarePayButton selectDateButton;

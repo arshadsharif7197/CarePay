@@ -45,12 +45,12 @@ import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
-import org.joda.time.DateTime;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+
+import org.joda.time.DateTime;
 
 
 /**
