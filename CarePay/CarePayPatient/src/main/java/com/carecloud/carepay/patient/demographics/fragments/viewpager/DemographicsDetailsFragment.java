@@ -274,11 +274,11 @@ public class DemographicsDetailsFragment extends BaseFragment
         raceTextView.setText(chooseCaption);
         raceTextView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 selectedArray = 1;
                 String cancelLabel = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsCancelLabel();
                 String title = globalLabelDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelDTO.getDemographicsTitleSelectRace();
-                showAlertDialogWithListview(raceArray, title, cancelLabel, (TextView) v);
+                showAlertDialogWithListview(raceArray, title, cancelLabel, (TextView) view);
             }
         });
 

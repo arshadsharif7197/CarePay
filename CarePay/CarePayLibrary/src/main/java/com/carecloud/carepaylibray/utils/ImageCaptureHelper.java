@@ -27,10 +27,11 @@ import com.carecloud.carepaylibray.carepaycamera.CarePayCameraActivity;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
 
+import static com.carecloud.carepaylibray.utils.ImageCaptureHelper.ImageShape.RECTANGULAR;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import static com.carecloud.carepaylibray.utils.ImageCaptureHelper.ImageShape.RECTANGULAR;
 
 /**
  * Helper for scan with camera functionality
@@ -321,7 +322,6 @@ public class ImageCaptureHelper {
     private Bitmap getRoundedCroppedBitmap(Bitmap input, int outSize) {
         int width = input.getWidth();
         int height = input.getHeight();
-        int inSize = Math.min(width, height);
 
         Bitmap output = Bitmap.createBitmap(outSize, outSize, Bitmap.Config.ARGB_8888);
 
@@ -337,8 +337,9 @@ public class ImageCaptureHelper {
         float halfSize = outSize / 2;
         canvas.drawCircle(halfSize + 0.7f, halfSize + 0.7f, halfSize + 0.1f, paint); 
 
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN)); 
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
 
+        int inSize = Math.min(width, height);
         int left = (width - inSize) / 2;
         int top = (height - inSize) / 2;
         Rect src = new Rect(left, top, left + inSize, top + inSize);
@@ -398,6 +399,8 @@ public class ImageCaptureHelper {
                 }
 
                 break;
+            default:
+                return image;
         }
 
         imageViewTarget.setImageBitmap(image);
@@ -426,7 +429,7 @@ public class ImageCaptureHelper {
 
     private static int getExifOrientation(Context context, Uri uri) {
         if (Build.VERSION.SDK_INT > 18) {
-            String[] CONTENT_ORIENTATION = new String[]{
+            String[] projection = new String[]{
                     MediaStore.Images.ImageColumns.ORIENTATION
             };
 
@@ -436,7 +439,7 @@ public class ImageCaptureHelper {
                 String id = DocumentsContract.getDocumentId(uri);
                 id = id.split(":")[1];
                 cursor = contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                        CONTENT_ORIENTATION, MediaStore.Images.Media._ID + " = ?", new String[]{id}, null);
+                        projection, MediaStore.Images.Media._ID + " = ?", new String[]{id}, null);
                 if (cursor == null || !cursor.moveToFirst()) {
                     return 0;
                 }

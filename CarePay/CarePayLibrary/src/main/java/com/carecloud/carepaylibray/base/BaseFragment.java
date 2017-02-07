@@ -46,6 +46,10 @@ public abstract class BaseFragment extends Fragment {
         return true;
     }
 
+    /**
+     * @param id of the view to be found
+     * @return the view or null if not found
+     */
     public View findViewById(int id) {
         View rootView = getView();
         if (null == rootView) {
