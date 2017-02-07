@@ -174,11 +174,11 @@ public class ImageCaptureHelper {
      * @param degrees degrees to be rotated
      * @return rotated picture
      */
-    public Bitmap rotateBitmap(Bitmap bitmap, int degrees) {
+    private static Bitmap rotateBitmap(Bitmap bitmap, int degrees) {
         Matrix matrix = new Matrix();
-        matrix.preRotate(degrees);
+        matrix.postRotate(degrees);
 
-        return Bitmap.createBitmap(bitmap, 0, 0,bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
     /**
@@ -419,11 +419,11 @@ public class ImageCaptureHelper {
 
         int orientation = getExifOrientation(context, selectedImage);
 
-        if (orientation == 0) {
+        if (0 == orientation) {
             return img;
         }
 
-        return rotateImage(img, orientation);
+        return rotateBitmap(img, orientation);
     }
 
     private static int getExifOrientation(Context context, Uri uri) {
@@ -451,15 +451,16 @@ public class ImageCaptureHelper {
                     cursor.close();
                 }
             }
-        } else {
-            return 0;
+        } else if (uri.getScheme().equals("content")) {
+            String[] projection = { MediaStore.Images.ImageColumns.ORIENTATION };
+            Cursor c = context.getContentResolver().query(uri, projection, null, null, null);
+            if (c.moveToFirst()) {
+                final int rotation = c.getInt(0);
+                c.close();
+                return rotation;
+            }
         }
-    }
 
-    private static Bitmap rotateImage(Bitmap bitmap, int degree) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degree);
-
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        return 0;
     }
 }
