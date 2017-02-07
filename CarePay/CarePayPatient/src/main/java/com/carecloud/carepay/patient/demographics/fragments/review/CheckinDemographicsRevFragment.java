@@ -46,11 +46,11 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtrabo
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
+import com.google.gson.Gson;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.gson.Gson;
 
 
 
