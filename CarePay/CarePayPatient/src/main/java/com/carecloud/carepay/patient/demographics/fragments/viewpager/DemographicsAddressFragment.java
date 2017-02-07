@@ -30,6 +30,7 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.Demographic
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.utils.AddressUtil;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -292,6 +293,7 @@ public class DemographicsAddressFragment extends Fragment {
         if (persDetailsDTO == null) {
             persDetailsDTO = new DemographicPersDetailsPayloadDTO();
         }
+        addressMetaDTO = DtoHelper.getConvertedDTO(DemographicMetadataEntityAddressDTO.class, getArguments());
     }
 
     private void populateViewsWithData() {
@@ -881,10 +883,6 @@ public class DemographicsAddressFragment extends Fragment {
         }
 
         return isPhoneValid && isStateValid && isCityValid && isZipValid;
-    }
-
-    public void setAddressMetaDTO(DemographicMetadataEntityAddressDTO addressMetaDTO) {
-        this.addressMetaDTO = addressMetaDTO;
     }
 
     public void setPersDetailsMetaDTO(DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO) {

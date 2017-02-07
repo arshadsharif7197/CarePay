@@ -69,7 +69,6 @@ public class DocScannerFragment extends DocumentScannerFragment {
     private String documentsScanBackString = null;
     private String documentsDlNumberString = null;
     private String documentsDlStateString = null;
-    private String documentsHealthInsuranceString = null;
     private String documentsHaveHealthInsuranceString = null;
     private String documentsAddnotherInsuranceString = null;
     private String documentsGoldenCrossString = null;
@@ -119,7 +118,6 @@ public class DocScannerFragment extends DocumentScannerFragment {
                     documentsScanBackString = demographicsSettingsLabelsDTO.getDocumentsScanBackLabel();
                     documentsDlNumberString = demographicsSettingsLabelsDTO.getDocumentsDlNumberLabel();
                     documentsDlStateString = demographicsSettingsLabelsDTO.getDocumentsDlStateLabel();
-                    documentsHealthInsuranceString = demographicsSettingsLabelsDTO.getDocumentsHealthInsuranceLabel();
                     documentsHaveHealthInsuranceString = demographicsSettingsLabelsDTO.getDocumentsHaveHealthInsuranceLabel();
                     documentsAddnotherInsuranceString = demographicsSettingsLabelsDTO.getDocumentsAddnotherInsuranceLabel();
                     documentsGoldenCrossString = demographicsSettingsLabelsDTO.getDocumentsGoldenCrossLabel();
@@ -209,7 +207,7 @@ public class DocScannerFragment extends DocumentScannerFragment {
 
         setTypefaces(view);
 
-        populateViewsFromModel();
+        populateViewsFromModel(view);
     }
 
     private void setEditText() {
@@ -280,7 +278,7 @@ public class DocScannerFragment extends DocumentScannerFragment {
     }
 
     @Override
-    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner) { // license has been scanned
+    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner, Bitmap bitmap) { // license has been scanned
         if (bitmap != null) {
             if (scanner == scannerFront) {
                 // change button caption to 'rescan'
@@ -300,7 +298,7 @@ public class DocScannerFragment extends DocumentScannerFragment {
     }
 
     @Override
-    public void populateViewsFromModel() {
+    public void populateViewsFromModel(View view) {
         if (model != null) {
             String licenseNum = model.getIdNumber();
             if (!StringUtil.isNullOrEmpty(licenseNum)) {
@@ -377,8 +375,8 @@ public class DocScannerFragment extends DocumentScannerFragment {
     }
 
     @Override
-    public int getImageShape() {
-        return ImageCaptureHelper.RECTANGULAR_IMAGE;
+    public ImageCaptureHelper.ImageShape getImageShape() {
+        return ImageCaptureHelper.ImageShape.RECTANGULAR;
     }
 
     public DemographicIdDocPayloadDTO getModel() {

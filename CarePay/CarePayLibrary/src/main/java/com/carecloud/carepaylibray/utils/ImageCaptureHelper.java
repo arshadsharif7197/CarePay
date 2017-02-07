@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.utils;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -12,7 +13,10 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
@@ -23,8 +27,11 @@ import com.carecloud.carepaylibray.carepaycamera.CarePayCameraActivity;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
 
+import static com.carecloud.carepaylibray.utils.ImageCaptureHelper.ImageShape.RECTANGULAR;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
 
 /**
  * Helper for scan with camera functionality
@@ -33,15 +40,12 @@ public class ImageCaptureHelper {
 
     public static final int            REQUEST_CAMERA        = 0;
     public static final int            SELECT_FILE           = 1;
-    public static final int            ROUND_IMAGE           = 11;
-    public static final int            RECTANGULAR_IMAGE     = 22;
     public static final String         CHOOSER_NAME          = "Select File";
     public static final CharSequence[] chooseActionDlOptions = new CharSequence[3];
     public static final CharSequence[] chooseActionDocumentDlOptions = new CharSequence[2];
     public static String chooseActionDlgTitle;
 
     private static int           orientation                 = 0;
-    private static final String LOG_TAG = ImageCaptureHelper.class.getSimpleName();
     private String               userChoosenTask;
     private ImageView            imageViewTarget;
     private int                  imgWidth;
@@ -51,6 +55,10 @@ public class ImageCaptureHelper {
 
     public enum CameraType {
         DEFAULT_CAMERA, CUSTOM_CAMERA;
+    }
+
+    public enum ImageShape {
+        CIRCULAR, RECTANGULAR
     }
 
     /**
@@ -106,24 +114,12 @@ public class ImageCaptureHelper {
         return imgHeight;
     }
 
-    public void setImgHeight(int imgHeight) {
-        this.imgHeight = imgHeight;
-    }
-
     public int getImgWidth() {
         return imgWidth;
     }
 
-    public void setImgWidth(int imgWidth) {
-        this.imgWidth = imgWidth;
-    }
-
     public ImageView getImageViewTarget() {
         return imageViewTarget;
-    }
-
-    public void setImageViewTarget(ImageView imageViewTarget) {
-        this.imageViewTarget = imageViewTarget;
     }
 
     public String getUserChoosenTask() {
@@ -135,10 +131,6 @@ public class ImageCaptureHelper {
     }
 
     private static Bitmap imageBitmap;
-
-    public static Bitmap getImageBitmap() {
-        return imageBitmap;
-    }
 
     public static void setImageBitmap(Bitmap imageBitmap) {
         ImageCaptureHelper.imageBitmap = imageBitmap;
@@ -178,15 +170,15 @@ public class ImageCaptureHelper {
     /**
      * Rotate a bitmap from center point
      *
-     * @param originalBitmap picture to be rotated
+     * @param bitmap picture to be rotated
      * @param degrees degrees to be rotated
      * @return rotated picture
      */
-    public Bitmap rotateBitmap(Bitmap originalBitmap, int degrees) {
+    public Bitmap rotateBitmap(Bitmap bitmap, int degrees) {
         Matrix matrix = new Matrix();
         matrix.preRotate(degrees);
-        Bitmap rotatedBitmap = Bitmap.createBitmap(originalBitmap, 0, 0,originalBitmap.getWidth(), originalBitmap.getHeight(), matrix, true);
-        return rotatedBitmap;
+
+        return Bitmap.createBitmap(bitmap, 0, 0,bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
     /**
@@ -196,7 +188,7 @@ public class ImageCaptureHelper {
      * @param shape The intended shape of the captured image
      * @return The bitmap
      */
-    public Bitmap onCaptureImageResult(Intent data, int shape) {
+    public Bitmap onCaptureImageResult(Intent data, ImageShape shape) {
         Bundle extras = data.getExtras();
         Bitmap thumbnail = (Bitmap) extras.get("data");
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -214,7 +206,7 @@ public class ImageCaptureHelper {
      * @param shape The intended shape of the captured image
      * @return The bitmap
      */
-    public Bitmap onCaptureImageResult(int shape) {
+    public Bitmap onCaptureImageResult(ImageShape shape) {
         if (imageBitmap == null) {
             return null;
         }
@@ -239,38 +231,18 @@ public class ImageCaptureHelper {
      * @param shape The intended shape of the captured image
      * @return The bitmap
      */
-    public Bitmap onSelectFromGalleryResult(Intent data, int shape) {
+    public Bitmap onSelectFromGalleryResult(Intent data, ImageShape shape) {
         try {
             Bitmap thumbnail = MediaStore.Images.Media.getBitmap(context.getContentResolver(), data.getData());
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             // compress
             thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-            thumbnail = rotateBitmap(thumbnail,getImageOrientation(data.getData().getLastPathSegment()));
+            thumbnail = rotateImageIfRequired(context, thumbnail, data.getData());
             return setCapturedImageToTargetView(thumbnail, shape);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
-    }
-
-    private int getImageOrientation(String pathSegment){
-        try {
-            final String[] imageColumns = { MediaStore.Images.Media._ID, MediaStore.Images.ImageColumns.ORIENTATION };
-            final String selection = MediaStore.Images.Media._ID+" = " + pathSegment.split(":")[1];
-            final String imageOrderBy = MediaStore.Images.Media._ID + " DESC";
-            Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageColumns, selection, null, imageOrderBy);
-
-            if(cursor.moveToFirst()){
-                int orientation = cursor.getInt(cursor.getColumnIndex(MediaStore.Images.ImageColumns.ORIENTATION));
-                cursor.close();
-                return (orientation>=90 ? orientation-90 : orientation);
-            } else {
-                return 0;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
-        }
     }
 
     /**
@@ -344,31 +316,34 @@ public class ImageCaptureHelper {
     /**
      * Builds a scaled round bitmap from another bitmap
      *
-     * @param finalBitmap The original bitmap
+     * @param input The original bitmap
      * @return The scaled bitmap
      */
-    private Bitmap getRoundedCroppedBitmap(Bitmap finalBitmap) {
-        Bitmap output = Bitmap.createBitmap(finalBitmap.getWidth(),
-                finalBitmap.getHeight(),
-                Bitmap.Config.ARGB_8888);
+    private Bitmap getRoundedCroppedBitmap(Bitmap input, int outSize) {
+        Bitmap output = Bitmap.createBitmap(outSize, outSize, Bitmap.Config.ARGB_8888);
 
-        Canvas canvas = new Canvas(output);
+        Canvas canvas = new Canvas(output); 
 
         final Paint paint = new Paint();
-        final Rect rect = new Rect(0, 0, finalBitmap.getWidth(), finalBitmap.getHeight());
         paint.setAntiAlias(true);
         paint.setFilterBitmap(true);
         paint.setDither(true);
         canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(ContextCompat.getColor(context, R.color.paint_color_thumbnail));
+        paint.setColor(ContextCompat.getColor(context, R.color.paint_color_thumbnail)); 
 
-        canvas.drawCircle(finalBitmap.getWidth() / 2 + 0.7f,
-                finalBitmap.getHeight() / 2 + 0.7f,
-                finalBitmap.getWidth() / 2 + 0.1f,
-                paint);
+        float halfSize = outSize / 2;
+        canvas.drawCircle(halfSize + 0.7f, halfSize + 0.7f, halfSize + 0.1f, paint); 
 
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(finalBitmap, rect, rect, paint);
+
+        int width = input.getWidth();
+        int height = input.getHeight();
+        int inSize = Math.min(width, height);
+        int left = (width - inSize) / 2;
+        int top = (height - inSize) / 2;
+        Rect src = new Rect(left, top, left + inSize, top + inSize);
+        Rect dest = new Rect(0, 0, outSize, outSize);
+        canvas.drawBitmap(input, src, dest, paint); 
 
         return output;
     }
@@ -376,56 +351,60 @@ public class ImageCaptureHelper {
     /**
      * Set the a bitmap to the target image view
      *
-     * @param thumbnail The bitmap
-     * @param shape     The shape (ImageCaptureHelper.ROUNDED or ImageCaptureHelper.RECTANGULAR)
+     * @param image The bitmap
+     * @param shape     The shape
      */
-    private Bitmap setCapturedImageToTargetView(Bitmap thumbnail, int shape) {
-        // calculate crop
-        int origWidth = thumbnail.getWidth();
-        int origHeigth = thumbnail.getHeight();
-        int xxCoord = 0;
-        int yyCoord = 0;
-        int croppedWidth = origWidth;
-        int croppedHeight = origHeigth;
-        int cropSize;
-        // calculate
-        if (origWidth < origHeigth) {
-            cropSize = origHeigth - origWidth;
-            yyCoord = cropSize;
-            croppedHeight = origWidth;
-        } else if (origWidth > origHeigth) {
-            cropSize = origWidth - origHeigth;
-            xxCoord = cropSize;
-            croppedWidth = origHeigth;
-        }
-
-        // crop to square
-        Bitmap croppedBitmap = Bitmap.createBitmap(thumbnail,
-                xxCoord,
-                yyCoord,
-                croppedWidth,
-                croppedHeight);
-
-        // compress
-        Bitmap bitmap = null;
-        if (cameraType == CameraType.CUSTOM_CAMERA && !SystemUtil.isTablet(context)) {
-            if (shape == ROUND_IMAGE) {
-                bitmap = getRoundedCroppedBitmap(Bitmap.createScaledBitmap(thumbnail, imgWidth, imgWidth, false));
-            } else if (shape == RECTANGULAR_IMAGE) {
-                bitmap = getSquareCroppedBitmap(Bitmap.createScaledBitmap(thumbnail, imgWidth, imgHeight, true));
-            }
-        } else {
-            if (shape == ROUND_IMAGE) {
-                bitmap = getRoundedCroppedBitmap(Bitmap.createScaledBitmap(croppedBitmap, imgWidth, imgWidth, false));
-                if(cameraType == null && !SystemUtil.isTablet(context)) {
-                    bitmap = rotateBitmap(bitmap,90);
+    private Bitmap setCapturedImageToTargetView(Bitmap image, ImageShape shape) {
+        switch (shape) {
+            case CIRCULAR:
+                image = getRoundedCroppedBitmap(image, imgWidth);
+                break;
+            case RECTANGULAR:
+                // calculate crop
+                int origWidth = image.getWidth();
+                int origHeigth = image.getHeight();
+                int xxCoord = 0;
+                int yyCoord = 0;
+                int croppedWidth = origWidth;
+                int croppedHeight = origHeigth;
+                int cropSize;
+                // calculate
+                if (origWidth < origHeigth) {
+                    cropSize = origHeigth - origWidth;
+                    yyCoord = cropSize;
+                    croppedHeight = origWidth;
+                } else if (origWidth > origHeigth) {
+                    cropSize = origWidth - origHeigth;
+                    xxCoord = cropSize;
+                    croppedWidth = origHeigth;
                 }
-            } else if (shape == RECTANGULAR_IMAGE) {
-                bitmap = getSquareCroppedBitmap(Bitmap.createScaledBitmap(croppedBitmap, imgWidth, imgHeight, true));
-            }
+
+                // crop to square
+                Bitmap croppedBitmap = Bitmap.createBitmap(image,
+                        xxCoord,
+                        yyCoord,
+                        croppedWidth,
+                        croppedHeight);
+
+                // compress
+                if (cameraType == CameraType.CUSTOM_CAMERA && !SystemUtil.isTablet(context)) {
+                    if (shape == RECTANGULAR) {
+                        image = getSquareCroppedBitmap(Bitmap.createScaledBitmap(image, imgWidth, imgHeight, true));
+                    }
+                } else {
+                    if (shape == RECTANGULAR) {
+                        image = getSquareCroppedBitmap(Bitmap.createScaledBitmap(croppedBitmap, imgWidth, imgHeight, true));
+                    }
+                }
+
+                break;
+            default:
+                return image;
         }
-        imageViewTarget.setImageBitmap(bitmap);
-        return bitmap;
+
+        imageViewTarget.setImageBitmap(image);
+
+        return image;
     }
 
     public void resetTargetView() {
@@ -434,5 +413,53 @@ public class ImageCaptureHelper {
 
     public void setCameraType(CameraType cameraType){
         this.cameraType=cameraType;
+    }
+
+    private static Bitmap rotateImageIfRequired(Context context, Bitmap img, Uri selectedImage) throws IOException {
+
+        int orientation = getExifOrientation(context, selectedImage);
+
+        if (orientation == 0) {
+            return img;
+        }
+
+        return rotateImage(img, orientation);
+    }
+
+    private static int getExifOrientation(Context context, Uri uri) {
+        if (Build.VERSION.SDK_INT > 18) {
+            String[] projection = new String[]{
+                    MediaStore.Images.ImageColumns.ORIENTATION
+            };
+
+            ContentResolver contentResolver = context.getContentResolver();
+            Cursor cursor = null;
+            try {
+                String id = DocumentsContract.getDocumentId(uri);
+                id = id.split(":")[1];
+                cursor = contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        projection, MediaStore.Images.Media._ID + " = ?", new String[]{id}, null);
+                if (cursor == null || !cursor.moveToFirst()) {
+                    return 0;
+                }
+                return cursor.getInt(0);
+            } catch (RuntimeException ignored) {
+                // If the orientation column doesn't exist, assume no rotation.
+                return 0;
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+        } else {
+            return 0;
+        }
+    }
+
+    private static Bitmap rotateImage(Bitmap bitmap, int degree) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degree);
+
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 }
