@@ -48,7 +48,6 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_balance_history);
 
-        toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.balance_history_toolbar);
         drawer = (DrawerLayout) findViewById(com.carecloud.carepaylibrary.R.id.drawer_layout_hist);
         navigationView = (NavigationView) findViewById(com.carecloud.carepaylibrary.R.id.nav_view_hist);
         appointmentsDrawerUserIdTextView = (TextView) navigationView.getHeaderView(0)
@@ -58,11 +57,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity {
         practiceId = paymentsDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPracticeId();
         practiceMgmt = paymentsDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPracticeMgmt();
         patientId = paymentsDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPatientId();
-
-        TextView toolbarText = (TextView) findViewById(R.id.balance_history_toolbar_title);
-        String toolBarTitle = paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPatientBalanceToolbar();
-        toolbarText.setText(StringUtil.isNullOrEmpty(toolBarTitle) ? CarePayConstants.NOT_DEFINED : toolBarTitle);
-
+        displayToolbar(true);
         inflateDrawer();
         FragmentManager fm = getSupportFragmentManager();
         PaymentBalanceHistoryFragment paymentBalanceHistoryFragment = (PaymentBalanceHistoryFragment)
@@ -84,6 +79,19 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity {
         fm.beginTransaction().replace(R.id.add_balance_history_frag_holder, paymentBalanceHistoryFragment,
                 PaymentBalanceHistoryFragment.class.getSimpleName()).commit();
 
+    }
+
+    public void displayToolbar(boolean visibility){
+        toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.balance_history_toolbar);
+        TextView toolbarText = (TextView) findViewById(R.id.balance_history_toolbar_title);
+        String toolBarTitle = paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPatientBalanceToolbar();
+        toolbarText.setText(StringUtil.isNullOrEmpty(toolBarTitle) ? CarePayConstants.NOT_DEFINED : toolBarTitle);
+        if(visibility){
+            setSupportActionBar(toolbar);
+            getSupportActionBar().show();
+        } else {
+            getSupportActionBar().hide();
+        }
     }
 
     /**
