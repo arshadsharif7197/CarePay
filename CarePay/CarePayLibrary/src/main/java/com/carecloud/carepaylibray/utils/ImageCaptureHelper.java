@@ -174,11 +174,11 @@ public class ImageCaptureHelper {
      * @param degrees degrees to be rotated
      * @return rotated picture
      */
-    public Bitmap rotateBitmap(Bitmap bitmap, int degrees) {
+    private static Bitmap rotateBitmap(Bitmap bitmap, int degrees) {
         Matrix matrix = new Matrix();
-        matrix.preRotate(degrees);
+        matrix.postRotate(degrees);
 
-        return Bitmap.createBitmap(bitmap, 0, 0,bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
     /**
@@ -419,47 +419,54 @@ public class ImageCaptureHelper {
 
         int orientation = getExifOrientation(context, selectedImage);
 
-        if (orientation == 0) {
+        if (0 == orientation) {
             return img;
         }
 
-        return rotateImage(img, orientation);
+        return rotateBitmap(img, orientation);
     }
 
     private static int getExifOrientation(Context context, Uri uri) {
-        if (Build.VERSION.SDK_INT > 18) {
+        Cursor cursor = null;
+        ContentResolver contentResolver = context.getContentResolver();
+        String selection = null;
+        String[] selectionArgs = null;
+
+        try {
+
+            if (Build.VERSION.SDK_INT > 18) {
+
+                String id = DocumentsContract.getDocumentId(uri);
+                id = id.split(":")[1];
+
+                selectionArgs = new String[]{ id };
+                uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                selection = MediaStore.Images.Media._ID + " = ?";
+
+            } else if (!uri.getScheme().equals("content")) {
+
+                return 0;
+
+            }
+
             String[] projection = new String[]{
                     MediaStore.Images.ImageColumns.ORIENTATION
             };
 
-            ContentResolver contentResolver = context.getContentResolver();
-            Cursor cursor = null;
-            try {
-                String id = DocumentsContract.getDocumentId(uri);
-                id = id.split(":")[1];
-                cursor = contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                        projection, MediaStore.Images.Media._ID + " = ?", new String[]{id}, null);
-                if (cursor == null || !cursor.moveToFirst()) {
-                    return 0;
-                }
-                return cursor.getInt(0);
-            } catch (RuntimeException ignored) {
-                // If the orientation column doesn't exist, assume no rotation.
+            cursor = contentResolver.query(uri, projection, selection, selectionArgs, null);
+
+            if (cursor == null || !cursor.moveToFirst()) {
                 return 0;
-            } finally {
-                if (cursor != null) {
-                    cursor.close();
-                }
             }
-        } else {
+
+            return cursor.getInt(0);
+        } catch (RuntimeException ignored) {
+            // If the orientation column doesn't exist, assume no rotation.
             return 0;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
-    }
-
-    private static Bitmap rotateImage(Bitmap bitmap, int degree) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degree);
-
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 }
