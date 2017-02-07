@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -46,7 +47,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -127,6 +127,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         homeAppointmentsLabel = (TextView) findViewById(R.id.homeAppointmentsLabel);
         homeCheckoutLabel = (TextView) findViewById(R.id.homeCheckoutLabel);
         homeShopLabel = (TextView) findViewById(R.id.homeShopLabel);
+
     }
 
     private void populateWithLabels() {
@@ -272,6 +273,25 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         findViewById(R.id.homeCheckoutClickable).setEnabled(true);
         findViewById(R.id.homeShopClickable).setEnabled(true);
         findViewById(R.id.homeNewsClickable).setEnabled(true);
+
+        disableUnavailableItems();
+    }
+
+    private void disableUnavailableItems(){
+        setViewsDisabled((ViewGroup) findViewById(R.id.homeCheckoutClickable));
+        setViewsDisabled((ViewGroup) findViewById(R.id.homeShopClickable));
+    }
+
+    private void setViewsDisabled(ViewGroup viewGroup){
+        viewGroup.setEnabled(false);
+        for(int i=0; i<viewGroup.getChildCount(); i++){
+            View view = viewGroup.getChildAt(i);
+            if(view instanceof ViewGroup) {
+                setViewsDisabled((ViewGroup) view);
+            }else {
+                view.setEnabled(false);
+            }
+        }
     }
 
     private void unlockPracticeMode() {
@@ -489,6 +509,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             findViewById(R.id.homePaymentsClickable).setEnabled(true);
             findViewById(R.id.homeCheckoutClickable).setEnabled(true);
             findViewById(R.id.homeShopClickable).setEnabled(true);
+
+            disableUnavailableItems();
             SystemUtil.showDefaultFailureDialog(CloverMainActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -499,7 +521,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         // call for transition
         Gson gson = new Gson();
         PatientHomeScreenTransitionsDTO transitions = gson.fromJson(homeScreenDTO.getMetadata().getTransitions(),
-                                                                    PatientHomeScreenTransitionsDTO.class);
+                PatientHomeScreenTransitionsDTO.class);
         TransitionDTO transitionDTO = transitions.getPracticeMode();
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("transition", "true");
