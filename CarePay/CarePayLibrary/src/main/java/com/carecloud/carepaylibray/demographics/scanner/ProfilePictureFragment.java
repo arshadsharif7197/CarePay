@@ -82,7 +82,11 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
             labelsMetaDTO = ((DemographicsLabelsHolder) getActivity()).getLabelsDTO();
         }
 
-        recaptureCaption = labelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : labelsMetaDTO.getDemographicsProfileReCaptureCaption();
+        if (null == labelsMetaDTO) {
+            labelsMetaDTO = new DemographicLabelsDTO();
+        }
+
+        recaptureCaption = labelsMetaDTO.getDemographicsProfileReCaptureCaption();
 
         ImageView imageViewDetailsImage = (ImageView) view.findViewById(R.id.DetailsProfileImage);
         imageCaptureHelper = new ImageCaptureHelper(getActivity(), imageViewDetailsImage, globalLabelsDTO);
@@ -94,7 +98,7 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
                 selectImage(imageCaptureHelper, ImageCaptureHelper.CameraType.DEFAULT_CAMERA);
             }
         });
-        String captureCaption = labelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : labelsMetaDTO.getDemographicsProfileCaptureCaption();
+        String captureCaption = labelsMetaDTO.getDemographicsProfileCaptureCaption();
         buttonChangeCurrentPhoto.setText(captureCaption);
 
         demographicPersDetailsPayloadDTO = DtoHelper.getConvertedDTO(DemographicPersDetailsPayloadDTO.class, getArguments());
