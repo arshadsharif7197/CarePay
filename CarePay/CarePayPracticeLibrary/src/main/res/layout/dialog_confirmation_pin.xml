@@ -226,7 +226,7 @@
                             android:layout_height="@dimen/button_delete_key_height"
                             android:layout_gravity="center"
                             android:gravity="center"
-                            android:textColor="@color/blue_cerulian"
+                            android:textColor="@color/bright_cerulean"
                             android:background="@drawable/ic_keyboard_delete"
                             android:text="" />
                     </LinearLayout>

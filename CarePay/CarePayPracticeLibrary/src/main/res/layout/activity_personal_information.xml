@@ -178,7 +178,7 @@
                 android:background="@color/transparent_apt"
                 android:enabled="false"
                 android:textAllCaps="false"
-                android:textColor="@color/bleu_de_france"
+                android:textColor="@color/blue_de_france"
                 android:textSize="@dimen/text_size_18sp"
                 app:customAssetFont="gotham_rounded_medium" />
 

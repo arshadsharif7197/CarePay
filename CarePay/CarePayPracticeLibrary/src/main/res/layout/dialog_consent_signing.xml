@@ -119,7 +119,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="@dimen/dimen_21dp"
-                    android:textColor="@color/optionl_gray"
+                    android:textColor="@color/optional_gray"
                     android:textSize="@dimen/sign_dialog_helper_font"
                     app:customAssetFont="proxima_nova_semi_bold" />
 
