@@ -130,10 +130,8 @@ public class SigninFragment extends Fragment {
 
         setTypefaces();
 
-        emailEditText.setText("kkannan@carecloud.com");
-        passwordEditText.setText("Kavin123!");
-        isEmptyEmail = false;
-        isEmptyPassword = false;
+        isEmptyEmail = true;
+        isEmptyPassword = true;
 
         return view;
     }
