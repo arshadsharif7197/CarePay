@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.base;
 
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -94,4 +95,7 @@ public abstract class BasePracticeActivity extends BaseVisibilityHintActivity im
         decorView.setSystemUiVisibility(uiOptions);
     }
 
+    public Context getContext(){
+        return this;
+    }
 }

@@ -1,9 +1,9 @@
 package com.carecloud.carepaylibray.utils;
 
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+
+import com.carecloud.carepaylibrary.R;
 
 /**
  * Created by sudhir_pingale on 12/21/2016.
@@ -11,7 +11,7 @@ import android.graphics.drawable.ColorDrawable;
 
 public class ProgressDialogUtil {
 
-    private ProgressDialog progressDialog;
+    private Dialog progressDialog;
     private static ProgressDialogUtil mProgressDialogUtil;
     private static Context mContext;
 
@@ -23,21 +23,28 @@ public class ProgressDialogUtil {
      */
     public static ProgressDialogUtil getInstance(Context context){
         mContext = context;
-     if(mProgressDialogUtil==null){
-         mProgressDialogUtil = new ProgressDialogUtil();
-     }
-     return mProgressDialogUtil;
+        if(mProgressDialogUtil==null){
+            mProgressDialogUtil = new ProgressDialogUtil();
+        }
+        return mProgressDialogUtil;
     }
 
     /**
      * Show.
      */
     public void show(){
-        progressDialog = new ProgressDialog(mContext);
-        progressDialog.setMessage("Loading");
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        progressDialog.setIndeterminate(false);
+        if(progressDialog!=null && progressDialog.isShowing()) {
+            return;
+        }
+
+        if(progressDialog == null) {
+            progressDialog = new Dialog(mContext, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
+            progressDialog.setContentView(R.layout.dialog_progress);
+        }
+//        progressDialog.setMessage("Loading");
+//        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//        progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.show();
     }
@@ -51,4 +58,5 @@ public class ProgressDialogUtil {
             progressDialog = null;
         }
     }
+
 }

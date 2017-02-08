@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.base;
 
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -59,4 +60,7 @@ public abstract class BasePatientActivity extends BaseVisibilityHintActivity {
         return null;
     }
 
+    public Context getContext(){
+        return this;
+    }
 }

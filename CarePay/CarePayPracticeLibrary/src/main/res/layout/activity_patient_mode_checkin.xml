@@ -13,7 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight=".4"
-        android:background="@drawable/background_default"
+        android:background="@color/colorPrimary"
         android:orientation="vertical"
         android:paddingEnd="@dimen/dimen_5dp"
         android:paddingStart="@dimen/checkin_main_panel_start_padding">
@@ -52,7 +52,7 @@
                 android:layout_width="@dimen/home_logo_width"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/home_logo"
-                android:src="@drawable/checkin_cp_logo_aligned_right" />
+                android:src="@drawable/cp_logo" />
         </LinearLayout>
 
         <FrameLayout
