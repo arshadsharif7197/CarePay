@@ -32,7 +32,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormMetadataDTO;
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
-import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormAppoPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormAppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormPayloadDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
@@ -55,12 +54,12 @@ import java.util.Locale;
 public class PatientModeCheckinActivity extends BasePracticeActivity implements IFragmentCallback,
                                                                                 DemographicsReviewLabelsHolder {
 
-    public final static int HANDLE_GENERIC_FRAGMENT = 0;
-    public final static int HANDLE_CHECKIN_INTAKE_FORM1_FRAGMENT = 1;
-    public final static int HANDLE_CHECKIN_DEMOGRAPHICS_REV_FRAGMENT = 2;
-    public final static int HANDLE_RESPONSIBILITY_FRAGMENT = 3;
-    public final static int HANDLE_CHECKIN_CONSENT_FORM_FRAGMENT = 4;
-    public final static int HANDLE_NEXT_CHECKIN_CONSENT_FORM_FRAGMENT = 5;
+    private static final int HANDLE_GENERIC_FRAGMENT = 0;
+    private static final int HANDLE_CHECKIN_INTAKE_FORM1_FRAGMENT = 1;
+    private static final int HANDLE_CHECKIN_DEMOGRAPHICS_REV_FRAGMENT = 2;
+    private static final int HANDLE_RESPONSIBILITY_FRAGMENT = 3;
+    private static final int HANDLE_CHECKIN_CONSENT_FORM_FRAGMENT = 4;
+    private static final int HANDLE_NEXT_CHECKIN_CONSENT_FORM_FRAGMENT = 5;
 
     public final static  int SUBFLOW_DEMOGRAPHICS_INS = 0;
     public final static  int SUBFLOW_CONSENT          = 1;
@@ -68,7 +67,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     public final static  int SUBFLOW_PAYMENTS         = 3;
     private static final int NUM_OF_SUBFLOWS          = 4;
     private              int numIntakeForms           = 3;
-    private final static int numConsentForms          = 3;
+    private static final int numConsentForms          = 3;
 
     private DemographicDTO  demographicDTO;
     private CarePayTextView backButton;
@@ -117,15 +116,15 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     private FlowStateInfo currentFlowStateInfo;
 
     private static class MyHandler extends Handler {
-        private final WeakReference<PatientModeCheckinActivity> mActivity;
+        private final WeakReference<PatientModeCheckinActivity> weakActivity;
 
         MyHandler(PatientModeCheckinActivity activity) {
-            mActivity = new WeakReference<>(activity);
+            weakActivity = new WeakReference<>(activity);
         }
 
         @Override
         public void handleMessage(Message message) {
-            PatientModeCheckinActivity activity = mActivity.get();
+            PatientModeCheckinActivity activity = weakActivity.get();
             if (null == activity) {
                 return;
             }
