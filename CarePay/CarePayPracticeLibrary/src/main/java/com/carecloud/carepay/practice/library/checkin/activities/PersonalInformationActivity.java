@@ -274,17 +274,17 @@ public class PersonalInformationActivity extends BasePracticeActivity {
 
         genderButton.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
 
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable editable) {
                 String genderValue = genderButton.getText().toString();
                 isEmptyGender = genderValue.equalsIgnoreCase(labelsDTO.getChooseGenderLabel());
                 enableFindMyAppointmentButton();
@@ -314,7 +314,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
      */
     View.OnClickListener selectGenderButtonListener = new View.OnClickListener(){
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
             selectGender();
         }
     };
