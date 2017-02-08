@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.signin;
 
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -37,6 +38,7 @@ import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -61,17 +63,19 @@ public class SigninActivity extends BasePracticeActivity {
     WorkflowServiceCallback signinCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
             signInButton.setClickable(true);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             signInButton.setClickable(true);
             SystemUtil.showDefaultFailureDialog(SigninActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
@@ -80,17 +84,19 @@ public class SigninActivity extends BasePracticeActivity {
     WorkflowServiceCallback signinPatientModeAppointmentsCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
             signInButton.setClickable(true);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             signInButton.setClickable(true);
             SystemUtil.showDefaultFailureDialog(SigninActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
@@ -117,11 +123,12 @@ public class SigninActivity extends BasePracticeActivity {
     WorkflowServiceCallback signinPatientModeCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             Map<String, String> queryMap = new HashMap<>();
 
             Gson gson = new Gson();
@@ -140,11 +147,13 @@ public class SigninActivity extends BasePracticeActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             signInButton.setClickable(true);
             SystemUtil.showDefaultFailureDialog(SigninActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
     CognitoActionCallback cognitoActionCallback = new CognitoActionCallback() {
         @Override
         public void onLoginSuccess() {
@@ -366,6 +375,7 @@ public class SigninActivity extends BasePracticeActivity {
 
     }
 
+
     private boolean checkEmail() {
         String email = emailEditText.getText().toString();
         isEmptyEmail = StringUtil.isNullOrEmpty(email);
@@ -541,4 +551,5 @@ public class SigninActivity extends BasePracticeActivity {
         }
 
     }
+
 }

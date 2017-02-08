@@ -30,6 +30,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderM
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeDialog;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -138,11 +139,13 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
     private WorkflowServiceCallback scheduleResourcesCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
+            ProgressDialogUtil.getInstance(getContext()).show();
             appointmentProgressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             Gson gson = new Gson();
             resourcesToScheduleModel = gson.fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
 
@@ -176,6 +179,7 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             SystemUtil.showDefaultFailureDialog(getActivity());
             appointmentProgressBar.setVisibility(View.GONE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
