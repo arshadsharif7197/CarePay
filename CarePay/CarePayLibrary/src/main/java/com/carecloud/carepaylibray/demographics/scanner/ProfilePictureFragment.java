@@ -21,6 +21,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsuranc
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -40,38 +41,16 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
 
     private static String LOG_TAG = ProfilePictureFragment.class.getSimpleName();
     private ImageCaptureHelper imageCaptureHelper;
-    private Button buttonChangeCurrentPhoto;
-    private DemographicPersDetailsPayloadDTO model;
     private String recaptureCaption;
+    private DemographicPersDetailsPayloadDTO demographicPersDetailsPayloadDTO;
     private DemographicLabelsDTO globalLabelsDTO;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // set label for capture button
-        Activity activity = getActivity();
-        DemographicLabelsDTO labelsMetaDTO = null;
-        if (activity instanceof DemographicsLabelsHolder) {
-            labelsMetaDTO = ((DemographicsLabelsHolder) getActivity()).getLabelsDTO();
-        }
-
-        recaptureCaption = labelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : labelsMetaDTO.getDemographicsProfileReCaptureCaption();
-
         View view = inflater.inflate(getLayoutRes(), container, false);
-        ImageView imageViewDetailsImage = (ImageView) view.findViewById(R.id.DetailsProfileImage);
-        imageCaptureHelper = new ImageCaptureHelper(getActivity(), imageViewDetailsImage, globalLabelsDTO);
-        buttonChangeCurrentPhoto = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
-        buttonChangeCurrentPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                selectImage(imageCaptureHelper, ImageCaptureHelper.CameraType.DEFAULT_CAMERA);
-            }
-        });
-        String captureCaption = labelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : labelsMetaDTO.getDemographicsProfileCaptureCaption();
-        buttonChangeCurrentPhoto.setText(captureCaption);
 
-
-        populateViewsFromModel();
+        populateViewsFromModel(view);
 
         return view;
     }
@@ -86,18 +65,46 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
     }
 
     @Override
-    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner) {
+    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner, Bitmap bitmap) {
         // save the image as base64 in the model
         if (bitmap != null) {
             String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
-            model.setProfilePhoto(imageAsBase64);
+            demographicPersDetailsPayloadDTO.setProfilePhoto(imageAsBase64);
         }
     }
 
     @Override
-    public void populateViewsFromModel() {
-        if (model != null) {
-            String profilePicURL = model.getProfilePhoto();
+    public void populateViewsFromModel(View view) {
+        // set label for capture button
+        Activity activity = getActivity();
+        DemographicLabelsDTO labelsMetaDTO = null;
+        if (activity instanceof DemographicsLabelsHolder) {
+            labelsMetaDTO = ((DemographicsLabelsHolder) getActivity()).getLabelsDTO();
+        }
+
+        if (null == labelsMetaDTO) {
+            labelsMetaDTO = new DemographicLabelsDTO();
+        }
+
+        recaptureCaption = labelsMetaDTO.getDemographicsProfileReCaptureCaption();
+
+        ImageView imageViewDetailsImage = (ImageView) view.findViewById(R.id.DetailsProfileImage);
+        imageCaptureHelper = new ImageCaptureHelper(getActivity(), imageViewDetailsImage, globalLabelsDTO);
+
+        Button buttonChangeCurrentPhoto = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
+        buttonChangeCurrentPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectImage(imageCaptureHelper, ImageCaptureHelper.CameraType.DEFAULT_CAMERA);
+            }
+        });
+        String captureCaption = labelsMetaDTO.getDemographicsProfileCaptureCaption();
+        buttonChangeCurrentPhoto.setText(captureCaption);
+
+        demographicPersDetailsPayloadDTO = DtoHelper.getConvertedDTO(DemographicPersDetailsPayloadDTO.class, getArguments());
+
+        if (demographicPersDetailsPayloadDTO != null) {
+            String profilePicURL = demographicPersDetailsPayloadDTO.getProfilePhoto();
             if (!StringUtil.isNullOrEmpty(profilePicURL)) {
                 try {
                     URL url = new URL(profilePicURL);
@@ -124,6 +131,7 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
 
     @Override
     protected void setTypefaces(View view) {
+        Button buttonChangeCurrentPhoto = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
         setGothamRoundedMediumTypeface(getActivity(), buttonChangeCurrentPhoto);
     }
 
@@ -131,18 +139,15 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // change the caption of the button
-        if (bitmap != null) {
+        if (hasImageChanged) {
+            Button buttonChangeCurrentPhoto = (Button) findViewById(R.id.changeCurrentPhotoButton);
             buttonChangeCurrentPhoto.setText(recaptureCaption);
         }
     }
 
     @Override
-    public int getImageShape() {
-        return ImageCaptureHelper.ROUND_IMAGE;
-    }
-
-    public void setPayloadDTO(DemographicPersDetailsPayloadDTO model) {
-        this.model = model;
+    public ImageCaptureHelper.ImageShape getImageShape() {
+        return ImageCaptureHelper.ImageShape.CIRCULAR;
     }
 
     public void setGlobalLabelsDTO(DemographicLabelsDTO globalLabelsDTO) {

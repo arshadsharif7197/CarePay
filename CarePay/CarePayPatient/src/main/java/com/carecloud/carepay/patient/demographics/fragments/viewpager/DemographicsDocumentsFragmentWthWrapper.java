@@ -50,7 +50,6 @@ import java.util.List;
  */
 public class DemographicsDocumentsFragmentWthWrapper extends Fragment {
 
-    private FragmentManager                        fm;
     private View                                   view;
     private ScrollView                             mainScrollView;
     private FrameLayout                            idCardContainer;
@@ -308,7 +307,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends Fragment {
 
     private void setSwitch() {
         // set the switch
-        fm.executePendingTransactions();
+        getChildFragmentManager().executePendingTransactions();
         switchCompat = (SwitchCompat) view.findViewById(R.id.demographicsDocumentsInsuranceSwitch);
 
         switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
