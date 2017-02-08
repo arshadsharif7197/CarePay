@@ -594,11 +594,11 @@ public class AddNewCreditCardFragment extends Fragment implements
     /**
      * SHMRK-1843
      *
-     * 1. 'Set as default' checkbox should be enabled once when 'Save card on file' check box is enabled.
+     * 1. 'Set as default' checkbox should be enabled onle when 'Save card on file' check box is enabled.
      *
      * 2. If both 'Set as default' and 'Save card on file' checkboxes were checked, then
      * un-checking 'Save card on file' checkbox should also un-check 'Set as default' checkbox.
-    */
+     */
     private View.OnClickListener saveCardSelectionListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
