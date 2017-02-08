@@ -174,7 +174,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         billingInformationDTO.setSameAsPatient(useProfileAddressCheckBox.isChecked());
         creditCardsPayloadDTO.setCardNumber(getLastFour());
         creditCardsPayloadDTO.setNameOnCard(nameOnCardEditText.getText().toString().trim());
-        creditCardsPayloadDTO.setCvv(Integer.parseInt(verificationCodeEditText.getText().toString().trim()));
+        creditCardsPayloadDTO.setCvv(verificationCodeEditText.getText().toString().trim());
         String expiryDate = pickDateTextView.getText().toString();
         expiryDate = expiryDate.substring(0, 2) + expiryDate.substring(expiryDate.length() - 2);
         creditCardsPayloadDTO.setExpireDt(expiryDate);
@@ -267,15 +267,6 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         queryMap.put("patient_id", intakePaymentModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getPatientId());
         TransitionDTO transitionDTO = intakePaymentModel.getPaymentsMetadata().getPaymentsTransitions().getAddCreditCard();
         String body = gson.toJson(creditCardsPayloadDTO);
-        JSONObject newCCBody;
-        try {
-            newCCBody = new JSONObject(body);
-            newCCBody.remove("cvv");
-            newCCBody.put("cvv",creditCardsPayloadDTO.getCvv()+"");
-            body = newCCBody.toString();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
         WorkflowServiceHelper.getInstance().execute(transitionDTO, addNewCreditCardCallback, body, queryMap, WorkflowServiceHelper.getPreferredLanguageHeader());
     }
 
@@ -292,7 +283,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             creditCard.put("card_number", creditCardsPayloadDTO.getCardNumber());
             creditCard.put("name_on_card", creditCardsPayloadDTO.getNameOnCard());
             creditCard.put("expire_dt", creditCardsPayloadDTO.getExpireDt());
-            creditCard.put("cvv", creditCardsPayloadDTO.getCvv()+"");
+            creditCard.put("cvv", creditCardsPayloadDTO.getCvv());
             creditCard.put("papi_pay", true);
             creditCard.put("token", creditCardsPayloadDTO.getToken());
             Gson gson = new Gson();
