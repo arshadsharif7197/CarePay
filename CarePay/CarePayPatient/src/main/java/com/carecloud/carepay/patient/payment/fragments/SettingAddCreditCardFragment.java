@@ -640,7 +640,7 @@ public class SettingAddCreditCardFragment extends Fragment implements
         billingInformationDTO.setSameAsPatient(useProfileAddressCheckBox.isChecked());
         creditCardsPayloadDTO.setCardNumber(getLastFour());
         creditCardsPayloadDTO.setNameOnCard(nameOnCardEditText.getText().toString().trim());
-        creditCardsPayloadDTO.setCvv(Integer.parseInt(verificationCodeEditText.getText().toString().trim()));
+        creditCardsPayloadDTO.setCvv(verificationCodeEditText.getText().toString().trim());
         String expiryDate = pickDateTextView.getText().toString();
         expiryDate = expiryDate.substring(0, 2) + expiryDate.substring(expiryDate.length() - 2);
         creditCardsPayloadDTO.setExpireDt(expiryDate);
