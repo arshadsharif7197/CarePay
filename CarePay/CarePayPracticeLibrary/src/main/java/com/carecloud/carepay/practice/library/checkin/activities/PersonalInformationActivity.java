@@ -1,7 +1,6 @@
 package com.carecloud.carepay.practice.library.checkin.activities;
 
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -13,10 +12,12 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.practice.library.signin.dtos.GenderOptionDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeLabelsDTO;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
@@ -34,8 +35,10 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.joda.time.LocalDate;
@@ -50,8 +53,11 @@ public class PersonalInformationActivity extends BasePracticeActivity {
     private boolean isEmptyLastName = true;
     private boolean isEmptyPhoneNumber = true;
     private boolean isEmptyDate = true;
+    private boolean isEmptyGender = true;
     private SigninPatientModeDTO signinPatientModeDTO;
     private SigninPatientModeLabelsDTO labelsDTO;
+    private String[] gendersArray;
+    private CarePayButton genderButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +127,15 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         selectDateButton.setText(labelsDTO.getPersonalInfoSelect());
         selectDateButton.setOnClickListener(selectDateButtonListener);
 
+
+        CarePayTextView genderTextView = (CarePayTextView) findViewById(R.id.genderTextView);
+        genderTextView.setText(signinPatientModeDTO.getMetadata().getLoginDataModels().getPersonalInfo().getProperties().getGender().getLabel());
+
+        genderButton =(CarePayButton) findViewById(R.id.selectGenderButton);
+        genderButton.setText(labelsDTO.getChooseGenderLabel());
+        genderButton.setOnClickListener(selectGenderButtonListener);
+
+
         findMyAppointmentButton = (CarePayButton)
                 findViewById(R.id.findMyAppointmentButton);
         findMyAppointmentButton.setText(labelsDTO.getPersonalInfoFindMyAppointments());
@@ -137,6 +152,13 @@ public class PersonalInformationActivity extends BasePracticeActivity {
 
         ImageView homeImageView = (ImageView) findViewById(R.id.homeImageView);
         homeImageView.setOnClickListener(homeImageViewListener);
+
+        List<GenderOptionDTO> options = signinPatientModeDTO.getMetadata().getLoginDataModels().getPersonalInfo().getProperties().getGender().getOptions();
+        List<String> genders = new ArrayList<>();
+        for (GenderOptionDTO o : options) {
+            genders.add(o.getLabel());
+        }
+        gendersArray = genders.toArray(new String[0]);
     }
 
     /**
@@ -249,13 +271,34 @@ public class PersonalInformationActivity extends BasePracticeActivity {
                 enableFindMyAppointmentButton();
             }
         });
+
+        genderButton.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String genderValue = genderButton.getText().toString();
+                isEmptyGender = genderValue.equalsIgnoreCase(labelsDTO.getChooseGenderLabel());
+                enableFindMyAppointmentButton();
+
+            }
+        });
+
     }
 
     /**
      * Method to enable or disable Find My Appointment button
      */
     private void enableFindMyAppointmentButton() {
-        boolean areAllNonEmpty = !(isEmptyFirstName || isEmptyLastName || isEmptyPhoneNumber || isEmptyDate);
+        boolean areAllNonEmpty = !(isEmptyFirstName || isEmptyLastName || isEmptyPhoneNumber || isEmptyDate || isEmptyGender);
 
         findMyAppointmentButton.setEnabled(areAllNonEmpty);
         if (!findMyAppointmentButton.isEnabled()) {
@@ -264,6 +307,18 @@ public class PersonalInformationActivity extends BasePracticeActivity {
             findMyAppointmentButton.setAlpha(1);
         }
     }
+
+
+    /**
+     * Listener to select gender
+     */
+    View.OnClickListener selectGenderButtonListener = new View.OnClickListener(){
+        @Override
+        public void onClick(View v) {
+            selectGender();
+        }
+    };
+
 
     /**
      * Click listener for go back button
@@ -274,6 +329,23 @@ public class PersonalInformationActivity extends BasePracticeActivity {
             onBackPressed();
         }
     };
+
+
+    /**
+     * Selects gender
+     */
+    public void selectGender(){
+        SystemUtil.showChooseDialog(this,
+                gendersArray, labelsDTO.getGenderLabel(), labelsDTO.getGenderCancelLabel(),
+                genderButton,
+                new SystemUtil.OnClickItemCallback() {
+                    @Override
+                    public void executeOnClick(TextView destination, String selectedOption) {
+                        genderButton.setText(selectedOption);
+                    }
+                });
+    }
+
 
     /**
      * Click listener for select date button
@@ -343,6 +415,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         queryMap.put("phone", phoneNumberEditText.getText().toString());
         queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
         queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+        queryMap.put("gender",  genderButton.getText().toString());
         TransitionDTO transitionDTO;
         transitionDTO = signinPatientModeDTO.getMetadata().getLinks().getPersonalInfo();
         WorkflowServiceHelper.getInstance().execute(transitionDTO, findMyAppointmentsCallback, queryMap);
