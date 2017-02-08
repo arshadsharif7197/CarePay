@@ -193,7 +193,7 @@
                     android:layout_marginRight="@dimen/dimen_14dp"
                     android:background="@color/transparent_apt"
                     android:textAllCaps="false"
-                    android:textColor="@color/bright_cerulean"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/text_size_16sp"
                     app:customAssetFont="proxima_nova_semi_bold" />
             </RelativeLayout>
