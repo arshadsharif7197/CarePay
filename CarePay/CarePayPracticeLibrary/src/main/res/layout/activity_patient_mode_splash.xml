@@ -6,7 +6,7 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@drawable/background_default"
+              android:background="@color/colorPrimary"
               android:orientation="vertical"
               tools:context="com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity">
 
@@ -116,7 +116,7 @@
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
-        <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/getstartedTextview"
             android:layout_width="@dimen/patient_splash_button_width"
             android:layout_height="@dimen/patient_splash_button_height"
@@ -124,6 +124,7 @@
             android:gravity="center"
             android:includeFontPadding="false"
             android:textColor="@color/white"
+            app:customAssetFont="gotham_rounded_medium"
             android:textSize="@dimen/home_alert_font_size"/>
     </LinearLayout>
 

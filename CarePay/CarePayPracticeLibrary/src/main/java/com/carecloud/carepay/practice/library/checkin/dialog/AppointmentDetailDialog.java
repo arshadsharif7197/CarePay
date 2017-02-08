@@ -185,7 +185,7 @@ public class AppointmentDetailDialog extends Dialog {
         bgShapePaymentButton.setColor(ContextCompat.getColor(context, R.color.yellowGreen));
 
         GradientDrawable bgShapeAssistButton = (GradientDrawable) assistButton.getBackground();
-        bgShapeAssistButton.setColor(ContextCompat.getColor(context, R.color.bright_cerulean));
+        bgShapeAssistButton.setColor(ContextCompat.getColor(context, R.color.colorPrimary));
 
         GradientDrawable bgShapePageButton = (GradientDrawable) pageButton.getBackground();
         bgShapePageButton.setColor(ContextCompat.getColor(context, R.color.rose_madder));
