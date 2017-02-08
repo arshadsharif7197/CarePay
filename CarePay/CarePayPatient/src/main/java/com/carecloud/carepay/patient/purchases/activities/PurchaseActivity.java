@@ -1,25 +1,21 @@
-package com.carecloud.carepay.patient.purchase.activities;
+package com.carecloud.carepay.patient.purchases.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.purchase.fragments.PurchaseFragment;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
+import com.carecloud.carepay.patient.purchases.fragments.PurchaseFragment;
 
 /**
  * Created by lmenendez on 2/8/17.
  */
 
 public class PurchaseActivity extends MenuPatientActivity {
-
-    private TextView noPurchaseTitle, noPurchaseDesc;
-    private View noPurchaseLayout;
 
     @Override
     public void onCreate(Bundle icicle){

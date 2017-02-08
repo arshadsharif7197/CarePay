@@ -74,7 +74,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity" /></activity>
         <activity android:name=".notification.activities.NotificationActivity" />
-        <activity android:name=".purchase.activities.PurchaseActivity"/>
+        <activity android:name=".purchases.activities.PurchaseActivity"/>
     </application>
 
 </manifest>

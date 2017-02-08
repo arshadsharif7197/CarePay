@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.Purchase.fragments;
+package com.carecloud.carepay.patient.purchases.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,7 +15,8 @@ import com.carecloud.carepay.patient.R;
 
 public class PurchaseFragment extends Fragment {
 
-    private TextView noPurchaseTitle, noPurchaseDesc;
+    private TextView noPurchaseTitle;
+    private TextView noPurchaseDesc;
     private View noPurchaseLayout;
 
     @Override
