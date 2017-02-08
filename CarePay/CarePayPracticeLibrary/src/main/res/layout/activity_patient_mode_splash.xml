@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout android:id="@+id/activity_patient_mode_splash"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/colorPrimary"
-              android:orientation="vertical"
-              tools:context="com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_patient_mode_splash"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
+    tools:context="com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -27,31 +27,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:src="@drawable/icn_lock_patient"/>
+                android:src="@drawable/icn_lock_patient" />
 
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"/>
+                android:layout_weight="1" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/home_alert_margin_start"
+            <Spinner
+                android:id="@+id/splashPatientLangSpinner"
+                android:layout_width="@dimen/home_spinner_width"
+                android:layout_height="@dimen/home_spinner_height"
                 android:background="@drawable/bg_blue_overlay"
-                android:paddingEnd="4dp"
-                android:layout_gravity="end">
-
-                <Spinner
-                    android:id="@+id/splashPatientLangSpinner"
-                    android:layout_width="@dimen/home_spinner_width"
-                    android:layout_height="@dimen/home_spinner_height"
-                    android:paddingEnd="@dimen/home_spinner_padding_righ_left"
-                    android:paddingStart="@dimen/home_spinner_padding_righ_left"
-                    android:background="@drawable/bg_blue_overlay"/>
-
-            </LinearLayout>
-
+                android:paddingEnd="@dimen/home_spinner_padding_righ_left"
+                android:paddingStart="@dimen/home_spinner_padding_righ_left" />
         </LinearLayout>
 
         <ImageView
@@ -60,14 +49,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/home_logo_margin_top"
-            android:src="@drawable/cp_logo"/>
-
+            android:src="@drawable/cp_logo" />
     </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".35"/>
+        android:layout_weight=".35" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -79,13 +67,13 @@
             android:id="@+id/practicelogo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/checkin_patient_pic_rounded_border"/>
+            android:src="@drawable/checkin_patient_pic_rounded_border" />
     </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".07"/>
+        android:layout_weight=".07" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -102,13 +90,13 @@
             android:hint="Welcome"
             android:textColor="@color/white"
             android:textSize="@dimen/signin_title_textsize"
-            app:customAssetFont="gotham_rounded_medium"/>
+            app:customAssetFont="gotham_rounded_medium" />
     </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".06"/>
+        android:layout_weight=".06" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -124,13 +112,13 @@
             android:gravity="center"
             android:includeFontPadding="false"
             android:textColor="@color/white"
-            app:customAssetFont="gotham_rounded_medium"
-            android:textSize="@dimen/home_alert_font_size"/>
+            android:textSize="@dimen/home_alert_font_size"
+            app:customAssetFont="gotham_rounded_medium" />
     </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".52"/>
+        android:layout_weight=".52" />
 
 </LinearLayout>
