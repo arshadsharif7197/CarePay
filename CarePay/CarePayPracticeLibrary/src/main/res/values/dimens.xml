@@ -101,8 +101,8 @@
     <dimen name="key_border_width">1dp</dimen>
     <dimen name="button_padding">2dp</dimen>
     <dimen name="button_margin_top">30dp</dimen>
-    <dimen name="pin_header_text_size">29sp</dimen>
-    <dimen name="pin_sub_header_text_size">19sp</dimen>
+    <dimen name="pin_header_text_size">36sp</dimen>
+    <dimen name="pin_sub_header_text_size">22sp</dimen>
     <dimen name="pin_sub_edit_text_size">50sp</dimen>
     <dimen name="button_pin_text_size">38sp</dimen>
     <dimen name="button_delete_key_width">40dp</dimen>

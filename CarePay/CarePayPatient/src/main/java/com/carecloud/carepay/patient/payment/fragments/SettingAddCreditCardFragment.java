@@ -98,25 +98,25 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
     private WorkflowServiceCallback addNewCreditCardCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getActivity()).dismiss();
             Gson gson = new Gson();
             DemographicsSettingsDTO removeCreditCardResponseDTO = gson.fromJson(workflowDTO.toString(),
                     DemographicsSettingsDTO.class);
             demographicsSettingsDTO.getPayload().setPatientCreditCards(removeCreditCardResponseDTO.getPayload()
                     .getPatientCreditCards());
             ((DemographicsSettingsActivity) getActivity()).onCreditCardOperation(demographicsSettingsDTO);
-            ProgressDialogUtil.getInstance(getActivity()).dismiss();
             getActivity().onBackPressed();
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showDefaultFailureDialog(getActivity());
             ProgressDialogUtil.getInstance(getActivity()).dismiss();
+            SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

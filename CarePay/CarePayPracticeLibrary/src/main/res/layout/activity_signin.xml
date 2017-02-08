@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
-    android:background="@color/colorPrimary"
     android:orientation="vertical">
 
     <FrameLayout
@@ -23,8 +23,8 @@
                 android:id="@+id/goBackButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_blue_overlay"
                 android:layout_marginTop="@dimen/dimen_20dp"
+                android:background="@drawable/bg_blue_overlay"
                 android:drawableLeft="@drawable/icn_arrow_left"
                 android:drawablePadding="@dimen/dimen_10dp"
                 android:paddingLeft="@dimen/dimen_15dp"
@@ -39,26 +39,15 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".5" />
 
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="51dp"
+            <Spinner
+                android:id="@+id/signinLangSpinner"
+                android:layout_width="@dimen/home_spinner_width"
+                android:layout_height="@dimen/home_spinner_height"
                 android:layout_marginTop="21.4dp"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:paddingEnd="4dp"
-                android:paddingStart="4dp">
-
-                <Spinner
-                    android:id="@+id/signinLangSpinner"
-                    android:layout_width="@dimen/home_spinner_width"
-                    android:layout_height="@dimen/home_spinner_height"
-                    android:paddingEnd="@dimen/home_spinner_padding_righ_left"
-                    android:paddingStart="@dimen/home_spinner_padding_righ_left"
-                    android:background="@drawable/bg_blue_overlay"
-                    android:visibility="gone" />
-            </LinearLayout>
-
+                android:background="@drawable/bg_blue_overlay"
+                android:paddingEnd="@dimen/home_spinner_padding_righ_left"
+                android:paddingStart="@dimen/home_spinner_padding_righ_left"
+                android:visibility="gone" />
         </LinearLayout>
 
         <ImageView
@@ -78,8 +67,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
         android:layout_marginTop="@dimen/dimen_130dp"
+        android:gravity="center_horizontal"
         android:orientation="horizontal">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -130,20 +119,20 @@
 
         </android.support.design.widget.TextInputLayout>
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                android:id="@+id/signinButton"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:layout_marginTop="31dp"
-                android:layout_marginEnd="2dp"
-                android:layout_marginStart="2dp"
-                android:background="@drawable/bg_silver_overlay"
-                android:textSize="@dimen/text_size_22sp"
-                app:customAssetFont="gotham_rounded_medium" />
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/signinButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginEnd="2dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="31dp"
+            android:background="@drawable/bg_silver_overlay"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_22sp"
+            app:customAssetFont="gotham_rounded_medium" />
 
-        </LinearLayout>
+    </LinearLayout>
 
 
     <ImageView
@@ -153,10 +142,12 @@
         android:layout_gravity="center"
         android:layout_marginTop="-48dp"
         android:src="@drawable/home_shadow" />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="4" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
