@@ -12,11 +12,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:visibility="gone"
         android:background="@color/transparent_apt"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
-        <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/headerLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -24,17 +24,17 @@
             android:background="@color/transparent_apt"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="@dimen/pin_header_text_size"/>
+            android:textSize="@dimen/pin_header_text_size"
+            app:customAssetFont="gotham_rounded_medium" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/subHeaderLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:textColor="@color/white"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/pin_sub_header_text_size"
-            app:customAssetFont="proxima_nova_regular"
-            />
+            app:customAssetFont="proxima_nova_regular" />
 
         <EditText
             android:id="@+id/pinEditText"
@@ -42,14 +42,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:background="@android:color/transparent"
+            android:clickable="false"
             android:cursorVisible="false"
+            android:focusable="false"
             android:inputType="numberPassword"
+            android:maxLength="4"
             android:textColor="@color/white"
             android:textCursorDrawable="@null"
-            android:focusable="false"
-            android:clickable="false"
-            android:textSize="@dimen/button_pin_text_size"
-            android:maxLength="4"/>
+            android:textSize="@dimen/button_pin_text_size" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -58,13 +58,12 @@
             android:gravity="center"
             android:orientation="vertical">
 
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/dialog_rounded_border"
-                android:padding="@dimen/button_padding"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="@dimen/button_padding">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -77,7 +76,7 @@
                         android:layout_width="@dimen/button_height"
                         android:layout_height="@dimen/button_width"
                         android:layout_marginBottom="@dimen/key_border_width"
-                        android:layout_marginRight="@dimen/key_border_width"
+                        android:layout_marginEnd="@dimen/key_border_width"
                         android:background="@drawable/button_pin_selector"
                         android:text="1"
                         android:textColor="@color/charcoal"
@@ -88,7 +87,7 @@
                         android:layout_width="@dimen/button_height"
                         android:layout_height="@dimen/button_width"
                         android:layout_marginBottom="@dimen/key_border_width"
-                        android:layout_marginRight="@dimen/key_border_width"
+                        android:layout_marginEnd="@dimen/key_border_width"
                         android:background="@drawable/button_pin_selector"
                         android:text="2"
                         android:textColor="@color/charcoal"
@@ -103,9 +102,7 @@
                         android:text="3"
                         android:textColor="@color/charcoal"
                         android:textSize="@dimen/button_pin_text_size" />
-
                 </LinearLayout>
-
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -118,7 +115,7 @@
                         android:layout_width="@dimen/button_height"
                         android:layout_height="@dimen/button_width"
                         android:layout_marginBottom="@dimen/key_border_width"
-                        android:layout_marginRight="@dimen/key_border_width"
+                        android:layout_marginEnd="@dimen/key_border_width"
                         android:background="@drawable/button_pin_selector"
                         android:text="4"
                         android:textColor="@color/charcoal"
@@ -129,7 +126,7 @@
                         android:layout_width="@dimen/button_height"
                         android:layout_height="@dimen/button_width"
                         android:layout_marginBottom="@dimen/key_border_width"
-                        android:layout_marginRight="@dimen/key_border_width"
+                        android:layout_marginEnd="@dimen/key_border_width"
                         android:background="@drawable/button_pin_selector"
                         android:text="5"
                         android:textColor="@color/charcoal"
@@ -144,7 +141,6 @@
                         android:text="6"
                         android:textColor="@color/charcoal"
                         android:textSize="@dimen/button_pin_text_size" />
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -158,7 +154,7 @@
                         android:layout_width="@dimen/button_height"
                         android:layout_height="@dimen/button_width"
                         android:layout_marginBottom="@dimen/key_border_width"
-                        android:layout_marginRight="@dimen/key_border_width"
+                        android:layout_marginEnd="@dimen/key_border_width"
                         android:background="@drawable/button_pin_selector"
                         android:text="7"
                         android:textColor="@color/charcoal"
@@ -169,7 +165,7 @@
                         android:layout_width="@dimen/button_height"
                         android:layout_height="@dimen/button_width"
                         android:layout_marginBottom="@dimen/key_border_width"
-                        android:layout_marginRight="@dimen/key_border_width"
+                        android:layout_marginEnd="@dimen/key_border_width"
                         android:background="@drawable/button_pin_selector"
                         android:text="8"
                         android:textColor="@color/charcoal"
@@ -184,7 +180,6 @@
                         android:text="9"
                         android:textColor="@color/charcoal"
                         android:textSize="@dimen/button_pin_text_size" />
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -197,7 +192,7 @@
                         android:id="@+id/pin_key_blank"
                         android:layout_width="@dimen/button_height"
                         android:layout_height="@dimen/button_width"
-                        android:layout_marginRight="@dimen/key_border_width"
+                        android:layout_marginEnd="@dimen/key_border_width"
                         android:background="@drawable/button_pin_selector"
                         android:text=""
                         android:textColor="@color/charcoal"
@@ -207,7 +202,7 @@
                         android:id="@+id/pin_key_zero"
                         android:layout_width="@dimen/button_height"
                         android:layout_height="@dimen/button_width"
-                        android:layout_marginRight="@dimen/key_border_width"
+                        android:layout_marginEnd="@dimen/key_border_width"
                         android:background="@drawable/button_pin_selector"
                         android:text="0"
                         android:textColor="@color/charcoal"
@@ -215,20 +210,20 @@
 
                     <LinearLayout
                         android:layout_width="@dimen/button_height"
+                        android:layout_height="@dimen/button_width"
                         android:layout_gravity="center"
-                        android:gravity="center"
                         android:background="@drawable/button_pin_selector"
-                        android:layout_height="@dimen/button_width">
+                        android:gravity="center">
 
                         <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
                             android:id="@+id/pin_key_clear"
                             android:layout_width="@dimen/button_delete_key_width"
                             android:layout_height="@dimen/button_delete_key_height"
                             android:layout_gravity="center"
-                            android:gravity="center"
-                            android:textColor="@color/bright_cerulean"
                             android:background="@drawable/ic_keyboard_delete"
-                            android:text="" />
+                            android:gravity="center"
+                            android:text=""
+                            android:textColor="@color/colorPrimary" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -246,11 +241,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:background="@color/transparent_apt"
-                    android:gravity="center_horizontal"
-                    android:textColor="@color/bright_cerulean" />
+                    android:background="@drawable/bg_primary_overlay"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/dimen_14dp"
+                    android:paddingEnd="@dimen/dimen_65dp"
+                    android:paddingStart="@dimen/dimen_65dp"
+                    android:paddingTop="@dimen/dimen_14dp"
+                    android:textColor="@color/white" />
             </LinearLayout>
         </LinearLayout>
-
     </LinearLayout>
 </ScrollView>
