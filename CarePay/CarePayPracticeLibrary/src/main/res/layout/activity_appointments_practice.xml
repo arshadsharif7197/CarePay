@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/dimen_25dp"
-    android:background="@drawable/background_default"
+    android:background="@color/colorPrimary"
     tools:context=".appointments.AppointmentsActivity">
 
     <TextView

@@ -41,6 +41,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.services.DemographicService;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -453,16 +454,18 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     WorkflowServiceCallback checkInCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             PracticeNavigationHelper.getInstance().navigateToWorkflow(CloverMainActivity.this, workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             findViewById(R.id.homeCheckinClickable).setEnabled(true);
             findViewById(R.id.homeAppointmentsClickable).setEnabled(true);
             SystemUtil.showDefaultFailureDialog(CloverMainActivity.this);
@@ -473,11 +476,12 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     WorkflowServiceCallback logOutCall = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             // log out previous user from Cognito
             CognitoAppHelper.getPool().getUser().signOut();
             CognitoAppHelper.setUser(null);
@@ -487,6 +491,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             SystemUtil.showDefaultFailureDialog(CloverMainActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -495,15 +500,18 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     WorkflowServiceCallback commonTransitionCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             PracticeNavigationHelper.getInstance().navigateToWorkflow(CloverMainActivity.this, workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             findViewById(R.id.homeCheckinClickable).setEnabled(true);
             findViewById(R.id.homeModeSwitchClickable).setEnabled(true);
             findViewById(R.id.homePaymentsClickable).setEnabled(true);
@@ -532,16 +540,19 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     WorkflowServiceCallback practiceModeCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
+            ProgressDialogUtil.getInstance(getContext()).show();
 
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             SystemUtil.showDefaultFailureDialog(CloverMainActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -606,4 +617,5 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         super.onBackPressed();
     }
+
 }

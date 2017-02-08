@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.checkin.activities;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -28,6 +29,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -349,11 +351,12 @@ public class PersonalInformationActivity extends BasePracticeActivity {
     WorkflowServiceCallback findMyAppointmentsCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             findMyAppointmentButton.setEnabled(true);
             Map<String, String> queryMap = new HashMap<>();
             TransitionDTO transitionDTO;
@@ -376,6 +379,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             findMyAppointmentButton.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(PersonalInformationActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
@@ -385,20 +389,23 @@ public class PersonalInformationActivity extends BasePracticeActivity {
     WorkflowServiceCallback patientModeAppointmentsCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             findMyAppointmentButton.setEnabled(true);
             PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             findMyAppointmentButton.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(PersonalInformationActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
 }

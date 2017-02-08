@@ -33,6 +33,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -372,11 +373,13 @@ public class AppointmentsListFragment extends Fragment {
     WorkflowServiceCallback pageRefreshCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
+            ProgressDialogUtil.getInstance(getContext()).show();
             appointmentProgressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             appointmentProgressBar.setVisibility(View.GONE);
             if (appointmentInfo != null) {
                 Gson gson = new Gson();
@@ -388,6 +391,7 @@ public class AppointmentsListFragment extends Fragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             appointmentProgressBar.setVisibility(View.GONE);
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
