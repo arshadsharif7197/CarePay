@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
@@ -43,6 +44,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
     private static TransitionDTO transitionAppointments;
     private static TransitionDTO transitionLogout;
 
+    protected ActionBarDrawerToggle toggle;
     protected TextView appointmentsDrawerUserIdTextView;
     protected NavigationView navigationView;
     protected DrawerLayout drawer;
@@ -52,7 +54,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
     protected void inflateDrawer() {
         setSupportActionBar(toolbar);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, com.carecloud.carepaylibrary.R.string.navigation_drawer_open, com.carecloud.carepaylibrary.R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
@@ -69,6 +71,17 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         practiceId = ApplicationPreferences.Instance.getPracticeId();
         practiceMgmt = ApplicationPreferences.Instance.getPracticeManagement();
     }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (toggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -110,8 +123,10 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
             }
         } else if (id == com.carecloud.carepaylibrary.R.id.nav_purchase) {
             Log.v(LOG_TAG, "Purchase");
+            navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_PURCHASE).setChecked(true);
         } else if (id == com.carecloud.carepaylibrary.R.id.nav_notification) {
             Log.v(LOG_TAG, "Notification");
+            navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_NOTIFICATION).setChecked(true);
         }
 
         //DrawerLayout drawer = (DrawerLayout) findViewById(com.carecloud.carepaylibrary.R.id.drawer_layout);
