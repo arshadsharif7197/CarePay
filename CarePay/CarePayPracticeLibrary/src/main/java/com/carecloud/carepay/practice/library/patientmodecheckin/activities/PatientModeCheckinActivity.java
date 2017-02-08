@@ -205,7 +205,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
      * @param fragment       The fragment
      * @param addToBackStack Whether to add the transaction to back-stack
      */
-    public void navigateToFragment(final Fragment fragment, final boolean addToBackStack) {
+  /*  public void navigateToFragment(final Fragment fragment, final boolean addToBackStack) {
         new Handler().post(new Runnable() {
             @Override
             public void run() {
@@ -218,6 +218,21 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
                 transaction.commitAllowingStateLoss();
             }
         });
+    }*/
+    /**
+     * Helper method to replace fragments
+     *
+     * @param fragment       The fragment
+     * @param addToBackStack Whether to add the transaction to back-stack
+     */
+     public void navigateToFragment(final Fragment fragment, final boolean addToBackStack) {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.replace(R.id.checkInContentHolderId, fragment, fragment.getClass().getSimpleName());
+        if (addToBackStack) {
+            transaction.addToBackStack(fragment.getClass().getName());
+        }
+        transaction.commitAllowingStateLoss();
     }
 
     /**
