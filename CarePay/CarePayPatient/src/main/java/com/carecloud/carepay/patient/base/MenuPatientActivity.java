@@ -1,6 +1,5 @@
 package com.carecloud.carepay.patient.base;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -124,9 +123,14 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         } else if (id == com.carecloud.carepaylibrary.R.id.nav_purchase) {
             Log.v(LOG_TAG, "Purchase");
             navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_PURCHASE).setChecked(true);
+            //Temporary link to landing Activity for blank purchase screen
+            PatientNavigationHelper.getInstance(this).navigateToWorkflow(PatientNavigationStateConstants.PURCHASE);
+
         } else if (id == com.carecloud.carepaylibrary.R.id.nav_notification) {
             Log.v(LOG_TAG, "Notification");
             navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_NOTIFICATION).setChecked(true);
+            //Temporary link to landing Activity for blank purchase screen
+            PatientNavigationHelper.getInstance(this).navigateToWorkflow(PatientNavigationStateConstants.NOTIFICATION);
         }
 
         //DrawerLayout drawer = (DrawerLayout) findViewById(com.carecloud.carepaylibrary.R.id.drawer_layout);

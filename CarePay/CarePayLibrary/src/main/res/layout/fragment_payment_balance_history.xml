@@ -1,16 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <android.support.design.widget.TabLayout
-        android:id="@+id/balance_history_tabs"
+              android:orientation="vertical" android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:textColor="@color/white"
-        app:tabMode="fixed"/>
-    <android.support.v4.view.ViewPager
-        android:id="@+id/historyPager"
+        android:layout_height="match_parent"
+        android:id="@+id/no_payment_layout"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/no_apt_placeholder_icon"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/icn_empty_state_payments"/>
+
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/no_payment_message_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/no_apt_message_title_margin_top"
+                android:gravity="center"
+                android:textColor="@color/textview_default_textcolor"
+                android:textSize="21sp"
+                app:customAssetFont="gotham_rounded_medium" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/no_payment_message_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/no_apt_message_desc_margin"
+                android:layout_marginStart="@dimen/no_apt_message_desc_margin"
+                android:layout_marginTop="@dimen/no_apt_message_desc_margin_top"
+                android:gravity="center"
+                android:textColor="@color/optionl_gray"
+                android:textSize="13sp"
+                app:customAssetFont="proxima_nova_regular" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_60dp"/>
+        </LinearLayout>
+
+
+    </FrameLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/payments_pager_layout">
+        <android.support.design.widget.TabLayout
+            android:id="@+id/balance_history_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/white"
+            app:tabMode="fixed"/>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/historyPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 </LinearLayout>

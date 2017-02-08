@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.adapter.PaymentBalancesAdapter;
@@ -42,6 +43,10 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
     private ProgressBar progressBar;
     private RecyclerView historyRecyclerView;
     private double total;
+    private EmptyPaymentListCallback emptyPaymentListCallback;
+    private int section_number;
+    private View noPaymentsLayout;
+    private TextView noPaymentTitle, noPaymentDesc;
 
     public static PaymentHistoryFragment newInstance(int sectionNumber, PaymentsModel paymentDTO) {
         PaymentHistoryFragment fragment = new PaymentHistoryFragment();
@@ -64,14 +69,21 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
         String paymentsDTOString = getArguments().getString(CarePayConstants.INTAKE_BUNDLE);
         paymentDTO = gson.fromJson(paymentsDTOString, PaymentsModel.class);
         historyRecyclerView = (RecyclerView) rootView.findViewById(R.id.history_recycler_view);
+        noPaymentsLayout = rootView.findViewById(R.id.no_payment_layout);
+        noPaymentTitle = (TextView) rootView.findViewById(com.carecloud.carepaylibrary.R.id.no_payment_message_title);
+        noPaymentDesc = (TextView) rootView.findViewById(com.carecloud.carepaylibrary.R.id.no_payment_message_desc);
 
+        noPaymentTitle.setText("No payments yet");
+        noPaymentDesc.setText("We'll list all your payments here");
+
+        hideNoPaymentsLayout();
         setUpRecyclerView();
 
         return rootView;
     }
 
     private void setUpRecyclerView() {
-        int section_number = getArguments().getInt(CarePayConstants.TAB_SECTION_NUMBER);
+        section_number = getArguments().getInt(CarePayConstants.TAB_SECTION_NUMBER);
         Map<String, String> queryString = new HashMap<>();
         PaymentsLinksDTO paymentsLinks = paymentDTO.getPaymentsMetadata().getPaymentsLinks();
         PaymentPayloadMetaDataDTO metadata = paymentDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges().getMetadata();
@@ -97,6 +109,15 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
         }
     }
 
+    private void showNoPaymentsLayout(){
+        noPaymentsLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void hideNoPaymentsLayout(){
+        noPaymentsLayout.setVisibility(View.GONE);
+    }
+
+
     private WorkflowServiceCallback balancesCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -114,6 +135,13 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
                         getActivity(), paymentDTO, PaymentHistoryFragment.this);
                 historyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 historyRecyclerView.setAdapter(paymentBalancesAdapter);
+
+                if(paymentBalancesAdapter.getItemCount()<1){
+                    //show noPayment view
+                    showNoPaymentsLayout();
+                    if(emptyPaymentListCallback!=null)
+                        emptyPaymentListCallback.listIsEmpty(section_number);
+                }
 
             } catch (Exception e){
                 Log.e(LOG, e.getMessage());
@@ -145,6 +173,14 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
                 PaymentHistoryAdapter historyAdapter = new PaymentHistoryAdapter(getActivity(), paymentDTO);
                 historyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 historyRecyclerView.setAdapter(historyAdapter);
+
+                if(historyAdapter.getItemCount()<1){
+                    //show noPayment view
+                    showNoPaymentsLayout();
+                    if(emptyPaymentListCallback!=null)
+                        emptyPaymentListCallback.listIsEmpty(section_number);
+                }
+
             } catch (Exception e){
                 Log.e(LOG, e.getMessage());
                 SystemUtil.showDefaultFailureDialog(getActivity());
@@ -196,4 +232,13 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
             e.printStackTrace();
         }
     }
+
+    public void setEmptyPaymentListCallback(EmptyPaymentListCallback emptyPaymentListCallback) {
+        this.emptyPaymentListCallback = emptyPaymentListCallback;
+    }
+
+    public interface EmptyPaymentListCallback{
+        void listIsEmpty(int sectionNumber);
+    }
+
 }

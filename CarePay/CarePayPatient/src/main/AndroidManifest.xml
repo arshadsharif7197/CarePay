@@ -73,6 +73,8 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity" /></activity>
+        <activity android:name=".Notification.activities.NotificationActivity" />
+        <activity android:name=".Purchase.activities.PurchaseActivity"/>
     </application>
 
 </manifest>
