@@ -206,7 +206,4 @@ public class AppointmentsActivity extends MenuPatientActivity {
         return AppointmentsActivity.model;
     }
 
-    private Context getContext(){
-        return this;
-    }
 }

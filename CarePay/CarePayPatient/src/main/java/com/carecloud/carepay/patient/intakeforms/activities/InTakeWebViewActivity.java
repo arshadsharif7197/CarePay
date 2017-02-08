@@ -319,7 +319,4 @@ public class InTakeWebViewActivity extends BasePatientActivity {
         }
     };
 
-    private Context getContext(){
-        return this;
-    }
 }

@@ -238,7 +238,4 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         }
     };
 
-    private Context getContext(){
-        return this;
-    }
 }

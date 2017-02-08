@@ -369,8 +369,5 @@ public class HowToCheckInActivity extends BasePracticeActivity {
         }
     }
 
-    private Context getContext(){
-        return this;
-    }
 
 }

@@ -163,18 +163,18 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
     private WorkflowServiceCallback transitionToDemographicsVerifyCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            ProgressDialogUtil.getInstance(context).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ProgressDialogUtil.getInstance(context).dismiss();
             PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ProgressDialogUtil.getInstance(context).dismiss();
             SystemUtil.showDefaultFailureDialog(context);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -217,8 +217,5 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         }
     }
 
-    private Context getContext(){
-        return context;
-    }
 }
 

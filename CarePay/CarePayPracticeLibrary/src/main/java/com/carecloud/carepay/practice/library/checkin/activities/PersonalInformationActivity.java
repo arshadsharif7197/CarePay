@@ -408,7 +408,4 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         }
     };
 
-    private Context getContext(){
-        return this;
-    }
 }

@@ -195,7 +195,4 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         MenuPatientActivity.transitionLogout = transitionLogout;
     }
 
-    private Context getContext(){
-        return this;
-    }
 }

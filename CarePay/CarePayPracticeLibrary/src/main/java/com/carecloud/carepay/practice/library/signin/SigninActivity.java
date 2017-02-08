@@ -552,7 +552,4 @@ public class SigninActivity extends BasePracticeActivity {
 
     }
 
-    private Context getContext(){
-        return this;
-    }
 }

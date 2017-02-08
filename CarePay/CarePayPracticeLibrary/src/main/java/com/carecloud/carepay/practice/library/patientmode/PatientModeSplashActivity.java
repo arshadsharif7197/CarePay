@@ -183,8 +183,5 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
         ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
     }
 
-    private Context getContext(){
-        return this;
-    }
 
 }

@@ -94,19 +94,19 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
     private WorkflowServiceCallback updateconsentformCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            ProgressDialogUtil.getInstance(PracticeAppSignatureActivity.this).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ProgressDialogUtil.getInstance(PracticeAppSignatureActivity.this).dismiss();
             //ConsentActivity.this.finish();
             PracticeNavigationHelper.getInstance().navigateToWorkflow(PracticeAppSignatureActivity.this, workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ProgressDialogUtil.getInstance(PracticeAppSignatureActivity.this).dismiss();
             SystemUtil.showDefaultFailureDialog(PracticeAppSignatureActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -561,7 +561,4 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
         sendBroadcast(intent);
     }
 
-    private Context getContext(){
-        return this;
-    }
 }

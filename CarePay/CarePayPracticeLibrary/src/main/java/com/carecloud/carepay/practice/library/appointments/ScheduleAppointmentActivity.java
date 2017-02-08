@@ -298,7 +298,4 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
         this.patientId = patientId;
     }
 
-    private Context getContext(){
-        return this;
-    }
 }

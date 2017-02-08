@@ -650,8 +650,4 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
         }
     }
 
-    private Context getContext(){
-        return this;
-    }
-
 }

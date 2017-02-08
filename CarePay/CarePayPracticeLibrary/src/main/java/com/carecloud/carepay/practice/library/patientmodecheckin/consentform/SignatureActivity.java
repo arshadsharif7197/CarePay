@@ -83,12 +83,12 @@ public class SignatureActivity extends AppCompatActivity {
     private WorkflowServiceCallback updateconsentformCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            ProgressDialogUtil.getInstance(SignatureActivity.this).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ProgressDialogUtil.getInstance(SignatureActivity.this).dismiss();
 
             //ConsentActivity.this.finish();
            // PatientNavigationHelper.getInstance(SignatureActivity.this).navigateToWorkflow(workflowDTO);
@@ -101,7 +101,7 @@ public class SignatureActivity extends AppCompatActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ProgressDialogUtil.getInstance(SignatureActivity.this).dismiss();
             SystemUtil.showDefaultFailureDialog(SignatureActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -406,7 +406,4 @@ public class SignatureActivity extends AppCompatActivity {
         }
     }
 
-    private Context getContext(){
-        return this;
-    }
 }

@@ -595,7 +595,4 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         super.onBackPressed();
     }
 
-    private Context getContext(){
-        return this;
-    }
 }

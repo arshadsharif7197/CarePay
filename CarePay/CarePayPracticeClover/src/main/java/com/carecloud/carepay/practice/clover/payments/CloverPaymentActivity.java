@@ -348,22 +348,22 @@ public class CloverPaymentActivity extends AppCompatActivity {
     /**
      * The Make payment callback.
      */
-    WorkflowServiceCallback makePaymentCallback = new WorkflowServiceCallback() {
+     WorkflowServiceCallback makePaymentCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            ProgressDialogUtil.getInstance(CloverPaymentActivity.this).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ProgressDialogUtil.getInstance(CloverPaymentActivity.this).dismiss();
             CloverPaymentActivity.this.finish();
             PracticeNavigationHelper.getInstance().navigateToWorkflow(CloverPaymentActivity.this, workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ProgressDialogUtil.getInstance(CloverPaymentActivity.this).dismiss();
             System.out.print(exceptionMessage);
             finish();
         }
@@ -397,10 +397,6 @@ public class CloverPaymentActivity extends AppCompatActivity {
             }
             Log.e(TAG, "Dumping Intent end");
         }
-    }
-
-    private Context getContext(){
-        return this;
     }
 
 }

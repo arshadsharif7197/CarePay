@@ -499,7 +499,4 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         return this.patientFiltered;
     }
 
-    private Context getContext(){
-        return this;
-    }
 }
