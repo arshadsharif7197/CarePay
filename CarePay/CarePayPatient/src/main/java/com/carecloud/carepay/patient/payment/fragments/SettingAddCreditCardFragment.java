@@ -17,11 +17,8 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.carecloud.carepaylibray.utils.payeezysdk.sdk.payeezydirecttransactions.RequestTask;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -30,12 +27,10 @@ import java.util.Map;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment implements RequestTask.AuthorizeCreditCardCallback {
+public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment implements BaseAddCreditCardFragment.IAuthoriseCreditCardResponse {
 
     private DemographicsSettingsDTO demographicsSettingsDTO = null;
     private DemographicsSettingsLabelsDTO settingsLabelsDTO;
-    private PaymentCreditCardsPayloadDTO creditCardsPayloadDTO;
-    private PaymentsCreditCardBillingInformationDTO billingInformationDTO;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,6 +47,7 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setChildFragment(this);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -97,17 +93,7 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
         stateAutoCompleteTextView.setHint(settingsLabelsDTO.getStateLabel());
 
         nextButton.setText(settingsLabelsDTO.getCreditCardAddNew());
-        nextButton.setOnClickListener(nextButtonListener);
     }
-
-    private View.OnClickListener nextButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            setDTOs();
-            ProgressDialogUtil.getInstance(getActivity()).show();
-            authorizeCreditCard();
-        }
-    };
 
     private WorkflowServiceCallback addNewCreditCardCallback = new WorkflowServiceCallback() {
         @Override
@@ -135,71 +121,6 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
         }
     };
 
-    private void setDTOs() {
-        creditCardsPayloadDTO = new PaymentCreditCardsPayloadDTO();
-        billingInformationDTO = new PaymentsCreditCardBillingInformationDTO();
-        billingInformationDTO.setSameAsPatient(useProfileAddressCheckBox.isChecked());
-        creditCardsPayloadDTO.setCardNumber(getLastFour());
-        creditCardsPayloadDTO.setNameOnCard(nameOnCardEditText.getText().toString().trim());
-        creditCardsPayloadDTO.setCvv(verificationCodeEditText.getText().toString().trim());
-        String expiryDate = pickDateTextView.getText().toString();
-        expiryDate = expiryDate.substring(0, 2) + expiryDate.substring(expiryDate.length() - 2);
-        creditCardsPayloadDTO.setExpireDt(expiryDate);
-        creditCardsPayloadDTO.setCardType(getCreditCardType(getCardNumber()));
-        billingInformationDTO.setLine1(address1EditText.getText().toString().trim());
-        billingInformationDTO.setLine2(address2EditText.getText().toString().trim());
-        billingInformationDTO.setZip(zipCodeEditText.getText().toString().trim());
-        billingInformationDTO.setCity(cityEditText.getText().toString().trim());
-        billingInformationDTO.setState(stateAutoCompleteTextView.getText().toString().trim());
-        creditCardsPayloadDTO.setBillingInformation(billingInformationDTO);
-    }
-
-    private void authorizeCreditCard() {
-        String amount = "1";
-        String currency = "USD";
-        String paymentMethod = "credit_card";
-        String cvv = creditCardsPayloadDTO.getCvv();
-        String expiryDate = creditCardsPayloadDTO.getExpireDt();
-        String name = creditCardsPayloadDTO.getNameOnCard();
-        String type = creditCardsPayloadDTO.getCardType();
-        String number = getCardNumber();
-        String state = billingInformationDTO.getState();
-        String addressline1 = billingInformationDTO.getLine1();
-        String zip = billingInformationDTO.getZip();
-        String country = "US";
-        String city = billingInformationDTO.getCity();
-
-        try {
-            RequestTask requestTask = new RequestTask(getActivity(), SettingAddCreditCardFragment.this);
-            requestTask.execute("authorize", amount, currency, paymentMethod, cvv, expiryDate, name, type, number, state, addressline1, zip, country, city);
-            System.out.println("first authorize call end");
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        System.out.println("authorize call end");
-    }
-
-    @Override
-    public void onAuthorizeCreditCard(String resString) {
-
-        if (resString != null && resString.length() > 800) {
-            int startIndex = resString.indexOf("value");
-            startIndex = resString.indexOf("=", startIndex + 1);
-            int endIndex = resString.indexOf(",", startIndex);
-            String tokenValue = resString.substring(startIndex, endIndex);
-            tokenValue = tokenValue.replace(" ", "");
-            tokenValue = tokenValue.replace(":", "");
-            tokenValue = tokenValue.replace("=", "");
-            tokenValue = tokenValue.replace("}", "");
-            creditCardsPayloadDTO.setToken(tokenValue);
-
-            addNewCreditCardCall();
-        } else {
-            SystemUtil.showDefaultFailureDialog(getActivity());
-            ProgressDialogUtil.getInstance(getActivity()).dismiss();
-        }
-    }
-
     private void addNewCreditCardCall() {
         Gson gson = new Gson();
         Map<String, String> queryMap = new HashMap<>();
@@ -207,5 +128,16 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
         TransitionDTO transitionDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getTransitions().getAddCreditCard();
         String body = gson.toJson(creditCardsPayloadDTO);
         WorkflowServiceHelper.getInstance().execute(transitionDTO, addNewCreditCardCallback, body, queryMap, WorkflowServiceHelper.getPreferredLanguageHeader());
+    }
+
+    @Override
+    public void onAuthorizeCreditCardSuccess() {
+        addNewCreditCardCall();
+    }
+
+    @Override
+    public void onAuthorizeCreditCardFailed() {
+        SystemUtil.showDefaultFailureDialog(getActivity());
+        ProgressDialogUtil.getInstance(getActivity()).dismiss();
     }
 }

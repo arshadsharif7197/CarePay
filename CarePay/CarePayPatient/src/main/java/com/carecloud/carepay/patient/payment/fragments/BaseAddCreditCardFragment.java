@@ -30,18 +30,27 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialog;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialogFragment;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
 import com.carecloud.carepaylibray.payments.utils.CardPattern;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.utils.payeezysdk.sdk.payeezydirecttransactions.RequestTask;
 import com.google.gson.Gson;
 import com.smartystreets.api.us_zipcode.City;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class BaseAddCreditCardFragment extends Fragment implements SimpleDatePickerDialog.OnDateSetListener {
+public class BaseAddCreditCardFragment extends Fragment implements RequestTask.AuthorizeCreditCardCallback, SimpleDatePickerDialog.OnDateSetListener {
+
+    public interface IAuthoriseCreditCardResponse {
+        void onAuthorizeCreditCardSuccess();
+
+        void onAuthorizeCreditCardFailed();
+    }
 
     protected TextInputLayout nameOnCardTextInputLayout;
     protected TextInputLayout creditCardNoTextInput;
@@ -74,7 +83,11 @@ public class BaseAddCreditCardFragment extends Fragment implements SimpleDatePic
     private static final char SPACE_CHAR = ' ';
     private String stateAbbr = null;
     private City smartyStreetsResponse;
+    protected double amountToMakePayment = 1;
     private DemographicAddressPayloadDTO addressPayloadDTO;
+    protected PaymentCreditCardsPayloadDTO creditCardsPayloadDTO;
+    protected PaymentsCreditCardBillingInformationDTO billingInformationDTO;
+    protected IAuthoriseCreditCardResponse authoriseCreditCardResponseCallback;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,14 +95,21 @@ public class BaseAddCreditCardFragment extends Fragment implements SimpleDatePic
         // Inflate the layout for this fragment
         final View addNewCreditCardView = inflater.inflate(com.carecloud.carepaylibrary.R.layout.fragment_add_new_credit_card,
                 container, false);
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            Gson gson = new Gson();
-            String addressPayloadString = ApplicationPreferences.Instance.readStringFromSharedPref(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE);
-            addressPayloadDTO = new DemographicAddressPayloadDTO();
-            if (addressPayloadString.length() > 1) {
-                addressPayloadDTO = gson.fromJson(addressPayloadString, DemographicAddressPayloadDTO.class);
+        try {
+            Bundle arguments = getArguments();
+            if (arguments != null) {
+                Gson gson = new Gson();
+                String addressPayloadString = ApplicationPreferences.Instance.readStringFromSharedPref(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE);
+                addressPayloadDTO = new DemographicAddressPayloadDTO();
+                if (addressPayloadString.length() > 1) {
+                    addressPayloadDTO = gson.fromJson(addressPayloadString, DemographicAddressPayloadDTO.class);
+                }
+                if (arguments.containsKey(CarePayConstants.PAYMENT_AMOUNT_BUNDLE)) {
+                    amountToMakePayment = arguments.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         Toolbar toolbar = (Toolbar) addNewCreditCardView.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
@@ -105,6 +125,10 @@ public class BaseAddCreditCardFragment extends Fragment implements SimpleDatePic
         setTypefaces();
         setTextWatchers();
         return addNewCreditCardView;
+    }
+
+    protected void setChildFragment(IAuthoriseCreditCardResponse callback) {
+        this.authoriseCreditCardResponseCallback = callback;
     }
 
     private void setTextWatchers() {
@@ -299,6 +323,7 @@ public class BaseAddCreditCardFragment extends Fragment implements SimpleDatePic
         });
 
         nextButton = (Button) view.findViewById(com.carecloud.carepaylibrary.R.id.nextButton);
+        nextButton.setOnClickListener(nextButtonListener);
 
         setChangeFocusListeners();
         setActionListeners();
@@ -325,6 +350,59 @@ public class BaseAddCreditCardFragment extends Fragment implements SimpleDatePic
         useProfileAddressCheckBox.setChecked(true);
         setAddressFiledsEnabled(false);
         setDefaultBillingAddressTexts();
+    }
+
+    private View.OnClickListener nextButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            nextButton.setEnabled(false);
+            setDTOs();
+            authorizeCreditCard();
+        }
+    };
+
+    private void setDTOs() {
+        creditCardsPayloadDTO = new PaymentCreditCardsPayloadDTO();
+        billingInformationDTO = new PaymentsCreditCardBillingInformationDTO();
+        billingInformationDTO.setSameAsPatient(useProfileAddressCheckBox.isChecked());
+        creditCardsPayloadDTO.setCardNumber(getLastFour());
+        creditCardsPayloadDTO.setNameOnCard(nameOnCardEditText.getText().toString().trim());
+        creditCardsPayloadDTO.setCvv(verificationCodeEditText.getText().toString().trim());
+        String expiryDate = pickDateTextView.getText().toString();
+        expiryDate = expiryDate.substring(0, 2) + expiryDate.substring(expiryDate.length() - 2);
+        creditCardsPayloadDTO.setExpireDt(expiryDate);
+        creditCardsPayloadDTO.setCardType(getCreditCardType(getCardNumber()));
+        billingInformationDTO.setLine1(address1EditText.getText().toString().trim());
+        billingInformationDTO.setLine2(address2EditText.getText().toString().trim());
+        billingInformationDTO.setZip(zipCodeEditText.getText().toString().trim());
+        billingInformationDTO.setCity(cityEditText.getText().toString().trim());
+        billingInformationDTO.setState(stateAutoCompleteTextView.getText().toString().trim());
+        creditCardsPayloadDTO.setBillingInformation(billingInformationDTO);
+    }
+
+    private void authorizeCreditCard() {
+        String amount = String.valueOf((int) amountToMakePayment);
+        String currency = "USD";
+        String paymentMethod = "credit_card";
+        String cvv = creditCardsPayloadDTO.getCvv();
+        String expiryDate = creditCardsPayloadDTO.getExpireDt();
+        String name = creditCardsPayloadDTO.getNameOnCard();
+        String type = creditCardsPayloadDTO.getCardType();
+        String number = getCardNumber();
+        String state = billingInformationDTO.getState();
+        String addressline1 = billingInformationDTO.getLine1();
+        String zip = billingInformationDTO.getZip();
+        String country = "US";
+        String city = billingInformationDTO.getCity();
+
+        try {
+            RequestTask requestTask = new RequestTask(getActivity(), BaseAddCreditCardFragment.this);
+            requestTask.execute("authorize", amount, currency, paymentMethod, cvv, expiryDate, name, type, number, state, addressline1, zip, country, city);
+            System.out.println("first authorize call end");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("authorize call end");
     }
 
     private void setDefaultBillingAddressTexts() {
@@ -561,13 +639,13 @@ public class BaseAddCreditCardFragment extends Fragment implements SimpleDatePic
         }
 
         if (!useProfileAddressCheckBox.isChecked() &&
-             (!(address1EditText.getText().toString().trim().length() > 0) ||
-             !(zipCodeEditText.getText().toString().trim().length() > 0) ||
-             !(cityEditText.getText().toString().trim().length() > 0) ||
-             !(stateAutoCompleteTextView.getText().toString().trim().length() > 0))) {
-                nextButton.setEnabled(false);
-                nextButton.setClickable(false);
-                return false;
+                (!(address1EditText.getText().toString().trim().length() > 0) ||
+                        !(zipCodeEditText.getText().toString().trim().length() > 0) ||
+                        !(cityEditText.getText().toString().trim().length() > 0) ||
+                        !(stateAutoCompleteTextView.getText().toString().trim().length() > 0))) {
+            nextButton.setEnabled(false);
+            nextButton.setClickable(false);
+            return false;
         }
 
         if (pickDateTextView.getText().toString().contains("/")) {
@@ -609,4 +687,27 @@ public class BaseAddCreditCardFragment extends Fragment implements SimpleDatePic
             }
         }.execute(zipcode);
     }
+
+    @Override
+    public void onAuthorizeCreditCard(String resString) {
+
+        if (resString != null && resString.length() > 800) {
+            int startIndex = resString.indexOf("value");
+            startIndex = resString.indexOf("=", startIndex + 1);
+            int endIndex = resString.indexOf(",", startIndex);
+            String tokenValue = resString.substring(startIndex, endIndex);
+            tokenValue = tokenValue.replace(" ", "");
+            tokenValue = tokenValue.replace(":", "");
+            tokenValue = tokenValue.replace("=", "");
+            tokenValue = tokenValue.replace("}", "");
+            creditCardsPayloadDTO.setToken(tokenValue);
+
+            authoriseCreditCardResponseCallback.onAuthorizeCreditCardSuccess();
+        } else {
+            nextButton.setEnabled(true);
+            authoriseCreditCardResponseCallback.onAuthorizeCreditCardFailed();
+        }
+    }
+
+
 }

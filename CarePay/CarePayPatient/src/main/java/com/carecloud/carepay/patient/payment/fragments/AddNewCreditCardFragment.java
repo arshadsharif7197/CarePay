@@ -18,13 +18,11 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
-import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.carecloud.carepaylibray.utils.payeezysdk.sdk.payeezydirecttransactions.RequestTask;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -38,14 +36,11 @@ import org.json.JSONObject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implements RequestTask.AuthorizeCreditCardCallback {
+public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implements BaseAddCreditCardFragment.IAuthoriseCreditCardResponse {
 
     private PaymentsModel paymentsModel;
     private PaymentsLabelDTO paymentsLabelDTO;
     private PaymentsModel intakePaymentModel;
-    private PaymentCreditCardsPayloadDTO creditCardsPayloadDTO;
-    private PaymentsCreditCardBillingInformationDTO billingInformationDTO;
-    private double amountToMakePayment;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,13 +54,13 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             paymentsDTOString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
             intakePaymentModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
             paymentsLabelDTO = intakePaymentModel.getPaymentsMetadata().getPaymentsLabel();
-            amountToMakePayment = arguments.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setChildFragment(this);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -76,7 +71,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         initilizeViews();
     }
 
-   private void initilizeViews() {
+    private void initilizeViews() {
         creditCardNoTextInput.setTag(paymentsLabelDTO.getPaymentCreditCardNumber());
         creditCardNoEditText.setHint(paymentsLabelDTO.getPaymentCreditCardNumber());
 
@@ -111,17 +106,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         stateAutoCompleteTextView.setHint(paymentsLabelDTO.getPaymentState());
 
         nextButton.setText(paymentsLabelDTO.getPaymentPayText());
-        nextButton.setOnClickListener(nextButtonListener);
     }
-
-    private View.OnClickListener nextButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            nextButton.setEnabled(false);
-            setDTOs();
-            authorizeCreditCard();
-        }
-    };
 
     private WorkflowServiceCallback addNewCreditCardCallback = new WorkflowServiceCallback() {
         @Override
@@ -168,95 +153,6 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         }
     };
 
-    private void setDTOs() {
-        creditCardsPayloadDTO = new PaymentCreditCardsPayloadDTO();
-        billingInformationDTO = new PaymentsCreditCardBillingInformationDTO();
-        billingInformationDTO.setSameAsPatient(useProfileAddressCheckBox.isChecked());
-        creditCardsPayloadDTO.setCardNumber(getLastFour());
-        creditCardsPayloadDTO.setNameOnCard(nameOnCardEditText.getText().toString().trim());
-        creditCardsPayloadDTO.setCvv(verificationCodeEditText.getText().toString().trim());
-        String expiryDate = pickDateTextView.getText().toString();
-        expiryDate = expiryDate.substring(0, 2) + expiryDate.substring(expiryDate.length() - 2);
-        creditCardsPayloadDTO.setExpireDt(expiryDate);
-        creditCardsPayloadDTO.setCardType(getCreditCardType(getCardNumber()));
-        billingInformationDTO.setLine1(address1EditText.getText().toString().trim());
-        billingInformationDTO.setLine2(address2EditText.getText().toString().trim());
-        billingInformationDTO.setZip(zipCodeEditText.getText().toString().trim());
-        billingInformationDTO.setCity(cityEditText.getText().toString().trim());
-        billingInformationDTO.setState(stateAutoCompleteTextView.getText().toString().trim());
-        creditCardsPayloadDTO.setBillingInformation(billingInformationDTO);
-    }
-
-    private void authorizeCreditCard() {
-        String amount = String.valueOf((int)amountToMakePayment);
-        String currency = "USD";
-        String paymentMethod = "credit_card";
-        String cvv = creditCardsPayloadDTO.getCvv() + "";
-        String expiryDate = creditCardsPayloadDTO.getExpireDt();
-        String name = creditCardsPayloadDTO.getNameOnCard();
-        String type = creditCardsPayloadDTO.getCardType();
-        String number = getCardNumber();
-        String state = billingInformationDTO.getState();
-        String addressline1 = billingInformationDTO.getLine1();
-        String zip = billingInformationDTO.getZip();
-        String country = "US";
-        String city = billingInformationDTO.getCity();
-
-        try {
-            RequestTask requestTask = new RequestTask(getActivity(), AddNewCreditCardFragment.this);
-            requestTask.execute("authorize", amount, currency, paymentMethod, cvv, expiryDate, name, type, number, state, addressline1, zip, country, city);
-            System.out.println("first authorize call end");
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        System.out.println("authorize call end");
-    }
-
-    @Override
-    public void onAuthorizeCreditCard(String resString) {
-
-        if (resString != null && resString.length() > 800) {
-            int startIndex = resString.indexOf("value");
-            startIndex = resString.indexOf("=", startIndex + 1);
-            int endIndex = resString.indexOf(",", startIndex);
-            String tokenValue = resString.substring(startIndex, endIndex);
-            tokenValue = tokenValue.replace(" ", "");
-            tokenValue = tokenValue.replace(":", "");
-            tokenValue = tokenValue.replace("=", "");
-            tokenValue = tokenValue.replace("}", "");
-            creditCardsPayloadDTO.setToken(tokenValue);
-
-            if (saveCardOnFileCheckBox.isChecked()) {
-                addNewCreditCardCall();
-            } else {
-                makePaymentCall();
-            }
-
-        } else {
-            nextButton.setEnabled(true);
-            new LargeAlertDialog(getActivity(), paymentsLabelDTO.getPaymentFailedErrorMessage(), paymentsLabelDTO.getPaymentChangeMethodButton(), R.color.Feldgrau, R.drawable.icn_card_error, new LargeAlertDialog.LargeAlertInterface() {
-                @Override
-                public void onActionButton() {
-                    FragmentManager fm = getActivity().getSupportFragmentManager();
-                    List<Fragment> backStackFragmentList = fm.getFragments();
-                    if(backStackFragmentList!=null && backStackFragmentList.size()>0){
-                        int index;
-                        for(index=0;index<backStackFragmentList.size();index++){
-                            if(backStackFragmentList.get(index) instanceof ChooseCreditCardFragment){
-                                fm.beginTransaction().remove(backStackFragmentList.get(index)).commit();
-                                fm.popBackStack();
-                                fm.popBackStack();
-                                break;
-                            }
-                        }
-                        if(index==backStackFragmentList.size()){
-                            fm.popBackStack();
-                        }
-                    }
-                }
-            }).show();
-        }
-    }
 
     private void addNewCreditCardCall() {
         Gson gson = new Gson();
@@ -308,5 +204,39 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onAuthorizeCreditCardSuccess() {
+        if (saveCardOnFileCheckBox.isChecked()) {
+            addNewCreditCardCall();
+        } else {
+            makePaymentCall();
+        }
+    }
+
+    @Override
+    public void onAuthorizeCreditCardFailed() {
+        new LargeAlertDialog(getActivity(), paymentsLabelDTO.getPaymentFailedErrorMessage(), paymentsLabelDTO.getPaymentChangeMethodButton(), R.color.Feldgrau, R.drawable.icn_card_error, new LargeAlertDialog.LargeAlertInterface() {
+            @Override
+            public void onActionButton() {
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                List<Fragment> backStackFragmentList = fm.getFragments();
+                if (backStackFragmentList != null && backStackFragmentList.size() > 0) {
+                    int index;
+                    for (index = 0; index < backStackFragmentList.size(); index++) {
+                        if (backStackFragmentList.get(index) instanceof ChooseCreditCardFragment) {
+                            fm.beginTransaction().remove(backStackFragmentList.get(index)).commit();
+                            fm.popBackStack();
+                            fm.popBackStack();
+                            break;
+                        }
+                    }
+                    if (index == backStackFragmentList.size()) {
+                        fm.popBackStack();
+                    }
+                }
+            }
+        }).show();
     }
 }
