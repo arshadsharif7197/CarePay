@@ -283,8 +283,17 @@ public class BaseAddCreditCardFragment extends Fragment implements RequestTask.A
         pickDateTextView.setOnClickListener(pickDateListener);
 
         saveCardOnFileCheckBox = (CheckBox) view.findViewById(com.carecloud.carepaylibrary.R.id.saveCardOnFileCheckBox);
+        saveCardOnFileCheckBox.setChecked(false);
+        saveCardOnFileCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setCardAsDefaultLogic((CheckBox) view);
+            }
+        });
 
         setAsDefaultCheckBox = (CheckBox) view.findViewById(com.carecloud.carepaylibrary.R.id.setAsDefaultCheckBox);
+        setAsDefaultCheckBox.setEnabled(false);
+        setAsDefaultCheckBox.setChecked(false);
 
         billingAddressTextView = (CarePayTextView) view.findViewById(R.id.billingAddressTextView);
         useProfileAddressCheckBox = (CheckBox) view.findViewById(R.id.useProfileAddressCheckBox);
@@ -350,6 +359,22 @@ public class BaseAddCreditCardFragment extends Fragment implements RequestTask.A
         useProfileAddressCheckBox.setChecked(true);
         setAddressFiledsEnabled(false);
         setDefaultBillingAddressTexts();
+    }
+
+    /**
+     * SHMRK-1843
+     * <p>
+     * 1. 'Set as default' checkbox should be enabled onle when 'Save card on file' check box is enabled.
+     * <p>
+     * 2. If both 'Set as default' and 'Save card on file' checkboxes were checked, then
+     * un-checking 'Save card on file' checkbox should also un-check 'Set as default' checkbox.
+     */
+    private void setCardAsDefaultLogic(CheckBox saveCardOnFileCheckBox) {
+        setAsDefaultCheckBox.setEnabled(saveCardOnFileCheckBox.isChecked());
+
+        if (!saveCardOnFileCheckBox.isChecked()) {
+            setAsDefaultCheckBox.setChecked(false);
+        }
     }
 
     private View.OnClickListener nextButtonListener = new View.OnClickListener() {

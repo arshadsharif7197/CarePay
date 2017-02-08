@@ -72,7 +72,9 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
         pickDateTextView.setText(settingsLabelsDTO.getCreditCardPickDateLabel());
 
         saveCardOnFileCheckBox.setVisibility(View.GONE);
+        saveCardOnFileCheckBox.setEnabled(true);
         setAsDefaultCheckBox.setText(settingsLabelsDTO.getEditCreditCardDefaultLabel());
+        setAsDefaultCheckBox.setEnabled(true);
 
         billingAddressTextView.setText(settingsLabelsDTO.getCreditCardBillingAddressLabel());
         useProfileAddressCheckBox.setText(settingsLabelsDTO.getSettingUseProfileAddressLabel());

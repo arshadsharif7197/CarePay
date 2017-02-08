@@ -26,13 +26,13 @@ import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -158,7 +158,6 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         }
     };
 
-
     private void addNewCreditCardCall() {
         Gson gson = new Gson();
         Map<String, String> queryMap = new HashMap<>();
@@ -185,13 +184,14 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             creditCard.put("name_on_card", creditCardsPayloadDTO.getNameOnCard());
             creditCard.put("expire_dt", creditCardsPayloadDTO.getExpireDt());
             creditCard.put("cvv", creditCardsPayloadDTO.getCvv());
-            creditCard.put("papi_pay", true);
             creditCard.put("token", creditCardsPayloadDTO.getToken());
+            creditCard.put("is_default", setAsDefaultCheckBox.isChecked());
             Gson gson = new Gson();
             JSONObject billingInformation;
             billingInformation = new JSONObject(gson.toJson(billingInformationDTO, PaymentsCreditCardBillingInformationDTO.class));
             creditCard.put("billing_information", billingInformation);
             paymentMethod.put("credit_card", creditCard);
+            paymentMethod.put("execution", "papi");
             paymentMethod.put("type", "credit_card");
             JSONArray paymentMethods = new JSONArray();
             paymentMethods.put(paymentMethod);
