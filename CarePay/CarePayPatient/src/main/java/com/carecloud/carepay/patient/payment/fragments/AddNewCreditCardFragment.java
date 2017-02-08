@@ -33,6 +33,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialog;
@@ -63,7 +64,7 @@ import org.json.JSONObject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AddNewCreditCardFragment extends Fragment implements
+public class AddNewCreditCardFragment extends BaseFragment implements
         SimpleDatePickerDialog.OnDateSetListener, RequestTask.AuthorizeCreditCardCallback {
 
     private TextInputLayout nameOnCardTextInputLayout;
@@ -81,7 +82,6 @@ public class AddNewCreditCardFragment extends Fragment implements
     private EditText verificationCodeEditText;
     private TextView expirationDateTextView;
     private TextView pickDateTextView;
-    private CheckBox saveCardOnFileCheckBox;
     private CheckBox setAsDefaultCheckBox;
     private CheckBox useProfileAddressCheckBox;
 
@@ -139,7 +139,7 @@ public class AddNewCreditCardFragment extends Fragment implements
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         initilizeViews(addNewCreditCardView);
-        setTypefaces();
+
         setTextWatchers();
         return addNewCreditCardView;
     }
@@ -303,9 +303,14 @@ public class AddNewCreditCardFragment extends Fragment implements
         pickDateTextView.setText(paymentsLabelDTO.getPaymentPickDate());
         pickDateTextView.setOnClickListener(pickDateListener);
 
-        saveCardOnFileCheckBox = (CheckBox) view.findViewById(com.carecloud.carepaylibrary.R.id.saveCardOnFileCheckBox);
+        CheckBox saveCardOnFileCheckBox = (CheckBox) view.findViewById(com.carecloud.carepaylibrary.R.id.saveCardOnFileCheckBox);
         saveCardOnFileCheckBox.setText(paymentsLabelDTO.getPaymentSaveCardOnFile());
-        saveCardOnFileCheckBox.setOnClickListener(saveCardSelectionListener);
+        saveCardOnFileCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setCardAsDefaultLogic((CheckBox) view);
+            }
+        });
 
         setAsDefaultCheckBox = (CheckBox) view.findViewById(com.carecloud.carepaylibrary.R.id.setAsDefaultCheckBox);
         setAsDefaultCheckBox.setText(paymentsLabelDTO.getPaymentSetAsDefaultCreditCard());
@@ -388,6 +393,25 @@ public class AddNewCreditCardFragment extends Fragment implements
         useProfileAddressCheckBox.setChecked(true);
         setAddressFiledsEnabled(false);
         setDefaultBillingAddressTexts();
+
+        setTypefaces(saveCardOnFileCheckBox);
+    }
+
+    /**
+     * SHMRK-1843
+     *
+     * 1. 'Set as default' checkbox should be enabled onle when 'Save card on file' check box is enabled.
+     *
+     * 2. If both 'Set as default' and 'Save card on file' checkboxes were checked, then
+     * un-checking 'Save card on file' checkbox should also un-check 'Set as default' checkbox.
+     */
+    private void setCardAsDefaultLogic(CheckBox saveCardOnFileCheckBox) {
+        setAsDefaultCheckBox.setEnabled(saveCardOnFileCheckBox.isChecked());
+
+        if(!saveCardOnFileCheckBox.isChecked())
+        {
+            setAsDefaultCheckBox.setChecked(false);
+        }
     }
 
     private void setDefaultBillingAddressTexts() {
@@ -403,7 +427,7 @@ public class AddNewCreditCardFragment extends Fragment implements
         }
     }
 
-    private void setTypefaces() {
+    private void setTypefaces(CheckBox saveCardOnFileCheckBox) {
         SystemUtil.setProximaNovaRegularTypeface(getActivity(), creditCardNoEditText);
         SystemUtil.setProximaNovaRegularTypeface(getActivity(), verificationCodeEditText);
         SystemUtil.setProximaNovaRegularTypeface(getActivity(), nameOnCardEditText);
@@ -591,25 +615,6 @@ public class AddNewCreditCardFragment extends Fragment implements
         }
     };
 
-    /**
-     * SHMRK-1843
-     *
-     * 1. 'Set as default' checkbox should be enabled onle when 'Save card on file' check box is enabled.
-     *
-     * 2. If both 'Set as default' and 'Save card on file' checkboxes were checked, then
-     * un-checking 'Save card on file' checkbox should also un-check 'Set as default' checkbox.
-     */
-    private View.OnClickListener saveCardSelectionListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            setAsDefaultCheckBox.setEnabled(saveCardOnFileCheckBox.isChecked());
-
-            if(!saveCardOnFileCheckBox.isChecked())
-            {
-                setAsDefaultCheckBox.setChecked(false);
-            }
-        }
-    };
 
     private WorkflowServiceCallback addNewCreditCardCallback = new WorkflowServiceCallback() {
         @Override
@@ -776,6 +781,7 @@ public class AddNewCreditCardFragment extends Fragment implements
             tokenValue = tokenValue.replace("}", "");
             creditCardsPayloadDTO.setToken(tokenValue);
 
+            CheckBox saveCardOnFileCheckBox = (CheckBox) findViewById(com.carecloud.carepaylibrary.R.id.saveCardOnFileCheckBox);
             if (saveCardOnFileCheckBox.isChecked()) {
                 addNewCreditCardCall();
             } else {
@@ -828,7 +834,8 @@ public class AddNewCreditCardFragment extends Fragment implements
             JSONObject paymentMethod = new JSONObject();
             paymentMethod.put("amount", amountToMakePayment);
             JSONObject creditCard = new JSONObject();
-            creditCard.put("save", saveCardOnFileCheckBox.isChecked());
+
+            creditCard.put("save", ((CheckBox) findViewById(com.carecloud.carepaylibrary.R.id.saveCardOnFileCheckBox)).isChecked());
             //creditCard.put("credit_card_id", creditCardPayload.getCreditCardsId());
             creditCard.put("card_type", creditCardsPayloadDTO.getCardType());
             creditCard.put("card_number", creditCardsPayloadDTO.getCardNumber());
