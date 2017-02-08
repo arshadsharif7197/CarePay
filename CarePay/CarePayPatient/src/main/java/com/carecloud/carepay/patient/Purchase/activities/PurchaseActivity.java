@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.Purchase.activities;
+package com.carecloud.carepay.patient.purchase.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.Purchase.fragments.PurchaseFragment;
+import com.carecloud.carepay.patient.purchase.fragments.PurchaseFragment;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 

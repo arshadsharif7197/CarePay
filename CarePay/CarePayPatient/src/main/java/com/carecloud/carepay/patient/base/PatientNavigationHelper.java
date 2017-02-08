@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.carecloud.carepay.patient.Notification.activities.NotificationActivity;
-import com.carecloud.carepay.patient.Purchase.activities.PurchaseActivity;
+import com.carecloud.carepay.patient.notification.activities.NotificationActivity;
+import com.carecloud.carepay.patient.purchase.activities.PurchaseActivity;
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.consentforms.ConsentActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;

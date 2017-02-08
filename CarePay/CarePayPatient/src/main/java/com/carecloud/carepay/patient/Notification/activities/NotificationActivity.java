@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.Notification.activities;
+package com.carecloud.carepay.patient.notification.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -7,7 +7,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.Notification.fragments.NotificationFragment;
+import com.carecloud.carepay.patient.notification.fragments.NotificationFragment;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 

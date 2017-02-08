@@ -32,7 +32,8 @@ public class PaymentBalanceHistoryFragment  extends Fragment  {
 
     private View noPaymentsLayout;
     private View pagerLayout;
-    private TextView noPaymentTitle, noPaymentDesc;
+    private TextView noPaymentTitle;
+    private TextView noPaymentDesc;
     private PaymentsModel paymentDTO;
 
 
@@ -51,8 +52,8 @@ public class PaymentBalanceHistoryFragment  extends Fragment  {
         noPaymentTitle = (TextView) balanceHistoryView.findViewById(R.id.no_payment_message_title);
         noPaymentDesc = (TextView) balanceHistoryView.findViewById(R.id.no_payment_message_desc);
 
-        noPaymentTitle.setText("No payments yet");
-        noPaymentDesc.setText("We'll list all your pending and past payments here");
+        noPaymentTitle.setText(paymentDTO.getPaymentsMetadata().getPaymentsLabel().getNoPaymentTitle());
+        noPaymentDesc.setText(paymentDTO.getPaymentsMetadata().getPaymentsLabel().getNoPaymentDescription());
 
         setupViewPager(balanceHistoryView, paymentDTO);
         hideNoPaymentsLayout();
@@ -76,13 +77,14 @@ public class PaymentBalanceHistoryFragment  extends Fragment  {
             ViewPaymentBalanceHistoryActivity.setIsPaymentDone(false);
         }
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getChildFragmentManager());
-        String pendingTabTitle = paymentDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPatientBalanceTab();
-        String historyTabTitle = paymentDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPatientHistoryTab();
         PaymentHistoryFragment pendingPaymentsFragment = PaymentHistoryFragment.newInstance(1, paymentDTO);
         PaymentHistoryFragment paymentHistoryFragment = PaymentHistoryFragment.newInstance(2, paymentDTO);
 
         pendingPaymentsFragment.setEmptyPaymentListCallback(emptyPaymentListCallback);
         paymentHistoryFragment.setEmptyPaymentListCallback(emptyPaymentListCallback);
+
+        String pendingTabTitle = paymentDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPatientBalanceTab();
+        String historyTabTitle = paymentDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPatientHistoryTab();
 
         adapter.addFragment(pendingPaymentsFragment, StringUtil.isNullOrEmpty(pendingTabTitle)?
                 CarePayConstants.NOT_DEFINED : pendingTabTitle);

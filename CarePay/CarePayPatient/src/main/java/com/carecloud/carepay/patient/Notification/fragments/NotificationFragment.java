@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.Notification.fragments;
+package com.carecloud.carepay.patient.notification.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,7 +14,8 @@ import com.carecloud.carepay.patient.R;
  */
 
 public class NotificationFragment extends Fragment {
-    private TextView noNotificationTitle, noNotificationDesc;
+    private TextView noNotificationTitle;
+    private TextView noNotificationDesc;
     private View noNotificationLayout;
 
 
