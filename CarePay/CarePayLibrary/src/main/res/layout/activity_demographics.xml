@@ -36,7 +36,7 @@
                 android:id="@+id/demographicsOnboardingTab"
                 android:src="@drawable/icn_signup_step_1"/>
 
-            <android.support.v4.view.ViewPager
+            <com.carecloud.carepaylibray.customcomponents.CustomViewPager
                 android:id="@+id/demographicsViewPager"
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
