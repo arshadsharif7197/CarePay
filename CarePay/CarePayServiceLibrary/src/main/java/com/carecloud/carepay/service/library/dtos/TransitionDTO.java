@@ -25,7 +25,9 @@ public class TransitionDTO {
     @SerializedName("post_model")
     @Expose
     private JsonObject postModel;
-
+    @SerializedName("header")
+    @Expose
+    private DemographicsSettingsHeaderDTO header;
 
     /**
      *
@@ -115,5 +117,21 @@ public class TransitionDTO {
      */
     public void setPostModel(JsonObject postModel) {
         this.postModel = postModel;
+    }
+
+    /**
+     *
+     * @return header
+     */
+    public DemographicsSettingsHeaderDTO getHeader() {
+        return header;
+    }
+
+    /**
+     *
+     * @param header the header
+     */
+    public void setHeader(DemographicsSettingsHeaderDTO header) {
+        this.header = header;
     }
 }

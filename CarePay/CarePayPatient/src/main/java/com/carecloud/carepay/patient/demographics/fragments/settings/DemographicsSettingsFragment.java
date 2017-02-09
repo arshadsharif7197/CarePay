@@ -109,17 +109,20 @@ public class DemographicsSettingsFragment extends Fragment {
         title.setText(settingsString);
         patientNameTextview.setText(getUserName());
         patientIdTextview.setText(userId);
-
-        DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
-        DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-        DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
-        DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
-        String imageUrl = demographicsPersonalDetails.getProfilePhoto();
-        if (!StringUtil.isNullOrEmpty(imageUrl)) {
-            Picasso.with(getActivity()).load(imageUrl).transform(
-                    new CircleImageTransform()).resize(160, 160).into(this.profileImageview);
-        }
-        setClickables(view);
+        try {
+         DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
+         DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
+         DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
+         DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+         String imageUrl = demographicsPersonalDetails.getProfilePhoto();
+         if (!StringUtil.isNullOrEmpty(imageUrl)) {
+           Picasso.with(getActivity()).load(imageUrl).transform(
+                new CircleImageTransform()).resize(160, 160).into(this.profileImageview);
+         }
+         setClickables(view);
+         }catch(Exception e){
+            e.printStackTrace();
+         }
         return view;
 
     }
@@ -285,6 +288,7 @@ public class DemographicsSettingsFragment extends Fragment {
     }
 
     private String getUserName() {
+        try{
         if(demographicsSettingsDTO!=null) {
             DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
             DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
@@ -294,6 +298,9 @@ public class DemographicsSettingsFragment extends Fragment {
             String lastName = demographicsPersonalDetails.getLastName();
             String userName = firstName + " " + lastName;
             return userName;
+        }
+        }catch(Exception e){
+            e.printStackTrace();
         }
         return "";
     }

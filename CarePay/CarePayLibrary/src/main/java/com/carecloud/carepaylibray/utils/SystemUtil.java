@@ -36,6 +36,7 @@ import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.base.BaseVisibilityHintActivity;
 
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -280,11 +281,35 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
         }
     }
 
-    /**
-     * Convert the image capture place holder into a base64
-     * @param context The context
-     * @return The base64 string
-     */
+    public static String encodeToBase64(String text){
+        String encodedString=null;
+        try { //Sending side
+             byte[] data = text.getBytes("UTF-8");
+             encodedString = Base64.encodeToString(data, Base64.DEFAULT);
+        }catch(Exception e){
+             e.printStackTrace();
+        }
+        return encodedString;
+    }
+
+    public static String decodeFromBase64(String text){
+        String decodedString = null;
+        try {
+            // Receiving side
+            byte[] data = Base64.decode(text, Base64.DEFAULT);
+            decodedString = new String(data, "UTF-8");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return decodedString;
+    }
+
+
+        /**
+         * Convert the image capture place holder into a base64
+         * @param context The context
+         * @return The base64 string
+         */
     public static String getPlaceholderAsBase64(Context context) {
         Bitmap placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.icn_camera);
         return SystemUtil.encodeToBase64(placeholder, Bitmap.CompressFormat.JPEG, 90);

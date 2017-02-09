@@ -4,15 +4,19 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -22,6 +26,12 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.dtos.DemographicSettingsCurrentPasswordDTO;
+import com.carecloud.carepay.service.library.dtos.DemographicsSettingsEmailProperties;
+import com.carecloud.carepay.service.library.dtos.DemographicsSettingsHeaderDTO;
+import com.carecloud.carepay.service.library.dtos.DemographicsSettingsLoginEmailDTO;
+import com.carecloud.carepay.service.library.dtos.DemographicsSettingsMaintainanceDTO;
+import com.carecloud.carepay.service.library.dtos.DemographicsSettingsProposedEmailDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
@@ -36,10 +46,13 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.api.client.util.Base64;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -112,19 +125,19 @@ public class DemographicsSettingUpdateEmailFragment extends Fragment {
      */
     public void getSettingsLabels() {
         try{
-        if (demographicsSettingsDTO != null) {
-            DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
-            if (demographicsSettingsMetadataDTO != null) {
-                DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO = demographicsSettingsMetadataDTO.getLabels();
-                if (demographicsSettingsLabelsDTO != null) {
+            if (demographicsSettingsDTO != null) {
+                DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
+                if (demographicsSettingsMetadataDTO != null) {
+                    DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO = demographicsSettingsMetadataDTO.getLabels();
+                    if (demographicsSettingsLabelsDTO != null) {
 
-                    changeEmailString = demographicsSettingsLabelsDTO.getDemographicsChangeEmailLabel();
-                    saveChangesString = demographicsSettingsLabelsDTO.getDemographicsSaveChangesLabel();
-                    emailString = demographicsSettingsLabelsDTO.getEmailLabel();
+                        changeEmailString = demographicsSettingsLabelsDTO.getDemographicsChangeEmailLabel();
+                        saveChangesString = demographicsSettingsLabelsDTO.getDemographicsSaveChangesLabel();
+                        emailString = demographicsSettingsLabelsDTO.getEmailLabel();
 
+                    }
                 }
             }
-         }
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -158,18 +171,18 @@ public class DemographicsSettingUpdateEmailFragment extends Fragment {
     private void getPersonalDetails() {
         String userId = CognitoAppHelper.getCurrUser();
 
-                if (SystemUtil.isNotEmptyString(userId)) {
-                    emailEditText.setText(userId);
-                    emailEditText.requestFocus();
-                }
+        if (SystemUtil.isNotEmptyString(userId)) {
+            emailEditText.setText(userId);
+            emailEditText.requestFocus();
+        }
 
-                rootview.requestFocus();
-                SystemUtil.hideSoftKeyboard(getActivity());
+        rootview.requestFocus();
+        SystemUtil.hideSoftKeyboard(getActivity());
 
     }
 
     private boolean checkEmail() {
-       String email = emailEditText.getText().toString();
+        String email = emailEditText.getText().toString();
         isEmailEmpty = StringUtil.isNullOrEmpty(email);
         emailLabel.setErrorEnabled(isEmailEmpty); // enable for error if either empty or invalid first name
         if (isEmailEmpty) {
@@ -208,30 +221,61 @@ public class DemographicsSettingUpdateEmailFragment extends Fragment {
             public void onClick(View view) {
                 try {
                     if (isEmailValid() ) {
-                        updateEmailButton.setEnabled(false);
                         if (demographicsSettingsDTO != null) {
                             DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
                             if (demographicsSettingsMetadataDTO != null) {
                                 DemographicsSettingsTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
-                                TransitionDTO demographicsSettingsUpdateDemographicsDTO = demographicsSettingsTransitionsDTO.getUpdateDemographics();
+                                TransitionDTO demographicsSettingsUpdateEmailDTO = demographicsSettingsTransitionsDTO.getChangeLoginEmail();
+                                DemographicsSettingsHeaderDTO demographicsSettingsHeaderDTO =  demographicsSettingsUpdateEmailDTO.getHeader();
+                                DemographicsSettingsMaintainanceDTO demographicsSettingsMaintainanceDTO = demographicsSettingsHeaderDTO.getMaintenance();
+                                DemographicsSettingsEmailProperties demographicsSettingsEmailProperties = demographicsSettingsMaintainanceDTO.getProperties();
+                                DemographicsSettingsLoginEmailDTO demographicsSettingsLoginEmailDTO = demographicsSettingsEmailProperties.getLoginEmail();
+                                DemographicsSettingsProposedEmailDTO demographicsSettingsProposedEmailDTO = demographicsSettingsEmailProperties.getProposedEmail();
+                                DemographicSettingsCurrentPasswordDTO demographicSettingsCurrentPasswordDTO = demographicsSettingsEmailProperties.getCurrentPassword();
+
+                                demographicsSettingsEmailProperties.setLoginEmail(demographicsSettingsLoginEmailDTO);
+                                demographicsSettingsEmailProperties.setProposedEmail(demographicsSettingsProposedEmailDTO);
+                                demographicsSettingsEmailProperties.setCurrentPassword(demographicSettingsCurrentPasswordDTO);
+                                String encodedProperties = SystemUtil.encodeToBase64(demographicsSettingsEmailProperties.getLoginEmail().toString()+ SystemUtil.encodeToBase64(demographicsSettingsEmailProperties.getProposedEmail().toString()+SystemUtil.encodeToBase64(demographicsSettingsEmailProperties.getCurrentPassword().toString())));
+                                try {
+                                    ByteArrayOutputStream bo = new ByteArrayOutputStream();
+                                    ObjectOutputStream so = new ObjectOutputStream(bo);
+                                    so.writeObject(demographicsSettingsEmailProperties);
+                                    so.flush();
+                                    String redisString = new String(Base64.encodeBase64(bo.toByteArray()));
+                                    //demographicsSettingsMaintainanceDTO.setProperties(redisString);
+
+                                }
+                                catch (Exception e) {
+                                    e.printStackTrace();        }
+                           /*     Map<String, String> properties = null;
+                                properties = new HashMap<>();
+                                properties.put("login_email","harshalp@carecloud.com");
+                                properties.put("proposed_email", "harshalpatil@carecloud.com");
+                                properties.put("current_password","Test123");
+                                JSONObject jso = new JSONObject( properties );
+                                String encoded = new String(Base64.encodeBase64( jso.toString().getBytes()));*/
+
                                 JSONObject payload = new JSONObject();
                                 Map<String, String> queries = null;
                                 Map<String, String> header = null;
+                                header = new HashMap<>();
+                                header.put("maintenance","eyJsb2dpbl9lbWFpbCI6ImhhcnNoYWxwQGNhcmVjbG91ZC5jb20iLCJwcm9wb3NlZF9lbWFpbCI6ImhhcnNoYWxwYXRpbEBjYXJlY2xvdWQuY29tIiwiY3VycmVudF9wYXNzd29yZCI6IlRlc3QxMjMhIn0");
+                                //header.put("transition", "true");
                                 try {
                                     if (demographicsSettingsDTO != null) {
                                         DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
                                         if (demographicsSettingsPayloadDTO != null) {
-                                            DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-                                            DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
-                                            DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+                                            //DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
+                                            //DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload().;
+                                            //DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
 
                                             Gson gson = new Gson();
-                                            String jsonInString = gson.toJson(demographicPayload);
-                                            WorkflowServiceHelper.getInstance().execute(demographicsSettingsUpdateDemographicsDTO, updateEmailCallback, jsonInString, header);
+                                            String jsonInString = gson.toJson(demographicsSettingsPayloadDTO);
+                                            WorkflowServiceHelper.getInstance().execute(demographicsSettingsUpdateEmailDTO, updateEmailCallback,null, queries, header);
                                         }
                                     }
-                                    header = new HashMap<>();
-                                    header.put("transition", "true");
+
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -253,17 +297,16 @@ public class DemographicsSettingUpdateEmailFragment extends Fragment {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            updateEmailButton.setEnabled(true);
+            Log.d("SETING",workflowDTO.toString());
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            updateEmailButton.setEnabled(true);
+
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
-
 }
 
