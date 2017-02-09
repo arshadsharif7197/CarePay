@@ -20,6 +20,7 @@ import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInLabelDTO;
+import com.carecloud.carepay.practice.library.checkin.dtos.PendingBalanceDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -209,10 +210,12 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         checkingInCounterTextview.setText(String.valueOf(checkingInAppointments.size()));
         waitingCounterTextview.setText(String.valueOf(waitingRoomAppointments.size()));
 
-        checkedInAdapter = new CheckedInAppointmentAdapter(CheckInActivity.this, checkingInAppointments, false);
+        checkedInAdapter = new CheckedInAppointmentAdapter(CheckInActivity.this, checkingInAppointments,
+                checkInDTO.getPayload().getPatientBalances(), false);
         checkinginRecyclerView.setAdapter(checkedInAdapter);
 
-        waitingRoomAdapter = new CheckedInAppointmentAdapter(CheckInActivity.this, waitingRoomAppointments, true);
+        waitingRoomAdapter = new CheckedInAppointmentAdapter(CheckInActivity.this, waitingRoomAppointments,
+                checkInDTO.getPayload().getPatientBalances(), true);
         waitingRoomRecyclerView.setAdapter(waitingRoomAdapter);
     }
 
@@ -460,13 +463,14 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         return null;
     }
 
-    private AppointmentDTO getPatientBalanceDTOs(String patientId) {
-        List<AppointmentDTO>allApps =  checkInDTO.getPayload().getAppointments();
-        for (AppointmentDTO ap:allApps)
-              {
-                  if(ap.getPayload().getPatient().getId().equalsIgnoreCase(patientId)){
-                      return ap;
-                  }
+    private PendingBalanceDTO getPatientBalanceDTOs(String patientId) {
+        List<PatientBalanceDTO> patientBalances = checkInDTO.getPayload().getPatientBalances();
+
+        for (PatientBalanceDTO patientBalanceDTO: patientBalances) {
+            PendingBalanceDTO pendingBalanceDTO = patientBalanceDTO.getPendingBalances().get(0);
+            if (pendingBalanceDTO.getMetadata().getPatientId().equals(patientId)) {
+                return pendingBalanceDTO;
+            }
         }
         return null;
     }
@@ -476,10 +480,10 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
      *
      * @param appointmentPayloadDTO the appointment payload dto
      */
-    public void onCheckInItemClick(AppointmentPayloadDTO appointmentPayloadDTO, boolean isWaitingroom) {
+    public void onCheckInItemClick(AppointmentPayloadDTO appointmentPayloadDTO, boolean isWaitingRoom) {
         AppointmentDetailDialog dialog = new AppointmentDetailDialog(context,
                 checkInDTO, getPatientBalanceDTOs(appointmentPayloadDTO.getPatient().getId()),
-                appointmentPayloadDTO, isWaitingroom);
+                appointmentPayloadDTO, isWaitingRoom);
         dialog.show();
     }
 
