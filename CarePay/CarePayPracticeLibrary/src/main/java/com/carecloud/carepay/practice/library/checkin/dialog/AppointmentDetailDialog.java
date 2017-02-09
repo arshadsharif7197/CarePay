@@ -367,9 +367,9 @@ public class AppointmentDetailDialog extends Dialog {
             CheckBox checkBox;
 
             String[] sufixes = getOrdinalSufix(metadata.getLabel());
-            for (int chkindex = index >= 3 ? 3 : index; chkindex >= 0; chkindex--) {
+            for (int checkIndex = Math.min(index, 3); checkIndex >= 0; checkIndex--) {
                 queue = queueList.get(index);
-                checkBox = checkBoxes.get(chkindex);
+                checkBox = checkBoxes.get(checkIndex);
                 if (index == maxIndex) {
                     checkBox.setChecked(true);
                     checkBox.setText(ordinal(queue.getRank(), sufixes) + " " + metadata.getLabel().getPracticeCheckinDetailDialogQueue());
