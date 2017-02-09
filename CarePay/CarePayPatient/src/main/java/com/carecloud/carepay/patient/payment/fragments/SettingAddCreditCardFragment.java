@@ -549,25 +549,25 @@ public class SettingAddCreditCardFragment extends Fragment implements
     private WorkflowServiceCallback addNewCreditCardCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getActivity()).dismiss();
             Gson gson = new Gson();
             DemographicsSettingsDTO removeCreditCardResponseDTO = gson.fromJson(workflowDTO.toString(),
                     DemographicsSettingsDTO.class);
             demographicsSettingsDTO.getPayload().setPatientCreditCards(removeCreditCardResponseDTO.getPayload()
                     .getPatientCreditCards());
             ((DemographicsSettingsActivity) getActivity()).onCreditCardOperation(demographicsSettingsDTO);
-            ProgressDialogUtil.getInstance(getActivity()).dismiss();
             getActivity().onBackPressed();
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showDefaultFailureDialog(getActivity());
             ProgressDialogUtil.getInstance(getActivity()).dismiss();
+            SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -640,7 +640,7 @@ public class SettingAddCreditCardFragment extends Fragment implements
         billingInformationDTO.setSameAsPatient(useProfileAddressCheckBox.isChecked());
         creditCardsPayloadDTO.setCardNumber(getLastFour());
         creditCardsPayloadDTO.setNameOnCard(nameOnCardEditText.getText().toString().trim());
-        creditCardsPayloadDTO.setCvv(Integer.parseInt(verificationCodeEditText.getText().toString().trim()));
+        creditCardsPayloadDTO.setCvv(verificationCodeEditText.getText().toString().trim());
         String expiryDate = pickDateTextView.getText().toString();
         expiryDate = expiryDate.substring(0, 2) + expiryDate.substring(expiryDate.length() - 2);
         creditCardsPayloadDTO.setExpireDt(expiryDate);

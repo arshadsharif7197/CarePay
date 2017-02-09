@@ -28,6 +28,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -140,10 +141,12 @@ public class PaymentAmountReceiptDialog extends Dialog implements View.OnClickLi
     private WorkflowServiceCallback paymentsCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             ViewPaymentBalanceHistoryActivity.setIsPaymentDone(true);
             PatientNavigationHelper.setAccessPaymentsBalances(true);
             PatientNavigationHelper.getInstance(context).navigateToWorkflow(workflowDTO);
@@ -151,6 +154,7 @@ public class PaymentAmountReceiptDialog extends Dialog implements View.OnClickLi
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             //SystemUtil.showDefaultFailureDialog(InTakeWebViewActivity.this);
             Log.e(context.getString(R.string.alert_title_server_error), exceptionMessage);
         }
