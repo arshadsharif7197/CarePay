@@ -134,7 +134,7 @@ public class DemographicsActivity extends BasePatientActivity
      * Enable or disable scroll on view pager
      */
     public void enableScroll(boolean isScrollEnable){
-        viewPager.enablePagin(isScrollEnable);
+        viewPager.enablePaging(isScrollEnable);
     }
 
     private void setupPager() {

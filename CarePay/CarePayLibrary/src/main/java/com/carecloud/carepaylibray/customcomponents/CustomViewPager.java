@@ -7,7 +7,7 @@ import android.view.MotionEvent;
 
 public class CustomViewPager extends ViewPager {
 
-    private boolean enablePagin = false;
+    private boolean enablePaging = false;
 
     public CustomViewPager(Context context) {
         super(context);
@@ -19,16 +19,16 @@ public class CustomViewPager extends ViewPager {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return this.enablePagin && super.onTouchEvent(event);
+        return this.enablePaging && super.onTouchEvent(event);
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        return this.enablePagin && super.onInterceptTouchEvent(event);
+        return this.enablePaging && super.onInterceptTouchEvent(event);
     }
 
 
-    public void enablePagin(boolean isEnable) {
-        this.enablePagin = isEnable;
+    public void enablePaging(boolean isEnable) {
+        this.enablePaging = isEnable;
     }
 }
