@@ -12,7 +12,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -26,6 +25,7 @@ import com.carecloud.carepay.patient.demographics.fragments.viewpager.Demographi
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.customcomponents.CustomViewPager;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.DemographicMetadataDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
@@ -61,7 +61,7 @@ public class DemographicsActivity extends BasePatientActivity
     private int       currentPageIndex;
     // views
     private TextView  titleTextView;
-    private ViewPager viewPager;
+    private CustomViewPager viewPager;
     private ImageView tabImageView;
     // jsons (payload)
     private DemographicDTO modelGet = null;
@@ -129,10 +129,18 @@ public class DemographicsActivity extends BasePatientActivity
 //        createDTOsForTest();
     }
 
+
+    /**
+     * Enable or disable scroll on view pager
+     */
+    public void enableScroll(boolean isScrollEnable){
+        viewPager.enablePagin(isScrollEnable);
+    }
+
     private void setupPager() {
         currentPageIndex = 0;
         DemographicPagerAdapter demographicPagerAdapter = new DemographicPagerAdapter(getSupportFragmentManager());
-        viewPager = (ViewPager) findViewById(R.id.demographicsViewPager);
+        viewPager = (CustomViewPager) findViewById(R.id.demographicsViewPager);
         viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(demographicPagerAdapter);
         ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
@@ -156,13 +164,9 @@ public class DemographicsActivity extends BasePatientActivity
         };
         viewPager.addOnPageChangeListener(pageChangeListener);
 
-        viewPager.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                return true;
-            }
-        });
     }
+
+
 
     private void setScreenHeader(int position) {
         switch (position) {

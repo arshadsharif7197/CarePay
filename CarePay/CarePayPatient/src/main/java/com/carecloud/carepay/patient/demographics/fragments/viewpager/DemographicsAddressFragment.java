@@ -538,9 +538,13 @@ public class DemographicsAddressFragment extends Fragment {
         });
     }
 
+    /**
+     * Enable next button and view pager
+     */
     private void enableNextButton() {
         boolean areAllReqNonEmpty = !(isFirstNameEmpty || isLastNameEmpty);
         nextButton.setEnabled(areAllReqNonEmpty);
+        ((DemographicsActivity) getActivity()).enableScroll(areAllReqNonEmpty);
     }
 
     private void setEditActionListeners() {
