@@ -133,12 +133,13 @@ public class NewReviewDemographicsActivity extends BasePatientActivity
 
     @Override
     public void navigateToInsuranceDocumentFragment(int index, DemographicInsurancePayloadDTO model) {
-        InsuranceDocumentScannerFragment fragment = new InsuranceDocumentScannerFragment();
+
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, demographicDTO.getMetadata().getLabels());
         DtoHelper.bundleDto(args, demographicDTO.getMetadata().getDataModels().demographic.insurances.properties.items.insurance);
         DtoHelper.bundleDto(args, model);
         DtoHelper.bundleDto(args, index);
+        InsuranceDocumentScannerFragment fragment = new InsuranceDocumentScannerFragment();
         fragment.setArguments(args);
 
         navigateToFragment(fragment, false);

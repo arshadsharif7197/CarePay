@@ -41,18 +41,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTextInputLayout;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
-
 /**
  * Fragment with insurance scanning functionality
  */
 
 public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
+
+    private static final String LOG_TAG = InsuranceDocumentScannerFragment.class.getSimpleName();
 
     private String[] planDataArray;
     private String[] providerDataArray;
@@ -471,33 +466,31 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
 
     @Override
     protected void setTypefaces(View view) {
-        TextView insurancePlanLabel = (TextView) view.findViewById(R.id.demogr_insurance_plan_label);
-        TextView insuranceProviderLabel = (TextView) view.findViewById(R.id.demogr_insurance_provider_label);
-        TextView insuranceTypeLabel = (TextView) view.findViewById(R.id.demogr_insurance_card_type_abel);
-        TextView insuranceCardNumEditText = (EditText) view.findViewById(R.id.reviewinsurncecardnum);
-        TextInputLayout insuranceCardNumberTextInput = (TextInputLayout) view.findViewById(R.id.insurancecardNumberLabel);
-        Button btnScanFrontInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_frontbtn);
-        Button btnScanBackInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_backbtn);
-        final TextView providerTextView = (TextView) view.findViewById(R.id.demogr_docs_provider);
-        final TextView cardTypeTextView = (TextView) view.findViewById(R.id.demogr_insurance_card_type_textview);
-        final TextView planTextView = (TextView) view.findViewById(R.id.demogr_docs_plan);
-
 
         Context context = getActivity();
-        setGothamRoundedMediumTypeface(context, btnScanFrontInsurance);
-        setGothamRoundedMediumTypeface(context, btnScanBackInsurance);
-        setProximaNovaRegularTypeface(context, insurancePlanLabel);
-        setProximaNovaSemiboldTypeface(context, planTextView);
-        setProximaNovaSemiboldTypeface(context, cardTypeTextView);
-        setProximaNovaRegularTypeface(context, insuranceProviderLabel);
-        setProximaNovaRegularTypeface(context, insuranceTypeLabel);
-        setProximaNovaSemiboldTypeface(context, providerTextView);
-        setProximaNovaRegularTypeface(context, insuranceCardNumEditText);
-
+        Button btnScanFrontInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_frontbtn);
+        SystemUtil.setGothamRoundedMediumTypeface(context, btnScanFrontInsurance);
+        Button btnScanBackInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_backbtn);
+        SystemUtil.setGothamRoundedMediumTypeface(context, btnScanBackInsurance);
+        TextView insurancePlanLabel = (TextView) view.findViewById(R.id.demogr_insurance_plan_label);
+        SystemUtil.setProximaNovaRegularTypeface(context, insurancePlanLabel);
+        final TextView planTextView = (TextView) view.findViewById(R.id.demogr_docs_plan);
+        SystemUtil.setProximaNovaSemiboldTypeface(context, planTextView);
+        final TextView cardTypeTextView = (TextView) view.findViewById(R.id.demogr_insurance_card_type_textview);
+        SystemUtil.setProximaNovaSemiboldTypeface(context, cardTypeTextView);
+        TextView insuranceProviderLabel = (TextView) view.findViewById(R.id.demogr_insurance_provider_label);
+        SystemUtil.setProximaNovaRegularTypeface(context, insuranceProviderLabel);
+        TextView insuranceTypeLabel = (TextView) view.findViewById(R.id.demogr_insurance_card_type_abel);
+        SystemUtil.setProximaNovaRegularTypeface(context, insuranceTypeLabel);
+        final TextView providerTextView = (TextView) view.findViewById(R.id.demogr_docs_provider);
+        SystemUtil.setProximaNovaSemiboldTypeface(context, providerTextView);
+        TextView insuranceCardNumEditText = (EditText) view.findViewById(R.id.reviewinsurncecardnum);
+        SystemUtil.setProximaNovaRegularTypeface(context, insuranceCardNumEditText);
+        TextInputLayout insuranceCardNumberTextInput = (TextInputLayout) view.findViewById(R.id.insurancecardNumberLabel);
         if (!StringUtil.isNullOrEmpty(insuranceCardNumEditText.getText().toString())) {
-            setProximaNovaExtraboldTypefaceInput(context, insuranceCardNumberTextInput);
+            SystemUtil.setProximaNovaExtraboldTypefaceInput(context, insuranceCardNumberTextInput);
         } else {
-            setProximaNovaSemiboldTextInputLayout(context, insuranceCardNumberTextInput);
+            SystemUtil.setProximaNovaSemiboldTextInputLayout(context, insuranceCardNumberTextInput);
         }
     }
 

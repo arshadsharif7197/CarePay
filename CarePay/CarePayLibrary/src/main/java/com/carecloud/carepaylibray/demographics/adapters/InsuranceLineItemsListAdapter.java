@@ -62,9 +62,17 @@ public class InsuranceLineItemsListAdapter extends RecyclerView.Adapter<Insuranc
             super(itemView);
         }
 
-        public CarePayTextView getLineItemNameLabel(){return (CarePayTextView) itemView.findViewById(R.id.lineItemNameLabel);}
-        public CarePayTextView getLineItemQueueLabel() {return (CarePayTextView) itemView.findViewById(R.id.lineItemQueueLabel);}
-        public CarePayTextView getLineItemNameLabelEdit() {return (CarePayTextView) itemView.findViewById(R.id.lineItemNameLabelEdit);}
+        public CarePayTextView getLineItemNameLabel(){
+            return (CarePayTextView) itemView.findViewById(R.id.lineItemNameLabel);
+        }
+
+        public CarePayTextView getLineItemQueueLabel() {
+            return (CarePayTextView) itemView.findViewById(R.id.lineItemQueueLabel);
+        }
+
+        public CarePayTextView getLineItemNameLabelEdit() {
+            return (CarePayTextView) itemView.findViewById(R.id.lineItemNameLabelEdit);
+        }
 
         }
 

@@ -58,6 +58,7 @@ public class HealthInsuranceFragment extends Fragment {
         TextView healthInsuranceTitleTextView = (TextView) view.findViewById(R.id.insurancesTitleLabel);
         healthInsuranceTitleTextView.setText(globalLabelsMetaDTO.getDemographicsUpdateInsuranceToolbarTitle().toUpperCase());
     }
+
     private void initActiveSection(View view) {
         boolean loadResources = insurancePayloadDTOs.size() > 0;
         view.findViewById(R.id.setupContainer).setVisibility(loadResources? View.GONE : View.VISIBLE);
