@@ -9,6 +9,10 @@ public class CustomViewPager extends ViewPager {
 
     private boolean enablePaging = false;
 
+    public void setEnablePaging(boolean enablePaging) {
+        this.enablePaging = enablePaging;
+    }
+
     public CustomViewPager(Context context) {
         super(context);
     }
@@ -27,8 +31,4 @@ public class CustomViewPager extends ViewPager {
         return this.enablePaging && super.onInterceptTouchEvent(event);
     }
 
-
-    public void enablePaging(boolean isEnable) {
-        this.enablePaging = isEnable;
-    }
 }
