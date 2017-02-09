@@ -56,7 +56,8 @@ import java.util.List;
 public class DemographicsActivity extends BasePatientActivity
         implements DemographicsLabelsHolder,
         DemographicsDocumentsFragmentWthWrapper.DemographicsDocumentsFragmentWthWrapperListener,
-        DemographicsDetailsFragment.DemographicsDetailsFragmentListener{
+        DemographicsDetailsFragment.DemographicsDetailsFragmentListener,
+        DemographicsAddressFragment.DemographicsAddressFragmentListener{
 
     private int       currentPageIndex;
     // views
@@ -133,7 +134,8 @@ public class DemographicsActivity extends BasePatientActivity
     /**
      * Enable or disable scroll on view pager
      */
-    public void enableScroll(boolean isScrollEnable){
+    @Override
+    public void enableScroll(boolean isScrollEnable) {
         viewPager.setEnablePaging(isScrollEnable);
     }
 
