@@ -23,7 +23,7 @@ public class PaymentCreditCardsPayloadDTO {
     private String expireDt;
     @SerializedName("cvv")
     @Expose
-    private int cvv;
+    private String cvv;
     @SerializedName("hash_credit_cards_id")
     @Expose
     private String creditCardsId;
@@ -93,14 +93,14 @@ public class PaymentCreditCardsPayloadDTO {
     /**
      * @return The cvv
      */
-    public int getCvv() {
+    public String getCvv() {
         return cvv;
     }
 
     /**
      * @param cvv The cvv
      */
-    public void setCvv(int cvv) {
+    public void setCvv(String cvv) {
         this.cvv = cvv;
     }
 
