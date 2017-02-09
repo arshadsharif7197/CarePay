@@ -57,7 +57,6 @@ public class PersonalInformationActivity extends BasePracticeActivity {
     private SigninPatientModeDTO signinPatientModeDTO;
     private SigninPatientModeLabelsDTO labelsDTO;
     private String[] gendersArray;
-    private CarePayButton genderButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,10 +130,28 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         CarePayTextView genderTextView = (CarePayTextView) findViewById(R.id.genderTextView);
         genderTextView.setText(signinPatientModeDTO.getMetadata().getLoginDataModels().getPersonalInfo().getProperties().getGender().getLabel());
 
-        genderButton =(CarePayButton) findViewById(R.id.selectGenderButton);
+        CarePayButton genderButton =(CarePayButton) findViewById(R.id.selectGenderButton);
         genderButton.setText(labelsDTO.getChooseGenderLabel());
         genderButton.setOnClickListener(selectGenderButtonListener);
+        genderButton.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String genderValue = editable.toString();
+                isEmptyGender = genderValue.equalsIgnoreCase(labelsDTO.getChooseGenderLabel());
+                enableFindMyAppointmentButton();
+
+            }
+        });
 
         findMyAppointmentButton = (CarePayButton)
                 findViewById(R.id.findMyAppointmentButton);
@@ -272,25 +289,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
             }
         });
 
-        genderButton.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                String genderValue = genderButton.getText().toString();
-                isEmptyGender = genderValue.equalsIgnoreCase(labelsDTO.getChooseGenderLabel());
-                enableFindMyAppointmentButton();
-
-            }
-        });
 
     }
 
@@ -315,7 +314,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
     View.OnClickListener selectGenderButtonListener = new View.OnClickListener(){
         @Override
         public void onClick(View view) {
-            selectGender();
+            selectGender((CarePayButton) view);
         }
     };
 
@@ -334,7 +333,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
     /**
      * Selects gender
      */
-    public void selectGender(){
+    public void selectGender(final CarePayButton genderButton){
         SystemUtil.showChooseDialog(this,
                 gendersArray, labelsDTO.getGenderLabel(), labelsDTO.getGenderCancelLabel(),
                 genderButton,
@@ -415,7 +414,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         queryMap.put("phone", phoneNumberEditText.getText().toString());
         queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
         queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
-        queryMap.put("gender",  genderButton.getText().toString());
+        queryMap.put("gender",  ((CarePayButton) findViewById(R.id.selectGenderButton)).getText().toString());
         TransitionDTO transitionDTO;
         transitionDTO = signinPatientModeDTO.getMetadata().getLinks().getPersonalInfo();
         WorkflowServiceHelper.getInstance().execute(transitionDTO, findMyAppointmentsCallback, queryMap);
