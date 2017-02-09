@@ -24,7 +24,7 @@
         android:layout_marginTop="5dp"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/blue_border_silver_bg"
-        android:textColor="@color/bright_cerulean"
+        android:textColor="@color/colorPrimary"
         android:textSize="13sp"
         android:layout_marginBottom="15dp"
         android:text="@string/selectOrTakePhotoButton"/>
