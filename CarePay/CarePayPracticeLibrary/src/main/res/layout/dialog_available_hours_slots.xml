@@ -55,7 +55,7 @@
         android:layout_margin="@dimen/apt_available_hours_list_padding"
         android:background="@drawable/button_blue_border"
         android:text="@string/edit_date_range_button_label"
-        android:textColor="@color/bright_cerulean"
+        android:textColor="@color/colorPrimary"
         android:textSize="@dimen/apt_list_upcoming_month_txt_size"
         android:visibility="gone" />
 
