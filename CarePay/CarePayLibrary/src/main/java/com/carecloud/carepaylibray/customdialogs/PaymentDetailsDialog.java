@@ -57,7 +57,7 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
         setCancelable(false);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         WindowManager.LayoutParams params = getWindow().getAttributes();
-        params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        params.height =WindowManager.LayoutParams.WRAP_CONTENT;
         params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * size);
         getWindow().setAttributes(params);
     }
@@ -75,6 +75,7 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
                 ((TextView) findViewById(R.id.payment_receipt_title)).setText(paymentsLabel.getPaymentReceiptTitle());
                 ((TextView) findViewById(R.id.payment_receipt_total_label)).setText(paymentsLabel.getPaymentDetailsPatientBalanceLabel());
                 ((TextView) findViewById(R.id.payment_receipt_total_value)).setText(totalAmount);
+                ((TextView) findViewById(R.id.avTextView)).setText(StringUtil.onShortDrName(paymentsLabel.getPaymentReceiptTitle()));
 
                 payNowButton.setText(paymentsLabel.getPaymentDetailsPayNow());
 

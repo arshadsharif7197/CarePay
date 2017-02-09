@@ -86,6 +86,7 @@
                 </LinearLayout>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/avTextView"
                     android:layout_width="@dimen/payment_details_dialog_icon_size"
                     android:layout_height="@dimen/payment_details_dialog_icon_size"
                     android:layout_alignParentBottom="true"
