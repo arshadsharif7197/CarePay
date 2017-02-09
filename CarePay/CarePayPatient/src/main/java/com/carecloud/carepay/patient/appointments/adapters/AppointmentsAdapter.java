@@ -358,53 +358,51 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             boolean isRequested = payloadDTO.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.REQUESTED);
 
             // Missed Appointment
-//            if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER) && !isCheckedIn) {
-//                new CancelAppointmentDialog(context, item, appointmentInfo,
-//                        BaseDoctorInfoDialog.AppointmentType.MISSED_APPOINTMENT, null).show();
-//
-//            } else if (isCheckedIn) {
-//                // Checked-In Appointment
-//                new QueueAppointmentDialog(context, item, appointmentLabels).show();
-//
-//            } else if (isCanceled) {
-//                // Cancelled Appointment
-//                new CancelAppointmentDialog(context, item, appointmentInfo,
-//                        BaseDoctorInfoDialog.AppointmentType.CANCELLED_APPOINTMENT, null).show();
-//
-//            } else if (isAppointmentCancellable(item)) {
-//                // Appointment as long as it's 24 hours or more in the future
-//                new CancelAppointmentDialog(context, item, appointmentInfo,
-//                        BaseDoctorInfoDialog.AppointmentType.CANCEL_APPOINTMENT,
-//                        AppointmentsAdapter.this).show();
-//
-//            } else if (isRequested) {
-//                // Requested Appointment
-//                new CancelAppointmentDialog(context, item, appointmentInfo,
-//                        BaseDoctorInfoDialog.AppointmentType.REQUESTED_APPOINTMENT, null).show();
-//
-//            } else if (isPending) {
-//                if (sectionHeaderTitle.equals(appointmentLabels.getTodayAppointmentsHeading())) {
-//
-//                    // Pending Appointment && Appointments for the current business day
-//                    new CheckInOfficeNowAppointmentDialog(context, false, item, appointmentInfo).show();
-//
-//                } else if (isAppointmentCancellable(item)) {
-//                    // Appointment as long as it's 24 hours or more in the future
-//                    new CancelAppointmentDialog(context, item, appointmentInfo,
-//                            BaseDoctorInfoDialog.AppointmentType.CANCEL_APPOINTMENT,
-//                            AppointmentsAdapter.this).show();
-//
-//                } else {
-//                    // Pending Appointment && Appointment in the future that is not today
-//                    new CancelAppointmentDialog(context, item, appointmentInfo,
-//                            BaseDoctorInfoDialog.AppointmentType.UPCOMING_APPOINTMENT, null).show();
-//                }
-//            } else {
-//                // Other
-//                new CheckInOfficeNowAppointmentDialog(context, false, item, appointmentInfo).show();
-//            }
+            if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER) && !isCheckedIn) {
+                new CancelAppointmentDialog(context, item, appointmentInfo,
+                        BaseDoctorInfoDialog.AppointmentType.MISSED_APPOINTMENT, null).show();
 
-            new CheckInOfficeNowAppointmentDialog(context, false, item, appointmentInfo).show();
+            } else if (isCheckedIn) {
+                // Checked-In Appointment
+                new QueueAppointmentDialog(context, item, appointmentLabels).show();
+
+            } else if (isCanceled) {
+                // Cancelled Appointment
+                new CancelAppointmentDialog(context, item, appointmentInfo,
+                        BaseDoctorInfoDialog.AppointmentType.CANCELLED_APPOINTMENT, null).show();
+
+            } else if (isAppointmentCancellable(item)) {
+                // Appointment as long as it's 24 hours or more in the future
+                new CancelAppointmentDialog(context, item, appointmentInfo,
+                        BaseDoctorInfoDialog.AppointmentType.CANCEL_APPOINTMENT,
+                        AppointmentsAdapter.this).show();
+
+            } else if (isRequested) {
+                // Requested Appointment
+                new CancelAppointmentDialog(context, item, appointmentInfo,
+                        BaseDoctorInfoDialog.AppointmentType.REQUESTED_APPOINTMENT, null).show();
+
+            } else if (isPending) {
+                if (sectionHeaderTitle.equals(appointmentLabels.getTodayAppointmentsHeading())) {
+
+                    // Pending Appointment && Appointments for the current business day
+                    new CheckInOfficeNowAppointmentDialog(context, false, item, appointmentInfo).show();
+
+                } else if (isAppointmentCancellable(item)) {
+                    // Appointment as long as it's 24 hours or more in the future
+                    new CancelAppointmentDialog(context, item, appointmentInfo,
+                            BaseDoctorInfoDialog.AppointmentType.CANCEL_APPOINTMENT,
+                            AppointmentsAdapter.this).show();
+
+                } else {
+                    // Pending Appointment && Appointment in the future that is not today
+                    new CancelAppointmentDialog(context, item, appointmentInfo,
+                            BaseDoctorInfoDialog.AppointmentType.UPCOMING_APPOINTMENT, null).show();
+                }
+            } else {
+                // Other
+                new CheckInOfficeNowAppointmentDialog(context, false, item, appointmentInfo).show();
+            }
         }
     }
 
