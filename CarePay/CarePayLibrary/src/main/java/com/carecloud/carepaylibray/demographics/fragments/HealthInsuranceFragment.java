@@ -40,7 +40,7 @@ public class HealthInsuranceFragment extends Fragment {
     private DemographicDTO                         demographicDTO;
     private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
     private DemographicLabelsDTO                   globalLabelsMetaDTO;
-    private InsuranceDocumentScannerFragment       documentCallback;
+    private InsuranceDocumentScannerListener       documentCallback;
 
 
     @Override
@@ -144,14 +144,14 @@ public class HealthInsuranceFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            documentCallback = (InsuranceDocumentScannerFragment) context;
+            documentCallback = (InsuranceDocumentScannerListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + " must implement InsuranceDocumentScannerFragment");
+                    + " must implement InsuranceDocumentScannerListener");
         }
     }
 
-    public interface InsuranceDocumentScannerFragment {
+    public interface InsuranceDocumentScannerListener {
         public void navigateToInsuranceDocumentFragment(int index, DemographicInsurancePayloadDTO model);
 
         public void navigateToParentFragment();

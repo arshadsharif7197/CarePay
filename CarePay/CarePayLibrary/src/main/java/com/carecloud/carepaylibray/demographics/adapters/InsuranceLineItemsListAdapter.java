@@ -25,7 +25,7 @@ public class InsuranceLineItemsListAdapter extends RecyclerView.Adapter<Insuranc
     private Context context;
     private List<DemographicInsurancePayloadDTO> detailsList;
     private DemographicDTO model;
-    private HealthInsuranceFragment.InsuranceDocumentScannerFragment listener;
+    private HealthInsuranceFragment.InsuranceDocumentScannerListener listener;
 
     /**
      * Constructor
@@ -36,7 +36,7 @@ public class InsuranceLineItemsListAdapter extends RecyclerView.Adapter<Insuranc
      */
     public InsuranceLineItemsListAdapter(Context context, DemographicDTO model,
                                          List<DemographicInsurancePayloadDTO> detailsList,
-                                         HealthInsuranceFragment.InsuranceDocumentScannerFragment listener) {
+                                         HealthInsuranceFragment.InsuranceDocumentScannerListener listener) {
 
         this.context = context;
         this.detailsList = detailsList;

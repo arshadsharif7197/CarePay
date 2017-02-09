@@ -33,7 +33,7 @@ public class NewReviewDemographicsActivity extends BasePatientActivity
         implements DemographicsLabelsHolder,
         CheckinDemographicsFragment.CheckinDemographicsFragmentListener,
         DemographicsCheckInDocumentsFragment.DemographicsCheckInDocumentsFragmentListener,
-        HealthInsuranceFragment.InsuranceDocumentScannerFragment {
+        HealthInsuranceFragment.InsuranceDocumentScannerListener {
 
     private DemographicDTO demographicDTO;
 

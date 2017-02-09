@@ -64,7 +64,7 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
     private int                                       index;
     private View                                      view;
 
-    private HealthInsuranceFragment.InsuranceDocumentScannerFragment documentCallback;
+    private HealthInsuranceFragment.InsuranceDocumentScannerListener documentCallback;
 
 
     @Nullable
@@ -88,7 +88,7 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            documentCallback = (HealthInsuranceFragment.InsuranceDocumentScannerFragment) context;
+            documentCallback = (HealthInsuranceFragment.InsuranceDocumentScannerListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement InsuranceDocumentScannerFragment");
