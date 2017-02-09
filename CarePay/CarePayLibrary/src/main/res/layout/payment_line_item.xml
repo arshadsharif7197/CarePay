@@ -38,8 +38,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="0.3"
-                android:background="@drawable/round_border_button_bg"
-                android:gravity="center"
+                android:ellipsize="end"
+                android:gravity="end|center_vertical"
+                android:maxLines="1"
                 android:textColor="@color/colorPrimary"
                 android:textSize="13sp"
                 app:customAssetFont="gotham_rounded_medium" />
