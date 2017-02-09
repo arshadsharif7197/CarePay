@@ -18,6 +18,18 @@ public class PatientBalanceDTO {
     @Expose
     private List<PatientBalancePayloadDTO> payload = new ArrayList<PatientBalancePayloadDTO>();
 
+    @SerializedName("pending_balances")
+    @Expose
+    private List<PendingBalanceDTO> pendingBalances = null;
+
+    public List<PendingBalanceDTO> getPendingBalances() {
+        return pendingBalances;
+    }
+
+    public void setPendingBalances(List<PendingBalanceDTO> pendingBalances) {
+        this.pendingBalances = pendingBalances;
+    }
+
     /**
      *
      * @return
