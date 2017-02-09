@@ -23,7 +23,6 @@ public class PurchaseActivity extends MenuPatientActivity {
     @Override
     public void onCreate(Bundle icicle){
         super.onCreate(icicle);
-        Gson gson = new Gson();
         setContentView(R.layout.activity_navigation);
         toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.toolbar);
         drawer = (DrawerLayout) findViewById(com.carecloud.carepaylibrary.R.id.drawer_layout);
@@ -31,6 +30,7 @@ public class PurchaseActivity extends MenuPatientActivity {
         appointmentsDrawerUserIdTextView = (TextView) navigationView.getHeaderView(0)
                 .findViewById(com.carecloud.carepaylibrary.R.id.appointmentsDrawerIdTextView);
 
+        Gson gson = new Gson();
         AppointmentsResultModel appointmentDTO = getConvertedDTO(AppointmentsResultModel.class);
         Bundle bundle = new Bundle();
         bundle.putString(CarePayConstants.APPOINTMENT_INFO_BUNDLE, gson.toJson(appointmentDTO));

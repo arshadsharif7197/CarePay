@@ -25,13 +25,13 @@ public class NotificationActivity extends MenuPatientActivity {
     public void onCreate(Bundle icicle){
         super.onCreate(icicle);
         setContentView(R.layout.activity_navigation);
-        Gson gson = new Gson();
         toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.toolbar);
         drawer = (DrawerLayout) findViewById(com.carecloud.carepaylibrary.R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(com.carecloud.carepaylibrary.R.id.nav_view);
         appointmentsDrawerUserIdTextView = (TextView) navigationView.getHeaderView(0)
                 .findViewById(com.carecloud.carepaylibrary.R.id.appointmentsDrawerIdTextView);
 
+        Gson gson = new Gson();
         AppointmentsResultModel appointmentDTO = getConvertedDTO(AppointmentsResultModel.class);
         Bundle bundle = new Bundle();
         bundle.putString(CarePayConstants.APPOINTMENT_INFO_BUNDLE, gson.toJson(appointmentDTO));

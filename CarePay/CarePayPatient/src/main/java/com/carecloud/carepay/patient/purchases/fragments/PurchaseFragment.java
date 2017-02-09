@@ -28,12 +28,12 @@ public class PurchaseFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(View view, Bundle icicle){
-        Gson gson = new Gson();
         TextView noPurchaseTitle = (TextView) view.findViewById(R.id.no_purchase_message_title);
         TextView noPurchaseDesc = (TextView) view.findViewById(R.id.no_purchase_message_desc);
         noPurchaseLayout = view.findViewById(R.id.no_purchase_layout);
 
         //TODO this is temporary and must be updated to use proper DTO when this class is implemented
+        Gson gson = new Gson();
         String appointmentDtoString = getArguments().getString(CarePayConstants.APPOINTMENT_INFO_BUNDLE);
         AppointmentsResultModel appointmentDTO = gson.fromJson(appointmentDtoString, AppointmentsResultModel.class);
 

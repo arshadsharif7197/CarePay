@@ -28,15 +28,15 @@ public class NotificationFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(View view, Bundle icicle){
-        Gson gson = new Gson();
         TextView noNotificationTitle = (TextView) view.findViewById(R.id.no_notification_message_title);
         TextView noNotificationDesc = (TextView) view.findViewById(R.id.no_notificaton_message_desc);
         noNotificationLayout = view.findViewById(R.id.no_notification_layout);
 
+        Gson gson = new Gson();
+        //TODO this is temporary and must be updated to use proper DTO when this class is implemented
         String appointmentDtoString = getArguments().getString(CarePayConstants.APPOINTMENT_INFO_BUNDLE);
         AppointmentsResultModel appointmentDTO = gson.fromJson(appointmentDtoString, AppointmentsResultModel.class);
 
-        //TODO this is temporary and must be updated to use proper DTO when this class is implemented
         noNotificationTitle.setText(SystemUtil.validateJsonLabel(appointmentDTO.getMetadata().getLabel().getNoNotificationsMessageTitle()));
         noNotificationDesc.setText(SystemUtil.validateJsonLabel(appointmentDTO.getMetadata().getLabel().getNoNotificationsMessageText()));
         noNotificationLayout.setVisibility(View.VISIBLE);
