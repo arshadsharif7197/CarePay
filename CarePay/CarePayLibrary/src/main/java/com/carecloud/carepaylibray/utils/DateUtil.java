@@ -293,7 +293,7 @@ public class DateUtil {
      * @param number the last digit of the day (as char)
      * @return return a ordinal String with day
      */
-    private String getOrdinalSuffix(int number) {
+    public String getOrdinalSuffix(int number) {
         int lastTwoDigits = number % 100;
         int dayLastDigit = number % 10;
         if (dayLastDigit == 1) { //

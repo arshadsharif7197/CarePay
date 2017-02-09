@@ -45,6 +45,7 @@ public class CarePayConstants {
     public static final String ATTR_UTC = "UTC";
 
     public static final int SIGNATURE_REQ_CODE = 100;
+    public static final int NO_INDEX = -1;
     public static final String FORM_DATA  = "formdata";
     public static final String CHECKED_IN_APPOINTMENT_BUNDLE  = "Checked_in_appointment_bundle";
     public static final String INTAKE_BUNDLE  = "intake_bundle";

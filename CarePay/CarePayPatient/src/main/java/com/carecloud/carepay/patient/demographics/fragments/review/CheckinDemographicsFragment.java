@@ -147,7 +147,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     private String stateAbbr = null;
     private City smartyStreetsResponse;
 
-    CheckinDemographicsFragmentListener activityCallback;
+    private CheckinDemographicsFragmentListener activityCallback;
 
     public interface CheckinDemographicsFragmentListener {
         void onDemographicDtoChanged(DemographicDTO demographicDTO);
@@ -204,6 +204,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         });
 
         formatEditText();
+        SystemUtil.hideSoftKeyboard(getActivity());
         ((ScrollView)view.findViewById(R.id.adddemoScrollview)).smoothScrollTo(0,0);
         return view;
     }
