@@ -80,6 +80,7 @@
                         android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
                         android:layout_marginEnd="15dp"
                         android:theme="@style/HaveHealthInsurance"
+                        android:textColor="@color/colorPrimary"
                         />
                 </LinearLayout>
 

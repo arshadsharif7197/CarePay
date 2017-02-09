@@ -114,7 +114,7 @@
                         android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ "
                         android:imeOptions="actionNext"
                         android:inputType="textPersonName"
-                        android:maxLength="1"
+                        android:maxLength="100"
                         android:nextFocusForward="@+id/reviewdemogrsLastNameEdit" />
 
                 </android.support.design.widget.TextInputLayout>
