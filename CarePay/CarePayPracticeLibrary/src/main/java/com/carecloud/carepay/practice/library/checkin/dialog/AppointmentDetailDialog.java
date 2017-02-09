@@ -397,7 +397,7 @@ public class AppointmentDetailDialog extends Dialog {
                     if(index == maxIndex){
                         checkBox.setChecked(true);
                         checkBox.setText(ordinal(queue.getRank(), sufixes)+" "+metadata.getLabel().getPracticeCheckinDetailDialogQueue());
-                        checkBox.setTextColor(ContextCompat.getColor(context, R.color.bright_cerulean));
+                        checkBox.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
                         checkBox.setTypeface(checkBox.getTypeface(), Typeface.BOLD);
                     }else{
                         //textView = textViews.get(chkindex);

@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/dimen_18dp"
         android:layout_marginStart="@dimen/dimen_18dp"
-        android:background="@drawable/bg_cardview"
+        android:background="@drawable/card_shadow"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -160,5 +160,6 @@
         android:layout_marginTop="-30dp"
         android:paddingEnd="@dimen/dimen_18dp"
         android:paddingStart="@dimen/dimen_18dp"
+        android:visibility="gone"
         android:src="@drawable/home_shadow" />
 </LinearLayout>
