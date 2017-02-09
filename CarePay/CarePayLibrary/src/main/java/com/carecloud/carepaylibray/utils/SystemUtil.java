@@ -29,7 +29,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.base.BaseVisibilityHintActivity;
@@ -387,16 +386,5 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
 //        t.setDefaultUncaughtExceptionHandler(new SystemUtil());
     }
 
-    /**
-     * Convinience method for validating json String
-     * @param jsonLabel - String to vaildate
-     * @return - Either original string if valid or "Not Defined"
-     */
-    public static String validateJsonLabel(String jsonLabel){
-        if(isNotEmptyString(jsonLabel)) {
-            return jsonLabel;
-        }
-        return CarePayConstants.NOT_DEFINED;
-    }
 
 }

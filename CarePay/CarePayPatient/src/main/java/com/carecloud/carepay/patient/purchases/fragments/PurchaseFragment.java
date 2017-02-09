@@ -10,7 +10,7 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.BaseFragment;
-import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
 /**
@@ -37,8 +37,8 @@ public class PurchaseFragment extends BaseFragment {
         String appointmentDtoString = getArguments().getString(CarePayConstants.APPOINTMENT_INFO_BUNDLE);
         AppointmentsResultModel appointmentDTO = gson.fromJson(appointmentDtoString, AppointmentsResultModel.class);
 
-        noPurchaseTitle.setText(SystemUtil.validateJsonLabel(appointmentDTO.getMetadata().getLabel().getNoShopMessageTitle()));
-        noPurchaseDesc.setText(SystemUtil.validateJsonLabel(appointmentDTO.getMetadata().getLabel().getNoShopMessageText()));
+        noPurchaseTitle.setText(StringUtil.validateJsonLabel(appointmentDTO.getMetadata().getLabel().getNoShopMessageTitle()));
+        noPurchaseDesc.setText(StringUtil.validateJsonLabel(appointmentDTO.getMetadata().getLabel().getNoShopMessageText()));
         noPurchaseLayout.setVisibility(View.VISIBLE);
 
     }

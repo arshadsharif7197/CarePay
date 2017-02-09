@@ -10,7 +10,7 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.BaseFragment;
-import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
 /**
@@ -37,8 +37,8 @@ public class NotificationFragment extends BaseFragment {
         String appointmentDtoString = getArguments().getString(CarePayConstants.APPOINTMENT_INFO_BUNDLE);
         AppointmentsResultModel appointmentDTO = gson.fromJson(appointmentDtoString, AppointmentsResultModel.class);
 
-        noNotificationTitle.setText(SystemUtil.validateJsonLabel(appointmentDTO.getMetadata().getLabel().getNoNotificationsMessageTitle()));
-        noNotificationDesc.setText(SystemUtil.validateJsonLabel(appointmentDTO.getMetadata().getLabel().getNoNotificationsMessageText()));
+        noNotificationTitle.setText(StringUtil.validateJsonLabel(appointmentDTO.getMetadata().getLabel().getNoNotificationsMessageTitle()));
+        noNotificationDesc.setText(StringUtil.validateJsonLabel(appointmentDTO.getMetadata().getLabel().getNoNotificationsMessageText()));
         noNotificationLayout.setVisibility(View.VISIBLE);
     }
 }
