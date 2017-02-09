@@ -44,7 +44,7 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
     private RecyclerView historyRecyclerView;
     private double total;
     private EmptyPaymentListCallback emptyPaymentListCallback;
-    private int section_number;
+    private int sectionNumber;
     private View noPaymentsLayout;
     private TextView noPaymentTitle;
     private TextView noPaymentDesc;
@@ -81,12 +81,12 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
     }
 
     private void setUpRecyclerView() {
-        section_number = getArguments().getInt(CarePayConstants.TAB_SECTION_NUMBER);
+        sectionNumber = getArguments().getInt(CarePayConstants.TAB_SECTION_NUMBER);
         Map<String, String> queryString = new HashMap<>();
         PaymentsLinksDTO paymentsLinks = paymentDTO.getPaymentsMetadata().getPaymentsLinks();
         PaymentPayloadMetaDataDTO metadata = paymentDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges().getMetadata();
 
-        switch (section_number) {
+        switch (sectionNumber) {
             case 1:
                 queryString.put("practice_id",  metadata.getPracticeId() );
                 queryString.put("practice_mgmt", metadata.getPracticeMgmt());
@@ -141,7 +141,7 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
                     //show noPayment view
                     showNoPaymentsLayout();
                     if(emptyPaymentListCallback!=null) {
-                        emptyPaymentListCallback.listIsEmpty(section_number);
+                        emptyPaymentListCallback.listIsEmpty(sectionNumber);
                     }
                 }
 
@@ -182,7 +182,7 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
                     //show noPayment view
                     showNoPaymentsLayout();
                     if(emptyPaymentListCallback!=null) {
-                        emptyPaymentListCallback.listIsEmpty(section_number);
+                        emptyPaymentListCallback.listIsEmpty(sectionNumber);
                     }
                 }
 
