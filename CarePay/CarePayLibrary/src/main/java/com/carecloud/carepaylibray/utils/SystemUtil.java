@@ -6,7 +6,6 @@ package com.carecloud.carepaylibray.utils;
  */
 
 import android.app.Activity;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
@@ -24,13 +23,13 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.base.BaseVisibilityHintActivity;
@@ -386,6 +385,18 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
 //        Use this in implementing class
 //        Thread t = Thread.currentThread();
 //        t.setDefaultUncaughtExceptionHandler(new SystemUtil());
+    }
+
+    /**
+     * Convinience method for validating json String
+     * @param jsonLabel - String to vaildate
+     * @return - Either original string if valid or "Not Defined"
+     */
+    public static String validateJsonLabel(String jsonLabel){
+        if(isNotEmptyString(jsonLabel)) {
+            return jsonLabel;
+        }
+        return CarePayConstants.NOT_DEFINED;
     }
 
 }

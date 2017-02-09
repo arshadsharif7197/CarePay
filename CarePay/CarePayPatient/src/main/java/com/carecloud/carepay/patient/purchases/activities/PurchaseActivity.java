@@ -10,6 +10,9 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.purchases.fragments.PurchaseFragment;
+import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.google.gson.Gson;
 
 /**
  * Created by lmenendez on 2/8/17.
@@ -20,6 +23,7 @@ public class PurchaseActivity extends MenuPatientActivity {
     @Override
     public void onCreate(Bundle icicle){
         super.onCreate(icicle);
+        Gson gson = new Gson();
         setContentView(R.layout.activity_navigation);
         toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.toolbar);
         drawer = (DrawerLayout) findViewById(com.carecloud.carepaylibrary.R.id.drawer_layout);
@@ -27,8 +31,14 @@ public class PurchaseActivity extends MenuPatientActivity {
         appointmentsDrawerUserIdTextView = (TextView) navigationView.getHeaderView(0)
                 .findViewById(com.carecloud.carepaylibrary.R.id.appointmentsDrawerIdTextView);
 
+        AppointmentsResultModel appointmentDTO = getConvertedDTO(AppointmentsResultModel.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(CarePayConstants.APPOINTMENT_INFO_BUNDLE, gson.toJson(appointmentDTO));
+        PurchaseFragment purchaseFragment = new PurchaseFragment();
+        purchaseFragment.setArguments(bundle);
+
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container_main, new PurchaseFragment(), null);
+        transaction.replace(R.id.container_main, purchaseFragment, null);
         transaction.commit();
 
         inflateDrawer();

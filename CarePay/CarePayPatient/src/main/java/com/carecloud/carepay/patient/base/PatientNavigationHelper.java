@@ -4,20 +4,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.carecloud.carepay.patient.notification.activities.NotificationActivity;
-import com.carecloud.carepay.patient.purchases.activities.PurchaseActivity;
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.consentforms.ConsentActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.patient.demographics.activities.NewReviewDemographicsActivity;
 import com.carecloud.carepay.patient.intakeforms.activities.InTakeWebViewActivity;
+import com.carecloud.carepay.patient.notifications.activities.NotificationActivity;
 import com.carecloud.carepay.patient.payment.PaymentActivity;
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
+import com.carecloud.carepay.patient.purchases.activities.PurchaseActivity;
 import com.carecloud.carepay.patient.selectlanguage.SelectLanguageActivity;
 import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-
 
 /**
  * Created by Jahirul Bhuiyan on 10/10/2016.
