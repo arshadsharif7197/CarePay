@@ -82,6 +82,15 @@ public class SigninPatientModeLabelsDTO {
     @SerializedName("personal_info_incorrect_details")
     @Expose
     private String personalInfoIncorrectDetails;
+    @SerializedName("choose_gender_label")
+    @Expose
+    private String chooseGenderLabel;
+    @SerializedName("gender_label")
+    @Expose
+    private String genderLabel;
+    @SerializedName("gender_cancel_label")
+    @Expose
+    private String genderCancelLabel;
 
     /**
      * 
@@ -528,5 +537,29 @@ public class SigninPatientModeLabelsDTO {
      */
     public void setPersonalInfoIncorrectDetails(String personalInfoIncorrectDetails) {
         this.personalInfoIncorrectDetails = personalInfoIncorrectDetails;
+    }
+
+    public String getChooseGenderLabel() {
+        return chooseGenderLabel;
+    }
+
+    public void setChooseGenderLabel(String chooseGenderLabel) {
+        this.chooseGenderLabel = chooseGenderLabel;
+    }
+
+    public String getGenderLabel() {
+        return genderLabel;
+    }
+
+    public void setGenderLabel(String genderLabel) {
+        this.genderLabel = genderLabel;
+    }
+
+    public String getGenderCancelLabel() {
+        return genderCancelLabel;
+    }
+
+    public void setGenderCancelLabel(String genderCancelLabel) {
+        this.genderCancelLabel = genderCancelLabel;
     }
 }
