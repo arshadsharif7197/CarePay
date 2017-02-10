@@ -281,29 +281,6 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
         }
     }
 
-    public static String encodeToBase64(String text){
-        String encodedString=null;
-        try { //Sending side
-             byte[] data = text.getBytes("UTF-8");
-             encodedString = Base64.encodeToString(data, Base64.DEFAULT);
-        }catch(Exception e){
-             e.printStackTrace();
-        }
-        return encodedString;
-    }
-
-    public static String decodeFromBase64(String text){
-        String decodedString = null;
-        try {
-            // Receiving side
-            byte[] data = Base64.decode(text, Base64.DEFAULT);
-            decodedString = new String(data, "UTF-8");
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return decodedString;
-    }
-
 
         /**
          * Convert the image capture place holder into a base64

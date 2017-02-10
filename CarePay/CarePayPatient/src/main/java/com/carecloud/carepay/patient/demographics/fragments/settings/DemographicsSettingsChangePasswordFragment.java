@@ -49,12 +49,13 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.api.client.util.Base64;
 import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
-
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.json.JSONObject;
+
+
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
@@ -281,6 +282,7 @@ public class DemographicsSettingsChangePasswordFragment extends Fragment {
         }
         return !isRepeatPasswordEmpty ;
     }
+
     /**
      * For tests
      *
@@ -319,7 +321,6 @@ public class DemographicsSettingsChangePasswordFragment extends Fragment {
                         if (isCurrentPasswordValid() ) {
                             if (demographicsSettingsDTO != null) {
                                 DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
-                                if (demographicsSettingsMetadataDTO != null) {
                                     DemographicsSettingsTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
                                     TransitionDTO demographicsSettingsUpdatePasswordDTO = demographicsSettingsTransitionsDTO.getChangePassword();
                                     DemographicsSettingsHeaderDTO demographicsSettingsHeaderDTO =  demographicsSettingsUpdatePasswordDTO.getHeader();
@@ -358,7 +359,6 @@ public class DemographicsSettingsChangePasswordFragment extends Fragment {
                                     }
                                 }
                             }
-                        }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
@@ -366,6 +366,7 @@ public class DemographicsSettingsChangePasswordFragment extends Fragment {
             });
         }
     }
+
     private String getCurrentEmail(){
         String currentEmail = null;
         if (demographicsSettingsDTO != null) {
@@ -373,7 +374,8 @@ public class DemographicsSettingsChangePasswordFragment extends Fragment {
             if (demographicsSettingsPayloadDTO != null) {
                 currentEmail = demographicsSettingsPayloadDTO.getCurrentEmail();
             }
-        }  return currentEmail;
+        }
+        return currentEmail;
     }
 }
 

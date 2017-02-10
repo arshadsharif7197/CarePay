@@ -13,7 +13,7 @@ public class DemographicsSettingsMaintainanceDTO {
 
     @SerializedName("$schema")
     @Expose
-    private String $schema;
+    private String schema;
     @SerializedName("type")
     @Expose
     private String type;
@@ -25,12 +25,12 @@ public class DemographicsSettingsMaintainanceDTO {
     @Expose
     private List<String> required = null;
 
-    public String get$schema() {
-        return $schema;
+    public String getschema() {
+        return schema;
     }
 
-    public void set$schema(String $schema) {
-        this.$schema = $schema;
+    public void setschema(String $schema) {
+        this.schema = schema;
     }
 
     public String getType() {

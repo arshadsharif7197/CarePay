@@ -35,13 +35,10 @@ import com.carecloud.carepay.service.library.dtos.DemographicsSettingsProposedEm
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicPayloadDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
 
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMetadataDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsTransitionsDTO;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -49,13 +46,10 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.api.client.util.Base64;
 import com.google.gson.Gson;
 
-import org.json.JSONObject;
-
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONObject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -265,7 +259,6 @@ public class DemographicsSettingUpdateEmailFragment extends Fragment {
                     if (isEmailValid() ) {
                         if (demographicsSettingsDTO != null) {
                             DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
-                            if (demographicsSettingsMetadataDTO != null) {
                                 DemographicsSettingsTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
                                 TransitionDTO demographicsSettingsUpdateEmailDTO = demographicsSettingsTransitionsDTO.getChangeLoginEmail();
                                 DemographicsSettingsHeaderDTO demographicsSettingsHeaderDTO =  demographicsSettingsUpdateEmailDTO.getHeader();
@@ -281,9 +274,6 @@ public class DemographicsSettingUpdateEmailFragment extends Fragment {
 
                                 Map<String, String> properties = null;
                                 properties = new HashMap<>();
-                                Log.d("EMMA1",getCurrentEmail());
-                                Log.d("EMMA2",emailEditText.getText().toString());
-                                Log.d("EMMA3",passwordEditText.getText().toString());
 
                                 properties.put("login_email",getCurrentEmail());
                                 properties.put("proposed_email", emailEditText.getText().toString());
@@ -313,7 +303,6 @@ public class DemographicsSettingUpdateEmailFragment extends Fragment {
                                 }
                             }
                         }
-                    }
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -347,7 +336,8 @@ public class DemographicsSettingUpdateEmailFragment extends Fragment {
             if (demographicsSettingsPayloadDTO != null) {
                 currentEmail = demographicsSettingsPayloadDTO.getCurrentEmail();
             }
-        }  return currentEmail;
+        }
+        return currentEmail;
     }
 
 }
