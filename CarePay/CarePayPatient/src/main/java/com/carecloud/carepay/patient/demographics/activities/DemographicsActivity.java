@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -127,7 +128,7 @@ public class DemographicsActivity extends BasePatientActivity
 
         isStoragePermissionGranted();
         setupPager();
-//        createDTOsForTest();
+
     }
 
 
@@ -154,7 +155,7 @@ public class DemographicsActivity extends BasePatientActivity
             public void onPageSelected(int position) {
                 if (position != 0) {
                     // hide the keyboard (just in case)
-                    SystemUtil.hideSoftKeyboard(DemographicsActivity.this);
+                    hideSoftKeyword();
                 }
                 currentPageIndex = position;
                 setScreenHeader(position);
@@ -166,7 +167,23 @@ public class DemographicsActivity extends BasePatientActivity
         };
         viewPager.addOnPageChangeListener(pageChangeListener);
 
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                hideSoftKeyword();
+            }
+        }, 500);
     }
+
+
+
+    /**
+     * Hide soft keyboard after
+     */
+    public void hideSoftKeyword(){
+        SystemUtil.hideSoftKeyboard(this);
+    }
+
 
 
 
@@ -293,7 +310,7 @@ public class DemographicsActivity extends BasePatientActivity
     @Override
     public void onBackPressed() {
         if (currentPageIndex == 0) {
-            SystemUtil.hideSoftKeyboard(this);
+            hideSoftKeyword();
             // sign-out from Cognito
             CognitoAppHelper.getPool().getUser().signOut();
             CognitoAppHelper.setUser(null);
