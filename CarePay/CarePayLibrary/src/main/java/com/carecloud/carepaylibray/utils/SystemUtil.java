@@ -6,7 +6,6 @@ package com.carecloud.carepaylibray.utils;
  */
 
 import android.app.Activity;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
@@ -24,7 +23,6 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -387,5 +385,6 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
 //        Thread t = Thread.currentThread();
 //        t.setDefaultUncaughtExceptionHandler(new SystemUtil());
     }
+
 
 }

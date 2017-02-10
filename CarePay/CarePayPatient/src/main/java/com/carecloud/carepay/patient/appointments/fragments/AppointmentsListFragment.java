@@ -243,13 +243,13 @@ public class AppointmentsListFragment extends Fragment {
     }
 
     private void init() {
-        String noAptPlaceholder = "";
+//        String noAptPlaceholder = "";
         String noAptMessageTitle = "";
         String noAptMessageText = "";
 
         if (appointmentInfo != null) {
             AppointmentLabelDTO labels = appointmentInfo.getMetadata().getLabel();
-            noAptPlaceholder = labels.getNoAppointmentsPlaceholderLabel();
+//            noAptPlaceholder = labels.getNoAppointmentsPlaceholderLabel();
             noAptMessageTitle = labels.getNoAppointmentsMessageTitle();
             noAptMessageText = labels.getNoAppointmentsMessageText();
         }
@@ -263,7 +263,7 @@ public class AppointmentsListFragment extends Fragment {
 
         appointmentView = (LinearLayout) appointmentsListView.findViewById(R.id.appointment_section_linear_layout);
         noAppointmentView = (LinearLayout) appointmentsListView.findViewById(R.id.no_appointment_layout);
-        ((CarePayTextView) appointmentsListView.findViewById(R.id.no_apt_placeholder_icon)).setText(noAptPlaceholder);
+//        ((CarePayTextView) appointmentsListView.findViewById(R.id.no_apt_placeholder_icon)).setText(noAptPlaceholder);
         ((CarePayTextView) appointmentsListView.findViewById(R.id.no_apt_message_title)).setText(noAptMessageTitle);
         ((CarePayTextView) appointmentsListView.findViewById(R.id.no_apt_message_desc)).setText(noAptMessageText);
 
