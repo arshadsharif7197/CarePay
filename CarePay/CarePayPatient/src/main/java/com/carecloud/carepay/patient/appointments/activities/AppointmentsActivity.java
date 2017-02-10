@@ -1,6 +1,5 @@
 package com.carecloud.carepay.patient.appointments.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -134,7 +133,7 @@ public class AppointmentsActivity extends MenuPatientActivity {
             appointmentsListFragment.setArguments(bundle);
         }
 
-        fm.beginTransaction().replace(R.id.appointments_list_frag_holder, appointmentsListFragment,
+        fm.beginTransaction().replace(R.id.container_main, appointmentsListFragment,
                 AppointmentsListFragment.class.getSimpleName()).commit();
     }
 

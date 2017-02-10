@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -59,21 +59,29 @@
             <LinearLayout
                 android:id="@+id/no_appointment_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                    android:id="@+id/no_apt_placeholder_icon"
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/no_apt_placeholder_icon"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="72dp"
-                    android:background="@drawable/circle_shape"
-                    android:gravity="center"
-                    android:textColor="@color/pastel_blue"
-                    android:textSize="13sp"
-                    app:customAssetFont="proxima_nova_regular" />
+                    android:src="@drawable/icn_empty_state_appointments"/>
+
+                <!--<com.carecloud.carepaylibray.customcomponents.CarePayTextView-->
+                    <!--android:id="@+id/no_apt_placeholder_icon"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="center_horizontal"-->
+                    <!--android:layout_marginTop="72dp"-->
+                    <!--android:background="@drawable/circle_shape"-->
+                    <!--android:gravity="center"-->
+                    <!--android:textColor="@color/pastel_blue"-->
+                    <!--android:textSize="13sp"-->
+                    <!--app:customAssetFont="proxima_nova_regular" />-->
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/no_apt_message_title"
@@ -96,8 +104,12 @@
                     android:textColor="@color/optionl_gray"
                     android:textSize="13sp"
                     app:customAssetFont="proxima_nova_regular" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_60dp"/>
             </LinearLayout>
-        </LinearLayout>
+        </FrameLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"

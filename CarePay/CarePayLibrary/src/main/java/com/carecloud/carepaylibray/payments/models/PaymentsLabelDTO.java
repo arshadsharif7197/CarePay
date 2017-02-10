@@ -288,6 +288,50 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_button")
     @Expose
     private String paymentButtonLabel;
+    @SerializedName("no_payment_title")
+    @Expose
+    private String noPaymentTitle;
+    @SerializedName("no_payment_description")
+    @Expose
+    private String noPaymentDescription;
+    @SerializedName("no_pending_payment_description")
+    @Expose
+    private String noPendingPaymentDescription;
+    @SerializedName("no_payment_history_description")
+    @Expose
+    private String noPaymentHistoryDescription;
+
+    public String getNoPendingPaymentDescription() {
+        return noPendingPaymentDescription;
+    }
+
+    public void setNoPendingPaymentDescription(String noPendingPaymentDescription) {
+        this.noPendingPaymentDescription = noPendingPaymentDescription;
+    }
+
+    public String getNoPaymentHistoryDescription() {
+        return noPaymentHistoryDescription;
+    }
+
+    public void setNoPaymentHistoryDescription(String noPaymentHistoryDescription) {
+        this.noPaymentHistoryDescription = noPaymentHistoryDescription;
+    }
+
+    public String getNoPaymentTitle() {
+        return noPaymentTitle;
+    }
+
+    public void setNoPaymentTitle(String noPaymentTitle) {
+        this.noPaymentTitle = noPaymentTitle;
+    }
+
+    public String getNoPaymentDescription() {
+        return noPaymentDescription;
+    }
+
+    public void setNoPaymentDescription(String noPaymentDescription) {
+        this.noPaymentDescription = noPaymentDescription;
+    }
 
     public String getPaymentCloverSwipeNowSeparatorText() {
         return StringUtil.getLabelForView(paymentCloverSwipeNowSeparatorText);
