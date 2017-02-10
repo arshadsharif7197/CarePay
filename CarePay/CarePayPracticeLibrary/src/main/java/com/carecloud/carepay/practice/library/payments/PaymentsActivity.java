@@ -3,8 +3,6 @@ package com.carecloud.carepay.practice.library.payments;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -12,7 +10,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.checkin.filters.CustomFilterPopupWindow;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
-import com.carecloud.carepay.practice.library.payments.adapter.PracticePaymentsAdapter;
+import com.carecloud.carepay.practice.library.customcomponent.TwoColumnPatientListView;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityDialog;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
@@ -82,7 +80,7 @@ public class PaymentsActivity extends BasePracticeActivity implements CustomFilt
             addPatientOnFilterList(patientList, patientBalancesList);
 
             setFilterableData(doctorsList, locationsList);
-            setAdapter();
+            initializePatientListView();
 
             ((CarePayTextView) findViewById(R.id.practice_payment_in_office_count))
                     .setText(String.format(Locale.getDefault(), "%1s", patientBalancesList.size()));
@@ -97,13 +95,18 @@ public class PaymentsActivity extends BasePracticeActivity implements CustomFilt
         });
     }
 
-    private void setAdapter() {
-        RecyclerView inOfficeList = (RecyclerView) findViewById(R.id.practice_payment_in_office_list);
-        inOfficeList.setHasFixedSize(true);
-        inOfficeList.setLayoutManager(new GridLayoutManager(this, 2));
+    private void initializePatientListView() {
+        TwoColumnPatientListView purchaseFragment = (TwoColumnPatientListView) findViewById(R.id.list_patients);
+        purchaseFragment.setPaymentsModel(paymentsModel);
+        purchaseFragment.setCallback(new TwoColumnPatientListView.TwoColumnPatientListViewListener() {
+            @Override
+            public void onPatientTapped(Object dto) {
+                PaymentsPatientBalancessDTO paymentsPatientBalancessDTO = (PaymentsPatientBalancessDTO) dto;
 
-        PracticePaymentsAdapter paymentsAdapter = new PracticePaymentsAdapter(this, paymentsModel);
-        inOfficeList.setAdapter(paymentsAdapter);
+                ResponsibilityDialog responsibilityDialog = new ResponsibilityDialog(getContext(), paymentsModel, paymentsPatientBalancessDTO);
+                responsibilityDialog.show();
+            }
+        });
     }
 
     private void setFilterableData(ArrayList<FilterDataDTO> doctorsList, ArrayList<FilterDataDTO> locationsList) {
@@ -169,11 +172,6 @@ public class PaymentsActivity extends BasePracticeActivity implements CustomFilt
         }
     }
 
-    public void onPatientItemClick(int selectedIndex) {
-        ResponsibilityDialog responsibilityDialog = new ResponsibilityDialog(this, paymentsModel, selectedIndex);
-        responsibilityDialog.show();
-    }
-
     private void applyFilterSortByName(ArrayList<FilterDataDTO> filterableList) {
         Collections.sort(filterableList, new Comparator<FilterDataDTO>() {
             //@TargetApi(Build.VERSION_CODES.KITKAT)
@@ -214,6 +212,6 @@ public class PaymentsActivity extends BasePracticeActivity implements CustomFilt
             isFilterOn = true;
         }
 
-        setAdapter();
+        // Filter here
     }
 }

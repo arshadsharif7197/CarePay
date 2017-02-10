@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.DragEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
@@ -128,6 +129,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
             waitingRoomTextView.setText(checkInLabelDTO.getPracticeCheckinWaitingRoom().toUpperCase());
             checkingInCounterTextview.setText("0");
             waitingCounterTextview.setText("0");
+            ((TextView) findViewById(R.id.drop_here_icon)).setText(checkInLabelDTO.getPracticeCheckinDropHereLabel());
         }
     }
 
@@ -281,6 +283,11 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
                 //signal for the start of a drag and drop operation.
                 case DragEvent.ACTION_DRAG_STARTED:
                     // do nothing
+                    AppointmentPayloadDTO draggedAppointment = getAppintmentById(
+                            dragEvent.getClipDescription().getLabel().toString(), waitingRoomAppointments);
+                    if (draggedAppointment == null) {
+                        findViewById(R.id.drop_down_area_view).setVisibility(View.VISIBLE);
+                    }
                     break;
                 //the drag point has entered the bounding box of the View
                 case DragEvent.ACTION_DRAG_ENTERED:
@@ -304,6 +311,8 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
                         checkedInAdapter.notifyDataSetChanged();
                         checkingInCounterTextview.setText(String.valueOf(checkingInAppointments.size()));
                         waitingCounterTextview.setText(String.valueOf(waitingRoomAppointments.size()));
+                    } else {
+                        findViewById(R.id.drop_down_area_view).setVisibility(View.GONE);
                     }
                     break;
                 //the drag and drop operation has concluded.
@@ -348,6 +357,9 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
                         checkingInCounterTextview.setText(String.valueOf(checkingInAppointments.size()));
                         waitingCounterTextview.setText(String.valueOf(waitingRoomAppointments.size()));
 
+                        CheckInLabelDTO checkInLabelDTO = checkInDTO.getMetadata().getLabel();
+                        ((TextView) findViewById(R.id.drop_here_icon)).setText(checkInLabelDTO.getPracticeCheckinSuccessLabel());
+                        ((TextView) findViewById(R.id.drop_here_icon)).setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icn_check, 0, 0);
                         onCheckInAppointment(appointmentDTO);
                     }
                     break;
@@ -382,6 +394,12 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(getContext()).dismiss();
+            findViewById(R.id.drop_down_area_view).setVisibility(View.GONE);
+
+            // Reset to original state
+            CheckInLabelDTO checkInLabelDTO = checkInDTO.getMetadata().getLabel();
+            ((TextView) findViewById(R.id.drop_here_icon)).setText(checkInLabelDTO.getPracticeCheckinDropHereLabel());
+            ((TextView) findViewById(R.id.drop_here_icon)).setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icn_drop_here, 0, 0);
         }
 
         @Override
