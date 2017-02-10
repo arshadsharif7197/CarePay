@@ -84,6 +84,8 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
         sectionNumber = getArguments().getInt(CarePayConstants.TAB_SECTION_NUMBER);
         Map<String, String> queryString = new HashMap<>();
         PaymentsLinksDTO paymentsLinks = paymentDTO.getPaymentsMetadata().getPaymentsLinks();
+        if(paymentDTO.getPaymentPayload().getPatientHistory() != null && paymentDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges() != null)
+        {
         PaymentPayloadMetaDataDTO metadata = paymentDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges().getMetadata();
 
         switch (sectionNumber) {
@@ -104,6 +106,8 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
                 WorkflowServiceHelper.getInstance().execute(
                         paymentsLinks.getPaymentsHistory(), historyCallback, queryString);
                 break;
+        }
+
         }
     }
 
