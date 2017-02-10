@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.demographics.fragments.viewpager;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -97,7 +98,18 @@ public class DemographicsAddressFragment extends Fragment {
     private DemographicMetadataEntityAddressDTO     addressMetaDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
     private DemographicLabelsDTO                    globalLabelsMetaDTO;
+    private DemographicsAddressFragmentListener demographicsAddressFragmentListener;
 
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            demographicsAddressFragmentListener = (DemographicsAddressFragment.DemographicsAddressFragmentListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString());
+        }
+    }
 
     @Nullable
     @Override
@@ -144,6 +156,13 @@ public class DemographicsAddressFragment extends Fragment {
         nextButton.setEnabled(!isFirstNameEmpty && !isLastNameEmpty);
 
         return view;
+    }
+
+    /**
+     * Interface to implement scrolling on view pager
+     */
+    public interface DemographicsAddressFragmentListener{
+        void enableScroll(boolean myString);
     }
 
     /**
@@ -538,9 +557,13 @@ public class DemographicsAddressFragment extends Fragment {
         });
     }
 
+    /**
+     * Enable next button and view pager
+     */
     private void enableNextButton() {
         boolean areAllReqNonEmpty = !(isFirstNameEmpty || isLastNameEmpty);
         nextButton.setEnabled(areAllReqNonEmpty);
+        demographicsAddressFragmentListener.enableScroll(areAllReqNonEmpty);
     }
 
     private void setEditActionListeners() {
