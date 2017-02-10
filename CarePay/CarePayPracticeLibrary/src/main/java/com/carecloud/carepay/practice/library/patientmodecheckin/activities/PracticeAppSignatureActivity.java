@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import com.carecloud.carepaylibray.consentforms.models.datamodels.consentformedi
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConseFormsPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormPayloadDTO;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -51,6 +53,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
 
 public class PracticeAppSignatureActivity extends AppCompatActivity {
 
@@ -91,17 +94,19 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
     private WorkflowServiceCallback updateconsentformCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-
+            ProgressDialogUtil.getInstance(PracticeAppSignatureActivity.this).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(PracticeAppSignatureActivity.this).dismiss();
             //ConsentActivity.this.finish();
             PracticeNavigationHelper.getInstance().navigateToWorkflow(PracticeAppSignatureActivity.this, workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(PracticeAppSignatureActivity.this).dismiss();
             SystemUtil.showDefaultFailureDialog(PracticeAppSignatureActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -555,4 +560,5 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
         intent.putExtra("INTAKE_WORKFLOW", workflowJson);
         sendBroadcast(intent);
     }
+
 }

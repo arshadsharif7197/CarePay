@@ -7,6 +7,8 @@ import android.util.Log;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.isNotEmptyString;
+
 import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -264,6 +266,18 @@ public class StringUtil {
         } else {
             return label;
         }
+    }
+
+    /**
+     * Convinience method for validating json String
+     * @param jsonLabel - String to vaildate
+     * @return - Either original string if valid or "Not Defined"
+     */
+    public static String validateJsonLabel(String jsonLabel){
+        if(isNotEmptyString(jsonLabel)) {
+            return jsonLabel;
+        }
+        return CarePayConstants.NOT_DEFINED;
     }
 
     /**

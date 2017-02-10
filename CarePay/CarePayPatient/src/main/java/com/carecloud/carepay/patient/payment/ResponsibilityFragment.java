@@ -1,7 +1,6 @@
 package com.carecloud.carepay.patient.payment;
 
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -59,19 +58,19 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
         payTotalAmountButton.setClickable(false);
         payTotalAmountButton.setEnabled(false);
         setGothamRoundedMediumTypeface(appCompatActivity, payTotalAmountButton);
-        payTotalAmountButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
+//        payTotalAmountButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
 
         Button makePartialPaymentButton = (Button) view.findViewById(R.id.make_partial_payment_button);
         makePartialPaymentButton.setClickable(false);
         makePartialPaymentButton.setEnabled(false);
         setGothamRoundedMediumTypeface(appCompatActivity, makePartialPaymentButton);
-        makePartialPaymentButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
+//        makePartialPaymentButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
 
         Button payLaterButton = (Button) view.findViewById(R.id.pay_later_button);
         payLaterButton.setClickable(false);
         payLaterButton.setEnabled(false);
         setGothamRoundedMediumTypeface(appCompatActivity, payLaterButton);
-        payLaterButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
+//        payLaterButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
 
         try {
             getPaymentInformation();
@@ -96,18 +95,19 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
                             payLaterButton.setEnabled(true);
                             payLaterButton.setEnabled(true);
 
-                            payTotalAmountButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                             payTotalAmountButton.setTextColor(Color.WHITE);
                             makePartialPaymentButton.setTextColor(getResources().getColor(R.color.colorPrimary));
-                            makePartialPaymentButton.setBackgroundColor(Color.WHITE);
                             payLaterButton.setTextColor(getResources().getColor(R.color.colorPrimary));
-                            payLaterButton.setBackgroundColor(Color.WHITE);
 
-                            GradientDrawable border = new GradientDrawable();
-                            border.setColor(Color.WHITE);
-                            border.setStroke(1, getResources().getColor(R.color.colorPrimary));
-                            makePartialPaymentButton.setBackground(border);
-                            payLaterButton.setBackground(border);
+//                            payTotalAmountButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+//                            makePartialPaymentButton.setBackgroundColor(Color.WHITE);
+//                            payLaterButton.setBackgroundColor(Color.WHITE);
+
+//                            GradientDrawable border = new GradientDrawable();
+//                            border.setColor(Color.WHITE);
+//                            border.setStroke(1, getResources().getColor(R.color.colorPrimary));
+//                            makePartialPaymentButton.setBackground(border);
+//                            payLaterButton.setBackground(border);
                         }
 
                         NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);

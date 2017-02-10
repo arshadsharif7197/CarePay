@@ -141,15 +141,17 @@
 
             <Button
                 android:id="@+id/make_partial_payment_button"
-                style="@style/ResponsButtonStyle"
-                android:layout_marginTop="@dimen/apt_popup_parent_padding"
-                android:background="@drawable/button_blue_border" />
+                style="@style/SigninNewAccountButtonStyle"
+                android:layout_marginEnd="@dimen/dimen_17dp"
+                android:layout_marginStart="@dimen/dimen_17dp"
+                android:layout_marginTop="@dimen/dimen_12dp" />
 
             <Button
                 android:id="@+id/pay_later_button"
-                style="@style/ResponsButtonStyle"
-                android:layout_marginTop="@dimen/apt_popup_parent_padding"
-                android:background="@drawable/button_blue_border" />
+                style="@style/SigninNewAccountButtonStyle"
+                android:layout_marginEnd="@dimen/dimen_17dp"
+                android:layout_marginStart="@dimen/dimen_17dp"
+                android:layout_marginTop="@dimen/dimen_12dp" />
         </LinearLayout>
     </LinearLayout>
     <!--/ScrollView-->

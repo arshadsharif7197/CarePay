@@ -12,6 +12,10 @@ public class SignInPatientModeDataModelDTO {
     @Expose
     private SignInPatientModeModelDTO login;
 
+    @SerializedName("personal_info")
+    @Expose
+    private PersonalInfoDTO personalInfo;
+
     /**
      * @return The login
      */
@@ -24,6 +28,14 @@ public class SignInPatientModeDataModelDTO {
      */
     public void setLogin(SignInPatientModeModelDTO login) {
         this.login = login;
+    }
+
+    public PersonalInfoDTO getPersonalInfo() {
+        return personalInfo;
+    }
+
+    public void setPersonalInfo(PersonalInfoDTO personalInfo) {
+        this.personalInfo = personalInfo;
     }
 
 }

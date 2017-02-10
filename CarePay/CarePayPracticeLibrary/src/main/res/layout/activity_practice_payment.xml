@@ -5,13 +5,13 @@
     android:id="@+id/activity_practice_payment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_default"
+    android:background="@color/colorPrimary"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/screen_header"
+        android:background="@color/colorPrimaryDark"
         android:paddingBottom="@dimen/dimen_15dp"
         android:paddingTop="@dimen/dimen_15dp">
 

@@ -17,26 +17,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInLabelDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInMetadataDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInStatusDataPayloadValueDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInStatusPayloadDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.PatientBalanceDTO;
+import com.carecloud.carepay.practice.library.checkin.dtos.PendingBalanceDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.QueryStrings;
 import com.carecloud.carepay.practice.library.checkin.dtos.QueueDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.QueueStatusPayloadDTO;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -51,17 +51,16 @@ import java.util.Vector;
 
 import org.joda.time.DateTime;
 
-
 /**
  * Created by sudhir_pingale on 10/26/2016.
  */
-
 public class AppointmentDetailDialog extends Dialog {
 
     private Context context;
     private CheckInDTO checkInDTO;
-    private PatientBalanceDTO patientBalanceDTO;
     private AppointmentPayloadDTO appointmentPayloadDTO;
+    private PendingBalanceDTO pendingBalanceDTO;
+
     private CarePayTextView checkingInLabel;
     private CarePayTextView hourLabel;
     private CarePayTextView patientNameLabel;
@@ -71,9 +70,6 @@ public class AppointmentDetailDialog extends Dialog {
     private CheckBox demographicsCheckbox;
     private CheckBox consentFormsCheckbox;
     private CheckBox intakeCheckbox;
-    //private CarePayTextView demographicsLabel;
-    //private CarePayTextView consentFormsLabel;
-    //private CarePayTextView intakeLabel;
     private CheckBox responsibilityCheckbox;
     private CarePayButton paymentButton;
     private CarePayButton assistButton;
@@ -81,40 +77,23 @@ public class AppointmentDetailDialog extends Dialog {
     private ImageView profilePhoto;
     private ImageView bgImage;
     private TextView shortName;
-    private AppointmentDTO appointmentDTO;
-    private boolean isWaitingroom;
+
+    private boolean isWaitingRoom;
     private Vector<CheckBox> checkBoxes = new Vector<>();
-    //private Vector<CarePayTextView> textViews = new Vector<>();
-
 
     /**
      * Constructor.
      *
      * @param context context
      */
-    public AppointmentDetailDialog(Context context, CheckInDTO checkInDTO, PatientBalanceDTO patientBalanceDTO,
-                                   AppointmentPayloadDTO payloadDTO) {
+    public AppointmentDetailDialog(Context context, CheckInDTO checkInDTO, PendingBalanceDTO pendingBalanceDTO,
+                                   AppointmentPayloadDTO payloadDTO, boolean isWaitingRoom) {
         super(context);
         this.context = context;
         this.checkInDTO = checkInDTO;
-        this.patientBalanceDTO = patientBalanceDTO;
+        this.pendingBalanceDTO = pendingBalanceDTO;
         this.appointmentPayloadDTO = payloadDTO;
-        this.isWaitingroom = isWaitingroom;
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param context context
-     */
-    public AppointmentDetailDialog(Context context, CheckInDTO checkInDTO, AppointmentDTO patientBalanceDTO,
-                                   AppointmentPayloadDTO payloadDTO,  boolean isWaitingroom) {
-        super(context);
-        this.context = context;
-        this.checkInDTO = checkInDTO;
-        this.appointmentDTO = patientBalanceDTO;
-        this.appointmentPayloadDTO = payloadDTO;
-        this.isWaitingroom = isWaitingroom;
+        this.isWaitingRoom = isWaitingRoom;
     }
 
     /**
@@ -122,6 +101,7 @@ public class AppointmentDetailDialog extends Dialog {
      *
      * @param savedInstanceState for saving state
      */
+    @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,11 +110,13 @@ public class AppointmentDetailDialog extends Dialog {
         setContentView(R.layout.dialog_checkin_detail);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         setCancelable(true);
-        callGetCheckinStatusAPI(); //API call for getting checkin status
+
+        callGetCheckinStatusAPI(); //API call for getting check-in status
         onInitialization();
         onSettingStyle();
         onSetValuesFromDTO();
-        if(balanceValueLabel.getText().toString().trim().equalsIgnoreCase(CarePayConstants.ZERO_BALANCE)){
+
+        if (balanceValueLabel.getText().toString().trim().equalsIgnoreCase(CarePayConstants.ZERO_BALANCE)) {
             paymentButton.setVisibility(View.GONE);
         }
     }
@@ -149,13 +131,12 @@ public class AppointmentDetailDialog extends Dialog {
         doctorNameLabel = (CarePayTextView) findViewById(R.id.doctorNameLabel);
         balanceTextLabel = (CarePayTextView) findViewById(R.id.balanceTextLabel);
         balanceValueLabel = (CarePayTextView) findViewById(R.id.balanceValueLabel);
+
         demographicsCheckbox = (CheckBox) findViewById(R.id.demographicsCheckbox);
         consentFormsCheckbox = (CheckBox) findViewById(R.id.consentFormsCheckbox);
         intakeCheckbox = (CheckBox) findViewById(R.id.intakeFormsCheckbox);
         responsibilityCheckbox = (CheckBox) findViewById(R.id.responsibilityCheckbox);
-        //demographicsLabel = (CarePayTextView) findViewById(R.id.demographicsLabel);
-        //consentFormsLabel = (CarePayTextView) findViewById(R.id.consentFormsLabel);
-        //intakeLabel = (CarePayTextView) findViewById(R.id.intakeLabel);
+
         paymentButton = (CarePayButton) findViewById(R.id.paymentButton);
         assistButton = (CarePayButton) findViewById(R.id.assistButton);
         pageButton = (CarePayButton) findViewById(R.id.pageButton);
@@ -167,7 +148,6 @@ public class AppointmentDetailDialog extends Dialog {
         profilePhoto = (ImageView) findViewById(R.id.patient_profile_photo);
         bgImage = (ImageView) findViewById(R.id.profile_bg_image);
         shortName = (TextView) findViewById(R.id.patient_profile_short_name);
-
     }
 
     /**
@@ -175,17 +155,13 @@ public class AppointmentDetailDialog extends Dialog {
      */
     private void onSettingStyle() {
         checkingInLabel.setTextColor(ContextCompat.getColor(context, R.color.charcoal_78));
-        //patientNameLabel.setTextColor(ContextCompat.getColor(context, R.color.charcoal));
-        //doctorNameLabel.setTextColor(ContextCompat.getColor(context, R.color.taupe_gray_78));
-        //balanceTextLabel.setTextColor(ContextCompat.getColor(context, R.color.charcoal));
-        //balanceValueLabel.setTextColor(ContextCompat.getColor(context, R.color.charcoal));
         checkingInLabel.setTextColor(ContextCompat.getColor(context, R.color.white));
 
         GradientDrawable bgShapePaymentButton = (GradientDrawable) paymentButton.getBackground();
         bgShapePaymentButton.setColor(ContextCompat.getColor(context, R.color.yellowGreen));
 
         GradientDrawable bgShapeAssistButton = (GradientDrawable) assistButton.getBackground();
-        bgShapeAssistButton.setColor(ContextCompat.getColor(context, R.color.bright_cerulean));
+        bgShapeAssistButton.setColor(ContextCompat.getColor(context, R.color.colorPrimary));
 
         GradientDrawable bgShapePageButton = (GradientDrawable) pageButton.getBackground();
         bgShapePageButton.setColor(ContextCompat.getColor(context, R.color.rose_madder));
@@ -196,30 +172,29 @@ public class AppointmentDetailDialog extends Dialog {
      */
     private void onSetValuesFromDTO() {
         CheckInLabelDTO checkInLabelDTO = checkInDTO.getMetadata().getLabel();
-        if (!isWaitingroom) {
+        if (!isWaitingRoom) {
             demographicsCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogDemographics()));
             consentFormsCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogConsentForms()));
             intakeCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogIntake()));
             responsibilityCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogResponsibility()));
         } else {
             checkBoxes.add(demographicsCheckbox);
-            //textViews.add(demographicsLabel);
             checkBoxes.add(consentFormsCheckbox);
-            //textViews.add(consentFormsLabel);
             checkBoxes.add(intakeCheckbox);
-            //textViews.add(intakeLabel);
             checkBoxes.add(responsibilityCheckbox);
         }
-        checkingInLabel.setText(StringUtil.getFormatedLabal(context, isWaitingroom?
+
+        checkingInLabel.setText(StringUtil.getFormatedLabal(context, isWaitingRoom ?
                 checkInLabelDTO.getPracticeCheckinDetailDialogWaitingRoom() : checkInLabelDTO.getPracticeCheckinDetailDialogCheckingIn()));
         balanceTextLabel.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogBalance()));
         assistButton.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogAssist()));
         pageButton.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogPage()));
         paymentButton.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogPayment()));
 
-        balanceValueLabel.setText(StringUtil.getFormatedLabal(context, getPatientBalance()));
+        balanceValueLabel.setText(StringUtil.getFormattedBalanceAmount(getPatientBalance()));
         patientNameLabel.setText(StringUtil.getFormatedLabal(context, appointmentPayloadDTO.getPatient().getFullName()));
         doctorNameLabel.setText(StringUtil.getFormatedLabal(context, appointmentPayloadDTO.getProvider().getName()));
+
         long hour = DateUtil.getInstance().setDateRaw(appointmentPayloadDTO.getStartTime()).getDate().getTime();
         final DateTime appointmentDateTime = new DateTime(hour);
         hourLabel.setText(appointmentDateTime.toString("hh:mm a"));
@@ -230,6 +205,7 @@ public class AppointmentDetailDialog extends Dialog {
                 dismiss();
             }
         });
+
         String photoUrl = ""; //NOT PHOTO YET
         if (!TextUtils.isEmpty(photoUrl)) {
             Picasso.Builder builder = new Picasso.Builder(context);
@@ -247,6 +223,7 @@ public class AppointmentDetailDialog extends Dialog {
 
             profilePhoto.setVisibility(View.VISIBLE);
         }
+
         checkingInLabel.bringToFront();
         hourLabel.bringToFront();
     }
@@ -285,13 +262,14 @@ public class AppointmentDetailDialog extends Dialog {
             TransitionDTO transition;
             Map<String, String> querymap;
             WorkflowServiceCallback callback;
-            if (isWaitingroom) {
+
+            if (isWaitingRoom) {
                 queryStringObject = checkInDTO.getMetadata().getLinks().getQueueStatus().getQueryString();
                 queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
                 querymap = getQueueQueryParam(queryStrings);
                 transition = checkInDTO.getMetadata().getLinks().getQueueStatus();
                 callback = getQueueCallBack;
-            }else{
+            } else {
                 queryStringObject = checkInDTO.getMetadata().getLinks().getCheckinStatus().getQueryString();
                 queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
                 querymap = getQueryParam(queryStrings);
@@ -308,10 +286,10 @@ public class AppointmentDetailDialog extends Dialog {
      * @return queryMap
      */
     private Map<String, String> getQueryParam(QueryStrings queryStrings) {
-        Map<String, String> queryMap = new HashMap<String, String>();
-        queryMap.put(queryStrings.getAppointmentId().getName(), appointmentDTO.getMetadata().getAppointmentId());
-        queryMap.put(queryStrings.getPracticeManagement().getName(), appointmentDTO.getMetadata().getPracticeMgmt());
-        queryMap.put(queryStrings.getPracticeId().getName(), appointmentDTO.getMetadata().getPracticeId());
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put(queryStrings.getAppointmentId().getName(), appointmentPayloadDTO.getId());
+        queryMap.put(queryStrings.getPracticeManagement().getName(), pendingBalanceDTO.getMetadata().getPracticeMgmt());
+        queryMap.put(queryStrings.getPracticeId().getName(), pendingBalanceDTO.getMetadata().getPracticeId());
 
         return queryMap;
     }
@@ -321,43 +299,49 @@ public class AppointmentDetailDialog extends Dialog {
      * @return queryMap
      */
     private Map<String, String> getQueueQueryParam(QueryStrings queryStrings) {
-        Map<String, String> queryMap = new HashMap<String, String>();
-        queryMap.put(queryStrings.getPatientId().getName(), appointmentDTO.getMetadata().getPatientId());
-        queryMap.put(queryStrings.getPracticeManagement().getName(), appointmentDTO.getMetadata().getPracticeMgmt());
-        queryMap.put(queryStrings.getPracticeId().getName(), appointmentDTO.getMetadata().getPracticeId());
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put(queryStrings.getPatientId().getName(), pendingBalanceDTO.getMetadata().getPatientId());
+        queryMap.put(queryStrings.getPracticeManagement().getName(), pendingBalanceDTO.getMetadata().getPracticeMgmt());
+        queryMap.put(queryStrings.getPracticeId().getName(), pendingBalanceDTO.getMetadata().getPracticeId());
 
         return queryMap;
     }
 
-    WorkflowServiceCallback getStatusCallBack = new WorkflowServiceCallback() {
+    private WorkflowServiceCallback getStatusCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             updateUI(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             SystemUtil.showDefaultFailureDialog(context);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
-    WorkflowServiceCallback getQueueCallBack = new WorkflowServiceCallback() {
+    private WorkflowServiceCallback getQueueCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             updateQueueStatus(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             SystemUtil.showDefaultFailureDialog(context);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -367,44 +351,40 @@ public class AppointmentDetailDialog extends Dialog {
      * @param workflowDTO workflow model returned by server.
      */
     private void updateQueueStatus(WorkflowDTO workflowDTO) {
-        JsonObject jsonObject = (JsonObject) workflowDTO.getPayload();
+        JsonObject jsonObject = workflowDTO.getPayload();
 
         Gson gson = new Gson();
         try {
-
             QueueStatusPayloadDTO queueStatusPayloadDTO = gson.fromJson(jsonObject, QueueStatusPayloadDTO.class);
             Log.d(this.getClass().getSimpleName(), "queue size: " + queueStatusPayloadDTO.getQueueStatus().getQueueStatusInnerPayload().getQueueList().size());
 
-            if (queueStatusPayloadDTO != null) {
-                CheckInMetadataDTO metadata = checkInDTO.getMetadata();
-                List<QueueDTO> queueList = queueStatusPayloadDTO.getQueueStatus().getQueueStatusInnerPayload().getQueueList();
-                int maxIndex = queueList.size() - 1;
-                int index = maxIndex;
-                QueueDTO queue;
-                CheckBox checkBox;
-                //CarePayTextView textView;
-                String[] sufixes = getOrdinalSufix(metadata.getLabel());
-                for(int chkindex = index >= 3 ? 3 : index; chkindex >=0; chkindex--){
-                    queue = queueList.get(index);
-                    checkBox = checkBoxes.get(chkindex);
-                    if(index == maxIndex){
-                        checkBox.setChecked(true);
-                        checkBox.setText(ordinal(queue.getRank(), sufixes)+" "+metadata.getLabel().getPracticeCheckinDetailDialogQueue());
-                        checkBox.setTextColor(ContextCompat.getColor(context, R.color.bright_cerulean));
-                        checkBox.setTypeface(checkBox.getTypeface(), Typeface.BOLD);
-                    }else{
-                        //textView = textViews.get(chkindex);
-                        checkBox.setText(ordinal(queue.getRank(), sufixes)+" "+queue.getFirstName());
-                        //textView.setText(queue.getFirstName());
-                        //textView.setVisibility(View.VISIBLE);
-                    }
-                    Log.d(this.getClass().getSimpleName(), "queue practice id: " + queue.getFirstName());
-                    index --;
+            CheckInMetadataDTO metadata = checkInDTO.getMetadata();
+            List<QueueDTO> queueList = queueStatusPayloadDTO.getQueueStatus().getQueueStatusInnerPayload().getQueueList();
+
+            int maxIndex = queueList.size() - 1;
+            int index = maxIndex;
+            QueueDTO queue;
+            CheckBox checkBox;
+
+            String[] sufixes = getOrdinalSufix(metadata.getLabel());
+            for (int checkIndex = Math.min(index, 3); checkIndex >= 0; checkIndex--) {
+                queue = queueList.get(index);
+                checkBox = checkBoxes.get(checkIndex);
+                if (index == maxIndex) {
+                    checkBox.setChecked(true);
+                    checkBox.setText(ordinal(queue.getRank(), sufixes) + " " + metadata.getLabel().getPracticeCheckinDetailDialogQueue());
+                    checkBox.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                    checkBox.setTypeface(checkBox.getTypeface(), Typeface.BOLD);
+                } else {
+                    checkBox.setText(ordinal(queue.getRank(), sufixes) + " " + queue.getFirstName());
                 }
+
+                Log.d(this.getClass().getSimpleName(), "queue practice id: " + queue.getFirstName());
+                index--;
             }
-        }catch (Exception ex){
-           SystemUtil.showDefaultFailureDialog(context);
-           Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), ex.getMessage());
+        } catch (Exception ex) {
+            SystemUtil.showDefaultFailureDialog(context);
+            Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), ex.getMessage());
             ex.printStackTrace();
         }
     }
@@ -413,7 +393,7 @@ public class AppointmentDetailDialog extends Dialog {
      * @param workflowDTO workflow model returned by server.
      */
     private void updateUI(WorkflowDTO workflowDTO) {
-        JsonObject jsonObject = (JsonObject) workflowDTO.getPayload();
+        JsonObject jsonObject = workflowDTO.getPayload();
 
         Gson gson = new Gson();
         try {
@@ -431,28 +411,22 @@ public class AppointmentDetailDialog extends Dialog {
                 responsibilityCheckbox.setChecked(payloadValueDTO.getRespsonsibility()
                         .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
             }
-        }catch (Exception ex){
-           SystemUtil.showDefaultFailureDialog(context);
-           Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), ex.getMessage());
+        } catch (Exception ex) {
+            SystemUtil.showDefaultFailureDialog(context);
+            Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), ex.getMessage());
         }
     }
 
-    private String getPatientBalance(){
-        double totalBalance=100;
-/*
-        for(PatientBalancePayloadDTO balancePayloadDTO : patientBalanceDTO.getPayload()){
-            totalBalance+=balancePayloadDTO.getTotal();
-        }
-*/
-        return " "+StringUtil.getFormattedBalanceAmount(totalBalance);
+    private double getPatientBalance() {
+        return pendingBalanceDTO.getPayload().get(0).getAmount();
     }
 
-    private String[] getOrdinalSufix(CheckInLabelDTO labels){
+    private String[] getOrdinalSufix(CheckInLabelDTO labels) {
         String th = labels.getPracticeCheckinDetailDialogOrdinalTh();
         String st = labels.getPracticeCheckinDetailDialogOrdinalSt();
         String nd = labels.getPracticeCheckinDetailDialogOrdinalNd();
         String rd = labels.getPracticeCheckinDetailDialogOrdinalRd();
-        return new String[] { th, st, nd, rd, th, th, th, th, th, th };
+        return new String[]{th, st, nd, rd, th, th, th, th, th, th};
     }
 
     private String ordinal(int number, String[] sufixes) {
@@ -463,7 +437,6 @@ public class AppointmentDetailDialog extends Dialog {
                 return number + sufixes[0];
             default:
                 return number + sufixes[number % 10];
-
         }
     }
 }
