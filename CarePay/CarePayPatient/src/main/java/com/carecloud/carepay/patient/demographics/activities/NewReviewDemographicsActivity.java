@@ -119,7 +119,7 @@ public class NewReviewDemographicsActivity extends BasePatientActivity
 
     @Override
     public void initializeInsurancesFragment(){
-        String tag = CheckinInsurancesSummaryFragment.class.getSimpleName();
+        String tag = HealthInsuranceFragment.class.getSimpleName();
 
         HealthInsuranceFragment fragment = new HealthInsuranceFragment();
         Bundle args = new Bundle();
