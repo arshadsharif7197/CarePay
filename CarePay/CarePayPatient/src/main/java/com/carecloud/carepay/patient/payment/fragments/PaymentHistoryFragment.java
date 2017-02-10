@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.adapter.PaymentBalancesAdapter;
@@ -24,6 +25,7 @@ import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLinksDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -41,6 +43,11 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
     private ProgressBar progressBar;
     private RecyclerView historyRecyclerView;
     private double total;
+    private EmptyPaymentListCallback emptyPaymentListCallback;
+    private int sectionNumber;
+    private View noPaymentsLayout;
+    private TextView noPaymentTitle;
+    private TextView noPaymentDesc;
 
     public static PaymentHistoryFragment newInstance(int sectionNumber, PaymentsModel paymentDTO) {
         PaymentHistoryFragment fragment = new PaymentHistoryFragment();
@@ -63,19 +70,23 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
         String paymentsDTOString = getArguments().getString(CarePayConstants.INTAKE_BUNDLE);
         paymentDTO = gson.fromJson(paymentsDTOString, PaymentsModel.class);
         historyRecyclerView = (RecyclerView) rootView.findViewById(R.id.history_recycler_view);
+        noPaymentsLayout = rootView.findViewById(R.id.no_payment_layout);
+        noPaymentTitle = (TextView) rootView.findViewById(com.carecloud.carepaylibrary.R.id.no_payment_message_title);
+        noPaymentDesc = (TextView) rootView.findViewById(com.carecloud.carepaylibrary.R.id.no_payment_message_desc);
 
+        hideNoPaymentsLayout();
         setUpRecyclerView();
 
         return rootView;
     }
 
     private void setUpRecyclerView() {
-        int section_number = getArguments().getInt(CarePayConstants.TAB_SECTION_NUMBER);
+        sectionNumber = getArguments().getInt(CarePayConstants.TAB_SECTION_NUMBER);
         Map<String, String> queryString = new HashMap<>();
         PaymentsLinksDTO paymentsLinks = paymentDTO.getPaymentsMetadata().getPaymentsLinks();
         PaymentPayloadMetaDataDTO metadata = paymentDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges().getMetadata();
 
-        switch (section_number) {
+        switch (sectionNumber) {
             case 1:
                 queryString.put("practice_id",  metadata.getPracticeId() );
                 queryString.put("practice_mgmt", metadata.getPracticeMgmt());
@@ -96,35 +107,54 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
         }
     }
 
+    private void showNoPaymentsLayout(){
+        noPaymentsLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void hideNoPaymentsLayout(){
+        noPaymentsLayout.setVisibility(View.GONE);
+    }
+
+
     private WorkflowServiceCallback balancesCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            progressBar.setVisibility(View.VISIBLE);
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             Gson gson = new Gson();
             try {
                 paymentDTO = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
+                noPaymentTitle.setText(paymentDTO.getPaymentsMetadata().getPaymentsLabel().getNoPaymentTitle());
+                noPaymentDesc.setText(paymentDTO.getPaymentsMetadata().getPaymentsLabel().getNoPendingPaymentDescription());
+
 
                 PaymentBalancesAdapter paymentBalancesAdapter = new PaymentBalancesAdapter(
                         getActivity(), paymentDTO, PaymentHistoryFragment.this);
                 historyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 historyRecyclerView.setAdapter(paymentBalancesAdapter);
 
-                progressBar.setVisibility(View.GONE);
+                if(paymentBalancesAdapter.getItemCount()<1){
+                    //show noPayment view
+                    showNoPaymentsLayout();
+                    if(emptyPaymentListCallback!=null) {
+                        emptyPaymentListCallback.listIsEmpty(sectionNumber);
+                    }
+                }
+
             } catch (Exception e){
                 Log.e(LOG, e.getMessage());
                 SystemUtil.showDefaultFailureDialog(getActivity());
             }
-            progressBar.setVisibility(View.GONE);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             SystemUtil.showDefaultFailureDialog(getActivity());
-            progressBar.setVisibility(View.GONE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -132,29 +162,40 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
     private WorkflowServiceCallback historyCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            progressBar.setVisibility(View.VISIBLE);
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             Gson gson = new Gson();
             try {
                 paymentDTO = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
+                noPaymentTitle.setText(paymentDTO.getPaymentsMetadata().getPaymentsLabel().getNoPaymentTitle());
+                noPaymentDesc.setText(paymentDTO.getPaymentsMetadata().getPaymentsLabel().getNoPaymentHistoryDescription());
 
                 PaymentHistoryAdapter historyAdapter = new PaymentHistoryAdapter(getActivity(), paymentDTO);
                 historyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 historyRecyclerView.setAdapter(historyAdapter);
+
+                if(historyAdapter.getItemCount()<1){
+                    //show noPayment view
+                    showNoPaymentsLayout();
+                    if(emptyPaymentListCallback!=null) {
+                        emptyPaymentListCallback.listIsEmpty(sectionNumber);
+                    }
+                }
+
             } catch (Exception e){
                 Log.e(LOG, e.getMessage());
                 SystemUtil.showDefaultFailureDialog(getActivity());
             }
-            progressBar.setVisibility(View.GONE);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             SystemUtil.showDefaultFailureDialog(getActivity());
-            progressBar.setVisibility(View.GONE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -196,4 +237,13 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
             e.printStackTrace();
         }
     }
+
+    public void setEmptyPaymentListCallback(EmptyPaymentListCallback emptyPaymentListCallback) {
+        this.emptyPaymentListCallback = emptyPaymentListCallback;
+    }
+
+    public interface EmptyPaymentListCallback{
+        void listIsEmpty(int sectionNumber);
+    }
+
 }

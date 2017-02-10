@@ -41,6 +41,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.services.DemographicService;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -241,22 +242,22 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         if (viewId == R.id.homeModeSwitchClickable) {
             navigateToPatientHome();
         } else if (viewId == R.id.homeCheckinClickable) {
-            findViewById(R.id.homeCheckinClickable).setEnabled(false);
+//            findViewById(R.id.homeCheckinClickable).setEnabled(false);
             navigateToCheckIn();
         } else if (viewId == R.id.homePaymentsClickable) {
-            findViewById(R.id.homePaymentsClickable).setEnabled(false);
+//            findViewById(R.id.homePaymentsClickable).setEnabled(false);
             navigateToPayments();
         } else if (viewId == R.id.homeAppointmentsClickable) {
-            findViewById(R.id.homeAppointmentsClickable).setEnabled(false);
+//            findViewById(R.id.homeAppointmentsClickable).setEnabled(false);
             navigateToAppointments();
         } else if (viewId == R.id.homeCheckoutClickable) {
-            findViewById(R.id.homeCheckoutClickable).setEnabled(false);
+//            findViewById(R.id.homeCheckoutClickable).setEnabled(false);
             checkOut();
         } else if (viewId == R.id.homeShopClickable) {
-            findViewById(R.id.homeShopClickable).setEnabled(false);
+//            findViewById(R.id.homeShopClickable).setEnabled(false);
             navigateToShop();
         } else if (viewId == R.id.homeNewsClickable) {
-            findViewById(R.id.homeNewsClickable).setEnabled(false);
+//            findViewById(R.id.homeNewsClickable).setEnabled(false);
             getNews();
         } else if (viewId == R.id.homeLockIcon) {
             unlockPracticeMode();
@@ -266,13 +267,13 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     @Override
     protected void onResume() {
         super.onResume();
-        findViewById(R.id.homeModeSwitchClickable).setEnabled(true);
-        findViewById(R.id.homeCheckinClickable).setEnabled(true);
-        findViewById(R.id.homePaymentsClickable).setEnabled(true);
-        findViewById(R.id.homeAppointmentsClickable).setEnabled(true);
-        findViewById(R.id.homeCheckoutClickable).setEnabled(true);
-        findViewById(R.id.homeShopClickable).setEnabled(true);
-        findViewById(R.id.homeNewsClickable).setEnabled(true);
+//        findViewById(R.id.homeModeSwitchClickable).setEnabled(true);
+//        findViewById(R.id.homeCheckinClickable).setEnabled(true);
+//        findViewById(R.id.homePaymentsClickable).setEnabled(true);
+//        findViewById(R.id.homeAppointmentsClickable).setEnabled(true);
+//        findViewById(R.id.homeCheckoutClickable).setEnabled(true);
+//        findViewById(R.id.homeShopClickable).setEnabled(true);
+//        findViewById(R.id.homeNewsClickable).setEnabled(true);
 
         disableUnavailableItems();
     }
@@ -280,6 +281,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private void disableUnavailableItems(){
         setViewsDisabled((ViewGroup) findViewById(R.id.homeCheckoutClickable));
         setViewsDisabled((ViewGroup) findViewById(R.id.homeShopClickable));
+        setViewsDisabled((ViewGroup) findViewById(R.id.homeNewsClickable));
     }
 
     private void setViewsDisabled(ViewGroup viewGroup){
@@ -453,18 +455,20 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     WorkflowServiceCallback checkInCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             PracticeNavigationHelper.getInstance().navigateToWorkflow(CloverMainActivity.this, workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            findViewById(R.id.homeCheckinClickable).setEnabled(true);
-            findViewById(R.id.homeAppointmentsClickable).setEnabled(true);
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
+//            findViewById(R.id.homeCheckinClickable).setEnabled(true);
+//            findViewById(R.id.homeAppointmentsClickable).setEnabled(true);
             SystemUtil.showDefaultFailureDialog(CloverMainActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -473,11 +477,12 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     WorkflowServiceCallback logOutCall = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             // log out previous user from Cognito
             CognitoAppHelper.getPool().getUser().signOut();
             CognitoAppHelper.setUser(null);
@@ -487,6 +492,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             SystemUtil.showDefaultFailureDialog(CloverMainActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -495,20 +501,23 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     WorkflowServiceCallback commonTransitionCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             PracticeNavigationHelper.getInstance().navigateToWorkflow(CloverMainActivity.this, workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            findViewById(R.id.homeCheckinClickable).setEnabled(true);
-            findViewById(R.id.homeModeSwitchClickable).setEnabled(true);
-            findViewById(R.id.homePaymentsClickable).setEnabled(true);
-            findViewById(R.id.homeCheckoutClickable).setEnabled(true);
-            findViewById(R.id.homeShopClickable).setEnabled(true);
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
+//            findViewById(R.id.homeCheckinClickable).setEnabled(true);
+//            findViewById(R.id.homeModeSwitchClickable).setEnabled(true);
+//            findViewById(R.id.homePaymentsClickable).setEnabled(true);
+//            findViewById(R.id.homeCheckoutClickable).setEnabled(true);
+//            findViewById(R.id.homeShopClickable).setEnabled(true);
 
             disableUnavailableItems();
             SystemUtil.showDefaultFailureDialog(CloverMainActivity.this);
@@ -532,16 +541,19 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     WorkflowServiceCallback practiceModeCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
+            ProgressDialogUtil.getInstance(getContext()).show();
 
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             SystemUtil.showDefaultFailureDialog(CloverMainActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -565,7 +577,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
             @Override
             public void onFailure(Call<DemographicDTO> call, Throwable throwable) {
-                findViewById(R.id.homeNewsClickable).setEnabled(true);
+//                findViewById(R.id.homeNewsClickable).setEnabled(true);
                 SystemUtil.showDefaultFailureDialog(CloverMainActivity.this);
                 Log.e(LOG_TAG, "failed fetching demogr info", throwable);
             }
@@ -606,4 +618,5 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         super.onBackPressed();
     }
+
 }

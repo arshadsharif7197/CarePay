@@ -54,8 +54,13 @@ import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.utils.ValidationHelper;
+import com.google.gson.Gson;
+import com.smartystreets.api.us_zipcode.City;
+import com.squareup.picasso.Picasso;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -63,11 +68,6 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtrabo
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
-
-import com.carecloud.carepaylibray.utils.ValidationHelper;
-import com.google.gson.Gson;
-import com.smartystreets.api.us_zipcode.City;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -147,7 +147,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     private String stateAbbr = null;
     private City smartyStreetsResponse;
 
-    CheckinDemographicsFragmentListener activityCallback;
+    private CheckinDemographicsFragmentListener activityCallback;
 
     public interface CheckinDemographicsFragmentListener {
         void onDemographicDtoChanged(DemographicDTO demographicDTO);
@@ -204,6 +204,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         });
 
         formatEditText();
+        SystemUtil.hideSoftKeyboard(getActivity());
         ((ScrollView)view.findViewById(R.id.adddemoScrollview)).smoothScrollTo(0,0);
         return view;
     }
@@ -678,10 +679,12 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     private WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             buttonConfirmData.setEnabled(true);
             demographicProgressBar.setVisibility(View.GONE);
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
@@ -689,6 +692,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             buttonConfirmData.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);

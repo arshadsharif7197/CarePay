@@ -44,6 +44,7 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsTransitionsDTO;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.api.client.util.Base64;
@@ -280,10 +281,7 @@ public class DemographicsSettingUpdateEmailFragment extends Fragment {
                                 demographicsSettingsEmailProperties.setCurrentPassword(demographicSettingsCurrentPasswordDTO);
 
                                 Map<String, String> properties = null;
-                                properties = new HashMap<>();
-                                Log.d("EMMA1",getCurrentEmail());
-                                Log.d("EMMA2",emailEditText.getText().toString());
-                                Log.d("EMMA3",passwordEditText.getText().toString());
+                                properties = new HashMap<>();                              
 
                                 properties.put("login_email",getCurrentEmail());
                                 properties.put("proposed_email", emailEditText.getText().toString());
@@ -324,17 +322,20 @@ public class DemographicsSettingUpdateEmailFragment extends Fragment {
     WorkflowServiceCallback updateEmailCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            updateEmailButton.setEnabled(true);
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            updateEmailButton.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

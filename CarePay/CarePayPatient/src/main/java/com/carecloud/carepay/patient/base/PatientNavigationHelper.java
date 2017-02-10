@@ -10,12 +10,13 @@ import com.carecloud.carepay.patient.demographics.activities.DemographicsActivit
 import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.patient.demographics.activities.NewReviewDemographicsActivity;
 import com.carecloud.carepay.patient.intakeforms.activities.InTakeWebViewActivity;
+import com.carecloud.carepay.patient.notifications.activities.NotificationActivity;
 import com.carecloud.carepay.patient.payment.PaymentActivity;
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
+import com.carecloud.carepay.patient.purchases.activities.PurchaseActivity;
 import com.carecloud.carepay.patient.selectlanguage.SelectLanguageActivity;
 import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-
 
 /**
  * Created by Jahirul Bhuiyan on 10/10/2016.
@@ -113,6 +114,16 @@ public class PatientNavigationHelper {
             }
             case PatientNavigationStateConstants.PROFILE_UPDATE: {
                 intent = new Intent(context, DemographicsSettingsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                break;
+            }
+            case PatientNavigationStateConstants.PURCHASE: {
+                intent = new Intent(context, PurchaseActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                break;
+            }
+            case PatientNavigationStateConstants.NOTIFICATION: {
+                intent = new Intent(context, NotificationActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }

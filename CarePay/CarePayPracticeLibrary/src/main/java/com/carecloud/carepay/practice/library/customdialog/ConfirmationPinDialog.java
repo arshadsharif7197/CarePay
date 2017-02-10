@@ -22,6 +22,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -35,11 +36,12 @@ import java.util.Map;
 
 public class ConfirmationPinDialog extends Dialog implements View.OnClickListener {
 
-    private Context                         context;
-    private EditText                        pinEditText;
-    private CustomGothamRoundedMediumButton headerLabel;
-    private CarePayTextView                 subHeaderLabel;
+    private Context context;
+    private EditText pinEditText;
+    private CarePayTextView headerLabel;
+    private CarePayTextView subHeaderLabel;
     private CustomGothamRoundedMediumButton dialogCancelTextView;
+
     private PatientModeSwitchPinDTO patientModeSwitchPinDTO;
     private boolean isDynamicLabels ;
     private TransitionDTO transitionDTOPinLink;
@@ -82,7 +84,7 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
      */
     private void onInitialization() {
         pinEditText = (EditText) findViewById(R.id.pinEditText);
-        headerLabel = (CustomGothamRoundedMediumButton) findViewById(R.id.headerLabel);
+        headerLabel = (CarePayTextView) findViewById(R.id.headerLabel);
         subHeaderLabel = (CarePayTextView) findViewById(R.id.subHeaderLabel);
         dialogCancelTextView = (CustomGothamRoundedMediumButton) findViewById(R.id.dialogCancelTextView);
     }
@@ -91,9 +93,9 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
      * for setting  UI Component Style .
      */
     private void onSettingStyle() {
-        headerLabel.setTextColor(ContextCompat.getColor(context, com.carecloud.carepaylibrary.R.color.white));
-        subHeaderLabel.setTextColor(ContextCompat.getColor(context, com.carecloud.carepaylibrary.R.color.white));
-        dialogCancelTextView.setTextColor(ContextCompat.getColor(context, com.carecloud.carepaylibrary.R.color.bright_cerulean));
+        headerLabel.setTextColor(ContextCompat.getColor(context, R.color.white));
+        subHeaderLabel.setTextColor(ContextCompat.getColor(context, R.color.confirm_pin_sub_title));
+        dialogCancelTextView.setTextColor(ContextCompat.getColor(context, R.color.white));
     }
 
     /**
@@ -186,13 +188,15 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
         ((CustomGothamRoundedMediumButton)findViewById(pinViewId)).setText(pinNumber);
     }
 
-    WorkflowServiceCallback commonTransitionCallback = new WorkflowServiceCallback() {
+    private WorkflowServiceCallback commonTransitionCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             Gson gson = new Gson();
             PatientModeSwitchPinResponseDTO patientModeSwitchPinResponseDTO =   gson.fromJson(workflowDTO.toString(),PatientModeSwitchPinResponseDTO.class);
             if(patientModeSwitchPinResponseDTO.getPayload().getPinpad().getPayload()) {
@@ -204,6 +208,7 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             SystemUtil.showDefaultFailureDialog(context);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

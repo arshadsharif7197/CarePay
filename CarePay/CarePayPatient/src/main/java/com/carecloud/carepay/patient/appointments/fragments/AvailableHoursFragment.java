@@ -399,22 +399,22 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
     private WorkflowServiceCallback getAppointmentsAvailabilitySlotsCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getActivity()).show();
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             Gson gson = new Gson();
             availabilityDTO = gson.fromJson(workflowDTO.toString(), AppointmentAvailabilityDTO.class);
             availableHoursRecycleView.setAdapter(new AvailableHoursAdapter(getActivity(),
                     getAvailableHoursListWithHeader(), AvailableHoursFragment.this));
             updateDateRange();
-            ProgressDialogUtil.getInstance(getActivity()).dismiss();
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getActivity()).dismiss();
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

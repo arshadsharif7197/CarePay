@@ -41,7 +41,7 @@
         android:id="@+id/view"
         android:layout_width="1.5dp"
         android:layout_height="match_parent"
-        android:background="@color/change_mode_divider_color"/>
+        android:background="@color/colorPrimary"/>
 
     <LinearLayout
         android:id="@+id/dialog_logout_option"

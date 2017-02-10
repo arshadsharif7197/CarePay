@@ -25,6 +25,7 @@ import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
@@ -152,17 +153,19 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
     WorkflowServiceCallback patientHomeCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             getStartedButton.setEnabled(true);
             PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             getStartedButton.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(PatientModeSplashActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
@@ -179,4 +182,6 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
         CognitoAppHelper.setUser(null);
         ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
     }
+
+
 }
