@@ -67,11 +67,15 @@ public class DemographicsSettingUpdateEmailFragment extends Fragment {
     private String changeEmailString = null;
     private String saveChangesString = null;
     private String emailString = null;
+    private String passwordString = null;
 
     private EditText emailEditText = null;
+    private EditText passwordEditText = null;
     private Button updateEmailButton = null;
     private boolean isEmailEmpty;
+    private boolean isPasswordEmpty;
     private TextInputLayout emailLabel = null;
+    private TextInputLayout passwordLabel = null;
     private LinearLayout rootview;
 
 
@@ -104,6 +108,8 @@ public class DemographicsSettingUpdateEmailFragment extends Fragment {
         }
 
         emailEditText = (EditText) view.findViewById(R.id.signinEmailEditText);
+        passwordEditText = (EditText) view.findViewById(R.id.passwordEditText);
+
         updateEmailButton = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
 
         getSettingsLabels();
@@ -116,6 +122,7 @@ public class DemographicsSettingUpdateEmailFragment extends Fragment {
         getPersonalDetails();
         setClickables(view);
         isEmailEmpty = true;
+        isPasswordEmpty = true;
         return view;
 
     }
@@ -134,6 +141,7 @@ public class DemographicsSettingUpdateEmailFragment extends Fragment {
                         changeEmailString = demographicsSettingsLabelsDTO.getDemographicsChangeEmailLabel();
                         saveChangesString = demographicsSettingsLabelsDTO.getDemographicsSaveChangesLabel();
                         emailString = demographicsSettingsLabelsDTO.getEmailLabel();
+                        passwordString = demographicsSettingsLabelsDTO.getSettingsCurrentPasswordLabel();
 
                     }
                 }
@@ -146,17 +154,31 @@ public class DemographicsSettingUpdateEmailFragment extends Fragment {
     private void initialiseUIFields(View view) {
 
         emailLabel = (TextInputLayout) view.findViewById(R.id.signInEmailTextInputLayout);
+        passwordLabel = (TextInputLayout) view.findViewById(R.id.oldPasswordTextInputLayout);
+
     }
 
     private void setEditTexts(View view) {
         emailLabel.setTag(emailString);
         emailEditText.setTag(emailLabel);
         emailEditText.setHint(emailString);
+        passwordLabel.setTag(passwordString);
+        passwordEditText.setTag(passwordLabel);
+        passwordEditText.setHint(passwordString);
         setChangeFocusListeners();
     }
 
     private void setChangeFocusListeners() {
         emailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean bool) {
+                if (bool) {
+                    SystemUtil.showSoftKeyboard(getActivity());
+                }
+                SystemUtil.handleHintChange(view, bool);
+            }
+        });
+        passwordEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean bool) {
                 if (bool) {
@@ -184,7 +206,7 @@ public class DemographicsSettingUpdateEmailFragment extends Fragment {
     private boolean checkEmail() {
         String email = emailEditText.getText().toString();
         isEmailEmpty = StringUtil.isNullOrEmpty(email);
-        emailLabel.setErrorEnabled(isEmailEmpty); // enable for error if either empty or invalid first name
+        emailLabel.setErrorEnabled(isEmailEmpty); // enable for error if either empty or invalid email
         if (isEmailEmpty) {
             emailLabel.setError("");
         } else {
@@ -193,12 +215,32 @@ public class DemographicsSettingUpdateEmailFragment extends Fragment {
         return !isEmailEmpty;
     }
 
+    private boolean checkPassword() {
+        String password = passwordEditText.getText().toString();
+        isPasswordEmpty = StringUtil.isNullOrEmpty(password);
+        passwordLabel.setErrorEnabled(isPasswordEmpty); // enable for error if either empty or invalid password
+        if (isPasswordEmpty) {
+            passwordLabel.setError("");
+        } else {
+            passwordLabel.setError(null);
+        }
+        return !isPasswordEmpty;
+    }
+
     private boolean isEmailValid() {
         boolean isEmailValid = checkEmail();
         if (!isEmailValid) {
             emailEditText.requestFocus();
         }
         return !isEmailEmpty ;
+    }
+
+    private boolean isPasswordValid() {
+        boolean isPasswordValid = checkPassword();
+        if (!isPasswordValid) {
+            passwordEditText.requestFocus();
+        }
+        return !isPasswordEmpty ;
     }
 
     @Override
@@ -236,32 +278,22 @@ public class DemographicsSettingUpdateEmailFragment extends Fragment {
                                 demographicsSettingsEmailProperties.setLoginEmail(demographicsSettingsLoginEmailDTO);
                                 demographicsSettingsEmailProperties.setProposedEmail(demographicsSettingsProposedEmailDTO);
                                 demographicsSettingsEmailProperties.setCurrentPassword(demographicSettingsCurrentPasswordDTO);
-                                String encodedProperties = SystemUtil.encodeToBase64(demographicsSettingsEmailProperties.getLoginEmail().toString()+ SystemUtil.encodeToBase64(demographicsSettingsEmailProperties.getProposedEmail().toString()+SystemUtil.encodeToBase64(demographicsSettingsEmailProperties.getCurrentPassword().toString())));
-                                try {
-                                    ByteArrayOutputStream bo = new ByteArrayOutputStream();
-                                    ObjectOutputStream so = new ObjectOutputStream(bo);
-                                    so.writeObject(demographicsSettingsEmailProperties);
-                                    so.flush();
-                                    String redisString = new String(Base64.encodeBase64(bo.toByteArray()));
-                                    //demographicsSettingsMaintainanceDTO.setProperties(redisString);
 
-                                }
-                                catch (Exception e) {
-                                    e.printStackTrace();        }
-                           /*     Map<String, String> properties = null;
+                                Map<String, String> properties = null;
                                 properties = new HashMap<>();
-                                properties.put("login_email","harshalp@carecloud.com");
-                                properties.put("proposed_email", "harshalpatil@carecloud.com");
-                                properties.put("current_password","Test123");
-                                JSONObject jso = new JSONObject( properties );
-                                String encoded = new String(Base64.encodeBase64( jso.toString().getBytes()));*/
+                                Log.d("EMMA1",getCurrentEmail());
+                                Log.d("EMMA2",emailEditText.getText().toString());
+                                Log.d("EMMA3",passwordEditText.getText().toString());
 
-                                JSONObject payload = new JSONObject();
-                                Map<String, String> queries = null;
+                                properties.put("login_email",getCurrentEmail());
+                                properties.put("proposed_email", emailEditText.getText().toString());
+                                properties.put("current_password",passwordEditText.getText().toString());
+                                JSONObject attributes = new JSONObject( properties );
+                                String encodedAttributes = new String(Base64.encodeBase64( attributes.toString().getBytes()));
                                 Map<String, String> header = null;
                                 header = new HashMap<>();
-                                header.put("maintenance","eyJsb2dpbl9lbWFpbCI6ImhhcnNoYWxwQGNhcmVjbG91ZC5jb20iLCJwcm9wb3NlZF9lbWFpbCI6ImhhcnNoYWxwYXRpbEBjYXJlY2xvdWQuY29tIiwiY3VycmVudF9wYXNzd29yZCI6IlRlc3QxMjMhIn0");
-                                //header.put("transition", "true");
+                                header.put("maintenance", encodedAttributes);
+
                                 try {
                                     if (demographicsSettingsDTO != null) {
                                         DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
@@ -272,7 +304,7 @@ public class DemographicsSettingUpdateEmailFragment extends Fragment {
 
                                             Gson gson = new Gson();
                                             String jsonInString = gson.toJson(demographicsSettingsPayloadDTO);
-                                            WorkflowServiceHelper.getInstance().execute(demographicsSettingsUpdateEmailDTO, updateEmailCallback,null, queries, header);
+                                            WorkflowServiceHelper.getInstance().execute(demographicsSettingsUpdateEmailDTO, updateEmailCallback,null, null, header);
                                         }
                                     }
 
@@ -297,7 +329,6 @@ public class DemographicsSettingUpdateEmailFragment extends Fragment {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            Log.d("SETING",workflowDTO.toString());
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
         }
 
@@ -308,5 +339,16 @@ public class DemographicsSettingUpdateEmailFragment extends Fragment {
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+    private String getCurrentEmail(){
+        String currentEmail = null;
+        if (demographicsSettingsDTO != null) {
+            DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
+            if (demographicsSettingsPayloadDTO != null) {
+                currentEmail = demographicsSettingsPayloadDTO.getCurrentEmail();
+            }
+        }  return currentEmail;
+    }
+
 }
 

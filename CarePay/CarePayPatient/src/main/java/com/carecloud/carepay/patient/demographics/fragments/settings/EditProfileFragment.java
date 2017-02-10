@@ -142,7 +142,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
         CarePayTextView patientPasswordLabel = (CarePayTextView) view.findViewById(R.id.patientChangePasswordTextView);
         patientPasswordLabel.setText(changePasswordString);
 
-        setClickables(patientNameLabel, patientEmailLabel, changeProfilePictureButton, updateProfileButton);
+        setClickables(patientNameLabel, patientEmailLabel, patientPasswordLabel, changeProfilePictureButton, updateProfileButton);
 
         return view;
 
@@ -187,7 +187,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
 
     }
 
-    private void setClickables(CarePayTextView patientNameLabel, CarePayTextView patientEmailLabel, Button changeProfilePictureButton, final Button updateProfileButton) {
+    private void setClickables(CarePayTextView patientNameLabel, CarePayTextView patientEmailLabel, CarePayTextView patientPasswordLabel, Button changeProfilePictureButton, final Button updateProfileButton) {
         changeProfilePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -287,6 +287,35 @@ public class EditProfileFragment extends DocumentScannerFragment {
 
                 fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
                         DemographicsSettingUpdateEmailFragment.class.getSimpleName()).addToBackStack(null).commit();
+
+            }
+
+        });
+
+        patientPasswordLabel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                Gson gson = new Gson();
+                String demographicsSettingsDTOString = gson.toJson(demographicsSettingsDTO);
+                bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
+
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                DemographicsSettingsChangePasswordFragment fragment = (DemographicsSettingsChangePasswordFragment)
+                        fm.findFragmentByTag(DemographicsSettingsChangePasswordFragment.class.getSimpleName());
+                if (fragment == null) {
+                    fragment = new DemographicsSettingsChangePasswordFragment();
+                }
+
+                //fix for random crashes
+                if (fragment.getArguments() != null) {
+                    fragment.getArguments().putAll(bundle);
+                } else {
+                    fragment.setArguments(bundle);
+                }
+
+                fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
+                        DemographicsSettingsChangePasswordFragment.class.getSimpleName()).addToBackStack(null).commit();
 
             }
 

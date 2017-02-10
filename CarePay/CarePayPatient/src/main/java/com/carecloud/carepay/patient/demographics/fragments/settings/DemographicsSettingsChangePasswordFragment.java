@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.demographics.fragments.settings;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -13,7 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
@@ -22,6 +25,13 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.dtos.DemographicSettingsCurrentPasswordDTO;
+import com.carecloud.carepay.service.library.dtos.DemographicsSettingsEmailProperties;
+import com.carecloud.carepay.service.library.dtos.DemographicsSettingsHeaderDTO;
+import com.carecloud.carepay.service.library.dtos.DemographicsSettingsLoginEmailDTO;
+import com.carecloud.carepay.service.library.dtos.DemographicsSettingsMaintainanceDTO;
+import com.carecloud.carepay.service.library.dtos.DemographicsSettingsProposedEmailDTO;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
@@ -32,11 +42,19 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsTransitionsDTO;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.api.client.util.Base64;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
@@ -48,7 +66,31 @@ public class DemographicsSettingsChangePasswordFragment extends Fragment {
     private AppCompatActivity appCompatActivity;
     private DemographicsSettingsDTO demographicsSettingsDTO = null;
 
+    private String currentPasswordString = null;
+    private String newPasswordString = null;
+    private String repeatPasswordString = null;
+
+    private EditText currentPasswordEditText = null;
+    private EditText newPasswordEditText = null;
+    private EditText repeatPasswordEditText = null;
+
+    private TextView passwordHelpLabel = null;
+
+    private Button updatePasswordButton = null;
+    private boolean isCurrentPasswordEmpty;
+    private boolean isNewPasswordEmpty;
+    private boolean isRepeatPasswordEmpty;
+
+    private TextInputLayout currentPasswordLabel = null;
+    private TextInputLayout newPasswordLabel = null;
+    private TextInputLayout repeatPasswordLabel = null;
+
     private String changePasswordString = null;
+    private String passwordHelpString = null;
+    private String saveChangesString = null;
+
+    private LinearLayout rootview;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,10 +118,25 @@ public class DemographicsSettingsChangePasswordFragment extends Fragment {
             String demographicsSettingsDTOString = bundle.getString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE);
             demographicsSettingsDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsDTO.class);
         }
+
+        currentPasswordEditText = (EditText) view.findViewById(R.id.currentPasswordEditText);
+        newPasswordEditText = (EditText) view.findViewById(R.id.newPasswordEditText);
+        repeatPasswordEditText = (EditText) view.findViewById(R.id.repeatPasswordEditText);
+        passwordHelpLabel = (TextView) view.findViewById(R.id.passwordHelpLabel);
+
+        updatePasswordButton = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
         getSettingsLabels();
         title.setText(changePasswordString);
+        updatePasswordButton.setText(saveChangesString);
 
+        initialiseUIFields(view);
+        setEditTexts(view);
+        passwordHelpLabel.setText(passwordHelpString);
         setClickables(view);
+        isCurrentPasswordEmpty = true;
+        isNewPasswordEmpty = true;
+        isRepeatPasswordEmpty = true;
+
         return view;
 
     }
@@ -95,6 +152,11 @@ public class DemographicsSettingsChangePasswordFragment extends Fragment {
                 if (demographicsSettingsLabelsDTO != null) {
 
                     changePasswordString = demographicsSettingsLabelsDTO.getSettingschangePasswordLabel();
+                    passwordHelpString = demographicsSettingsLabelsDTO.getPasswordHelpLabel();
+                    saveChangesString = demographicsSettingsLabelsDTO.getDemographicsSaveChangesLabel();
+                    currentPasswordString = demographicsSettingsLabelsDTO.getSettingsCurrentPasswordLabel();
+                    newPasswordString = demographicsSettingsLabelsDTO.getSettingsNewPasswordLabel();
+                    repeatPasswordString = demographicsSettingsLabelsDTO.getSettingRepeatNewPasswordLabel();
 
                 }
             }
@@ -106,6 +168,119 @@ public class DemographicsSettingsChangePasswordFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
+    private void initialiseUIFields(View view) {
+
+        currentPasswordLabel = (TextInputLayout) view.findViewById(R.id.oldPasswordTextInputLayout);
+        newPasswordLabel = (TextInputLayout) view.findViewById(R.id.newPasswordTextInputLayout);
+        repeatPasswordLabel = (TextInputLayout) view.findViewById(R.id.repeatPasswordTextInputLayout);
+    }
+
+    private void setEditTexts(View view) {
+        currentPasswordLabel.setTag(currentPasswordString);
+        currentPasswordEditText.setTag(currentPasswordLabel);
+        currentPasswordEditText.setHint(currentPasswordString);
+
+        newPasswordLabel.setTag(newPasswordString);
+        newPasswordEditText.setTag(newPasswordLabel);
+        newPasswordEditText.setHint(newPasswordString);
+
+        repeatPasswordLabel.setTag(repeatPasswordString);
+        repeatPasswordEditText.setTag(repeatPasswordLabel);
+        repeatPasswordEditText.setHint(repeatPasswordString);
+
+        setChangeFocusListeners();
+    }
+
+    private void setChangeFocusListeners() {
+        currentPasswordEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean bool) {
+                if (bool) {
+                    SystemUtil.showSoftKeyboard(getActivity());
+                }
+                SystemUtil.handleHintChange(view, bool);
+            }
+        });
+        newPasswordEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean bool) {
+                if (bool) {
+                    SystemUtil.showSoftKeyboard(getActivity());
+                }
+                SystemUtil.handleHintChange(view, bool);
+            }
+        });
+        repeatPasswordEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean bool) {
+                if (bool) {
+                    SystemUtil.showSoftKeyboard(getActivity());
+                }
+                SystemUtil.handleHintChange(view, bool);
+            }
+        });
+
+    }
+
+    private boolean checkCurrentPassword() {
+        String currentPassword = currentPasswordEditText.getText().toString();
+        isCurrentPasswordEmpty = StringUtil.isNullOrEmpty(currentPassword);
+        currentPasswordLabel.setErrorEnabled(isCurrentPasswordEmpty);
+        if (isCurrentPasswordEmpty) {
+            currentPasswordLabel.setError("");
+        } else {
+            currentPasswordLabel.setError(null);
+        }
+        return !isCurrentPasswordEmpty;
+    }
+
+    private boolean checkNewPassword() {
+        String newPassword = newPasswordEditText.getText().toString();
+        isNewPasswordEmpty = StringUtil.isNullOrEmpty(newPassword);
+        newPasswordLabel.setErrorEnabled(isNewPasswordEmpty);
+        if (isNewPasswordEmpty) {
+            newPasswordLabel.setError("");
+        } else {
+            newPasswordLabel.setError(null);
+        }
+        return !isNewPasswordEmpty;
+    }
+
+    private boolean checkRepeatPassword() {
+        String repeatPassword = repeatPasswordEditText.getText().toString();
+        isRepeatPasswordEmpty = StringUtil.isNullOrEmpty(repeatPassword);
+        repeatPasswordLabel.setErrorEnabled(isRepeatPasswordEmpty);
+        if (isRepeatPasswordEmpty) {
+            repeatPasswordLabel.setError("");
+        } else {
+            repeatPasswordLabel.setError(null);
+        }
+        return !isRepeatPasswordEmpty;
+    }
+
+    private boolean isCurrentPasswordValid() {
+        boolean isCurrentPasswordValid = checkCurrentPassword();
+        if (!isCurrentPasswordValid) {
+            currentPasswordEditText.requestFocus();
+        }
+        return !isCurrentPasswordEmpty ;
+    }
+
+    private boolean isNewPasswordValid() {
+        boolean isNewPasswordValid = checkNewPassword();
+        if (!isNewPasswordValid) {
+            newPasswordEditText.requestFocus();
+        }
+        return !isNewPasswordEmpty ;
+    }
+
+    private boolean isRepeatPasswordValid() {
+        boolean isRepeatPasswordValid = checkRepeatPassword();
+        if (!isRepeatPasswordValid) {
+            repeatPasswordEditText.requestFocus();
+        }
+        return !isRepeatPasswordEmpty ;
+    }
     /**
      * For tests
      *
@@ -115,9 +290,90 @@ public class DemographicsSettingsChangePasswordFragment extends Fragment {
         appCompatActivity = activity;
     }
 
+    WorkflowServiceCallback updatePasswordCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+
+            SystemUtil.showDefaultFailureDialog(getActivity());
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+
     private void setClickables(View view) {
+        {
+            updatePasswordButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        if (isCurrentPasswordValid() ) {
+                            if (demographicsSettingsDTO != null) {
+                                DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
+                                if (demographicsSettingsMetadataDTO != null) {
+                                    DemographicsSettingsTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
+                                    TransitionDTO demographicsSettingsUpdatePasswordDTO = demographicsSettingsTransitionsDTO.getChangePassword();
+                                    DemographicsSettingsHeaderDTO demographicsSettingsHeaderDTO =  demographicsSettingsUpdatePasswordDTO.getHeader();
+                                    DemographicsSettingsMaintainanceDTO demographicsSettingsMaintainanceDTO = demographicsSettingsHeaderDTO.getMaintenance();
+                                    DemographicsSettingsEmailProperties demographicsSettingsEmailProperties = demographicsSettingsMaintainanceDTO.getProperties();
+                                    DemographicSettingsCurrentPasswordDTO demographicSettingsCurrentPasswordDTO = demographicsSettingsEmailProperties.getCurrentPassword();
 
+                                    Map<String, String> properties = null;
+                                    properties = new HashMap<>();
+
+                                    properties.put("login_email",getCurrentEmail());
+                                    properties.put("current_password", currentPasswordEditText.getText().toString());
+                                    properties.put("proposed_password",newPasswordEditText.getText().toString());
+                                    JSONObject attributes = new JSONObject( properties );
+                                    String encodedAttributes = new String(Base64.encodeBase64( attributes.toString().getBytes()));
+                                    Map<String, String> header = null;
+                                    header = new HashMap<>();
+                                    header.put("maintenance", encodedAttributes);
+
+                                    try {
+                                        if (demographicsSettingsDTO != null) {
+                                            DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
+                                            if (demographicsSettingsPayloadDTO != null) {
+                                                //DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
+                                                //DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload().;
+                                                //DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+
+                                                Gson gson = new Gson();
+                                                String jsonInString = gson.toJson(demographicsSettingsPayloadDTO);
+                                                WorkflowServiceHelper.getInstance().execute(demographicsSettingsUpdatePasswordDTO, updatePasswordCallback,null, null, header);
+                                            }
+                                        }
+
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
     }
-
+    private String getCurrentEmail(){
+        String currentEmail = null;
+        if (demographicsSettingsDTO != null) {
+            DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
+            if (demographicsSettingsPayloadDTO != null) {
+                currentEmail = demographicsSettingsPayloadDTO.getCurrentEmail();
+            }
+        }  return currentEmail;
+    }
 }
 
