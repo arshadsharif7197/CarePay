@@ -800,6 +800,10 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         });
     }
 
+    /**
+     * update demographic DTO
+     * @return main demographic DTO
+     */
     public DemographicDTO updateModels() {
 
         // save the personal details

@@ -134,9 +134,9 @@ public class NewReviewDemographicsActivity extends BasePatientActivity
     @Override
     public void navigateToInsuranceDocumentFragment(int index, DemographicInsurancePayloadDTO model) {
 
-        CheckinDemographicsFragment Checkinfragment = (CheckinDemographicsFragment)
+        CheckinDemographicsFragment checkinFragment = (CheckinDemographicsFragment)
                 getSupportFragmentManager().findFragmentById(R.id.root_layout);
-        onDemographicDtoChanged(Checkinfragment.updateModels());
+        onDemographicDtoChanged(checkinFragment.updateModels());
 
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, demographicDTO.getMetadata().getLabels());
@@ -173,9 +173,7 @@ public class NewReviewDemographicsActivity extends BasePatientActivity
 
     @Override
     public void initializeIdDocScannerFragment() {
-        String tag = "license";
 
-        FragmentManager fm = getSupportFragmentManager();
         // add license fragment
         IdDocScannerFragment fragment = new IdDocScannerFragment();
 
@@ -188,7 +186,8 @@ public class NewReviewDemographicsActivity extends BasePatientActivity
         if (null != idDocsMetaDTO) {
             DtoHelper.bundleDto(args, idDocsMetaDTO.properties.items.identityDocument);
         }
-
+        String tag = "license";
+        FragmentManager fm = getSupportFragmentManager();
         fragment.setArguments(args);
         fm.beginTransaction().replace(R.id.demographicsDocsLicense, fragment, tag).commit();
     }
