@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -127,7 +128,7 @@ public class DemographicsActivity extends BasePatientActivity
 
         isStoragePermissionGranted();
         setupPager();
-//        createDTOsForTest();
+
     }
 
 
@@ -166,9 +167,13 @@ public class DemographicsActivity extends BasePatientActivity
         };
         viewPager.addOnPageChangeListener(pageChangeListener);
 
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                SystemUtil.hideSoftKeyboard(DemographicsActivity.this);
+            }
+        }, 800);
     }
-
-
 
     private void setScreenHeader(int position) {
         switch (position) {
