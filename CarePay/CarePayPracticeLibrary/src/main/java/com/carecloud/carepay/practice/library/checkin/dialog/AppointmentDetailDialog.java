@@ -287,9 +287,11 @@ public class AppointmentDetailDialog extends Dialog {
      */
     private Map<String, String> getQueryParam(QueryStrings queryStrings) {
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put(queryStrings.getAppointmentId().getName(), appointmentPayloadDTO.getId());
-        queryMap.put(queryStrings.getPracticeManagement().getName(), pendingBalanceDTO.getMetadata().getPracticeMgmt());
-        queryMap.put(queryStrings.getPracticeId().getName(), pendingBalanceDTO.getMetadata().getPracticeId());
+        if (appointmentPayloadDTO != null && pendingBalanceDTO != null) {
+            queryMap.put(queryStrings.getAppointmentId().getName(), appointmentPayloadDTO.getId());
+            queryMap.put(queryStrings.getPracticeManagement().getName(), pendingBalanceDTO.getMetadata().getPracticeMgmt());
+            queryMap.put(queryStrings.getPracticeId().getName(), pendingBalanceDTO.getMetadata().getPracticeId());
+        }
 
         return queryMap;
     }
@@ -300,10 +302,11 @@ public class AppointmentDetailDialog extends Dialog {
      */
     private Map<String, String> getQueueQueryParam(QueryStrings queryStrings) {
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put(queryStrings.getPatientId().getName(), pendingBalanceDTO.getMetadata().getPatientId());
-        queryMap.put(queryStrings.getPracticeManagement().getName(), pendingBalanceDTO.getMetadata().getPracticeMgmt());
-        queryMap.put(queryStrings.getPracticeId().getName(), pendingBalanceDTO.getMetadata().getPracticeId());
-
+        if (appointmentPayloadDTO != null && pendingBalanceDTO != null) {
+            queryMap.put(queryStrings.getPatientId().getName(), appointmentPayloadDTO.getId());
+            queryMap.put(queryStrings.getPracticeManagement().getName(), pendingBalanceDTO.getMetadata().getPracticeMgmt());
+            queryMap.put(queryStrings.getPracticeId().getName(), pendingBalanceDTO.getMetadata().getPracticeId());
+        }
         return queryMap;
     }
 
@@ -418,7 +421,11 @@ public class AppointmentDetailDialog extends Dialog {
     }
 
     private double getPatientBalance() {
-        return pendingBalanceDTO.getPayload().get(0).getAmount();
+        if (pendingBalanceDTO != null) {
+            return pendingBalanceDTO.getPayload().get(0).getAmount();
+        }
+
+        return 0;
     }
 
     private String[] getOrdinalSufix(CheckInLabelDTO labels) {
