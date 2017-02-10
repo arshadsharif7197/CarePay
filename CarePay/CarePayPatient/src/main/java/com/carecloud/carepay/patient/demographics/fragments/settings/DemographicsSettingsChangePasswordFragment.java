@@ -318,8 +318,7 @@ public class DemographicsSettingsChangePasswordFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     try {
-                        if (isCurrentPasswordValid() ) {
-                            if (demographicsSettingsDTO != null) {
+                        if (isCurrentPasswordValid() && demographicsSettingsDTO != null ) {
                                 DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
                                     DemographicsSettingsTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
                                     TransitionDTO demographicsSettingsUpdatePasswordDTO = demographicsSettingsTransitionsDTO.getChangePassword();
@@ -358,7 +357,6 @@ public class DemographicsSettingsChangePasswordFragment extends Fragment {
                                         e.printStackTrace();
                                     }
                                 }
-                            }
                     }catch (Exception e){
                         e.printStackTrace();
                     }

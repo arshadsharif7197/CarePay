@@ -257,8 +257,7 @@ public class DemographicsSettingUpdateEmailFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 try {
-                    if (isEmailValid() ) {
-                        if (demographicsSettingsDTO != null) {
+                    if (isEmailValid() && demographicsSettingsDTO != null ) {
                             DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
                                 DemographicsSettingsTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
                                 TransitionDTO demographicsSettingsUpdateEmailDTO = demographicsSettingsTransitionsDTO.getChangeLoginEmail();
@@ -304,7 +303,6 @@ public class DemographicsSettingUpdateEmailFragment extends Fragment {
                                     e.printStackTrace();
                                 }
                             }
-                        }
                 }catch (Exception e){
                     e.printStackTrace();
                 }

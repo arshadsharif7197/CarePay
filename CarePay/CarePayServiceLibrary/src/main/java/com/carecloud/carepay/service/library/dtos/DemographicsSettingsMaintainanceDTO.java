@@ -29,7 +29,7 @@ public class DemographicsSettingsMaintainanceDTO {
         return schema;
     }
 
-    public void setschema(String $schema) {
+    public void setschema(String schema) {
         this.schema = schema;
     }
 
