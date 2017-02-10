@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.utils;
 import android.os.Bundle;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 /**
  * Created by cocampo on 2/2/17.
@@ -35,6 +36,23 @@ public class DtoHelper {
         if (!StringUtil.isNullOrEmpty(jsonString)) {
             Gson gson = new Gson();
             return gson.fromJson(jsonString, dtoClass);
+        }
+
+        return null;
+    }
+
+    /**
+      * Converts to the desire DTO object from JsonObject DTO
+      *
+      * @param dtoClass class to convert
+      * @param <S>      Dynamic class to convert
+      * @return Dynamic converted class object
+      */
+    public static <S> S getConvertedDTO(Class<S> dtoClass, JsonObject jsonObject) {
+
+        if (null != jsonObject) {
+            Gson gson = new Gson();
+            return gson.fromJson(jsonObject, dtoClass);
         }
 
         return null;
