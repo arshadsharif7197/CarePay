@@ -46,12 +46,18 @@ public class TwoColumnPatientListView extends RecyclerView {
         callback = listener;
     }
 
+    /**
+     * @param checkInDTO to fill list view
+     */
     public void setCheckInDTO(CheckInDTO checkInDTO) {
         if (null != checkInDTO) {
             setPatientAdapter(new PatientListAdapter(getContext(), checkInDTO));
         }
     }
 
+    /**
+     * @param paymentsModel to fill list view
+     */
     public void setPaymentsModel(PaymentsModel paymentsModel) {
         if (null != paymentsModel) {
             setPatientAdapter(new PatientListAdapter(getContext(), paymentsModel));
