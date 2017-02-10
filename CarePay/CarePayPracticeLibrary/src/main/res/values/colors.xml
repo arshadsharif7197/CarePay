@@ -2,6 +2,7 @@
 <resources>
     <color name="colorPrimary">#5BC5D0</color>
     <color name="colorPrimaryDark">#489DA6</color>
+    <color name="left_panel_color">#4EAAB3</color>
 
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
@@ -21,7 +22,7 @@
     <color name="cardinal">#c31e30</color>
     <color name="amaranth">#ffe63248</color>
     <color name="harvard_crimson">#d0021b</color>
-    <color name="brick_red">#d14c4c </color>
+    <color name="brick_red">#d14c4c</color>
 
     <color name="yellowGreen">#5BD063</color>
     <color name="checkin_item_border">#80C8E9</color>
