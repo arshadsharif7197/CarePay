@@ -155,7 +155,7 @@ public class DemographicsActivity extends BasePatientActivity
             public void onPageSelected(int position) {
                 if (position != 0) {
                     // hide the keyboard (just in case)
-                    hideSoftKeyboard();
+                    SystemUtil.hideSoftKeyboard(DemographicsActivity.this);
                 }
                 currentPageIndex = position;
                 setScreenHeader(position);
@@ -170,22 +170,10 @@ public class DemographicsActivity extends BasePatientActivity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                hideSoftKeyboard();
+                SystemUtil.hideSoftKeyboard(DemographicsActivity.this);
             }
-        }, 500);
+        }, 800);
     }
-
-
-
-    /**
-     * Hide soft keyboard after
-     */
-    public void hideSoftKeyboard(){
-        SystemUtil.hideSoftKeyboard(this);
-    }
-
-
-
 
     private void setScreenHeader(int position) {
         switch (position) {
@@ -310,7 +298,7 @@ public class DemographicsActivity extends BasePatientActivity
     @Override
     public void onBackPressed() {
         if (currentPageIndex == 0) {
-            hideSoftKeyboard();
+            SystemUtil.hideSoftKeyboard(this);
             // sign-out from Cognito
             CognitoAppHelper.getPool().getUser().signOut();
             CognitoAppHelper.setUser(null);
