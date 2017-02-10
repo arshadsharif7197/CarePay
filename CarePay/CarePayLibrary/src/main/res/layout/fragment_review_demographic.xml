@@ -373,7 +373,7 @@
                         android:layout_weight="1"
                         app:hintTextAppearance="@style/FloatingLabelStyle">
 
-                        <EditText
+                        <AutoCompleteTextView
                             android:id="@+id/stateAutoCompleteTextView"
                             style="@style/SigninSignupEditStyle"
                             android:digits="ABCDEFGHIJKLMNOPQURSTUVWXYZ"
