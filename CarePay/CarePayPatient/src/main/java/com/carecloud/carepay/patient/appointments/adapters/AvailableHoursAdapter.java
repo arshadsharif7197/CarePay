@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailableHoursDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
@@ -97,6 +96,10 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 }
             });
         }
+    }
+
+    public void setItems(List<Object> items){
+        this.items = items;
     }
 
     private class ViewHolderTimeSlot extends RecyclerView.ViewHolder {

@@ -27,6 +27,7 @@
             android:text="@string/Other"
             android:textColor="@color/white"
             android:textSize="@dimen/visit_type_button_font"
+            android:textAllCaps="true"
             android:visibility="gone" />
     </LinearLayout>
 
