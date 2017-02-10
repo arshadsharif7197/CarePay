@@ -171,13 +171,18 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+
             ProgressDialogUtil.getInstance(getContext()).dismiss();
+
             PatientNavigationHelper.getInstance(MenuPatientActivity.this).navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            SystemUtil.showDefaultFailureDialog(MenuPatientActivity.this);
+
             ProgressDialogUtil.getInstance(getContext()).dismiss();
+
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

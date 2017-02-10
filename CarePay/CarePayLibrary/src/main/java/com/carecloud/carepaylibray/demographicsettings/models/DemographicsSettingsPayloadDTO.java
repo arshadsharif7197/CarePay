@@ -17,6 +17,10 @@ public class DemographicsSettingsPayloadDTO {
     @SerializedName("demographics")
     @Expose
     private DemographicsSettingsDemographicsDTO demographics;
+    @SerializedName("current_email")
+    @Expose
+    private String currentEmail;
+
 
     public List<DemographicsSettingsLanguageDTO> getLanguages() {
         return demographicsSettingsLanguageDTOs;
@@ -42,4 +46,13 @@ public class DemographicsSettingsPayloadDTO {
     public void setPatientCreditCards(List<DemographicsSettingsCreditCardsPayloadDTO> patientCreditCards) {
         this.patientCreditCards = patientCreditCards;
     }
+
+    public String getCurrentEmail() {
+        return currentEmail;
+    }
+
+    public void setCurrentEmail(String currentEmail) {
+        this.currentEmail = currentEmail;
+    }
 }
+
