@@ -371,7 +371,7 @@
                                 android:inputType="textCapCharacters"
                                 android:maxLength="255"
                                 android:maxLines="1"
-                                android:nextFocusRight="@+id/stateAutoCompleteTextView" />
+                                android:nextFocusRight="@+id/addNewCredidCardStateAutoCompleteTextView" />
 
                         </android.support.design.widget.TextInputLayout>
 
@@ -387,7 +387,7 @@
                             android:textColorHint="@color/payne_gray">
 
                             <AutoCompleteTextView
-                                android:id="@+id/stateAutoCompleteTextView"
+                                android:id="@+id/addNewCredidCardStateAutoCompleteTextView"
                                 style="@style/EditTextStyle"
                                 android:imeOptions="actionDone"
                                 android:inputType="textAutoComplete"
