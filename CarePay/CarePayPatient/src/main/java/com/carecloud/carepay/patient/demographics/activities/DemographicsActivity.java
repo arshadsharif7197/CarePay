@@ -44,7 +44,6 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsuranc
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
-import com.carecloud.carepaylibray.demographics.fragments.DemographicsCheckInDocumentsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
@@ -369,8 +368,14 @@ public class DemographicsActivity extends BasePatientActivity
         fragment.setArguments(args);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(com.carecloud.carepay.patient.R.id.demographicsHealtInsurance, fragment, tag);
+        transaction.replace(R.id.demographicsHealtInsurance, fragment, tag);
         transaction.commit();
+    }
+
+    private void hideShowComponents(boolean isParent){
+        findViewById(R.id.demographics_toolbar).setVisibility(isParent? View.VISIBLE :View.GONE);
+        findViewById(R.id.demogr_content_holder).setVisibility(isParent? View.VISIBLE :View.GONE);
+        findViewById(R.id.insurance_item_holder).setVisibility(isParent? View.GONE :View.VISIBLE);
     }
 
     @Override
@@ -385,13 +390,15 @@ public class DemographicsActivity extends BasePatientActivity
 
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(com.carecloud.carepay.patient.R.id.insurance_item_holder, fragment, fragment.getClass().getSimpleName());
+        transaction.replace(R.id.insurance_item_holder, fragment, fragment.getClass().getSimpleName());
         transaction.commit();
+        hideShowComponents(false);
     }
 
     @Override
     public void navigateToParentFragment() {
-        setCurrentItem(2, true);
+        hideShowComponents(true);
+        //setCurrentItem(2, true);
         /*CheckinDemographicsFragment fragment = new CheckinDemographicsFragment();
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, modelGet);
@@ -403,14 +410,18 @@ public class DemographicsActivity extends BasePatientActivity
 
     @Override
     public void updateInsuranceDTO(int index, DemographicInsurancePayloadDTO model) {
-        List<DemographicInsurancePayloadDTO> insurances = modelGet.getPayload().getDemographics().getPayload()
-                .getInsurances();
         if (index>=0){
-            insurances.set(index, model);
+            insuranceModelList.set(index, model);
         } else {
-            insurances.add(model);
+            insuranceModelList.add(model);
+        }
+        if(modelGet.getPayload().getDemographics() ==null){
+            modelGet.getPayload().setDemographics(new DemographicPayloadInfoDTO());
+            modelGet.getPayload().getDemographics().setPayload(new DemographicPayloadDTO());
+            modelGet.getPayload().getDemographics().getPayload().setInsurances(insuranceModelList);
         }
 
+        initializeInsurancesFragment();
     }
 
 
