@@ -25,6 +25,7 @@ public class CustomPopupNotification extends PopupWindow {
     public static final int TYPE_TIMED_NOTIFICATION = 1;
     public static final int TYPE_ALERT_NOTIFICATION = 2;
     public static final int TYPE_ERROR_NOTIFICATION = 3;
+    private static final int AUTO_DISSMISS_SUCCESS_NOTIFICATION = 4;
     private View parentView;
     private CustomPopupNotification customPopupNotificationInstance;
 
@@ -97,6 +98,11 @@ public class CustomPopupNotification extends PopupWindow {
                 popupWindowLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.cardinal));
                 popupMessageLabel.setTextColor(ContextCompat.getColor(context, R.color.white));
                 popupIcon.setImageResource(R.drawable.icn_notification_error);
+                break;
+            case AUTO_DISSMISS_SUCCESS_NOTIFICATION:
+                popupWindowLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.success));
+                popupMessageLabel.setTextColor(ContextCompat.getColor(context, R.color.white));
+                popupIcon.setImageResource(R.drawable.icn_check);
                 break;
             default:
         }
