@@ -178,7 +178,7 @@
                     android:background="@drawable/top_right_rounded_transparent_bg"
                     android:visibility="gone">
 
-                    <TextView
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/drop_here_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -186,8 +186,8 @@
                         android:drawablePadding="@dimen/dimen_10dp"
                         android:drawableTop="@drawable/icn_drop_here"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_17"
-                        android:textStyle="bold" />
+                        android:textSize="@dimen/text_size_22sp"
+                        app:customAssetFont="gotham_rounded_medium" />
                 </RelativeLayout>
             </RelativeLayout>
         </LinearLayout>
