@@ -4,7 +4,7 @@
     android:id="@+id/activity_how_to_check_in"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/rich_electric_blue_1"
+    android:background="@color/colorPrimary"
     android:orientation="vertical"
     android:paddingBottom="@dimen/dimen_21dp"
     android:paddingLeft="@dimen/dimen_20dp"
@@ -72,7 +72,7 @@
             android:layout_height="@dimen/dimen_1dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dimen_10dp"
-            android:background="@color/white_30opacity"/>
+            android:background="@color/white_opacity_30"/>
         <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookButton
             android:id="@+id/scanQRCodeButton"
             android:layout_width="wrap_content"
@@ -90,7 +90,7 @@
             android:layout_height="@dimen/dimen_1dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dimen_10dp"
-            android:background="@color/white_30opacity"/>
+            android:background="@color/white_opacity_30"/>
         <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookButton
             android:id="@+id/manualSearchButton"
             android:layout_width="wrap_content"
@@ -109,7 +109,7 @@
             android:layout_height="@dimen/dimen_1dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dimen_10dp"
-            android:background="@color/white_30opacity"/>
+            android:background="@color/white_opacity_30"/>
 
 
     </LinearLayout>

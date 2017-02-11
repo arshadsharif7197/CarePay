@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_checked_in"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_default"
+    android:background="@color/colorPrimary"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#056DA3"
+        android:background="@color/colorPrimaryDark"
         android:padding="4dp">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -18,31 +19,35 @@
             android:layout_width="180dp"
             android:layout_height="53dp"
             android:layout_alignParentStart="true"
+            android:drawablePadding="@dimen/dimen_10dp"
             android:drawableStart="@drawable/icn_arrow_left"
             android:gravity="center_vertical"
             android:includeFontPadding="false"
-            android:paddingLeft="10dp"
-            android:text="  Go Back"
-            android:textColor="#ffffff"
+            android:paddingEnd="0dp"
+            android:paddingStart="@dimen/dimen_10dp"
+            android:textColor="@color/white"
             android:textSize="20sp"
             app:customAssetFont="gotham_rounded_medium" />
 
         <LinearLayout
+            android:id="@+id/filterLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:id="@+id/filterLayout"
             android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:paddingEnd="10dp"
-            android:orientation="horizontal">
+            android:paddingStart="0dp"
+            tools:ignore="RelativeOverlap">
 
             <ImageView
                 android:id="@+id/filterImageView"
                 android:layout_width="18dp"
                 android:layout_height="20dp"
                 android:layout_marginEnd="10dp"
-                android:src="@drawable/icn_filter" />
+                android:src="@drawable/icn_filter"
+                tools:ignore="ContentDescription" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/filterTextView"
@@ -50,7 +55,6 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:includeFontPadding="false"
-                android:text="Filters"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 app:customAssetFont="proxima_nova_regular" />
@@ -61,25 +65,22 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_green_overlay"
                 android:gravity="center"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp"
-                android:paddingTop="6dp"
-                android:paddingBottom="6dp"
-                android:visibility="gone"
                 android:includeFontPadding="false"
-                android:text="Filters: On"
-                android:textColor="#34590C"
+                android:paddingBottom="6dp"
+                android:paddingEnd="15dp"
+                android:paddingStart="15dp"
+                android:paddingTop="6dp"
+                android:textColor="@color/filter_on"
                 android:textSize="18sp"
+                android:visibility="gone"
                 app:customAssetFont="proxima_nova_extra_bold" />
-
-
         </LinearLayout>
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:baselineAligned="false"
         android:orientation="horizontal"
         android:paddingBottom="10dp"
         android:paddingLeft="175dp"
@@ -103,8 +104,7 @@
                     android:id="@+id/checkingInTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="CHECKING-IN"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/white"
                     android:textSize="20sp"
                     app:customAssetFont="gotham_rounded_medium" />
 
@@ -112,11 +112,10 @@
                     android:id="@+id/checkingInCounterTextview"
                     android:layout_width="34dp"
                     android:layout_height="34dp"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:background="@drawable/queue_counter_noborder_background"
                     android:gravity="center"
-                    android:text="0"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/white"
                     android:textSize="16sp"
                     app:customAssetFont="gotham_rounded_bold" />
             </LinearLayout>
@@ -125,7 +124,7 @@
                 android:id="@+id/checkinginRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginRight="2dp"
+                android:layout_marginEnd="2dp"
                 android:background="@drawable/checking_in_list_background" />
         </LinearLayout>
 
@@ -145,8 +144,7 @@
                     android:id="@+id/waitingRoomTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="WAITING ROOM"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/white"
                     android:textSize="20sp"
                     app:customAssetFont="gotham_rounded_medium" />
 
@@ -154,22 +152,44 @@
                     android:id="@+id/waitingCounterTextview"
                     android:layout_width="34dp"
                     android:layout_height="34dp"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:background="@drawable/queue_counter_noborder_background"
                     android:gravity="center"
-                    android:text="0"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/white"
                     android:textSize="16sp"
                     app:customAssetFont="gotham_rounded_bold" />
             </LinearLayout>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/waitingRoomRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginRight="2dp"
-                android:background="@drawable/waiting_room_list_background" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/waitingRoomRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="2dp"
+                    android:background="@drawable/waiting_room_list_background" />
+
+                <RelativeLayout
+                    android:id="@+id/drop_down_area_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/top_right_rounded_transparent_bg"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/drop_here_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:drawablePadding="@dimen/dimen_10dp"
+                        android:drawableTop="@drawable/icn_drop_here"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_17"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+            </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>

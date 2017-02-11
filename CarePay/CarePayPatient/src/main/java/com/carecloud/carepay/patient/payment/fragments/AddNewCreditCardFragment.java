@@ -33,6 +33,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialog;
@@ -46,6 +47,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.utils.CardPattern;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.payeezysdk.sdk.payeezydirecttransactions.RequestTask;
@@ -63,7 +65,7 @@ import org.json.JSONObject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AddNewCreditCardFragment extends Fragment implements
+public class AddNewCreditCardFragment extends BaseFragment implements
         SimpleDatePickerDialog.OnDateSetListener, RequestTask.AuthorizeCreditCardCallback {
 
     private TextInputLayout nameOnCardTextInputLayout;
@@ -81,7 +83,6 @@ public class AddNewCreditCardFragment extends Fragment implements
     private EditText verificationCodeEditText;
     private TextView expirationDateTextView;
     private TextView pickDateTextView;
-    private CheckBox saveCardOnFileCheckBox;
     private CheckBox setAsDefaultCheckBox;
     private CheckBox useProfileAddressCheckBox;
 
@@ -139,7 +140,7 @@ public class AddNewCreditCardFragment extends Fragment implements
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         initilizeViews(addNewCreditCardView);
-        setTypefaces();
+
         setTextWatchers();
         return addNewCreditCardView;
     }
@@ -303,8 +304,14 @@ public class AddNewCreditCardFragment extends Fragment implements
         pickDateTextView.setText(paymentsLabelDTO.getPaymentPickDate());
         pickDateTextView.setOnClickListener(pickDateListener);
 
-        saveCardOnFileCheckBox = (CheckBox) view.findViewById(com.carecloud.carepaylibrary.R.id.saveCardOnFileCheckBox);
+        CheckBox saveCardOnFileCheckBox = (CheckBox) view.findViewById(com.carecloud.carepaylibrary.R.id.saveCardOnFileCheckBox);
         saveCardOnFileCheckBox.setText(paymentsLabelDTO.getPaymentSaveCardOnFile());
+        saveCardOnFileCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setCardAsDefaultLogic((CheckBox) view);
+            }
+        });
 
         setAsDefaultCheckBox = (CheckBox) view.findViewById(com.carecloud.carepaylibrary.R.id.setAsDefaultCheckBox);
         setAsDefaultCheckBox.setText(paymentsLabelDTO.getPaymentSetAsDefaultCreditCard());
@@ -376,6 +383,7 @@ public class AddNewCreditCardFragment extends Fragment implements
 
         saveCardOnFileCheckBox.setChecked(false);
         setAsDefaultCheckBox.setChecked(false);
+        setAsDefaultCheckBox.setEnabled(false);
 
         useProfileAddressCheckBox.setChecked(true);
         setAddressFiledsEnabled(false);
@@ -386,6 +394,25 @@ public class AddNewCreditCardFragment extends Fragment implements
         useProfileAddressCheckBox.setChecked(true);
         setAddressFiledsEnabled(false);
         setDefaultBillingAddressTexts();
+
+        setTypefaces(saveCardOnFileCheckBox);
+    }
+
+    /**
+     * SHMRK-1843
+     *
+     * 1. 'Set as default' checkbox should be enabled onle when 'Save card on file' check box is enabled.
+     *
+     * 2. If both 'Set as default' and 'Save card on file' checkboxes were checked, then
+     * un-checking 'Save card on file' checkbox should also un-check 'Set as default' checkbox.
+     */
+    private void setCardAsDefaultLogic(CheckBox saveCardOnFileCheckBox) {
+        setAsDefaultCheckBox.setEnabled(saveCardOnFileCheckBox.isChecked());
+
+        if(!saveCardOnFileCheckBox.isChecked())
+        {
+            setAsDefaultCheckBox.setChecked(false);
+        }
     }
 
     private void setDefaultBillingAddressTexts() {
@@ -401,7 +428,7 @@ public class AddNewCreditCardFragment extends Fragment implements
         }
     }
 
-    private void setTypefaces() {
+    private void setTypefaces(CheckBox saveCardOnFileCheckBox) {
         SystemUtil.setProximaNovaRegularTypeface(getActivity(), creditCardNoEditText);
         SystemUtil.setProximaNovaRegularTypeface(getActivity(), verificationCodeEditText);
         SystemUtil.setProximaNovaRegularTypeface(getActivity(), nameOnCardEditText);
@@ -589,14 +616,16 @@ public class AddNewCreditCardFragment extends Fragment implements
         }
     };
 
+
     private WorkflowServiceCallback addNewCreditCardCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             nextButton.setEnabled(true);
             Log.d("addNewCreditCard", "=========================>\nworkflowDTO=" + workflowDTO.toString());
             makePaymentCall();
@@ -604,6 +633,7 @@ public class AddNewCreditCardFragment extends Fragment implements
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             nextButton.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
@@ -613,11 +643,12 @@ public class AddNewCreditCardFragment extends Fragment implements
     private WorkflowServiceCallback makePaymentCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             nextButton.setEnabled(true);
             Log.d("makePaymentCallback", "=========================>\nworkflowDTO=" + workflowDTO.toString());
             Gson gson = new Gson();
@@ -628,6 +659,7 @@ public class AddNewCreditCardFragment extends Fragment implements
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             nextButton.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
@@ -702,7 +734,7 @@ public class AddNewCreditCardFragment extends Fragment implements
         billingInformationDTO.setSameAsPatient(useProfileAddressCheckBox.isChecked());
         creditCardsPayloadDTO.setCardNumber(getLastFour());
         creditCardsPayloadDTO.setNameOnCard(nameOnCardEditText.getText().toString().trim());
-        creditCardsPayloadDTO.setCvv(Integer.parseInt(verificationCodeEditText.getText().toString().trim()));
+        creditCardsPayloadDTO.setCvv(verificationCodeEditText.getText().toString().trim());
         String expiryDate = pickDateTextView.getText().toString();
         expiryDate = expiryDate.substring(0, 2) + expiryDate.substring(expiryDate.length() - 2);
         creditCardsPayloadDTO.setExpireDt(expiryDate);
@@ -754,6 +786,7 @@ public class AddNewCreditCardFragment extends Fragment implements
             tokenValue = tokenValue.replace("}", "");
             creditCardsPayloadDTO.setToken(tokenValue);
 
+            CheckBox saveCardOnFileCheckBox = (CheckBox) findViewById(com.carecloud.carepaylibrary.R.id.saveCardOnFileCheckBox);
             if (saveCardOnFileCheckBox.isChecked()) {
                 addNewCreditCardCall();
             } else {
@@ -806,20 +839,22 @@ public class AddNewCreditCardFragment extends Fragment implements
             JSONObject paymentMethod = new JSONObject();
             paymentMethod.put("amount", amountToMakePayment);
             JSONObject creditCard = new JSONObject();
-            creditCard.put("save", saveCardOnFileCheckBox.isChecked());
+
+            creditCard.put("save", ((CheckBox) findViewById(com.carecloud.carepaylibrary.R.id.saveCardOnFileCheckBox)).isChecked());
             //creditCard.put("credit_card_id", creditCardPayload.getCreditCardsId());
             creditCard.put("card_type", creditCardsPayloadDTO.getCardType());
             creditCard.put("card_number", creditCardsPayloadDTO.getCardNumber());
             creditCard.put("name_on_card", creditCardsPayloadDTO.getNameOnCard());
             creditCard.put("expire_dt", creditCardsPayloadDTO.getExpireDt());
             creditCard.put("cvv", creditCardsPayloadDTO.getCvv());
-            creditCard.put("papi_pay", true);
             creditCard.put("token", creditCardsPayloadDTO.getToken());
+            creditCard.put("is_default", setAsDefaultCheckBox.isChecked());
             Gson gson = new Gson();
             JSONObject billingInformation;
             billingInformation = new JSONObject(gson.toJson(billingInformationDTO, PaymentsCreditCardBillingInformationDTO.class));
             creditCard.put("billing_information", billingInformation);
             paymentMethod.put("credit_card", creditCard);
+            paymentMethod.put("execution", "papi");
             paymentMethod.put("type", "credit_card");
             JSONArray paymentMethods = new JSONArray();
             paymentMethods.put(paymentMethod);

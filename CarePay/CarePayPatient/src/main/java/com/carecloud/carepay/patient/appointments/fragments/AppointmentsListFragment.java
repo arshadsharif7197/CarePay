@@ -20,6 +20,8 @@ import android.widget.ProgressBar;
 import com.carecloud.carepay.patient.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.appointments.adapters.AppointmentsAdapter;
+import com.carecloud.carepay.patient.appointments.utils.CustomPopupNotification;
+import com.carecloud.carepay.patient.appointments.utils.PatientAppUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -33,6 +35,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -242,13 +245,13 @@ public class AppointmentsListFragment extends Fragment {
     }
 
     private void init() {
-        String noAptPlaceholder = "";
+//        String noAptPlaceholder = "";
         String noAptMessageTitle = "";
         String noAptMessageText = "";
 
         if (appointmentInfo != null) {
             AppointmentLabelDTO labels = appointmentInfo.getMetadata().getLabel();
-            noAptPlaceholder = labels.getNoAppointmentsPlaceholderLabel();
+//            noAptPlaceholder = labels.getNoAppointmentsPlaceholderLabel();
             noAptMessageTitle = labels.getNoAppointmentsMessageTitle();
             noAptMessageText = labels.getNoAppointmentsMessageText();
         }
@@ -262,7 +265,7 @@ public class AppointmentsListFragment extends Fragment {
 
         appointmentView = (LinearLayout) appointmentsListView.findViewById(R.id.appointment_section_linear_layout);
         noAppointmentView = (LinearLayout) appointmentsListView.findViewById(R.id.no_appointment_layout);
-        ((CarePayTextView) appointmentsListView.findViewById(R.id.no_apt_placeholder_icon)).setText(noAptPlaceholder);
+//        ((CarePayTextView) appointmentsListView.findViewById(R.id.no_apt_placeholder_icon)).setText(noAptPlaceholder);
         ((CarePayTextView) appointmentsListView.findViewById(R.id.no_apt_message_title)).setText(noAptMessageTitle);
         ((CarePayTextView) appointmentsListView.findViewById(R.id.no_apt_message_desc)).setText(noAptMessageText);
 
@@ -372,11 +375,13 @@ public class AppointmentsListFragment extends Fragment {
     WorkflowServiceCallback pageRefreshCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
+            ProgressDialogUtil.getInstance(getContext()).show();
             appointmentProgressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             appointmentProgressBar.setVisibility(View.GONE);
             if (appointmentInfo != null) {
                 Gson gson = new Gson();
@@ -388,6 +393,7 @@ public class AppointmentsListFragment extends Fragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             appointmentProgressBar.setVisibility(View.GONE);
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
@@ -491,7 +497,8 @@ public class AppointmentsListFragment extends Fragment {
                     .getAppointmentRequestSuccessMessage();
         }
 
-        SystemUtil.showSuccessDialogMessage(getActivity(), "", appointmentRequestSuccessMessage);
+        PatientAppUtil.showSuccessNotification(getActivity(), getActivity().getWindow().getCurrentFocus(), appointmentRequestSuccessMessage);
+
     }
 
     @Override

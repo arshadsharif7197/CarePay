@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,7 +13,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -26,6 +26,7 @@ import com.carecloud.carepay.patient.demographics.fragments.viewpager.Demographi
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.customcomponents.CustomViewPager;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.DemographicMetadataDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
@@ -42,6 +43,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadI
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
+import com.carecloud.carepaylibray.demographics.scanner.ProfilePictureFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -53,12 +55,15 @@ import java.util.List;
  * Main activity for Demographics sign-up sub-flow
  */
 public class DemographicsActivity extends BasePatientActivity
-        implements DemographicsLabelsHolder, DemographicsDocumentsFragmentWthWrapper.DemographicsDocumentsFragmentWthWrapperListener {
+        implements DemographicsLabelsHolder,
+        DemographicsDocumentsFragmentWthWrapper.DemographicsDocumentsFragmentWthWrapperListener,
+        DemographicsDetailsFragment.DemographicsDetailsFragmentListener,
+        DemographicsAddressFragment.DemographicsAddressFragmentListener{
 
     private int       currentPageIndex;
     // views
     private TextView  titleTextView;
-    private ViewPager viewPager;
+    private CustomViewPager viewPager;
     private ImageView tabImageView;
     // jsons (payload)
     private DemographicDTO modelGet = null;
@@ -123,13 +128,22 @@ public class DemographicsActivity extends BasePatientActivity
 
         isStoragePermissionGranted();
         setupPager();
-//        createDTOsForTest();
+
+    }
+
+
+    /**
+     * Enable or disable scroll on view pager
+     */
+    @Override
+    public void enableScroll(boolean isScrollEnable) {
+        viewPager.setEnablePaging(isScrollEnable);
     }
 
     private void setupPager() {
         currentPageIndex = 0;
         DemographicPagerAdapter demographicPagerAdapter = new DemographicPagerAdapter(getSupportFragmentManager());
-        viewPager = (ViewPager) findViewById(R.id.demographicsViewPager);
+        viewPager = (CustomViewPager) findViewById(R.id.demographicsViewPager);
         viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(demographicPagerAdapter);
         ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
@@ -153,12 +167,12 @@ public class DemographicsActivity extends BasePatientActivity
         };
         viewPager.addOnPageChangeListener(pageChangeListener);
 
-        viewPager.setOnTouchListener(new View.OnTouchListener() {
+        new Handler().postDelayed(new Runnable() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                return true;
+            public void run() {
+                SystemUtil.hideSoftKeyboard(DemographicsActivity.this);
             }
-        });
+        }, 800);
     }
 
     private void setScreenHeader(int position) {
@@ -351,8 +365,12 @@ public class DemographicsActivity extends BasePatientActivity
             switch (position) {
                 case 0:
                     DemographicsAddressFragment addressFragment = new DemographicsAddressFragment();
-                    addressFragment.setAddressMetaDTO(addressEntityMetaDTO);
                     addressFragment.setPersDetailsMetaDTO(persDetailsMetaDTO);
+
+                    Bundle args = new Bundle();
+                    DtoHelper.bundleDto(args, addressEntityMetaDTO);
+                    addressFragment.setArguments(args);
+
                     return addressFragment;
                 case 1:
                     DemographicsDetailsFragment demographicsDetailsFragment = new DemographicsDetailsFragment();
@@ -400,5 +418,25 @@ public class DemographicsActivity extends BasePatientActivity
         }
 
         fm.beginTransaction().replace(R.id.demographicsDocsLicense, fragment, tag).commit();
+    }
+
+    @Override
+    public void initializeProfilePictureFragment(DemographicLabelsDTO globalLabelDTO,
+                                                 DemographicPersDetailsPayloadDTO persDetailsDTO) {
+
+        FragmentManager fm = getSupportFragmentManager();
+        String tag = ProfilePictureFragment.class.getSimpleName();
+        ProfilePictureFragment fragment = (ProfilePictureFragment) fm.findFragmentByTag(tag);
+        if (fragment == null) {
+            fragment = new ProfilePictureFragment();
+            fragment.setGlobalLabelsDTO(globalLabelDTO);
+
+            Bundle args = new Bundle();
+            DtoHelper.bundleDto(args, persDetailsDTO);
+            fragment.setArguments(args);
+        }
+        fm.beginTransaction()
+                .replace(R.id.demographicsAddressPicCapturer, fragment, tag)
+                .commit();
     }
 }

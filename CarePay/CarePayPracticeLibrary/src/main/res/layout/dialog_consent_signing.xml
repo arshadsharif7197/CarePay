@@ -111,7 +111,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/sig_pad"
                     android:background="#40f5f8f9"
-                    app:penColor="@color/bright_cerulean" />
+                    app:penColor="@color/colorPrimary" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/patient_mode_helper_view"
@@ -119,7 +119,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="@dimen/dimen_21dp"
-                    android:textColor="@color/optionl_gray"
+                    android:textColor="@color/optional_gray"
                     android:textSize="@dimen/sign_dialog_helper_font"
                     app:customAssetFont="proxima_nova_semi_bold" />
 
@@ -131,7 +131,7 @@
                     android:layout_marginEnd="@dimen/sign_dialog_clear_margin"
                     android:layout_marginTop="@dimen/dimen_14dp"
                     android:background="@drawable/button_clear_border"
-                    android:textColor="@color/rich_electric_blue"
+                    android:textColor="@color/colorPrimary"
                     android:visibility="gone" />
             </RelativeLayout>
 

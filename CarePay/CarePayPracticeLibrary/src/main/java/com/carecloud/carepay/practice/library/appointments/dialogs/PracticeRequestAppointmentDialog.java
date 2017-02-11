@@ -15,7 +15,6 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.ScheduleAppointmentActivity;
 import com.carecloud.carepay.practice.library.customdialog.BasePracticeDialog;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -90,13 +89,15 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         requestAppointmentButton.setText(appointmentsResultModel.getMetadata().getLabel().getAppointmentsRequestHeading());
         requestAppointmentButton.setOnClickListener(requestAppointmentClickListener);
         requestAppointmentButton.requestFocus();
-        SystemUtil.setGothamRoundedBoldTypeface(context,requestAppointmentButton);
+        SystemUtil.setGothamRoundedBookTypeface(context,requestAppointmentButton);
 
         DateUtil.getInstance().setDateRaw(appointmentsSlotsDTO.getStartTime());
         CarePayTextView appointmentDateTextView = (CarePayTextView)view.findViewById(R.id.appointment_date);
-        appointmentDateTextView.setText(DateUtil.getInstance().getDateAsDayMonthDayOrdinal());
+        appointmentDateTextView.setText(DateUtil.getInstance().getDateAsDayMonthDayOrdinalYear());
+        SystemUtil.setProximaNovaSemiboldTypeface(context,appointmentDateTextView);
         CarePayTextView appointmentTimeTextView = (CarePayTextView)view.findViewById(R.id.appointment_time);
         appointmentTimeTextView.setText(DateUtil.getInstance().getTime12Hour());
+        SystemUtil.setGothamRoundedBoldTypeface(context,appointmentTimeTextView);
 
         CarePayTextView providerImageTextView = (CarePayTextView)view.findViewById(R.id.provider_short_name);
         providerImageTextView.setText(StringUtil.onShortDrName(((ScheduleAppointmentActivity)context)
@@ -113,6 +114,7 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         AppointmentLocationDTO location = appointmentAvailabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getLocation();
         CarePayTextView appointmentPlaceNameTextView = (CarePayTextView)view.findViewById(R.id.provider_place_name);
         appointmentPlaceNameTextView.setText(location.getName());
+        SystemUtil.setProximaNovaExtraboldTypeface(context,appointmentPlaceNameTextView);
         CarePayTextView appointmentAddressTextView = (CarePayTextView)view.findViewById(R.id.provider_place_address);
         appointmentAddressTextView.setText(location.getAddress().getPlaceAddressString());
         CarePayTextView visitTypeLabel = (CarePayTextView)view.findViewById(R.id.visitTypeLabel);

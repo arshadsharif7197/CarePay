@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.clover.payments;
 
 import android.accounts.Account;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,13 +11,13 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.carecloud.carepay.practice.clover.R;
-import com.carecloud.carepay.practice.library.appointments.AppointmentsActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.util.CloverAuth;
@@ -347,19 +348,22 @@ public class CloverPaymentActivity extends AppCompatActivity {
     /**
      * The Make payment callback.
      */
-    WorkflowServiceCallback makePaymentCallback = new WorkflowServiceCallback() {
+     WorkflowServiceCallback makePaymentCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
+            ProgressDialogUtil.getInstance(CloverPaymentActivity.this).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(CloverPaymentActivity.this).dismiss();
             CloverPaymentActivity.this.finish();
             PracticeNavigationHelper.getInstance().navigateToWorkflow(CloverPaymentActivity.this, workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(CloverPaymentActivity.this).dismiss();
             System.out.print(exceptionMessage);
             finish();
         }

@@ -1,19 +1,18 @@
 package com.carecloud.carepay.patient.payment.fragments;
 
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -31,7 +30,13 @@ import java.util.List;
 
 public class PaymentBalanceHistoryFragment  extends Fragment  {
 
-    private FragmentActivity context;
+    private View noPaymentsLayout;
+    private View pagerLayout;
+    private TextView noPaymentTitle;
+    private TextView noPaymentDesc;
+    private PaymentsModel paymentDTO;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -40,10 +45,24 @@ public class PaymentBalanceHistoryFragment  extends Fragment  {
         Bundle bundle = getArguments();
         Gson gson = new Gson();
         String paymentsDTOString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
-        PaymentsModel paymentDTO = gson.fromJson(paymentsDTOString, PaymentsModel.class);
+        paymentDTO = gson.fromJson(paymentsDTOString, PaymentsModel.class);
 
+        noPaymentsLayout = balanceHistoryView.findViewById(R.id.no_payment_layout);
+        pagerLayout = balanceHistoryView.findViewById(R.id.payments_pager_layout);
+        noPaymentTitle = (TextView) balanceHistoryView.findViewById(R.id.no_payment_message_title);
+        noPaymentDesc = (TextView) balanceHistoryView.findViewById(R.id.no_payment_message_desc);
+
+        noPaymentTitle.setText(paymentDTO.getPaymentsMetadata().getPaymentsLabel().getNoPaymentTitle());
+        noPaymentDesc.setText(paymentDTO.getPaymentsMetadata().getPaymentsLabel().getNoPaymentDescription());
+
+        setupViewPager(balanceHistoryView, paymentDTO);
+        hideNoPaymentsLayout();
+
+        return balanceHistoryView;
+    }
+
+    private void setupViewPager(View balanceHistoryView, PaymentsModel paymentDTO) {
         ViewPager viewPager = (ViewPager) balanceHistoryView.findViewById(R.id.historyPager);
-        setupViewPager(viewPager, paymentDTO);
 
         TabLayout tabs = (TabLayout) balanceHistoryView.findViewById (R.id.balance_history_tabs);
         tabs.setSelectedTabIndicatorColor(Color.WHITE);
@@ -57,30 +76,26 @@ public class PaymentBalanceHistoryFragment  extends Fragment  {
             }
             ViewPaymentBalanceHistoryActivity.setIsPaymentDone(false);
         }
+        SectionsPagerAdapter adapter = new SectionsPagerAdapter(getChildFragmentManager());
+        PaymentHistoryFragment pendingPaymentsFragment = PaymentHistoryFragment.newInstance(1, paymentDTO);
+        PaymentHistoryFragment paymentHistoryFragment = PaymentHistoryFragment.newInstance(2, paymentDTO);
 
-        return balanceHistoryView;
-    }
+        pendingPaymentsFragment.setEmptyPaymentListCallback(emptyPaymentListCallback);
+        paymentHistoryFragment.setEmptyPaymentListCallback(emptyPaymentListCallback);
 
-    private void setupViewPager(ViewPager viewPager, PaymentsModel paymentDTO) {
-        SectionsPagerAdapter adapter = new SectionsPagerAdapter(context.getSupportFragmentManager());
         String pendingTabTitle = paymentDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPatientBalanceTab();
         String historyTabTitle = paymentDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPatientHistoryTab();
-        adapter.addFragment(PaymentHistoryFragment.newInstance(1, paymentDTO), StringUtil.isNullOrEmpty(pendingTabTitle)?
+
+        adapter.addFragment(pendingPaymentsFragment, StringUtil.isNullOrEmpty(pendingTabTitle)?
                 CarePayConstants.NOT_DEFINED : pendingTabTitle);
-        adapter.addFragment(PaymentHistoryFragment.newInstance(2, paymentDTO), StringUtil.isNullOrEmpty(historyTabTitle)?
+        adapter.addFragment(paymentHistoryFragment, StringUtil.isNullOrEmpty(historyTabTitle)?
                 CarePayConstants.NOT_DEFINED : historyTabTitle);
         viewPager.setAdapter(adapter);
 
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        context=(FragmentActivity) activity;
-        super.onAttach(activity);
 
-    }
-
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
         private final List<Fragment> mFragments = new ArrayList<>();
         private final List<String> mFragmentTitles = new ArrayList<>();
 
@@ -108,4 +123,37 @@ public class PaymentBalanceHistoryFragment  extends Fragment  {
             return mFragmentTitles.get(position);
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getActivity() instanceof ViewPaymentBalanceHistoryActivity) {
+            ((ViewPaymentBalanceHistoryActivity)this.getActivity()).displayToolbar(true);
+        }
+    }
+
+    private void showNoPaymentsLayout(){
+        noPaymentsLayout.setVisibility(View.VISIBLE);
+        pagerLayout.setVisibility(View.GONE);
+
+    }
+
+    private void hideNoPaymentsLayout(){
+        noPaymentsLayout.setVisibility(View.GONE);
+        pagerLayout.setVisibility(View.VISIBLE);
+    }
+
+
+    private PaymentHistoryFragment.EmptyPaymentListCallback emptyPaymentListCallback = new PaymentHistoryFragment.EmptyPaymentListCallback() {
+        int sectionNumber = -1;
+        @Override
+        public void listIsEmpty(int sectionNumber) {
+            if(this.sectionNumber<0) {//not yet set
+                this.sectionNumber = sectionNumber;
+            }else if(this.sectionNumber!=sectionNumber){//this is the second one so we should hide the pager
+                showNoPaymentsLayout();
+            }
+        }
+    };
+
 }

@@ -29,7 +29,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
                     android:gravity="center"
-                    android:textStyle="bold"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/text_size_30sp"
                     app:customAssetFont="proxima_nova_semi_bold" />
@@ -43,7 +42,6 @@
                     android:gravity="center"
                     android:textColor="@color/white_opacity_60"
                     android:textSize="@dimen/text_size_40sp"
-                    android:textStyle="bold"
                     app:customAssetFont="gotham_rounded_medium" />
             </LinearLayout>
 

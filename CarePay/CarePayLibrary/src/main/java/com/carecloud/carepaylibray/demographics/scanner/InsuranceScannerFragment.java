@@ -189,7 +189,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
 
         setEditTexts(view);
         setTypefaces(view);
-        populateViewsFromModel();
+        populateViewsFromModel(view);
     }
 
     private void getOptions() {
@@ -262,7 +262,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     }
 
     @Override
-    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner) {
+    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner, Bitmap bitmap) {
         if (bitmap != null) {
             if (scanner == insuranceFrontScanHelper) {
                 // change button caption to 'rescan'
@@ -285,7 +285,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
      * initializing view from the insuranceDTO
      */
     @Override
-    public void populateViewsFromModel() {
+    public void populateViewsFromModel(View view) {
         if (insuranceDTO != null) {
             // populate with images
             List<DemographicInsurancePhotoDTO> photos = insuranceDTO.getInsurancePhotos();
@@ -454,8 +454,8 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     }
 
     @Override
-    public int getImageShape() {
-        return ImageCaptureHelper.RECTANGULAR_IMAGE;
+    public ImageCaptureHelper.ImageShape getImageShape() {
+        return ImageCaptureHelper.ImageShape.RECTANGULAR;
     }
 
     /**

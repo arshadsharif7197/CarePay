@@ -81,10 +81,10 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
                         payPartialButton.setClickable(true);
 
                         payTotalButton.setTextColor(Color.WHITE);
-                        payPartialButton.setTextColor(getResources().getColor(R.color.bright_cerulean));
+                        payPartialButton.setTextColor(getResources().getColor(R.color.colorPrimary));
                         GradientDrawable border = new GradientDrawable();
                         border.setColor(Color.WHITE);
-                        border.setStroke(1, getResources().getColor(R.color.bright_cerulean));
+                        border.setStroke(1, getResources().getColor(R.color.colorPrimary));
                     }
 
                     NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);

@@ -5,7 +5,7 @@
     android:id="@+id/activity_personal_information"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/rich_electric_blue_1"
+    android:background="@color/colorPrimary"
     android:orientation="vertical"
     android:paddingBottom="@dimen/dimen_21dp"
     android:paddingLeft="@dimen/dimen_20dp"
@@ -161,7 +161,39 @@
                     android:layout_marginRight="@dimen/dimen_14dp"
                     android:background="@color/transparent_apt"
                     android:textAllCaps="false"
-                    android:textColor="@color/bright_cerulean"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_size_16sp"
+                    app:customAssetFont="proxima_nova_semi_bold" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="@dimen/dimen_500dp"
+                android:layout_height="@dimen/dimen_1dp"
+                android:background="@color/light_gray" />
+
+            <RelativeLayout
+                android:layout_width="@dimen/dimen_500dp"
+                android:layout_height="@dimen/dimen_57dp">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/genderTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="@dimen/dimen_14dp"
+                    android:textColor="@color/textview_default_textcolor"
+                    android:textSize="@dimen/text_size_18sp"
+                    app:customAssetFont="proxima_nova_regular" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                    android:id="@+id/selectGenderButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/dimen_14dp"
+                    android:background="@color/transparent_apt"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/text_size_16sp"
                     app:customAssetFont="proxima_nova_semi_bold" />
             </RelativeLayout>
@@ -178,7 +210,7 @@
                 android:background="@color/transparent_apt"
                 android:enabled="false"
                 android:textAllCaps="false"
-                android:textColor="@color/bleu_de_france"
+                android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_18sp"
                 app:customAssetFont="gotham_rounded_medium" />
 

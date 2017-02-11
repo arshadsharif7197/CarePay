@@ -122,13 +122,13 @@ public class DateUtil {
     }
 
     /**
-     * Format the date as "EEE, MMM d YYYY" (eg Mon, Oct 10th 2016)
+     * Format the date as "EEEE, MMM d" (eg Monday, Oct 10th)
      *
      * @return A string containing the formatted date
      */
     public String getDateAsDayMonthDayOrdinalYear() {
-        return String.format(Locale.getDefault(), "%s, %s %d%s %s",
-                             dayLiteralAbbr, monthLiteralAbbr, day, getOrdinalSuffix(day), year);
+        return String.format(Locale.getDefault(), "%s, %s %d%s",
+                             dayLiteral, monthLiteralAbbr, day, getOrdinalSuffix(day));
     }
 
     /**
@@ -293,7 +293,7 @@ public class DateUtil {
      * @param number the last digit of the day (as char)
      * @return return a ordinal String with day
      */
-    private String getOrdinalSuffix(int number) {
+    public String getOrdinalSuffix(int number) {
         int lastTwoDigits = number % 100;
         int dayLastDigit = number % 10;
         if (dayLastDigit == 1) { //

@@ -1,11 +1,13 @@
 package com.carecloud.carepay.practice.library.base;
 
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.customdialog.IConfirmPracticeAppPin;
 import com.carecloud.carepaylibray.base.BaseVisibilityHintActivity;
@@ -94,4 +96,56 @@ public abstract class BasePracticeActivity extends BaseVisibilityHintActivity im
         decorView.setSystemUiVisibility(uiOptions);
     }
 
+    public Context getContext(){
+        return this;
+    }
+
+    protected boolean setViewTextById(int id, String text) {
+        View view = findViewById(id);
+        if (null == view || !(view instanceof TextView)) {
+            return false;
+        }
+
+        ((TextView) view).setText(text);
+
+        return true;
+    }
+
+    public boolean enableViewById(int id) {
+        return setEnabledViewById(id, true);
+    }
+
+    public boolean disableViewById(int id) {
+        return setEnabledViewById(id, true);
+    }
+
+    private boolean setEnabledViewById(int id, boolean enabled) {
+        View view = findViewById(id);
+        if (null == view) {
+            return false;
+        }
+
+        view.setEnabled(enabled);
+
+        return true;
+    }
+
+    public boolean showViewById(int id) {
+        return setVisibilityById(id, View.VISIBLE);
+    }
+
+    public boolean disappearViewById(int id) {
+        return setVisibilityById(id, View.GONE);
+    }
+
+    private boolean setVisibilityById(int id, int visibility) {
+        View view = findViewById(id);
+        if (null == view) {
+            return false;
+        }
+
+        view.setVisibility(visibility);
+
+        return true;
+    }
 }

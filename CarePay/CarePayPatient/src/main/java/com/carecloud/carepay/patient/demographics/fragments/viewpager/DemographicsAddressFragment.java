@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.demographics.fragments.viewpager;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -30,6 +31,7 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.Demographic
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.utils.AddressUtil;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -96,7 +98,18 @@ public class DemographicsAddressFragment extends Fragment {
     private DemographicMetadataEntityAddressDTO     addressMetaDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
     private DemographicLabelsDTO                    globalLabelsMetaDTO;
+    private DemographicsAddressFragmentListener demographicsAddressFragmentListener;
 
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            demographicsAddressFragmentListener = (DemographicsAddressFragment.DemographicsAddressFragmentListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString());
+        }
+    }
 
     @Nullable
     @Override
@@ -143,6 +156,13 @@ public class DemographicsAddressFragment extends Fragment {
         nextButton.setEnabled(!isFirstNameEmpty && !isLastNameEmpty);
 
         return view;
+    }
+
+    /**
+     * Interface to implement scrolling on view pager
+     */
+    public interface DemographicsAddressFragmentListener{
+        void enableScroll(boolean myString);
     }
 
     /**
@@ -292,6 +312,7 @@ public class DemographicsAddressFragment extends Fragment {
         if (persDetailsDTO == null) {
             persDetailsDTO = new DemographicPersDetailsPayloadDTO();
         }
+        addressMetaDTO = DtoHelper.getConvertedDTO(DemographicMetadataEntityAddressDTO.class, getArguments());
     }
 
     private void populateViewsWithData() {
@@ -536,9 +557,13 @@ public class DemographicsAddressFragment extends Fragment {
         });
     }
 
+    /**
+     * Enable next button and view pager
+     */
     private void enableNextButton() {
         boolean areAllReqNonEmpty = !(isFirstNameEmpty || isLastNameEmpty);
         nextButton.setEnabled(areAllReqNonEmpty);
+        demographicsAddressFragmentListener.enableScroll(areAllReqNonEmpty);
     }
 
     private void setEditActionListeners() {
@@ -881,10 +906,6 @@ public class DemographicsAddressFragment extends Fragment {
         }
 
         return isPhoneValid && isStateValid && isCityValid && isZipValid;
-    }
-
-    public void setAddressMetaDTO(DemographicMetadataEntityAddressDTO addressMetaDTO) {
-        this.addressMetaDTO = addressMetaDTO;
     }
 
     public void setPersDetailsMetaDTO(DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO) {

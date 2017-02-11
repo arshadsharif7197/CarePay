@@ -203,6 +203,50 @@ public class AppointmentLabelDTO implements Serializable {
     @SerializedName("appointment_request_failure_message")
     @Expose
     private String appointmentRequestFailureMessage;
+    @SerializedName("no_shop_message_title")
+    @Expose
+    private String noShopMessageTitle;
+    @SerializedName("no_shop_message_text")
+    @Expose
+    private String noShopMessageText;
+    @SerializedName("no_notifications_message_title")
+    @Expose
+    private String noNotificationsMessageTitle;
+    @SerializedName("no_notifications_message_text")
+    @Expose
+    private String noNotificationsMessageText;
+
+    public String getNoShopMessageTitle() {
+        return noShopMessageTitle;
+    }
+
+    public void setNoShopMessageTitle(String noShopMessageTitle) {
+        this.noShopMessageTitle = noShopMessageTitle;
+    }
+
+    public String getNoShopMessageText() {
+        return noShopMessageText;
+    }
+
+    public void setNoShopMessageText(String noShopMessageText) {
+        this.noShopMessageText = noShopMessageText;
+    }
+
+    public String getNoNotificationsMessageTitle() {
+        return noNotificationsMessageTitle;
+    }
+
+    public void setNoNotificationsMessageTitle(String noNotificationsMessageTitle) {
+        this.noNotificationsMessageTitle = noNotificationsMessageTitle;
+    }
+
+    public String getNoNotificationsMessageText() {
+        return noNotificationsMessageText;
+    }
+
+    public void setNoNotificationsMessageText(String noNotificationsMessageText) {
+        this.noNotificationsMessageText = noNotificationsMessageText;
+    }
 
     /**
      * @return The appointmentsHeading

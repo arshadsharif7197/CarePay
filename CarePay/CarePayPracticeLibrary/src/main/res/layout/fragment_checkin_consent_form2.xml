@@ -47,7 +47,7 @@
                     android:layout_marginTop="@dimen/dimen_22dp"
                     android:gravity="center"
                     android:text="@string/consentname"
-                    android:textColor="@color/bleu_de_france"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/text_size_28sp"
                     app:customAssetFont="gotham_rounded_medium" />
 

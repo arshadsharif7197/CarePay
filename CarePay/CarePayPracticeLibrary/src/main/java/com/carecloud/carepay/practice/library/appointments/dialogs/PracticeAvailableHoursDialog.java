@@ -225,12 +225,12 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(context).dismiss();
             Gson gson = new Gson();
             availabilityDTO = gson.fromJson(workflowDTO.toString(), AppointmentAvailabilityDTO.class);
             availableHoursRecycleView.setAdapter(new PracticeAvailableHoursAdapter(context,
                     getAvailableHoursListWithHeader(), PracticeAvailableHoursDialog.this));
             updateDateRange();
-            ProgressDialogUtil.getInstance(context).dismiss();
         }
 
         @Override

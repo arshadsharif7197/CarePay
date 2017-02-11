@@ -33,6 +33,7 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -109,17 +110,20 @@ public class DemographicsSettingsFragment extends Fragment {
         title.setText(settingsString);
         patientNameTextview.setText(getUserName());
         patientIdTextview.setText(userId);
-
-        DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
-        DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-        DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
-        DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
-        String imageUrl = demographicsPersonalDetails.getProfilePhoto();
-        if (!StringUtil.isNullOrEmpty(imageUrl)) {
-            Picasso.with(getActivity()).load(imageUrl).transform(
-                    new CircleImageTransform()).resize(160, 160).into(this.profileImageview);
-        }
-        setClickables(view);
+        try {
+         DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
+         DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
+         DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
+         DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+         String imageUrl = demographicsPersonalDetails.getProfilePhoto();
+         if (!StringUtil.isNullOrEmpty(imageUrl)) {
+           Picasso.with(getActivity()).load(imageUrl).transform(
+                new CircleImageTransform()).resize(160, 160).into(this.profileImageview);
+         }
+         setClickables(view);
+         }catch(Exception e){
+            e.printStackTrace();
+         }
         return view;
 
     }
@@ -285,6 +289,7 @@ public class DemographicsSettingsFragment extends Fragment {
     }
 
     private String getUserName() {
+        try{
         if(demographicsSettingsDTO!=null) {
             DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
             DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
@@ -295,17 +300,21 @@ public class DemographicsSettingsFragment extends Fragment {
             String userName = firstName + " " + lastName;
             return userName;
         }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         return "";
     }
 
     WorkflowServiceCallback logOutCall = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             signOutButton.setEnabled(true);
             // log out previous user from Cognito
             CognitoAppHelper.getPool().getUser().signOut();
@@ -315,6 +324,7 @@ public class DemographicsSettingsFragment extends Fragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             signOutButton.setEnabled(true);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

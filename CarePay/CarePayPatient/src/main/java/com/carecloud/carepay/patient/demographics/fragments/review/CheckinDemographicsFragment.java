@@ -20,6 +20,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -54,8 +56,13 @@ import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.utils.ValidationHelper;
+import com.google.gson.Gson;
+import com.smartystreets.api.us_zipcode.City;
+import com.squareup.picasso.Picasso;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -63,11 +70,6 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtrabo
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
-
-import com.carecloud.carepaylibray.utils.ValidationHelper;
-import com.google.gson.Gson;
-import com.smartystreets.api.us_zipcode.City;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -104,7 +106,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     private EditText address1EditText;
     private EditText address2EditText;
     private EditText dobEditText;
-    private EditText stateEditText;
+    private AutoCompleteTextView stateEditText;
     private EditText cityEditText;
     private EditText firstNameText;
     private EditText middleNameText;
@@ -147,7 +149,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     private String stateAbbr = null;
     private City smartyStreetsResponse;
 
-    CheckinDemographicsFragmentListener activityCallback;
+    private CheckinDemographicsFragmentListener activityCallback;
 
     public interface CheckinDemographicsFragmentListener {
         void onDemographicDtoChanged(DemographicDTO demographicDTO);
@@ -204,6 +206,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         });
 
         formatEditText();
+        SystemUtil.hideSoftKeyboard(getActivity());
         ((ScrollView)view.findViewById(R.id.adddemoScrollview)).smoothScrollTo(0,0);
         return view;
     }
@@ -257,8 +260,20 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         address2EditText = (EditText) view.findViewById(R.id.addressEditText2Id);
         zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeId);
         cityEditText = (EditText) view.findViewById(R.id.cityId);
-        stateEditText = (EditText) view.findViewById(R.id.stateAutoCompleteTextView);
+        stateEditText = (AutoCompleteTextView) view.findViewById(R.id.stateAutoCompleteTextView);
         stateEditText.setHint(addressMetaDTO.properties.state.getLabel());
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
+                R.layout.autocomplete_state_item,
+                R.id.text1,
+                AddressUtil.states);
+        stateEditText.setThreshold(1);
+        stateEditText.setAdapter(adapter);
+        stateEditText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                stateAbbr = adapter.getItem(position);
+            }
+        });
 
         demographicProgressBar = (ProgressBar) view.findViewById(R.id.demographicReviewProgressBar);
         demographicProgressBar.setVisibility(View.GONE);
@@ -678,10 +693,12 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     private WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             buttonConfirmData.setEnabled(true);
             demographicProgressBar.setVisibility(View.GONE);
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
@@ -689,6 +706,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
             buttonConfirmData.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
@@ -782,7 +800,11 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         });
     }
 
-    private void updateModels() {
+    /**
+     * update demographic DTO
+     * @return main demographic DTO
+     */
+    public DemographicDTO updateModels() {
 
         // save the personal details
         if (demographicPersDetailsPayloadDTO == null) {
@@ -865,10 +887,11 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         // update DTO in the activity
         activityCallback.onDemographicDtoChanged(demographicDTO);
 
-        if (bitmap != null) {
-            String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
-            demographicPersDetailsPayloadDTO.setProfilePhoto(imageAsBase64);
-        }
+//        if (bitmap != null) {
+//            String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
+//            demographicPersDetailsPayloadDTO.setProfilePhoto(imageAsBase64);
+//        }
+        return demographicDTO;
     }
 
     private void setEditTexts(View view) {
@@ -1252,17 +1275,17 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     }
 
     @Override
-    public int getImageShape() {
-        return ImageCaptureHelper.ROUND_IMAGE;
+    public ImageCaptureHelper.ImageShape getImageShape() {
+        return ImageCaptureHelper.ImageShape.CIRCULAR;
     }
 
     @Override
-    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner) {
+    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner, Bitmap bitmap) {
 
     }
 
     @Override
-    public void populateViewsFromModel() {
+    public void populateViewsFromModel(View view) {
 
     }
 
