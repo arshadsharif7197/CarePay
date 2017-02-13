@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.appointments.adapters.PatientListAdapter;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
+import com.carecloud.carepay.practice.library.models.FilterModel;
+import com.carecloud.carepay.practice.library.models.MapFilterModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 
 /**
@@ -17,6 +19,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 
 public class TwoColumnPatientListView extends RecyclerView {
     TwoColumnPatientListViewListener callback;
+    private PatientListAdapter paymentsAdapter;
 
     public TwoColumnPatientListView(Context context) {
         super(context);
@@ -65,6 +68,7 @@ public class TwoColumnPatientListView extends RecyclerView {
     }
 
     private void setPatientAdapter(PatientListAdapter paymentsAdapter) {
+        this.paymentsAdapter = paymentsAdapter;
         paymentsAdapter.setTapListener(new PatientListAdapter.OnItemTappedListener() {
             @Override
             public void onItemTap(Object dto) {
@@ -77,7 +81,7 @@ public class TwoColumnPatientListView extends RecyclerView {
         setAdapter(paymentsAdapter);
     }
 
-    public void applyFilters() {
-        Toast.makeText(getContext(), "Applying filters", Toast.LENGTH_SHORT).show();
+    public void applyFilter(FilterModel filterModel) {
+         paymentsAdapter.applyFilter(new MapFilterModel(filterModel));
     }
 }
