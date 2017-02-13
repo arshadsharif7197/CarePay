@@ -348,7 +348,7 @@ public class AddNewCreditCardFragment extends BaseFragment implements
 
         stateTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.stateTextInputLayout);
         stateTextInput.setTag(paymentsLabelDTO.getPaymentState());
-        stateAutoCompleteTextView = (AutoCompleteTextView) view.findViewById(R.id.stateAutoCompleteTextView);
+        stateAutoCompleteTextView = (AutoCompleteTextView) view.findViewById(R.id.addNewCredidCardStateAutoCompleteTextView);
         stateAutoCompleteTextView.setHint(paymentsLabelDTO.getPaymentState());
         stateAutoCompleteTextView.setTag(stateTextInput);
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
