@@ -339,7 +339,7 @@
                         <EditText
                             android:id="@+id/cityId"
                             style="@style/SigninSignupEditStyle"
-                            android:nextFocusRight="@+id/stateAutoCompleteTextView" />
+                            android:nextFocusRight="@+id/reviewDemographicsStateAutoCompleteTextView" />
 
                     </android.support.design.widget.TextInputLayout>
 
@@ -350,7 +350,7 @@
                         app:hintTextAppearance="@style/FloatingLabelStyle">
 
                         <EditText
-                            android:id="@+id/stateAutoCompleteTextView"
+                            android:id="@+id/reviewDemographicsStateAutoCompleteTextView"
                             style="@style/SigninSignupEditStyle"
                             android:digits="ABCDEFGHIJKLMNOPQURSTUVWXYZ"
                             android:imeOptions="actionDone"
