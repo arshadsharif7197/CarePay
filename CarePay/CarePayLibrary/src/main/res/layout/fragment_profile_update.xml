@@ -12,13 +12,6 @@
 
     <include layout="@layout/toolbar_demographics_settings" />
 
-    <ProgressBar
-        android:id="@+id/demographicReviewProgressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-8dp"
-        android:indeterminate="true" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,8 +26,9 @@
 
         <ImageView
              android:id="@+id/providerPicImageView"
-             android:layout_width="wrap_content"
+             android:layout_width="0dp"
              android:layout_height="wrap_content"
+             android:layout_weight=".25"
              android:contentDescription="@string/profile_picture"
              android:src="@drawable/icn_placeholder_user_profile_png" />
 
@@ -42,7 +36,7 @@
             android:id="@+id/changeCurrentPhotoButton"
             style="@style/DemographicsChooseProfilePicStyle"
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="0.75"
             android:textColor="@color/colorPrimary" />
 
     </LinearLayout>
@@ -55,17 +49,19 @@
             android:layout_marginRight="@dimen/dimen_10dp"
             android:orientation="vertical">
 
-            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_25dp"
                 android:layout_marginEnd="@dimen/dimen_25dp"
-                android:layout_marginBottom="@dimen/dimen_15dp">
+                android:layout_marginBottom="@dimen/dimen_15dp"
+                android:orientation="horizontal">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/patientNameTextView"
-                    android:layout_width="@dimen/dimen_150dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight=".50"
                     android:ellipsize="end"
                     android:gravity="left"
                     android:padding="2dp"
@@ -76,8 +72,9 @@
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/patientChangeNameTextView"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight=".50"
                     android:layout_toRightOf="@id/patientTitleTextView"
                     android:gravity="right"
                     android:layout_alignParentRight="true"
@@ -87,7 +84,7 @@
                     android:textColor="@color/colorPrimary"
                     app:customAssetFont="proxima_nova_regular"/>/>
 
-            </RelativeLayout>
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -97,17 +94,18 @@
                 android:background="@color/gray"
                 android:layout_marginBottom="@dimen/dimen_15dp"/>
 
-            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_25dp"
                 android:layout_marginEnd="@dimen/dimen_25dp"
                 android:layout_marginBottom="@dimen/dimen_15dp">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/patientEmailTextView"
-                    android:layout_width="@dimen/dimen_150dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight=".50"
                     android:ellipsize="end"
                     android:gravity="left"
                     android:padding="2dp"
@@ -119,8 +117,9 @@
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/patientChangeEmailTextView"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight=".50"
                     android:layout_toRightOf="@id/patientEmailTextView"
                     android:gravity="right"
                     android:layout_alignParentRight="true"
@@ -131,7 +130,7 @@
                     android:textColor="@color/colorPrimary"
                     app:customAssetFont="proxima_nova_regular"/>/>
 
-            </RelativeLayout>
+            </LinearLayout>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -140,17 +139,19 @@
                 android:layout_marginBottom="@dimen/dimen_15dp"
                 android:background="@color/gray" />
 
-            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_25dp"
                 android:layout_marginEnd="@dimen/dimen_25dp"
+                android:orientation="horizontal"
                 android:layout_marginBottom="@dimen/dimen_15dp">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/patientPasswordTextView"
-                    android:layout_width="@dimen/dimen_150dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight=".50"
                     android:ellipsize="end"
                     android:gravity="left"
                     android:padding="2dp"
@@ -162,8 +163,9 @@
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/patientChangePasswordTextView"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight=".50"
                     android:layout_toRightOf="@id/patientPasswordTextView"
                     android:gravity="right"
                     android:layout_alignParentRight="true"
@@ -174,7 +176,7 @@
                     android:textColor="@color/colorPrimary"
                     app:customAssetFont="proxima_nova_regular"/>
 
-            </RelativeLayout>
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"

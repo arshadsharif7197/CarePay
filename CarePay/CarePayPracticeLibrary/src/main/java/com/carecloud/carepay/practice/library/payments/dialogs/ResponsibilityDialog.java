@@ -39,20 +39,19 @@ public class ResponsibilityDialog extends Dialog {
 
     private Context context;
     private PaymentsModel paymentsModel;
-    private int selectedIndex;
     private PaymentsPatientBalancessDTO patientPayments;
 
     /**
      * Constructor
      * @param context context
      * @param paymentsModel paymentsModel
-     * @param selectedIndex selectedIndex
+     * @param patientPayments PaymentsPatientBalancessDTO
      */
-    public ResponsibilityDialog(Context context, PaymentsModel paymentsModel, int selectedIndex) {
+    public ResponsibilityDialog(Context context, PaymentsModel paymentsModel, PaymentsPatientBalancessDTO patientPayments) {
         super(context);
         this.context = context;
         this.paymentsModel = paymentsModel;
-        this.selectedIndex = selectedIndex;
+        this.patientPayments = patientPayments;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -80,8 +79,6 @@ public class ResponsibilityDialog extends Dialog {
 
     @SuppressLint("InflateParams")
     private void onInitialization() {
-        patientPayments = paymentsModel.getPaymentPayload().getPatientBalances().get(selectedIndex);
-
         final DemographicsSettingsPersonalDetailsPayloadDTO personalDetails = patientPayments.getDemographics().getPayload().getPersonalDetails();
         ((TextView) findViewById(R.id.patient_full_name)).setText(personalDetails.getFirstName() + " " + personalDetails.getLastName());
 

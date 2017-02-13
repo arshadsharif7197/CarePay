@@ -52,6 +52,20 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.carecloud.carepay.practice.library.homescreen.CloverMainActivity" />
         </activity>
+        <activity android:name="com.carecloud.carepay.practice.library.payments.PatientResponsibilityActivity" />
+        <activity android:name="com.carecloud.carepay.practice.library.payments.RotateActivity" />
+        <activity android:name="com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInActivity" />
+        <activity android:name="com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity" />
+        <activity android:name="com.carecloud.carepay.practice.library.appointments.AppointmentsActivity" />
+        <activity android:name="com.carecloud.carepay.practice.library.appointments.ScheduleAppointmentActivity" />
+        <activity android:name="com.carecloud.carepay.practice.library.appointments.PracticeAppointmentsActivity" />
+        <activity android:name="com.carecloud.carepay.practice.library.checkin.activities.PersonalInformationActivity" />
+        <activity android:name="com.carecloud.carepay.practice.library.payments.PaymentsActivity"/>
+        <activity android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PracticeAppSignatureActivity"
+            android:theme="@style/Theme.MyDialog"/>
+        <activity android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity"
+                  android:windowSoftInputMode="adjustNothing"/>
+        <activity android:name="com.carecloud.carepaylibray.qrcodescanner.ScannerActivity" android:screenOrientation="landscape"/>
         <activity
             android:name="com.carecloud.carepay.practice.library.payments.PatientResponsibilityActivity"
             android:screenOrientation="sensorLandscape"/>

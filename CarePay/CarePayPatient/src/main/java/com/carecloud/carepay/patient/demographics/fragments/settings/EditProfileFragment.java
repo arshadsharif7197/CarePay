@@ -78,7 +78,6 @@ public class EditProfileFragment extends DocumentScannerFragment {
 
         final Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
-        disappearViewById(R.id.demographicReviewProgressBar);
 
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
         setGothamRoundedMediumTypeface(appCompatActivity, title);
@@ -318,12 +317,10 @@ public class EditProfileFragment extends DocumentScannerFragment {
     WorkflowServiceCallback updateProfileCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
 //            updateProfileButton.setEnabled(true);
 
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
@@ -331,7 +328,6 @@ public class EditProfileFragment extends DocumentScannerFragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
 //            updateProfileButton.setEnabled(true);
 
             SystemUtil.showDefaultFailureDialog(getActivity());
