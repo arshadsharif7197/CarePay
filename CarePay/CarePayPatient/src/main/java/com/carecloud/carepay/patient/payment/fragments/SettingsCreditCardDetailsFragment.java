@@ -214,9 +214,8 @@ public class SettingsCreditCardDetailsFragment extends Fragment {
                 ((DemographicsSettingsActivity) getActivity()).onCreditCardOperation(demographicsSettingsDTO);
                 getActivity().onBackPressed();
 
-                PatientAppUtil.showSuccessNotification(getActivity(), getActivity().getWindow().getCurrentFocus(), demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getLabels().getSettingsSavedSuccessMessage());
-            }
-            catch(Exception e) {
+                PatientAppUtil.showSuccessNotification(getActivity(), getView(), demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getLabels().getSettingsSavedSuccessMessage());
+            } catch(Exception e) {
                 Log.e(TAG, "Credit Card onPostExecute" + e.getMessage());
             }
 
