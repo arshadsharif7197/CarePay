@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.appointments.utils.PatientAppUtil;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -48,6 +50,7 @@ public class SettingsCreditCardDetailsFragment extends Fragment {
     private DemographicsSettingsDTO demographicsSettingsDTO = null;
     private DemographicsSettingsCreditCardsPayloadDTO creditCardsPayloadDTO = null;
     private DemographicsSettingsLabelsDTO settingsLabelsDTO;
+    private static final String TAG = SettingsCreditCardDetailsFragment.class.getName();
 
     public interface IOnCreditCardOperationSuccess {
         void onCreditCardOperation(DemographicsSettingsDTO demographicsSettingsDTO);
@@ -201,14 +204,22 @@ public class SettingsCreditCardDetailsFragment extends Fragment {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getActivity()).dismiss();
-            Gson gson = new Gson();
-            DemographicsSettingsDTO removeCreditCardResponseDTO = gson.fromJson(workflowDTO.toString(),
-                    DemographicsSettingsDTO.class);
-            demographicsSettingsDTO.getPayload().setPatientCreditCards(removeCreditCardResponseDTO.getPayload()
-                    .getPatientCreditCards());
-            ((DemographicsSettingsActivity) getActivity()).onCreditCardOperation(demographicsSettingsDTO);
-            getActivity().onBackPressed();
+            try {
+                ProgressDialogUtil.getInstance(getActivity()).dismiss();
+                Gson gson = new Gson();
+                DemographicsSettingsDTO removeCreditCardResponseDTO = gson.fromJson(workflowDTO.toString(),
+                        DemographicsSettingsDTO.class);
+                demographicsSettingsDTO.getPayload().setPatientCreditCards(removeCreditCardResponseDTO.getPayload()
+                        .getPatientCreditCards());
+                ((DemographicsSettingsActivity) getActivity()).onCreditCardOperation(demographicsSettingsDTO);
+                getActivity().onBackPressed();
+
+                PatientAppUtil.showSuccessNotification(getActivity(), getActivity().getWindow().getCurrentFocus(), demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getLabels().getSettingsSavedSuccessMessage());
+            }
+            catch(Exception e) {
+                Log.e(TAG, "Credit Card onPostExecute" + e.getMessage());
+            }
+
         }
 
         @Override
