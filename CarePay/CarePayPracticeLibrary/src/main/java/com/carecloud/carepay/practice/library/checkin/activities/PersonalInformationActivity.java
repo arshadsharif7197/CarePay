@@ -1,7 +1,6 @@
 package com.carecloud.carepay.practice.library.checkin.activities;
 
 import android.app.DatePickerDialog;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
@@ -35,13 +34,13 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
+import org.joda.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.joda.time.LocalDate;
 
 public class PersonalInformationActivity extends BasePracticeActivity {
     private CarePayButton selectDateButton;
@@ -61,7 +60,6 @@ public class PersonalInformationActivity extends BasePracticeActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         signinPatientModeDTO = getConvertedDTO(SigninPatientModeDTO.class);
         labelsDTO = signinPatientModeDTO.getMetadata().getLabels();
