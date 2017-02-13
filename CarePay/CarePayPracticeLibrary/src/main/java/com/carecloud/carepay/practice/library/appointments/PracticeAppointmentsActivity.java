@@ -114,12 +114,11 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
             return;
         }
 
-        List<AppointmentDTO> appointments = payload.getAppointments();
-
         doctors = new ArrayList<>();
         locations = new ArrayList<>();
         patients = new ArrayList<>();
 
+        List<AppointmentDTO> appointments = payload.getAppointments();
         for (AppointmentDTO appointmentDTO : appointments) {
             AppointmentPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
             addProviderOnProviderFilterList(appointmentPayloadDTO);

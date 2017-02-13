@@ -29,13 +29,13 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Picasso;
 
-import org.joda.time.DateTime;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import org.joda.time.DateTime;
 
 /**
  * Created by cocampo on 2/10/17.
@@ -56,7 +56,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<PatientListAdapter.
      * Constructor.
      *
      * @param context         context
-     * @param paymentsModel list of patients
+     * @param paymentsModel   payload
      */
     public PatientListAdapter(Context context, PaymentsModel paymentsModel) {
         this.context = context;
@@ -64,6 +64,12 @@ public class PatientListAdapter extends RecyclerView.Adapter<PatientListAdapter.
         applyFilter();
     }
 
+    /**
+     * Constructor.
+     *
+     * @param context         context
+     * @param checkInDTO      payload
+     */
     public PatientListAdapter(Context context, CheckInDTO checkInDTO) {
         this.context = context;
         loadPatients(checkInDTO);

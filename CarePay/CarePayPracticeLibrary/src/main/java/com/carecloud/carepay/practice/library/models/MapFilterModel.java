@@ -20,6 +20,9 @@ public class MapFilterModel {
     private boolean filterByLocations;
     private boolean filterByPatients;
 
+    /**
+     * @param filterModel to transform to map
+     */
     public MapFilterModel(FilterModel filterModel) {
 
         doctors = map(filterModel.getDoctors());

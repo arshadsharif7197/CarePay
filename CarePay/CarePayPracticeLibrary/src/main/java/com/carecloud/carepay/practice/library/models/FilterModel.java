@@ -21,12 +21,24 @@ public class FilterModel {
     private String practicePaymentsFilterFindPatientByName;
     private String practicePaymentsFilterClearFilters;
 
+    /**
+     * @param doctors to filter from
+     * @param locations to filter from
+     * @param patients to filter from
+     * @param practiceCheckinFilterDoctorsLabel on top of doctors list
+     * @param practiceCheckinFilterLocationsLabel on top on locations list
+     * @param practicePaymentsFilter label on top of filter dialog
+     * @param practicePaymentsFilterFindPatientByName label for patient search text view
+     * @param practicePaymentsFilterClearFilters label for clear filters button
+     */
     public FilterModel(ArrayList<FilterDataDTO> doctors,
                        ArrayList<FilterDataDTO> locations,
                        ArrayList<FilterDataDTO> patients,
                        String practiceCheckinFilterDoctorsLabel,
                        String practiceCheckinFilterLocationsLabel,
-                       String practicePaymentsFilter, String practicePaymentsFilterFindPatientByName, String practicePaymentsFilterClearFilters) {
+                       String practicePaymentsFilter,
+                       String practicePaymentsFilterFindPatientByName,
+                       String practicePaymentsFilterClearFilters) {
 
         this.doctors = doctors;
         this.locations = locations;
@@ -38,6 +50,9 @@ public class FilterModel {
         this.practicePaymentsFilterClearFilters = practicePaymentsFilterClearFilters;
     }
 
+    /**
+     * Clears filters
+     */
     public void clear() {
         clear(doctors);
         clear(locations);
@@ -74,7 +89,10 @@ public class FilterModel {
         return practicePaymentsFilterClearFilters;
     }
 
-    public List<FilterDataDTO> getLocationsPlusDoctors() {
+    /**
+     * @return list of doctor plus locations
+     */
+    public List<FilterDataDTO> getDoctorsPlusLocations() {
         List<FilterDataDTO> list = new ArrayList<>();
         list.add(new FilterDataDTO(practiceCheckinFilterDoctorsLabel));
         list.addAll(doctors);

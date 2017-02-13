@@ -82,7 +82,7 @@ public class FilterDialog extends PopupWindow
         filterableDataRecyclerView.setLayoutManager(filterableListLayoutManager);
 
         patientAdapter = new CustomSearchAdapter(context, this, filterModel.getPatients());
-        doctorsLocationsAdapter = new CustomFilterListAdapter(context, this, filterModel.getLocationsPlusDoctors());
+        doctorsLocationsAdapter = new CustomFilterListAdapter(context, this, filterModel.getDoctorsPlusLocations());
         filterableDataRecyclerView.setAdapter(doctorsLocationsAdapter);
     }
 
