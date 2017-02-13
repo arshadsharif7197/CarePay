@@ -118,7 +118,7 @@ public class DateUtil {
      */
     public String getDateAsDayMonthDayOrdinal() {
         return String.format(Locale.getDefault(), "%s, %s %d%s",
-                             dayLiteral, monthLiteral, day, getOrdinalSuffix(day));
+                dayLiteral, monthLiteral, day, getOrdinalSuffix(day));
     }
 
     /**
@@ -128,7 +128,7 @@ public class DateUtil {
      */
     public String getDateAsDayMonthDayOrdinalYear() {
         return String.format(Locale.getDefault(), "%s, %s %d%s",
-                             dayLiteral, monthLiteralAbbr, day, getOrdinalSuffix(day));
+                dayLiteral, monthLiteralAbbr, day, getOrdinalSuffix(day));
     }
 
     /**
@@ -148,7 +148,7 @@ public class DateUtil {
     public String getDateAsMonthLiteralDayOrdinalYear() {
         String ordinal = instance.getOrdinalSuffix(day); // fetch the ordinal
         return String.format(Locale.getDefault(), "%s %s%s, %d",
-                             monthLiteral, day, ordinal, year);
+                monthLiteral, day, ordinal, year);
     }
 
     /**
@@ -287,6 +287,11 @@ public class DateUtil {
         updateFields();
     }
 
+    public void setDate(Calendar calendar){
+        this.date = calendar.getTime();
+        updateFields(calendar);
+    }
+
     /**
      * Get the ordinal suffix
      *
@@ -336,6 +341,20 @@ public class DateUtil {
         }
     }
 
+    private void updateFields(Calendar calendar) {
+        day = calendar.get(Calendar.DAY_OF_MONTH);
+        month = calendar.get(Calendar.MONTH);
+        year = calendar.get(Calendar.YEAR);
+        hour12 = calendar.get(Calendar.HOUR);
+        minute = calendar.get(Calendar.MINUTE);
+        amPm = DateFormatSymbols.getInstance(Locale.getDefault()).getAmPmStrings()[calendar.get(Calendar.AM_PM)];
+        dayLiteral = DateFormatSymbols.getInstance(Locale.getDefault()).getWeekdays()[calendar.get(Calendar.DAY_OF_WEEK)];
+        monthLiteral = DateFormatSymbols.getInstance(Locale.getDefault()).getMonths()[month];
+        dayLiteralAbbr = DateFormatSymbols.getInstance(Locale.getDefault()).getShortWeekdays()[calendar.get(Calendar.DAY_OF_WEEK)];
+        monthLiteralAbbr = DateFormatSymbols.getInstance(Locale.getDefault()).getShortMonths()[month];
+
+    }
+
     /**
      * Check for Today.
      *
@@ -348,6 +367,17 @@ public class DateUtil {
         int crtYear = calendar.get(Calendar.YEAR);
 
         return crtDay == day && crtMonth == month && crtYear == year;
+    }
+
+    public static boolean isToday(Date date){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return isToday(calendar);
+    }
+
+    public static boolean isToday(Calendar calendar){
+        Calendar checkCal = Calendar.getInstance();//init to today
+        return isSameYear(calendar, checkCal) && isSameDay(calendar, checkCal);
     }
 
     /**
@@ -388,6 +418,126 @@ public class DateUtil {
         int crtYear = calendar.get(Calendar.YEAR);
 
         return crtDay == day-1 && crtMonth == month && crtYear == year;
+    }
+
+    public static boolean isTomorrow(Date date){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        return isTomorrow(calendar);
+    }
+
+    public static boolean isTomorrow(Calendar calendar){
+        Calendar checkCal = Calendar.getInstance();
+        checkCal.add(Calendar.DAY_OF_YEAR, 1);
+
+        return isSameDay(calendar, checkCal);
+
+    }
+
+
+    /**
+     * Check if given date corresponds to last day in month
+     *
+     * @return true if date is last day in month
+     */
+    public boolean endsThisMonth(){
+
+        return endsThisMonth(date);
+    }
+
+    public static boolean endsThisMonth(Date date){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        return endsThisMonth(calendar);
+    }
+
+    public static boolean endsThisMonth(Calendar calendar){
+        Calendar checkCal = Calendar.getInstance();
+        int calMonth = checkCal.get(Calendar.MONTH);
+        int calMaxDayMonth = checkCal.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+        return isSameYear(checkCal, calendar) &&
+                calMonth == calendar.get(Calendar.MONTH) &&
+                calMaxDayMonth == calendar.get(Calendar.DAY_OF_MONTH);
+    }
+
+
+    public static int getDaysElapsed(Date start, Date end){
+        Calendar startCal = Calendar.getInstance();
+        Calendar endCal = Calendar.getInstance();
+
+        startCal.setTime(start);
+        endCal.setTime(end);
+
+        return getDaysElapsed(startCal, endCal);
+    }
+
+    public static int getDaysElapsed(Calendar start, Calendar end){
+        if(end.compareTo(start)<0){//parameters in wrong order
+            Log.w(TAG, "calendar parameters out of order" );
+            Calendar temp = start;
+            start = end;
+            end = temp;
+        }
+
+        int years = end.get(Calendar.YEAR) - start.get(Calendar.YEAR);
+        if(years == 0) {//is the time period within the current year range
+            return end.get(Calendar.DAY_OF_YEAR) - start.get(Calendar.DAY_OF_YEAR);
+        }else if(years == 1){//this is probably a care where the range is carrying over at the end of the year
+            int daysLeftStartingYear =  start.getActualMaximum(Calendar.DAY_OF_YEAR) - start.get(Calendar.DAY_OF_YEAR);
+            return daysLeftStartingYear + end.get(Calendar.DAY_OF_YEAR);
+        }else{//need to figure out how many years we are looking at
+            int fullYearCount = years-1;
+
+            int leapYearOffset = 0;
+            int yearCheck = start.get(Calendar.YEAR);
+            for(int i=0; i<fullYearCount; i++){
+                yearCheck++;
+                if(yearCheck%4==0)
+                    leapYearOffset++;
+            }
+
+            int daysLeftStartingYear = start.getActualMaximum(Calendar.DAY_OF_YEAR) - start.get(Calendar.DAY_OF_YEAR);
+            return daysLeftStartingYear + fullYearCount * 365 + end.get(Calendar.DAY_OF_YEAR) + leapYearOffset;
+        }
+    }
+
+    public static int getDaysElapsedInclusive(Date start, Date end){
+        return getDaysElapsed(start, end)+1;
+    }
+
+    public static int getDaysElapsedInclusive(Calendar start, Calendar end){
+        return getDaysElapsed(start, end)+1;
+    }
+
+    public static boolean isSameYear(Calendar start, Calendar end){
+        return start.get(Calendar.YEAR) == end.get(Calendar.YEAR);
+    }
+
+    public static boolean isSameYear(Date start, Date end){
+        Calendar startCal = Calendar.getInstance();
+        Calendar endCal = Calendar.getInstance();
+
+        startCal.setTime(start);
+        endCal.setTime(end);
+
+        return isSameYear(startCal, endCal);
+    }
+
+    public static boolean isSameDay(Calendar start, Calendar end){
+        return isSameYear(start, end) && start.get(Calendar.DAY_OF_YEAR) == end.get(Calendar.DAY_OF_YEAR);
+    }
+
+    public static boolean isSameDay(Date start, Date end){
+        Calendar startCal = Calendar.getInstance();
+        Calendar endCal = Calendar.getInstance();
+
+        startCal.setTime(start);
+        endCal.setTime(end);
+
+        return isSameDay(startCal, endCal);
     }
 
     /**
@@ -440,4 +590,6 @@ public class DateUtil {
         return String.format(Locale.getDefault(), "%s, %s %d%s",
                 dayLiteral, monthLiteralAbbr, day, getOrdinalSuffix(day));
     }
+
+
 }

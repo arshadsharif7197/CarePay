@@ -11,7 +11,6 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailableHoursDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.List;
 
@@ -85,6 +84,8 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             String time12Hour = DateUtil.getInstance().getTime12Hour();
             vhTimeSlot.getTextView().setText(time12Hour);
 
+            String location = "Test Location";//TODO get from DTO
+            vhTimeSlot.getTextViewLocation().setText(location);
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -105,11 +106,12 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private class ViewHolderTimeSlot extends RecyclerView.ViewHolder {
 
         private TextView textViewTimeSlot;
+        private TextView textViewLocation;
 
         ViewHolderTimeSlot(View view) {
             super(view);
             textViewTimeSlot = (TextView) view.findViewById(R.id.textview_timeslot);
-            SystemUtil.setProximaNovaRegularTypeface(view.getContext(), textViewTimeSlot);
+            textViewLocation = (TextView) view.findViewById(R.id.textview_location);
         }
 
         TextView getTextView() {
@@ -118,6 +120,14 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         public void setTextView(TextView textViewTimeSlot) {
             this.textViewTimeSlot = textViewTimeSlot;
+        }
+
+        public TextView getTextViewLocation() {
+            return textViewLocation;
+        }
+
+        public void setTextViewLocation(TextView textViewLocation) {
+            this.textViewLocation = textViewLocation;
         }
     }
 
@@ -128,7 +138,6 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         ViewHolderSectionHeader(View view) {
             super(view);
             textViewSectionHeader = (TextView) view.findViewById(R.id.textview_section_header);
-            SystemUtil.setProximaNovaSemiboldTypeface(view.getContext(), textViewSectionHeader);
         }
 
         TextView getTextView() {

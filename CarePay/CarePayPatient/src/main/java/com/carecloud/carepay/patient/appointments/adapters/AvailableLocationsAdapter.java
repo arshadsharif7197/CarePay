@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLocationsDTO;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class AvailableLocationsAdapter extends RecyclerView.Adapter<AvailableLocationsAdapter.ViewHolderLocation> {
@@ -23,6 +24,7 @@ public class AvailableLocationsAdapter extends RecyclerView.Adapter<AvailableLoc
     private Context context;
     private SelectLocationCallback selectLocationCallback;
     private String allButtonText;
+    private List<AppointmentLocationsDTO> selectedLocations = new LinkedList<>();
 
     /**
      * Constructor.
@@ -56,20 +58,36 @@ public class AvailableLocationsAdapter extends RecyclerView.Adapter<AvailableLoc
     @Override
     public void onBindViewHolder(ViewHolderLocation viewHolder, final int position) {
         final AppointmentLocationsDTO appointmentLocations = position>0?items.get(position-1):null;
-
+        TextView locationTextView = viewHolder.getLocationTextView();
         if(position == 0) {
-            viewHolder.getLocationTextView().setText(allButtonText);
+            locationTextView.setText(allButtonText);
+            locationTextView.setSelected(selectedLocations.isEmpty());
+
         }else{
-            viewHolder.getLocationTextView().setText(appointmentLocations.getName());
+            locationTextView.setText(appointmentLocations.getName());
+            locationTextView.setSelected(selectedLocations.contains(appointmentLocations));
         }
 
-        viewHolder.getLocationTextView().setOnClickListener(new View.OnClickListener() {
+        locationTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(selectLocationCallback!=null)
                     selectLocationCallback.onSelectLocation(appointmentLocations);
+                v.setSelected(!v.isSelected());//toggle selection status
             }
         });
+    }
+
+
+    public void resetLocationsSelected(boolean clearAll){
+        if(clearAll) {
+            selectedLocations.clear();
+        }
+        notifyDataSetChanged();
+    }
+
+    public void updateSelectedLocations(List<AppointmentLocationsDTO> selectedLocations){
+        this.selectedLocations = selectedLocations;
     }
 
     public void setItems(List<AppointmentLocationsDTO> items){

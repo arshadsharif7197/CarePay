@@ -38,11 +38,9 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
-import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
-import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -52,6 +50,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -63,12 +62,15 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
     private AppointmentAvailabilityDTO availabilityDTO;
     private VisitTypeDTO selectedVisitTypeDTO;
     private AppointmentResourcesDTO selectedResourcesDTO;
+    private AppointmentsResultModel resourcesToScheduleDTO;
+
     private RecyclerView availableHoursRecycleView;
     private RecyclerView availableLocationsRecycleView;
-    private AppointmentsResultModel resourcesToScheduleDTO;
+    private TextView titleView;
+//    private CarePayTextView dateRangeCustomTextView;
+
     private String addAppointmentPatientId;
-    private String rangeEndDateString;
-    private CarePayTextView dateRangeCustomTextView;
+    private List<AppointmentLocationsDTO> selectedLocations = new LinkedList<>();
 
     @Override
     public void onStart() {
@@ -127,13 +129,14 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
     private void inflateToolbar(View availableHoursListView) {
         Toolbar toolbar = (Toolbar)
                 availableHoursListView.findViewById(R.id.add_appointment_toolbar);
-        TextView titleView = (TextView) toolbar.findViewById(R.id.add_appointment_toolbar_title);
+        titleView = (TextView) toolbar.findViewById(R.id.add_appointment_toolbar_title);
         titleView.setText(R.string.apt_available_hours_title);
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), titleView);
         toolbar.setTitle("");
 
+        String range = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentSelectRangeButton();
         TextView titleOther = (TextView) toolbar.findViewById(R.id.add_appointment_toolbar_other);
-        titleOther.setText(R.string.edit_range_button_label);//TODO get from DTO
+        titleOther.setText(range!=null?range:getString(R.string.edit_range_button_label));
         titleOther.setVisibility(View.VISIBLE);
         titleOther.setOnClickListener(dateRangeClickListener);
 
@@ -157,7 +160,8 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
         }
 
         if(availableLocationsRecycleView.getAdapter() == null){
-            availableLocationsRecycleView.setAdapter(new AvailableLocationsAdapter(getContext(), getAvailableLocationsFromDTO(), this, "All")); //TODO get from DTO
+            String all = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentAllLocationsItem();
+            availableLocationsRecycleView.setAdapter(new AvailableLocationsAdapter(getContext(), getAvailableLocationsFromDTO(), this, all));
         }else{
             AvailableLocationsAdapter availableLocationsAdapter = (AvailableLocationsAdapter) availableLocationsRecycleView.getAdapter();
             availableLocationsAdapter.setItems(getAvailableLocationsFromDTO());
@@ -175,8 +179,8 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
 //                availableHoursListView.findViewById(R.id.add_appointment_date_pick);
 //        editRangeButton.setOnClickListener(dateRangeClickListener);
 
-        dateRangeCustomTextView = (CarePayTextView)
-                availableHoursListView.findViewById(R.id.date_range_custom_text_view);
+//        dateRangeCustomTextView = (CarePayTextView)
+//                availableHoursListView.findViewById(R.id.date_range_custom_text_view);
 
         LinearLayoutManager availableHoursLayoutManager = new LinearLayoutManager(getContext());
         availableHoursLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -201,57 +205,68 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
     /**
      * Method to update date range that is selected on calendar
      */
-    private void updateDateRange() {
-
-        dateRangeCustomTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.glitter));
-
-        String selectedRangeLabel = resourcesToScheduleDTO.getMetadata().getLabel().getAddAppointmentFromToText();
-        if (startDate != null && endDate != null) {
-            DateUtil.getInstance().setDate(startDate);
-            String formattedStartDate = getFormattedDate();
-
-            DateUtil.getInstance().setDate(endDate);
-            String formattedEndDate = getFormattedDate();
-
-            if(!StringUtil.isNullOrEmpty(rangeEndDateString)){
-                formattedEndDate = rangeEndDateString;
-            }
-
-            dateRangeCustomTextView.setText(String.format(selectedRangeLabel,formattedStartDate,formattedEndDate));
-        } else {
-            /*To show by default one week as range from today*/
-            Calendar rangeStart = Calendar.getInstance();
-            rangeStart.add(Calendar.DAY_OF_MONTH, 0);
-            Calendar rangeEnd = Calendar.getInstance();
-            rangeEnd.add(Calendar.DAY_OF_MONTH, 6);
-
-//            startDate = rangeStart.getTime();
-//            endDate = rangeEnd.getTime();
-//            DateUtil.getInstance().setDate(endDate);
-
-            String formattedEndDate = getFormattedDate();
-
-            if(!StringUtil.isNullOrEmpty(rangeEndDateString)){
-                formattedEndDate = rangeEndDateString;
-            }
-
-            dateRangeCustomTextView.setText(String.format(selectedRangeLabel,resourcesToScheduleDTO
-                    .getMetadata().getLabel().getTodayAppointmentsHeading().toLowerCase(), formattedEndDate));
+    private void updateDateRange(){
+        if(startDate == null || endDate == null){
+            startDate = Calendar.getInstance().getTime();//today
+            endDate = startDate;
         }
+        String formattedDate = getFormattedDate(startDate, endDate);
+        titleView.setText(formattedDate);
     }
 
-    private String getFormattedDate(){
-        String formattedDate = DateUtil.getInstance().getDateAsMonthLiteralDayOrdinal();
+    private String getFormattedDate(Date startDate, Date endDate){
+        Calendar startCal = Calendar.getInstance();
+        Calendar endCal = Calendar.getInstance();
 
-        if(DateUtil.getInstance().isToday()){
-            formattedDate = resourcesToScheduleDTO.getMetadata().getLabel().getTodayAppointmentsHeading()
-                    .toLowerCase();
-        } else if(DateUtil.getInstance().isTomorrow()){
-            formattedDate = resourcesToScheduleDTO.getMetadata().getLabel().getAddAppointmentTomorrow()
-                    .toLowerCase();
+        startCal.setTime(startDate);
+        endCal.setTime(endDate);
+
+        //check for single Day
+        if(DateUtil.isSameDay(startCal, endCal)){
+            //check for today
+            if(DateUtil.isToday(startCal)){
+                //return Today String from DTO
+                return resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentsTodayHeadingSmall();
+            }
+            //check for tomorrow
+            else if(DateUtil.isTomorrow(startCal)){
+                //return Tomorrow String from DTO
+                return resourcesToScheduleDTO.getMetadata().getLabel().getAddAppointmentTomorrow();
+            }
+            //Just return this date in readable format
+            else{
+                DateUtil dateUtil = DateUtil.getInstance();
+                dateUtil.setDate(startCal);
+                return dateUtil.getDateAsDayShortMonthDayOrdinal();
+            }
+        }else{
+            //check if the range starts today
+            if(DateUtil.isToday(startCal)){
+                //check if end date is month end
+                if(DateUtil.endsThisMonth(endCal)){
+                    //return ThisMonth String from DTO
+                    return resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentThisMonthTitle();
+                }else{
+                    //get text from DTO
+                    String daysElapsedText = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentNextDaysTitle();
+                    int days = DateUtil.getDaysElapsedInclusive(startCal, endCal);
+
+                    return String.format(daysElapsedText, days);
+                }
+            }
+            else{
+                //return from:to format
+                DateUtil dateUtil = DateUtil.getInstance();
+                dateUtil.setDate(startDate);
+                String fromText = dateUtil.getDateAsMonthLiteralDayOrdinal();
+                dateUtil.setDate(endDate);
+                String toText = dateUtil.getDateAsMonthLiteralDayOrdinal();
+
+                String fromToText = resourcesToScheduleDTO.getMetadata().getLabel().getAddAppointmentFromToText();
+                return String.format(fromToText, fromText, toText);
+            }
         }
 
-        return formattedDate;
     }
 
     /**
@@ -278,7 +293,7 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
     /**
      *Click listener for edit range and edit date range button
      */
-    View.OnClickListener dateRangeClickListener = new View.OnClickListener() {
+    private View.OnClickListener dateRangeClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -310,11 +325,35 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
     }
 
     private List<AppointmentLocationsDTO> getAvailableLocationsFromDTO(){
+        List<AppointmentLocationsDTO> locationsDTOList = new ArrayList<>();
         if(availabilityDTO != null && availabilityDTO.getPayload()!=null){
-            return availabilityDTO.getPayload().getLocations();
+            locationsDTOList = availabilityDTO.getPayload().getLocations();
         }
-        return new ArrayList<>();
+        if(locationsDTOList==null || locationsDTOList.isEmpty()){//TODO remove this
+            locationsDTOList = getFakeLocationInfos(30);
+        }
+
+        return locationsDTOList;
     }
+
+
+    private void resetLocatonSelections(boolean clearAll){
+        RecyclerView.LayoutManager layoutManager = availableLocationsRecycleView.getLayoutManager();
+        for(int i=0; i<layoutManager.getChildCount(); i++) {
+            layoutManager.getChildAt(i).findViewById(R.id.available_location).setSelected(false);
+        }
+        ((AvailableLocationsAdapter) availableLocationsRecycleView.getAdapter()).resetLocationsSelected(clearAll);
+        selectedLocations.clear();
+    }
+
+    private void updateSelectedLocationsForAdapter(){
+        if(selectedLocations.isEmpty()){//if user removed last location reset everything
+            resetLocatonSelections(true);
+        }else{
+            ((AvailableLocationsAdapter) availableLocationsRecycleView.getAdapter()).updateSelectedLocations(selectedLocations);
+        }
+    }
+
 
     private ArrayList<Object> getAvailableHoursListWithHeader(){
         ArrayList<Object> timeSlotsListWithHeaders = new ArrayList<>();
@@ -363,24 +402,18 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
 
                 // To create appointment time slots list data structure along with headers
                 String headerTitle = "";
-                AppointmentsSlotsDTO timeSlotsDTO = null;
                 for (AppointmentsSlotsDTO timSlotsDTO : appointmentsSlotsDTOList) {
 
                     String title = getSectionHeaderTitle(timSlotsDTO.getStartTime());
                     if (headerTitle.equalsIgnoreCase(title)) {
                         timeSlotsListWithHeaders.add(timSlotsDTO);
                     } else {
-                        headerTitle = getSectionHeaderTitle(timSlotsDTO.getStartTime());
+                        headerTitle = title;
                         timeSlotsListWithHeaders.add(headerTitle);
                         timeSlotsListWithHeaders.add(timSlotsDTO);
                     }
-                    timeSlotsDTO = timSlotsDTO;
                 }
-                if(!StringUtil.isNullOrEmpty(headerTitle) && headerTitle.contains(",") && timeSlotsDTO != null) {
-                    rangeEndDateString = DateUtil.getInstance().setDateRaw(timeSlotsDTO.getStartTime()).getDateAsMonthLiteralDayOrdinal();
-                } else {
-                    rangeEndDateString = headerTitle.toLowerCase();
-                }
+
             }
         }
         return timeSlotsListWithHeaders;
@@ -497,6 +530,34 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
 
     @Override
     public void onSelectLocation(AppointmentLocationsDTO appointmentLocationsDTO) {
-        //TODO
+        if(appointmentLocationsDTO == null) {//selected ALL locations
+            resetLocatonSelections(true);
+        }else{
+            if(selectedLocations.isEmpty()) {//Initial state, reset location selections to remove the All selected status
+                resetLocatonSelections(false);
+            }
+            if(!selectedLocations.contains(appointmentLocationsDTO)){
+                selectedLocations.add(appointmentLocationsDTO);
+            }else if(selectedLocations.contains(appointmentLocationsDTO)){
+                selectedLocations.remove(appointmentLocationsDTO);
+            }
+
+            updateSelectedLocationsForAdapter();
+
+        }
+        //TODO make updated request with location param
+
+    }
+
+    //TODO Remove this
+    List<AppointmentLocationsDTO> getFakeLocationInfos(int count){
+        List<AppointmentLocationsDTO> locationsDTOs = new ArrayList<>();
+        for(int i=0; i<count; i++){
+            AppointmentLocationsDTO locationsDTO = new AppointmentLocationsDTO();
+            locationsDTO.setId(i);
+            locationsDTO.setName("TestLocation"+i);
+            locationsDTOs.add(locationsDTO);
+        }
+        return locationsDTOs;
     }
 }
