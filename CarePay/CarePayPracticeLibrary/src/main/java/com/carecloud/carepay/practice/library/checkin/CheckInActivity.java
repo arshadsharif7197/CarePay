@@ -78,7 +78,6 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         super.onCreate(savedInstanceState);
 
         checkInDTO = getConvertedDTO(CheckInDTO.class);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_check_in);
         patientFiltered=false;
