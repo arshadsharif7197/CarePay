@@ -91,10 +91,10 @@ public class ConfirmationActivity extends AppCompatActivity {
                 .setMaskedWalletDetailsHeaderTextAppearance(
                         R.style.WalletFragmentDetailsHeaderTextAppearance)
                 .setMaskedWalletDetailsBackgroundColor(
-                        R.color.bright_cerulean)
+                        R.color.colorPrimary)
                 .setMaskedWalletDetailsButtonTextAppearance(R.drawable.cell_checkbox_on)
                 .setMaskedWalletDetailsButtonBackgroundResource(R.drawable.button_blue)
-                .setMaskedWalletDetailsBackgroundResource(R.color.bright_cerulean);
+                .setMaskedWalletDetailsBackgroundResource(R.color.colorPrimary);
 
         WalletFragmentOptions walletFragmentOptions = WalletFragmentOptions.newBuilder()
                 .setEnvironment(PaymentConstants.WALLET_ENVIRONMENT)

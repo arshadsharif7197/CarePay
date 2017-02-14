@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/intake_radio_caption_margin"
             android:text="@string/yes"
-            android:textColor="@color/bright_cerulean"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/intake_radio_option_text_size" />
 
         <TextView
@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/no"
-            android:textColor="@color/bright_cerulean"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/intake_radio_option_text_size" />
     </LinearLayout>
 

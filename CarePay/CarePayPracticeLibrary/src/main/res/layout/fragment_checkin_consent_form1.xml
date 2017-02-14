@@ -44,7 +44,7 @@
                     android:layout_marginBottom="@dimen/dimen_10dp"
                     android:gravity="top|center"
                     android:paddingBottom="@dimen/dimen_10dp"
-                    android:textColor="@color/consent_title"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/text_size_28sp"
                     app:customAssetFont="gotham_rounded_medium" />
 

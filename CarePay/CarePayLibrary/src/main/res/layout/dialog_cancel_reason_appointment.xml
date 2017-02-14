@@ -70,7 +70,7 @@
                         android:enabled="false"
                         android:focusable="false"
                         android:imeOptions="flagNoExtractUi"
-                        android:textColor="@color/bright_cerulean"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/cancel_edittext_size" />
 
                 </android.support.design.widget.TextInputLayout>

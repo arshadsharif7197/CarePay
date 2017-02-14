@@ -12,7 +12,7 @@
         android:text="HAVE YOU EVER BEEN TREATED FOR ANY OF THE FOLLOWING?"
         android:textSize="@dimen/textview_textsize"
         android:layout_marginTop="@dimen/apt_popup_button_margin"
-        android:textColor="@color/bright_cerulean"
+        android:textColor="@color/colorPrimary"
         android:layout_height="wrap_content" />
     <LinearLayout
         android:layout_width="match_parent"
