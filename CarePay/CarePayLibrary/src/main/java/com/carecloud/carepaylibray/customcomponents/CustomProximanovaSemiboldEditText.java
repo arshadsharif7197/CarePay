@@ -40,7 +40,7 @@ public class CustomProximanovaSemiboldEditText extends CustomEditTextBase {
     @Override
     public void addViews() {
         super.addViews();
-        input.setTextColor(ContextCompat.getColor(context, R.color.bright_cerulean));
+        input.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
         //input.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         this.setHintTextAppearance(R.style.TextAppearence_App_TextInputLayout);
         Typeface tf = Typeface.createFromAsset(getContext().getAssets(), "fonts/proximanova_semibold.otf");

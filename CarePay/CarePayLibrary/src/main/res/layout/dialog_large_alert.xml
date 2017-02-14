@@ -55,6 +55,6 @@
             style="@style/ResponsButtonStyle"
             android:layout_margin="@dimen/payment_side_margin"
             android:background="@drawable/button_blue_border"
-            android:textColor="@color/bright_cerulean" />
+            android:textColor="@color/colorPrimary" />
     </LinearLayout>
 </LinearLayout>

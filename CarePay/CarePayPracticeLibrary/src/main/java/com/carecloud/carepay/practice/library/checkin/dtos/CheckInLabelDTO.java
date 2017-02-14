@@ -82,9 +82,18 @@ public class CheckInLabelDTO {
     @SerializedName("practice_checkin_drop_here_label")
     @Expose
     private String practiceCheckinDropHereLabel;
+
     @SerializedName("practice_checkin_success_label")
     @Expose
     private String practiceCheckinSuccessLabel;
+
+    @SerializedName("activity_heading")
+    @Expose
+    private String activityHeading;
+
+    @SerializedName("today")
+    @Expose
+    private String today;
 
     /**
      * @return The practiceCheckinDetailDialogCheckingIn
@@ -368,5 +377,13 @@ public class CheckInLabelDTO {
 
     public void setPracticeCheckinSuccessLabel(String practiceCheckinSuccessLabel) {
         this.practiceCheckinSuccessLabel = practiceCheckinSuccessLabel;
+    }
+
+    public String getActivityHeading() {
+        return StringUtil.getLabelForView(activityHeading);
+    }
+
+    public String getToday() {
+        return StringUtil.getLabelForView(today);
     }
 }
