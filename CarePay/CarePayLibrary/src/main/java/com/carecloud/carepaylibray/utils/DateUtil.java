@@ -497,8 +497,8 @@ public class DateUtil {
 
     /**
      * Get the number of days elapsed between two dates
-     * @param start
-     * @param end
+     * @param start starting date
+     * @param end ending date
      * @return number of days elapsed
      */
     public static int getDaysElapsed(Date start, Date end){
@@ -513,8 +513,8 @@ public class DateUtil {
 
     /**
      * Get the number of days elapsed between two Calendar days
-     * @param start
-     * @param end
+     * @param start starting day
+     * @param end ending day
      * @return number of days elapsed
      */
     public static int getDaysElapsed(Calendar start, Calendar end){
@@ -550,8 +550,8 @@ public class DateUtil {
 
     /**
      * Like {@link #getDaysElapsed(Date, Date)} but includes the current date in the count
-     * @param start
-     * @param end
+     * @param start starting date
+     * @param end ending date
      * @return number of days elapsed including the starting date
      */
     public static int getDaysElapsedInclusive(Date start, Date end){
@@ -560,8 +560,8 @@ public class DateUtil {
 
     /**
      * Like {@link #getDaysElapsed(Calendar, Calendar)} but includes the current date in the count
-     * @param start
-     * @param end
+     * @param start starting day
+     * @param end ending day
      * @return number of days elapsed including the starting day
      */
     public static int getDaysElapsedInclusive(Calendar start, Calendar end){
@@ -570,8 +570,8 @@ public class DateUtil {
 
     /**
      * Check whether the provided days are in the same year
-     * @param start
-     * @param end
+     * @param start starting day
+     * @param end ending day
      * @return true if days are in same year
      */
     public static boolean isSameYear(Calendar start, Calendar end){
@@ -580,8 +580,8 @@ public class DateUtil {
 
     /**
      * Check whether the provided dates are in the same year
-     * @param start
-     * @param end
+     * @param start starting date
+     * @param end ending date
      * @return true if dates are in same year
      */
     public static boolean isSameYear(Date start, Date end){
@@ -597,8 +597,8 @@ public class DateUtil {
 
     /**
      * Check whether the provided days are the same day regardless of time
-     * @param start
-     * @param end
+     * @param start starting day
+     * @param end endind day
      * @return true if same day
      */
     public static boolean isSameDay(Calendar start, Calendar end){
@@ -607,8 +607,8 @@ public class DateUtil {
 
     /**
      * Check whether the provided dates are the same day regardless of time
-     * @param start
-     * @param end
+     * @param start starting date
+     * @param end ending date
      * @return true if same day
      */
     public static boolean isSameDay(Date start, Date end){
