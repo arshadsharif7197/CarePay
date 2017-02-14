@@ -78,7 +78,6 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         super.onCreate(savedInstanceState);
 
         checkInDTO = getConvertedDTO(CheckInDTO.class);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_check_in);
         patientFiltered=false;
@@ -405,6 +404,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         @Override
         public void onFailure(String exceptionMessage) {
             ProgressDialogUtil.getInstance(getContext()).dismiss();
+            findViewById(R.id.drop_down_area_view).setVisibility(View.GONE);
         }
     };
 

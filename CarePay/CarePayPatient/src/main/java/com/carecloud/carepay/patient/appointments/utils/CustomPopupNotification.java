@@ -100,9 +100,9 @@ public class CustomPopupNotification extends PopupWindow {
                 popupIcon.setImageResource(R.drawable.icn_notification_error);
                 break;
             case AUTO_DISSMISS_SUCCESS_NOTIFICATION:
-                popupWindowLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.success));
+                popupWindowLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.emerald));
                 popupMessageLabel.setTextColor(ContextCompat.getColor(context, R.color.white));
-                popupIcon.setImageResource(R.drawable.icn_check);
+                popupIcon.setImageResource(R.drawable.icn_notification_basic_white_check);
                 break;
             default:
         }
