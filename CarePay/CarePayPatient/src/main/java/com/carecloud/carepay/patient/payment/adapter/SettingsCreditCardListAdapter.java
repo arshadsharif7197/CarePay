@@ -72,7 +72,7 @@ public class SettingsCreditCardListAdapter extends RecyclerView.Adapter<Settings
 
     @Override
     public int getItemCount() {
-        return creditCardList.size();
+        return creditCardList != null ? creditCardList.size() : 0 ;
     }
 
     class SettingsCreditCardListViewHolder extends RecyclerView.ViewHolder {

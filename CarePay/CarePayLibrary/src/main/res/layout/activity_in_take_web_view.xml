@@ -28,7 +28,7 @@
             app:cumulativeDots="false"
             app:activeDotIndex="0"
             app:activeDotColor="@color/gray"
-            app:inactiveDotColor="@color/bright_cerulean"
+            app:inactiveDotColor="@color/colorPrimary"
             app:activeDotIcon="@drawable/circle_indicator_blue"
             app:inactiveDotIcon="@drawable/circle_indicator_gray"
             app:numberDots="0"

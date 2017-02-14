@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:layout_weight="0.5"
         android:background="@drawable/button_blue_border"
-        android:textColor="@color/bright_cerulean"
+        android:textColor="@color/colorPrimary"
         android:textSize="@dimen/apt_dl_textview_size" />
 
     <Button

@@ -35,7 +35,7 @@
     </style>
 
     <style name="TextInputLayoutStyle" parent="TextAppearence.App.TextInputLayout">
-        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="errorTextAppearance">@style/errorTextAppearance</item>
@@ -43,7 +43,7 @@
 
     <style name="DemographicImageviewStyle">
         <item name="android:radius">3dp</item>
-        <item name="android:foregroundTint">@color/rich_electric_blue</item>
+        <item name="android:foregroundTint">@color/colorPrimary</item>
     </style>
 
 </resources>
