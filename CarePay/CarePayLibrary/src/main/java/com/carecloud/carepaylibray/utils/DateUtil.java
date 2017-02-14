@@ -73,6 +73,7 @@ public class DateUtil {
         for (String format: formats) {
             try {
                 SimpleDateFormat formatter = new SimpleDateFormat(format, Locale.getDefault());
+                formatter.setLenient(false);
                 Date newDate = formatter.parse(dateString);
                 setDate(newDate);
 

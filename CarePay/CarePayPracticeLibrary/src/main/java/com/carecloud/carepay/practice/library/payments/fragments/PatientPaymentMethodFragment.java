@@ -239,6 +239,9 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                         (RadioButton) paymentMethodRadioGroup.getChildAt(i));
                 ((RadioButton) paymentMethodRadioGroup.getChildAt(i))
                         .setTextColor(ContextCompat.getColor(activity, R.color.slateGray));
+                ((RadioButton) paymentMethodRadioGroup.getChildAt(i))
+                        .setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.payment_method_layout_label_text_size));
+
             }
         }
     }

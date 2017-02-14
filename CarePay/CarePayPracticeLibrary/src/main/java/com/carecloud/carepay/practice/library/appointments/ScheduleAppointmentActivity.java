@@ -1,7 +1,5 @@
 package com.carecloud.carepay.practice.library.appointments;
 
-import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -59,7 +57,6 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_providers_patient);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         appointmentsRecyclerView = (RecyclerView) findViewById(R.id.provider_recycler_view);
         appointmentsRecyclerView.setHasFixedSize(true);

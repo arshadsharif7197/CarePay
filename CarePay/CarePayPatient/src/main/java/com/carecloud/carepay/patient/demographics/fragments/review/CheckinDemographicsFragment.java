@@ -260,7 +260,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         address2EditText = (EditText) view.findViewById(R.id.addressEditText2Id);
         zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeId);
         cityEditText = (EditText) view.findViewById(R.id.cityId);
-        stateEditText = (AutoCompleteTextView) view.findViewById(R.id.stateAutoCompleteTextView);
+        stateEditText = (AutoCompleteTextView) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView);
         stateEditText.setHint(addressMetaDTO.properties.state.getLabel());
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
                 R.layout.autocomplete_state_item,

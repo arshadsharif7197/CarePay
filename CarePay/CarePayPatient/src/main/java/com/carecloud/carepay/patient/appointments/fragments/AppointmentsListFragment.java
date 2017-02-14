@@ -20,7 +20,6 @@ import android.widget.ProgressBar;
 import com.carecloud.carepay.patient.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.appointments.adapters.AppointmentsAdapter;
-import com.carecloud.carepay.patient.appointments.utils.CustomPopupNotification;
 import com.carecloud.carepay.patient.appointments.utils.PatientAppUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;

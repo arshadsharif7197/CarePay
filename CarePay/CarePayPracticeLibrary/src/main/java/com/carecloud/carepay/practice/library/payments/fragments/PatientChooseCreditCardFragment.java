@@ -186,34 +186,29 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
                     JSONObject payload = new JSONObject();
                     double totalAmountToPay = getArguments().getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
 
-                    try {
-                        payload.put("amount", totalAmountToPay);
+                        try {
+                            payload.put("amount", totalAmountToPay);
 
-                        JSONObject paymentMethod = new JSONObject();
-                        paymentMethod.put("amount", totalAmountToPay);
+                            JSONObject paymentMethod = new JSONObject();
+                            paymentMethod.put("amount", totalAmountToPay);
+                            JSONObject creditCard = new JSONObject();
+                            creditCard.put("card_type", creditCardPayload.getCardType());
+                            creditCard.put("card_number", creditCardPayload.getCardNumber());
+                            creditCard.put("name_on_card", creditCardPayload.getNameOnCard().replaceAll(" ",""));
+                            creditCard.put("expire_dt", creditCardPayload.getExpireDt().replaceAll("/",""));
+                            creditCard.put("cvv", creditCardPayload.getCvv());
+                            creditCard.put("token", creditCardPayload.getToken());
+                            JSONObject billingInformation = new JSONObject();
+                            billingInformation.put("same_as_patient", true);
+                            creditCard.put("billing_information", billingInformation);
+                            paymentMethod.put("credit_card", creditCard);
+                            paymentMethod.put("execution", "papi");
+                            paymentMethod.put("type", "credit_card");
+                            JSONArray paymentMethods = new JSONArray();
+                            paymentMethods.put(paymentMethod);
+                            payload.put("payment_methods", paymentMethods);
 
-                        JSONObject creditCard = new JSONObject();
-                        creditCard.put("save", false);
-                        creditCard.put("credit_card_id", creditCardPayload.getCreditCardsId());
-                        creditCard.put("card_type", creditCardPayload.getCardType());
-                        creditCard.put("card_number", creditCardPayload.getCardNumber());
-                        creditCard.put("name_on_card", creditCardPayload.getNameOnCard());
-                        creditCard.put("expire_dt", creditCardPayload.getExpireDt());
-                        creditCard.put("cvv", creditCardPayload.getCvv());
-                        creditCard.put("papi_pay", true);
-
-                        JSONObject billingInformation = new JSONObject();
-                        billingInformation.put("same_as_patient", true);
-                        creditCard.put("billing_information", billingInformation);
-
-                        paymentMethod.put("credit_card", creditCard);
-                        paymentMethod.put("type", "credit_card");
-
-                        JSONArray paymentMethods = new JSONArray();
-                        paymentMethods.put(paymentMethod);
-                        payload.put("payment_methods", paymentMethods);
-
-                        PaymentPayloadMetaDataDTO metadata = paymentsModel.getPaymentPayload()
+                            PaymentPayloadMetaDataDTO metadata = paymentsModel.getPaymentPayload()
                                 .getPatientBalances().get(0).getBalances().get(0).getMetadata();
 
                         Map<String, String> queries = new HashMap<>();
