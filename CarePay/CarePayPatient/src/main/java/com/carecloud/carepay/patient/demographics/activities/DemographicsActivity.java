@@ -4,21 +4,24 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
+import com.carecloud.carepay.patient.demographics.fragments.review.CheckinDemographicsFragment;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsAddressFragment;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsAllSetFragment;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsDetailsFragment;
@@ -26,6 +29,7 @@ import com.carecloud.carepay.patient.demographics.fragments.viewpager.Demographi
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.customcomponents.CustomViewPager;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.DemographicMetadataDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
@@ -40,8 +44,10 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsuranc
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
+import com.carecloud.carepaylibray.demographics.scanner.InsuranceDocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.scanner.ProfilePictureFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -56,12 +62,15 @@ import java.util.List;
 public class DemographicsActivity extends BasePatientActivity
         implements DemographicsLabelsHolder,
         DemographicsDocumentsFragmentWthWrapper.DemographicsDocumentsFragmentWthWrapperListener,
-        DemographicsDetailsFragment.DemographicsDetailsFragmentListener{
+        DemographicsDetailsFragment.DemographicsDetailsFragmentListener,
+        DemographicsAddressFragment.DemographicsAddressFragmentListener,
+        CheckinDemographicsFragment.CheckinDemographicsFragmentListener,
+        HealthInsuranceFragment.InsuranceDocumentScannerListener{
 
     private int       currentPageIndex;
     // views
     private TextView  titleTextView;
-    private ViewPager viewPager;
+    private CustomViewPager viewPager;
     private ImageView tabImageView;
     // jsons (payload)
     private DemographicDTO modelGet = null;
@@ -126,13 +135,22 @@ public class DemographicsActivity extends BasePatientActivity
 
         isStoragePermissionGranted();
         setupPager();
-//        createDTOsForTest();
+
+    }
+
+
+    /**
+     * Enable or disable scroll on view pager
+     */
+    @Override
+    public void enableScroll(boolean isScrollEnable) {
+        viewPager.setEnablePaging(isScrollEnable);
     }
 
     private void setupPager() {
         currentPageIndex = 0;
         DemographicPagerAdapter demographicPagerAdapter = new DemographicPagerAdapter(getSupportFragmentManager());
-        viewPager = (ViewPager) findViewById(R.id.demographicsViewPager);
+        viewPager = (CustomViewPager) findViewById(R.id.demographicsViewPager);
         viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(demographicPagerAdapter);
         ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
@@ -156,12 +174,12 @@ public class DemographicsActivity extends BasePatientActivity
         };
         viewPager.addOnPageChangeListener(pageChangeListener);
 
-        viewPager.setOnTouchListener(new View.OnTouchListener() {
+        new Handler().postDelayed(new Runnable() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                return true;
+            public void run() {
+                SystemUtil.hideSoftKeyboard(DemographicsActivity.this);
             }
-        });
+        }, 800);
     }
 
     private void setScreenHeader(int position) {
@@ -331,6 +349,82 @@ public class DemographicsActivity extends BasePatientActivity
         return labelsDTO;
     }
 
+    @Override
+    public void onDemographicDtoChanged(DemographicDTO demographicDTO) {
+
+    }
+
+    @Override
+    public void initializeDocumentFragment() {
+
+    }
+
+    @Override
+    public void initializeInsurancesFragment() {
+        String tag = HealthInsuranceFragment.class.getSimpleName();
+        HealthInsuranceFragment fragment = new HealthInsuranceFragment();
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, modelGet);
+        fragment.setArguments(args);
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.demographicsHealtInsurance, fragment, tag);
+        transaction.commit();
+    }
+
+    private void hideShowComponents(boolean isParent){
+        findViewById(R.id.demographics_toolbar).setVisibility(isParent? View.VISIBLE :View.GONE);
+        findViewById(R.id.demogr_content_holder).setVisibility(isParent? View.VISIBLE :View.GONE);
+        findViewById(R.id.insurance_item_holder).setVisibility(isParent? View.GONE :View.VISIBLE);
+    }
+
+    @Override
+    public void navigateToInsuranceDocumentFragment(int index, DemographicInsurancePayloadDTO model) {
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, modelGet.getMetadata().getLabels());
+        DtoHelper.bundleDto(args, modelGet.getMetadata().getDataModels().demographic.insurances.properties.items.insurance);
+        DtoHelper.bundleDto(args, model);
+        DtoHelper.bundleDto(args, index);
+        InsuranceDocumentScannerFragment fragment = new InsuranceDocumentScannerFragment();
+        fragment.setArguments(args);
+
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.replace(R.id.insurance_item_holder, fragment, fragment.getClass().getSimpleName());
+        transaction.commit();
+        hideShowComponents(false);
+    }
+
+    @Override
+    public void navigateToParentFragment() {
+        hideShowComponents(true);
+        //setCurrentItem(2, true);
+        /*CheckinDemographicsFragment fragment = new CheckinDemographicsFragment();
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, modelGet);
+        fragment.setArguments(args);
+
+        navigateToFragment(fragment, false);
+        Log.v(NewReviewDemographicsActivity.class.getSimpleName(), "NewReviewDemographicsActivity");*/
+    }
+
+    @Override
+    public void updateInsuranceDTO(int index, DemographicInsurancePayloadDTO model) {
+        if (index>=0){
+            insuranceModelList.set(index, model);
+        } else {
+            insuranceModelList.add(model);
+        }
+        if(modelGet.getPayload().getDemographics() ==null){
+            modelGet.getPayload().setDemographics(new DemographicPayloadInfoDTO());
+            modelGet.getPayload().getDemographics().setPayload(new DemographicPayloadDTO());
+            modelGet.getPayload().getDemographics().getPayload().setInsurances(insuranceModelList);
+        }
+
+        initializeInsurancesFragment();
+    }
+
+
     /**
      * Adapter for the viewpager
      */
@@ -368,7 +462,6 @@ public class DemographicsActivity extends BasePatientActivity
                 case 2:
                     DemographicsDocumentsFragmentWthWrapper demographicsDocumentsFragment = new DemographicsDocumentsFragmentWthWrapper();
                     demographicsDocumentsFragment.setIdDocsMetaDTO(idDocsMetaDTO);
-                    demographicsDocumentsFragment.setInsurancesMetaDTO(insurancesMetaDTO);
                     return demographicsDocumentsFragment;
                 case 3:
                     return new DemographicsAllSetFragment();

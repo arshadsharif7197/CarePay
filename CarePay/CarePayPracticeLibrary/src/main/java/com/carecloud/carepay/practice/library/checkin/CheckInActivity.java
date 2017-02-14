@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.DragEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
@@ -20,6 +21,7 @@ import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInLabelDTO;
+import com.carecloud.carepay.practice.library.checkin.dtos.PendingBalanceDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -76,7 +78,6 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         super.onCreate(savedInstanceState);
 
         checkInDTO = getConvertedDTO(CheckInDTO.class);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_check_in);
         patientFiltered=false;
@@ -127,6 +128,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
             waitingRoomTextView.setText(checkInLabelDTO.getPracticeCheckinWaitingRoom().toUpperCase());
             checkingInCounterTextview.setText("0");
             waitingCounterTextview.setText("0");
+            ((TextView) findViewById(R.id.drop_here_icon)).setText(checkInLabelDTO.getPracticeCheckinDropHereLabel());
         }
     }
 
@@ -209,10 +211,12 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         checkingInCounterTextview.setText(String.valueOf(checkingInAppointments.size()));
         waitingCounterTextview.setText(String.valueOf(waitingRoomAppointments.size()));
 
-        checkedInAdapter = new CheckedInAppointmentAdapter(CheckInActivity.this, checkingInAppointments, false);
+        checkedInAdapter = new CheckedInAppointmentAdapter(CheckInActivity.this, checkingInAppointments,
+                checkInDTO.getPayload().getPatientBalances(), false);
         checkinginRecyclerView.setAdapter(checkedInAdapter);
 
-        waitingRoomAdapter = new CheckedInAppointmentAdapter(CheckInActivity.this, waitingRoomAppointments, true);
+        waitingRoomAdapter = new CheckedInAppointmentAdapter(CheckInActivity.this, waitingRoomAppointments,
+                checkInDTO.getPayload().getPatientBalances(), true);
         waitingRoomRecyclerView.setAdapter(waitingRoomAdapter);
     }
 
@@ -222,16 +226,16 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
 
         CheckInLabelDTO checkInLabelDTO = checkInDTO.getMetadata().getLabel();
 
-        filterableDoctorLocationList.add(new FilterDataDTO(checkInLabelDTO.getPracticeCheckinFilterDoctors(), FilterDataDTO.FilterDataType.HEADER));
+        filterableDoctorLocationList.add(new FilterDataDTO(checkInLabelDTO.getPracticeCheckinFilterDoctors()));
         filterableDoctorLocationList.addAll(doctorsList);
-        filterableDoctorLocationList.add(new FilterDataDTO(checkInLabelDTO.getPracticeCheckinFilterLocations(), FilterDataDTO.FilterDataType.HEADER));
+        filterableDoctorLocationList.add(new FilterDataDTO(checkInLabelDTO.getPracticeCheckinFilterLocations()));
         filterableDoctorLocationList.addAll(locationsList);
     }
 
     private void addLocationOnFilterList(ArrayList<FilterDataDTO> locationsList, AppointmentPayloadDTO appointmentPayloadDTO) {
         FilterDataDTO filterDataDTO;
         LocationDTO locationDTO = appointmentPayloadDTO.getLocation();
-        filterDataDTO = new FilterDataDTO(locationDTO.getName(), FilterDataDTO.FilterDataType.LOCATION);
+        filterDataDTO = new FilterDataDTO(locationDTO.getId(), locationDTO.getName(), FilterDataDTO.FilterDataType.LOCATION);
         if (locationsList.indexOf(filterDataDTO) < 0) {
             //filterDataDTO.setFilterId(locationDTO.getId());
             filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
@@ -246,7 +250,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         FilterDataDTO filterDataDTO;
         PatientDTO patientDTO = appointmentPayloadDTO.getPatient();
 
-        filterDataDTO = new FilterDataDTO(patientDTO.getFullName(), FilterDataDTO.FilterDataType.PATIENT);
+        filterDataDTO = new FilterDataDTO(patientDTO.getId(), patientDTO.getFullName(), FilterDataDTO.FilterDataType.PATIENT);
         if (patientsList.indexOf(filterDataDTO) < 0) {
             //filterDataDTO.setFilterId(patientDTO.getId());
             filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
@@ -260,7 +264,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
     private void addProviderOnProviderFilterList(ArrayList<FilterDataDTO> doctorsList, AppointmentPayloadDTO appointmentPayloadDTO) {
         FilterDataDTO filterDataDTO;// For filtering
         ProviderDTO providerDTO = appointmentPayloadDTO.getProvider();
-        filterDataDTO = new FilterDataDTO(providerDTO.getName(), FilterDataDTO.FilterDataType.PROVIDER);
+        filterDataDTO = new FilterDataDTO(providerDTO.getId(), providerDTO.getName(), FilterDataDTO.FilterDataType.PROVIDER);
         if (doctorsList.indexOf(filterDataDTO) < 0) {
             //filterDataDTO.setFilterId(providerDTO.getId());
             filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
@@ -278,6 +282,11 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
                 //signal for the start of a drag and drop operation.
                 case DragEvent.ACTION_DRAG_STARTED:
                     // do nothing
+                    AppointmentPayloadDTO draggedAppointment = getAppintmentById(
+                            dragEvent.getClipDescription().getLabel().toString(), waitingRoomAppointments);
+                    if (draggedAppointment == null) {
+                        findViewById(R.id.drop_down_area_view).setVisibility(View.VISIBLE);
+                    }
                     break;
                 //the drag point has entered the bounding box of the View
                 case DragEvent.ACTION_DRAG_ENTERED:
@@ -301,6 +310,8 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
                         checkedInAdapter.notifyDataSetChanged();
                         checkingInCounterTextview.setText(String.valueOf(checkingInAppointments.size()));
                         waitingCounterTextview.setText(String.valueOf(waitingRoomAppointments.size()));
+                    } else {
+                        findViewById(R.id.drop_down_area_view).setVisibility(View.GONE);
                     }
                     break;
                 //the drag and drop operation has concluded.
@@ -345,6 +356,9 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
                         checkingInCounterTextview.setText(String.valueOf(checkingInAppointments.size()));
                         waitingCounterTextview.setText(String.valueOf(waitingRoomAppointments.size()));
 
+                        CheckInLabelDTO checkInLabelDTO = checkInDTO.getMetadata().getLabel();
+                        ((TextView) findViewById(R.id.drop_here_icon)).setText(checkInLabelDTO.getPracticeCheckinSuccessLabel());
+                        ((TextView) findViewById(R.id.drop_here_icon)).setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icn_check, 0, 0);
                         onCheckInAppointment(appointmentDTO);
                     }
                     break;
@@ -379,6 +393,12 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(getContext()).dismiss();
+            findViewById(R.id.drop_down_area_view).setVisibility(View.GONE);
+
+            // Reset to original state
+            CheckInLabelDTO checkInLabelDTO = checkInDTO.getMetadata().getLabel();
+            ((TextView) findViewById(R.id.drop_here_icon)).setText(checkInLabelDTO.getPracticeCheckinDropHereLabel());
+            ((TextView) findViewById(R.id.drop_here_icon)).setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icn_drop_here, 0, 0);
         }
 
         @Override
@@ -460,13 +480,14 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         return null;
     }
 
-    private AppointmentDTO getPatientBalanceDTOs(String patientId) {
-        List<AppointmentDTO>allApps =  checkInDTO.getPayload().getAppointments();
-        for (AppointmentDTO ap:allApps)
-              {
-                  if(ap.getPayload().getPatient().getId().equalsIgnoreCase(patientId)){
-                      return ap;
-                  }
+    private PendingBalanceDTO getPatientBalanceDTOs(String patientId) {
+        List<PatientBalanceDTO> patientBalances = checkInDTO.getPayload().getPatientBalances();
+
+        for (PatientBalanceDTO patientBalanceDTO: patientBalances) {
+            PendingBalanceDTO pendingBalanceDTO = patientBalanceDTO.getPendingBalances().get(0);
+            if (pendingBalanceDTO.getMetadata().getPatientId().equals(patientId)) {
+                return pendingBalanceDTO;
+            }
         }
         return null;
     }
@@ -476,10 +497,10 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
      *
      * @param appointmentPayloadDTO the appointment payload dto
      */
-    public void onCheckInItemClick(AppointmentPayloadDTO appointmentPayloadDTO, boolean isWaitingroom) {
+    public void onCheckInItemClick(AppointmentPayloadDTO appointmentPayloadDTO, boolean isWaitingRoom) {
         AppointmentDetailDialog dialog = new AppointmentDetailDialog(context,
                 checkInDTO, getPatientBalanceDTOs(appointmentPayloadDTO.getPatient().getId()),
-                appointmentPayloadDTO, isWaitingroom);
+                appointmentPayloadDTO, isWaitingRoom);
         dialog.show();
     }
 

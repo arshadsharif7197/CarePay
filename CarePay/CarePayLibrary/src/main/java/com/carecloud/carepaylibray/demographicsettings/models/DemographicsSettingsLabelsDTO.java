@@ -228,6 +228,21 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     @SerializedName("edit_credit_card_default_label")
     @Expose
     private String editCreditCardDefaultLabel;
+    @SerializedName("settings_password_help_text")
+    @Expose
+    private String passwordHelpLabel;
+    @SerializedName("settings_saved_success_message")
+    @Expose
+    private String settingsSavedSuccessMessage;
+
+    public String getSettingsSavedSuccessMessage() {
+        return StringUtil.getLabelForView(settingsSavedSuccessMessage);
+    }
+
+    public void setSettingsSavedSuccessMessage(String settingsSavedSuccessMessage) {
+        this.settingsSavedSuccessMessage = settingsSavedSuccessMessage;
+    }
+
 
     /**
      * @return systemNotificationsHeading
@@ -1353,4 +1368,21 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     public void setEditCreditCardDefaultLabel(String editCreditCardDefaultLabel) {
         this.editCreditCardDefaultLabel = editCreditCardDefaultLabel;
     }
+
+    /**
+     *
+     * @return passwordHelpLabel
+     */
+    public String getPasswordHelpLabel() {
+        return StringUtil.getLabelForView(passwordHelpLabel);
+    }
+
+    /**
+     *
+     * @param passwordHelpLabel the passwordHelpLabel
+     */
+    public void setPasswordHelpLabel(String passwordHelpLabel) {
+        this.passwordHelpLabel = passwordHelpLabel;
+    }
+
 }

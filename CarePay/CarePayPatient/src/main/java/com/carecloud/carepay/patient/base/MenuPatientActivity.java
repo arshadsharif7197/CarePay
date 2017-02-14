@@ -1,6 +1,5 @@
 package com.carecloud.carepay.patient.base;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,7 +11,6 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
@@ -123,10 +121,20 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
             }
         } else if (id == com.carecloud.carepaylibrary.R.id.nav_purchase) {
             Log.v(LOG_TAG, "Purchase");
-            navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_PURCHASE).setChecked(true);
+            Map<String, String> queryString = new HashMap<>();
+            queryString.put("practice_id", practiceId == null ? "" : practiceId);
+            queryString.put("practice_mgmt", practiceMgmt == null ? "" : practiceMgmt);
+            queryString.put("patient_id", patientId == null ? "" : patientId);
+            WorkflowServiceHelper.getInstance().execute(transitionAppointments, purchaseWorkflowCallback, queryString);
+
         } else if (id == com.carecloud.carepaylibrary.R.id.nav_notification) {
             Log.v(LOG_TAG, "Notification");
-            navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_NOTIFICATION).setChecked(true);
+            //Temporary link to landing Activity for blank purchase screen
+            Map<String, String> queryString = new HashMap<>();
+            queryString.put("practice_id", practiceId == null ? "" : practiceId);
+            queryString.put("practice_mgmt", practiceMgmt == null ? "" : practiceMgmt);
+            queryString.put("patient_id", patientId == null ? "" : patientId);
+            WorkflowServiceHelper.getInstance().execute(transitionAppointments, notificationsWorkflowCallback, queryString);
         }
 
         //DrawerLayout drawer = (DrawerLayout) findViewById(com.carecloud.carepaylibrary.R.id.drawer_layout);
@@ -163,13 +171,18 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+
             ProgressDialogUtil.getInstance(getContext()).dismiss();
+
             PatientNavigationHelper.getInstance(MenuPatientActivity.this).navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            SystemUtil.showDefaultFailureDialog(MenuPatientActivity.this);
+
             ProgressDialogUtil.getInstance(getContext()).dismiss();
+
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -193,6 +206,50 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+    private WorkflowServiceCallback purchaseWorkflowCallback = new WorkflowServiceCallback() {//TODO this is currently pointed at appointments endpoint
+        @Override
+        public void onPreExecute() {
+            ProgressDialogUtil.getInstance(getContext()).show();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            //need to manually redirect this response to the notifications screen temporarily
+            workflowDTO.setState(PatientNavigationStateConstants.PURCHASE);
+            PatientNavigationHelper.getInstance(MenuPatientActivity.this).navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            SystemUtil.showDefaultFailureDialog(MenuPatientActivity.this);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+    private WorkflowServiceCallback notificationsWorkflowCallback = new WorkflowServiceCallback() {//TODO this is currently pointed at appointments endpoint
+        @Override
+        public void onPreExecute() {
+            ProgressDialogUtil.getInstance(getContext()).show();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            //need to manually redirect this response to the notifications screen temporarily
+            workflowDTO.setState(PatientNavigationStateConstants.NOTIFICATION);
+            PatientNavigationHelper.getInstance(MenuPatientActivity.this).navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            SystemUtil.showDefaultFailureDialog(MenuPatientActivity.this);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
 
     public static void setTransitionBalance(TransitionDTO transitionBalance) {
         MenuPatientActivity.transitionBalance = transitionBalance;

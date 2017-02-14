@@ -316,7 +316,7 @@ public class BaseAddCreditCardFragment extends Fragment implements RequestTask.A
         cityEditText.setTag(cityTextInput);
 
         stateTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.stateTextInputLayout);
-        stateAutoCompleteTextView = (AutoCompleteTextView) view.findViewById(R.id.stateAutoCompleteTextView);
+        stateAutoCompleteTextView = (AutoCompleteTextView) view.findViewById(R.id.addNewCredidCardStateAutoCompleteTextView);
         stateAutoCompleteTextView.setTag(stateTextInput);
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
                 R.layout.autocomplete_state_item,

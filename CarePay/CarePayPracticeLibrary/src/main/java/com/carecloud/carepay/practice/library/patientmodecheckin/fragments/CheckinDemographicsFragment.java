@@ -1051,30 +1051,6 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
         ((PatientModeCheckinActivity) getActivity()).toggleVisibleBackButton(true);
     }
 
-    public DemographicMetadataEntityIdDocsDTO getIdDocsMetaDTO() {
-        return idDocsMetaDTO;
-    }
-
-    public void setIdDocsMetaDTO(DemographicMetadataEntityIdDocsDTO idDocsMetaDTO) {
-        this.idDocsMetaDTO = idDocsMetaDTO;
-    }
-
-    public DemographicMetadataEntityPersDetailsDTO getPersDetailsMetaDTO() {
-        return persDetailsMetaDTO;
-    }
-
-    public void setPersDetailsMetaDTO(DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO) {
-        this.persDetailsMetaDTO = persDetailsMetaDTO;
-    }
-
-    public DemographicMetadataEntityAddressDTO getAddressMetaDTO() {
-        return addressMetaDTO;
-    }
-
-    public void setAddressMetaDTO(DemographicMetadataEntityAddressDTO addressMetaDTO) {
-        this.addressMetaDTO = addressMetaDTO;
-    }
-
     private void setTypefaces(View view) {
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(),
                 (TextView) view.findViewById(R.id.detailsReviewHeading));

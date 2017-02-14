@@ -188,7 +188,7 @@ public class ScanDocDialog extends BasePracticeDialog implements  CarePayCameraC
 
     private void onClearButtonTextColor(){
         if(scanClearImageButton.isEnabled()){
-            scanClearImageButton.setTextColor(ContextCompat.getColor(context, R.color.bright_cerulean));
+            scanClearImageButton.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
         }else{
             scanClearImageButton.setTextColor(ContextCompat.getColor(context, R.color.white));
         }

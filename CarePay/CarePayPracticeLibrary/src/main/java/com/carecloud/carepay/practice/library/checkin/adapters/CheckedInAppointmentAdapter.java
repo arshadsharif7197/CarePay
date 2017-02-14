@@ -9,13 +9,15 @@ import android.view.ViewGroup;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.checkin.CheckInActivity;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
+import com.carecloud.carepay.practice.library.checkin.dtos.PatientBalanceDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.PatientDTO;
+import com.carecloud.carepay.practice.library.checkin.dtos.PendingBalanceDTO;
 import com.carecloud.carepay.practice.library.customcomponent.AppointmentStatusCardView;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -26,7 +28,8 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
 
     private Context context;
     private ArrayList<AppointmentPayloadDTO> appointmentArrayList;
-    private boolean isWaitingroom;
+    private List<PatientBalanceDTO> patientBalances;
+    private boolean isWaitingRoom;
 
     /**
      * Constructor.
@@ -34,11 +37,13 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
      * @param context context
      * @param data    list of appointments
      */
-    public CheckedInAppointmentAdapter(Context context, ArrayList<AppointmentPayloadDTO> data, boolean isWaitingroom) {
+    public CheckedInAppointmentAdapter(Context context, ArrayList<AppointmentPayloadDTO> data,
+                                       List<PatientBalanceDTO> patientBalances, boolean isWaitingRoom) {
+
         this.context = context;
-        appointmentArrayList = data;
-        this.isWaitingroom = isWaitingroom;
-        System.out.println("size: " + data.size());
+        this.appointmentArrayList = data;
+        this.patientBalances = patientBalances;
+        this.isWaitingRoom = isWaitingRoom;
     }
 
     private AppointmentPayloadDTO getAppointmentById(String id) {
@@ -69,7 +74,8 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
         PatientDTO patientModel = appointmentItem.getPatient();
         holder.appointmentStatusCartView.setPatientName(patientModel.getFirstName() + " " + patientModel.getLastName());
         holder.appointmentStatusCartView.setAppointmentId(appointmentItem.getId());
-        //holder.appointmentStatusCartView.setAmount(patientModel.getTotalBalance());
+
+        holder.appointmentStatusCartView.setAmount(getTotalBalance(position));
         //holder.appointmentStatusCartView.setPatientImage(patientModel.getPhoto());
         holder.appointmentStatusCartView.setProviderName(appointmentItem.getProvider().getName());
         holder.appointmentStatusCartView.setAppointmentTime(DateUtil.getInstance().setDateRaw(appointmentItem.getStartTime()).getDate().getTime());
@@ -79,6 +85,19 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
                 new CircleImageTransform()).resize(160, 160).into(holder.patientPicImageView);
         holder.paymentTextview.setTag(patientModel);
         Log.d("PatientPhoto", patientModel.getPhoto());*/
+    }
+
+    private double getTotalBalance(int position) {
+        AppointmentPayloadDTO appointmentItem = appointmentArrayList.get(position);
+        String id = appointmentItem.getPatient().getId();
+
+        for (PatientBalanceDTO patientBalanceDTO: patientBalances) {
+            PendingBalanceDTO pendingBalanceDTO = patientBalanceDTO.getPendingBalances().get(0);
+            if (pendingBalanceDTO.getMetadata().getPatientId().equals(id)) {
+                return pendingBalanceDTO.getPayload().get(0).getAmount();
+            }
+        }
+        return 0;
     }
 
     @Override
@@ -128,7 +147,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
 
         @Override
         public void onClick(View view) {
-            ((CheckInActivity)context).onCheckInItemClick((AppointmentPayloadDTO)view.getTag(), isWaitingroom);
+            ((CheckInActivity)context).onCheckInItemClick((AppointmentPayloadDTO)view.getTag(), isWaitingRoom);
         }
 
         /*@Override

@@ -28,6 +28,13 @@ public class DemographicsSettingsTransitionsDTO {
     @SerializedName("update_credit_card")
     @Expose
     private TransitionDTO updateCreditCard;
+    @SerializedName("change_login_email")
+    @Expose
+    private TransitionDTO changeLoginEmail;
+    @SerializedName("change_password")
+    @Expose
+    private TransitionDTO changePassword;
+
 
     public DemographicsSettingsUpdateProfileDTO getUpdateProfile() {
         return demographicsSettingsUpdateProfileDTO;
@@ -84,4 +91,21 @@ public class DemographicsSettingsTransitionsDTO {
     public void setUpdateCreditCard(TransitionDTO updateCreditCard) {
         this.updateCreditCard = updateCreditCard;
     }
+
+    public TransitionDTO getChangeLoginEmail() {
+        return changeLoginEmail;
+    }
+
+    public void setChangeLoginEmail(TransitionDTO changeLoginEmail) {
+        this.changeLoginEmail = changeLoginEmail;
+    }
+
+    public TransitionDTO getChangePassword() {
+        return changePassword;
+    }
+
+    public void setChangePassword(TransitionDTO changePassword) {
+        this.changePassword = changePassword;
+    }
+
 }

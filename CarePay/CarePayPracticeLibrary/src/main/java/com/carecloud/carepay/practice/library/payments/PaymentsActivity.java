@@ -1,22 +1,20 @@
 package com.carecloud.carepay.practice.library.payments;
 
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
-import com.carecloud.carepay.practice.library.checkin.filters.CustomFilterPopupWindow;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
-import com.carecloud.carepay.practice.library.payments.adapter.PracticePaymentsAdapter;
+import com.carecloud.carepay.practice.library.customcomponent.TwoColumnPatientListView;
+import com.carecloud.carepay.practice.library.customdialog.FilterDialog;
+import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityDialog;
-import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.LocationDTO;
+import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
@@ -25,25 +23,28 @@ import com.carecloud.carepaylibray.payments.models.ProviderDTO;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
-public class PaymentsActivity extends BasePracticeActivity implements CustomFilterPopupWindow.FilterCallBack {
+public class PaymentsActivity extends BasePracticeActivity implements FilterDialog.FilterCallBack {
 
     private PaymentsModel paymentsModel;
-    private List<PaymentsPatientBalancessDTO> patientBalancesList;
+    private FilterModel filter;
 
-    private boolean isFilterOn;
-    private ArrayList<FilterDataDTO> patientList;
-    private ArrayList<FilterDataDTO> searchedPatientList = new ArrayList<>();
-    private ArrayList<FilterDataDTO> filterableDoctorLocationList = new ArrayList<>();
+    private ArrayList<FilterDataDTO> patients;
+    private ArrayList<FilterDataDTO> locations = new ArrayList<>();
+    private ArrayList<FilterDataDTO> doctors = new ArrayList<>();
+
+    private String practiceCheckinFilterDoctorsLabel;
+    private String practiceCheckinFilterLocationsLabel;
+    private String practicePaymentsFilter;
+    private String practicePaymentsFilterFindPatientByName;
+    private String practicePaymentsFilterClearFilters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_practice_payment);
@@ -58,11 +59,18 @@ public class PaymentsActivity extends BasePracticeActivity implements CustomFilt
         if (paymentsModel != null) {
             PaymentsLabelDTO paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
             if (paymentsLabel != null) {
-                ((CarePayTextView) findViewById(R.id.practice_payment_title)).setText(paymentsLabel.getPracticePaymentsHeader());
-                ((CarePayTextView) findViewById(R.id.practice_payment_go_back)).setText(paymentsLabel.getPracticePaymentsBackLabel());
-                ((CarePayTextView) findViewById(R.id.practice_payment_find_patient)).setText(paymentsLabel.getPracticePaymentsFindPatientLabel());
-                ((CarePayTextView) findViewById(R.id.practice_payment_filter_label)).setText(paymentsLabel.getPracticePaymentsFilter());
-                ((CarePayTextView) findViewById(R.id.practice_payment_in_office_label)).setText(paymentsLabel.getPracticePaymentsInOffice());
+
+                setViewTextById(R.id.practice_payment_title, paymentsLabel.getPracticePaymentsHeader());
+                setViewTextById(R.id.practice_payment_go_back, paymentsLabel.getPracticePaymentsBackLabel());
+                setViewTextById(R.id.practice_payment_find_patient, paymentsLabel.getPracticePaymentsFindPatientLabel());
+                setViewTextById(R.id.practice_payment_filter_label, paymentsLabel.getPracticePaymentsFilter());
+                setViewTextById(R.id.practice_payment_in_office_label, paymentsLabel.getPracticePaymentsInOffice());
+
+                practiceCheckinFilterDoctorsLabel = paymentsLabel.getPracticePaymentsFilterDoctors();
+                practiceCheckinFilterLocationsLabel = paymentsLabel.getPracticePaymentsFilterLocations();
+                practicePaymentsFilter = paymentsLabel.getPracticePaymentsFilter();
+                practicePaymentsFilterFindPatientByName = paymentsLabel.getPracticePaymentsFilterFindPatientByName();
+                practicePaymentsFilterClearFilters = paymentsLabel.getPracticePaymentsFilterClearFilters();
             }
         }
     }
@@ -71,21 +79,18 @@ public class PaymentsActivity extends BasePracticeActivity implements CustomFilt
         if (paymentsModel != null && paymentsModel.getPaymentPayload().getPatientBalances() != null
                 && paymentsModel.getPaymentPayload().getPatientBalances().size() > 0) {
 
-            patientList = new ArrayList<>();
-            ArrayList<FilterDataDTO> doctorsList = new ArrayList<>();
-            ArrayList<FilterDataDTO> locationsList = new ArrayList<>();
+            List<PaymentsPatientBalancessDTO> patientBalancesList = paymentsModel.getPaymentPayload().getPatientBalances();
 
-            patientBalancesList = paymentsModel.getPaymentPayload().getPatientBalances();
+            addProviderOnProviderFilterList(paymentsModel);
+            addLocationOnFilterList(paymentsModel);
+            addPatientOnFilterList(patientBalancesList);
 
-            addProviderOnProviderFilterList(doctorsList, paymentsModel);
-            addLocationOnFilterList(locationsList, paymentsModel);
-            addPatientOnFilterList(patientList, patientBalancesList);
+            applyFilterSortByName(doctors);
+            applyFilterSortByName(locations);
+            initializePatientListView();
 
-            setFilterableData(doctorsList, locationsList);
-            setAdapter();
-
-            ((CarePayTextView) findViewById(R.id.practice_payment_in_office_count))
-                    .setText(String.format(Locale.getDefault(), "%1s", patientBalancesList.size()));
+            setViewTextById(R.id.practice_payment_in_office_count,
+                    String.format(Locale.getDefault(), "%1s", patientBalancesList.size()));
         }
 
         findViewById(R.id.practice_payment_filter_label).setOnClickListener(onFilterIconClick());
@@ -97,81 +102,65 @@ public class PaymentsActivity extends BasePracticeActivity implements CustomFilt
         });
     }
 
-    private void setAdapter() {
-        RecyclerView inOfficeList = (RecyclerView) findViewById(R.id.practice_payment_in_office_list);
-        inOfficeList.setHasFixedSize(true);
-        inOfficeList.setLayoutManager(new GridLayoutManager(this, 2));
+    private void initializePatientListView() {
+        TwoColumnPatientListView patientListView = (TwoColumnPatientListView) findViewById(R.id.list_patients);
+        patientListView.setPaymentsModel(paymentsModel);
+        patientListView.setCallback(new TwoColumnPatientListView.TwoColumnPatientListViewListener() {
+            @Override
+            public void onPatientTapped(Object dto) {
+                PaymentsPatientBalancessDTO paymentsPatientBalancessDTO = (PaymentsPatientBalancessDTO) dto;
 
-        PracticePaymentsAdapter paymentsAdapter = new PracticePaymentsAdapter(this, paymentsModel);
-        inOfficeList.setAdapter(paymentsAdapter);
+                ResponsibilityDialog responsibilityDialog = new ResponsibilityDialog(getContext(), paymentsModel, paymentsPatientBalancessDTO);
+                responsibilityDialog.show();
+            }
+        });
     }
 
-    private void setFilterableData(ArrayList<FilterDataDTO> doctorsList, ArrayList<FilterDataDTO> locationsList) {
-        applyFilterSortByName(doctorsList);
-        applyFilterSortByName(locationsList);
-
-        PaymentsLabelDTO paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
-        filterableDoctorLocationList.add(new FilterDataDTO(paymentsLabel.getPracticePaymentsFilterDoctors(),
-                FilterDataDTO.FilterDataType.HEADER));
-        filterableDoctorLocationList.addAll(doctorsList);
-
-        filterableDoctorLocationList.add(new FilterDataDTO(paymentsLabel.getPracticePaymentsFilterLocations(),
-                FilterDataDTO.FilterDataType.HEADER));
-        filterableDoctorLocationList.addAll(locationsList);
-    }
-
-    private void addProviderOnProviderFilterList(ArrayList<FilterDataDTO> doctorsList, PaymentsModel paymentsModel) {
-        FilterDataDTO filterDataDTO;
+    private void addProviderOnProviderFilterList(PaymentsModel paymentsModel) {
+        doctors = new ArrayList<>();
         List<ProviderDTO> providers = paymentsModel.getPaymentPayload().getProviders();
         for (ProviderDTO provider : providers) {
-            filterDataDTO = new FilterDataDTO(provider.getName(), FilterDataDTO.FilterDataType.PROVIDER);
-            if (doctorsList.indexOf(filterDataDTO) < 0) {
-//                filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
-                doctorsList.add(filterDataDTO);
-            } else {
-//                filterDataDTO = doctorsList.get(doctorsList.indexOf(filterDataDTO));
-//                filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
+            FilterDataDTO filterDataDTO = new FilterDataDTO(provider.getId(), provider.getName(), FilterDataDTO.FilterDataType.PROVIDER);
+            if (doctors.indexOf(filterDataDTO) < 0) {
+                doctors.add(filterDataDTO);
             }
         }
     }
 
-    private void addLocationOnFilterList(ArrayList<FilterDataDTO> locationsList, PaymentsModel paymentsModel) {
-        FilterDataDTO filterDataDTO;
+    private void addLocationOnFilterList(PaymentsModel paymentsModel) {
+        this.locations = new ArrayList<>();
         List<LocationDTO> locations = paymentsModel.getPaymentPayload().getLocations();
         for (LocationDTO location : locations) {
-            filterDataDTO = new FilterDataDTO(location.getName(), FilterDataDTO.FilterDataType.LOCATION);
-            if (locationsList.indexOf(filterDataDTO) < 0) {
-//                filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
-                locationsList.add(filterDataDTO);
-            } else {
-//                filterDataDTO = locationsList.get(locationsList.indexOf(filterDataDTO));
-//                filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
+            FilterDataDTO filterDataDTO = new FilterDataDTO(location.getId(), location.getName(), FilterDataDTO.FilterDataType.LOCATION);
+            if (this.locations.indexOf(filterDataDTO) < 0) {
+                this.locations.add(filterDataDTO);
             }
         }
     }
 
-    private void addPatientOnFilterList(ArrayList<FilterDataDTO> patientsList, List<PaymentsPatientBalancessDTO> patientBalancesList) {
-        FilterDataDTO filterDataDTO;
-        for (PaymentsPatientBalancessDTO patientBalances : patientBalancesList) {
+    private void addPatientOnFilterList(List<PaymentsPatientBalancessDTO> balances) {
+        patients = new ArrayList<>();
+        for (PaymentsPatientBalancessDTO patientBalances : balances) {
 
             DemographicsSettingsPersonalDetailsPayloadDTO personalDetails
                     = patientBalances.getDemographics().getPayload().getPersonalDetails();
             String fullName = personalDetails.getFirstName() + " " + personalDetails.getLastName();
-            filterDataDTO = new FilterDataDTO(fullName, FilterDataDTO.FilterDataType.PATIENT);
+            String patientId = getPatientId(patientBalances);
+            FilterDataDTO filterDataDTO = new FilterDataDTO(patientId, fullName, FilterDataDTO.FilterDataType.PATIENT);
 
-            if (patientsList.indexOf(filterDataDTO) < 0) {
-//                filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
-                patientsList.add(filterDataDTO);
-            } else {
-//                filterDataDTO = patientsList.get(patientsList.indexOf(filterDataDTO));
-//                filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
+            if (patients.indexOf(filterDataDTO) < 0) {
+                patients.add(filterDataDTO);
             }
         }
     }
 
-    public void onPatientItemClick(int selectedIndex) {
-        ResponsibilityDialog responsibilityDialog = new ResponsibilityDialog(this, paymentsModel, selectedIndex);
-        responsibilityDialog.show();
+    private String getPatientId(PaymentsPatientBalancessDTO patientBalances) {
+        List<PatienceBalanceDTO> balances = patientBalances.getBalances();
+        if (balances.isEmpty()) {
+            return null;
+        }
+
+        return balances.get(0).getMetadata().getPatientId();
     }
 
     private void applyFilterSortByName(ArrayList<FilterDataDTO> filterableList) {
@@ -189,31 +178,21 @@ public class PaymentsActivity extends BasePracticeActivity implements CustomFilt
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CustomFilterPopupWindow customFilterPopupWindow
-                        = new CustomFilterPopupWindow(PaymentsActivity.this,
-                        findViewById(R.id.activity_practice_payment), filterableDoctorLocationList,
-                        patientList, searchedPatientList);
+                filter = new FilterModel(doctors, locations, patients,
+                        practiceCheckinFilterDoctorsLabel, practiceCheckinFilterLocationsLabel,
+                        practicePaymentsFilter, practicePaymentsFilterFindPatientByName,
+                        practicePaymentsFilterClearFilters);
+                FilterDialog filterDialog = new FilterDialog(PaymentsActivity.this,
+                        findViewById(R.id.activity_practice_payment), filter);
 
-                PaymentsLabelDTO paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
-                if (paymentsLabel != null) {
-                    customFilterPopupWindow.setTitle(paymentsLabel.getPracticePaymentsFilter());
-                    customFilterPopupWindow.setSearchHint(paymentsLabel.getPracticePaymentsFilterFindPatientByName());
-                    customFilterPopupWindow.setClearFiltersButtonText(paymentsLabel.getPracticePaymentsFilterClearFilters());
-                }
-                customFilterPopupWindow.showPopWindow();
-                customFilterPopupWindow.showClearFilterButton(isFilterOn);
+                filterDialog.showPopWindow();
             }
         };
     }
 
     @Override
-    public void applyFilter(HashSet<String> patientBalances) {
-        if (patientBalances.size() == patientBalancesList.size()) {
-            isFilterOn = false;
-        } else {
-            isFilterOn = true;
-        }
-
-        setAdapter();
+    public void applyFilter() {
+        TwoColumnPatientListView patientListView = (TwoColumnPatientListView) findViewById(R.id.list_patients);
+        patientListView.applyFilter(filter);
     }
 }

@@ -296,6 +296,23 @@ public class DemographicLabelsDTO {
     @Expose
     private String demographicsInsuranceClear;
 
+    @SerializedName("demographics_insurance_setup")
+    @Expose
+    private String demographicsInsuranceSetup;
+
+    @SerializedName("demographics_insurance_setup_health_insurance")
+    @Expose
+    private String demographicsInsuranceSetupHealthInsurance;
+
+    @SerializedName("practice_checin_edit_clickable_label")
+    @Expose
+    private String practiceCheckinEditClickableLabel;
+
+    @SerializedName("practice_checkin_demogr_ins_add_another")
+    @Expose
+    private String practiceCheckinDemogrInsAddAnother;
+
+
     /**
      * @return The demographicsUpdateButton
      */
@@ -1060,4 +1077,38 @@ public class DemographicLabelsDTO {
     public void setDemographicsDriversLicenseAddStateLabel(String demographicsDriversLicenseAddStateLabel) {
         this.demographicsDriversLicenseAddStateLabel = demographicsDriversLicenseAddStateLabel;
     }
+
+    public String getDemographicsInsuranceSetupHealthInsurance() {
+        return StringUtil.getLabelForView(demographicsInsuranceSetupHealthInsurance);
+    }
+
+    public void setDemographicsInsuranceSetupHealthInsurance(String demographicsInsuranceSetupHealthInsurance) {
+        this.demographicsInsuranceSetupHealthInsurance = demographicsInsuranceSetupHealthInsurance;
+    }
+
+    public String getDemographicsInsuranceSetup() {
+        return StringUtil.getLabelForView(demographicsInsuranceSetup);
+    }
+
+    public void setDemographicsInsuranceSetup(String demographicsInsuranceSetup) {
+        this.demographicsInsuranceSetup = demographicsInsuranceSetup;
+    }
+
+    public String getPracticeCheckinEditClickableLabel() {
+        return StringUtil.getLabelForView(practiceCheckinEditClickableLabel);
+    }
+
+    public void setPracticeCheckinEditClickableLabel(String practiceCheckinEditClickableLabel) {
+        this.practiceCheckinEditClickableLabel = practiceCheckinEditClickableLabel;
+    }
+
+    public String getPracticeCheckinDemogrInsAddAnother() {
+        return StringUtil.getLabelForView(practiceCheckinDemogrInsAddAnother);
+    }
+
+    public void setPracticeCheckinDemogrInsAddAnother(String practiceCheckinDemogrInsAddAnother) {
+        this.practiceCheckinDemogrInsAddAnother = practiceCheckinDemogrInsAddAnother;
+    }
+
+
 }

@@ -73,6 +73,7 @@ public class DateUtil {
         for (String format: formats) {
             try {
                 SimpleDateFormat formatter = new SimpleDateFormat(format, Locale.getDefault());
+                formatter.setLenient(false);
                 Date newDate = formatter.parse(dateString);
                 setDate(newDate);
 
@@ -293,7 +294,7 @@ public class DateUtil {
      * @param number the last digit of the day (as char)
      * @return return a ordinal String with day
      */
-    private String getOrdinalSuffix(int number) {
+    public String getOrdinalSuffix(int number) {
         int lastTwoDigits = number % 100;
         int dayLastDigit = number % 10;
         if (dayLastDigit == 1) { //
