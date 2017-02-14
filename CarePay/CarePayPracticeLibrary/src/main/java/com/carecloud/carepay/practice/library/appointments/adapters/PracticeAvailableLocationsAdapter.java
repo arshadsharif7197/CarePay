@@ -70,15 +70,19 @@ public class PracticeAvailableLocationsAdapter extends RecyclerView.Adapter<Prac
 
         locationTextView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                if(selectLocationCallback!=null)
+            public void onClick(View view) {
+                if(selectLocationCallback!=null) {
                     selectLocationCallback.onSelectLocation(appointmentLocations);
-                v.setSelected(!v.isSelected());//toggle selection status
+                }
+                view.setSelected(!view.isSelected());//toggle selection status
             }
         });
     }
 
-
+    /**
+     * Refresh locations and reset selections if required
+     * @param clearAll true to cause reset of all selections
+     */
     public void resetLocationsSelected(boolean clearAll){
         if(clearAll) {
             selectedLocations.clear();

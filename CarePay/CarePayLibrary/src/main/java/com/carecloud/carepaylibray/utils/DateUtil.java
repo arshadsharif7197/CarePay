@@ -370,12 +370,22 @@ public class DateUtil {
         return crtDay == day && crtMonth == month && crtYear == year;
     }
 
+    /**
+     * Check whether the provided day is today
+     * @param date Date to check
+     * @return true if date is today
+     */
     public static boolean isToday(Date date){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return isToday(calendar);
     }
 
+    /**
+     * Check whether the provided day is today
+     * @param calendar Calendar to check
+     * @return true if calendar is today
+     */
     public static boolean isToday(Calendar calendar){
         Calendar checkCal = Calendar.getInstance();//init to today
         return isSameYear(calendar, checkCal) && isSameDay(calendar, checkCal);
@@ -421,6 +431,11 @@ public class DateUtil {
         return crtDay == day-1 && crtMonth == month && crtYear == year;
     }
 
+    /**
+     * Check whether the provided date is tomorrow
+     * @param date Date to check
+     * @return true if Date is tomorrow
+     */
     public static boolean isTomorrow(Date date){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -428,6 +443,11 @@ public class DateUtil {
         return isTomorrow(calendar);
     }
 
+    /**
+     * Check whether the provided day is tomorrow
+     * @param calendar Calendar to check
+     * @return true if Calendar day is tomorrow
+     */
     public static boolean isTomorrow(Calendar calendar){
         Calendar checkCal = Calendar.getInstance();
         checkCal.add(Calendar.DAY_OF_YEAR, 1);
@@ -447,6 +467,11 @@ public class DateUtil {
         return endsThisMonth(date);
     }
 
+    /**
+     * Check whether the provided date corresponds to the last day of the current month
+     * @param date Date to check
+     * @return true if date is last of the month
+     */
     public static boolean endsThisMonth(Date date){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -454,6 +479,11 @@ public class DateUtil {
         return endsThisMonth(calendar);
     }
 
+    /**
+     * Check whether the provided day corresponds to the last day of the current month
+     * @param calendar Calendar to check
+     * @return true if day is last of the month
+     */
     public static boolean endsThisMonth(Calendar calendar){
         Calendar checkCal = Calendar.getInstance();
         int calMonth = checkCal.get(Calendar.MONTH);
@@ -465,6 +495,12 @@ public class DateUtil {
     }
 
 
+    /**
+     * Get the number of days elapsed between two dates
+     * @param start
+     * @param end
+     * @return number of days elapsed
+     */
     public static int getDaysElapsed(Date start, Date end){
         Calendar startCal = Calendar.getInstance();
         Calendar endCal = Calendar.getInstance();
@@ -475,6 +511,12 @@ public class DateUtil {
         return getDaysElapsed(startCal, endCal);
     }
 
+    /**
+     * Get the number of days elapsed between two Calendar days
+     * @param start
+     * @param end
+     * @return number of days elapsed
+     */
     public static int getDaysElapsed(Calendar start, Calendar end){
         if(end.compareTo(start)<0){//parameters in wrong order
             Log.w(TAG, "calendar parameters out of order" );
@@ -496,8 +538,9 @@ public class DateUtil {
             int yearCheck = start.get(Calendar.YEAR);
             for(int i=0; i<fullYearCount; i++){
                 yearCheck++;
-                if(yearCheck%4==0)
+                if(yearCheck%4==0) {
                     leapYearOffset++;
+                }
             }
 
             int daysLeftStartingYear = start.getActualMaximum(Calendar.DAY_OF_YEAR) - start.get(Calendar.DAY_OF_YEAR);
@@ -505,18 +548,42 @@ public class DateUtil {
         }
     }
 
+    /**
+     * Like {@link #getDaysElapsed(Date, Date)} but includes the current date in the count
+     * @param start
+     * @param end
+     * @return number of days elapsed including the starting date
+     */
     public static int getDaysElapsedInclusive(Date start, Date end){
         return getDaysElapsed(start, end)+1;
     }
 
+    /**
+     * Like {@link #getDaysElapsed(Calendar, Calendar)} but includes the current date in the count
+     * @param start
+     * @param end
+     * @return number of days elapsed including the starting day
+     */
     public static int getDaysElapsedInclusive(Calendar start, Calendar end){
         return getDaysElapsed(start, end)+1;
     }
 
+    /**
+     * Check whether the provided days are in the same year
+     * @param start
+     * @param end
+     * @return true if days are in same year
+     */
     public static boolean isSameYear(Calendar start, Calendar end){
         return start.get(Calendar.YEAR) == end.get(Calendar.YEAR);
     }
 
+    /**
+     * Check whether the provided dates are in the same year
+     * @param start
+     * @param end
+     * @return true if dates are in same year
+     */
     public static boolean isSameYear(Date start, Date end){
         Calendar startCal = Calendar.getInstance();
         Calendar endCal = Calendar.getInstance();
@@ -527,10 +594,23 @@ public class DateUtil {
         return isSameYear(startCal, endCal);
     }
 
+
+    /**
+     * Check whether the provided days are the same day regardless of time
+     * @param start
+     * @param end
+     * @return true if same day
+     */
     public static boolean isSameDay(Calendar start, Calendar end){
         return isSameYear(start, end) && start.get(Calendar.DAY_OF_YEAR) == end.get(Calendar.DAY_OF_YEAR);
     }
 
+    /**
+     * Check whether the provided dates are the same day regardless of time
+     * @param start
+     * @param end
+     * @return true if same day
+     */
     public static boolean isSameDay(Date start, Date end){
         Calendar startCal = Calendar.getInstance();
         Calendar endCal = Calendar.getInstance();
@@ -592,7 +672,16 @@ public class DateUtil {
                 dayLiteral, monthLiteralAbbr, day, getOrdinalSuffix(day));
     }
 
-
+    /**
+     * Convinience method for formatting a date range using contextual output
+     * @param startDate start of date range
+     * @param endDate end of date range
+     * @param today String to represent today output
+     * @param tomorrow String to represent tomorrow output
+     * @param thisMonth String to represent this month as output
+     * @param nextDays Formatted String to represent upcoming day count
+     * @return Contextually formatted Date range
+     */
     public static String getFormattedDate(Date startDate, Date endDate, String today, String tomorrow, String thisMonth, String nextDays){
         Calendar startCal = Calendar.getInstance();
         Calendar endCal = Calendar.getInstance();
@@ -602,18 +691,11 @@ public class DateUtil {
 
         //check for single Day
         if(DateUtil.isSameDay(startCal, endCal)){
-            //check for today
-            if(DateUtil.isToday(startCal)){
-                //return Today String from DTO
+            if(DateUtil.isToday(startCal)){           //check for today
                 return today;
-            }
-            //check for tomorrow
-            else if(DateUtil.isTomorrow(startCal)){
-                //return Tomorrow String from DTO
+            }else if(DateUtil.isTomorrow(startCal)){  //check for tomorrow
                 return tomorrow;
-            }
-            //Just return this date in readable format
-            else{
+            }else{                                    //Just return this date in readable format
                 DateUtil dateUtil = DateUtil.getInstance();
                 dateUtil.setDate(startCal);
                 return dateUtil.getDateAsDayShortMonthDayOrdinal();
@@ -623,10 +705,8 @@ public class DateUtil {
             if(DateUtil.isToday(startCal)){
                 //check if end date is month end
                 if(DateUtil.endsThisMonth(endCal)){
-                    //return ThisMonth String from DTO
                     return thisMonth;
                 }else{
-                    //get text from DTO
                     String daysElapsedText = nextDays;
                     int days = DateUtil.getDaysElapsedInclusive(startCal, endCal);
 

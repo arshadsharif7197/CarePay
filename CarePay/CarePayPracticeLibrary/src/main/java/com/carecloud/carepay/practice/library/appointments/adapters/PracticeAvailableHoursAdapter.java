@@ -122,6 +122,7 @@ public class PracticeAvailableHoursAdapter extends RecyclerView.Adapter<Recycler
         public void setTextView(TextView textViewTimeSlot) {
             this.textViewTimeSlot = textViewTimeSlot;
         }
+
         public TextView getTextViewLocation() {
             return textViewLocation;
         }
