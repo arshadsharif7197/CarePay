@@ -405,6 +405,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         @Override
         public void onFailure(String exceptionMessage) {
             ProgressDialogUtil.getInstance(getContext()).dismiss();
+            findViewById(R.id.drop_down_area_view).setVisibility(View.GONE);
         }
     };
 
