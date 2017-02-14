@@ -2,9 +2,7 @@ package com.carecloud.carepay.practice.library.checkin.activities;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -67,7 +65,6 @@ public class HowToCheckInActivity extends BasePracticeActivity {
         signinPatientModeDTO = getConvertedDTO(SigninPatientModeDTO.class);
 
         setContentView(R.layout.activity_how_to_check_in);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setNavigationBarVisibility();
 
 

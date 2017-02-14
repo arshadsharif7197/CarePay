@@ -78,7 +78,6 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         super.onCreate(savedInstanceState);
 
         checkInDTO = getConvertedDTO(CheckInDTO.class);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_check_in);
         patientFiltered=false;
@@ -227,16 +226,16 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
 
         CheckInLabelDTO checkInLabelDTO = checkInDTO.getMetadata().getLabel();
 
-        filterableDoctorLocationList.add(new FilterDataDTO(checkInLabelDTO.getPracticeCheckinFilterDoctors(), FilterDataDTO.FilterDataType.HEADER));
+        filterableDoctorLocationList.add(new FilterDataDTO(checkInLabelDTO.getPracticeCheckinFilterDoctors()));
         filterableDoctorLocationList.addAll(doctorsList);
-        filterableDoctorLocationList.add(new FilterDataDTO(checkInLabelDTO.getPracticeCheckinFilterLocations(), FilterDataDTO.FilterDataType.HEADER));
+        filterableDoctorLocationList.add(new FilterDataDTO(checkInLabelDTO.getPracticeCheckinFilterLocations()));
         filterableDoctorLocationList.addAll(locationsList);
     }
 
     private void addLocationOnFilterList(ArrayList<FilterDataDTO> locationsList, AppointmentPayloadDTO appointmentPayloadDTO) {
         FilterDataDTO filterDataDTO;
         LocationDTO locationDTO = appointmentPayloadDTO.getLocation();
-        filterDataDTO = new FilterDataDTO(locationDTO.getName(), FilterDataDTO.FilterDataType.LOCATION);
+        filterDataDTO = new FilterDataDTO(locationDTO.getId(), locationDTO.getName(), FilterDataDTO.FilterDataType.LOCATION);
         if (locationsList.indexOf(filterDataDTO) < 0) {
             //filterDataDTO.setFilterId(locationDTO.getId());
             filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
@@ -251,7 +250,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         FilterDataDTO filterDataDTO;
         PatientDTO patientDTO = appointmentPayloadDTO.getPatient();
 
-        filterDataDTO = new FilterDataDTO(patientDTO.getFullName(), FilterDataDTO.FilterDataType.PATIENT);
+        filterDataDTO = new FilterDataDTO(patientDTO.getId(), patientDTO.getFullName(), FilterDataDTO.FilterDataType.PATIENT);
         if (patientsList.indexOf(filterDataDTO) < 0) {
             //filterDataDTO.setFilterId(patientDTO.getId());
             filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
@@ -265,7 +264,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
     private void addProviderOnProviderFilterList(ArrayList<FilterDataDTO> doctorsList, AppointmentPayloadDTO appointmentPayloadDTO) {
         FilterDataDTO filterDataDTO;// For filtering
         ProviderDTO providerDTO = appointmentPayloadDTO.getProvider();
-        filterDataDTO = new FilterDataDTO(providerDTO.getName(), FilterDataDTO.FilterDataType.PROVIDER);
+        filterDataDTO = new FilterDataDTO(providerDTO.getId(), providerDTO.getName(), FilterDataDTO.FilterDataType.PROVIDER);
         if (doctorsList.indexOf(filterDataDTO) < 0) {
             //filterDataDTO.setFilterId(providerDTO.getId());
             filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());

@@ -14,7 +14,7 @@ public class FilterDataDTO {
         PATIENT,PROVIDER,LOCATION,HEADER
     }
 
-    //private int filterId = -1;
+    private String id;
     private String displayText = "";
     private String imageURL = "";
     private FilterDataType filterDataType=FilterDataType.HEADER;
@@ -22,20 +22,36 @@ public class FilterDataDTO {
 
     private List<String> appointmentList;
 
-    private FilterDataDTO(){}
+    /**
+     * Constructor with text and type
+     * @param id of the DTO
+     * @param displayText text
+     * @param filterDataType type PREVIOUS_BALANCE, PROVIDER,LOCATION or HEADER
+     */
+    public FilterDataDTO(String id, String displayText, FilterDataType filterDataType) {
+        this.id = id;
+        this.filterDataType=filterDataType;
+        this.displayText=displayText;
+        appointmentList=new ArrayList<>();
+    }
+
+    /**
+     * Constructor with text and type
+     * @param id of the DTO
+     * @param displayText text
+     * @param filterDataType type PREVIOUS_BALANCE, PROVIDER,LOCATION or HEADER
+     */
+    public FilterDataDTO(int id, String displayText, FilterDataType filterDataType) {
+        this(String.valueOf(id), displayText, filterDataType);
+    }
 
     /**
      * Constructor with text and type
      * @param displayText text
-     * @param filterDataType type PREVIOUS_BALANCE, PROVIDER,LOCATION or HEADER
      */
-    public FilterDataDTO(String displayText,FilterDataType filterDataType) {
-        this.filterDataType=filterDataType;
-        this.displayText=displayText;
-        appointmentList=new ArrayList<>();
-
+    public FilterDataDTO(String displayText) {
+        this(null, displayText, FilterDataDTO.FilterDataType.HEADER);
     }
-
 
     public String getDisplayText() {
         return displayText;
@@ -68,6 +84,10 @@ public class FilterDataDTO {
 
     public void setAppointmentList(List<String> appointmentList) {
         this.appointmentList = appointmentList;
+    }
+
+    public String getId() {
+        return id;
     }
 
     @Override
