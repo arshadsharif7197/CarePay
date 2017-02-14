@@ -887,10 +887,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         // update DTO in the activity
         activityCallback.onDemographicDtoChanged(demographicDTO);
 
-//        if (bitmap != null) {
-//            String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
-//            demographicPersDetailsPayloadDTO.setProfilePhoto(imageAsBase64);
-//        }
         return demographicDTO;
     }
 
@@ -1281,7 +1277,10 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
     @Override
     protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner, Bitmap bitmap) {
-
+        if (bitmap != null) {
+            String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
+            demographicPersDetailsPayloadDTO.setProfilePhoto(imageAsBase64);
+        }
     }
 
     @Override
