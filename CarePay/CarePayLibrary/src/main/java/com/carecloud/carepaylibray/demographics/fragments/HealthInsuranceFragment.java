@@ -57,6 +57,7 @@ public class HealthInsuranceFragment extends Fragment {
     private void initTitle(View view){
         TextView healthInsuranceTitleTextView = (TextView) view.findViewById(R.id.insurancesTitleLabel);
         healthInsuranceTitleTextView.setText(globalLabelsMetaDTO.getDemographicsUpdateInsuranceToolbarTitle().toUpperCase());
+        SystemUtil.setProximaNovaSemiboldTypeface(getContext(), healthInsuranceTitleTextView);
     }
 
     private void initActiveSection(View view) {

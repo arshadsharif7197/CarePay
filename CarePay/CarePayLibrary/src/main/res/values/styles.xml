@@ -730,7 +730,6 @@
         <item name="android:textSize">@dimen/respons_button_text_size</item>
         <item name="android:textStyle">normal</item>
         <item name="android:background">@color/colorPrimary</item>
-        <item name="android:textAllCaps">true</item>
         <item name="android:gravity">center</item>
     </style>
 

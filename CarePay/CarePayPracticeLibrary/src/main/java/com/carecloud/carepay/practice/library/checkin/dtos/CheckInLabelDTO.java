@@ -76,12 +76,15 @@ public class CheckInLabelDTO {
     @SerializedName("practice_checkin_waiting_room")
     @Expose
     private String practiceCheckinWaitingRoom;
-
     @SerializedName("go_back")
     @Expose
     private String goBack;
-
-
+    @SerializedName("practice_checkin_drop_here_label")
+    @Expose
+    private String practiceCheckinDropHereLabel;
+    @SerializedName("practice_checkin_success_label")
+    @Expose
+    private String practiceCheckinSuccessLabel;
 
     /**
      * @return The practiceCheckinDetailDialogCheckingIn
@@ -349,5 +352,21 @@ public class CheckInLabelDTO {
 
     public void setPracticeCheckinDetailDialogQueue(String practiceCheckinDetailDialogQueue) {
         this.practiceCheckinDetailDialogQueue = practiceCheckinDetailDialogQueue;
+    }
+
+    public String getPracticeCheckinDropHereLabel() {
+        return StringUtil.getLabelForView(practiceCheckinDropHereLabel);
+    }
+
+    public void setPracticeCheckinDropHereLabel(String practiceCheckinDropHereLabel) {
+        this.practiceCheckinDropHereLabel = practiceCheckinDropHereLabel;
+    }
+
+    public String getPracticeCheckinSuccessLabel() {
+        return StringUtil.getLabelForView(practiceCheckinSuccessLabel);
+    }
+
+    public void setPracticeCheckinSuccessLabel(String practiceCheckinSuccessLabel) {
+        this.practiceCheckinSuccessLabel = practiceCheckinSuccessLabel;
     }
 }
