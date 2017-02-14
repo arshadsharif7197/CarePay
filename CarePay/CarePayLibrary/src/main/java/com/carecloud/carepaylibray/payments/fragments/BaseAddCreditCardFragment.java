@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.payment.fragments;
+package com.carecloud.carepaylibray.payments.fragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,9 +23,9 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialog;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialogFragment;
@@ -33,6 +33,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressP
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
 import com.carecloud.carepaylibray.payments.utils.CardPattern;
+import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -44,7 +45,7 @@ import com.smartystreets.api.us_zipcode.City;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class BaseAddCreditCardFragment extends Fragment implements RequestTask.AuthorizeCreditCardCallback, SimpleDatePickerDialog.OnDateSetListener {
+public class BaseAddCreditCardFragment extends BaseCheckinFragment implements RequestTask.AuthorizeCreditCardCallback, SimpleDatePickerDialog.OnDateSetListener {
 
     public interface IAuthoriseCreditCardResponse {
         void onAuthorizeCreditCardSuccess();
