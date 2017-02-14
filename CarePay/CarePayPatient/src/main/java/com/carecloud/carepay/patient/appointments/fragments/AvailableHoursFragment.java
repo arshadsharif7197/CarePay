@@ -495,6 +495,7 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
         for(AppointmentAvailabilityPayloadDTO availableAppointment : availableAppointments){
             locationsDTOs.add(availableAppointment.getLocation());
         }
+        locationsDTOs.addAll(getExtraLocationsStub(3));
         return locationsDTOs;
     }
 
@@ -513,7 +514,8 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
 
         //need to sort the slots by time just in case there are multiple locations and times are out of order
         //TODO
-
+        Date testStart = new Date(appointmentsSlots.get(0).getStartTime());
+        Log.d("Test Date", testStart.toString());
         return appointmentsSlots;
     }
 
@@ -521,6 +523,16 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
         return selectedLocations.isEmpty() || selectedLocations.contains(appointmentLocationsDTO);
     }
 
-
+    List<AppointmentLocationsDTO> extraLocationsStub = new LinkedList<>();
+    List<AppointmentLocationsDTO> getExtraLocationsStub(int count){
+        if(extraLocationsStub.size()<count) {
+            for (int i = 0; i <(count-extraLocationsStub.size()); i++){
+                AppointmentLocationsDTO locationsDTO = new AppointmentLocationsDTO();
+                locationsDTO.setName("Stub Location "+i);
+                extraLocationsStub.add(locationsDTO);
+            }
+        }
+        return extraLocationsStub;
+    }
 
 }
