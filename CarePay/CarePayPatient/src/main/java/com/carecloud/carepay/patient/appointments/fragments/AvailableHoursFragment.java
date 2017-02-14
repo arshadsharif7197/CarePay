@@ -28,8 +28,8 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAddressDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentLocationDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLocationsDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentPatientDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentProviderDTO;
@@ -161,10 +161,10 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
 
         if(availableLocationsRecycleView.getAdapter() == null){
             String all = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentAllLocationsItem();
-            availableLocationsRecycleView.setAdapter(new AvailableLocationsAdapter(getContext(), getAvailableLocationsFromDTO(), this, all));
+            availableLocationsRecycleView.setAdapter(new AvailableLocationsAdapter(getContext(), extractAvailableLocations(availabilityDTO), this, all));
         }else{
             AvailableLocationsAdapter availableLocationsAdapter = (AvailableLocationsAdapter) availableLocationsRecycleView.getAdapter();
-            availableLocationsAdapter.setItems(getAvailableLocationsFromDTO());
+            availableLocationsAdapter.setItems(extractAvailableLocations(availabilityDTO));
             availableLocationsAdapter.notifyDataSetChanged();
         }
     }
@@ -210,64 +210,15 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
             startDate = Calendar.getInstance().getTime();//today
             endDate = startDate;
         }
-        String formattedDate = getFormattedDate(startDate, endDate);
+        String today = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentsTodayHeadingSmall();
+        String tomorrow = resourcesToScheduleDTO.getMetadata().getLabel().getAddAppointmentTomorrow();
+        String thisMonth = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentThisMonthTitle();
+        String nextDay = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentNextDaysTitle();
+
+        String formattedDate = DateUtil.getFormattedDate(startDate, endDate, today, tomorrow, thisMonth, nextDay);
         titleView.setText(formattedDate);
     }
 
-    private String getFormattedDate(Date startDate, Date endDate){
-        Calendar startCal = Calendar.getInstance();
-        Calendar endCal = Calendar.getInstance();
-
-        startCal.setTime(startDate);
-        endCal.setTime(endDate);
-
-        //check for single Day
-        if(DateUtil.isSameDay(startCal, endCal)){
-            //check for today
-            if(DateUtil.isToday(startCal)){
-                //return Today String from DTO
-                return resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentsTodayHeadingSmall();
-            }
-            //check for tomorrow
-            else if(DateUtil.isTomorrow(startCal)){
-                //return Tomorrow String from DTO
-                return resourcesToScheduleDTO.getMetadata().getLabel().getAddAppointmentTomorrow();
-            }
-            //Just return this date in readable format
-            else{
-                DateUtil dateUtil = DateUtil.getInstance();
-                dateUtil.setDate(startCal);
-                return dateUtil.getDateAsDayShortMonthDayOrdinal();
-            }
-        }else{
-            //check if the range starts today
-            if(DateUtil.isToday(startCal)){
-                //check if end date is month end
-                if(DateUtil.endsThisMonth(endCal)){
-                    //return ThisMonth String from DTO
-                    return resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentThisMonthTitle();
-                }else{
-                    //get text from DTO
-                    String daysElapsedText = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentNextDaysTitle();
-                    int days = DateUtil.getDaysElapsedInclusive(startCal, endCal);
-
-                    return String.format(daysElapsedText, days);
-                }
-            }
-            else{
-                //return from:to format
-                DateUtil dateUtil = DateUtil.getInstance();
-                dateUtil.setDate(startDate);
-                String fromText = dateUtil.getDateAsMonthLiteralDayOrdinal();
-                dateUtil.setDate(endDate);
-                String toText = dateUtil.getDateAsMonthLiteralDayOrdinal();
-
-                String fromToText = resourcesToScheduleDTO.getMetadata().getLabel().getAddAppointmentFromToText();
-                return String.format(fromToText, fromText, toText);
-            }
-        }
-
-    }
 
     /**
      *Click listener for toolbar navigation
@@ -324,19 +275,6 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
         return appointmentDate;
     }
 
-    private List<AppointmentLocationsDTO> getAvailableLocationsFromDTO(){
-        List<AppointmentLocationsDTO> locationsDTOList = new ArrayList<>();
-        if(availabilityDTO != null && availabilityDTO.getPayload()!=null){
-            locationsDTOList = availabilityDTO.getPayload().getLocations();
-        }
-        if(locationsDTOList==null || locationsDTOList.isEmpty()){//TODO remove this
-            locationsDTOList = getFakeLocationInfos(30);
-        }
-
-        return locationsDTOList;
-    }
-
-
     private void resetLocatonSelections(boolean clearAll){
         RecyclerView.LayoutManager layoutManager = availableLocationsRecycleView.getLayoutManager();
         for(int i=0; i<layoutManager.getChildCount(); i++) {
@@ -359,7 +297,8 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
         ArrayList<Object> timeSlotsListWithHeaders = new ArrayList<>();
 
         if(availabilityDTO!=null && availabilityDTO.getPayload().getAppointmentAvailability().getPayload().size()>0) {
-            List<AppointmentsSlotsDTO> appointmentsSlotsDTOList = availabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getSlots();
+            List<AppointmentAvailabilityPayloadDTO> availabilityPayloadDTOs = availabilityDTO.getPayload().getAppointmentAvailability().getPayload();
+            List<AppointmentsSlotsDTO> appointmentsSlotsDTOList = groupAllLocatonSlotsByTime(availabilityPayloadDTOs);//availabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getSlots();
             if(appointmentsSlotsDTOList!=null && appointmentsSlotsDTOList.size()>0){
                 // To sort appointment time slots list based on time
                 Collections.sort(appointmentsSlotsDTOList, new Comparator<AppointmentsSlotsDTO>() {
@@ -511,9 +450,9 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
         AppointmentProviderDTO providersDTO;
         providersDTO = selectedResourcesDTO.getResource().getProvider();
 
-        AppointmentLocationDTO locationDTO = availabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getLocation();
+        AppointmentLocationsDTO locationDTO = availabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getLocation();
         if(locationDTO == null){
-            locationDTO = new AppointmentLocationDTO();
+            locationDTO = new AppointmentLocationsDTO();
             AppointmentAddressDTO addressDTO = new AppointmentAddressDTO();
             locationDTO.setName(resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentsPlaceNameHeading());
             locationDTO.setAddress(addressDTO);
@@ -549,15 +488,39 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
 
     }
 
-    //TODO Remove this
-    List<AppointmentLocationsDTO> getFakeLocationInfos(int count){
-        List<AppointmentLocationsDTO> locationsDTOs = new ArrayList<>();
-        for(int i=0; i<count; i++){
-            AppointmentLocationsDTO locationsDTO = new AppointmentLocationsDTO();
-            locationsDTO.setId(i);
-            locationsDTO.setName("TestLocation"+i);
-            locationsDTOs.add(locationsDTO);
+
+    private List<AppointmentLocationsDTO> extractAvailableLocations(AppointmentAvailabilityDTO availabilityDTO){
+        List<AppointmentLocationsDTO> locationsDTOs = new LinkedList<>();
+        List<AppointmentAvailabilityPayloadDTO> availableAppointments = availabilityDTO.getPayload().getAppointmentAvailability().getPayload();
+        for(AppointmentAvailabilityPayloadDTO availableAppointment : availableAppointments){
+            locationsDTOs.add(availableAppointment.getLocation());
         }
         return locationsDTOs;
     }
+
+    private List<AppointmentsSlotsDTO> groupAllLocatonSlotsByTime(List<AppointmentAvailabilityPayloadDTO> appointmentAvailabilityPayloadDTOs){
+        List<AppointmentsSlotsDTO> appointmentsSlots = new LinkedList<>();
+        String locationName = null;
+        for(AppointmentAvailabilityPayloadDTO availabilityPayloadDTO : appointmentAvailabilityPayloadDTOs){
+            if(isLocationSelected(availabilityPayloadDTO.getLocation())) {
+                locationName = availabilityPayloadDTO.getLocation().getName();
+                for (AppointmentsSlotsDTO slotsDTO : availabilityPayloadDTO.getSlots()) {
+                    slotsDTO.setLocationName(locationName);
+                    appointmentsSlots.add(slotsDTO);
+                }
+            }
+        }
+
+        //need to sort the slots by time just in case there are multiple locations and times are out of order
+        //TODO
+
+        return appointmentsSlots;
+    }
+
+    private boolean isLocationSelected(AppointmentLocationsDTO appointmentLocationsDTO){
+        return selectedLocations.isEmpty() || selectedLocations.contains(appointmentLocationsDTO);
+    }
+
+
+
 }

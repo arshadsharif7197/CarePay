@@ -84,7 +84,7 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             String time12Hour = DateUtil.getInstance().getTime12Hour();
             vhTimeSlot.getTextView().setText(time12Hour);
 
-            String location = "Test Location";//TODO get from DTO
+            String location = appointmentsSlotsDTO.getLocationName();
             vhTimeSlot.getTextViewLocation().setText(location);
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -114,7 +114,7 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             textViewLocation = (TextView) view.findViewById(R.id.textview_location);
         }
 
-        TextView getTextView() {
+        public TextView getTextView() {
             return textViewTimeSlot;
         }
 

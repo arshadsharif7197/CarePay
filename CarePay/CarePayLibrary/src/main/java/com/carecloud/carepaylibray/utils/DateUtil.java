@@ -593,4 +593,59 @@ public class DateUtil {
     }
 
 
+    public static String getFormattedDate(Date startDate, Date endDate, String today, String tomorrow, String thisMonth, String nextDays){
+        Calendar startCal = Calendar.getInstance();
+        Calendar endCal = Calendar.getInstance();
+
+        startCal.setTime(startDate);
+        endCal.setTime(endDate);
+
+        //check for single Day
+        if(DateUtil.isSameDay(startCal, endCal)){
+            //check for today
+            if(DateUtil.isToday(startCal)){
+                //return Today String from DTO
+                return today;
+            }
+            //check for tomorrow
+            else if(DateUtil.isTomorrow(startCal)){
+                //return Tomorrow String from DTO
+                return tomorrow;
+            }
+            //Just return this date in readable format
+            else{
+                DateUtil dateUtil = DateUtil.getInstance();
+                dateUtil.setDate(startCal);
+                return dateUtil.getDateAsDayShortMonthDayOrdinal();
+            }
+        }else{
+            //check if the range starts today
+            if(DateUtil.isToday(startCal)){
+                //check if end date is month end
+                if(DateUtil.endsThisMonth(endCal)){
+                    //return ThisMonth String from DTO
+                    return thisMonth;
+                }else{
+                    //get text from DTO
+                    String daysElapsedText = nextDays;
+                    int days = DateUtil.getDaysElapsedInclusive(startCal, endCal);
+
+                    return String.format(daysElapsedText, days);
+                }
+            }
+            else{
+                //return from:to format
+                DateUtil dateUtil = DateUtil.getInstance();
+                dateUtil.setDate(startDate);
+                String fromText = dateUtil.getDateAsMonthLiteralDayOrdinal();
+                dateUtil.setDate(endDate);
+                String toText = dateUtil.getDateAsMonthLiteralDayOrdinal();
+
+                String fromToText = "%s - %s";
+                return String.format(fromToText, fromText, toText);
+            }
+        }
+
+    }
+
 }
