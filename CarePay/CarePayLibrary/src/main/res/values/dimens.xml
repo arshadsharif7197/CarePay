@@ -71,6 +71,7 @@
     <!-- sign in screen -->
     <dimen name="error_textsize">10sp</dimen>
     <dimen name="textview_size">15sp</dimen>
+    <dimen name="signin_layout_padding">16dp</dimen>
 
     <!-- sign up screen -->
     <dimen name="signup_button_textsize">13sp</dimen>
