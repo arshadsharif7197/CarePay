@@ -712,8 +712,7 @@ public class DateUtil {
 
                     return String.format(daysElapsedText, days);
                 }
-            }
-            else{
+            }else{
                 //return from:to format
                 DateUtil dateUtil = DateUtil.getInstance();
                 dateUtil.setDate(startDate);
