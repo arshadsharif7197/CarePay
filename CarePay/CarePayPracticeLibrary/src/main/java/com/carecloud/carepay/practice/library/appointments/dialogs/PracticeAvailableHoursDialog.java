@@ -31,6 +31,8 @@ import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -61,6 +63,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     private TextView singleLocationText;
 
     private List<AppointmentLocationsDTO> selectedLocations = new LinkedList<>();
+    private SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
 
     /**
      * Instantiates a new Practice available hours dialog.
@@ -393,7 +396,6 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
             updateSelectedLocationsForAdapter();
 
         }
-        //TODO make updated request with location param
 
     }
 
@@ -421,7 +423,21 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
         }
 
         //need to sort the slots by time just in case there are multiple locations and times are out of order
-        //TODO
+        Collections.sort(appointmentsSlots, new Comparator<AppointmentsSlotsDTO>() {
+            @Override
+            public int compare(AppointmentsSlotsDTO o1, AppointmentsSlotsDTO o2) {
+                try {
+                    Date d1 = dateFormater.parse(o1.getStartTime());
+                    Date d2 = dateFormater.parse(o2.getStartTime());
+
+                    return d1.compareTo(d2);
+                }catch (ParseException pxe){
+                    pxe.printStackTrace();
+                }
+
+                return 0;
+            }
+        });
 
         return appointmentsSlots;
     }
