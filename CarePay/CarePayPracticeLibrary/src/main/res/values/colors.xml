@@ -11,7 +11,7 @@
 
     <color name="colorAccent">#acacac</color>
     <color name="slateGray">#607d8b</color>
-
+    <color name="find_patient_bg">#CC142C2E</color>
     <color name="charcoal">#ff37474f</color>
     <!--<color name="rich_electric_blue">#ff009bde</color>-->
 
