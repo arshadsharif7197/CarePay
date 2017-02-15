@@ -114,7 +114,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/bright_cerulean"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/dimen_24dp"
                     app:customAssetFont="proxima_nova_semi_bold"/>
 
