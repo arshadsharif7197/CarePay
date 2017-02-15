@@ -27,8 +27,7 @@ public class PaymentsPayloadDTO implements Serializable {
     private PaymentsPatientHistoryDTO patientHistory;
     @SerializedName("patient_credit_cards")
     @Expose
-    private List<PaymentsPatientsCreditCardsPayloadListDTO> patientCreditCards = new ArrayList<>();;
-
+    private List<PaymentsPatientsCreditCardsPayloadListDTO> patientCreditCards = new ArrayList<>();
     @SerializedName("provider_index")
     @Expose
     private List<ProviderIndexDTO> providerIndex;
@@ -41,7 +40,6 @@ public class PaymentsPayloadDTO implements Serializable {
     @SerializedName("patient_balances")
     @Expose
     private List<PaymentsPatientBalancessDTO> patientBalances = new ArrayList<>();
-
     @SerializedName("providers")
     @Expose
     private List<ProviderDTO> providers = null;
@@ -51,6 +49,17 @@ public class PaymentsPayloadDTO implements Serializable {
     @SerializedName("patient_payments")
     @Expose
     private PatientPaymentsDTO patientPayments;
+    @SerializedName("patients")
+    @Expose
+    private List<PatientDTO> patients = null;
+
+    public List<PatientDTO> getPatients() {
+        return patients;
+    }
+
+    public void setPatients(List<PatientDTO> patients) {
+        this.patients = patients;
+    }
 
     public PatientPaymentsDTO getPatientPayments() {
         return patientPayments;

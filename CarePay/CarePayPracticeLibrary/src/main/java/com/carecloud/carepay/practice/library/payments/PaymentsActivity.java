@@ -13,6 +13,7 @@ import com.carecloud.carepay.practice.library.customdialog.FilterDialog;
 import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepay.practice.library.payments.dialogs.FindPatientDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityDialog;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.LocationDTO;
 import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
@@ -29,6 +30,7 @@ import java.util.Locale;
 
 public class PaymentsActivity extends BasePracticeActivity implements FilterDialog.FilterCallBack {
 
+    private PaymentsLabelDTO paymentsLabel;
     private PaymentsModel paymentsModel;
     private FilterModel filter;
 
@@ -58,7 +60,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     private void setLabels() {
         if (paymentsModel != null) {
-            PaymentsLabelDTO paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
+            paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
             if (paymentsLabel != null) {
 
                 setViewTextById(R.id.practice_payment_title, paymentsLabel.getPracticePaymentsHeader());
@@ -197,7 +199,11 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
             @Override
             public void onClick(View view) {
-                FindPatientDialog findPatientDialog = new FindPatientDialog(PaymentsActivity.this, paymentsModel);
+                TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getFindPatient();
+
+                FindPatientDialog findPatientDialog = new FindPatientDialog(PaymentsActivity.this,
+                        transitionDTO, paymentsLabel.getPracticePaymentsDetailDialogCloseButton(),
+                        paymentsLabel.getPracticePaymentsFindPatientLabel());
                 findPatientDialog.show();
             }
         };

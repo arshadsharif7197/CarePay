@@ -39,14 +39,29 @@
                 app:customAssetFont="gotham_rounded_medium" />
         </LinearLayout>
 
-        <EditText
-            android:id="@+id/find_patient_edit_box"
+        <LinearLayout
             android:layout_width="520dp"
-            android:layout_height="@dimen/dimen_60dp"
-            android:background="@drawable/bg_find_patient_edit_box"
-            android:paddingBottom="@dimen/dimen_17dp"
-            android:paddingEnd="@dimen/dimen_24dp"
-            android:paddingStart="@dimen/dimen_24dp"
-            android:paddingTop="@dimen/dimen_17dp" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/find_patient_edit_box"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_60dp"
+                android:background="@drawable/bg_find_patient_edit_box"
+                android:inputType="textVisiblePassword"
+                android:paddingBottom="@dimen/dimen_17dp"
+                android:paddingEnd="@dimen/dimen_24dp"
+                android:paddingStart="@dimen/dimen_24dp"
+                android:paddingTop="@dimen/dimen_17dp" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/patient_searched_list"
+                android:layout_width="match_parent"
+                android:layout_height="182dp"
+                android:layout_marginTop="@dimen/dimen_18dp"
+                android:background="@drawable/layout_white_background"
+                android:visibility="gone" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>
