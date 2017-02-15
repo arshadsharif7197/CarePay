@@ -12,7 +12,6 @@ public class AppointmentsRequestsDTO implements Serializable {
     @SerializedName("automatically_approve_requests")
     @Expose
     private Boolean automaticallyApproveRequests;
-    private final static long serialVersionUID = -5643056070669674972L;
 
     public Boolean getAutomaticallyApproveRequests() {
         return automaticallyApproveRequests;
