@@ -34,7 +34,7 @@ public class AppointmentChargeDTO {
     private Integer locationId;
     @SerializedName("location")
     @Expose
-    private AppointmentLocationDTO location;
+    private AppointmentLocationsDTO location;
     @SerializedName("attending_provider_id")
     @Expose
     private Integer attendingProviderId;
@@ -115,11 +115,11 @@ public class AppointmentChargeDTO {
         this.locationId = locationId;
     }
 
-    public AppointmentLocationDTO getLocation() {
+    public AppointmentLocationsDTO getLocation() {
         return location;
     }
 
-    public void setLocation(AppointmentLocationDTO location) {
+    public void setLocation(AppointmentLocationsDTO location) {
         this.location = location;
     }
 

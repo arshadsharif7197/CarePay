@@ -15,7 +15,7 @@ public class AppointmentPayloadModel implements Serializable {
 
     @SerializedName("languages")
     @Expose
-    private List<ResourceLanguageDTO> languages = null;
+    private List<ResourceLanguageDTO> languages = new ArrayList<>();
     @SerializedName("appointments")
     @Expose
     private List<AppointmentDTO> appointments = new ArrayList<>();
@@ -42,7 +42,7 @@ public class AppointmentPayloadModel implements Serializable {
     private AppointmentAvailabilityDataDTO appointmentAvailability;
     @SerializedName("resources_to_schedule")
     @Expose
-    private List<ResourcesToScheduleDTO> resourcesToSchedule = null;
+    private List<ResourcesToScheduleDTO> resourcesToSchedule = new ArrayList<>();
     @SerializedName("appointments_settings")
     @Expose
     private List<AppointmentsSettingDTO> appointmentsSettings = new ArrayList<AppointmentsSettingDTO>();
