@@ -12,8 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/add_apt_available_hours_edit_range_height"
         android:background="@color/date_range_header"
-        android:orientation="horizontal"
-        android:weightSum="3">
+        android:orientation="horizontal">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/date_range_custom_text_view"
@@ -42,6 +41,7 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/location_text"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/dimen_16dp"
             android:layout_marginEnd="@dimen/dimen_8dp"
@@ -52,7 +52,28 @@
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/available_locations_recycler"/>
+            android:id="@+id/available_locations_recycler"
+            android:visibility="visible"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:foregroundGravity="center"
+            android:id="@+id/appointment_available_single_location"
+            android:visibility="gone">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:id="@+id/available_single_location_text"
+                android:layout_marginRight="@dimen/dimen_8dp"
+                android:text="Location"
+                android:ellipsize="end"
+                android:background="@drawable/rounded_button_blue_border_selected"
+                app:customAssetFont="proxima_nova_regular"/>
+
+        </FrameLayout>
 
     </LinearLayout>
 

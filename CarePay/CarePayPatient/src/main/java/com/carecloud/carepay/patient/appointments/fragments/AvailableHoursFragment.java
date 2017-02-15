@@ -44,6 +44,8 @@ import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -67,10 +69,15 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
     private RecyclerView availableHoursRecycleView;
     private RecyclerView availableLocationsRecycleView;
     private TextView titleView;
+    private View singleLocation;
+    private TextView singleLocationText;
+
 //    private CarePayTextView dateRangeCustomTextView;
 
     private String addAppointmentPatientId;
     private List<AppointmentLocationsDTO> selectedLocations = new LinkedList<>();
+    private SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
+
 
     @Override
     public void onStart() {
@@ -124,11 +131,11 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
     /**
      * Method to inflate toolbar to UI
      *
-     * @param availableHoursListView used as view component
+     * @param view used as view component
      */
-    private void inflateToolbar(View availableHoursListView) {
+    private void inflateToolbar(View view) {
         Toolbar toolbar = (Toolbar)
-                availableHoursListView.findViewById(R.id.add_appointment_toolbar);
+                view.findViewById(R.id.add_appointment_toolbar);
         titleView = (TextView) toolbar.findViewById(R.id.add_appointment_toolbar_title);
         titleView.setText(R.string.apt_available_hours_title);
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), titleView);
@@ -146,61 +153,67 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
         ((AddAppointmentActivity) getActivity()).setSupportActionBar(toolbar);
 
         toolbar.setNavigationOnClickListener(navigationOnClickListener);
+
     }
 
-
-    private void setAdapters(){
-        if(availableHoursRecycleView.getAdapter() == null){
-            availableHoursRecycleView.setAdapter(new AvailableHoursAdapter(getActivity(),
-                    getAvailableHoursListWithHeader(), AvailableHoursFragment.this));
-        }else{
-            AvailableHoursAdapter availableHoursAdapter = (AvailableHoursAdapter) availableHoursRecycleView.getAdapter();
-            availableHoursAdapter.setItems(getAvailableHoursListWithHeader());
-            availableHoursAdapter.notifyDataSetChanged();
-        }
-
-        if(availableLocationsRecycleView.getAdapter() == null){
-            String all = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentAllLocationsItem();
-            availableLocationsRecycleView.setAdapter(new AvailableLocationsAdapter(getContext(), extractAvailableLocations(availabilityDTO), this, all));
-        }else{
-            AvailableLocationsAdapter availableLocationsAdapter = (AvailableLocationsAdapter) availableLocationsRecycleView.getAdapter();
-            availableLocationsAdapter.setItems(extractAvailableLocations(availabilityDTO));
-            availableLocationsAdapter.notifyDataSetChanged();
-        }
-    }
 
     /**
      * Method to inflate UI components
      *
-     * @param availableHoursListView used as view component
+     * @param view used as view component
      */
-    private void inflateUIComponents(View availableHoursListView) {
-//        Button editRangeButton = (Button)
-//                availableHoursListView.findViewById(R.id.add_appointment_date_pick);
-//        editRangeButton.setOnClickListener(dateRangeClickListener);
-
-//        dateRangeCustomTextView = (CarePayTextView)
-//                availableHoursListView.findViewById(R.id.date_range_custom_text_view);
+    private void inflateUIComponents(View view) {
+        singleLocation = view.findViewById(R.id.appointment_available_single_location);
+        singleLocationText = (TextView) view.findViewById(R.id.available_single_location_text);
 
         LinearLayoutManager availableHoursLayoutManager = new LinearLayoutManager(getContext());
         availableHoursLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
         availableHoursRecycleView = (RecyclerView)
-                availableHoursListView.findViewById(R.id.available_hours_recycler_view);
+                view.findViewById(R.id.available_hours_recycler_view);
         availableHoursRecycleView.setLayoutManager(availableHoursLayoutManager);
 
 
         LinearLayoutManager availableLocationsLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        availableLocationsRecycleView = (RecyclerView) availableHoursListView.findViewById(R.id.available_locations_recycler);
+        availableLocationsRecycleView = (RecyclerView) view.findViewById(R.id.available_locations_recycler);
         availableLocationsRecycleView.setLayoutManager(availableLocationsLayoutManager);
 
-        /*availableHoursRecycleView.setAdapter(new AvailableHoursAdapter(getActivity(),
-                getSampleArrayList(), AvailableHoursFragment.this));*/
-
-//        Button editDateRangeButton = (Button)
-//                availableHoursListView.findViewById(R.id.edit_date_range_button);
-//        editDateRangeButton.setOnClickListener(dateRangeClickListener);
+        String location = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentLocationsLabel();
+        TextView locationsLabel = (TextView) view.findViewById(R.id.location_text);
+        locationsLabel.setText(location!=null?location:getString(R.string.locations_label));
     }
+
+    private void setAdapters(){
+        List<AppointmentLocationsDTO> locations = extractAvailableLocations(availabilityDTO);
+
+        if(availableHoursRecycleView.getAdapter() == null){
+            availableHoursRecycleView.setAdapter(new AvailableHoursAdapter(getActivity(),
+                    getAvailableHoursListWithHeader(), AvailableHoursFragment.this, locations.size()>1));
+        }else{
+            AvailableHoursAdapter availableHoursAdapter = (AvailableHoursAdapter) availableHoursRecycleView.getAdapter();
+            availableHoursAdapter.setItems(getAvailableHoursListWithHeader());
+            availableHoursAdapter.setMultiLocationStyle(locations.size()>1);
+            availableHoursAdapter.notifyDataSetChanged();
+        }
+
+        if(locations.size()>1) {
+            availableLocationsRecycleView.setVisibility(View.VISIBLE);
+            singleLocation.setVisibility(View.GONE);
+            if (availableLocationsRecycleView.getAdapter() == null) {
+                String all = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentAllLocationsItem();
+                availableLocationsRecycleView.setAdapter(new AvailableLocationsAdapter(getContext(), locations, this, all));
+            } else {
+                AvailableLocationsAdapter availableLocationsAdapter = (AvailableLocationsAdapter) availableLocationsRecycleView.getAdapter();
+                availableLocationsAdapter.setItems(locations);
+                availableLocationsAdapter.notifyDataSetChanged();
+            }
+        }else{
+            availableLocationsRecycleView.setVisibility(View.GONE);
+            singleLocation.setVisibility(View.VISIBLE);
+            singleLocationText.setText(locations.get(0).getName());
+        }
+    }
+
 
     /**
      * Method to update date range that is selected on calendar
@@ -484,7 +497,8 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
             updateSelectedLocationsForAdapter();
 
         }
-        //TODO make updated request with location param
+
+        setAdapters();
 
     }
 
@@ -513,9 +527,22 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
         }
 
         //need to sort the slots by time just in case there are multiple locations and times are out of order
-        //TODO
-        Date testStart = new Date(appointmentsSlots.get(0).getStartTime());
-        Log.d("Test Date", testStart.toString());
+        Collections.sort(appointmentsSlots, new Comparator<AppointmentsSlotsDTO>() {
+            @Override
+            public int compare(AppointmentsSlotsDTO o1, AppointmentsSlotsDTO o2) {
+                try {
+                    Date d1 = dateFormater.parse(o1.getStartTime());
+                    Date d2 = dateFormater.parse(o2.getStartTime());
+
+                    return d1.compareTo(d2);
+                }catch (ParseException pxe){
+                    pxe.printStackTrace();
+                }
+
+                return 0;
+            }
+        });
+
         return appointmentsSlots;
     }
 

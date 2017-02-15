@@ -56,6 +56,9 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
 
     private RecyclerView availableHoursRecycleView;
     private RecyclerView availableLocationsRecycleView;
+    private TextView titleView;
+    private View singleLocation;
+    private TextView singleLocationText;
 
     private List<AppointmentLocationsDTO> selectedLocations = new LinkedList<>();
 
@@ -94,48 +97,66 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     }
 
     private void inflateUIComponents(View view) {
+        singleLocation = view.findViewById(R.id.practice_available_single_location);
+        singleLocationText = (TextView) view.findViewById(R.id.practice_single_location_text);
+
         String range = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentSelectRangeButton();
         TextView editRangeButton = (TextView) view.findViewById(R.id.edit_date_range_button);//TODO set Text from DTO
         editRangeButton.setOnClickListener(dateRangeClickListener);
         SystemUtil.setGothamRoundedBoldTypeface(context, editRangeButton);
 
-        updateDateRange();
 
         LinearLayoutManager availableHoursLayoutManager = new LinearLayoutManager(context);
         availableHoursLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
         availableHoursRecycleView = (RecyclerView)
-                view.findViewById(com.carecloud.carepaylibrary.R.id.available_hours_recycler_view);
+                view.findViewById(R.id.available_hours_recycler_view);
         availableHoursRecycleView.setLayoutManager(availableHoursLayoutManager);
 
         LinearLayoutManager availableLocationsLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        availableLocationsRecycleView = (RecyclerView) view.findViewById(com.carecloud.carepaylibrary.R.id.available_locations_recycler);
+        availableLocationsRecycleView = (RecyclerView) view.findViewById(R.id.available_locations_recycler);
         availableLocationsRecycleView.setLayoutManager(availableLocationsLayoutManager);
 
+        String location = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentLocationsLabel();
+        TextView locationsLabel = (TextView) view.findViewById(R.id.location_text);
+        locationsLabel.setText(location!=null?location:context.getString(R.string.locations_label));
 
         setDialogTitle(((ScheduleAppointmentActivity) context).getResourcesToSchedule().getMetadata().getLabel()
                 .getAvailableHoursHeading());
         setCancelImage(R.drawable.icn_arrow_up);
         setCancelable(false);
+
+        updateDateRange();
     }
 
     private void setAdapters(){
+        List<AppointmentLocationsDTO> locations = extractAvailableLocations(availabilityDTO);
+
         if(availableHoursRecycleView.getAdapter() == null){
             availableHoursRecycleView.setAdapter(new PracticeAvailableHoursAdapter(context,
-                    getAvailableHoursListWithHeader(), PracticeAvailableHoursDialog.this));
+                    getAvailableHoursListWithHeader(), PracticeAvailableHoursDialog.this, locations.size()>1));
         }else{
             PracticeAvailableHoursAdapter availableHoursAdapter = (PracticeAvailableHoursAdapter) availableHoursRecycleView.getAdapter();
             availableHoursAdapter.setItems(getAvailableHoursListWithHeader());
+            availableHoursAdapter.setMultiLocationStyle(locations.size()>1);
             availableHoursAdapter.notifyDataSetChanged();
         }
 
-        if(availableLocationsRecycleView.getAdapter() == null){
-            String all = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentAllLocationsItem();
-            availableLocationsRecycleView.setAdapter(new PracticeAvailableLocationsAdapter(getContext(), extractAvailableLocations(availabilityDTO), this, all));
+        if(locations.size()>1) {
+            availableLocationsRecycleView.setVisibility(View.VISIBLE);
+            singleLocation.setVisibility(View.GONE);
+            if (availableLocationsRecycleView.getAdapter() == null) {
+                String all = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentAllLocationsItem();
+                availableLocationsRecycleView.setAdapter(new PracticeAvailableLocationsAdapter(getContext(), locations, this, all));
+            } else {
+                PracticeAvailableLocationsAdapter availableLocationsAdapter = (PracticeAvailableLocationsAdapter) availableLocationsRecycleView.getAdapter();
+                availableLocationsAdapter.setItems(locations);
+                availableLocationsAdapter.notifyDataSetChanged();
+            }
         }else{
-            PracticeAvailableLocationsAdapter availableLocationsAdapter = (PracticeAvailableLocationsAdapter) availableLocationsRecycleView.getAdapter();
-            availableLocationsAdapter.setItems(extractAvailableLocations(availabilityDTO));
-            availableLocationsAdapter.notifyDataSetChanged();
+            availableLocationsRecycleView.setVisibility(View.GONE);
+            singleLocation.setVisibility(View.VISIBLE);
+            singleLocationText.setText(locations.get(0).getName());
         }
     }
 
@@ -228,7 +249,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
         public void onFailure(String exceptionMessage) {
             ProgressDialogUtil.getInstance(context).dismiss();
             SystemUtil.showDefaultFailureDialog(context);
-            Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            Log.e(context.getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -236,7 +257,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     private void resetLocatonSelections(boolean clearAll){
         RecyclerView.LayoutManager layoutManager = availableLocationsRecycleView.getLayoutManager();
         for(int i=0; i<layoutManager.getChildCount(); i++) {
-            layoutManager.getChildAt(i).findViewById(com.carecloud.carepaylibrary.R.id.available_location).setSelected(false);
+            layoutManager.getChildAt(i).findViewById(R.id.available_location).setSelected(false);
         }
         ((PracticeAvailableLocationsAdapter) availableLocationsRecycleView.getAdapter()).resetLocationsSelected(clearAll);
         selectedLocations.clear();

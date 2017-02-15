@@ -17,6 +17,10 @@ import java.util.List;
 
 public class PracticeAvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    public void setMultiLocationStyle(boolean multiLocationStyle) {
+        this.multiLocationStyle = multiLocationStyle;
+    }
+
     public interface SelectAppointmentTimeSlotCallback{
         void onSelectAppointmentTimeSlot(AppointmentsSlotsDTO appointmentsSlotsDTO);
     }
@@ -26,6 +30,7 @@ public class PracticeAvailableHoursAdapter extends RecyclerView.Adapter<Recycler
     private Context context;
     private final int sectionHeader = 0;
     private SelectAppointmentTimeSlotCallback selectSlotCallback;
+    private boolean multiLocationStyle = false;
 
     /**
      * Constructor.
@@ -33,10 +38,11 @@ public class PracticeAvailableHoursAdapter extends RecyclerView.Adapter<Recycler
      * @param items list of occurrence
      * @param callback callback on select time slot
      */
-    public PracticeAvailableHoursAdapter(Context context, List<Object> items, SelectAppointmentTimeSlotCallback callback) {
+    public PracticeAvailableHoursAdapter(Context context, List<Object> items, SelectAppointmentTimeSlotCallback callback, boolean multiLocationStyle) {
         this.context = context;
         this.items = items;
         this.selectSlotCallback = callback;
+        this.multiLocationStyle = multiLocationStyle;
     }
 
     // Return the size of your data set (invoked by the layout manager)
@@ -85,8 +91,14 @@ public class PracticeAvailableHoursAdapter extends RecyclerView.Adapter<Recycler
             String time12Hour = DateUtil.getInstance().getTime12Hour();
             vhTimeSlot.getTextView().setText(time12Hour);
 
-            String location = appointmentsSlotsDTO.getLocationName();
-            vhTimeSlot.getTextViewLocation().setText(location);
+            if(multiLocationStyle) {
+                String location = appointmentsSlotsDTO.getLocationName();
+                vhTimeSlot.getTextViewLocation().setText(location);
+                vhTimeSlot.getTextViewLocation().setVisibility(View.VISIBLE);
+            }else{
+                vhTimeSlot.getTextViewLocation().setVisibility(View.GONE);
+            }
+
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
