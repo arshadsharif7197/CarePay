@@ -18,6 +18,9 @@ public class AppointmentsSlotsDTO implements Serializable {
     @Expose
     private String endTime;
 
+    @Expose(serialize = false)
+    private String locationName;
+
     /**
      * Gets start time.
      *
@@ -52,5 +55,13 @@ public class AppointmentsSlotsDTO implements Serializable {
      */
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public String getLocationName() {
+        return locationName;
+    }
+
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
     }
 }

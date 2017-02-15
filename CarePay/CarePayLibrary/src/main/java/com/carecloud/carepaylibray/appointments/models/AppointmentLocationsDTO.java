@@ -20,7 +20,7 @@ public class AppointmentLocationsDTO {
     private Boolean isVisibleAppointmentScheduler;
     @SerializedName("address")
     @Expose
-    private AppointmentLocationsAddressDTO address;
+    private AppointmentAddressDTO address;
 
     /**
      * 
@@ -81,7 +81,7 @@ public class AppointmentLocationsDTO {
      * @return
      *     The address
      */
-    public AppointmentLocationsAddressDTO getAddress() {
+    public AppointmentAddressDTO getAddress() {
         return address;
     }
 
@@ -90,7 +90,7 @@ public class AppointmentLocationsDTO {
      * @param address
      *     The address
      */
-    public void setAddress(AppointmentLocationsAddressDTO address) {
+    public void setAddress(AppointmentAddressDTO address) {
         this.address = address;
     }
 
