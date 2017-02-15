@@ -99,7 +99,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         holder.appointmentTime.setText(DateUtil.getInstance().getTime12Hour());
         holder.startCheckIn.setText(appointmentLabels.getAppointmentsPracticeCheckin());
 
-        Date appointmentTime = DateUtil.getInstance().setDateRaw(item.getEndTime()).getDate();
+        Date appointmentTime = DateUtil.getInstance().setDateRaw(item.getStartTime()).getDate();
         // Get current date/time in required format
         Date currentDate = DateUtil.getInstance().setToCurrent().getDate();
         boolean isMissed = false;
@@ -110,18 +110,24 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
                 isMissed = true;
             }
         }
-
+        boolean allowEarlyCheckin = appointmentsResultModel.getPayload().getAppointmentsSettings().get(0).getCheckin().getAllowEarlyCheckin();
+        String allowEarlyCheckinPeriodStr = appointmentsResultModel.getPayload().getAppointmentsSettings().get(0).getCheckin().getEarlyCheckinPeriod();
+        long allowEarlyCheckinPeriod = Long.parseLong(allowEarlyCheckinPeriodStr);
+        // Get current date/time in required format
         boolean isPending = item.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.PENDING);
+        long differenceInMilli = appointmentTime.getTime() - currentDate.getTime();
+        long differenceInMinutes = TimeUnit.MILLISECONDS.toMinutes(differenceInMilli);
+
         if (isPending && isToday && !isMissed) {
+            holder.startCheckIn.setClickable(true);
+            holder.startCheckIn.setEnabled(true);
+        } else if(isPending && !isMissed && allowEarlyCheckin && (differenceInMinutes < allowEarlyCheckinPeriod)){
             holder.startCheckIn.setClickable(true);
             holder.startCheckIn.setEnabled(true);
         } else {
             holder.startCheckIn.setClickable(false);
             holder.startCheckIn.setEnabled(false);
         }
-
-//        GradientDrawable bgShape = (GradientDrawable) holder.headerView.getBackground();
-//        bgShape.setColor(context.getResources().getColor(R.color.cardview_header_bg));
 
         String photoUrl = item.getProvider().getPhoto();
         if (TextUtils.isEmpty(photoUrl)) {
@@ -135,9 +141,6 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
                 }
             });
 
-//            builder.build().load(photoUrl).transform(new CircleImageTransform())
-//                    .resize(58, 58).into(holder.profileImage);
-//            holder.profileImage.setVisibility(View.VISIBLE);
         }
 
         holder.startCheckIn.setTag(position);

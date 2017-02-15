@@ -336,7 +336,7 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
 
     <!--add appointment calendar screen-->
     <string name="date_range_apply_button_label">Apply</string>
-    <string name="edit_range_button_label">Edit range</string>
+    <string name="edit_range_button_label">Range</string>
     <string name="edit_date_range_button_label">Edit date range</string>
     <string name="pick_a_date_label">Pick a date</string>
     <string name="sunday_text_view_label">S</string>
@@ -348,6 +348,7 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="saturday_text_view_label">S</string>
     <string name="date_range_from_today_to">From today to</string>
     <string name="to">to</string>
+    <string name="locations_label">Locations</string>
 
 
     <!--<months string date util>-->
