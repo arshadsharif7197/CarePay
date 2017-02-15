@@ -11,6 +11,7 @@ import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.customcomponent.TwoColumnPatientListView;
 import com.carecloud.carepay.practice.library.customdialog.FilterDialog;
 import com.carecloud.carepay.practice.library.models.FilterModel;
+import com.carecloud.carepay.practice.library.payments.dialogs.FindPatientDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityDialog;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.LocationDTO;
@@ -93,6 +94,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                     String.format(Locale.getDefault(), "%1s", patientBalancesList.size()));
         }
 
+        findViewById(R.id.practice_payment_find_patient).setOnClickListener(onFindPatientClick());
         findViewById(R.id.practice_payment_filter_label).setOnClickListener(onFilterIconClick());
         findViewById(R.id.practice_payment_go_back).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -186,6 +188,17 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                         findViewById(R.id.activity_practice_payment), filter);
 
                 filterDialog.showPopWindow();
+            }
+        };
+    }
+
+    private View.OnClickListener onFindPatientClick() {
+        return new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                FindPatientDialog findPatientDialog = new FindPatientDialog(PaymentsActivity.this, paymentsModel);
+                findPatientDialog.show();
             }
         };
     }
