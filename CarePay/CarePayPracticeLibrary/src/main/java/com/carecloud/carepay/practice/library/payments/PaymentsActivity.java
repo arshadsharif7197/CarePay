@@ -196,7 +196,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         return new View.OnClickListener() {
 
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 FindPatientDialog findPatientDialog = new FindPatientDialog(PaymentsActivity.this, paymentsModel);
                 findPatientDialog.show();
             }
