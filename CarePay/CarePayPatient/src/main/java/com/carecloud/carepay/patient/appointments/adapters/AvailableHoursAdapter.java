@@ -83,31 +83,35 @@ public class AvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             vhSectionHeader.getTextView().setText(appointmentSlotItem.toString());
         } else {
             ViewHolderTimeSlot vhTimeSlot = (ViewHolderTimeSlot) viewHolder;
-            final AppointmentsSlotsDTO appointmentsSlotsDTO = ((AppointmentsSlotsDTO) appointmentSlotItem);
+            try {
+                final AppointmentsSlotsDTO appointmentsSlotsDTO = ((AppointmentsSlotsDTO) appointmentSlotItem);
 
-            String upcomingStartTime = appointmentsSlotsDTO.getStartTime();
-            DateUtil.getInstance().setDateRaw(upcomingStartTime);
-            String time12Hour = DateUtil.getInstance().getTime12Hour();
-            vhTimeSlot.getTextView().setText(time12Hour);
+                String upcomingStartTime = appointmentsSlotsDTO.getStartTime();
+                DateUtil.getInstance().setDateRaw(upcomingStartTime);
+                String time12Hour = DateUtil.getInstance().getTime12Hour();
+                vhTimeSlot.getTextView().setText(time12Hour);
 
-            if(multiLocationStyle) {
-                String location = appointmentsSlotsDTO.getLocationName();
-                vhTimeSlot.getTextViewLocation().setText(location);
-                vhTimeSlot.getTextViewLocation().setVisibility(View.VISIBLE);
-            }else{
-                vhTimeSlot.getTextViewLocation().setVisibility(View.GONE);
-            }
-
-            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    // Restricted the appointment list item click if it is appointment header type.
-                    if (appointmentSlotItem.getClass() == AppointmentsSlotsDTO.class) {
-                        selectSlotCallback.onSelectAppointmentTimeSlot((AppointmentsSlotsDTO)appointmentSlotItem);
-                    }
+                if (multiLocationStyle) {
+                    String location = appointmentsSlotsDTO.getLocationName();
+                    vhTimeSlot.getTextViewLocation().setText(location);
+                    vhTimeSlot.getTextViewLocation().setVisibility(View.VISIBLE);
+                } else {
+                    vhTimeSlot.getTextViewLocation().setVisibility(View.GONE);
                 }
-            });
+
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        // Restricted the appointment list item click if it is appointment header type.
+                        if (appointmentSlotItem.getClass() == AppointmentsSlotsDTO.class) {
+                            selectSlotCallback.onSelectAppointmentTimeSlot((AppointmentsSlotsDTO) appointmentSlotItem);
+                        }
+                    }
+                });
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
         }
     }
 

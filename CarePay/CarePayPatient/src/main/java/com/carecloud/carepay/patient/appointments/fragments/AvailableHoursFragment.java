@@ -141,7 +141,12 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), titleView);
         toolbar.setTitle("");
 
-        String range = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentSelectRangeButton();
+        String range = null;
+        try {
+            range = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentSelectRangeButton();
+        }catch (NullPointerException ex){
+            ex.printStackTrace();
+        }
         TextView titleOther = (TextView) toolbar.findViewById(R.id.add_appointment_toolbar_other);
         titleOther.setText(range!=null?range:getString(R.string.edit_range_button_label));
         titleOther.setVisibility(View.VISIBLE);
@@ -177,39 +182,47 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
         availableLocationsRecycleView = (RecyclerView) view.findViewById(R.id.available_locations_recycler);
         availableLocationsRecycleView.setLayoutManager(availableLocationsLayoutManager);
 
-        String location = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentLocationsLabel();
-        TextView locationsLabel = (TextView) view.findViewById(R.id.location_text);
-        locationsLabel.setText(location!=null?location:getString(R.string.locations_label));
+        try {
+            String location = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentLocationsLabel();
+            TextView locationsLabel = (TextView) view.findViewById(R.id.location_text);
+            locationsLabel.setText(location != null ? location : getString(R.string.locations_label));
+        }catch (NullPointerException ex){
+            ex.printStackTrace();
+        }
     }
 
     private void setAdapters(){
-        List<AppointmentLocationsDTO> locations = extractAvailableLocations(availabilityDTO);
+        try {
+            List<AppointmentLocationsDTO> locations = extractAvailableLocations(availabilityDTO);
 
-        if(availableHoursRecycleView.getAdapter() == null){
-            availableHoursRecycleView.setAdapter(new AvailableHoursAdapter(getActivity(),
-                    getAvailableHoursListWithHeader(), AvailableHoursFragment.this, locations.size()>1));
-        }else{
-            AvailableHoursAdapter availableHoursAdapter = (AvailableHoursAdapter) availableHoursRecycleView.getAdapter();
-            availableHoursAdapter.setItems(getAvailableHoursListWithHeader());
-            availableHoursAdapter.setMultiLocationStyle(locations.size()>1);
-            availableHoursAdapter.notifyDataSetChanged();
-        }
-
-        if(locations.size()>1) {
-            availableLocationsRecycleView.setVisibility(View.VISIBLE);
-            singleLocation.setVisibility(View.GONE);
-            if (availableLocationsRecycleView.getAdapter() == null) {
-                String all = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentAllLocationsItem();
-                availableLocationsRecycleView.setAdapter(new AvailableLocationsAdapter(getContext(), locations, this, all));
+            if (availableHoursRecycleView.getAdapter() == null) {
+                availableHoursRecycleView.setAdapter(new AvailableHoursAdapter(getActivity(),
+                        getAvailableHoursListWithHeader(), AvailableHoursFragment.this, locations.size() > 1));
             } else {
-                AvailableLocationsAdapter availableLocationsAdapter = (AvailableLocationsAdapter) availableLocationsRecycleView.getAdapter();
-                availableLocationsAdapter.setItems(locations);
-                availableLocationsAdapter.notifyDataSetChanged();
+                AvailableHoursAdapter availableHoursAdapter = (AvailableHoursAdapter) availableHoursRecycleView.getAdapter();
+                availableHoursAdapter.setItems(getAvailableHoursListWithHeader());
+                availableHoursAdapter.setMultiLocationStyle(locations.size() > 1);
+                availableHoursAdapter.notifyDataSetChanged();
             }
-        }else{
-            availableLocationsRecycleView.setVisibility(View.GONE);
-            singleLocation.setVisibility(View.VISIBLE);
-            singleLocationText.setText(locations.get(0).getName());
+
+            if (locations.size() > 1) {
+                availableLocationsRecycleView.setVisibility(View.VISIBLE);
+                singleLocation.setVisibility(View.GONE);
+                if (availableLocationsRecycleView.getAdapter() == null) {
+                    String all = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentAllLocationsItem();
+                    availableLocationsRecycleView.setAdapter(new AvailableLocationsAdapter(getContext(), locations, this, all));
+                } else {
+                    AvailableLocationsAdapter availableLocationsAdapter = (AvailableLocationsAdapter) availableLocationsRecycleView.getAdapter();
+                    availableLocationsAdapter.setItems(locations);
+                    availableLocationsAdapter.notifyDataSetChanged();
+                }
+            } else {
+                availableLocationsRecycleView.setVisibility(View.GONE);
+                singleLocation.setVisibility(View.VISIBLE);
+                singleLocationText.setText(locations.get(0).getName());
+            }
+        }catch (NullPointerException ex){
+            ex.printStackTrace();
         }
     }
 

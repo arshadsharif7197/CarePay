@@ -103,13 +103,6 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
         singleLocation = view.findViewById(R.id.practice_available_single_location);
         singleLocationText = (TextView) view.findViewById(R.id.practice_single_location_text);
 
-        String range = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentEditDateRangeButton();
-        TextView editRangeButton = (TextView) view.findViewById(R.id.edit_date_range_button);
-        editRangeButton.setText(range!=null?range:context.getString(R.string.edit_date_range_button_label));
-        editRangeButton.setOnClickListener(dateRangeClickListener);
-        SystemUtil.setGothamRoundedBoldTypeface(context, editRangeButton);
-
-
         LinearLayoutManager availableHoursLayoutManager = new LinearLayoutManager(context);
         availableHoursLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
@@ -120,12 +113,25 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
         availableLocationsRecycleView = (RecyclerView) view.findViewById(R.id.available_locations_recycler);
         availableLocationsRecycleView.setLayoutManager(availableLocationsLayoutManager);
 
-        String location = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentLocationsLabel();
-        TextView locationsLabel = (TextView) view.findViewById(R.id.location_text);
-        locationsLabel.setText(location!=null?location:context.getString(R.string.locations_label));
+        String range = null;
+        try {
+            range = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentEditDateRangeButton();
 
-        setDialogTitle(((ScheduleAppointmentActivity) context).getResourcesToSchedule().getMetadata().getLabel()
-                .getAvailableHoursHeading());
+            String location = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentLocationsLabel();
+            TextView locationsLabel = (TextView) view.findViewById(R.id.location_text);
+            locationsLabel.setText(location != null ? location : context.getString(R.string.locations_label));
+
+            setDialogTitle(resourcesToScheduleDTO.getMetadata().getLabel()
+                    .getAvailableHoursHeading());
+        }catch (NullPointerException ex){
+            ex.printStackTrace();
+        }
+
+        TextView editRangeButton = (TextView) view.findViewById(R.id.edit_date_range_button);
+        editRangeButton.setText(range != null ? range : context.getString(R.string.edit_date_range_button_label));
+        editRangeButton.setOnClickListener(dateRangeClickListener);
+        SystemUtil.setGothamRoundedBoldTypeface(context, editRangeButton);
+
         setCancelImage(R.drawable.icn_arrow_up);
         setCancelable(false);
 
@@ -133,33 +139,37 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     }
 
     private void setAdapters(){
-        List<AppointmentLocationsDTO> locations = extractAvailableLocations(availabilityDTO);
+        try {
+            List<AppointmentLocationsDTO> locations = extractAvailableLocations(availabilityDTO);
 
-        if(availableHoursRecycleView.getAdapter() == null){
-            availableHoursRecycleView.setAdapter(new PracticeAvailableHoursAdapter(context,
-                    getAvailableHoursListWithHeader(), PracticeAvailableHoursDialog.this, locations.size()>1));
-        }else{
-            PracticeAvailableHoursAdapter availableHoursAdapter = (PracticeAvailableHoursAdapter) availableHoursRecycleView.getAdapter();
-            availableHoursAdapter.setItems(getAvailableHoursListWithHeader());
-            availableHoursAdapter.setMultiLocationStyle(locations.size()>1);
-            availableHoursAdapter.notifyDataSetChanged();
-        }
-
-        if(locations.size()>1) {
-            availableLocationsRecycleView.setVisibility(View.VISIBLE);
-            singleLocation.setVisibility(View.GONE);
-            if (availableLocationsRecycleView.getAdapter() == null) {
-                String all = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentAllLocationsItem();
-                availableLocationsRecycleView.setAdapter(new PracticeAvailableLocationsAdapter(getContext(), locations, this, all));
+            if (availableHoursRecycleView.getAdapter() == null) {
+                availableHoursRecycleView.setAdapter(new PracticeAvailableHoursAdapter(context,
+                        getAvailableHoursListWithHeader(), PracticeAvailableHoursDialog.this, locations.size() > 1));
             } else {
-                PracticeAvailableLocationsAdapter availableLocationsAdapter = (PracticeAvailableLocationsAdapter) availableLocationsRecycleView.getAdapter();
-                availableLocationsAdapter.setItems(locations);
-                availableLocationsAdapter.notifyDataSetChanged();
+                PracticeAvailableHoursAdapter availableHoursAdapter = (PracticeAvailableHoursAdapter) availableHoursRecycleView.getAdapter();
+                availableHoursAdapter.setItems(getAvailableHoursListWithHeader());
+                availableHoursAdapter.setMultiLocationStyle(locations.size() > 1);
+                availableHoursAdapter.notifyDataSetChanged();
             }
-        }else{
-            availableLocationsRecycleView.setVisibility(View.GONE);
-            singleLocation.setVisibility(View.VISIBLE);
-            singleLocationText.setText(locations.get(0).getName());
+
+            if (locations.size() > 1) {
+                availableLocationsRecycleView.setVisibility(View.VISIBLE);
+                singleLocation.setVisibility(View.GONE);
+                if (availableLocationsRecycleView.getAdapter() == null) {
+                    String all = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentAllLocationsItem();
+                    availableLocationsRecycleView.setAdapter(new PracticeAvailableLocationsAdapter(getContext(), locations, this, all));
+                } else {
+                    PracticeAvailableLocationsAdapter availableLocationsAdapter = (PracticeAvailableLocationsAdapter) availableLocationsRecycleView.getAdapter();
+                    availableLocationsAdapter.setItems(locations);
+                    availableLocationsAdapter.notifyDataSetChanged();
+                }
+            } else {
+                availableLocationsRecycleView.setVisibility(View.GONE);
+                singleLocation.setVisibility(View.VISIBLE);
+                singleLocationText.setText(locations.get(0).getName());
+            }
+        }catch (NullPointerException ex){
+            ex.printStackTrace();
         }
     }
 
