@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.base.PatientNavigationStateConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -105,10 +106,16 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
             checkInAtOfficeButton.setEnabled(true);
             cancel();
         } else if (viewId == R.id.checkInNowButton) {
+            //FIXME
+            PatientNavigationHelper.getInstance(getContext()).navigateToWorkflow(PatientNavigationStateConstants.MEDICATION_ALLERGIES);
+
+
+/*
             checkInNowButton.setEnabled(false);
             TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCheckingIn();
             doTransition(transitionDTO, demographicsVerifyCallback);
             cancel();
+*/
         }
     }
 

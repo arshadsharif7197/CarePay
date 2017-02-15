@@ -75,6 +75,7 @@
                 android:value="com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity" /></activity>
         <activity android:name=".notifications.activities.NotificationActivity" />
         <activity android:name=".purchases.activities.PurchaseActivity"/>
+        <activity android:name=".medication.activities.MedicationAllergyActivity"/>
     </application>
 
 </manifest>

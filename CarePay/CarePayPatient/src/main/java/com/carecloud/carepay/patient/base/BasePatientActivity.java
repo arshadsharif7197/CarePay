@@ -1,12 +1,9 @@
 package com.carecloud.carepay.patient.base;
 
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseVisibilityHintActivity;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
@@ -22,7 +19,6 @@ public abstract class BasePatientActivity extends BaseVisibilityHintActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
     }
 
