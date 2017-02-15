@@ -53,6 +53,8 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
     private Date endDate;
     private String patientId;
 
+    private List<AppointmentResourcesDTO> resources;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -202,7 +204,7 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
                     && scheduleResourcesModel.getPayload().getResourcesToSchedule().size() > 0) {
 
                 noAppointmentView.setVisibility(View.GONE);
-                List<AppointmentResourcesDTO> resources = scheduleResourcesModel.getPayload()
+                resources = scheduleResourcesModel.getPayload()
                         .getResourcesToSchedule().get(0).getResources();
 
                 if (resources.size() > 0) {
@@ -243,7 +245,7 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
 
     @Override
     public void onProviderListItemClickListener(int position) {
-        List<AppointmentResourcesDTO> resources = scheduleResourcesModel.getPayload().getResourcesToSchedule().get(0).getResources();
+//        List<AppointmentResourcesDTO> resources = scheduleResourcesModel.getPayload().getResourcesToSchedule().get(0).getResources();
         selectedResource = resources.get(position);
         VisitTypeDialog visitTypeDialog = new VisitTypeDialog(this, selectedResource, this, scheduleResourcesModel);
         visitTypeDialog.show();

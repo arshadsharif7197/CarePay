@@ -215,6 +215,50 @@ public class AppointmentLabelDTO implements Serializable {
     @SerializedName("no_notifications_message_text")
     @Expose
     private String noNotificationsMessageText;
+    @SerializedName("appointment_select_range_button")
+    @Expose
+    private String appointmentSelectRangeButton;
+    @SerializedName("appointment_next_days_title")
+    @Expose
+    private String appointmentNextDaysTitle;
+    @SerializedName("appointment_this_month_title")
+    @Expose
+    private String appointmentThisMonthTitle;
+    @SerializedName("appointment_all_locations_item")
+    @Expose
+    private String appointmentAllLocationsItem;
+
+    public String getAppointmentSelectRangeButton() {
+        return appointmentSelectRangeButton;
+    }
+
+    public void setAppointmentSelectRangeButton(String appointmentSelectRangeButton) {
+        this.appointmentSelectRangeButton = appointmentSelectRangeButton;
+    }
+
+    public String getAppointmentNextDaysTitle() {
+        return appointmentNextDaysTitle;
+    }
+
+    public void setAppointmentNextDaysTitle(String appointmentNextDaysTitle) {
+        this.appointmentNextDaysTitle = appointmentNextDaysTitle;
+    }
+
+    public String getAppointmentThisMonthTitle() {
+        return appointmentThisMonthTitle;
+    }
+
+    public void setAppointmentThisMonthTitle(String appointmentThisMonthTitle) {
+        this.appointmentThisMonthTitle = appointmentThisMonthTitle;
+    }
+
+    public String getAppointmentAllLocationsItem() {
+        return appointmentAllLocationsItem;
+    }
+
+    public void setAppointmentAllLocationsItem(String appointmentAllLocationsItem) {
+        this.appointmentAllLocationsItem = appointmentAllLocationsItem;
+    }
 
     public String getNoShopMessageTitle() {
         return noShopMessageTitle;

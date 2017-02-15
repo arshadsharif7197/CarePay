@@ -1,13 +1,16 @@
 package com.carecloud.carepay.patient;
 
 import com.carecloud.carepaylibray.utils.DateUtil;
+
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.util.Calendar;
 import java.util.Date;
 
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-
-import org.junit.Test;
 
 
 
@@ -154,4 +157,15 @@ public class DateUtilTest {
         assertThat("error test tommorrow", DateUtil.getInstance().isTomorrowOrAfter(), is(true));
 
     }
+
+
+    @Test
+    public void numberOfDays(){
+        Date start = new Date(2012, 1, 1);
+        Date end = new Date(2017, 1, 1);
+
+        int days = DateUtil.getInstance().getDaysElapsed(start, end);
+        Assert.assertEquals(1827, days);
+    }
+
 }

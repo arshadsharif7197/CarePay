@@ -20,7 +20,7 @@ public class AppointmentsPayloadDTO {
     private AppointmentPatientDTO patient;
     @SerializedName("location")
     @Expose
-    private AppointmentLocationDTO location;
+    private AppointmentLocationsDTO location;
     @SerializedName("cancellation_details")
     @Expose
     private AppointmentCancellationDetailsDTO cancellationDetails;
@@ -162,7 +162,7 @@ public class AppointmentsPayloadDTO {
      * @return
      *     The location
      */
-    public AppointmentLocationDTO getLocation() {
+    public AppointmentLocationsDTO getLocation() {
         return location;
     }
 
@@ -171,7 +171,7 @@ public class AppointmentsPayloadDTO {
      * @param location
      *     The location
      */
-    public void setLocation(AppointmentLocationDTO location) {
+    public void setLocation(AppointmentLocationsDTO location) {
         this.location = location;
     }
 

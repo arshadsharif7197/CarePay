@@ -15,7 +15,7 @@ public class AppointmentAvailabilityPayloadDTO implements Serializable {
 
     @SerializedName("location")
     @Expose
-    private AppointmentLocationDTO location;
+    private AppointmentLocationsDTO location;
     @SerializedName("visit_reason")
     @Expose
     private ProvidersReasonDTO visitReason;
@@ -31,7 +31,7 @@ public class AppointmentAvailabilityPayloadDTO implements Serializable {
      *
      * @return the location
      */
-    public AppointmentLocationDTO getLocation() {
+    public AppointmentLocationsDTO getLocation() {
         return location;
     }
 
@@ -40,7 +40,7 @@ public class AppointmentAvailabilityPayloadDTO implements Serializable {
      *
      * @param location the location
      */
-    public void setLocation(AppointmentLocationDTO location) {
+    public void setLocation(AppointmentLocationsDTO location) {
         this.location = location;
     }
 

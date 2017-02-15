@@ -14,9 +14,8 @@
         <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
             android:id="@+id/add_appointment_toolbar_title"
             style="@style/ResponsibilityToolbarTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_weight="0.7"
-            android:gravity="start" />
+            android:layout_width="0dp"
+            android:layout_weight="1"/>
 
         <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel
             android:id="@+id/add_appointment_toolbar_other"
@@ -27,7 +26,9 @@
             android:text="@string/Other"
             android:textColor="@color/white"
             android:textSize="@dimen/visit_type_button_font"
-            android:visibility="gone" />
+            android:textAllCaps="true"
+            android:visibility="gone"
+            android:singleLine="true"/>
     </LinearLayout>
 
 </android.support.v7.widget.Toolbar>
