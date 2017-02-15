@@ -44,6 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:id="@+id/location_text"
             android:layout_marginStart="@dimen/dimen_16dp"
             android:layout_marginEnd="@dimen/dimen_8dp"
             android:text="@string/locations_label"

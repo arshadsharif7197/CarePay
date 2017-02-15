@@ -100,8 +100,9 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
         singleLocation = view.findViewById(R.id.practice_available_single_location);
         singleLocationText = (TextView) view.findViewById(R.id.practice_single_location_text);
 
-        String range = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentSelectRangeButton();
-        TextView editRangeButton = (TextView) view.findViewById(R.id.edit_date_range_button);//TODO set Text from DTO
+        String range = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentEditDateRangeButton();
+        TextView editRangeButton = (TextView) view.findViewById(R.id.edit_date_range_button);
+        editRangeButton.setText(range!=null?range:context.getString(R.string.edit_date_range_button_label));
         editRangeButton.setOnClickListener(dateRangeClickListener);
         SystemUtil.setGothamRoundedBoldTypeface(context, editRangeButton);
 
@@ -109,8 +110,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
         LinearLayoutManager availableHoursLayoutManager = new LinearLayoutManager(context);
         availableHoursLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        availableHoursRecycleView = (RecyclerView)
-                view.findViewById(R.id.available_hours_recycler_view);
+        availableHoursRecycleView = (RecyclerView) view.findViewById(R.id.available_hours_recycler_view);
         availableHoursRecycleView.setLayoutManager(availableHoursLayoutManager);
 
         LinearLayoutManager availableLocationsLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);

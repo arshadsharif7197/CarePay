@@ -169,8 +169,7 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
         LinearLayoutManager availableHoursLayoutManager = new LinearLayoutManager(getContext());
         availableHoursLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        availableHoursRecycleView = (RecyclerView)
-                view.findViewById(R.id.available_hours_recycler_view);
+        availableHoursRecycleView = (RecyclerView) view.findViewById(R.id.available_hours_recycler_view);
         availableHoursRecycleView.setLayoutManager(availableHoursLayoutManager);
 
 
@@ -509,7 +508,7 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
         for(AppointmentAvailabilityPayloadDTO availableAppointment : availableAppointments){
             locationsDTOs.add(availableAppointment.getLocation());
         }
-        locationsDTOs.addAll(getExtraLocationsStub(3));
+//        locationsDTOs.addAll(getExtraLocationsStub(3));
         return locationsDTOs;
     }
 

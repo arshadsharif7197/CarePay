@@ -230,6 +230,9 @@ public class AppointmentLabelDTO implements Serializable {
     @SerializedName("appointment_locations_label")
     @Expose
     private String appointmentLocationsLabel;
+    @SerializedName("appoitment_edit_date_range_button")
+    @Expose
+    private String appointmentEditDateRangeButton;
 
     public String getAppointmentSelectRangeButton() {
         return appointmentSelectRangeButton;
@@ -1231,5 +1234,13 @@ public class AppointmentLabelDTO implements Serializable {
 
     public void setAppointmentLocationsLabel(String appointmentLocationsLabel) {
         this.appointmentLocationsLabel = appointmentLocationsLabel;
+    }
+
+    public String getAppointmentEditDateRangeButton() {
+        return appointmentEditDateRangeButton;
+    }
+
+    public void setAppointmentEditDateRangeButton(String appointmentEditDateRangeButton) {
+        this.appointmentEditDateRangeButton = appointmentEditDateRangeButton;
     }
 }
