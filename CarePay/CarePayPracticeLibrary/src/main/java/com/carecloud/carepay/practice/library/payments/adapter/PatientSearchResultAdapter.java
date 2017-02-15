@@ -17,6 +17,11 @@ public class PatientSearchResultAdapter extends RecyclerView.Adapter<PatientSear
     private Context context;
     private List<PatientDTO> patients;
 
+    /**
+     * Constructor
+     * @param context context
+     * @param patients patient list
+     */
     public PatientSearchResultAdapter(Context context, List<PatientDTO> patients) {
         this.context = context;
         this.patients = patients;
@@ -43,6 +48,10 @@ public class PatientSearchResultAdapter extends RecyclerView.Adapter<PatientSear
 
         private CarePayTextView name;
 
+        /**
+         * Constructor
+         * @param itemView view
+         */
         public ViewHolder(View itemView) {
             super(itemView);
 
