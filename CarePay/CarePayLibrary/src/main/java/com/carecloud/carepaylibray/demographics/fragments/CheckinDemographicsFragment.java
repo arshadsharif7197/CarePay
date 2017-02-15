@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.demographics.fragments.review;
+package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -31,8 +31,6 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.carecloud.carepaylibray.utils.CustomPopupNotification;
-import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -50,9 +48,11 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressP
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterface;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
+import com.carecloud.carepaylibray.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
@@ -63,6 +63,7 @@ import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.gson.Gson;
 import com.smartystreets.api.us_zipcode.City;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -145,6 +146,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     private boolean isCityEmpty;
     private boolean isStateEmtpy;
     private boolean isZipEmpty;
+    private boolean isPractice;
 
     private String stateAbbr = null;
     private City smartyStreetsResponse;
@@ -179,8 +181,11 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        view = inflater.inflate(R.layout.fragment_review_demographic, container, false);
-
+        if (isPractice){
+            view = inflater.inflate(R.layout.fragment_review_demographic_practice, container, false);
+        }else{
+            view = inflater.inflate(R.layout.fragment_review_demographic, container, false);
+        }
         initializeDemographicsDTO();
 
         rootview = (LinearLayout) view.findViewById(R.id.demographicsReviewRootLayout);
@@ -206,7 +211,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         });
 
         formatEditText();
-        SystemUtil.hideSoftKeyboard(getActivity());
         ((ScrollView)view.findViewById(R.id.adddemoScrollview)).smoothScrollTo(0,0);
         return view;
     }
@@ -701,7 +705,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             ProgressDialogUtil.getInstance(getContext()).dismiss();
             buttonConfirmData.setEnabled(true);
             demographicProgressBar.setVisibility(View.GONE);
-            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+            ((CheckinDemographicsInterface)getActivity()).navigateToConsentFlow(workflowDTO);
         }
 
         @Override
@@ -887,6 +891,10 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         // update DTO in the activity
         activityCallback.onDemographicDtoChanged(demographicDTO);
 
+//        if (bitmap != null) {
+//            String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
+//            demographicPersDetailsPayloadDTO.setProfilePhoto(imageAsBase64);
+//        }
         return demographicDTO;
     }
 
@@ -1048,7 +1056,11 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             if (!StringUtil.isNullOrEmpty(imageUrl)) {
                 Picasso.with(getActivity()).load(imageUrl).transform(
                         new CircleImageTransform()).resize(160, 160).into(this.profileImageview);
-
+                if(isPractice){
+                    Picasso.Builder builder = new Picasso.Builder(getContext());
+                    RequestCreator load = builder.build().load(imageUrl);
+                    load.fit().into((ImageView) view.findViewById(R.id.chknin_profile_bg_image));
+                }
             }else{
                 profileImageview.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.icn_placeholder_user_profile_png));
             }
@@ -1277,10 +1289,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
     @Override
     protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner, Bitmap bitmap) {
-        if (bitmap != null) {
-            String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
-            demographicPersDetailsPayloadDTO.setProfilePhoto(imageAsBase64);
-        }
+
     }
 
     @Override

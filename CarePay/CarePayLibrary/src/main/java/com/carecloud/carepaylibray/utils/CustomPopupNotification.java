@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.appointments.utils;
+package com.carecloud.carepaylibray.utils;
 
 import android.content.Context;
 import android.os.Handler;
@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
  * Created by sudhir_pingale on 9/22/2016.
