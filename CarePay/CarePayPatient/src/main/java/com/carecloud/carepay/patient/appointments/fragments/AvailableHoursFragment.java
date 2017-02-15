@@ -549,16 +549,5 @@ public class AvailableHoursFragment extends Fragment implements AvailableHoursAd
         return selectedLocations.isEmpty() || selectedLocations.contains(appointmentLocationsDTO);
     }
 
-    List<AppointmentLocationsDTO> extraLocationsStub = new LinkedList<>();
-    List<AppointmentLocationsDTO> getExtraLocationsStub(int count){
-        if(extraLocationsStub.size()<count) {
-            for (int i = 0; i <(count-extraLocationsStub.size()); i++){
-                AppointmentLocationsDTO locationsDTO = new AppointmentLocationsDTO();
-                locationsDTO.setName("Stub Location "+i);
-                extraLocationsStub.add(locationsDTO);
-            }
-        }
-        return extraLocationsStub;
-    }
 
 }
