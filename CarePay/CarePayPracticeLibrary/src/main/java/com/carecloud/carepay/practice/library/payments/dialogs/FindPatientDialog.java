@@ -31,6 +31,11 @@ public class FindPatientDialog extends Dialog {
     private Context context;
     private PaymentsModel paymentsModel;
 
+    /**
+     * Constructor
+     * @param context context
+     * @param paymentsModel payment model
+     */
     public FindPatientDialog(Context context, PaymentsModel paymentsModel) {
         super(context);
         this.context = context;
@@ -78,17 +83,17 @@ public class FindPatientDialog extends Dialog {
         editView.addTextChangedListener(new TextWatcher() {
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
 
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable charSequence) {
                 Map<String, String> queryMap = new HashMap<>();
                 queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
                 queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
