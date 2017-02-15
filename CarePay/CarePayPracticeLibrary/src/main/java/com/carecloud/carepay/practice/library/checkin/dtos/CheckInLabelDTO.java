@@ -91,9 +91,33 @@ public class CheckInLabelDTO {
     @Expose
     private String activityHeading;
 
-    @SerializedName("today")
+    @SerializedName("today_label")
     @Expose
-    private String today;
+    private String todayLabel;
+
+    @SerializedName("date_range_picker_dialog_title")
+    @Expose
+    private String dateRangePickerDialogTitle;
+
+    @SerializedName("date_range_picker_dialog_close")
+    @Expose
+    private String dateRangePickerDialogClose;
+
+    @SerializedName("change_date_range_label")
+    @Expose
+    private String changeDateRangeLabel;
+
+    @SerializedName("tomorrow_label")
+    @Expose
+    private String tomorrowLabel;
+
+    @SerializedName("this_month_label")
+    @Expose
+    private String thisMonthLabel;
+
+    @SerializedName("next_days_label")
+    @Expose
+    private String nextDaysLabel;
 
     /**
      * @return The practiceCheckinDetailDialogCheckingIn
@@ -383,7 +407,31 @@ public class CheckInLabelDTO {
         return StringUtil.getLabelForView(activityHeading);
     }
 
-    public String getToday() {
-        return StringUtil.getLabelForView(today);
+    public String getTodayLabel() {
+        return StringUtil.getLabelForView(todayLabel);
+    }
+
+    public String getDateRangePickerDialogTitle() {
+        return StringUtil.getLabelForView(dateRangePickerDialogTitle);
+    }
+
+    public String getDateRangePickerDialogClose() {
+        return StringUtil.getLabelForView(dateRangePickerDialogClose);
+    }
+
+    public String getChangeDateRangeLabel() {
+        return StringUtil.getLabelForView(changeDateRangeLabel);
+    }
+
+    public String getTomorrow() {
+        return StringUtil.getLabelForView(tomorrowLabel);
+    }
+
+    public String getThisMonthLabel() {
+        return StringUtil.getLabelForView(thisMonthLabel);
+    }
+
+    public String getNextDaysLabel() {
+        return StringUtil.getLabelForView(nextDaysLabel);
     }
 }

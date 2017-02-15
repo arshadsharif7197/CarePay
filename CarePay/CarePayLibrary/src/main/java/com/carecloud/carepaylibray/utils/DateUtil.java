@@ -283,9 +283,11 @@ public class DateUtil {
         this.date = new Date();
     }
 
-    public void setDate(Date date) {
+    public DateUtil setDate(Date date) {
         this.date = date;
         updateFields();
+
+        return this;
     }
 
     public void setDate(Calendar calendar){

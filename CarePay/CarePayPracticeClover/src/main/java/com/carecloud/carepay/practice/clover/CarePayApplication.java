@@ -8,6 +8,7 @@ import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
+import com.carecloud.carepay.practice.library.base.IPracticeSession;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
@@ -21,7 +22,10 @@ import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
  * Created by Jahirul Bhuiyan on 10/24/2016.
  */
 
-public class CarePayApplication extends MultiDexApplication implements Application.ActivityLifecycleCallbacks {
+public class CarePayApplication extends MultiDexApplication
+        implements Application.ActivityLifecycleCallbacks, IPracticeSession {
+
+    private PracticeNavigationHelper practiceNavigationHelper;
 
     @Override
     public void onCreate() {
@@ -29,7 +33,6 @@ public class CarePayApplication extends MultiDexApplication implements Applicati
         setHttpConstants();
 
         ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
-        PracticeNavigationHelper.initInstance(this);
         ApplicationPreferences.createPreferences(this);
         registerActivityLifecycleCallbacks(this);
     }
@@ -46,6 +49,14 @@ public class CarePayApplication extends MultiDexApplication implements Applicati
         HttpConstants.setPushNotificationWebclientUrl(BuildConfig.WEBCLIENT_URL);
     }
 
+    @Override
+    public PracticeNavigationHelper getPracticeNavigationHelper() {
+        if (practiceNavigationHelper == null) {
+            practiceNavigationHelper = new PracticeNavigationHelper(this);
+        }
+
+        return practiceNavigationHelper;
+    }
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
