@@ -114,7 +114,7 @@
                         android:gravity="right"
                         style="@style/ConsentForm_GenderStyle"
                         android:paddingEnd="14dp"
-                        android:textColor="@color/bright_cerulean"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/consent_minor_textsize" />
 
                     <TextView

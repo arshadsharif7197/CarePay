@@ -77,9 +77,14 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
         if (checkInDTO != null) {
             CheckInLabelDTO checkInLabelDTO = checkInDTO.getMetadata().getLabel();
             if (checkInLabelDTO != null) {
-                setViewTextById(R.id.practice_title, checkInLabelDTO.getGoBack());
+                setViewTextById(R.id.practice_title, checkInLabelDTO.getActivityHeading());
                 setViewTextById(R.id.practice_go_back, checkInLabelDTO.getGoBack());
-                setViewTextById(R.id.practice_patient_count_label, "TO-DO");
+                setViewTextById(R.id.practice_patient_count_label, checkInLabelDTO.getToday());
+                practiceCheckinFilterDoctorsLabel = checkInLabelDTO.getPracticeCheckinFilterDoctors();
+                practiceCheckinFilterLocationsLabel = checkInLabelDTO.getPracticeCheckinFilterLocations();
+                practicePaymentsFilter = checkInLabelDTO.getPracticeCheckinFilter();
+                practicePaymentsFilterFindPatientByName = checkInLabelDTO.getPracticeCheckinFilterFindPatientByName();
+                practicePaymentsFilterClearFilters = checkInLabelDTO.getPracticeCheckinFilterClearFilters();
             }
 
             String patientCount = String.format(Locale.getDefault(), "%1s", checkInDTO.getPayload().getAppointments().size());

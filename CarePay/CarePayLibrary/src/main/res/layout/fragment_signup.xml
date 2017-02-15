@@ -101,6 +101,7 @@
             android:id="@+id/signupAlreadyHaveAccountTextView"
             style="@style/SigninSignupClickableTextView"
             android:text="@string/account_exist_textview"
+            android:textColor="@color/button_bright_cerulean"
             android:layout_gravity="bottom"/>
     </LinearLayout>
 

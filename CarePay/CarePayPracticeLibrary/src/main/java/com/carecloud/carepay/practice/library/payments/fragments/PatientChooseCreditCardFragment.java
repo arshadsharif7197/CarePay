@@ -171,7 +171,7 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
 
     private void onSetRadioButtonSemiBoldTypeFace(RadioButton radioButton) {
         SystemUtil.setProximaNovaSemiboldTypeface(this.activity, radioButton);
-        radioButton.setTextColor(ContextCompat.getColor(activity, R.color.bright_cerulean));
+        radioButton.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimary));
     }
 
     private View.OnClickListener nextButtonListener = new View.OnClickListener() {
