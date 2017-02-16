@@ -26,8 +26,8 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.payments.models.PatientDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 
 import java.util.HashMap;
@@ -149,10 +149,11 @@ public class FindPatientDialog extends Dialog {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(getContext()).dismiss();
 
-            Gson gson = new Gson();
-            PaymentsModel searchResult = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
-            List<PatientDTO> patients = searchResult.getPaymentPayload().getPatients();
-            showSearchResultList(patients);
+            PaymentsModel searchResult = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
+            if (searchResult != null) {
+                List<PatientDTO> patients = searchResult.getPaymentPayload().getPatients();
+                showSearchResultList(patients);
+            }
         }
 
         @Override
