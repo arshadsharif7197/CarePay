@@ -29,6 +29,7 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePhotoDTO;
+import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
 import com.carecloud.carepaylibray.demographics.scanner.InsuranceScannerFragment;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
@@ -109,7 +110,13 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
         this.context = context;
         this.index =index;
         this.demographicDTO =demographicDTO;
-        insuranceDTO = demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(index);
+        if( index >=0 ){
+            insuranceDTO = demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(index);
+        } else {
+            insuranceDTO = new DemographicInsurancePayloadDTO();
+            insuranceDTO.getInsurancePhotos().add(new DemographicInsurancePhotoDTO());
+            insuranceDTO.getInsurancePhotos().add(new DemographicInsurancePhotoDTO());
+        }
         this.globalLabelsDTO =demographicDTO.getMetadata().getLabels();
         DemographicMetadataEntityInsurancesDTO demographicMetadataEntityInsurancesDTO  = demographicDTO.getMetadata().getDataModels().demographic.insurances;
         insuranceMetadataDTO
@@ -135,6 +142,9 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
         saveChangesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ((HealthInsuranceFragment.InsuranceDocumentScannerListener)CheckinInsuranceEditDialog.this.getOwnerActivity()).updateInsuranceDTO
+                        (index,
+                        insuranceDTO);
                 dismiss();
             }
         });
@@ -223,6 +233,7 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
         setEditTexts(view);
         setTypefaces(view);
         populateViewsFromModel();
+        setDialogTitle(globalLabelsDTO.getDemographicsUpdateInsuranceToolbarTitle().toUpperCase());
     }
 
     private void setEditTexts(final View view) {

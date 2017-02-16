@@ -423,6 +423,13 @@ public class DemographicsActivity extends BasePatientActivity
         initializeInsurancesFragment();
     }
 
+    @Override
+    public void disableMainButton(boolean isDisabled) {
+        CheckinDemographicsFragment checkinFragment = (CheckinDemographicsFragment)
+                getSupportFragmentManager().findFragmentById(R.id.root_layout);
+        checkinFragment.checkIfDisableButton(isDisabled);
+    }
+
 
     /**
      * Adapter for the viewpager

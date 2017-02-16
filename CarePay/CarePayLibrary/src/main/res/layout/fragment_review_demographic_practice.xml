@@ -4,14 +4,14 @@
     android:id="@+id/demographicsReviewRootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:padding="0dp"
+    android:layout_margin="0dp"
+    android:background="@color/alert"
     android:descendantFocusability="beforeDescendants"
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
-
-    <include layout="@layout/toolbar_demographics_review" />
 
     <ProgressBar
         android:id="@+id/demographicReviewProgressBar"
@@ -25,71 +25,97 @@
     <ScrollView
         android:id="@+id/adddemoScrollview"
         android:layout_width="match_parent"
+        android:padding="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="@dimen/demographics_address_bottom_margin"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:background="@color/yellowGreen">
 
         <LinearLayout
             android:id="@+id/adddemoLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="0dp"
+            android:layout_margin="0dp"
             android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/reviewtitle"
-                style="@style/DemographicsFragmentsHeadingStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/reviewSubtitle"
-                style="@style/DemographicsFragmentsSubHeadingStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
 
 
             <RelativeLayout
                 android:id="@+id/chknin_profile_image_layout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_220dp">
+                android:padding="0dp"
+                android:layout_margin="0dp"
+                android:layout_height="@dimen/dimen_300dp">
+
+
 
                 <ImageView
                     android:id="@+id/chknin_profile_bg_image"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:padding="0dp"
+                    android:layout_margin="0dp"/>
 
                 <LinearLayout
                     android:id="@+id/payment_chknin_header"
                     android:layout_width="match_parent"
                     android:alpha="0.9"
-                    android:layout_height="@dimen/dimen_220dp"
-                    android:background="@drawable/top_left_right_rounded_background"
+                    android:layout_height="@dimen/dimen_300dp"
+                    android:background="@color/colorPrimary"
                     android:gravity="center_horizontal"
+                    android:padding="0dp"
+                    android:layout_margin="0dp"
                     android:orientation="vertical">
 
                     <RelativeLayout
-                        android:layout_width="@dimen/dimen_88dp"
-                        android:layout_height="@dimen/dimen_88dp"
-                        android:layout_marginTop="@dimen/dimen_26dp">
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/dimen_88dp">
 
 
                         <ImageView
                             android:id="@+id/patientPicImageView"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_width="@dimen/dimen_88dp"
+                            android:layout_height="@dimen/dimen_88dp"
                             android:src="@drawable/icn_placeholder_user_profile"
-                            android:layout_alignParentStart="true"
                             android:layout_alignParentTop="true"/>
 
+                        <Button
+                            android:id="@+id/updateProfileImageButton"
+                            style="@style/DemographicsDocsButtonStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/patientPicImageView"
+                            />
                     </RelativeLayout>
 
-                    <Button
-                        android:id="@+id/updateProfileImageButton"
-                        style="@style/DemographicsDocsButtonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        />
 
+
+                </LinearLayout>
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_alignParentTop="true"
+                    android:alpha="0.9"
+                    android:gravity="left"
+                    android:background="@drawable/bottom_rounded_background_gray"
+                    android:paddingStart="0dp">
+                    <TextView
+                        android:id="@+id/reviewtitle"
+                        style="@style/DemographicsFragmentsHeadingStyle"
+                        android:layout_width="wrap_content"
+                        android:textColor="@color/white"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/reviewSubtitle"
+                        style="@style/DemographicsFragmentsSubHeadingStyle"
+                        android:textColor="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
             </RelativeLayout>
 

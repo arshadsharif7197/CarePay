@@ -18,7 +18,9 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.practice.library.customdialog.CheckinInsuranceEditDialog;
 import com.carecloud.carepay.practice.library.patientmodecheckin.consentform.FormData;
+import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.PracticeIdDocScannerFragment;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
@@ -628,13 +630,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     public void onDemographicDtoChanged(DemographicDTO demographicDTO) {
         this.demographicDTO = demographicDTO;
 
-        /*CheckinInsurancesSummaryFragment checkinInsurancesSummaryFragment = (CheckinInsurancesSummaryFragment)
-                getSupportFragmentManager().findFragmentById(R.id.insuranceCapturer);
-
-        if (checkinInsurancesSummaryFragment != null) {
-            demographicDTO.getPayload().getDemographics().getPayload()
-                    .setInsurances(checkinInsurancesSummaryFragment.getInsurancePayloadDTOs());
-        }*/
 
         IdDocScannerFragment idDocScannerFragment = (IdDocScannerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.demographicsDocsLicense);
@@ -679,8 +674,9 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
 
     @Override
     public void navigateToInsuranceDocumentFragment(int index, DemographicInsurancePayloadDTO model) {
-
-        CheckinDemographicsFragment checkinFragment = (CheckinDemographicsFragment)
+        CheckinInsuranceEditDialog checkinInsuranceEditDialog = new CheckinInsuranceEditDialog(this,true,demographicDTO,index);
+        checkinInsuranceEditDialog.show();
+        /*CheckinDemographicsFragment checkinFragment = (CheckinDemographicsFragment)
                 getSupportFragmentManager().findFragmentById(R.id.root_layout);
         onDemographicDtoChanged(checkinFragment.updateModels());
 
@@ -692,7 +688,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         InsuranceDocumentScannerFragment fragment = new InsuranceDocumentScannerFragment();
         fragment.setArguments(args);
 
-        navigateToFragment(fragment, false);
+        navigateToFragment(fragment, false);*/
     }
 
     @Override
@@ -721,7 +717,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     public void initializeIdDocScannerFragment() {
 
         // add license fragment
-        IdDocScannerFragment fragment = new IdDocScannerFragment();
+        PracticeIdDocScannerFragment fragment = new PracticeIdDocScannerFragment();
 
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, getDemographicIdDocPayloadDTO());

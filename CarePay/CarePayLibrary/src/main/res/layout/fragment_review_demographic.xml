@@ -37,13 +37,6 @@
             android:layout_marginRight="17dp"
             android:orientation="vertical">
 
-         <LinearLayout android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="@dimen/dimen_10dp"
-            android:gravity="left"
-            android:background="@drawable/bottom_rounded_background_gray"
-            android:paddingStart="0dp">
             <TextView
                 android:id="@+id/reviewtitle"
                 style="@style/DemographicsFragmentsHeadingStyle"
@@ -55,7 +48,6 @@
                 style="@style/DemographicsFragmentsSubHeadingStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-        </LinearLayout>
 
             <LinearLayout android:layout_width="match_parent"
                 android:layout_height="wrap_content"

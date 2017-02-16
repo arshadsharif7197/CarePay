@@ -175,6 +175,13 @@ public class NewReviewDemographicsActivity extends BasePatientActivity
     }
 
     @Override
+    public void disableMainButton(boolean isDisabled) {
+        CheckinDemographicsFragment checkinFragment = (CheckinDemographicsFragment)
+                getSupportFragmentManager().findFragmentById(R.id.root_layout);
+        checkinFragment.checkIfDisableButton(isDisabled);
+    }
+
+    @Override
     public void initializeIdDocScannerFragment() {
 
         // add license fragment

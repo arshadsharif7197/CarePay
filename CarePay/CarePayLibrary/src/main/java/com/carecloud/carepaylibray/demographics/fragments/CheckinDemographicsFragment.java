@@ -35,6 +35,7 @@ import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
@@ -181,6 +182,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        isPractice = ApplicationMode.getInstance().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
         if (isPractice){
             view = inflater.inflate(R.layout.fragment_review_demographic_practice, container, false);
         }else{
@@ -196,19 +198,21 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         setTypefaces(view);
         initViewFromModels();
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.demographics_review_toolbar);
-        TextView title = (TextView) toolbar.findViewById(R.id.demographics_review_toolbar_title);
-        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
-        title.setText(globalLabelsMetaDTO.getDemographicsReviewToolbarTitle());
-        toolbar.setTitle("");
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().finish();
-            }
-        });
+        if (!isPractice) {
+            Toolbar toolbar = (Toolbar) view.findViewById(R.id.demographics_review_toolbar);
+            TextView title = (TextView) toolbar.findViewById(R.id.demographics_review_toolbar_title);
+            SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
+            title.setText(globalLabelsMetaDTO.getDemographicsReviewToolbarTitle());
+            toolbar.setTitle("");
+            toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getActivity().finish();
+                }
+            });
+        }
 
         formatEditText();
         ((ScrollView)view.findViewById(R.id.adddemoScrollview)).smoothScrollTo(0,0);
@@ -372,6 +376,8 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         buttonConfirmData.setOnClickListener(this);
         buttonConfirmData.setText(globalLabelsMetaDTO.getDemographicsReviewCorrectButton().toUpperCase());
 
+        enableButton(isAllFieldsValid());
+
     }
 
     private void formatEditText() {
@@ -398,6 +404,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                     firstNameLabel.setError(firstNameError);
                     firstNameLabel.setErrorEnabled(true);
                 }
+                checkIfEnableButton();
             }
         });
 
@@ -429,6 +436,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                     doblabel.setError(null);
                 }
                 StringUtil.autoFormatDateOfBirth(editable, prevLen);
+                checkIfEnableButton();
             }
         });
         dobEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -474,6 +482,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                 }
                 // auto-format as typing
                 StringUtil.autoFormatPhone(phonenumber, len);
+                checkIfEnableButton();
             }
         });
         lastNameText.addTextChangedListener(new TextWatcher() {
@@ -498,7 +507,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                     lastNameLabel.setError(lastNameError);
                     lastNameLabel.setErrorEnabled(true);
                 }
-
+                checkIfEnableButton();
             }
         });
 
@@ -524,6 +533,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                     address1Label.setError(lastNameError);
                     address1Label.setErrorEnabled(true);
                 }
+                checkIfEnableButton();
 
             }
         });
@@ -550,6 +560,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                 }
 
                 StringUtil.autoFormatZipcode(editable, prevLen);
+                checkIfEnableButton();
             }
         });
 
@@ -576,6 +587,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                     cityLabel.setErrorEnabled(true);
                 }
 
+                checkIfEnableButton();
             }
         });
 
@@ -601,7 +613,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                     stateLabel.setError(lastNameError);
                     stateLabel.setErrorEnabled(true);
                 }
-
+                checkIfEnableButton();
             }
         });
 
@@ -1280,6 +1292,24 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
 
         }.execute(zipcode);
+    }
+
+    public void checkIfEnableButton(){
+        checkIfDisableButton(false);
+    }
+
+    public void checkIfDisableButton(boolean isDisabled){
+        enableButton(isAllFieldsValid() && !isDisabled);
+    }
+
+    public void enableButton(boolean isEnabled){
+        if(isPractice){
+            buttonConfirmData.setBackground(ContextCompat.getDrawable(getContext(),isEnabled? R.drawable.bg_green_overlay  : R.drawable.bg_silver_overlay));
+
+        } else {
+            buttonConfirmData.setBackground(ContextCompat.getDrawable(getContext(),isEnabled? R.drawable.language_button_selector  : R.drawable.button_light_gray_bg));
+        }
+        buttonConfirmData.setEnabled(isEnabled);
     }
 
     @Override
