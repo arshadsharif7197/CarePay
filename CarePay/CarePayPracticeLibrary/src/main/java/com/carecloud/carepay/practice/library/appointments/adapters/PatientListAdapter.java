@@ -190,7 +190,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 continue;
             }
 
-            if (null !=  patient.appointmentTime && !DateUtil.isSameDay(dateTime, patient.appointmentTime)) {
+            if (null != patient.appointmentTime && !DateUtil.isSameDay(dateTime, patient.appointmentTime)) {
                 dateTime = patient.appointmentTime;
                 filteredPatients.add(new Patient(dateTime));
                 filteredPatients.add(new Patient());
