@@ -52,9 +52,10 @@ public class PracticeNavigationHelper {
     /**
      * Navigation using application context
      *
+     *  @param context    activity context
      * @param workflowDTO WorkflowDTO
      */
-    public void navigateToWorkflow(WorkflowDTO workflowDTO) {
+    public void navigateToWorkflow(Context context, WorkflowDTO workflowDTO) {
         Intent intent = null;
         if (workflowDTO == null || StringUtil.isNullOrEmpty(workflowDTO.getState())) {
             return;
@@ -156,5 +157,15 @@ public class PracticeNavigationHelper {
             intent.putExtras(bundle);
             context.startActivity(intent);
         }
+    }
+
+
+    /**
+     * Navigation using application context
+     *
+     * @param workflowDTO WorkflowDTO
+     */
+    public void navigateToWorkflow(WorkflowDTO workflowDTO) {
+        navigateToWorkflow(context, workflowDTO);
     }
 }

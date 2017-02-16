@@ -461,7 +461,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(getContext()).dismiss();
-            getPracticeNavigationHelper().navigateToWorkflow(workflowDTO);
+            getPracticeNavigationHelper().navigateToWorkflow(getContext(), workflowDTO);
         }
 
         @Override
@@ -486,7 +486,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             // log out previous user from Cognito
             CognitoAppHelper.getPool().getUser().signOut();
             CognitoAppHelper.setUser(null);
-            getPracticeNavigationHelper().navigateToWorkflow(workflowDTO);
+            getPracticeNavigationHelper().navigateToWorkflow(getContext(), workflowDTO);
             CloverMainActivity.this.finish();
         }
 
@@ -507,7 +507,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(getContext()).dismiss();
-            getPracticeNavigationHelper().navigateToWorkflow(workflowDTO);
+            getPracticeNavigationHelper().navigateToWorkflow(getContext(), workflowDTO);
         }
 
         @Override
