@@ -117,7 +117,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
             ProgressDialogUtil.getInstance(getContext()).dismiss();
             findViewById(R.id.logoutTextview).setEnabled(true);
             AppointmentsActivity.this.finish();
-            getPracticeNavigationHelper().navigateToWorkflow(workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
 
         @Override
@@ -140,7 +140,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
             ProgressDialogUtil.getInstance(getContext()).dismiss();
             findViewById(R.id.btnHome).setEnabled(true);
             AppointmentsActivity.this.finish();
-            getPracticeNavigationHelper().navigateToWorkflow(workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
 
         @Override
