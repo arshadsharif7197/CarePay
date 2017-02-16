@@ -31,6 +31,8 @@ import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -56,8 +58,12 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
 
     private RecyclerView availableHoursRecycleView;
     private RecyclerView availableLocationsRecycleView;
+    private TextView titleView;
+    private View singleLocation;
+    private TextView singleLocationText;
 
     private List<AppointmentLocationsDTO> selectedLocations = new LinkedList<>();
+    private SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
 
     /**
      * Instantiates a new Practice available hours dialog.
@@ -94,48 +100,76 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     }
 
     private void inflateUIComponents(View view) {
-        String range = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentSelectRangeButton();
-        TextView editRangeButton = (TextView) view.findViewById(R.id.edit_date_range_button);//TODO set Text from DTO
-        editRangeButton.setOnClickListener(dateRangeClickListener);
-        SystemUtil.setGothamRoundedBoldTypeface(context, editRangeButton);
-
-        updateDateRange();
+        singleLocation = view.findViewById(R.id.practice_available_single_location);
+        singleLocationText = (TextView) view.findViewById(R.id.practice_single_location_text);
 
         LinearLayoutManager availableHoursLayoutManager = new LinearLayoutManager(context);
         availableHoursLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        availableHoursRecycleView = (RecyclerView)
-                view.findViewById(com.carecloud.carepaylibrary.R.id.available_hours_recycler_view);
+        availableHoursRecycleView = (RecyclerView) view.findViewById(R.id.available_hours_recycler_view);
         availableHoursRecycleView.setLayoutManager(availableHoursLayoutManager);
 
         LinearLayoutManager availableLocationsLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        availableLocationsRecycleView = (RecyclerView) view.findViewById(com.carecloud.carepaylibrary.R.id.available_locations_recycler);
+        availableLocationsRecycleView = (RecyclerView) view.findViewById(R.id.available_locations_recycler);
         availableLocationsRecycleView.setLayoutManager(availableLocationsLayoutManager);
 
+        String range = null;
+        try {
+            range = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentEditDateRangeButton();
 
-        setDialogTitle(((ScheduleAppointmentActivity) context).getResourcesToSchedule().getMetadata().getLabel()
-                .getAvailableHoursHeading());
+            String location = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentLocationsLabel();
+            TextView locationsLabel = (TextView) view.findViewById(R.id.location_text);
+            locationsLabel.setText(location != null ? location : context.getString(R.string.locations_label));
+
+            setDialogTitle(resourcesToScheduleDTO.getMetadata().getLabel()
+                    .getAvailableHoursHeading());
+        }catch (NullPointerException ex){
+            ex.printStackTrace();
+        }
+
+        TextView editRangeButton = (TextView) view.findViewById(R.id.edit_date_range_button);
+        editRangeButton.setText(range != null ? range : context.getString(R.string.edit_date_range_button_label));
+        editRangeButton.setOnClickListener(dateRangeClickListener);
+        SystemUtil.setGothamRoundedBoldTypeface(context, editRangeButton);
+
         setCancelImage(R.drawable.icn_arrow_up);
         setCancelable(false);
+
+        updateDateRange();
     }
 
     private void setAdapters(){
-        if(availableHoursRecycleView.getAdapter() == null){
-            availableHoursRecycleView.setAdapter(new PracticeAvailableHoursAdapter(context,
-                    getAvailableHoursListWithHeader(), PracticeAvailableHoursDialog.this));
-        }else{
-            PracticeAvailableHoursAdapter availableHoursAdapter = (PracticeAvailableHoursAdapter) availableHoursRecycleView.getAdapter();
-            availableHoursAdapter.setItems(getAvailableHoursListWithHeader());
-            availableHoursAdapter.notifyDataSetChanged();
-        }
+        try {
+            List<AppointmentLocationsDTO> locations = extractAvailableLocations(availabilityDTO);
 
-        if(availableLocationsRecycleView.getAdapter() == null){
-            String all = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentAllLocationsItem();
-            availableLocationsRecycleView.setAdapter(new PracticeAvailableLocationsAdapter(getContext(), extractAvailableLocations(availabilityDTO), this, all));
-        }else{
-            PracticeAvailableLocationsAdapter availableLocationsAdapter = (PracticeAvailableLocationsAdapter) availableLocationsRecycleView.getAdapter();
-            availableLocationsAdapter.setItems(extractAvailableLocations(availabilityDTO));
-            availableLocationsAdapter.notifyDataSetChanged();
+            if (availableHoursRecycleView.getAdapter() == null) {
+                availableHoursRecycleView.setAdapter(new PracticeAvailableHoursAdapter(context,
+                        getAvailableHoursListWithHeader(), PracticeAvailableHoursDialog.this, locations.size() > 1));
+            } else {
+                PracticeAvailableHoursAdapter availableHoursAdapter = (PracticeAvailableHoursAdapter) availableHoursRecycleView.getAdapter();
+                availableHoursAdapter.setItems(getAvailableHoursListWithHeader());
+                availableHoursAdapter.setMultiLocationStyle(locations.size() > 1);
+                availableHoursAdapter.notifyDataSetChanged();
+            }
+
+            if (locations.size() > 1) {
+                availableLocationsRecycleView.setVisibility(View.VISIBLE);
+                singleLocation.setVisibility(View.GONE);
+                if (availableLocationsRecycleView.getAdapter() == null) {
+                    String all = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentAllLocationsItem();
+                    availableLocationsRecycleView.setAdapter(new PracticeAvailableLocationsAdapter(getContext(), locations, this, all));
+                } else {
+                    PracticeAvailableLocationsAdapter availableLocationsAdapter = (PracticeAvailableLocationsAdapter) availableLocationsRecycleView.getAdapter();
+                    availableLocationsAdapter.setItems(locations);
+                    availableLocationsAdapter.notifyDataSetChanged();
+                }
+            } else {
+                availableLocationsRecycleView.setVisibility(View.GONE);
+                singleLocation.setVisibility(View.VISIBLE);
+                singleLocationText.setText(locations.get(0).getName());
+            }
+        }catch (NullPointerException ex){
+            ex.printStackTrace();
         }
     }
 
@@ -228,7 +262,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
         public void onFailure(String exceptionMessage) {
             ProgressDialogUtil.getInstance(context).dismiss();
             SystemUtil.showDefaultFailureDialog(context);
-            Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            Log.e(context.getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -236,7 +270,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     private void resetLocatonSelections(boolean clearAll){
         RecyclerView.LayoutManager layoutManager = availableLocationsRecycleView.getLayoutManager();
         for(int i=0; i<layoutManager.getChildCount(); i++) {
-            layoutManager.getChildAt(i).findViewById(com.carecloud.carepaylibrary.R.id.available_location).setSelected(false);
+            layoutManager.getChildAt(i).findViewById(R.id.available_location).setSelected(false);
         }
         ((PracticeAvailableLocationsAdapter) availableLocationsRecycleView.getAdapter()).resetLocationsSelected(clearAll);
         selectedLocations.clear();
@@ -372,7 +406,6 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
             updateSelectedLocationsForAdapter();
 
         }
-        //TODO make updated request with location param
 
     }
 
@@ -400,7 +433,21 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
         }
 
         //need to sort the slots by time just in case there are multiple locations and times are out of order
-        //TODO
+        Collections.sort(appointmentsSlots, new Comparator<AppointmentsSlotsDTO>() {
+            @Override
+            public int compare(AppointmentsSlotsDTO o1, AppointmentsSlotsDTO o2) {
+                try {
+                    Date d1 = dateFormater.parse(o1.getStartTime());
+                    Date d2 = dateFormater.parse(o2.getStartTime());
+
+                    return d1.compareTo(d2);
+                }catch (ParseException pxe){
+                    pxe.printStackTrace();
+                }
+
+                return 0;
+            }
+        });
 
         return appointmentsSlots;
     }

@@ -227,6 +227,12 @@ public class AppointmentLabelDTO implements Serializable {
     @SerializedName("appointment_all_locations_item")
     @Expose
     private String appointmentAllLocationsItem;
+    @SerializedName("appointment_locations_label")
+    @Expose
+    private String appointmentLocationsLabel;
+    @SerializedName("appoitment_edit_date_range_button")
+    @Expose
+    private String appointmentEditDateRangeButton;
 
     public String getAppointmentSelectRangeButton() {
         return appointmentSelectRangeButton;
@@ -1220,5 +1226,21 @@ public class AppointmentLabelDTO implements Serializable {
 
     public void setAppointmentRequestFailureMessage(String appointmentRequestFailureMessage) {
         this.appointmentRequestFailureMessage = appointmentRequestFailureMessage;
+    }
+
+    public String getAppointmentLocationsLabel() {
+        return appointmentLocationsLabel;
+    }
+
+    public void setAppointmentLocationsLabel(String appointmentLocationsLabel) {
+        this.appointmentLocationsLabel = appointmentLocationsLabel;
+    }
+
+    public String getAppointmentEditDateRangeButton() {
+        return appointmentEditDateRangeButton;
+    }
+
+    public void setAppointmentEditDateRangeButton(String appointmentEditDateRangeButton) {
+        this.appointmentEditDateRangeButton = appointmentEditDateRangeButton;
     }
 }
