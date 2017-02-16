@@ -1,6 +1,5 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -24,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.base.IPracticeSession;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -55,7 +55,7 @@ import java.util.Locale;
 import java.util.Map;
 
 
-public class PracticeAppSignatureActivity extends AppCompatActivity {
+public class PracticeAppSignatureActivity extends AppCompatActivity implements IPracticeSession{
 
     public static boolean isBackButtonClicked = false;
     public static int numOfLaunches = 0;
@@ -101,7 +101,7 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(PracticeAppSignatureActivity.this).dismiss();
             //ConsentActivity.this.finish();
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(PracticeAppSignatureActivity.this, workflowDTO);
+            getPracticeNavigationHelper().navigateToWorkflow(workflowDTO);
         }
 
         @Override
@@ -549,16 +549,8 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     *
-     * @param workflowJson intake forms json
-     */
-
-    public void launchIntake(String workflowJson) {
-        Intent intent = new Intent();
-        intent.setAction("NEW_CHECKEDIN_NOTIFICATION");
-        intent.putExtra("INTAKE_WORKFLOW", workflowJson);
-        sendBroadcast(intent);
+    @Override
+    public PracticeNavigationHelper getPracticeNavigationHelper() {
+        return ((IPracticeSession) getApplication()).getPracticeNavigationHelper();
     }
-
 }

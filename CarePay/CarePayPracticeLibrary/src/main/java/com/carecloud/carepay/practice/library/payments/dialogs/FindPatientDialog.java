@@ -26,7 +26,8 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.payments.models.PatientDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.google.gson.Gson;
+import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.google.gson.JsonArray;
 
 import java.util.HashMap;
@@ -36,9 +37,10 @@ import java.util.Map;
 public class FindPatientDialog extends Dialog {
 
     private Context context;
-    private TransitionDTO transitionDTO;
     private String closeLabel;
     private String hintLabel;
+    private TransitionDTO transitionDTO;
+    private OnItemClickedListener clickedListener;
 
     /**
      * Constructor
@@ -140,27 +142,51 @@ public class FindPatientDialog extends Dialog {
 
         @Override
         public void onPreExecute() {
+            ProgressDialogUtil.getInstance(getContext()).show();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            Gson gson = new Gson();
-            PaymentsModel searchResult = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
-            List<PatientDTO> patients = searchResult.getPaymentPayload().getPatients();
-            showSearchResultList(patients);
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
+
+            PaymentsModel searchResult = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
+            if (searchResult != null) {
+                List<PatientDTO> patients = searchResult.getPaymentPayload().getPatients();
+                showSearchResultList(patients);
+            }
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
         }
     };
 
     private void showSearchResultList(List<PatientDTO> patients) {
         PatientSearchResultAdapter adapter = new PatientSearchResultAdapter(context, patients);
+        setOnItemClickedListener(adapter);
 
         RecyclerView searchedList = (RecyclerView) findViewById(R.id.patient_searched_list);
         searchedList.setLayoutManager(new LinearLayoutManager(context));
         searchedList.setAdapter(adapter);
         searchedList.setVisibility(View.VISIBLE);
+    }
+
+    private void setOnItemClickedListener(PatientSearchResultAdapter adapter) {
+        adapter.setClickedListener(new PatientSearchResultAdapter.OnItemClickedListener() {
+            @Override
+            public void onItemClicked(PatientDTO patient) {
+                dismiss();
+                clickedListener.onItemClicked(patient);
+            }
+        });
+    }
+
+    public void setClickedListener(OnItemClickedListener clickedListener) {
+        this.clickedListener = clickedListener;
+    }
+
+    public interface OnItemClickedListener {
+        void onItemClicked(PatientDTO patient);
     }
 }

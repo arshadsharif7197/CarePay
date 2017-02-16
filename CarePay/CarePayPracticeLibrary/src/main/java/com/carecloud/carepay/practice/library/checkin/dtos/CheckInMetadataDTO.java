@@ -25,6 +25,10 @@ public class CheckInMetadataDTO {
      * The label
      */
     public CheckInLabelDTO getLabel() {
+        if (null == label) {
+            return new CheckInLabelDTO();
+        }
+
         return label;
     }
 

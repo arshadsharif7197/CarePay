@@ -28,8 +28,7 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 
 public class PracticeNavigationHelper {
 
-    private static PracticeNavigationHelper instance;
-    private static Context context;
+    private Context context;
 
     /**
      * Getting same state form 2 endpoints hence added this flag to differentiate app flow,
@@ -38,34 +37,22 @@ public class PracticeNavigationHelper {
      */
     private static boolean isPatientModeAppointments;
 
-    private PracticeNavigationHelper() {
-
-    }
-
     /**
-     * PracticeNavigationHelper singleton initialization from Application class
-     *
-     * @param context application context
+     * @param context Application context
      */
-    public static void initInstance(Context context) {
-        PracticeNavigationHelper.context = context;
-        if (instance == null) {
-            instance = new PracticeNavigationHelper();
-        }
-    }
-
-    public static PracticeNavigationHelper getInstance() {
-        return instance;
+    public PracticeNavigationHelper(Context context) {
+        this.context = context;
     }
 
     public void setIsPatientModeAppointments(boolean isPatientModeAppointments) {
         PracticeNavigationHelper.isPatientModeAppointments = isPatientModeAppointments;
     }
 
+
     /**
-     * Navigation using activity context
+     * Navigation using application context
      *
-     * @param context     activity context
+     *  @param context    activity context
      * @param workflowDTO WorkflowDTO
      */
     public void navigateToWorkflow(Context context, WorkflowDTO workflowDTO) {
@@ -165,12 +152,13 @@ public class PracticeNavigationHelper {
 
         //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         Bundle bundle = new Bundle();
-        bundle.putSerializable(PracticeNavigationHelper.context.getClass().getSimpleName(), workflowDTO.toString());
+        bundle.putSerializable(WorkflowDTO.class.getSimpleName(), workflowDTO.toString());
         if (intent != null) {
             intent.putExtras(bundle);
             context.startActivity(intent);
         }
     }
+
 
     /**
      * Navigation using application context
@@ -178,6 +166,6 @@ public class PracticeNavigationHelper {
      * @param workflowDTO WorkflowDTO
      */
     public void navigateToWorkflow(WorkflowDTO workflowDTO) {
-        navigateToWorkflow(PracticeNavigationHelper.context, workflowDTO);
+        navigateToWorkflow(context, workflowDTO);
     }
 }

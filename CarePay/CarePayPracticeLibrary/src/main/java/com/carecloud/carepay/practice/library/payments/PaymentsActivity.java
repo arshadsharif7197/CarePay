@@ -13,20 +13,29 @@ import com.carecloud.carepay.practice.library.customdialog.FilterDialog;
 import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepay.practice.library.payments.dialogs.FindPatientDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityDialog;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.LocationDTO;
 import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PatientDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderDTO;
+import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class PaymentsActivity extends BasePracticeActivity implements FilterDialog.FilterCallBack {
 
@@ -204,10 +213,51 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 FindPatientDialog findPatientDialog = new FindPatientDialog(PaymentsActivity.this,
                         transitionDTO, paymentsLabel.getPracticePaymentsDetailDialogCloseButton(),
                         paymentsLabel.getPracticePaymentsFindPatientLabel());
+                setOnItemClickedListener(findPatientDialog);
                 findPatientDialog.show();
             }
         };
     }
+
+    private void setOnItemClickedListener(FindPatientDialog findPatientDialog) {
+        findPatientDialog.setClickedListener(new FindPatientDialog.OnItemClickedListener() {
+            @Override
+            public void onItemClicked(PatientDTO patient) {
+                Map<String, String> queryMap = new HashMap<>();
+                queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
+                queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+                queryMap.put("patient_id", patient.getPatientId());
+
+                TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getPaymentsPatientBalances();
+                WorkflowServiceHelper.getInstance().execute(transitionDTO, patientBalancesCallback, queryMap);
+            }
+        });
+    }
+
+    private WorkflowServiceCallback patientBalancesCallback = new WorkflowServiceCallback() {
+
+        @Override
+        public void onPreExecute() {
+            ProgressDialogUtil.getInstance(getContext()).show();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            PaymentsModel patientDetails = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
+
+            if (patientDetails != null) {
+                PaymentsPatientBalancessDTO paymentsPatientBalancessDTO = patientDetails.getPaymentPayload().getPatientBalances().get(0);
+                ProgressDialogUtil.getInstance(getContext()).dismiss();
+                ResponsibilityDialog responsibilityDialog = new ResponsibilityDialog(getContext(), paymentsModel, paymentsPatientBalancessDTO);
+                responsibilityDialog.show();
+            }
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
+        }
+    };
 
     @Override
     public void applyFilter() {

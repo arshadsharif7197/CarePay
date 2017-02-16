@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 
+import com.carecloud.carepay.practice.library.base.IPracticeSession;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
@@ -21,7 +22,10 @@ import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
  * Created by Jahirul Bhuiyan on 10/24/2016.
  */
 
-public class CarePayApplication extends Application implements Application.ActivityLifecycleCallbacks {
+public class CarePayApplication extends Application
+        implements Application.ActivityLifecycleCallbacks, IPracticeSession {
+
+    private PracticeNavigationHelper practiceNavigationHelper;
 
     @Override
     public void onCreate() {
@@ -35,7 +39,6 @@ public class CarePayApplication extends Application implements Application.Activ
     public void start(){
         setHttpConstants();
         ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
-        PracticeNavigationHelper.initInstance(this);
         ApplicationPreferences.createPreferences(this);
         registerActivityLifecycleCallbacks(this);
     }
@@ -51,6 +54,15 @@ public class CarePayApplication extends Application implements Application.Activ
         HttpConstants.setApiStartUrl(BuildConfig.API_START_URL);
         HttpConstants.setApiStartKey(BuildConfig.X_API_KEY);
         HttpConstants.setPushNotificationWebclientUrl(BuildConfig.WEBCLIENT_URL);
+    }
+
+    @Override
+    public PracticeNavigationHelper getPracticeNavigationHelper() {
+        if (practiceNavigationHelper == null) {
+            practiceNavigationHelper = new PracticeNavigationHelper(this);
+        }
+
+        return practiceNavigationHelper;
     }
 
     @Override
