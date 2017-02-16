@@ -29,8 +29,6 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 public class FilterDialog extends PopupWindow
         implements CustomFilterListAdapter.OnFilterOptionChangedListener, CustomSearchAdapter.OnSearchChangedListener {
 
-    private static final String TAG = "FilterDialog";
-
     private Context context;
     private View parentView;
     private Button clearFiltersButton;
@@ -164,7 +162,6 @@ public class FilterDialog extends PopupWindow
         clearFiltersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClearFilters");
                 clearSearchImageView.performClick();
                 filterModel.clear();
                 filterableDataRecyclerView.setAdapter(doctorsLocationsAdapter);
@@ -187,7 +184,6 @@ public class FilterDialog extends PopupWindow
 
     @Override
     public void onSearchChanged(FilterDataDTO filteredDataDTO) {
-        Log.d(TAG, "onSearchChanged " + filteredDataDTO.toString());
         filterCallBack.applyFilter();
     }
 }

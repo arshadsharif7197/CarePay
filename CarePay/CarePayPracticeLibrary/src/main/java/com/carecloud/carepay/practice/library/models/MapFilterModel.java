@@ -34,6 +34,15 @@ public class MapFilterModel {
         filterByPatients = !patients.isEmpty();
     }
 
+    /**
+     * Default constructor
+     */
+    public MapFilterModel() {
+        doctors = new HashMap<>();
+        locations = new HashMap<>();
+        patients = new HashMap<>();
+    }
+
     private Map<String, FilterDataDTO> map(ArrayList<FilterDataDTO> list) {
         Map<String, FilterDataDTO> map = new HashMap<>();
 
@@ -68,9 +77,5 @@ public class MapFilterModel {
 
     public boolean hasFilterByPatients() {
         return filterByPatients;
-    }
-
-    public boolean hasFilters() {
-        return filterByDoctors || filterByLocations || filterByPatients;
     }
 }

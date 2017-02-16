@@ -36,7 +36,7 @@
             android:layout_centerInParent="true"
             android:paddingEnd="0dp"
             android:paddingStart="@dimen/dimen_10dp"
-            android:textColor="@color/white"
+            android:textColor="@color/confirm_pin_sub_title"
             android:textSize="@dimen/text_size_20sp"
             app:customAssetFont="gotham_rounded_medium" />
 
