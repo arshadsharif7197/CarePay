@@ -3,6 +3,8 @@ package com.carecloud.carepay.practice.library.models;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -15,41 +17,70 @@ public class FilterModel {
     private ArrayList<FilterDataDTO> locations;
     private ArrayList<FilterDataDTO> patients;
 
-    private String practiceCheckinFilterDoctorsLabel;
-    private String practiceCheckinFilterLocationsLabel;
-    private String practicePaymentsFilter;
-    private String practicePaymentsFilterFindPatientByName;
-    private String practicePaymentsFilterClearFilters;
-
     private boolean filteringByPending;
 
-    /**
-     * @param doctors to filter from
-     * @param locations to filter from
-     * @param patients to filter from
-     * @param practiceCheckinFilterDoctorsLabel on top of doctors list
-     * @param practiceCheckinFilterLocationsLabel on top on locations list
-     * @param practicePaymentsFilter label on top of filter dialog
-     * @param practicePaymentsFilterFindPatientByName label for patient search text view
-     * @param practicePaymentsFilterClearFilters label for clear filters button
-     */
-    public FilterModel(ArrayList<FilterDataDTO> doctors,
-                       ArrayList<FilterDataDTO> locations,
-                       ArrayList<FilterDataDTO> patients,
-                       String practiceCheckinFilterDoctorsLabel,
-                       String practiceCheckinFilterLocationsLabel,
-                       String practicePaymentsFilter,
-                       String practicePaymentsFilterFindPatientByName,
-                       String practicePaymentsFilterClearFilters) {
+    public FilterModel() {
+        doctors = new ArrayList<>();
+        locations = new ArrayList<>();
+        patients = new ArrayList<>();
+    }
 
-        this.doctors = doctors;
-        this.locations = locations;
-        this.patients = patients;
-        this.practiceCheckinFilterDoctorsLabel = practiceCheckinFilterDoctorsLabel;
-        this.practiceCheckinFilterLocationsLabel = practiceCheckinFilterLocationsLabel;
-        this.practicePaymentsFilter = practicePaymentsFilter;
-        this.practicePaymentsFilterFindPatientByName = practicePaymentsFilterFindPatientByName;
-        this.practicePaymentsFilterClearFilters = practicePaymentsFilterClearFilters;
+    public void setDoctors(ArrayList<FilterDataDTO> newList) {
+        applyFilterSortByName(newList);
+        checkPreviouslyChecked(this.doctors, newList);
+        this.doctors = newList;
+    }
+
+    public void setLocations(ArrayList<FilterDataDTO> newList) {
+        applyFilterSortByName(newList);
+        checkPreviouslyChecked(this.locations, newList);
+        this.locations = newList;
+    }
+
+    public void setPatients(ArrayList<FilterDataDTO> newList) {
+        applyFilterSortByName(newList);
+        checkPreviouslyChecked(this.patients, newList);
+        this.patients = newList;
+    }
+
+    private void applyFilterSortByName(ArrayList<FilterDataDTO> filterableList) {
+        Collections.sort(filterableList, new Comparator<FilterDataDTO>() {
+            //@TargetApi(Build.VERSION_CODES.KITKAT)
+            @Override
+            public int compare(FilterDataDTO lhs, FilterDataDTO rhs) {
+                if (lhs != null && rhs != null) {
+                    return lhs.getDisplayText().compareTo(rhs.getDisplayText());
+                }
+                return -1;
+            }
+        });
+    }
+
+    private void checkPreviouslyChecked(ArrayList<FilterDataDTO> oldList, ArrayList<FilterDataDTO> newList) {
+        int oldIndex = 0;
+        int newIndex = 0;
+
+        while (oldIndex < oldList.size() && newIndex < newList.size()) {
+            FilterDataDTO oldDTO = oldList.get(oldIndex);
+            FilterDataDTO newDTO = newList.get(newIndex);
+
+            int idComparison = oldDTO.getId().compareTo(newDTO.getId());
+            int displayTextComparison = oldDTO.getDisplayText().compareTo(newDTO.getDisplayText());
+
+            if (0 == idComparison) {
+                newDTO.setChecked(oldDTO.isChecked());
+                oldIndex++;
+                newIndex++;
+            } else if (displayTextComparison < 0) {
+                oldIndex++;
+            } else if (displayTextComparison > 0) {
+                newIndex++;
+            } else if (idComparison < 0) {
+                oldIndex++;
+            } else {
+                newIndex++;
+            }
+        }
     }
 
     /**
@@ -77,31 +108,6 @@ public class FilterModel {
 
     public ArrayList<FilterDataDTO> getPatients() {
         return patients;
-    }
-
-    public String getPracticePaymentsFilter() {
-        return practicePaymentsFilter;
-    }
-
-    public String getPracticePaymentsFilterFindPatientByName() {
-        return practicePaymentsFilterFindPatientByName;
-    }
-
-    public String getPracticePaymentsFilterClearFilters() {
-        return practicePaymentsFilterClearFilters;
-    }
-
-    /**
-     * @return list of doctor plus locations
-     */
-    public List<FilterDataDTO> getDoctorsPlusLocations() {
-        List<FilterDataDTO> list = new ArrayList<>();
-        list.add(new FilterDataDTO(practiceCheckinFilterDoctorsLabel));
-        list.addAll(doctors);
-        list.add(new FilterDataDTO(practiceCheckinFilterLocationsLabel));
-        list.addAll(locations);
-
-        return list;
     }
 
     public void clearFilterByPatients() {

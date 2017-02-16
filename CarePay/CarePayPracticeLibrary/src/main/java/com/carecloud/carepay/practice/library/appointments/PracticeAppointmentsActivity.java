@@ -47,10 +47,6 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
 
     private FilterModel filter;
 
-    private ArrayList<FilterDataDTO> patients;
-    private ArrayList<FilterDataDTO> locations;
-    private ArrayList<FilterDataDTO> doctors;
-
     private Date startDate;
     private Date endDate;
 
@@ -64,6 +60,7 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_practice_appointments);
 
+        filter = new FilterModel();
         initializeCheckinDto();
         initializeViews();
     }
@@ -79,11 +76,14 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
     }
 
     private void initializePatientCounter() {
-        String patientCount = String.format(Locale.getDefault(), "%1s", patientListView.getSizeFilteredPatients());
-        setViewTextById(R.id.practice_patient_count, patientCount);
+        String count = String.format(Locale.getDefault(), "%1s", patientListView.getSizeFilteredPatients());
+        setViewTextById(R.id.practice_patient_count, count);
 
-        String pendingCount = String.format(Locale.getDefault(), "%d %s", patientListView.getSizeFilteredPendingPatients(), checkInLabelDTO.getPendingAppointmentsLabel());
-        setViewTextById(R.id.activity_practice_appointments_show_pending_appointments_label, pendingCount);
+        count = String.format(Locale.getDefault(), "%1s", patientListView.getSizeFilteredPendingPatients());
+        setViewTextById(R.id.practice_pending_count, count);
+
+        count = String.format(Locale.getDefault(), "%d %s", patientListView.getSizeFilteredPendingPatients(), checkInLabelDTO.getPendingAppointmentsLabel());
+        setViewTextById(R.id.activity_practice_appointments_show_pending_appointments_label, count);
 
         if (null != startDate && null != endDate) {
             String practiceCountLabel = DateUtil.getFormattedDate(
@@ -114,15 +114,13 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
     }
 
     private void initializeViews() {
-        if (checkInDTO != null) {
-            CheckInLabelDTO checkInLabelDTO = checkInDTO.getMetadata().getLabel();
-            if (checkInLabelDTO != null) {
-                setViewTextById(R.id.practice_title, checkInLabelDTO.getActivityHeading());
-                setViewTextById(R.id.practice_go_back, checkInLabelDTO.getGoBack());
-                setViewTextById(R.id.activity_practice_appointments_change_date_range_label, checkInLabelDTO.getChangeDateRangeLabel());
-                setViewTextById(R.id.activity_practice_appointments_show_all_appointments_label, checkInLabelDTO.getAllAppointmentsLabel());
-                setViewTextById(R.id.practice_patient_count_label, checkInLabelDTO.getTodayLabel());
-            }
+        if (checkInLabelDTO != null) {
+            setViewTextById(R.id.practice_title, checkInLabelDTO.getActivityHeading());
+            setViewTextById(R.id.practice_go_back, checkInLabelDTO.getGoBack());
+            setViewTextById(R.id.activity_practice_appointments_change_date_range_label, checkInLabelDTO.getChangeDateRangeLabel());
+            setViewTextById(R.id.activity_practice_appointments_show_all_appointments_label, checkInLabelDTO.getAllAppointmentsLabel());
+            setViewTextById(R.id.practice_patient_count_label, checkInLabelDTO.getTodayLabel());
+            setViewTextById(R.id.practice_pending_count_label, checkInLabelDTO.getPendingLabel());
         }
 
         findViewById(R.id.practice_go_back).setOnClickListener(new View.OnClickListener() {
@@ -135,46 +133,77 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
         findViewById(R.id.practice_filter_label).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                filter = new FilterModel(doctors, locations, patients,
+                FilterDialog filterDialog = new FilterDialog(getContext(),
+                        findViewById(R.id.activity_practice_appointments), filter,
                         checkInLabelDTO.getPracticeCheckinFilterDoctors(), checkInLabelDTO.getPracticeCheckinFilterLocations(),
                         checkInLabelDTO.getPracticeCheckinFilter(), checkInLabelDTO.getPracticeCheckinFilterFindPatientByName(),
                         checkInLabelDTO.getPracticeCheckinFilterClearFilters());
-                FilterDialog filterDialog = new FilterDialog(getContext(),
-                        findViewById(R.id.activity_practice_appointments), filter);
 
                 filterDialog.showPopWindow();
             }
         });
 
         initializePracticeSelectDateRange();
-//        initializeShowAllAppointments();
-//        initializeShowPendingAppointments();
+        initializeShowAllAppointments();
+        initializeShowPendingAppointments();
+    }
+
+    private void initializeShowAllAppointments() {
+        findViewById(R.id.activity_practice_appointments_show_all_appointments_label).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showViewById(R.id.activity_practice_appointments_show_pending_appointments_label);
+                showViewById(R.id.practice_patient_count);
+                showViewById(R.id.practice_patient_count_label);
+                hideViewById(R.id.activity_practice_appointments_show_all_appointments_label);
+                disappearViewById(R.id.practice_pending_count);
+                disappearViewById(R.id.practice_pending_count_label);
+                filter.setFilteringByPending(false);
+                applyFilter();
+            }
+        });
+    }
+
+    private void initializeShowPendingAppointments() {
+        findViewById(R.id.activity_practice_appointments_show_pending_appointments_label).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showViewById(R.id.activity_practice_appointments_show_all_appointments_label);
+                showViewById(R.id.practice_pending_count);
+                showViewById(R.id.practice_pending_count_label);
+                hideViewById(R.id.activity_practice_appointments_show_pending_appointments_label);
+                disappearViewById(R.id.practice_patient_count);
+                disappearViewById(R.id.practice_patient_count_label);
+                filter.setFilteringByPending(true);
+                applyFilter();
+            }
+        });
     }
 
     private void populateLists() {
+        ArrayList<FilterDataDTO> doctors = new ArrayList<>();
+        ArrayList<FilterDataDTO> locations = new ArrayList<>();
+        ArrayList<FilterDataDTO> patients = new ArrayList<>();
+
         CheckInPayloadDTO payload = checkInDTO.getPayload();
         if (null == payload) {
             return;
         }
 
-        doctors = new ArrayList<>();
-        locations = new ArrayList<>();
-        patients = new ArrayList<>();
-
         List<AppointmentDTO> appointments = payload.getAppointments();
         for (AppointmentDTO appointmentDTO : appointments) {
             AppointmentPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
-            addProviderOnProviderFilterList(appointmentPayloadDTO);
-            addLocationOnFilterList(appointmentPayloadDTO);
-            addPatientOnFilterList(appointmentPayloadDTO);
+            addProviderOnProviderFilterList(doctors, appointmentPayloadDTO);
+            addLocationOnFilterList(locations, appointmentPayloadDTO);
+            addPatientOnFilterList(patients, appointmentPayloadDTO);
         }
 
-        applyFilterSortByName(patients);
-        applyFilterSortByName(doctors);
-        applyFilterSortByName(locations);
+        filter.setDoctors(doctors);
+        filter.setLocations(locations);
+        filter.setPatients(patients);
     }
 
-    private void addLocationOnFilterList(AppointmentPayloadDTO appointmentPayloadDTO) {
+    private void addLocationOnFilterList(ArrayList<FilterDataDTO> locations, AppointmentPayloadDTO appointmentPayloadDTO) {
         LocationDTO locationDTO = appointmentPayloadDTO.getLocation();
         FilterDataDTO filterDataDTO = new FilterDataDTO(locationDTO.getId(), locationDTO.getName(), FilterDataDTO.FilterDataType.LOCATION);
         if (locations.indexOf(filterDataDTO) < 0) {
@@ -186,7 +215,7 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
         }
     }
 
-    private void addPatientOnFilterList(AppointmentPayloadDTO appointmentPayloadDTO) {
+    private void addPatientOnFilterList(ArrayList<FilterDataDTO> patients, AppointmentPayloadDTO appointmentPayloadDTO) {
         PatientDTO patientDTO = appointmentPayloadDTO.getPatient();
         FilterDataDTO filterDataDTO = new FilterDataDTO(patientDTO.getId(), patientDTO.getFullName(), FilterDataDTO.FilterDataType.PATIENT);
         if (patients.indexOf(filterDataDTO) < 0) {
@@ -198,7 +227,7 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
         }
     }
 
-    private void addProviderOnProviderFilterList(AppointmentPayloadDTO appointmentPayloadDTO) {
+    private void addProviderOnProviderFilterList(ArrayList<FilterDataDTO> doctors, AppointmentPayloadDTO appointmentPayloadDTO) {
         ProviderDTO providerDTO = appointmentPayloadDTO.getProvider();
         FilterDataDTO filterDataDTO = new FilterDataDTO(providerDTO.getId(), providerDTO.getName(), FilterDataDTO.FilterDataType.PROVIDER);
         if (doctors.indexOf(filterDataDTO) < 0) {
@@ -208,19 +237,6 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
             filterDataDTO = doctors.get(doctors.indexOf(filterDataDTO));
             filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
         }
-    }
-
-    private void applyFilterSortByName(ArrayList<FilterDataDTO> filterableList) {
-        Collections.sort(filterableList, new Comparator<FilterDataDTO>() {
-            //@TargetApi(Build.VERSION_CODES.KITKAT)
-            @Override
-            public int compare(FilterDataDTO lhs, FilterDataDTO rhs) {
-                if (lhs != null && rhs != null) {
-                    return lhs.getDisplayText().compareTo(rhs.getDisplayText());
-                }
-                return -1;
-            }
-        });
     }
 
     @Override
@@ -271,6 +287,7 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
 
             DtoHelper.putExtra(getIntent(), workflowDTO);
             initializeCheckinDto();
+            applyFilter();
         }
 
         @Override
