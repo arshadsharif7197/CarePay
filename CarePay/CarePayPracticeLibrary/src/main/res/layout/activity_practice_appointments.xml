@@ -144,6 +144,38 @@
                 android:paddingEnd="20dp"
                 android:paddingStart="20dp"
                 android:paddingTop="10dp"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_16sp"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/activity_practice_appointments_show_all_appointments_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/activity_practice_appointments_change_date_range_label"
+                android:background="@drawable/bg_blue_overlay"
+                android:gravity="center_vertical"
+                android:paddingBottom="10dp"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_16sp"
+                android:visibility="gone"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/activity_practice_appointments_show_pending_appointments_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/activity_practice_appointments_change_date_range_label"
+                android:background="@drawable/bg_blue_overlay"
+                android:gravity="center_vertical"
+                android:paddingBottom="10dp"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_16sp"/>
         </RelativeLayout>

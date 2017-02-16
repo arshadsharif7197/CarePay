@@ -84,4 +84,18 @@ public class TwoColumnPatientListView extends RecyclerView {
     public void applyFilter(FilterModel filterModel) {
          paymentsAdapter.applyFilter(new MapFilterModel(filterModel));
     }
+
+    /**
+     * @return number of pending and non-pending patients after filtering
+     */
+    public int getSizeFilteredPatients() {
+        return paymentsAdapter.getSizeFilteredPatients();
+    }
+
+    /**
+     * @return number of pending patients after filtering
+     */
+    public int getSizeFilteredPendingPatients() {
+        return paymentsAdapter.getSizeFilteredPendingPatients();
+    }
 }
