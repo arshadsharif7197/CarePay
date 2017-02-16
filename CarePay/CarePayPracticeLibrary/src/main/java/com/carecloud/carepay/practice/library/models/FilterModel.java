@@ -13,30 +13,33 @@ import java.util.List;
 
 public class FilterModel {
 
-    private ArrayList<FilterDataDTO> doctors;
-    private ArrayList<FilterDataDTO> locations;
-    private ArrayList<FilterDataDTO> patients;
+    private ArrayList<FilterDataDTO> doctors = new ArrayList<>();
+    private ArrayList<FilterDataDTO> locations = new ArrayList<>();
+    private ArrayList<FilterDataDTO> patients = new ArrayList<>();
 
     private boolean filteringByPending;
 
-    public FilterModel() {
-        doctors = new ArrayList<>();
-        locations = new ArrayList<>();
-        patients = new ArrayList<>();
-    }
-
+    /**
+     * @param newList new list of doctors
+     */
     public void setDoctors(ArrayList<FilterDataDTO> newList) {
         applyFilterSortByName(newList);
         checkPreviouslyChecked(this.doctors, newList);
         this.doctors = newList;
     }
 
+    /**
+     * @param newList new list of locations
+     */
     public void setLocations(ArrayList<FilterDataDTO> newList) {
         applyFilterSortByName(newList);
         checkPreviouslyChecked(this.locations, newList);
         this.locations = newList;
     }
 
+    /**
+     * @param newList new list of patients
+     */
     public void setPatients(ArrayList<FilterDataDTO> newList) {
         applyFilterSortByName(newList);
         checkPreviouslyChecked(this.patients, newList);
