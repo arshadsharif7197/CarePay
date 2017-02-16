@@ -178,15 +178,15 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         int countDifferentDates = 0;
         for (Patient patient : allPatients) {
             // Check filter by patient
-            if (filterModel.hasFilterByPatients() && !patients.containsKey(patient.id)) {
+            if (filterModel.isFilteringByPatients() && !patients.containsKey(patient.id)) {
                 continue;
             }
             // Check filter by provider
-            if (filterModel.hasFilterByDoctors() && !doctors.containsKey(patient.providerId)) {
+            if (filterModel.isFilteringByDoctors() && !doctors.containsKey(patient.providerId)) {
                 continue;
             }
             // Check filter by location
-            if (filterModel.hasFilterByLocations() && !locations.containsKey(patient.locationId)) {
+            if (filterModel.isFilteringByLocations() && !locations.containsKey(patient.locationId)) {
                 continue;
             }
 

@@ -16,9 +16,10 @@ public class MapFilterModel {
     private Map<String, FilterDataDTO> locations;
     private Map<String, FilterDataDTO> patients;
 
-    private boolean filterByDoctors;
-    private boolean filterByLocations;
-    private boolean filterByPatients;
+    private boolean filteringByDoctors;
+    private boolean filteringByLocations;
+    private boolean filteringByPatients;
+    private boolean filteringByPending;
 
     /**
      * @param filterModel to transform to map
@@ -29,9 +30,10 @@ public class MapFilterModel {
         locations = map(filterModel.getLocations());
         patients = map(filterModel.getPatients());
 
-        filterByDoctors = !doctors.isEmpty();
-        filterByLocations = !locations.isEmpty();
-        filterByPatients = !patients.isEmpty();
+        filteringByDoctors = !doctors.isEmpty();
+        filteringByLocations = !locations.isEmpty();
+        filteringByPatients = !patients.isEmpty();
+        filteringByPending = filterModel.isFilteringByPending();
     }
 
     /**
@@ -67,15 +69,19 @@ public class MapFilterModel {
         return patients;
     }
 
-    public boolean hasFilterByDoctors() {
-        return filterByDoctors;
+    public boolean isFilteringByDoctors() {
+        return filteringByDoctors;
     }
 
-    public boolean hasFilterByLocations() {
-        return filterByLocations;
+    public boolean isFilteringByLocations() {
+        return filteringByLocations;
     }
 
-    public boolean hasFilterByPatients() {
-        return filterByPatients;
+    public boolean isFilteringByPatients() {
+        return filteringByPatients;
+    }
+
+    public boolean isFilteringByPending() {
+        return filteringByPending;
     }
 }
