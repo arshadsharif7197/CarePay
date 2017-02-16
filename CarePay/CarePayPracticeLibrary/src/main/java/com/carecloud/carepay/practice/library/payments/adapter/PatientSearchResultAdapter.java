@@ -16,6 +16,11 @@ public class PatientSearchResultAdapter extends RecyclerView.Adapter<PatientSear
 
     private Context context;
     private List<PatientDTO> patients;
+    private OnItemClickedListener clickedListener;
+
+    public interface OnItemClickedListener {
+        void onItemClicked(PatientDTO patient);
+    }
 
     /**
      * Constructor
@@ -25,6 +30,10 @@ public class PatientSearchResultAdapter extends RecyclerView.Adapter<PatientSear
     public PatientSearchResultAdapter(Context context, List<PatientDTO> patients) {
         this.context = context;
         this.patients = patients;
+    }
+
+    public void setClickedListener(OnItemClickedListener clickedListener) {
+        this.clickedListener = clickedListener;
     }
 
     @Override
@@ -44,7 +53,7 @@ public class PatientSearchResultAdapter extends RecyclerView.Adapter<PatientSear
         return patients.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private CarePayTextView name;
 
@@ -56,6 +65,12 @@ public class PatientSearchResultAdapter extends RecyclerView.Adapter<PatientSear
             super(itemView);
 
             name = (CarePayTextView) itemView.findViewById(R.id.search_result_item_text);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            clickedListener.onItemClicked(patients.get(getAdapterPosition()));
         }
     }
 }
