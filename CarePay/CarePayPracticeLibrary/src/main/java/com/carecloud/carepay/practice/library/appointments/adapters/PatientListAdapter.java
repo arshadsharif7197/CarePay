@@ -53,6 +53,9 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private OnItemTappedListener tapListener;
     private MapFilterModel filterModel;
 
+    int sizeFilteredPatients;
+    int sizeFilteredPendingPatients;
+
     public interface OnItemTappedListener {
         void onItemTap(Object dto);
     }
@@ -174,6 +177,9 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         Map<String, FilterDataDTO> doctors = filterModel.getDoctors();
         Map<String, FilterDataDTO> locations = filterModel.getLocations();
 
+        sizeFilteredPatients = 0;
+        sizeFilteredPendingPatients = 0;
+
         Date dateTime = new Date(0);
         int countDifferentDates = 0;
         for (Patient patient : allPatients) {
@@ -188,6 +194,18 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             // Check filter by location
             if (filterModel.isFilteringByLocations() && !locations.containsKey(patient.locationId)) {
                 continue;
+            }
+
+            sizeFilteredPatients++;
+
+            // Count pending
+            if (patient.isPending) {
+                sizeFilteredPendingPatients++;
+
+                // Check filter by pending
+                if (filterModel.isFilteringByPending()) {
+                    continue;
+                }
             }
 
             if (null != patient.appointmentTime && !DateUtil.isSameDay(dateTime, patient.appointmentTime)) {
@@ -267,6 +285,20 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.tapListener = tapListener;
     }
 
+    /**
+     * @return number of pending and non-pending patients after filtering
+     */
+    public int getSizeFilteredPatients() {
+        return sizeFilteredPatients;
+    }
+
+    /**
+     * @return number of pending patients after filtering
+     */
+    public int getSizeFilteredPendingPatients() {
+        return sizeFilteredPendingPatients;
+    }
+
     class CardViewHolder extends RecyclerView.ViewHolder {
 
         CarePayTextView initials;
@@ -309,10 +341,10 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             final DateTime appointmentDateTime = new DateTime(appointmentTime);
             timeTextView.setText(appointmentDateTime.toString("hh:mm a"));
-            if (appointmentDateTime.isBeforeNow()) {
-                timeTextView.setBackgroundResource(R.drawable.bg_red_overlay);
-            } else if (isAppointmentPending) {
+            if (isAppointmentPending) {
                 timeTextView.setBackgroundResource(R.drawable.bg_orange_overlay);
+            } else if (appointmentDateTime.isBeforeNow()) {
+                timeTextView.setBackgroundResource(R.drawable.bg_red_overlay);
             } else {
                 timeTextView.setBackgroundResource(R.drawable.bg_green_overlay);
             }

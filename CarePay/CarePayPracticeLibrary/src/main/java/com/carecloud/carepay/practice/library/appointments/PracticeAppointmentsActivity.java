@@ -54,18 +54,10 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
     private Date startDate;
     private Date endDate;
 
-    private String practiceCheckinFilterDoctorsLabel;
-    private String practiceCheckinFilterLocationsLabel;
-    private String practicePaymentsFilter;
-    private String practicePaymentsFilterFindPatientByName;
-    private String practicePaymentsFilterClearFilters;
-    private String todayLabel;
-    private String tomorrowLabel;
-    private String thisMonthLabel;
-    private String nextDaysLabel;
-    private String closeText;
-    private String dialogTitle;
     private CheckInDTO checkInDTO;
+    private CheckInLabelDTO checkInLabelDTO;
+
+    private TwoColumnPatientListView patientListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +71,7 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
     private void initializeCheckinDto() {
         checkInDTO = getConvertedDTO(CheckInDTO.class);
         if (null != checkInDTO) {
+            checkInLabelDTO = checkInDTO.getMetadata().getLabel();
             populateLists();
             initializePatientListView();
             initializePatientCounter();
@@ -86,19 +79,29 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
     }
 
     private void initializePatientCounter() {
-        String patientCount = String.format(Locale.getDefault(), "%1s", checkInDTO.getPayload().getAppointments().size());
+        String patientCount = String.format(Locale.getDefault(), "%1s", patientListView.getSizeFilteredPatients());
         setViewTextById(R.id.practice_patient_count, patientCount);
 
+        String pendingCount = String.format(Locale.getDefault(), "%d %s", patientListView.getSizeFilteredPendingPatients(), checkInLabelDTO.getPendingAppointmentsLabel());
+        setViewTextById(R.id.activity_practice_appointments_show_pending_appointments_label, pendingCount);
+
         if (null != startDate && null != endDate) {
-            String practiceCountLabel = DateUtil.getFormattedDate(startDate, endDate, todayLabel, tomorrowLabel, thisMonthLabel, nextDaysLabel);
+            String practiceCountLabel = DateUtil.getFormattedDate(
+                    startDate,
+                    endDate,
+                    checkInLabelDTO.getTodayLabel(),
+                    checkInLabelDTO.getTomorrow(),
+                    checkInLabelDTO.getThisMonthLabel(),
+                    checkInLabelDTO.getNextDaysLabel()
+            );
             setViewTextById(R.id.practice_patient_count_label, practiceCountLabel);
         }
     }
 
     private void initializePatientListView() {
-        TwoColumnPatientListView purchaseFragment = (TwoColumnPatientListView) findViewById(R.id.list_patients);
-        purchaseFragment.setCheckInDTO(checkInDTO);
-        purchaseFragment.setCallback(new TwoColumnPatientListView.TwoColumnPatientListViewListener() {
+        patientListView = (TwoColumnPatientListView) findViewById(R.id.list_patients);
+        patientListView.setCheckInDTO(checkInDTO);
+        patientListView.setCallback(new TwoColumnPatientListView.TwoColumnPatientListViewListener() {
             @Override
             public void onPatientTapped(Object dto) {
                 AppointmentDTO appointmentDTO = (AppointmentDTO) dto;
@@ -117,19 +120,8 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
                 setViewTextById(R.id.practice_title, checkInLabelDTO.getActivityHeading());
                 setViewTextById(R.id.practice_go_back, checkInLabelDTO.getGoBack());
                 setViewTextById(R.id.activity_practice_appointments_change_date_range_label, checkInLabelDTO.getChangeDateRangeLabel());
-                todayLabel = checkInLabelDTO.getTodayLabel();
-                tomorrowLabel = checkInLabelDTO.getTomorrow();
-                thisMonthLabel = checkInLabelDTO.getThisMonthLabel();
-                nextDaysLabel = checkInLabelDTO.getNextDaysLabel();
-                
-                setViewTextById(R.id.practice_patient_count_label, todayLabel);
-                practiceCheckinFilterDoctorsLabel = checkInLabelDTO.getPracticeCheckinFilterDoctors();
-                practiceCheckinFilterLocationsLabel = checkInLabelDTO.getPracticeCheckinFilterLocations();
-                practicePaymentsFilter = checkInLabelDTO.getPracticeCheckinFilter();
-                practicePaymentsFilterFindPatientByName = checkInLabelDTO.getPracticeCheckinFilterFindPatientByName();
-                practicePaymentsFilterClearFilters = checkInLabelDTO.getPracticeCheckinFilterClearFilters();
-                closeText = checkInLabelDTO.getDateRangePickerDialogClose();
-                dialogTitle = checkInLabelDTO.getDateRangePickerDialogTitle();
+                setViewTextById(R.id.activity_practice_appointments_show_all_appointments_label, checkInLabelDTO.getAllAppointmentsLabel());
+                setViewTextById(R.id.practice_patient_count_label, checkInLabelDTO.getTodayLabel());
             }
         }
 
@@ -144,9 +136,9 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
             @Override
             public void onClick(View view) {
                 filter = new FilterModel(doctors, locations, patients,
-                        practiceCheckinFilterDoctorsLabel, practiceCheckinFilterLocationsLabel,
-                        practicePaymentsFilter, practicePaymentsFilterFindPatientByName,
-                        practicePaymentsFilterClearFilters);
+                        checkInLabelDTO.getPracticeCheckinFilterDoctors(), checkInLabelDTO.getPracticeCheckinFilterLocations(),
+                        checkInLabelDTO.getPracticeCheckinFilter(), checkInLabelDTO.getPracticeCheckinFilterFindPatientByName(),
+                        checkInLabelDTO.getPracticeCheckinFilterClearFilters());
                 FilterDialog filterDialog = new FilterDialog(getContext(),
                         findViewById(R.id.activity_practice_appointments), filter);
 
@@ -155,6 +147,8 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
         });
 
         initializePracticeSelectDateRange();
+//        initializeShowAllAppointments();
+//        initializeShowPendingAppointments();
     }
 
     private void populateLists() {
@@ -231,8 +225,8 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
 
     @Override
     public void applyFilter() {
-        TwoColumnPatientListView patientListView = (TwoColumnPatientListView) findViewById(R.id.list_patients);
         patientListView.applyFilter(filter);
+        initializePatientCounter();
     }
 
     private void initializePracticeSelectDateRange() {
@@ -249,7 +243,7 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
                     }
                 };
 
-                DateRangePickerDialog dialog = new DateRangePickerDialog(getContext(), dialogTitle, closeText, todayLabel, startDate, endDate, callback);
+                DateRangePickerDialog dialog = new DateRangePickerDialog(getContext(), checkInLabelDTO.getDateRangePickerDialogTitle(), checkInLabelDTO.getDateRangePickerDialogClose(), checkInLabelDTO.getTodayLabel(), startDate, endDate, callback);
                 dialog.show();
             }
         });

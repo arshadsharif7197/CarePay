@@ -119,6 +119,14 @@ public class CheckInLabelDTO {
     @Expose
     private String nextDaysLabel;
 
+    @SerializedName("all_appointments_label")
+    @Expose
+    private String allAppointmentsLabel;
+
+    @SerializedName("pending_appointments_label")
+    @Expose
+    private String pendingAppointmentsLabel;
+
     /**
      * @return The practiceCheckinDetailDialogCheckingIn
      */
@@ -433,5 +441,13 @@ public class CheckInLabelDTO {
 
     public String getNextDaysLabel() {
         return StringUtil.getLabelForView(nextDaysLabel);
+    }
+
+    public String getAllAppointmentsLabel() {
+        return StringUtil.getLabelForView(allAppointmentsLabel);
+    }
+
+    public String getPendingAppointmentsLabel() {
+        return StringUtil.getLabelForView(pendingAppointmentsLabel);
     }
 }
