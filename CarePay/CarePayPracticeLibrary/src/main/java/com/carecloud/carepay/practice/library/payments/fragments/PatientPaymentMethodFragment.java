@@ -65,6 +65,8 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
     private TextView swipeCardSeparatorLabel ;
     private String swipeCardNowString;
     private String swipeCardSeparatorString;
+    private String swipeCardAlternateSeparatorString;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -172,20 +174,21 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
     private void setSwipeCardNowVisibility(View view)
     {
         swipeCreditCardNowLayout = (LinearLayout) view.findViewById(R.id.swipeCreditCardNowLayout);
+        swipeCreditCarNowButton = (Button) view.findViewById(R.id.swipeCreditCarNowButton);
+        swipeCardSeparatorLabel = (TextView) view.findViewById(R.id.swipeCardSeparatorLabel);
         if(isCloverDevice)
         {
-            swipeCreditCardNowLayout.setVisibility(View.VISIBLE);
-
-            swipeCreditCarNowButton = (Button) view.findViewById(R.id.swipeCreditCarNowButton);
+            swipeCreditCarNowButton.setEnabled(true);
             swipeCreditCarNowButton.setText(swipeCardNowString);
             swipeCreditCarNowButton.setOnClickListener(swipeCreditCarNowButtonClickListener);
 
-            swipeCardSeparatorLabel = (TextView) view.findViewById(R.id.swipeCardSeparatorLabel);
-            swipeCardSeparatorLabel.setText(swipeCardSeparatorString);
+            swipeCardSeparatorLabel.setText(swipeCardAlternateSeparatorString);
         }
         else
         {
-            swipeCreditCardNowLayout.setVisibility(View.GONE);
+            swipeCreditCarNowButton.setEnabled(false);
+            swipeCardSeparatorLabel.setText(swipeCardSeparatorString);
+
         }
 
     }
@@ -214,19 +217,25 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                 paymentChoiceButton.setTag(paymentList.get(i).getType());
                 if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CASH)){
                     shape.setColor(getActivity().getResources().getColor(R.color.overlay_green));
+                    paymentChoiceButton.setText(paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPayLabel());
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CREDIT_CARD)){
                     shape.setColor(getActivity().getResources().getColor(R.color.colorPrimary));
                     paymentChoiceButton.setText(paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentChooseCreditCardButton());
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CHECK)){
                     shape.setColor(getActivity().getResources().getColor(R.color.colorPrimary));
+                    paymentChoiceButton.setText(paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPayLabel());
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_GIFT_CARD)){
                     shape.setColor(getActivity().getResources().getColor(R.color.colorPrimary));
+                    paymentChoiceButton.setText(paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPayLabel());
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_PAYPAL)){
                     shape.setColor(getActivity().getResources().getColor(R.color.overlay_green));
+                    paymentChoiceButton.setText(paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPayPalLabel());
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_HSA)){
                     shape.setColor(getActivity().getResources().getColor(R.color.colorPrimary));
+                    paymentChoiceButton.setText(paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPayLabel());
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_FSA)){
                     shape.setColor(getActivity().getResources().getColor(R.color.colorPrimary));
+                    paymentChoiceButton.setText(paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPayLabel());
                 }
             }
         }
@@ -354,6 +363,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                     paymentCreatePlanString = paymentsLabelsDTO.getPaymentCreatePlanButton();
                     swipeCardNowString = paymentsLabelsDTO.getPaymentCloverSwipeNowButtonLabel();
                     swipeCardSeparatorString = paymentsLabelsDTO.getPaymentCloverSwipeNowSeparatorText();
+                    swipeCardAlternateSeparatorString = paymentsLabelsDTO.getPaymentCloverAlternatePayButton();
 
                 }
             }
