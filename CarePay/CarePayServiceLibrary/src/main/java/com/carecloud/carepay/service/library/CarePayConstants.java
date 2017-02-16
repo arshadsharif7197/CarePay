@@ -109,4 +109,5 @@ public class CarePayConstants {
     public static final int NAVIGATION_ITEM_INDEX_NOTIFICATION= 3;
 
 
+    public static final String MEDICATION_ALLERGIES_DTO_EXTRA = "medication_allergies_payload_extra";
 }

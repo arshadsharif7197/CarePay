@@ -6,6 +6,9 @@ import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.view.Window;
 
+import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.utils.StringUtil;
+
 /**
  * Created by cocampo on 2/6/17.
  */
@@ -81,5 +84,11 @@ public abstract class BaseDialogFragment extends DialogFragment {
         }
 
         return rootView.findViewById(id);
+    }
+
+    public String getTextForLabel(String text){
+        if(StringUtil.isNullOrEmpty(text))
+            return CarePayConstants.NOT_DEFINED;
+        return text;
     }
 }

@@ -18,7 +18,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/search_text_view"
+            android:id="@+id/medication_allergy_text_view"
             android:gravity="left"
             android:layout_margin="@dimen/padding_xlarge"
             android:maxLines="2"
@@ -30,7 +30,7 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/medication_choose_button"
+            android:id="@+id/medication_allergy_delete_button"
             android:padding="@dimen/padding_large"
             android:textColor="@color/harvard_crimson"
             android:textSize="@dimen/text_size_17"
@@ -44,4 +44,4 @@
         android:layout_height="@dimen/dimen_1dp"
         android:background="@color/light_gray"/>
 
-</>
+</LinearLayout>

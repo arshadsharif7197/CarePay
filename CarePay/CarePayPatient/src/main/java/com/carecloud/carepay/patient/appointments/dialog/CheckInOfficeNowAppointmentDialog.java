@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.base.PatientNavigationStateConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -107,7 +106,24 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
             cancel();
         } else if (viewId == R.id.checkInNowButton) {
             //FIXME
-            PatientNavigationHelper.getInstance(getContext()).navigateToWorkflow(PatientNavigationStateConstants.MEDICATION_ALLERGIES);
+//            PatientNavigationHelper.getInstance(getContext()).navigateToWorkflow(PatientNavigationStateConstants.MEDICATION_ALLERGIES);
+            TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCancel();
+            transitionDTO.setMethod("GET");
+            transitionDTO.setUrl("https://aze9ynjfhl.execute-api.us-east-1.amazonaws.com/dev/workflow/shamrock/patient_app/medications_allergies/medications");
+
+            Gson gson = new Gson();
+            JsonObject queryStringObject = appointmentInfo.getMetadata().getTransitions().getCheckinAtOffice().getQueryString();
+            QueryStrings queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
+            Map<String, String> queries = new HashMap<>();
+            queries.put(queryStrings.getPracticeMgmt().getName(), appointmentDTO.getMetadata().getPracticeMgmt());
+            queries.put(queryStrings.getPracticeId().getName(), appointmentDTO.getMetadata().getPracticeId());
+            queries.put("patient_id", appointmentDTO.getMetadata().getPatientId());
+
+
+            Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
+//            header.put("transition", "true");
+
+            WorkflowServiceHelper.getInstance().execute(transitionDTO, testMedicationsCallback, queries, header);
 
 
 /*
@@ -118,6 +134,25 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
 */
         }
     }
+
+    private WorkflowServiceCallback testMedicationsCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            ProgressDialogUtil.getInstance(getContext()).show();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            PatientNavigationHelper.getInstance(getContext()).navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
+
+        }
+    };
 
     /**
      * call to do transition.

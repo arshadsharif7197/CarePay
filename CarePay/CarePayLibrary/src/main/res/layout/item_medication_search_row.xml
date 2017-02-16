@@ -24,4 +24,4 @@
         android:layout_height="@dimen/dimen_1dp"
         android:background="@color/light_gray"/>
 
-</>
+</LinearLayout>
