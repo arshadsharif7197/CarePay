@@ -128,7 +128,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
             WorkflowServiceHelper.getInstance().execute(transitionDTO, patientModeSignInCallback, queryMap, headers);*/
             Intent intent = new Intent(HowToCheckInActivity.this, SigninActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putSerializable(getApplicationContext().getClass().getSimpleName(), signinPatientModeDTO.toString());
+            bundle.putSerializable(WorkflowDTO.class.getSimpleName(), signinPatientModeDTO.toString());
             intent.putExtras(bundle);
             startActivity(intent);
             finish();
@@ -155,7 +155,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
             /*To implement click event for Manual Search */
             Intent intent = new Intent(HowToCheckInActivity.this, PersonalInformationActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putSerializable(getApplicationContext().getClass().getSimpleName(), signinPatientModeDTO.toString());
+            bundle.putSerializable(WorkflowDTO.class.getSimpleName(), signinPatientModeDTO.toString());
             intent.putExtras(bundle);
             startActivity(intent);
             finish();
@@ -200,7 +200,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(getContext()).dismiss();
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
+            getPracticeNavigationHelper().navigateToWorkflow(workflowDTO);
         }
 
         @Override
@@ -301,8 +301,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(getContext()).dismiss();
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(HowToCheckInActivity.this,
-                    workflowDTO);
+            getPracticeNavigationHelper().navigateToWorkflow(workflowDTO);
             dismissDialog();
         }
 

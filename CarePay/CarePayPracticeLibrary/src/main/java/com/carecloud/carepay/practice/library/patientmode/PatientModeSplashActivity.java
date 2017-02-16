@@ -160,7 +160,7 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(getContext()).dismiss();
             getStartedButton.setEnabled(true);
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
+            getPracticeNavigationHelper().navigateToWorkflow(workflowDTO);
         }
 
         @Override

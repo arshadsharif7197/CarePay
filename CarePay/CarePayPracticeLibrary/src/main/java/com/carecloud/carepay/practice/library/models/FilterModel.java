@@ -21,6 +21,8 @@ public class FilterModel {
     private String practicePaymentsFilterFindPatientByName;
     private String practicePaymentsFilterClearFilters;
 
+    private boolean filteringByPending;
+
     /**
      * @param doctors to filter from
      * @param locations to filter from
@@ -104,5 +106,13 @@ public class FilterModel {
 
     public void clearFilterByPatients() {
         clear(patients);
+    }
+
+    public boolean isFilteringByPending() {
+        return filteringByPending;
+    }
+
+    public void setFilteringByPending(boolean newValue) {
+        this.filteringByPending = newValue;
     }
 }

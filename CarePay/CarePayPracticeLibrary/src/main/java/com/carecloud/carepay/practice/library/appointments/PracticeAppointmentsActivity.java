@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.appointments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -14,16 +15,28 @@ import com.carecloud.carepay.practice.library.checkin.dtos.CheckInPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.PatientDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.customcomponent.TwoColumnPatientListView;
+import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
 import com.carecloud.carepay.practice.library.customdialog.FilterDialog;
 import com.carecloud.carepay.practice.library.models.FilterModel;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.payments.models.LocationDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderDTO;
+import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Created by cocampo on 2/10/17.
@@ -38,27 +51,51 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
     private ArrayList<FilterDataDTO> locations;
     private ArrayList<FilterDataDTO> doctors;
 
+    private Date startDate;
+    private Date endDate;
+
     private String practiceCheckinFilterDoctorsLabel;
     private String practiceCheckinFilterLocationsLabel;
     private String practicePaymentsFilter;
     private String practicePaymentsFilterFindPatientByName;
     private String practicePaymentsFilterClearFilters;
+    private String todayLabel;
+    private String tomorrowLabel;
+    private String thisMonthLabel;
+    private String nextDaysLabel;
+    private String closeText;
+    private String dialogTitle;
+    private CheckInDTO checkInDTO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_practice_appointments);
 
-        CheckInDTO checkInDTO = getConvertedDTO(CheckInDTO.class);
-        if (null != checkInDTO) {
-            populateLists(checkInDTO);
-            initializePatientListView(checkInDTO);
-        }
-
-        initializeViews(checkInDTO);
+        initializeCheckinDto();
+        initializeViews();
     }
 
-    private void initializePatientListView(CheckInDTO checkInDTO) {
+    private void initializeCheckinDto() {
+        checkInDTO = getConvertedDTO(CheckInDTO.class);
+        if (null != checkInDTO) {
+            populateLists();
+            initializePatientListView();
+            initializePatientCounter();
+        }
+    }
+
+    private void initializePatientCounter() {
+        String patientCount = String.format(Locale.getDefault(), "%1s", checkInDTO.getPayload().getAppointments().size());
+        setViewTextById(R.id.practice_patient_count, patientCount);
+
+        if (null != startDate && null != endDate) {
+            String practiceCountLabel = DateUtil.getFormattedDate(startDate, endDate, todayLabel, tomorrowLabel, thisMonthLabel, nextDaysLabel);
+            setViewTextById(R.id.practice_patient_count_label, practiceCountLabel);
+        }
+    }
+
+    private void initializePatientListView() {
         TwoColumnPatientListView purchaseFragment = (TwoColumnPatientListView) findViewById(R.id.list_patients);
         purchaseFragment.setCheckInDTO(checkInDTO);
         purchaseFragment.setCallback(new TwoColumnPatientListView.TwoColumnPatientListViewListener() {
@@ -73,22 +110,27 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
         });
     }
 
-    private void initializeViews(CheckInDTO checkInDTO) {
+    private void initializeViews() {
         if (checkInDTO != null) {
             CheckInLabelDTO checkInLabelDTO = checkInDTO.getMetadata().getLabel();
             if (checkInLabelDTO != null) {
                 setViewTextById(R.id.practice_title, checkInLabelDTO.getActivityHeading());
                 setViewTextById(R.id.practice_go_back, checkInLabelDTO.getGoBack());
-                setViewTextById(R.id.practice_patient_count_label, checkInLabelDTO.getToday());
+                setViewTextById(R.id.activity_practice_appointments_change_date_range_label, checkInLabelDTO.getChangeDateRangeLabel());
+                todayLabel = checkInLabelDTO.getTodayLabel();
+                tomorrowLabel = checkInLabelDTO.getTomorrow();
+                thisMonthLabel = checkInLabelDTO.getThisMonthLabel();
+                nextDaysLabel = checkInLabelDTO.getNextDaysLabel();
+                
+                setViewTextById(R.id.practice_patient_count_label, todayLabel);
                 practiceCheckinFilterDoctorsLabel = checkInLabelDTO.getPracticeCheckinFilterDoctors();
                 practiceCheckinFilterLocationsLabel = checkInLabelDTO.getPracticeCheckinFilterLocations();
                 practicePaymentsFilter = checkInLabelDTO.getPracticeCheckinFilter();
                 practicePaymentsFilterFindPatientByName = checkInLabelDTO.getPracticeCheckinFilterFindPatientByName();
                 practicePaymentsFilterClearFilters = checkInLabelDTO.getPracticeCheckinFilterClearFilters();
+                closeText = checkInLabelDTO.getDateRangePickerDialogClose();
+                dialogTitle = checkInLabelDTO.getDateRangePickerDialogTitle();
             }
-
-            String patientCount = String.format(Locale.getDefault(), "%1s", checkInDTO.getPayload().getAppointments().size());
-            setViewTextById(R.id.practice_patient_count, patientCount);
         }
 
         findViewById(R.id.practice_go_back).setOnClickListener(new View.OnClickListener() {
@@ -111,9 +153,11 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
                 filterDialog.showPopWindow();
             }
         });
+
+        initializePracticeSelectDateRange();
     }
 
-    private void populateLists(CheckInDTO checkInDTO) {
+    private void populateLists() {
         CheckInPayloadDTO payload = checkInDTO.getPayload();
         if (null == payload) {
             return;
@@ -190,4 +234,56 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
         TwoColumnPatientListView patientListView = (TwoColumnPatientListView) findViewById(R.id.list_patients);
         patientListView.applyFilter(filter);
     }
+
+    private void initializePracticeSelectDateRange() {
+        findViewById(R.id.activity_practice_appointments_change_date_range_label).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DateRangePickerDialog.DateRangePickerDialogListener callback = new DateRangePickerDialog.DateRangePickerDialogListener() {
+                    @Override
+                    public void onRangeSelected(Date start, Date end) {
+                        PracticeAppointmentsActivity.this.startDate = start;
+                        PracticeAppointmentsActivity.this.endDate = end;
+
+                        reloadCheckInDto();
+                    }
+                };
+
+                DateRangePickerDialog dialog = new DateRangePickerDialog(getContext(), dialogTitle, closeText, todayLabel, startDate, endDate, callback);
+                dialog.show();
+            }
+        });
+    }
+
+    private void reloadCheckInDto() {
+        TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getPracticeAppointments();
+
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("start_date", DateUtil.getInstance().setDate(startDate).toStringWithFormatYyyyDashMmDashDd());
+        queryMap.put("end_date", DateUtil.getInstance().setDate(endDate).toStringWithFormatYyyyDashMmDashDd());
+
+        WorkflowServiceHelper.getInstance().execute(transitionDTO, checkInCallback, queryMap);
+    }
+
+    WorkflowServiceCallback checkInCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            ProgressDialogUtil.getInstance(getContext()).show();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
+
+            DtoHelper.putExtra(getIntent(), workflowDTO);
+            initializeCheckinDto();
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            SystemUtil.showDefaultFailureDialog(getContext());
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
 }
