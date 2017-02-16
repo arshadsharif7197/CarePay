@@ -33,7 +33,7 @@ public class SplashActivity extends BasePracticeActivity {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            getPracticeNavigationHelper().navigateToWorkflow(workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
             SplashActivity.this.finish();
         }
 

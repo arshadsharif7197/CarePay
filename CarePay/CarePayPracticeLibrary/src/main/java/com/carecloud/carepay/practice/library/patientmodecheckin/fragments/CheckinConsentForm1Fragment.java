@@ -24,7 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.base.IPracticeSession;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -339,9 +338,7 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(getContext()).dismiss();
-            Activity activity = getActivity();
-            IPracticeSession practiceSession = (IPracticeSession) activity;
-            practiceSession.getPracticeNavigationHelper().navigateToWorkflow(workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
             nextButton.setClickable(true);
         }
 

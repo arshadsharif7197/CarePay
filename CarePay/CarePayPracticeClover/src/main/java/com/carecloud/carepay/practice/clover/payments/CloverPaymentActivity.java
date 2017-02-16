@@ -362,7 +362,7 @@ public class CloverPaymentActivity extends AppCompatActivity implements IPractic
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(CloverPaymentActivity.this).dismiss();
             CloverPaymentActivity.this.finish();
-            getPracticeNavigationHelper().navigateToWorkflow(workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(CloverPaymentActivity.this, workflowDTO);
         }
 
         @Override

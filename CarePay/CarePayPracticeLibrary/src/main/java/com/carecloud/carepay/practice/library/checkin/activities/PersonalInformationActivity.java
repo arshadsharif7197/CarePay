@@ -466,7 +466,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(getContext()).dismiss();
             findMyAppointmentButton.setEnabled(true);
-            getPracticeNavigationHelper().navigateToWorkflow(workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
 
         @Override

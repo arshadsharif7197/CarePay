@@ -23,7 +23,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.base.IPracticeSession;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -55,7 +54,7 @@ import java.util.Locale;
 import java.util.Map;
 
 
-public class PracticeAppSignatureActivity extends AppCompatActivity implements IPracticeSession{
+public class PracticeAppSignatureActivity extends AppCompatActivity {
 
     public static boolean isBackButtonClicked = false;
     public static int numOfLaunches = 0;
@@ -72,13 +71,9 @@ public class PracticeAppSignatureActivity extends AppCompatActivity implements I
     private EditText legalLastNameET;
     private TextInputLayout legalFirstName;
     private TextInputLayout legalLastName;
-   private String headerTitle;
-    private ImageView closeButton;
+    private String headerTitle;
 
     private ConsentFormLabelsDTO consentFormLabelsDTO;
-
-
-    private Map<Integer, List<String>> stringMap = new HashMap<>();
 
     private String signatureAsBase64;
     private boolean isLegalFirstNameEmpty;
@@ -101,7 +96,7 @@ public class PracticeAppSignatureActivity extends AppCompatActivity implements I
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(PracticeAppSignatureActivity.this).dismiss();
             //ConsentActivity.this.finish();
-            getPracticeNavigationHelper().navigateToWorkflow(workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(PracticeAppSignatureActivity.this, workflowDTO);
         }
 
         @Override
@@ -547,10 +542,5 @@ public class PracticeAppSignatureActivity extends AppCompatActivity implements I
             default:
                 break;
         }
-    }
-
-    @Override
-    public PracticeNavigationHelper getPracticeNavigationHelper() {
-        return ((IPracticeSession) getApplication()).getPracticeNavigationHelper();
     }
 }

@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.carecloud.carepay.practice.library.base.IPracticeSession;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
@@ -72,9 +71,7 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
             ProgressDialogUtil.getInstance(getContext()).dismiss();
             correctInformationButton.setEnabled(true);
             demographicProgressBar.setVisibility(View.GONE);
-            Activity activity = getActivity();
-            IPracticeSession practiceSession = (IPracticeSession) activity;
-            practiceSession.getPracticeNavigationHelper().navigateToWorkflow(workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
         }
 
         @Override
