@@ -20,7 +20,7 @@ import com.google.gson.Gson;
  */
 
 public abstract class BasePracticeActivity extends BaseVisibilityHintActivity
-        implements IConfirmPracticeAppPin, IPracticeSession {
+        implements IConfirmPracticeAppPin {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -147,10 +147,5 @@ public abstract class BasePracticeActivity extends BaseVisibilityHintActivity
         view.setVisibility(visibility);
 
         return true;
-    }
-
-    @Override
-    public PracticeNavigationHelper getPracticeNavigationHelper() {
-        return ((IPracticeSession) getApplication()).getPracticeNavigationHelper();
     }
 }

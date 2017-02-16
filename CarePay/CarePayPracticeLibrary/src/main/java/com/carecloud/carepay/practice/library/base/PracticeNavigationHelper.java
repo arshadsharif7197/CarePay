@@ -12,7 +12,6 @@ import com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInAct
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
-import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PracticeAppSignatureActivity;
 import com.carecloud.carepay.practice.library.payments.PaymentsActivity;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -28,8 +27,6 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 
 public class PracticeNavigationHelper {
 
-    private Context context;
-
     /**
      * Getting same state form 2 endpoints hence added this flag to differentiate app flow,
      * whether call is from Check-in or Appointments on Home screen.
@@ -37,17 +34,9 @@ public class PracticeNavigationHelper {
      */
     private static boolean isPatientModeAppointments;
 
-    /**
-     * @param context Application context
-     */
-    public PracticeNavigationHelper(Context context) {
-        this.context = context;
-    }
-
-    public void setIsPatientModeAppointments(boolean isPatientModeAppointments) {
+    public static void setIsPatientModeAppointments(boolean isPatientModeAppointments) {
         PracticeNavigationHelper.isPatientModeAppointments = isPatientModeAppointments;
     }
-
 
     /**
      * Navigation using application context
@@ -55,7 +44,7 @@ public class PracticeNavigationHelper {
      *  @param context    activity context
      * @param workflowDTO WorkflowDTO
      */
-    public void navigateToWorkflow(Context context, WorkflowDTO workflowDTO) {
+    public static void navigateToWorkflow(Context context, WorkflowDTO workflowDTO) {
         Intent intent = null;
         if (workflowDTO == null || StringUtil.isNullOrEmpty(workflowDTO.getState())) {
             return;
@@ -157,15 +146,5 @@ public class PracticeNavigationHelper {
             intent.putExtras(bundle);
             context.startActivity(intent);
         }
-    }
-
-
-    /**
-     * Navigation using application context
-     *
-     * @param workflowDTO WorkflowDTO
-     */
-    public void navigateToWorkflow(WorkflowDTO workflowDTO) {
-        navigateToWorkflow(context, workflowDTO);
     }
 }

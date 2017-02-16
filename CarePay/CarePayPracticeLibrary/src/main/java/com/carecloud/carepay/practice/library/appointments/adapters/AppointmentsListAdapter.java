@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.base.IPracticeSession;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -173,8 +172,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(context).dismiss();
-            IPracticeSession practiceSession = (IPracticeSession) context;
-            practiceSession.getPracticeNavigationHelper().navigateToWorkflow(workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(context, workflowDTO);
         }
 
         @Override

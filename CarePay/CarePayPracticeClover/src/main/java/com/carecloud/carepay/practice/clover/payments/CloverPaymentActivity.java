@@ -1,7 +1,6 @@
 package com.carecloud.carepay.practice.clover.payments;
 
 import android.accounts.Account;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.carecloud.carepay.practice.clover.R;
-import com.carecloud.carepay.practice.library.base.IPracticeSession;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -46,7 +44,7 @@ import java.util.Set;
 /**
  * The type Clover payment activity.
  */
-public class CloverPaymentActivity extends AppCompatActivity implements IPracticeSession {
+public class CloverPaymentActivity extends AppCompatActivity {
     /**
      * The constant creditCardIntentID.
      */
@@ -199,11 +197,6 @@ public class CloverPaymentActivity extends AppCompatActivity implements IPractic
                 }
             }
         }.execute();
-    }
-
-    @Override
-    public PracticeNavigationHelper getPracticeNavigationHelper() {
-        return ((IPracticeSession) getApplication()).getPracticeNavigationHelper();
     }
 
     private class OrderAsyncTask extends AsyncTask<Void, Void, Order> {
@@ -362,7 +355,7 @@ public class CloverPaymentActivity extends AppCompatActivity implements IPractic
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(CloverPaymentActivity.this).dismiss();
             CloverPaymentActivity.this.finish();
-            getPracticeNavigationHelper().navigateToWorkflow(workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(CloverPaymentActivity.this, workflowDTO);
         }
 
         @Override

@@ -200,7 +200,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(getContext()).dismiss();
-            getPracticeNavigationHelper().navigateToWorkflow(workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
 
         @Override
@@ -301,7 +301,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(getContext()).dismiss();
-            getPracticeNavigationHelper().navigateToWorkflow(workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
             dismissDialog();
         }
 
