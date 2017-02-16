@@ -283,6 +283,10 @@ public class DateUtil {
         this.date = new Date();
     }
 
+    /**
+     * @param date as Date
+     * @return The current DateUtil object
+     */
     public DateUtil setDate(Date date) {
         this.date = date;
         updateFields();

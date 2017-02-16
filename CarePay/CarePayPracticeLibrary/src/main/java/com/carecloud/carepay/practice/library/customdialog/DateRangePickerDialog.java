@@ -48,6 +48,15 @@ public class DateRangePickerDialog extends BasePracticeDialog {
         void onRangeSelected(Date start, Date end);
     }
 
+    /**
+     * @param context the context
+     * @param dialogTitle title to be shown at the top of the dialog
+     * @param closeText label below the close icon
+     * @param todayLabel today in current language
+     * @param start current start date
+     * @param end current end date
+     * @param callback to be executed when dates change
+     */
     public DateRangePickerDialog(Context context, String dialogTitle, String closeText, String todayLabel, Date start, Date end, DateRangePickerDialogListener callback) {
         super(context, closeText, false);
         this.context = context;
