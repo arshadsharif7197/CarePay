@@ -146,9 +146,8 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
         saveChangesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                insuranceDocumentScannerListener.updateInsuranceDTO
-                        (index,
-                        insuranceDTO);
+                insuranceDocumentScannerListener.updateInsuranceDTO(index,
+                                                                    insuranceDTO);
                 dismiss();
             }
         });

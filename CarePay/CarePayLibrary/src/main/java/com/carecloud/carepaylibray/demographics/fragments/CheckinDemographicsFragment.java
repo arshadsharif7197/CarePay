@@ -1309,6 +1309,10 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         enableButton(isAllFieldsValid() && !isDisabled);
     }
 
+    /**
+     * Enable or disable main button
+     * @param isEnabled is Button enabled
+     */
     public void enableButton(boolean isEnabled){
         if(isPractice){
             buttonConfirmData.setBackground(ContextCompat.getDrawable(getContext(),isEnabled? R.drawable.bg_green_overlay  : R.drawable.bg_silver_overlay));

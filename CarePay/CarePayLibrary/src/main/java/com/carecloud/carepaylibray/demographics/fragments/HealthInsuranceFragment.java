@@ -73,6 +73,10 @@ public class HealthInsuranceFragment extends Fragment {
         SystemUtil.setProximaNovaSemiboldTypeface(getContext(), healthInsuranceTitleTextView);
     }
 
+    /**
+     * enable or disable sections
+     * @param view main view
+     */
     public void initActiveSection(View view) {
         boolean loadResources = insurancePayloadDTOs.size() > 0;
         boolean isSetup = !isPractice && !loadResources;
