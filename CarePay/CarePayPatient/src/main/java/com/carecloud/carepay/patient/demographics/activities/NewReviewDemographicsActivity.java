@@ -9,8 +9,9 @@ import android.util.Log;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
-import com.carecloud.carepay.patient.demographics.fragments.review.CheckinDemographicsFragment;
-import com.carecloud.carepay.patient.demographics.fragments.review.CheckinInsurancesSummaryFragment;
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.demographics.fragments.CheckinDemographicsFragment;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
@@ -18,6 +19,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPay
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.fragments.DemographicsCheckInDocumentsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
+import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterface;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
 import com.carecloud.carepaylibray.demographics.scanner.InsuranceDocumentScannerFragment;
@@ -33,7 +35,8 @@ public class NewReviewDemographicsActivity extends BasePatientActivity
         implements DemographicsLabelsHolder,
         CheckinDemographicsFragment.CheckinDemographicsFragmentListener,
         DemographicsCheckInDocumentsFragment.DemographicsCheckInDocumentsFragmentListener,
-        HealthInsuranceFragment.InsuranceDocumentScannerListener {
+        HealthInsuranceFragment.InsuranceDocumentScannerListener,
+        CheckinDemographicsInterface{
 
     private DemographicDTO demographicDTO;
 
@@ -172,6 +175,13 @@ public class NewReviewDemographicsActivity extends BasePatientActivity
     }
 
     @Override
+    public void disableMainButton(boolean isDisabled) {
+        CheckinDemographicsFragment checkinFragment = (CheckinDemographicsFragment)
+                getSupportFragmentManager().findFragmentById(R.id.root_layout);
+        checkinFragment.checkIfDisableButton(isDisabled);
+    }
+
+    @Override
     public void initializeIdDocScannerFragment() {
 
         // add license fragment
@@ -203,6 +213,11 @@ public class NewReviewDemographicsActivity extends BasePatientActivity
         }
 
         return demographicIdDocPayloadDTO;
+    }
+
+
+    public void navigateToConsentFlow(WorkflowDTO workflowDTO){
+        PatientNavigationHelper.getInstance(this).navigateToWorkflow(workflowDTO);
     }
 
 

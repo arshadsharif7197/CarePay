@@ -7,8 +7,7 @@
 
     <TextView
         android:id="@+id/settings_toolbar_title"
-        style="@style/ResponsibilityToolbarTextStyle"
-        android:text="Settings"/>
+        style="@style/ResponsibilityToolbarTextStyle"/>
 
 </android.support.v7.widget.Toolbar>
 

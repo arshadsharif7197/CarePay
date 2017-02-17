@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,7 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
-import com.carecloud.carepay.patient.demographics.fragments.review.CheckinDemographicsFragment;
+import com.carecloud.carepaylibray.demographics.fragments.CheckinDemographicsFragment;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsAddressFragment;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsAllSetFragment;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsDetailsFragment;
@@ -422,6 +421,11 @@ public class DemographicsActivity extends BasePatientActivity
         }
 
         initializeInsurancesFragment();
+    }
+
+    @Override
+    public void disableMainButton(boolean isDisabled) {
+
     }
 
 

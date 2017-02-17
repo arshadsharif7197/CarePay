@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepaylibray.base.BaseVisibilityHintActivity;
+import com.carecloud.carepaylibray.utils.CustomPopupNotification;
 
 /**
  * Created by kkannan on 2/10/17.

@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.demographics.fragments.review;
+package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -31,12 +31,11 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.appointments.utils.CustomPopupNotification;
-import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
@@ -50,9 +49,11 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressP
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterface;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
+import com.carecloud.carepaylibray.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
@@ -63,6 +64,7 @@ import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.gson.Gson;
 import com.smartystreets.api.us_zipcode.City;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -145,6 +147,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     private boolean isCityEmpty;
     private boolean isStateEmtpy;
     private boolean isZipEmpty;
+    private boolean isPractice;
 
     private String stateAbbr = null;
     private City smartyStreetsResponse;
@@ -179,8 +182,12 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        view = inflater.inflate(R.layout.fragment_review_demographic, container, false);
-
+        isPractice = ApplicationMode.getInstance().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
+        if (isPractice){
+            view = inflater.inflate(R.layout.fragment_review_demographic_practice, container, false);
+        }else{
+            view = inflater.inflate(R.layout.fragment_review_demographic, container, false);
+        }
         initializeDemographicsDTO();
 
         rootview = (LinearLayout) view.findViewById(R.id.demographicsReviewRootLayout);
@@ -191,22 +198,23 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         setTypefaces(view);
         initViewFromModels();
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.demographics_review_toolbar);
-        TextView title = (TextView) toolbar.findViewById(R.id.demographics_review_toolbar_title);
-        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
-        title.setText(globalLabelsMetaDTO.getDemographicsReviewToolbarTitle());
-        toolbar.setTitle("");
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().finish();
-            }
-        });
+        if (!isPractice) {
+            Toolbar toolbar = (Toolbar) view.findViewById(R.id.demographics_review_toolbar);
+            TextView title = (TextView) toolbar.findViewById(R.id.demographics_review_toolbar_title);
+            SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
+            title.setText(globalLabelsMetaDTO.getDemographicsReviewToolbarTitle());
+            toolbar.setTitle("");
+            toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getActivity().finish();
+                }
+            });
+        }
 
         formatEditText();
-        SystemUtil.hideSoftKeyboard(getActivity());
         ((ScrollView)view.findViewById(R.id.adddemoScrollview)).smoothScrollTo(0,0);
         return view;
     }
@@ -233,8 +241,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
     private void initialiseUIFields() {
 
-        LinearLayout addDemoLineraLayout = (LinearLayout) view.findViewById(R.id.adddemoLinearLayout);
-        addDemoLineraLayout.setPadding(20, 0, 20, 0);
 
         profileImageview = (ImageView) view.findViewById(R.id.patientPicImageView);
         imageCaptureHelper = new ImageCaptureHelper(getActivity(), profileImageview, globalLabelsMetaDTO);
@@ -368,6 +374,8 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         buttonConfirmData.setOnClickListener(this);
         buttonConfirmData.setText(globalLabelsMetaDTO.getDemographicsReviewCorrectButton().toUpperCase());
 
+        enableButton(isAllFieldsValid());
+
     }
 
     private void formatEditText() {
@@ -394,6 +402,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                     firstNameLabel.setError(firstNameError);
                     firstNameLabel.setErrorEnabled(true);
                 }
+                checkIfEnableButton();
             }
         });
 
@@ -425,6 +434,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                     doblabel.setError(null);
                 }
                 StringUtil.autoFormatDateOfBirth(editable, prevLen);
+                checkIfEnableButton();
             }
         });
         dobEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -470,6 +480,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                 }
                 // auto-format as typing
                 StringUtil.autoFormatPhone(phonenumber, len);
+                checkIfEnableButton();
             }
         });
         lastNameText.addTextChangedListener(new TextWatcher() {
@@ -494,7 +505,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                     lastNameLabel.setError(lastNameError);
                     lastNameLabel.setErrorEnabled(true);
                 }
-
+                checkIfEnableButton();
             }
         });
 
@@ -520,6 +531,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                     address1Label.setError(lastNameError);
                     address1Label.setErrorEnabled(true);
                 }
+                checkIfEnableButton();
 
             }
         });
@@ -546,6 +558,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                 }
 
                 StringUtil.autoFormatZipcode(editable, prevLen);
+                checkIfEnableButton();
             }
         });
 
@@ -572,6 +585,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                     cityLabel.setErrorEnabled(true);
                 }
 
+                checkIfEnableButton();
             }
         });
 
@@ -597,7 +611,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                     stateLabel.setError(lastNameError);
                     stateLabel.setErrorEnabled(true);
                 }
-
+                checkIfEnableButton();
             }
         });
 
@@ -668,8 +682,11 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             dobEditText.requestFocus();
         }
 
+        boolean isGenderValid = !globalLabelsMetaDTO.getDemographicsChooseLabel().equals(selectGender.getText().toString());
+        boolean isEthnicityValid = !globalLabelsMetaDTO.getDemographicsChooseLabel().equals(ethnicityDataTextView.getText().toString());
+        boolean isRaceValid = !globalLabelsMetaDTO.getDemographicsChooseLabel().equals(raceDataTextView.getText().toString());
 
-        return isPhoneValid && isZipValid && isdobValid && !isAddressEmpty && !isFirstNameEmpty && !isLastNameEmpty && !isCityEmpty && !isStateEmtpy;
+        return isPhoneValid && isZipValid && isdobValid && isRaceValid && isEthnicityValid && isGenderValid && !isAddressEmpty && !isFirstNameEmpty && !isLastNameEmpty && !isCityEmpty && !isStateEmtpy;
 
     }
 
@@ -701,7 +718,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             ProgressDialogUtil.getInstance(getContext()).dismiss();
             buttonConfirmData.setEnabled(true);
             demographicProgressBar.setVisibility(View.GONE);
-            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+            ((CheckinDemographicsInterface)getActivity()).navigateToConsentFlow(workflowDTO);
         }
 
         @Override
@@ -887,6 +904,10 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         // update DTO in the activity
         activityCallback.onDemographicDtoChanged(demographicDTO);
 
+//        if (bitmap != null) {
+//            String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
+//            demographicPersDetailsPayloadDTO.setProfilePhoto(imageAsBase64);
+//        }
         return demographicDTO;
     }
 
@@ -1048,8 +1069,18 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             if (!StringUtil.isNullOrEmpty(imageUrl)) {
                 Picasso.with(getActivity()).load(imageUrl).transform(
                         new CircleImageTransform()).resize(160, 160).into(this.profileImageview);
-
+                if(isPractice){
+                    Picasso.Builder builder = new Picasso.Builder(getContext());
+                    RequestCreator load = builder.build().load(imageUrl);
+                    load.fit().into((ImageView) view.findViewById(R.id.chknin_profile_bg_image));
+                    updateProfileImageButton.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_silver_overlay));
+                    updateProfileImageButton.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                }
             }else{
+                if(isPractice) {
+                    view.findViewById(R.id.review_profile_chkin_header).setBackgroundColor(ContextCompat.getColor(getContext(), R.color.light_gray));
+
+                }
                 profileImageview.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.icn_placeholder_user_profile_png));
             }
 
@@ -1270,6 +1301,28 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         }.execute(zipcode);
     }
 
+    public void checkIfEnableButton(){
+        checkIfDisableButton(false);
+    }
+
+    public void checkIfDisableButton(boolean isDisabled){
+        enableButton(isAllFieldsValid() && !isDisabled);
+    }
+
+    /**
+     * Enable or disable main button
+     * @param isEnabled is Button enabled
+     */
+    public void enableButton(boolean isEnabled){
+        if(isPractice){
+            buttonConfirmData.setBackground(ContextCompat.getDrawable(getContext(),isEnabled? R.drawable.bg_green_overlay  : R.drawable.bg_silver_overlay));
+            buttonConfirmData.setPadding(20, 0, 20, 0);
+        } else {
+            buttonConfirmData.setBackground(ContextCompat.getDrawable(getContext(),isEnabled? R.drawable.language_button_selector  : R.drawable.button_light_gray_bg));
+        }
+        buttonConfirmData.setEnabled(isEnabled);
+    }
+
     @Override
     public ImageCaptureHelper.ImageShape getImageShape() {
         return ImageCaptureHelper.ImageShape.CIRCULAR;
@@ -1277,10 +1330,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
     @Override
     protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner, Bitmap bitmap) {
-        if (bitmap != null) {
-            String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
-            demographicPersDetailsPayloadDTO.setProfilePhoto(imageAsBase64);
-        }
+
     }
 
     @Override
