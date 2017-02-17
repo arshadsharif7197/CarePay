@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +25,9 @@ import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FilterDialog extends PopupWindow
         implements CustomFilterListAdapter.OnFilterOptionChangedListener, CustomSearchAdapter.OnSearchChangedListener {
 
@@ -41,14 +43,36 @@ public class FilterDialog extends PopupWindow
 
     private FilterCallBack filterCallBack;
 
+    private String practiceCheckinFilterDoctorsLabel;
+    private String practiceCheckinFilterLocationsLabel;
+    private String practicePaymentsFilter;
+    private String practicePaymentsFilterFindPatientByName;
+    private String practicePaymentsFilterClearFilters;
 
     /**
      * @param context    the context to inflate custom popup layout
      * @param parentView a parent view to get the {@link View#getWindowToken()} token from
+     * @param practiceCheckinFilterDoctorsLabel on top of doctors list
+     * @param practiceCheckinFilterLocationsLabel on top on locations list
+     * @param practicePaymentsFilter label on top of filter dialog
+     * @param practicePaymentsFilterFindPatientByName label for patient search text view
+     * @param practicePaymentsFilterClearFilters label for clear filters button
      */
-    public FilterDialog(Context context, View parentView, FilterModel filterModel) {
+    public FilterDialog(Context context,
+                        View parentView,
+                        FilterModel filterModel,
+                        String practiceCheckinFilterDoctorsLabel,
+                        String practiceCheckinFilterLocationsLabel,
+                        String practicePaymentsFilter,
+                        String practicePaymentsFilterFindPatientByName,
+                        String practicePaymentsFilterClearFilters) {
 
         super(context);
+        this.practiceCheckinFilterDoctorsLabel = practiceCheckinFilterDoctorsLabel;
+        this.practiceCheckinFilterLocationsLabel = practiceCheckinFilterLocationsLabel;
+        this.practicePaymentsFilter = practicePaymentsFilter;
+        this.practicePaymentsFilterFindPatientByName = practicePaymentsFilterFindPatientByName;
+        this.practicePaymentsFilterClearFilters = practicePaymentsFilterClearFilters;
         filterCallBack = (FilterCallBack) context;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.custom_filter_popup_window_layout, null);
@@ -71,7 +95,6 @@ public class FilterDialog extends PopupWindow
         void applyFilter();
     }
 
-
     private void displayRecyclerView() {
         // Set our custom adapter as the ListView's adapter.
         LinearLayoutManager filterableListLayoutManager = new LinearLayoutManager(context);
@@ -80,7 +103,7 @@ public class FilterDialog extends PopupWindow
         filterableDataRecyclerView.setLayoutManager(filterableListLayoutManager);
 
         patientAdapter = new CustomSearchAdapter(context, this, filterModel.getPatients());
-        doctorsLocationsAdapter = new CustomFilterListAdapter(context, this, filterModel.getDoctorsPlusLocations());
+        doctorsLocationsAdapter = new CustomFilterListAdapter(context, this, getDoctorsPlusLocations());
         filterableDataRecyclerView.setAdapter(doctorsLocationsAdapter);
     }
 
@@ -90,7 +113,7 @@ public class FilterDialog extends PopupWindow
         filterableDataRecyclerView = (RecyclerView) popupWindowLayout.findViewById(R.id.filterableDataRecyclerView);
 
         CarePayTextView titleTextView = (CarePayTextView) popupWindowLayout.findViewById(R.id.titleTextView);
-        titleTextView.setText(filterModel.getPracticePaymentsFilter());
+        titleTextView.setText(practicePaymentsFilter);
 
         ImageView closeFilterWindowImageView = (ImageView) popupWindowLayout.findViewById(R.id.closeFilterWindowImageView);
         closeFilterWindowImageView.setOnClickListener(new View.OnClickListener() {
@@ -111,7 +134,7 @@ public class FilterDialog extends PopupWindow
         });
 
         searchPatientEditText = (EditText) popupWindowLayout.findViewById(R.id.searchPatientEditText);
-        searchPatientEditText.setHint(filterModel.getPracticePaymentsFilterFindPatientByName());
+        searchPatientEditText.setHint(practicePaymentsFilterFindPatientByName);
         searchPatientEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence string, int start, int count, int after) {
@@ -158,7 +181,7 @@ public class FilterDialog extends PopupWindow
         });
 
         clearFiltersButton = (Button) popupWindowLayout.findViewById(R.id.clearFiltersButton);
-        clearFiltersButton.setText(filterModel.getPracticePaymentsFilterClearFilters());
+        clearFiltersButton.setText(practicePaymentsFilterClearFilters);
         clearFiltersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -185,5 +208,18 @@ public class FilterDialog extends PopupWindow
     @Override
     public void onSearchChanged(FilterDataDTO filteredDataDTO) {
         filterCallBack.applyFilter();
+    }
+
+    /**
+     * @return list of doctor plus locations
+     */
+    private List<FilterDataDTO> getDoctorsPlusLocations() {
+        List<FilterDataDTO> list = new ArrayList<>();
+        list.add(new FilterDataDTO(practiceCheckinFilterDoctorsLabel));
+        list.addAll(filterModel.getDoctors());
+        list.add(new FilterDataDTO(practiceCheckinFilterLocationsLabel));
+        list.addAll(filterModel.getLocations());
+
+        return list;
     }
 }

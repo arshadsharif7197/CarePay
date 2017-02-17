@@ -182,6 +182,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         Date dateTime = new Date(0);
         int countDifferentDates = 0;
+        int countByDay = 0;
         for (Patient patient : allPatients) {
             // Check filter by patient
             if (filterModel.isFilteringByPatients() && !patients.containsKey(patient.id)) {
@@ -198,24 +199,28 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             sizeFilteredPatients++;
 
-            // Count pending
+            // Count pending and filter by pending
             if (patient.isPending) {
                 sizeFilteredPendingPatients++;
-
-                // Check filter by pending
-                if (filterModel.isFilteringByPending()) {
-                    continue;
-                }
+            } else if (filterModel.isFilteringByPending()) {
+                continue;
             }
 
             if (null != patient.appointmentTime && !DateUtil.isSameDay(dateTime, patient.appointmentTime)) {
                 dateTime = patient.appointmentTime;
+
+                if (countByDay % 2 == 1) {
+                    filteredPatients.add(new Patient());
+                }
+
                 filteredPatients.add(new Patient(dateTime));
                 filteredPatients.add(new Patient());
                 countDifferentDates++;
+                countByDay = 0;
             }
 
             filteredPatients.add(patient);
+            countByDay++;
         }
 
         if (1 == countDifferentDates) {
