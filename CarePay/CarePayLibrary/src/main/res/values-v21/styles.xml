@@ -20,6 +20,13 @@
         <item name="android:elevation">@dimen/respons_toolbar_elevation</item>
     </style>
 
+    <style name="SearchToolbarStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:elevation">@dimen/respons_toolbar_elevation</item>
+    </style>
+
     <style name="ResponsButtonStyle" parent="android:Widget.TextView">
         <item name="android:textColor">@color/white</item>
         <item name="android:layout_marginStart">@dimen/respons_button_margin_left_right</item>

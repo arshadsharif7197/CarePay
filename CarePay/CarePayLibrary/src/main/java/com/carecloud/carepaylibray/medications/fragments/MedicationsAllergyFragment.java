@@ -2,7 +2,6 @@ package com.carecloud.carepaylibray.medications.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -12,18 +11,27 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.medications.adapters.MedicationAllergiesAdapter;
 import com.carecloud.carepaylibray.medications.models.MedicationAllergiesAction;
 import com.carecloud.carepaylibray.medications.models.MedicationAllergiesLabelsDTO;
+import com.carecloud.carepaylibray.medications.models.MedicationAllergiesPostModel;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
+import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesQueryStrings;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
 import com.carecloud.carepaylibray.medications.models.MedicationsObject;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lmenendez on 2/15/17.
@@ -92,7 +100,7 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
         if(getDialog()==null) {
             toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.icn_patient_mode_nav_back));
             toolbar.setNavigationOnClickListener(navigationClickListener);
-            ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+//            ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
         }
         TextView title = (TextView) toolbar.findViewById(R.id.medications_toolbar_title);
@@ -150,9 +158,14 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
     }
 
     private void setAdapters(){
-        MedicationAllergiesAdapter medicationAdapter = new MedicationAllergiesAdapter(getContext(), currentMedications, this, getTextForLabel(labels.getMedicationAllergiesDeleteButton()));
-        medicationRecycler.setAdapter(medicationAdapter);
-
+        if(medicationRecycler.getAdapter()==null) {
+            MedicationAllergiesAdapter medicationAdapter = new MedicationAllergiesAdapter(getContext(), currentMedications, this, getTextForLabel(labels.getMedicationAllergiesDeleteButton()));
+            medicationRecycler.setAdapter(medicationAdapter);
+        }else{
+            MedicationAllergiesAdapter adapter =((MedicationAllergiesAdapter)medicationRecycler.getAdapter());
+            adapter.setItems(currentMedications);
+            adapter.notifyDataSetChanged();
+        }
         setAdapterVisibility();
     }
 
@@ -163,6 +176,7 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
         }else{
             medicationRecycler.setVisibility(View.VISIBLE);
             placeholderMedication.setVisibility(View.GONE);
+            medicationRecycler.getLayoutManager().setMeasuredDimension(View.MeasureSpec.AT_MOST, View.MeasureSpec.AT_MOST);
         }
 
         allergyRecycler.setVisibility(View.GONE);
@@ -173,19 +187,40 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
     public void deleteItem(MedicationsAllergiesObject item) {
         if(item instanceof MedicationsObject){
             //remove Medication from list
+            currentMedications.remove(item);
+            if(addMedications.contains(item)){
+                addMedications.remove(item);
+                return;
+            }
             item.setAction(MedicationAllergiesAction.DELETE);
             removeMedications.add((MedicationsObject) item);
-            currentMedications.remove(item);
-
-            MedicationAllergiesAdapter adapter =((MedicationAllergiesAdapter)medicationRecycler.getAdapter());
-            adapter.setItems(currentMedications);
-            adapter.notifyDataSetChanged();
-
-            setAdapterVisibility();
         }
+        setAdapters();
 
     }
 
+    public void addItem(MedicationsAllergiesObject item){
+        if(item instanceof  MedicationsObject){
+            //check if exists
+            if(currentMedications.contains(item)){
+                return;
+            }
+            if(removeMedications.contains(item)){
+                removeMedications.remove(item);
+            }
+            item.setAction(MedicationAllergiesAction.ADD);
+            currentMedications.add((MedicationsObject) item);
+            addMedications.add((MedicationsObject) item);
+        }
+        setAdapters();
+    }
+
+    private List<MedicationsObject> getAllModifiedItems(){
+        List<MedicationsObject> combinedList = new ArrayList<>();
+        combinedList.addAll(addMedications);
+        combinedList.addAll(removeMedications);
+        return combinedList;
+    }
 
     private View.OnClickListener chooseAllergyClickListener = new View.OnClickListener() {
         @Override
@@ -204,6 +239,23 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
     private View.OnClickListener continueClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            Gson gson = new Gson();
+            TransitionDTO transitionDTO = medicationsAllergiesDTO.getMetadata().getTransitions().getMedications();
+            MedicationAllergiesPostModel postModel = new MedicationAllergiesPostModel();
+            postModel.setItems(getAllModifiedItems());
+
+            MedicationsAllergiesQueryStrings medicationsAllergiesQueryStrings = gson.fromJson(transitionDTO.getQueryString().toString(), MedicationsAllergiesQueryStrings.class);
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put(medicationsAllergiesQueryStrings.getPatientId().getName(), medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPatientId());
+            queryMap.put(medicationsAllergiesQueryStrings.getPracticeMgmt().getName(), medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPracticeMgmt());
+            queryMap.put(medicationsAllergiesQueryStrings.getPracticeId().getName(), medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPracticeId());
+
+            Map<String, String> headers = WorkflowServiceHelper.getPreferredLanguageHeader();
+//            headers.put("transition", "true");
+
+            String jsonBody = gson.toJson(getAllModifiedItems());
+            WorkflowServiceHelper.getInstance().execute(transitionDTO, submitMedicationAllergiesCallback, jsonBody, queryMap, headers);
+
 
         }
     };
@@ -215,6 +267,24 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
         }
     };
 
+    private WorkflowServiceCallback submitMedicationAllergiesCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            ProgressDialogUtil.getInstance(getContext()).show();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
+
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
+
+        }
+    };
 
 }
 

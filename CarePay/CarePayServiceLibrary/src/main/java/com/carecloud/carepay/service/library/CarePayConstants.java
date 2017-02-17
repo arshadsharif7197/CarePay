@@ -110,4 +110,5 @@ public class CarePayConstants {
 
 
     public static final String MEDICATION_ALLERGIES_DTO_EXTRA = "medication_allergies_payload_extra";
+    public static final String MEDICATION_ALLERGIES_SEARCH_MODE_EXTRA = "medication_allergies_search_mode_extra";
 }

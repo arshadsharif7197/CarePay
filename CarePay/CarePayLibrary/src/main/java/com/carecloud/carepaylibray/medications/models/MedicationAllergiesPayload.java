@@ -13,11 +13,24 @@ public class MedicationAllergiesPayload {
     @Expose
     private MedicationsPayload medications =  new MedicationsPayload();
 
+
+    @SerializedName("searched_medications")
+    @Expose
+    private SearchMedicationsPayload searchMedications = new SearchMedicationsPayload();
+
     public MedicationsPayload getMedications() {
         return medications;
     }
 
     public void setMedications(MedicationsPayload medications) {
         this.medications = medications;
+    }
+
+    public SearchMedicationsPayload getSearchMedications() {
+        return searchMedications;
+    }
+
+    public void setSearchMedications(SearchMedicationsPayload searchMedications) {
+        this.searchMedications = searchMedications;
     }
 }

@@ -3,6 +3,9 @@ package com.carecloud.carepaylibray.medications.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by lmenendez on 2/15/17.
  */
@@ -15,7 +18,7 @@ public class MedicationsAllergiesPostObject {
 
     @SerializedName("properties")
     @Expose
-    private MedicationsAllergiesObject properties;
+    private List<? extends MedicationsAllergiesObject> items = new ArrayList<>();
 
 
     public String getType() {
@@ -26,11 +29,11 @@ public class MedicationsAllergiesPostObject {
         this.type = type;
     }
 
-    public MedicationsAllergiesObject getProperties() {
-        return properties;
+    public List<? extends MedicationsAllergiesObject> getItems() {
+        return items;
     }
 
-    public void setProperties(MedicationsAllergiesObject properties) {
-        this.properties = properties;
+    public void setItems(List<? extends MedicationsAllergiesObject> items) {
+        this.items = items;
     }
 }

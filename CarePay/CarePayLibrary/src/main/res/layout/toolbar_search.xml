@@ -4,12 +4,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/search_toolbar"
-    style="@style/CustomToolbarStyle">
+    android:padding="0dp"
+    style="@style/SearchToolbarStyle"
+    app:contentInsetLeft="0dp"
+    app:contentInsetStart="0dp"
+    app:contentInsetStartWithNavigation="0dp">
 
     <android.support.v7.widget.SearchView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/search_entry_view"
-        app:iconifiedByDefault="false"/>
+        app:iconifiedByDefault="false"
+        android:theme="@style/SearchViewStyle"/>
 
 </android.support.v7.widget.Toolbar>

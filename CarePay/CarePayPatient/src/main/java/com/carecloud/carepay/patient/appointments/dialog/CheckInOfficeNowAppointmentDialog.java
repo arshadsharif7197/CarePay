@@ -105,8 +105,8 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
             checkInAtOfficeButton.setEnabled(true);
             cancel();
         } else if (viewId == R.id.checkInNowButton) {
+/*
             //FIXME
-//            PatientNavigationHelper.getInstance(getContext()).navigateToWorkflow(PatientNavigationStateConstants.MEDICATION_ALLERGIES);
             TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCancel();
             transitionDTO.setMethod("GET");
             transitionDTO.setUrl("https://aze9ynjfhl.execute-api.us-east-1.amazonaws.com/dev/workflow/shamrock/patient_app/medications_allergies/medications");
@@ -124,14 +124,13 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
 //            header.put("transition", "true");
 
             WorkflowServiceHelper.getInstance().execute(transitionDTO, testMedicationsCallback, queries, header);
+*/
 
 
-/*
             checkInNowButton.setEnabled(false);
             TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCheckingIn();
             doTransition(transitionDTO, demographicsVerifyCallback);
             cancel();
-*/
         }
     }
 

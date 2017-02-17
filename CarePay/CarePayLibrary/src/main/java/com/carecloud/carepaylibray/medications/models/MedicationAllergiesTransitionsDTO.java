@@ -1,6 +1,6 @@
 package com.carecloud.carepaylibray.medications.models;
 
-import com.carecloud.carepaylibray.appointments.models.TransitionsDTO;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -12,14 +12,14 @@ public class MedicationAllergiesTransitionsDTO {
 
     @SerializedName("medications")
     @Expose
-    private TransitionsDTO medications =  new TransitionsDTO();
+    private TransitionDTO medications =  new TransitionDTO();
 
 
-    public TransitionsDTO getMedications() {
+    public TransitionDTO getMedications() {
         return medications;
     }
 
-    public void setMedications(TransitionsDTO medications) {
+    public void setMedications(TransitionDTO medications) {
         this.medications = medications;
     }
 }

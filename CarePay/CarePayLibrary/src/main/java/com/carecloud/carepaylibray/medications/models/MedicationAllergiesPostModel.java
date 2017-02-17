@@ -22,7 +22,7 @@ public class MedicationAllergiesPostModel {
 
     @SerializedName("items")
     @Expose
-    private List<MedicationsAllergiesPostObject> items = new ArrayList<>();
+    private List<MedicationsObject> items = new ArrayList<>();
 
     public String getSchema() {
         return schema;
@@ -40,11 +40,11 @@ public class MedicationAllergiesPostModel {
         this.type = type;
     }
 
-    public List<MedicationsAllergiesPostObject> getItems() {
+    public List<MedicationsObject> getItems() {
         return items;
     }
 
-    public void setItems(List<MedicationsAllergiesPostObject> items) {
+    public void setItems(List<MedicationsObject> items) {
         this.items = items;
     }
 }
