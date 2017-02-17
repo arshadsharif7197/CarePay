@@ -33,11 +33,6 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
         view = inflater.inflate(R.layout.base_dialog_fragment, container, false);
 
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-//        WindowManager.LayoutParams params = getWindow().getAttributes();
-
-//        params.height = (int) (getResources().getDisplayMetrics().heightPixels * 0.88);
-//        params.width = LinearLayout.LayoutParams.WRAP_CONTENT;
-//        getWindow().setAttributes(params);
 
         onInitialization();
         setDialogCancelText();

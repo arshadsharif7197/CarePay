@@ -11,7 +11,6 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.SparseIntArray;
 import android.util.TypedValue;
-import android.widget.TextView;
 
 /**
  * Created by cocampo on 2/17/17.
@@ -32,29 +31,29 @@ public class AutoResizeTextView extends CarePayTextView {
         public int onTestSize(int suggestedSize, RectF availableSpace);
     }
 
-    private RectF mTextRect = new RectF();
+    private RectF textRect = new RectF();
 
-    private RectF mAvailableSpaceRect;
+    private RectF availableSpaceRect;
 
-    private SparseIntArray mTextCachedSizes;
+    private SparseIntArray textCachedSizes;
 
-    private TextPaint mPaint;
+    private TextPaint paint;
 
-    private float mMaxTextSize;
+    private float maxTextSize;
 
-    private float mSpacingMult = 1.0f;
+    private float spacingMult = 1.0f;
 
-    private float mSpacingAdd = 0.0f;
+    private float spacingAdd = 0.0f;
 
-    private float mMinTextSize = 20;
+    private float minTextSize = 20;
 
-    private int mWidthLimit;
+    private int widthLimit;
 
     private static final int NO_LINE_LIMIT = -1;
-    private int mMaxLines;
+    private int maxLines;
 
-    private boolean mEnableSizeCache = true;
-    private boolean mInitiallized;
+    private boolean enableSizeCache = true;
+    private boolean initialized;
 
     public AutoResizeTextView(Context context) {
         super(context);
@@ -72,15 +71,15 @@ public class AutoResizeTextView extends CarePayTextView {
     }
 
     private void initialize() {
-        mPaint = new TextPaint(getPaint());
-        mMaxTextSize = getTextSize();
-        mAvailableSpaceRect = new RectF();
-        mTextCachedSizes = new SparseIntArray();
-        if (mMaxLines == 0) {
+        paint = new TextPaint(getPaint());
+        maxTextSize = getTextSize();
+        availableSpaceRect = new RectF();
+        textCachedSizes = new SparseIntArray();
+        if (maxLines == 0) {
             // no value was assigned during construction
-            mMaxLines = NO_LINE_LIMIT;
+            maxLines = NO_LINE_LIMIT;
         }
-        mInitiallized = true;
+        initialized = true;
     }
 
     @Override
@@ -91,26 +90,26 @@ public class AutoResizeTextView extends CarePayTextView {
 
     @Override
     public void setTextSize(float size) {
-        mMaxTextSize = size;
-        mTextCachedSizes.clear();
+        maxTextSize = size;
+        textCachedSizes.clear();
         adjustTextSize(getText().toString());
     }
 
     @Override
     public void setMaxLines(int maxlines) {
         super.setMaxLines(maxlines);
-        mMaxLines = maxlines;
+        maxLines = maxlines;
         reAdjust();
     }
 
     public int getMaxLines() {
-        return mMaxLines;
+        return maxLines;
     }
 
     @Override
     public void setSingleLine() {
         super.setSingleLine();
-        mMaxLines = 1;
+        maxLines = 1;
         reAdjust();
     }
 
@@ -118,9 +117,9 @@ public class AutoResizeTextView extends CarePayTextView {
     public void setSingleLine(boolean singleLine) {
         super.setSingleLine(singleLine);
         if (singleLine) {
-            mMaxLines = 1;
+            maxLines = 1;
         } else {
-            mMaxLines = NO_LINE_LIMIT;
+            maxLines = NO_LINE_LIMIT;
         }
         reAdjust();
     }
@@ -128,7 +127,7 @@ public class AutoResizeTextView extends CarePayTextView {
     @Override
     public void setLines(int lines) {
         super.setLines(lines);
-        mMaxLines = lines;
+        maxLines = lines;
         reAdjust();
     }
 
@@ -141,17 +140,17 @@ public class AutoResizeTextView extends CarePayTextView {
             r = Resources.getSystem();
         else
             r = c.getResources();
-        mMaxTextSize = TypedValue.applyDimension(unit, size,
+        maxTextSize = TypedValue.applyDimension(unit, size,
                 r.getDisplayMetrics());
-        mTextCachedSizes.clear();
+        textCachedSizes.clear();
         adjustTextSize(getText().toString());
     }
 
     @Override
     public void setLineSpacing(float add, float mult) {
         super.setLineSpacing(add, mult);
-        mSpacingMult = mult;
-        mSpacingAdd = add;
+        spacingMult = mult;
+        spacingAdd = add;
     }
 
     /**
@@ -160,7 +159,7 @@ public class AutoResizeTextView extends CarePayTextView {
      * @param minTextSize
      */
     public void setMinTextSize(float minTextSize) {
-        mMinTextSize = minTextSize;
+        this.minTextSize = minTextSize;
         reAdjust();
     }
 
@@ -169,53 +168,53 @@ public class AutoResizeTextView extends CarePayTextView {
     }
 
     private void adjustTextSize(String string) {
-        if (!mInitiallized) {
+        if (!initialized) {
             return;
         }
-        int startSize = (int) mMinTextSize;
+        int startSize = (int) minTextSize;
         int heightLimit = getMeasuredHeight() - getCompoundPaddingBottom()
                 - getCompoundPaddingTop();
-        mWidthLimit = getMeasuredWidth() - getCompoundPaddingLeft()
+        widthLimit = getMeasuredWidth() - getCompoundPaddingLeft()
                 - getCompoundPaddingRight();
-        mAvailableSpaceRect.right = mWidthLimit;
-        mAvailableSpaceRect.bottom = heightLimit;
+        availableSpaceRect.right = widthLimit;
+        availableSpaceRect.bottom = heightLimit;
         super.setTextSize(
                 TypedValue.COMPLEX_UNIT_PX,
-                efficientTextSizeSearch(startSize, (int) mMaxTextSize,
-                        mSizeTester, mAvailableSpaceRect));
+                efficientTextSizeSearch(startSize, (int) maxTextSize,
+                        mSizeTester, availableSpaceRect));
     }
 
     private final SizeTester mSizeTester = new SizeTester() {
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public int onTestSize(int suggestedSize, RectF availableSPace) {
-            mPaint.setTextSize(suggestedSize);
+            paint.setTextSize(suggestedSize);
             String text = getText().toString();
             boolean singleline = getMaxLines() == 1;
             if (singleline) {
-                mTextRect.bottom = mPaint.getFontSpacing();
-                mTextRect.right = mPaint.measureText(text);
+                textRect.bottom = paint.getFontSpacing();
+                textRect.right = paint.measureText(text);
             } else {
-                StaticLayout layout = new StaticLayout(text, mPaint,
-                        mWidthLimit, Alignment.ALIGN_NORMAL, mSpacingMult,
-                        mSpacingAdd, true);
+                StaticLayout layout = new StaticLayout(text, paint,
+                        widthLimit, Alignment.ALIGN_NORMAL, spacingMult,
+                        spacingAdd, true);
                 // return early if we have more lines
                 if (getMaxLines() != NO_LINE_LIMIT
                         && layout.getLineCount() > getMaxLines()) {
                     return 1;
                 }
-                mTextRect.bottom = layout.getHeight();
+                textRect.bottom = layout.getHeight();
                 int maxWidth = -1;
                 for (int i = 0; i < layout.getLineCount(); i++) {
                     if (maxWidth < layout.getLineWidth(i)) {
                         maxWidth = (int) layout.getLineWidth(i);
                     }
                 }
-                mTextRect.right = maxWidth;
+                textRect.right = maxWidth;
             }
 
-            mTextRect.offsetTo(0, 0);
-            if (availableSPace.contains(mTextRect)) {
+            textRect.offsetTo(0, 0);
+            if (availableSPace.contains(textRect)) {
                 // may be too small, don't worry we will find the best match
                 return -1;
             } else {
@@ -235,24 +234,24 @@ public class AutoResizeTextView extends CarePayTextView {
      *            enable font size caching
      */
     public void enableSizeCache(boolean enable) {
-        mEnableSizeCache = enable;
-        mTextCachedSizes.clear();
+        enableSizeCache = enable;
+        textCachedSizes.clear();
         adjustTextSize(getText().toString());
     }
 
     private int efficientTextSizeSearch(int start, int end,
                                         SizeTester sizeTester, RectF availableSpace) {
-        if (!mEnableSizeCache) {
+        if (!enableSizeCache) {
             return binarySearch(start, end, sizeTester, availableSpace);
         }
         String text = getText().toString();
         int key = text == null ? 0 : text.length();
-        int size = mTextCachedSizes.get(key);
+        int size = textCachedSizes.get(key);
         if (size != 0) {
             return size;
         }
         size = binarySearch(start, end, sizeTester, availableSpace);
-        mTextCachedSizes.put(key, size);
+        textCachedSizes.put(key, size);
         return size;
     }
 
@@ -291,7 +290,7 @@ public class AutoResizeTextView extends CarePayTextView {
     @Override
     protected void onSizeChanged(int width, int height, int oldwidth,
                                  int oldheight) {
-        mTextCachedSizes.clear();
+        textCachedSizes.clear();
         super.onSizeChanged(width, height, oldwidth, oldheight);
         if (width != oldwidth || height != oldheight) {
             reAdjust();

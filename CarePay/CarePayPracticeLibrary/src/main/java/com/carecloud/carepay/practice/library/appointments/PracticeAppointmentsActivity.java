@@ -251,20 +251,20 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
             public void onClick(View view) {
 
 
-                String TAG = DateRangePickerDialog.class.getSimpleName();
+                String tag = DateRangePickerDialog.class.getSimpleName();
 
                 // DialogFragment.show() will take care of adding the fragment
                 // in a transaction.  We also want to remove any currently showing
                 // dialog, so make our own transaction and take care of that here.
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                Fragment prev = getFragmentManager().findFragmentByTag(TAG);
+                Fragment prev = getFragmentManager().findFragmentByTag(tag);
                 if (prev != null) {
                     ft.remove(prev);
                 }
                 ft.addToBackStack(null);
 
                 DateRangePickerDialog dialog = DateRangePickerDialog.newInstance(checkInLabelDTO.getDateRangePickerDialogTitle(), checkInLabelDTO.getDateRangePickerDialogClose(), checkInLabelDTO.getTodayLabel(), startDate, endDate);
-                dialog.show(ft, TAG);
+                dialog.show(ft, tag);
             }
         });
     }

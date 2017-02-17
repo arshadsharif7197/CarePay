@@ -70,8 +70,6 @@ public class DateRangePickerDialog extends BaseDialogFragment {
      * @return new instance of DateRangePickerDialog 
      */
     public static DateRangePickerDialog newInstance(String dialogTitle, String closeText, String todayLabel, Date startDate, Date endDate) {
-        DateRangePickerDialog f = new DateRangePickerDialog();
-
         // Supply num input as an argument
         Bundle args = new Bundle();
         args.putString("cancelString", closeText);
@@ -80,9 +78,11 @@ public class DateRangePickerDialog extends BaseDialogFragment {
         args.putString("todayLabel", todayLabel);
         args.putSerializable("startDate", startDate);
         args.putSerializable("endDate", endDate);
-        f.setArguments(args);
 
-        return f;
+        DateRangePickerDialog dialog = new DateRangePickerDialog();
+        dialog.setArguments(args);
+
+        return dialog;
     }
 
     @Override
