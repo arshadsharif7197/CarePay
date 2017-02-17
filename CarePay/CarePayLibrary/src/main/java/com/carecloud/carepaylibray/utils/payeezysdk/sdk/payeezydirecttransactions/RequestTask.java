@@ -75,6 +75,13 @@ public class RequestTask extends AsyncTask<String, String, String> {
 
 	FirstAPIClientV2Helper clientHelper = new FirstAPIClientV2Helper();
 
+	/**
+	 * Instantiates a new Request task.
+	 *
+	 * @param pcontext           the pcontext
+	 * @param callback           the callback
+	 * @param merchantServiceDTO the merchant service dto
+	 */
 	public RequestTask(Context pcontext, AuthorizeCreditCardCallback callback,
 					   DemographicsSettingsPapiMetadataMerchantServiceDTO merchantServiceDTO) {
 		context = pcontext;

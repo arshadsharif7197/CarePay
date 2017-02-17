@@ -9,7 +9,7 @@ public class DemographicsSettingsPapiBankAccountDTO {
     private String id;
     @SerializedName("account_id")
     @Expose
-    private String account_id;
+    private String accountId;
     @SerializedName("token")
     @Expose
     private String token;
@@ -35,22 +35,24 @@ public class DemographicsSettingsPapiBankAccountDTO {
         this.id = id;
     }
 
+
     /**
      * Gets account id.
      *
      * @return the account id
      */
-    public String getAccount_id() {
-        return account_id;
+    public String getAccountId() {
+        return accountId;
     }
+
 
     /**
      * Sets account id.
      *
-     * @param account_id the account id
+     * @param accountId the account id
      */
-    public void setAccount_id(String account_id) {
-        this.account_id = account_id;
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 
     /**
