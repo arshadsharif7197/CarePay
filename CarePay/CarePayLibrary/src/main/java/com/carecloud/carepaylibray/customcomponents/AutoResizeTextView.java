@@ -12,10 +12,6 @@ import android.util.AttributeSet;
 import android.util.SparseIntArray;
 import android.util.TypedValue;
 
-/**
- * Created by cocampo on 2/17/17.
- */
-
 public class AutoResizeTextView extends CarePayTextView {
     private interface SizeTester {
         /**
@@ -96,6 +92,22 @@ public class AutoResizeTextView extends CarePayTextView {
     }
 
     @Override
+    public void setTextSize(int unit, float size) {
+        Context context = getContext();
+        Resources resources;
+
+        if (context == null) {
+            resources = Resources.getSystem();
+        } else {
+            resources = context.getResources();
+        }
+        maxTextSize = TypedValue.applyDimension(unit, size,
+                resources.getDisplayMetrics());
+        textCachedSizes.clear();
+        adjustTextSize(getText().toString());
+    }
+
+    @Override
     public void setMaxLines(int maxlines) {
         super.setMaxLines(maxlines);
         maxLines = maxlines;
@@ -132,21 +144,6 @@ public class AutoResizeTextView extends CarePayTextView {
     }
 
     @Override
-    public void setTextSize(int unit, float size) {
-        Context c = getContext();
-        Resources r;
-
-        if (c == null)
-            r = Resources.getSystem();
-        else
-            r = c.getResources();
-        maxTextSize = TypedValue.applyDimension(unit, size,
-                r.getDisplayMetrics());
-        textCachedSizes.clear();
-        adjustTextSize(getText().toString());
-    }
-
-    @Override
     public void setLineSpacing(float add, float mult) {
         super.setLineSpacing(add, mult);
         spacingMult = mult;
@@ -156,7 +153,7 @@ public class AutoResizeTextView extends CarePayTextView {
     /**
      * Set the lower text size limit and invalidate the view
      *
-     * @param minTextSize
+     * @param minTextSize minimum text size
      */
     public void setMinTextSize(float minTextSize) {
         this.minTextSize = minTextSize;
@@ -171,7 +168,7 @@ public class AutoResizeTextView extends CarePayTextView {
         if (!initialized) {
             return;
         }
-        int startSize = (int) minTextSize;
+        final int startSize = (int) minTextSize;
         int heightLimit = getMeasuredHeight() - getCompoundPaddingBottom()
                 - getCompoundPaddingTop();
         widthLimit = getMeasuredWidth() - getCompoundPaddingLeft()
@@ -181,10 +178,10 @@ public class AutoResizeTextView extends CarePayTextView {
         super.setTextSize(
                 TypedValue.COMPLEX_UNIT_PX,
                 efficientTextSizeSearch(startSize, (int) maxTextSize,
-                        mSizeTester, availableSpaceRect));
+                        sizeTester, availableSpaceRect));
     }
 
-    private final SizeTester mSizeTester = new SizeTester() {
+    private final SizeTester sizeTester = new SizeTester() {
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public int onTestSize(int suggestedSize, RectF availableSPace) {
