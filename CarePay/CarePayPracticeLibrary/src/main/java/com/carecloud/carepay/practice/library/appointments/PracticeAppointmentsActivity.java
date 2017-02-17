@@ -1,5 +1,7 @@
 package com.carecloud.carepay.practice.library.appointments;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -30,8 +32,6 @@ import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +43,7 @@ import java.util.Map;
  */
 
 public class PracticeAppointmentsActivity extends BasePracticeActivity
-        implements FilterDialog.FilterCallBack {
+        implements FilterDialog.FilterCallBack, DateRangePickerDialog.DateRangePickerDialogListener {
 
     private FilterModel filter;
 
@@ -249,33 +249,41 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
         findViewById(R.id.activity_practice_appointments_change_date_range_label).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DateRangePickerDialog.DateRangePickerDialogListener callback = new DateRangePickerDialog.DateRangePickerDialogListener() {
-                    @Override
-                    public void onRangeSelected(Date start, Date end) {
-                        PracticeAppointmentsActivity.this.startDate = start;
-                        PracticeAppointmentsActivity.this.endDate = end;
 
-                        reloadCheckInDto();
-                    }
-                };
 
-                DateRangePickerDialog dialog = new DateRangePickerDialog(getContext(), checkInLabelDTO.getDateRangePickerDialogTitle(), checkInLabelDTO.getDateRangePickerDialogClose(), checkInLabelDTO.getTodayLabel(), startDate, endDate, callback);
-                dialog.show();
+                String TAG = DateRangePickerDialog.class.getSimpleName();
+
+                // DialogFragment.show() will take care of adding the fragment
+                // in a transaction.  We also want to remove any currently showing
+                // dialog, so make our own transaction and take care of that here.
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                Fragment prev = getFragmentManager().findFragmentByTag(TAG);
+                if (prev != null) {
+                    ft.remove(prev);
+                }
+                ft.addToBackStack(null);
+
+                DateRangePickerDialog dialog = DateRangePickerDialog.newInstance(checkInLabelDTO.getDateRangePickerDialogTitle(), checkInLabelDTO.getDateRangePickerDialogClose(), checkInLabelDTO.getTodayLabel(), startDate, endDate);
+                dialog.show(ft, TAG);
             }
         });
     }
 
-    private void reloadCheckInDto() {
+    @Override
+    public void onRangeSelected(Date start, Date end) {
+        this.startDate = start;
+        this.endDate = end;
+
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getPracticeAppointments();
 
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("start_date", DateUtil.getInstance().setDate(startDate).toStringWithFormatYyyyDashMmDashDd());
         queryMap.put("end_date", DateUtil.getInstance().setDate(endDate).toStringWithFormatYyyyDashMmDashDd());
 
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, checkInCallback, queryMap);
+        WorkflowServiceHelper.getInstance().execute(transitionDTO, workflowServiceCallback, queryMap);
     }
 
-    WorkflowServiceCallback checkInCallback = new WorkflowServiceCallback() {
+    WorkflowServiceCallback workflowServiceCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             ProgressDialogUtil.getInstance(getContext()).show();
