@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.utils;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.gson.Gson;
@@ -72,5 +73,9 @@ public class DtoHelper {
 
     public static void bundleDto(Bundle bundle, Object dto) {
         bundle.putString(dto.getClass().getSimpleName(), getStringDTO(dto));
+    }
+
+    public static void putExtra(Intent intent, Object dto) {
+        intent.putExtra(dto.getClass().getSimpleName(), getStringDTO(dto));
     }
 }

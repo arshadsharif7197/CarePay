@@ -67,7 +67,7 @@ public class SigninActivity extends BasePracticeActivity {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(getContext()).dismiss();
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
             signInButton.setClickable(true);
         }
 
@@ -88,7 +88,7 @@ public class SigninActivity extends BasePracticeActivity {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(getContext()).dismiss();
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
             signInButton.setClickable(true);
         }
 

@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -294,7 +295,7 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(getContext()).dismiss();
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(getActivity(), workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
         }
 
         @Override

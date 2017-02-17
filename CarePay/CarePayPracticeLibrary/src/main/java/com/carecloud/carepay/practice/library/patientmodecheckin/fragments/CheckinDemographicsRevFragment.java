@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -70,7 +71,7 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
             ProgressDialogUtil.getInstance(getContext()).dismiss();
             correctInformationButton.setEnabled(true);
             demographicProgressBar.setVisibility(View.GONE);
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(getContext(), workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
         }
 
         @Override
