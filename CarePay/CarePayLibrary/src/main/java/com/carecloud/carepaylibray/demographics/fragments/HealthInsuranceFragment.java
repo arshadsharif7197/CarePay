@@ -73,10 +73,12 @@ public class HealthInsuranceFragment extends Fragment {
         SystemUtil.setProximaNovaSemiboldTypeface(getContext(), healthInsuranceTitleTextView);
     }
 
-    private void initActiveSection(View view) {
+    public void initActiveSection(View view) {
         boolean loadResources = insurancePayloadDTOs.size() > 0;
-        view.findViewById(R.id.setupContainer).setVisibility(loadResources  && !isPractice ? View.GONE : View.VISIBLE);
-        view.findViewById(R.id.setupInsurancePracticeContainer).setVisibility(loadResources && isPractice ? View.GONE : View.VISIBLE);
+        boolean isSetup = !isPractice && !loadResources;
+        boolean isRatio = isPractice && !loadResources;
+        view.findViewById(R.id.setupContainer).setVisibility( isSetup ? View.VISIBLE : View.GONE );
+        view.findViewById(R.id.setupInsurancePracticeContainer).setVisibility( isRatio ? View.VISIBLE : View.GONE );
         view.findViewById(R.id.existingContainer).setVisibility(loadResources? View.VISIBLE : View.GONE);
         if( loadResources ){
             fillDetailAdapter(view);
@@ -93,9 +95,11 @@ public class HealthInsuranceFragment extends Fragment {
             dontHaveInsurance.setText(globalLabelsMetaDTO.getDemographicsDontHaveHealthInsuranceLabel());
             RadioButton haveInsurance = (RadioButton)view.findViewById(R.id.haveInsurance);
             haveInsurance.setText(globalLabelsMetaDTO.getDemographicsHaveHealthInsuranceLabel());
+            final Button addButton = (Button)view.findViewById(R.id.addNewButton);
             haveInsurance.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
+                    addButton.setEnabled(on);
                     documentCallback.disableMainButton(on);
                 }
             });

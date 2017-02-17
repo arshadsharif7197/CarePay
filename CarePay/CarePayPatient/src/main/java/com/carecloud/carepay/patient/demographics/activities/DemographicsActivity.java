@@ -425,9 +425,7 @@ public class DemographicsActivity extends BasePatientActivity
 
     @Override
     public void disableMainButton(boolean isDisabled) {
-        CheckinDemographicsFragment checkinFragment = (CheckinDemographicsFragment)
-                getSupportFragmentManager().findFragmentById(R.id.root_layout);
-        checkinFragment.checkIfDisableButton(isDisabled);
+
     }
 
 

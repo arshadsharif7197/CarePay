@@ -241,8 +241,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
     private void initialiseUIFields() {
 
-        LinearLayout addDemoLineraLayout = (LinearLayout) view.findViewById(R.id.adddemoLinearLayout);
-        addDemoLineraLayout.setPadding(20, 0, 20, 0);
 
         profileImageview = (ImageView) view.findViewById(R.id.patientPicImageView);
         imageCaptureHelper = new ImageCaptureHelper(getActivity(), profileImageview, globalLabelsMetaDTO);
@@ -684,8 +682,11 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             dobEditText.requestFocus();
         }
 
+        boolean isGenderValid = !globalLabelsMetaDTO.getDemographicsChooseLabel().equals(selectGender.getText().toString());
+        boolean isEthnicityValid = !globalLabelsMetaDTO.getDemographicsChooseLabel().equals(ethnicityDataTextView.getText().toString());
+        boolean isRaceValid = !globalLabelsMetaDTO.getDemographicsChooseLabel().equals(raceDataTextView.getText().toString());
 
-        return isPhoneValid && isZipValid && isdobValid && !isAddressEmpty && !isFirstNameEmpty && !isLastNameEmpty && !isCityEmpty && !isStateEmtpy;
+        return isPhoneValid && isZipValid && isdobValid && isRaceValid && isEthnicityValid && isGenderValid && !isAddressEmpty && !isFirstNameEmpty && !isLastNameEmpty && !isCityEmpty && !isStateEmtpy;
 
     }
 
@@ -1072,8 +1073,14 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                     Picasso.Builder builder = new Picasso.Builder(getContext());
                     RequestCreator load = builder.build().load(imageUrl);
                     load.fit().into((ImageView) view.findViewById(R.id.chknin_profile_bg_image));
+                    updateProfileImageButton.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_silver_overlay));
+                    updateProfileImageButton.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                 }
             }else{
+                if(isPractice) {
+                    view.findViewById(R.id.review_profile_chkin_header).setBackgroundColor(ContextCompat.getColor(getContext(), R.color.light_gray));
+
+                }
                 profileImageview.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.icn_placeholder_user_profile_png));
             }
 
@@ -1305,7 +1312,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     public void enableButton(boolean isEnabled){
         if(isPractice){
             buttonConfirmData.setBackground(ContextCompat.getDrawable(getContext(),isEnabled? R.drawable.bg_green_overlay  : R.drawable.bg_silver_overlay));
-
+            buttonConfirmData.setPadding(20, 0, 20, 0);
         } else {
             buttonConfirmData.setBackground(ContextCompat.getDrawable(getContext(),isEnabled? R.drawable.language_button_selector  : R.drawable.button_light_gray_bg));
         }

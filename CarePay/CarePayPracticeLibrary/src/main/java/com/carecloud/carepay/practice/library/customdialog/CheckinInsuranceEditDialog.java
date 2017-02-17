@@ -73,6 +73,7 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
     private Button btnScanFrontInsurance;
     private Button btnScanBackInsurance;
     private EditText insuranceCardNumEditText;
+    private EditText insuranceGroupNumEditText;
     private TextView planTextView;
     private TextView providerTextView;
     private TextView cardTypeTextView;
@@ -95,6 +96,8 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
     private Button removeButton;
     private int index;
 
+    private HealthInsuranceFragment.InsuranceDocumentScannerListener  insuranceDocumentScannerListener;
+
     protected Bitmap bitmap;
 
 
@@ -105,8 +108,9 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
      *  @param demographicDTO DTO
      *   @param index for index
      */
-    public CheckinInsuranceEditDialog(Context context,boolean isFooterVisibity,DemographicDTO demographicDTO,int index){
+    public CheckinInsuranceEditDialog(Context context,boolean isFooterVisibity,DemographicDTO demographicDTO,int index, HealthInsuranceFragment.InsuranceDocumentScannerListener  insuranceDocumentScannerListener){
         super(context,demographicDTO.getMetadata().getLabels().getDemographicsCancelLabel(),isFooterVisibity);
+        this.insuranceDocumentScannerListener = insuranceDocumentScannerListener;
         this.context = context;
         this.index =index;
         this.demographicDTO =demographicDTO;
@@ -142,7 +146,7 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
         saveChangesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((HealthInsuranceFragment.InsuranceDocumentScannerListener)CheckinInsuranceEditDialog.this.getOwnerActivity()).updateInsuranceDTO
+                insuranceDocumentScannerListener.updateInsuranceDTO
                         (index,
                         insuranceDTO);
                 dismiss();
@@ -151,7 +155,9 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
         removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onRemoveChanges();
+                if (index>=0) {
+                    onRemoveChanges();
+                }
                 dismiss();
             }
         });
@@ -243,6 +249,11 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
         insuranceCardNumberTextInput.setTag(hint);
         insuranceCardNumEditText.setTag(insuranceCardNumberTextInput);
         insuranceCardNumEditText.setHint(hint);
+
+        /*TextInputLayout insuranceGroupNumberTextInput = (TextInputLayout) view.findViewById(R.id.insuranceGroupNumberLabel);
+        EditText insuranceGroupNumEditText = (EditText) view.findViewById(R.id.reviewinsurnceGroupnum);
+        hint = insuranceMetadataDTO == null ? CarePayConstants.NOT_DEFINED : insuranceMetadataDTO.properties.insuranceMemberId.getLabel();*/
+
 
         setChangeFocusListeners();
         insuranceCardNumEditText.addTextChangedListener(new TextWatcher() {
@@ -528,7 +539,7 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
     }
 
     private  void onRemoveChanges(){
-            insuranceDTO = demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(index);
+            demographicDTO.getPayload().getDemographics().getPayload().getInsurances().remove(index);
             scanDocBackByte = null;
             scanDocFrontByte = null;
     }
@@ -536,7 +547,6 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
     @Override
     protected void onDialogCancel() {
         super.onDialogCancel();
-        onRemoveChanges();
     }
 
     private void onEnableSaveButton(){

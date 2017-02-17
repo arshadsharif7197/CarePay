@@ -30,11 +30,9 @@ import com.carecloud.carepaylibray.demographics.fragments.DemographicsCheckInDoc
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
 import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterface;
 import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
-import com.carecloud.carepaylibray.demographics.scanner.InsuranceDocumentScannerFragment;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinConsentForm1Fragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinConsentForm2Fragment;
-import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinDemographicsRevFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinIntakeForm1Fragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.IFragmentCallback;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityFragment;
@@ -674,21 +672,12 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
 
     @Override
     public void navigateToInsuranceDocumentFragment(int index, DemographicInsurancePayloadDTO model) {
-        CheckinInsuranceEditDialog checkinInsuranceEditDialog = new CheckinInsuranceEditDialog(this,true,demographicDTO,index);
-        checkinInsuranceEditDialog.show();
-        /*CheckinDemographicsFragment checkinFragment = (CheckinDemographicsFragment)
-                getSupportFragmentManager().findFragmentById(R.id.root_layout);
+        CheckinDemographicsFragment checkinFragment = (CheckinDemographicsFragment)
+                getSupportFragmentManager().findFragmentById(R.id.checkInContentHolderId);
         onDemographicDtoChanged(checkinFragment.updateModels());
 
-        Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, demographicDTO.getMetadata().getLabels());
-        DtoHelper.bundleDto(args, demographicDTO.getMetadata().getDataModels().demographic.insurances.properties.items.insurance);
-        DtoHelper.bundleDto(args, model);
-        DtoHelper.bundleDto(args, index);
-        InsuranceDocumentScannerFragment fragment = new InsuranceDocumentScannerFragment();
-        fragment.setArguments(args);
-
-        navigateToFragment(fragment, false);*/
+        CheckinInsuranceEditDialog checkinInsuranceEditDialog = new CheckinInsuranceEditDialog(this,true,demographicDTO,index, this);
+        checkinInsuranceEditDialog.show();
     }
 
     @Override
@@ -711,6 +700,15 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         } else {
             insurances.add(model);
         }
+        disableMainButton(false);
+        initializeInsurancesFragment();
+    }
+
+    @Override
+    public void disableMainButton(boolean isDisabled) {
+        CheckinDemographicsFragment checkinFragment = (CheckinDemographicsFragment)
+                getSupportFragmentManager().findFragmentById(R.id.checkInContentHolderId);
+        checkinFragment.checkIfDisableButton(isDisabled);
     }
 
     @Override
@@ -736,7 +734,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
 
     @Override
     public void navigateToConsentFlow(WorkflowDTO workflowDTO) {
-        PracticeNavigationHelper.getInstance().navigateToWorkflow(getContext(), workflowDTO);
+
+        PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
     }
 
     private DemographicIdDocPayloadDTO getDemographicIdDocPayloadDTO() {
