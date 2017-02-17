@@ -138,6 +138,10 @@ public abstract class BasePracticeActivity extends BaseVisibilityHintActivity
         return setVisibilityById(id, View.GONE);
     }
 
+    public boolean hideViewById(int id) {
+        return setVisibilityById(id, View.INVISIBLE);
+    }
+
     private boolean setVisibilityById(int id, int visibility) {
         View view = findViewById(id);
         if (null == view) {
