@@ -13,7 +13,7 @@ public class ConsentFormTransitionsDTO {
 
     @SerializedName("update_consent")
     @Expose
-    private TransitionDTO updateConsent;
+    private TransitionDTO updateConsent = new TransitionDTO();
 
     /**
      * @return The updateConsent

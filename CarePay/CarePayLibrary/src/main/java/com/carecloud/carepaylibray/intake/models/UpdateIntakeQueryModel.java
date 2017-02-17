@@ -10,19 +10,19 @@ public class UpdateIntakeQueryModel {
 
     @SerializedName("practice_mgmt")
     @Expose
-    private PracticeMgmtModel practiceMgmt;
+    private PracticeMgmtModel practiceMgmt = new PracticeMgmtModel();
     @SerializedName("practice_id")
     @Expose
-    private PracticeIdModel practiceId;
+    private PracticeIdModel practiceId = new PracticeIdModel();
     @SerializedName("appointment_id")
     @Expose
-    private AppointmentModel appointmentId;
+    private AppointmentModel appointmentId = new AppointmentModel();
     @SerializedName("patient_id")
     @Expose
-    private PatientIdModel patientId;
+    private PatientIdModel patientId = new PatientIdModel();
     @SerializedName("findings_id")
     @Expose
-    private FindingsIdModel findingsId;
+    private FindingsIdModel findingsId = new FindingsIdModel();
 
     /**
      * 

@@ -11,13 +11,13 @@ public class ConsentFormPostDTO {
 
     @SerializedName("consent_for_medicare")
     @Expose
-    private ConsentFormConsentMedicareDTO consentForMedicare;
+    private ConsentFormConsentMedicareDTO consentForMedicare = new ConsentFormConsentMedicareDTO();
     @SerializedName("consent_for_authorization")
     @Expose
-    private ConsentFormConsentAuthorizationDTO consentForAuthorization;
+    private ConsentFormConsentAuthorizationDTO consentForAuthorization = new ConsentFormConsentAuthorizationDTO();
     @SerializedName("consent_for_hipaa")
     @Expose
-    private ConsentFormConsentHippaDTO consentForHipaa;
+    private ConsentFormConsentHippaDTO consentForHipaa = new ConsentFormConsentHippaDTO();
 
     /**
      * @return The consentForMedicare

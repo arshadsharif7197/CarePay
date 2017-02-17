@@ -15,7 +15,7 @@ public class ConsentFormConsentAuthSignatureDTO {
     private String type;
     @SerializedName("validation")
     @Expose
-    private ConsentFormConsentAuthSignatureValidationDTO validation;
+    private ConsentFormConsentAuthSignatureValidationDTO validation = new ConsentFormConsentAuthSignatureValidationDTO();
 
     /**
      * @return The type

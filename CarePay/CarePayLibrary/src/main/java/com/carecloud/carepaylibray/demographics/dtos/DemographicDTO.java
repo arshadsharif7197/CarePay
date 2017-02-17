@@ -11,9 +11,15 @@ import com.google.gson.annotations.SerializedName;
  */
 public class DemographicDTO {
 
-    @SerializedName("metadata") @Expose private DemographicMetadataDTO        metadata;
-    @SerializedName("payload") @Expose private  DemographicPayloadResponseDTO payload;
-    @SerializedName("state") @Expose private    String                        state;
+    @SerializedName("metadata")
+    @Expose
+    private DemographicMetadataDTO metadata = new DemographicMetadataDTO();
+    @SerializedName("payload")
+    @Expose private
+    DemographicPayloadResponseDTO payload = new DemographicPayloadResponseDTO();
+    @SerializedName("state")
+    @Expose private
+    String state;
 
     /**
      * @return The metadata

@@ -12,16 +12,16 @@ public class SignInMetaDataDTO {
 
     @SerializedName("labels")
     @Expose
-    private SignInLablesDTO labels;
+    private SignInLablesDTO labels = new SignInLablesDTO();
     @SerializedName("links")
     @Expose
-    private SignInLinksDTO links;
+    private SignInLinksDTO links = new SignInLinksDTO();
     @SerializedName("transitions")
     @Expose
-    private SignInSignUpTransitionsDTO transitions;
+    private SignInSignUpTransitionsDTO transitions = new SignInSignUpTransitionsDTO();
     @SerializedName("data_models")
     @Expose
-    private SignInDataModelDTO dataModels;
+    private SignInDataModelDTO dataModels = new SignInDataModelDTO();
 
     /**
      * @return The labels

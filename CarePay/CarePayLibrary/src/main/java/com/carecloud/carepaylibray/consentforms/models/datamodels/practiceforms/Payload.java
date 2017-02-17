@@ -3,6 +3,8 @@ package com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -34,13 +36,13 @@ public class Payload {
     private Fields fields;
     @SerializedName("providers")
     @Expose
-    private List<Object> providers = null;
+    private List<Object> providers = new ArrayList<>();
     @SerializedName("locations")
     @Expose
-    private List<Object> locations = null;
+    private List<Object> locations = new ArrayList<>();
     @SerializedName("visit_types")
     @Expose
-    private List<Object> visitTypes = null;
+    private List<Object> visitTypes = new ArrayList<>();
     @SerializedName("uuid")
     @Expose
     private String uuid;

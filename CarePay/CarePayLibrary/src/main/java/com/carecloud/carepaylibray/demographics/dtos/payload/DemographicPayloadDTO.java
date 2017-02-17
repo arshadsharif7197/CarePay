@@ -14,15 +14,15 @@ public class DemographicPayloadDTO {
 
     @SerializedName("address")
     @Expose
-    private DemographicAddressPayloadDTO address;
+    private DemographicAddressPayloadDTO address = new DemographicAddressPayloadDTO();
 
     @SerializedName("personal_details")
     @Expose
-    private DemographicPersDetailsPayloadDTO personalDetails;
+    private DemographicPersDetailsPayloadDTO personalDetails = new DemographicPersDetailsPayloadDTO();
 
     @SerializedName("identity_documents")
     @Expose
-    private List<DemographicIdDocPayloadDTO> idDocuments;
+    private List<DemographicIdDocPayloadDTO> idDocuments = new ArrayList<>();
 
     @SerializedName("insurances")
     @Expose

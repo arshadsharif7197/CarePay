@@ -47,7 +47,7 @@ public class DemographicsSettingsPayloadPropertiesDTO {
     private String paymentProfileId;
     @SerializedName("billing_information")
     @Expose
-    private DemographicsSettingsBillingInformationDTO billingInformation;
+    private DemographicsSettingsBillingInformationDTO billingInformation = new DemographicsSettingsBillingInformationDTO();
 
     public String getCardType() {
         return cardType;

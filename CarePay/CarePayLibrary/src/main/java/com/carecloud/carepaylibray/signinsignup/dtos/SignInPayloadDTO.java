@@ -13,7 +13,7 @@ public class SignInPayloadDTO {
 
     @SerializedName("patient_app_signin")
     @Expose
-    private PatientAppSigninDTO patientAppSignin;
+    private PatientAppSigninDTO patientAppSignin = new PatientAppSigninDTO();
 
     /**
      * @return The patientAppSignin

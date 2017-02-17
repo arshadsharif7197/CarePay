@@ -12,7 +12,7 @@ public class AppointmentPayloadDTO {
 
     @SerializedName("metadata")
     @Expose
-    private AppointmentMetaDataDTO metadata;
+    private AppointmentMetaDataDTO metadata = new AppointmentMetaDataDTO();
 
 
     /**

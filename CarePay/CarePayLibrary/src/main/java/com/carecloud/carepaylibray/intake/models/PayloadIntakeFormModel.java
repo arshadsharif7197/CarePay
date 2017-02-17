@@ -1,11 +1,11 @@
 
 package com.carecloud.carepaylibray.intake.models;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class PayloadIntakeFormModel {
@@ -24,16 +24,16 @@ public class PayloadIntakeFormModel {
     private String description;
     @SerializedName("providers")
     @Expose
-    private List<Integer> providers = new ArrayList<Integer>();
+    private List<Integer> providers = new ArrayList<>();
     @SerializedName("providier_locations")
     @Expose
-    private List<String> providierLocations = new ArrayList<String>();
+    private List<String> providierLocations = new ArrayList<>();
     @SerializedName("show")
     @Expose
     private Boolean show;
     @SerializedName("sections")
     @Expose
-    private List<String> sections = new ArrayList<String>();
+    private List<String> sections = new ArrayList<>();
     @SerializedName("xml")
     @Expose
     private String xml;

@@ -14,7 +14,7 @@ public class PaymentsDeleteCreditCardsDTO {
     private String url;
     @SerializedName("query_string")
     @Expose
-    private PaymentsCreditCardQueryDTO queryString;
+    private PaymentsCreditCardQueryDTO queryString = new PaymentsCreditCardQueryDTO();
 
     /**
      * 

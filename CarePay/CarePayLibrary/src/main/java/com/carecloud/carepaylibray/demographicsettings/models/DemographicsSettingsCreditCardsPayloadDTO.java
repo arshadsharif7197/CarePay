@@ -10,10 +10,10 @@ import com.google.gson.annotations.SerializedName;
 public class DemographicsSettingsCreditCardsPayloadDTO {
     @SerializedName("metadata")
     @Expose
-    private DemographicsSettingsCreditCardMetadataDTO metadata;
+    private DemographicsSettingsCreditCardMetadataDTO metadata = new DemographicsSettingsCreditCardMetadataDTO();
     @SerializedName("payload")
     @Expose
-    private DemographicsSettingsPayloadPropertiesDTO payload;
+    private DemographicsSettingsPayloadPropertiesDTO payload = new DemographicsSettingsPayloadPropertiesDTO();
 
     public DemographicsSettingsCreditCardMetadataDTO getMetadata() {
         return metadata;

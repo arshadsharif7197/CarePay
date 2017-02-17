@@ -10,10 +10,10 @@ import com.google.gson.annotations.SerializedName;
 public class SelectLanguageDTO {
     @SerializedName("metadata")
     @Expose
-    private MetaDataDTO metadata;
+    private MetaDataDTO metadata = new MetaDataDTO();
     @SerializedName("payload")
     @Expose
-    private PayloadDTO payload;
+    private PayloadDTO payload = new PayloadDTO();
     @SerializedName("state")
     @Expose
     private String state;

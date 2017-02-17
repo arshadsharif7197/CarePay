@@ -12,13 +12,13 @@ public class SignUpPropertiesDTO {
 
     @SerializedName("email")
     @Expose
-    private SignUpEmailDTO email;
+    private SignUpEmailDTO email = new SignUpEmailDTO();
     @SerializedName("create_password")
     @Expose
-    private CreatePasswordDTO createPassword;
+    private CreatePasswordDTO createPassword = new CreatePasswordDTO();
     @SerializedName("repeat_password")
     @Expose
-    private RepeatPasswordDTO repeatPassword;
+    private RepeatPasswordDTO repeatPassword = new RepeatPasswordDTO();
 
     /**
      * @return The email

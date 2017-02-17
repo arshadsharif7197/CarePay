@@ -10,16 +10,16 @@ public class PayloadModel {
 
     @SerializedName("payments")
     @Expose
-    private PaymentsModel payments;
+    private PaymentsModel payments = new PaymentsModel();
     @SerializedName("appointments")
     @Expose
     private List<AppointmentPayloadModel> appointments = new ArrayList<>();
     @SerializedName("intake_forms")
     @Expose
-    private List<IntakeFormPayloadModel> intakeForms = new ArrayList<IntakeFormPayloadModel>();
+    private List<IntakeFormPayloadModel> intakeForms = new ArrayList<>();
     @SerializedName("findings")
     @Expose
-    private FindingsPayloadModel findings;
+    private FindingsPayloadModel findings = new FindingsPayloadModel();
 
 
     /**

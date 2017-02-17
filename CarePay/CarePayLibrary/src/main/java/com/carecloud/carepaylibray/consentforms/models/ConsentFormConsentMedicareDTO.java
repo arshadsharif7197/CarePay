@@ -13,7 +13,7 @@ public class ConsentFormConsentMedicareDTO {
 
     @SerializedName("properties")
     @Expose
-    private ConsentFormsConsentMedicarePropertiesDTO properties;
+    private ConsentFormsConsentMedicarePropertiesDTO properties = new ConsentFormsConsentMedicarePropertiesDTO();
 
     /**
      * @return The properties

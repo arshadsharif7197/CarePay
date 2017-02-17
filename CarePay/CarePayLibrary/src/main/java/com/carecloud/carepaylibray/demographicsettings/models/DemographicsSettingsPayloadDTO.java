@@ -4,19 +4,20 @@ package com.carecloud.carepaylibray.demographicsettings.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DemographicsSettingsPayloadDTO {
 
     @SerializedName("languages")
     @Expose
-    private List<DemographicsSettingsLanguageDTO> demographicsSettingsLanguageDTOs = null;
+    private List<DemographicsSettingsLanguageDTO> demographicsSettingsLanguageDTOs = new ArrayList<>();
     @SerializedName("patient_credit_cards")
     @Expose
-    private List<DemographicsSettingsCreditCardsPayloadDTO> patientCreditCards;
+    private List<DemographicsSettingsCreditCardsPayloadDTO> patientCreditCards = new ArrayList<>();
     @SerializedName("demographics")
     @Expose
-    private DemographicsSettingsDemographicsDTO demographics;
+    private DemographicsSettingsDemographicsDTO demographics = new DemographicsSettingsDemographicsDTO();
     @SerializedName("current_email")
     @Expose
     private String currentEmail;

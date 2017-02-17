@@ -21,7 +21,7 @@ public class ProviderDTO {
     private String phoneNumber;
     @SerializedName("specialty")
     @Expose
-    private SpecialtyDTO specialty;
+    private SpecialtyDTO specialty = new SpecialtyDTO();
 
     /**
      *

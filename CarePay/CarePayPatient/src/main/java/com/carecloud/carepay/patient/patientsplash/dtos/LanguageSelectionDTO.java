@@ -12,7 +12,7 @@ public class LanguageSelectionDTO {
 
     @SerializedName("language")
     @Expose
-    private LanguageListDTO language;
+    private LanguageListDTO language = new LanguageListDTO();
 
     /**
      * @return The language

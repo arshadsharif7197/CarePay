@@ -10,18 +10,23 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class DemographicMetadataPropertiesInsuranceDTO {
-    @SerializedName("insurance_photos") @Expose
-    public MetadataEntityDTO insurancePhotos;
+    @SerializedName("insurance_photos")
+    @Expose
+    public MetadataEntityDTO insurancePhotos = new MetadataEntityDTO();
 
-    @SerializedName("insurance_provider") @Expose
-    public MetadataEntityDTO insuranceProvider;
+    @SerializedName("insurance_provider")
+    @Expose
+    public MetadataEntityDTO insuranceProvider = new MetadataEntityDTO();
 
-    @SerializedName("insurance_plan") @Expose
-    public MetadataEntityDTO insurancePlan;
+    @SerializedName("insurance_plan")
+    @Expose
+    public MetadataEntityDTO insurancePlan = new MetadataEntityDTO();
 
-    @SerializedName("insurance_member_id") @Expose
-    public MetadataEntityDTO insuranceMemberId;
+    @SerializedName("insurance_member_id")
+    @Expose
+    public MetadataEntityDTO insuranceMemberId = new MetadataEntityDTO();
 
-    @SerializedName("insurance_type") @Expose
-    public MetadataEntityDTO insuranceType;
+    @SerializedName("insurance_type")
+    @Expose
+    public MetadataEntityDTO insuranceType = new MetadataEntityDTO();
 }

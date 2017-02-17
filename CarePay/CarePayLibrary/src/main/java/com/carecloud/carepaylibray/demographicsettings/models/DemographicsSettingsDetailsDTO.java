@@ -2,7 +2,6 @@ package com.carecloud.carepaylibray.demographicsettings.models;
 
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemInsuranceDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -13,19 +12,19 @@ import com.google.gson.annotations.SerializedName;
 public class DemographicsSettingsDetailsDTO {
     @SerializedName("address")
     @Expose
-    private DemographicsSettingsAddressDTO address;
+    private DemographicsSettingsAddressDTO address = new DemographicsSettingsAddressDTO();
     @SerializedName("personal_details")
     @Expose
-    private DemographicsSettingsPersonalDetailsPropertiesDTO personalDetails;
+    private DemographicsSettingsPersonalDetailsPropertiesDTO personalDetails = new DemographicsSettingsPersonalDetailsPropertiesDTO();
     @SerializedName("identity_documents")
     @Expose
-    private DemographicMetadataEntityIdDocsDTO identityDocuments;
+    private DemographicMetadataEntityIdDocsDTO identityDocuments = new DemographicMetadataEntityIdDocsDTO();
     @SerializedName("insurances")
     @Expose
-    private DemographicMetadataEntityInsurancesDTO insurances;
+    private DemographicMetadataEntityInsurancesDTO insurances = new DemographicMetadataEntityInsurancesDTO();
     @SerializedName("updates")
     @Expose
-    private DemographicsSettingsUpdatesDTO updates;
+    private DemographicsSettingsUpdatesDTO updates = new DemographicsSettingsUpdatesDTO();
 
     public DemographicsSettingsAddressDTO getAddress() {
         return address;

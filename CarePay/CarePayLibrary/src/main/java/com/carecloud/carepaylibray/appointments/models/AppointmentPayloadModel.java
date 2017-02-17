@@ -39,7 +39,7 @@ public class AppointmentPayloadModel implements Serializable {
     private List<CancellationReasonDTO> cancellationReasons = new ArrayList<CancellationReasonDTO>();
     @SerializedName("appointment_availability")
     @Expose
-    private AppointmentAvailabilityDataDTO appointmentAvailability;
+    private AppointmentAvailabilityDataDTO appointmentAvailability = new AppointmentAvailabilityDataDTO();
     @SerializedName("resources_to_schedule")
     @Expose
     private List<ResourcesToScheduleDTO> resourcesToSchedule = new ArrayList<>();

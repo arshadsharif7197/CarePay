@@ -10,10 +10,10 @@ public class PaymentsModel implements Serializable {
 
     @SerializedName("metadata")
     @Expose
-    private PaymentsMetadataModel paymentsMetadata;
+    private PaymentsMetadataModel paymentsMetadata = new PaymentsMetadataModel();
     @SerializedName("payload")
     @Expose
-    private PaymentsPayloadDTO paymentPayload;
+    private PaymentsPayloadDTO paymentPayload = new PaymentsPayloadDTO();
     @SerializedName("state")
     @Expose
     private String state;

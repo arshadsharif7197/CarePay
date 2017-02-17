@@ -10,7 +10,7 @@ public class ItemsModel {
 
     @SerializedName("intake")
     @Expose
-    private IntakeModel intake;
+    private IntakeModel intake = new IntakeModel();
 
     /**
      * 

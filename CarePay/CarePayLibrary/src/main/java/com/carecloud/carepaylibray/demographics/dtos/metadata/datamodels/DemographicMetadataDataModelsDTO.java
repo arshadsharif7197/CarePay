@@ -8,6 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * DTO holding various metadata entities
  */
 public class DemographicMetadataDataModelsDTO {
-    @SerializedName("demographic") @Expose
-    public DemographicMetadataEntitiesDTO demographic;
+    @SerializedName("demographic")
+    @Expose
+    public DemographicMetadataEntitiesDTO demographic = new DemographicMetadataEntitiesDTO();
 }

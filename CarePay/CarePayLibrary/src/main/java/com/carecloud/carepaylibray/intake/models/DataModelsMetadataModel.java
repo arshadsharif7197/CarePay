@@ -10,7 +10,7 @@ public class DataModelsMetadataModel {
 
     @SerializedName("intake_forms")
     @Expose
-    private IntakeFormsDataModel intakeForms;
+    private IntakeFormsDataModel intakeForms = new IntakeFormsDataModel();
 
     /**
      * 

@@ -2,6 +2,8 @@ package com.carecloud.carepaylibray.demographicsettings.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -18,13 +20,13 @@ public class DemographicsSettingsPersonalDetailsPropertiesDTO {
     private String label;
     @SerializedName("validations")
     @Expose
-    private List<DemographicsSettingsValidationDTO> validations = null;
+    private List<DemographicsSettingsValidationDTO> validations = new ArrayList<>();
     @SerializedName("method")
     @Expose
-    private DemographicsSettingsMethodDTO method;
+    private DemographicsSettingsMethodDTO method = new DemographicsSettingsMethodDTO();
     @SerializedName("properties")
     @Expose
-    private DemographicsSettingsPersonalDetailsDTO properties;
+    private DemographicsSettingsPersonalDetailsDTO properties = new DemographicsSettingsPersonalDetailsDTO();
 
     public String getType() {
         return type;
