@@ -37,4 +37,12 @@ public abstract class MedicationsAllergiesObject implements Comparable<Medicatio
     public int compareTo(MedicationsAllergiesObject object){
         return this.displayName.compareTo(object.displayName);
     }
+
+    @Override
+    public boolean equals(Object object){
+        if(object instanceof MedicationsAllergiesObject){
+            return this.displayName.equals(((MedicationsAllergiesObject)object).getDisplayName());
+        }
+        return super.equals(object);
+    }
 }

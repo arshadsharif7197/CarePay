@@ -192,7 +192,7 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
                 addMedications.remove(item);
                 return;
             }
-            item.setAction(MedicationAllergiesAction.DELETE);
+            item.setAction(MedicationAllergiesAction.delete);
             removeMedications.add((MedicationsObject) item);
         }
         setAdapters();
@@ -208,7 +208,7 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
             if(removeMedications.contains(item)){
                 removeMedications.remove(item);
             }
-            item.setAction(MedicationAllergiesAction.ADD);
+            item.setAction(MedicationAllergiesAction.add);
             currentMedications.add((MedicationsObject) item);
             addMedications.add((MedicationsObject) item);
         }
@@ -251,7 +251,7 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
             queryMap.put(medicationsAllergiesQueryStrings.getPracticeId().getName(), medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPracticeId());
 
             Map<String, String> headers = WorkflowServiceHelper.getPreferredLanguageHeader();
-//            headers.put("transition", "true");
+            headers.put("transition", "true");
 
             String jsonBody = gson.toJson(getAllModifiedItems());
             WorkflowServiceHelper.getInstance().execute(transitionDTO, submitMedicationAllergiesCallback, jsonBody, queryMap, headers);

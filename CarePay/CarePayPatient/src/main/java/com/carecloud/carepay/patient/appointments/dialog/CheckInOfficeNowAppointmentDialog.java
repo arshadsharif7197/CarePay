@@ -105,7 +105,6 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
             checkInAtOfficeButton.setEnabled(true);
             cancel();
         } else if (viewId == R.id.checkInNowButton) {
-/*
             //FIXME
             TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCancel();
             transitionDTO.setMethod("GET");
@@ -124,13 +123,14 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
 //            header.put("transition", "true");
 
             WorkflowServiceHelper.getInstance().execute(transitionDTO, testMedicationsCallback, queries, header);
-*/
 
 
+/*
             checkInNowButton.setEnabled(false);
             TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCheckingIn();
             doTransition(transitionDTO, demographicsVerifyCallback);
             cancel();
+*/
         }
     }
 
