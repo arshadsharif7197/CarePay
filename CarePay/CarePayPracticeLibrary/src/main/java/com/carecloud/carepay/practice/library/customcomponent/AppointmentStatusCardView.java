@@ -5,6 +5,8 @@ import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.Point;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -48,6 +50,7 @@ public class AppointmentStatusCardView extends LinearLayout {
     private String appointmentId;
     private String appointmentListType;
     private CarePayTextView shortNameTextView;
+    private boolean isWaitingRoom;
 
     /**
      * AppointmentStatusCardView with context
@@ -149,7 +152,9 @@ public class AppointmentStatusCardView extends LinearLayout {
         return appointmentId;
     }
 
-
+    public void setWaitingRoom(boolean waiting) {
+        isWaitingRoom = waiting;
+    }
 
     public void setAppointmentId(String appointmentId) {
         this.appointmentId = appointmentId;
@@ -229,10 +234,31 @@ public class AppointmentStatusCardView extends LinearLayout {
             // Create a new ClipData using the tag as a label, the plain text MIME type, and
             // the already-created item. This will create a new ClipDescription object within the
             // ClipData, and set its MIME type entry to "text/plain"
-            ClipData dragData = new ClipData((CharSequence) appointmentStatusCartView.getAppointmentId(), new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN}, item);
+            ClipData dragData = new ClipData(appointmentStatusCartView.getAppointmentId(), new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN}, item);
+            double rotationRad = Math.toRadians(view.getRotation());
+            int scaledWidth = (int) (view.getWidth() * view.getScaleX());
+            int scaledHeight = (int) (view.getHeight() * view.getScaleY());
+            double sinRotation = Math.abs(Math.sin(rotationRad));
+            double cosRotation = Math.abs(Math.cos(rotationRad));
+            final int width = (int) (scaledWidth * cosRotation + scaledHeight * sinRotation);
+            final int height = (int) (scaledWidth * sinRotation + scaledHeight * cosRotation);
 
             // Instantiates the drag shadow builder.
-            View.DragShadowBuilder myShadow = new AppDragShadowBuilder(appointmentStatusCartView);
+            View.DragShadowBuilder myShadow = new View.DragShadowBuilder(view) {
+                @Override
+                public void onDrawShadow(Canvas canvas) {
+                    if (!isWaitingRoom) {
+                        canvas.rotate(3, 0, height / 2);
+                    }
+                    super.onDrawShadow(canvas);
+                }
+
+                @Override
+                public void onProvideShadowMetrics(Point shadowSize, Point shadowTouchPoint) {
+                    shadowSize.set(width + 100, height + 100);
+                    shadowTouchPoint.set(shadowSize.x / 2, shadowSize.y / 2);
+                }
+            };
 
             // Starts the drag
 
