@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiMetadataMerchantServiceDTO;
 import com.carecloud.carepaylibray.utils.payeezysdk.firstdata.FirstAPIClientV2Helper;
 import com.carecloud.carepaylibray.utils.payeezysdk.firstdata.domain.TransactionType;
 import com.carecloud.carepaylibray.utils.payeezysdk.firstdata.domain.v2.Address;
@@ -64,6 +65,7 @@ public class RequestTask extends AsyncTask<String, String, String> {
 	}
 
 	private Context context = null;
+	private DemographicsSettingsPapiMetadataMerchantServiceDTO merchantServiceDTO;
 	public static String urlCert = "https://api-cert.payeezy.com/v1";
 
 	CardType cardtype ;
@@ -73,10 +75,11 @@ public class RequestTask extends AsyncTask<String, String, String> {
 
 	FirstAPIClientV2Helper clientHelper = new FirstAPIClientV2Helper();
 
-	public RequestTask(Context pcontext, AuthorizeCreditCardCallback callback)
-	{
+	public RequestTask(Context pcontext, AuthorizeCreditCardCallback callback,
+					   DemographicsSettingsPapiMetadataMerchantServiceDTO merchantServiceDTO) {
 		context = pcontext;
 		this.authorizeCreditCardCallback = callback;
+		this.merchantServiceDTO = merchantServiceDTO;
 	}
 	private String statusString = "";
 	private String splitter = "~~~~~~~~";
@@ -211,9 +214,13 @@ public class RequestTask extends AsyncTask<String, String, String> {
 		clientHelper.setSecuredSecret(TransactionDataProvider.secureIdCert);
 		clientHelper.setToken(TransactionDataProvider.tokenCert);
 		clientHelper.setUrl(TransactionDataProvider.urlCert);*/
-		clientHelper.setAppId("E66y09GJ71wdjc84q6EvA955qtMqYNAM");
-		clientHelper.setSecuredSecret("7d5b00c61b300c4ef7ee16e249169652e490696069ecb0ff588e31df34724d93");
-		clientHelper.setToken("fdoa-daad1ac2944ca1d97c16bf762ac12604daad1ac2944ca1d9");
+		// use the below Credentials from DTO
+//		clientHelper.setAppId("E66y09GJ71wdjc84q6EvA955qtMqYNAM");
+//		clientHelper.setSecuredSecret("7d5b00c61b300c4ef7ee16e249169652e490696069ecb0ff588e31df34724d93");
+//		clientHelper.setToken("fdoa-daad1ac2944ca1d97c16bf762ac12604daad1ac2944ca1d9");
+		clientHelper.setAppId(merchantServiceDTO.getApiKey());
+        clientHelper.setSecuredSecret(merchantServiceDTO.getApiSecret());
+		clientHelper.setToken(merchantServiceDTO.getMasterMerchantToken());
 		clientHelper.setUrl(urlCert);
 	}
 

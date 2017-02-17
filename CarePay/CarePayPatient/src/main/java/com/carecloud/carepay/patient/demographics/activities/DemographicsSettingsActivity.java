@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsSettingsFragment;
+import com.carecloud.carepay.patient.payment.fragments.SettingAddCreditCardFragment;
 import com.carecloud.carepay.patient.payment.fragments.SettingsCreditCardDetailsFragment;
 import com.carecloud.carepay.patient.payment.fragments.SettingsCreditCardListFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -23,7 +24,8 @@ import java.util.List;
  * Main activity for Settings workflow
  */
 public class DemographicsSettingsActivity extends BasePatientActivity implements
-        SettingsCreditCardDetailsFragment.IOnCreditCardOperationSuccess {
+        SettingsCreditCardDetailsFragment.IOnCreditCardOperationSuccess,
+        SettingsCreditCardListFragment.ISettingsCreditCardListFragmentListener{
     DemographicsSettingsDTO demographicsSettingsDTO;
 
     @Override
@@ -108,5 +110,22 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
             transaction.addToBackStack(fragment.getClass().getName());
         }
         transaction.commitAllowingStateLoss();
+    }
+
+    @Override
+    public void initializeAddNewCreditCardFragment() {
+        FragmentManager fragmentmanager = getSupportFragmentManager();
+        SettingAddCreditCardFragment fragment = (SettingAddCreditCardFragment)
+                fragmentmanager.findFragmentByTag(SettingAddCreditCardFragment.class.getSimpleName());
+        if (fragment == null) {
+            fragment = new SettingAddCreditCardFragment();
+        }
+
+        Bundle bundle = new Bundle();
+        Gson gson = new Gson();
+        bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, gson.toJson(demographicsSettingsDTO));
+        bundle.putString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE, gson.toJson(demographicsSettingsDTO.getPayload().getPapiAccounts()));
+        fragment.setArguments(bundle);
+        navigateToFragment(fragment,true);
     }
 }

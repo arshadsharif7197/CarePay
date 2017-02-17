@@ -433,6 +433,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
             }
 
             Bundle args = new Bundle();
+            args.putString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE, gson.toJson(paymentsDTO.getPaymentPayload().getPapiAccounts()));
             args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
             args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, getArguments()
                     .getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE));
