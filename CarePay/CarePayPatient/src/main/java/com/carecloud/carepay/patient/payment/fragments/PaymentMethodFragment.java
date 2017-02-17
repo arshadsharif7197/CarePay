@@ -144,7 +144,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
         }
         isAndroidPayReadyToUse();
         title.setText(titlePaymentMethodString);
-        toolbar.setTitle(titlePaymentMethodString);
+//        toolbar.setTitle(titlePaymentMethodString);
         return view;
     }
 

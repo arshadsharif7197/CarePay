@@ -335,16 +335,7 @@ public class DateUtil {
         if (date != null) {
             Calendar calendar = Calendar.getInstance(Locale.getDefault());
             calendar.setTime(date);
-            day = calendar.get(Calendar.DAY_OF_MONTH);
-            month = calendar.get(Calendar.MONTH);
-            year = calendar.get(Calendar.YEAR);
-            hour12 = calendar.get(Calendar.HOUR);
-            minute = calendar.get(Calendar.MINUTE);
-            amPm = DateFormatSymbols.getInstance(Locale.getDefault()).getAmPmStrings()[calendar.get(Calendar.AM_PM)];
-            dayLiteral = DateFormatSymbols.getInstance(Locale.getDefault()).getWeekdays()[calendar.get(Calendar.DAY_OF_WEEK)];
-            monthLiteral = DateFormatSymbols.getInstance(Locale.getDefault()).getMonths()[month];
-            dayLiteralAbbr = DateFormatSymbols.getInstance(Locale.getDefault()).getShortWeekdays()[calendar.get(Calendar.DAY_OF_WEEK)];
-            monthLiteralAbbr = DateFormatSymbols.getInstance(Locale.getDefault()).getShortMonths()[month];
+            updateFields(calendar);
         }
     }
 

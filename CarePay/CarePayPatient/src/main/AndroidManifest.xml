@@ -67,7 +67,7 @@
         <activity android:name=".payment.androidpay.ConfirmationActivity" />
         <activity
             android:name=".demographics.activities.DemographicsSettingsActivity"
-            android:label="@string/title_activity_demographics_settings"
+            android:label=""
             android:windowSoftInputMode="stateVisible|adjustPan"
             android:parentActivityName=".appointments.activities.AppointmentsActivity">
             <meta-data
