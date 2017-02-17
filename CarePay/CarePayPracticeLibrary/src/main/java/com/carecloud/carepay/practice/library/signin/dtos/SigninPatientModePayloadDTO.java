@@ -11,7 +11,7 @@ public class SigninPatientModePayloadDTO {
 
     @SerializedName("patient_mode_signin")
     @Expose
-    private SigninPayloadPatientModeDTO patientModeSignin;
+    private SigninPayloadPatientModeDTO patientModeSignin = new SigninPayloadPatientModeDTO();
 
     /**
      *

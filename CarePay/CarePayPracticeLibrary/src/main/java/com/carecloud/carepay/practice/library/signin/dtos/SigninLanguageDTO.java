@@ -14,7 +14,7 @@ import java.util.List;
 public class SigninLanguageDTO {
     @SerializedName("options")
     @Expose
-    private List<LanguageOptionDTO> options = new ArrayList<LanguageOptionDTO>();
+    private List<LanguageOptionDTO> options = new ArrayList<>();
 
     /**
      *

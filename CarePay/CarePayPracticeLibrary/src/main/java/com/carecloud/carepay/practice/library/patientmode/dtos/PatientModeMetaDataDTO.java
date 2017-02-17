@@ -11,13 +11,13 @@ public class PatientModeMetaDataDTO {
 
     @SerializedName("labels")
     @Expose
-    private PatientModeLabelsDTO      labels;
+    private PatientModeLabelsDTO labels = new PatientModeLabelsDTO();
     @SerializedName("links")
     @Expose
-    private PatientModeLinksDTO       links;
+    private PatientModeLinksDTO links = new PatientModeLinksDTO();
     @SerializedName("transitions")
     @Expose
-    private PatientModeTransitionsDTO transitions;
+    private PatientModeTransitionsDTO transitions = new PatientModeTransitionsDTO();
 
     /**
      * @return The labels

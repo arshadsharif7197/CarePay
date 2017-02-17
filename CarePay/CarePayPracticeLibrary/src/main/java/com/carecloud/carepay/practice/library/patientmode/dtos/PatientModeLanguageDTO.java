@@ -21,7 +21,7 @@ public class PatientModeLanguageDTO {
     private String type;
     @SerializedName("validations")
     @Expose
-    private List<PatientModesValidationDTO> validations = new ArrayList<PatientModesValidationDTO>();
+    private List<PatientModesValidationDTO> validations = new ArrayList<>();
 
     /**
      * @return The name

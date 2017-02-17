@@ -10,11 +10,11 @@ import com.google.gson.annotations.SerializedName;
 public class SignInPatientModeDataModelDTO {
     @SerializedName("login")
     @Expose
-    private SignInPatientModeModelDTO login;
+    private SignInPatientModeModelDTO login = new SignInPatientModeModelDTO();
 
     @SerializedName("personal_info")
     @Expose
-    private PersonalInfoDTO personalInfo;
+    private PersonalInfoDTO personalInfo = new PersonalInfoDTO();
 
     /**
      * @return The login

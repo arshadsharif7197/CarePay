@@ -13,7 +13,7 @@ public class SignInPatientModeModelDTO {
     private String labels;
     @SerializedName("properties")
     @Expose
-    private SignInPropertiesDTO properties;
+    private SignInPropertiesDTO properties = new SignInPropertiesDTO();
 
     /**
      * @return The labels

@@ -21,13 +21,13 @@ public class TransitionDTO {
     private  JsonObject queryString;
     @SerializedName("data")
     @Expose
-    private DataDTO data;
+    private DataDTO data = new DataDTO();
     @SerializedName("post_model")
     @Expose
     private JsonObject postModel;
     @SerializedName("header")
     @Expose
-    private DemographicsSettingsHeaderDTO header;
+    private DemographicsSettingsHeaderDTO header = new DemographicsSettingsHeaderDTO();
 
     /**
      *
