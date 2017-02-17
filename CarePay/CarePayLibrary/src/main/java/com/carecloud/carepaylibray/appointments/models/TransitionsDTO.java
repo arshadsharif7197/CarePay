@@ -10,26 +10,33 @@ import com.google.gson.annotations.SerializedName;
  */
 public class TransitionsDTO {
 
-    @SerializedName("cancel") @Expose
-    private TransitionDTO cancel;
+    @SerializedName("cancel")
+    @Expose
+    private TransitionDTO cancel = new TransitionDTO();
 
-    @SerializedName("checkin") @Expose
-    private TransitionDTO checkin;
+    @SerializedName("checkin")
+    @Expose
+    private TransitionDTO checkin = new TransitionDTO();
 
-    @SerializedName("checkin_at_office") @Expose
-    private TransitionDTO checkinAtOffice;
+    @SerializedName("checkin_at_office")
+    @Expose
+    private TransitionDTO checkinAtOffice = new TransitionDTO();
 
-    @SerializedName("add") @Expose
-    private TransitionDTO add;
+    @SerializedName("add")
+    @Expose
+    private TransitionDTO add = new TransitionDTO();
 
-    @SerializedName("logout") @Expose
-    private TransitionDTO logout;
+    @SerializedName("logout")
+    @Expose
+    private TransitionDTO logout = new TransitionDTO();
 
-    @SerializedName("checking_in") @Expose
-    private TransitionDTO checkingIn;
+    @SerializedName("checking_in")
+    @Expose
+    private TransitionDTO checkingIn = new TransitionDTO();
 
-    @SerializedName("make_appointment") @Expose
-    private TransitionDTO makeAppointment;
+    @SerializedName("make_appointment")
+    @Expose
+    private TransitionDTO makeAppointment = new TransitionDTO();
 
     /**
      * @return The checkingIn

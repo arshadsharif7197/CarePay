@@ -19,7 +19,7 @@ public class LocationModel {
     private Boolean isVisibleAppointmentScheduler;
     @SerializedName("address")
     @Expose
-    private AddressModel address;
+    private AddressModel address = new AddressModel();
 
     /**
      * 

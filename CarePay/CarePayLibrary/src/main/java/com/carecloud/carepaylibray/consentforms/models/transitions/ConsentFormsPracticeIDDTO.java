@@ -25,7 +25,7 @@ public class ConsentFormsPracticeIDDTO {
     private String type;
     @SerializedName("validations")
     @Expose
-    private List<ConsentFormsPracticeIdValidationDTO> validations = new ArrayList<ConsentFormsPracticeIdValidationDTO>();
+    private List<ConsentFormsPracticeIdValidationDTO> validations = new ArrayList<>();
 
     /**
      * @return The name

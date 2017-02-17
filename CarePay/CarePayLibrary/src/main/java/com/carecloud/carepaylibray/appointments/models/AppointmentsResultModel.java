@@ -13,10 +13,10 @@ public class AppointmentsResultModel implements Serializable {
 
     @SerializedName("metadata")
     @Expose
-    private AppointmentMetadataModel metadata;
+    private AppointmentMetadataModel metadata = new AppointmentMetadataModel();
     @SerializedName("payload")
     @Expose
-    private AppointmentPayloadModel payload;
+    private AppointmentPayloadModel payload = new AppointmentPayloadModel();
     @SerializedName("state")
     @Expose
     private String state;

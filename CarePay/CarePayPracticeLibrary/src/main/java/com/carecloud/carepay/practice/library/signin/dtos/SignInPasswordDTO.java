@@ -20,7 +20,7 @@ public class SignInPasswordDTO {
     private String label;
     @SerializedName("validations")
     @Expose
-    private List<SignInPasswordValidationDTO> validations = new ArrayList<SignInPasswordValidationDTO>();
+    private List<SignInPasswordValidationDTO> validations = new ArrayList<>();
 
     /**
      * @return The type

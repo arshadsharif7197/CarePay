@@ -10,18 +10,23 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class DemographicMetadataPropertiesIdDocDTO {
-    @SerializedName("identity_document_photos") @Expose
-    public MetadataEntityDTO identityDocumentPhotos;
+    @SerializedName("identity_document_photos")
+    @Expose
+    public MetadataEntityDTO identityDocumentPhotos = new MetadataEntityDTO();
 
-    @SerializedName("identity_document_number") @Expose
-    public MetadataEntityDTO identityDocumentNumber;
+    @SerializedName("identity_document_number")
+    @Expose
+    public MetadataEntityDTO identityDocumentNumber = new MetadataEntityDTO();
 
-    @SerializedName("identity_document_country") @Expose
-    public MetadataEntityDTO identityDocumentCountry;
+    @SerializedName("identity_document_country")
+    @Expose
+    public MetadataEntityDTO identityDocumentCountry = new MetadataEntityDTO();
 
-    @SerializedName("identity_document_state") @Expose
-    public MetadataEntityDTO identityDocumentState;
+    @SerializedName("identity_document_state")
+    @Expose
+    public MetadataEntityDTO identityDocumentState = new MetadataEntityDTO();
 
-    @SerializedName("identity_document_type") @Expose
-    public MetadataEntityDTO identityDocumentType;
+    @SerializedName("identity_document_type")
+    @Expose
+    public MetadataEntityDTO identityDocumentType = new MetadataEntityDTO();
 }

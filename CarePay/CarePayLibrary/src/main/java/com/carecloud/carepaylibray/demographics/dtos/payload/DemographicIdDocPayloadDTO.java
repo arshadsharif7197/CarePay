@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.demographics.dtos.payload;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,19 +12,24 @@ import java.util.List;
  */
 public class DemographicIdDocPayloadDTO {
 
-    @SerializedName("identity_document_photos") @Expose
-    private List<DemographicIdDocPhotoDTO> idDocPhothos;
+    @SerializedName("identity_document_photos")
+    @Expose
+    private List<DemographicIdDocPhotoDTO> idDocPhothos = new ArrayList<>();
 
-    @SerializedName("identity_document_number") @Expose
+    @SerializedName("identity_document_number")
+    @Expose
     private String idNumber;
 
-    @SerializedName("identity_document_state") @Expose
+    @SerializedName("identity_document_state")
+    @Expose
     private String idState;
 
-    @SerializedName("identity_document_country") @Expose
+    @SerializedName("identity_document_country")
+    @Expose
     private String idCountry;
 
-    @SerializedName("identity_document_type") @Expose
+    @SerializedName("identity_document_type")
+    @Expose
     private String idType;
 
     public List<DemographicIdDocPhotoDTO> getIdDocPhothos() {

@@ -11,10 +11,10 @@ public class ScanQRCodeDTO {
 
     @SerializedName("metadata")
     @Expose
-    private AppointmentMetadataModel metadata;
+    private AppointmentMetadataModel metadata = new AppointmentMetadataModel();
     @SerializedName("payload")
     @Expose
-    private QRCodePayloadDTO payload;
+    private QRCodePayloadDTO payload = new QRCodePayloadDTO();
     @SerializedName("state")
     @Expose
     private String state;

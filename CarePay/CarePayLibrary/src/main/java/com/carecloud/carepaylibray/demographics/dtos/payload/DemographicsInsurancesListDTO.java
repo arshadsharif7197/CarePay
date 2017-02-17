@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.demographics.dtos.payload;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
 
 public class DemographicsInsurancesListDTO {
     @SerializedName("insurances") @Expose
-    private List<DemographicInsurancePayloadDTO> insurances;
+    private List<DemographicInsurancePayloadDTO> insurances = new ArrayList<>();
 
     public List<DemographicInsurancePayloadDTO> getInsurances() {
         return insurances;

@@ -23,7 +23,7 @@ public class CreatePasswordDTO {
     private String label;
     @SerializedName("validations")
     @Expose
-    private List<CreatePasswordValidationDTO> validations = new ArrayList<CreatePasswordValidationDTO>();
+    private List<CreatePasswordValidationDTO> validations = new ArrayList<>();
 
     /**
      * @return The type

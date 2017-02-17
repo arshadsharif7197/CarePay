@@ -11,7 +11,7 @@ public class LinksDTO {
 
     @SerializedName("self")
     @Expose
-    private SelfLinkDTO self;
+    private SelfLinkDTO self = new SelfLinkDTO();
 
     /**
      * @return The self

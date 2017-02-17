@@ -15,7 +15,7 @@ public class PaymentsPatientsCreditCardsPayloadDTO {
 
     @SerializedName("metadata")
     @Expose
-    private PaymentPatientPlansPayloadDTO metadata;
+    private PaymentPatientPlansPayloadDTO metadata = new PaymentPatientPlansPayloadDTO();
     @SerializedName("payload")
     @Expose
     private List<PaymentsPatientsCreditCardsPayloadListDTO> payload = new ArrayList<>();

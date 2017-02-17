@@ -10,10 +10,10 @@ import com.google.gson.annotations.SerializedName;
 public class DemographicsSettingsEmailProperties {
     @SerializedName("login_email")
     @Expose
-    private DemographicsSettingsLoginEmailDTO loginEmail;
+    private DemographicsSettingsLoginEmailDTO loginEmail = new DemographicsSettingsLoginEmailDTO();
     @SerializedName("proposed_email")
     @Expose
-    private DemographicsSettingsProposedEmailDTO proposedEmail;
+    private DemographicsSettingsProposedEmailDTO proposedEmail = new DemographicsSettingsProposedEmailDTO();
 
     public DemographicSettingsCurrentPasswordDTO getCurrentPassword() {
         return currentPassword;

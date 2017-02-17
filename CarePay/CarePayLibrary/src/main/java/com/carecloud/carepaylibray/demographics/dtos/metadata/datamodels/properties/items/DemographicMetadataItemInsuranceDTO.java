@@ -9,6 +9,7 @@ import com.google.gson.annotations.SerializedName;
  * Specific metadata DTO for 'insurances' -> 'items' -> 'insurance'
  */
 public class DemographicMetadataItemInsuranceDTO {
-    @SerializedName("insurance") @Expose
-    public DemographicMetadataEntityItemInsuranceDTO insurance;
+    @SerializedName("insurance")
+    @Expose
+    public DemographicMetadataEntityItemInsuranceDTO insurance = new DemographicMetadataEntityItemInsuranceDTO();
 }

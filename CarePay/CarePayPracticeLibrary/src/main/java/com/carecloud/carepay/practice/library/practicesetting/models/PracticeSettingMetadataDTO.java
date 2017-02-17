@@ -10,10 +10,10 @@ public class PracticeSettingMetadataDTO {
 
     @SerializedName("labels")
     @Expose
-    private PracticeSettingLabelDTO label;
+    private PracticeSettingLabelDTO label = new PracticeSettingLabelDTO();
     @SerializedName("links")
     @Expose
-    private PracticeSettingLinksDTO links;
+    private PracticeSettingLinksDTO links = new PracticeSettingLinksDTO();
 
     /**
      *

@@ -11,7 +11,7 @@ public class AppointmentResourcesDTO {
 
     @SerializedName("resource")
     @Expose
-    private AppointmentResourcesItemDTO resource;
+    private AppointmentResourcesItemDTO resource = new AppointmentResourcesItemDTO();
 
     /**
      * 

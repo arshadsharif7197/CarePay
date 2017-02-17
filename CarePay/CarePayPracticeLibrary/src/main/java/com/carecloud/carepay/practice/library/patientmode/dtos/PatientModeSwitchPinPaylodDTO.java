@@ -10,10 +10,10 @@ import com.google.gson.annotations.SerializedName;
 public class PatientModeSwitchPinPaylodDTO {
     @SerializedName("patient_mode_start")
     @Expose
-    private PatientModesStartDTO patientModeStart;
+    private PatientModesStartDTO patientModeStart = new PatientModesStartDTO();
     @SerializedName("pinpad")
     @Expose
-    private PatientModeSwitchpinPadDTO pinpad;
+    private PatientModeSwitchpinPadDTO pinpad = new PatientModeSwitchpinPadDTO();
 
 
     public PatientModesStartDTO getPatientModeStart() {

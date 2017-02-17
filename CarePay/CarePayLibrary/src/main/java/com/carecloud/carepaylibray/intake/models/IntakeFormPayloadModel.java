@@ -10,10 +10,10 @@ public class IntakeFormPayloadModel {
 
     @SerializedName("metadata")
     @Expose
-    private MetadataIntakeFormModel metadata;
+    private MetadataIntakeFormModel metadata = new MetadataIntakeFormModel();
     @SerializedName("payload")
     @Expose
-    private PayloadIntakeFormModel payload;
+    private PayloadIntakeFormModel payload = new PayloadIntakeFormModel();
 
     /**
      * 

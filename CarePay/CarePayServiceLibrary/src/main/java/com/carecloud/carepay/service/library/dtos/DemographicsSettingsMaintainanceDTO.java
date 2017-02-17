@@ -19,7 +19,7 @@ public class DemographicsSettingsMaintainanceDTO {
     private String type;
     @SerializedName("properties")
     @Expose
-    private DemographicsSettingsEmailProperties properties;
+    private DemographicsSettingsEmailProperties properties = new DemographicsSettingsEmailProperties();
 
     @SerializedName("required")
     @Expose

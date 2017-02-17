@@ -4,6 +4,7 @@ package com.carecloud.carepaylibray.payments.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LocationIndexDTO {
@@ -16,7 +17,7 @@ public class LocationIndexDTO {
     private String id;
     @SerializedName("patient_ids")
     @Expose
-    private List<String> patientIds = null;
+    private List<String> patientIds = new ArrayList<>();
 
     public String getName() {
         return name;

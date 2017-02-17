@@ -12,28 +12,28 @@ public class LinksDTO {
 
     @SerializedName("self")
     @Expose
-    private LinkDTO self;
+    private LinkDTO self = new LinkDTO();
     @SerializedName("demographics")
     @Expose
-    private LinkDTO demographics;
+    private LinkDTO demographics = new LinkDTO();
     @SerializedName("appointments")
     @Expose
-    private TransitionDTO appointments;
+    private TransitionDTO appointments = new TransitionDTO();
     @SerializedName("patient_balances")
     @Expose
-    private TransitionDTO patientBalances;
+    private TransitionDTO patientBalances = new TransitionDTO();
     @SerializedName("resources_to_schedule")
     @Expose
-    private TransitionDTO resourcesToSchedule;
+    private TransitionDTO resourcesToSchedule = new TransitionDTO();
     @SerializedName("providers_schedule")
     @Expose
-    private LinkDTO providersSchedule;
+    private LinkDTO providersSchedule = new LinkDTO();
     @SerializedName("appointment_availability")
     @Expose
-    private TransitionDTO appointmentAvailability;
+    private TransitionDTO appointmentAvailability = new TransitionDTO();
     @SerializedName("profile_update")
     @Expose
-    private TransitionDTO profileUpdate;
+    private TransitionDTO profileUpdate = new TransitionDTO();
 
     /**
      * @return The self

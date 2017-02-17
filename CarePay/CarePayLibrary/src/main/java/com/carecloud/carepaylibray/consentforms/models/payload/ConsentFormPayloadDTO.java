@@ -15,10 +15,10 @@ public class ConsentFormPayloadDTO {
 
     @SerializedName("consent_forms")
     @Expose
-    private ConseFormsPayloadDTO consentforms;
+    private ConseFormsPayloadDTO consentforms = new ConseFormsPayloadDTO();
     @SerializedName("demographics")
     @Expose
-    private ConseFormDemoagraphicsPayloadDTO demographics;
+    private ConseFormDemoagraphicsPayloadDTO demographics = new ConseFormDemoagraphicsPayloadDTO();
 
     @SerializedName("appointments")
     @Expose

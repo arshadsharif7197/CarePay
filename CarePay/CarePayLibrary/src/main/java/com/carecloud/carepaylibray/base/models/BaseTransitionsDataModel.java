@@ -16,7 +16,7 @@ public class BaseTransitionsDataModel {
     private String label;
     @SerializedName("action")
     @Expose
-    private BaseTransitionsActionModel action;
+    private BaseTransitionsActionModel action = new BaseTransitionsActionModel();
     @SerializedName("type")
     @Expose
     private String type;

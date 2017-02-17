@@ -8,25 +8,25 @@ public class DemographicsSettingsPropertiesDTO {
 
     @SerializedName("card_type")
     @Expose
-    private DemographicsSettingsCardTypeDTO demographicsSettingsCardTypeDTO;
+    private DemographicsSettingsCardTypeDTO demographicsSettingsCardTypeDTO = new DemographicsSettingsCardTypeDTO();
     @SerializedName("card_number")
     @Expose
-    private DemographicsSettingsCardNumberDTO demographicsSettingsCardNumberDTO;
+    private DemographicsSettingsCardNumberDTO demographicsSettingsCardNumberDTO = new DemographicsSettingsCardNumberDTO();
     @SerializedName("name_on_card")
     @Expose
-    private DemographicsSettingsNameOnCardDTO demographicsSettingsNameOnCardDTO;
+    private DemographicsSettingsNameOnCardDTO demographicsSettingsNameOnCardDTO = new DemographicsSettingsNameOnCardDTO();
     @SerializedName("expire_dt")
     @Expose
-    private DemographicsSettingsExpireDateDTO demographicsSettingsExpireDateDTO;
+    private DemographicsSettingsExpireDateDTO demographicsSettingsExpireDateDTO = new DemographicsSettingsExpireDateDTO();
     @SerializedName("cvv")
     @Expose
-    private DemographicsSettingsCvvDTO demographicsSettingsCvvDTO;
+    private DemographicsSettingsCvvDTO demographicsSettingsCvvDTO = new DemographicsSettingsCvvDTO();
     @SerializedName("token")
     @Expose
-    private DemographicsSettingsTokenDTO demographicsSettingsTokenDTO;
+    private DemographicsSettingsTokenDTO demographicsSettingsTokenDTO = new DemographicsSettingsTokenDTO();
     @SerializedName("billing_information")
     @Expose
-    private DemographicsSettingsBillingInformationDTO demographicsSettingsBillingInformationDTO;
+    private DemographicsSettingsBillingInformationDTO demographicsSettingsBillingInformationDTO = new DemographicsSettingsBillingInformationDTO();
 
     public DemographicsSettingsCardTypeDTO getCardType() {
         return demographicsSettingsCardTypeDTO;

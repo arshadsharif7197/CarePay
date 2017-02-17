@@ -8,7 +8,7 @@ public class DemographicsSettingsLinksDTO {
 
     @SerializedName("self")
     @Expose
-    private DemographicsSettingsSelfDTO demographicsSettingsSelfDTO;
+    private DemographicsSettingsSelfDTO demographicsSettingsSelfDTO = new DemographicsSettingsSelfDTO();
 
     public DemographicsSettingsSelfDTO getSelf() {
         return demographicsSettingsSelfDTO;

@@ -11,13 +11,13 @@ import com.google.gson.annotations.SerializedName;
 public class HomeScreenDTO {
     @SerializedName("metadata")
     @Expose
-    private HomeScreenMetadataDTO metadata;
+    private HomeScreenMetadataDTO metadata = new HomeScreenMetadataDTO();
     @SerializedName("payload")
     @Expose
-    private JsonObject            payload;
+    private JsonObject payload;
     @SerializedName("state")
     @Expose
-    private String                state;
+    private String state;
 
     /**
      *

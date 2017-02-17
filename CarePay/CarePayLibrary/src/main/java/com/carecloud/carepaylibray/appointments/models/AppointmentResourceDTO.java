@@ -50,7 +50,7 @@ public class AppointmentResourceDTO {
     private Integer updatedBy;
     @SerializedName("default_provider")
     @Expose
-    private ProvidersDefaultDTO defaultProvider;
+    private ProvidersDefaultDTO defaultProvider = new ProvidersDefaultDTO();
 
     /**
      * 
