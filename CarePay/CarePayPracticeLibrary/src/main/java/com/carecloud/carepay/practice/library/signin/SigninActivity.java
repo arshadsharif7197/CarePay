@@ -288,8 +288,8 @@ public class SigninActivity extends BasePracticeActivity {
 
         passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(v.length()>0 && areAllValid()){
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                if(view.length()>0 && areAllValid()){
                     signInUser();
                 }
                 return false;
