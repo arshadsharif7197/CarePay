@@ -90,7 +90,8 @@
             android:screenOrientation="sensorLandscape"/>
         <activity
             android:name="com.carecloud.carepay.practice.clover.cloverqrcodescanner.CloverQRScannerActivity"
-            android:label="@string/qr_code_scanner">
+            android:label="@string/qr_code_scanner"
+            android:screenOrientation="sensorLandscape">
             <intent-filter>
                 <action android:name="com.carecloud.carepay.practice.clover.qrscanner.CloverQRScannerActivity" />
                 <category android:name="android.intent.category.DEFAULT" />

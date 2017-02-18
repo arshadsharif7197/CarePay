@@ -22,7 +22,7 @@ public class CarePayPatientApplication extends Application {
         super.onCreate();
         setHttpConstants();
         ApplicationPreferences.createPreferences(this);
-        registerActivityLifecycleCallbacks(new CarePayActivityLifecycleCallbacks());
+//        registerActivityLifecycleCallbacks(new CarePayActivityLifecycleCallbacks());
         ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PATIENT);
     }
 
