@@ -35,6 +35,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsAddressDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsAddressInfoDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCityDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDataModelsDTO;
@@ -75,13 +76,13 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.json.JSONObject;
 
 
 
@@ -337,7 +338,7 @@ public class DemographicsInformationFragment extends Fragment {
                 DemographicsSettingsDataModelsDTO demographicsSettingsDataModelsDTO = demographicsSettingsMetadataDTO.getDataModels();
                 DemographicsSettingsDetailsDTO demographicsSettingsDemographicsDTO = demographicsSettingsDataModelsDTO.getDemographic();
                 DemographicsSettingsPersonalDetailsPropertiesDTO demographicsSettingsPersonalDetailsDTO = demographicsSettingsDemographicsDTO.getPersonalDetails();
-                DemographicsSettingsAddressDTO demographicsSettingsAddressDetailsDTO = demographicsSettingsDemographicsDTO.getAddress();
+                DemographicsSettingsAddressInfoDTO demographicsSettingsAddressDetailsDTO = demographicsSettingsDemographicsDTO.getAddress();
                 demographicsSettingsDetailsDTO = demographicsSettingsAddressDetailsDTO.getProperties();
                 demographicsSettingsPersonalDetailsDTO1 = demographicsSettingsPersonalDetailsDTO.getProperties();
 
@@ -425,7 +426,7 @@ public class DemographicsInformationFragment extends Fragment {
             if (demographicsSettingsMetadataDTO != null) {
                 DemographicsSettingsDataModelsDTO demographicsSettingsDataModelsDTO = demographicsSettingsMetadataDTO.getDataModels();
                 DemographicsSettingsDetailsDTO demographicsSettingsDemographicsDTO = demographicsSettingsDataModelsDTO.getDemographic();
-                DemographicsSettingsAddressDTO demographicsSettingsAddressDTO = demographicsSettingsDemographicsDTO.getAddress();
+                DemographicsSettingsAddressInfoDTO demographicsSettingsAddressDTO = demographicsSettingsDemographicsDTO.getAddress();
                 demographicsSettingsDetailsDTO = demographicsSettingsAddressDTO.getProperties();
 
             }
@@ -922,7 +923,7 @@ public class DemographicsInformationFragment extends Fragment {
                     DemographicsSettingsDetailsDTO demographicsSettingsDetailsDTO = demographicsSettingsDataModelsDTO.getDemographic();
                     if(demographicsSettingsDetailsDTO !=null) {
                         DemographicsSettingsPersonalDetailsPropertiesDTO demographicsSettingsPersonalDetailsPreopertiesDTO = demographicsSettingsDetailsDTO.getPersonalDetails();
-                        DemographicsSettingsAddressDTO demographicsSettingsAddressDTO = demographicsSettingsDetailsDTO.getAddress();
+                        DemographicsSettingsAddressInfoDTO demographicsSettingsAddressDTO = demographicsSettingsDetailsDTO.getAddress();
                         addressString = demographicsSettingsAddressDTO.getLabel();
                         DemographicsSettingsPersonalDetailsDTO demographicsSettingsPersonalDetailsDTO = demographicsSettingsPersonalDetailsPreopertiesDTO.getProperties();
                         DemographicsSettingsDateOfBirthDTO demographicsSettingsDOBDTO = demographicsSettingsPersonalDetailsDTO.getDateOfBirth();

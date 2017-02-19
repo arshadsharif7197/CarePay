@@ -12,7 +12,7 @@ import com.google.gson.annotations.SerializedName;
 public class DemographicsSettingsDetailsDTO {
     @SerializedName("address")
     @Expose
-    private DemographicsSettingsAddressDTO address = new DemographicsSettingsAddressDTO();
+    private DemographicsSettingsAddressInfoDTO address = new DemographicsSettingsAddressInfoDTO();
     @SerializedName("personal_details")
     @Expose
     private DemographicsSettingsPersonalDetailsPropertiesDTO personalDetails = new DemographicsSettingsPersonalDetailsPropertiesDTO();
@@ -25,14 +25,6 @@ public class DemographicsSettingsDetailsDTO {
     @SerializedName("updates")
     @Expose
     private DemographicsSettingsUpdatesDTO updates = new DemographicsSettingsUpdatesDTO();
-
-    public DemographicsSettingsAddressDTO getAddress() {
-        return address;
-    }
-
-    public void setAddress(DemographicsSettingsAddressDTO address) {
-        this.address = address;
-    }
 
     public DemographicsSettingsPersonalDetailsPropertiesDTO getPersonalDetails() {
         return personalDetails;
@@ -66,4 +58,11 @@ public class DemographicsSettingsDetailsDTO {
         this.updates = updates;
     }
 
+    public DemographicsSettingsAddressInfoDTO getAddress() {
+        return address;
+    }
+
+    public void setAddress(DemographicsSettingsAddressInfoDTO address) {
+        this.address = address;
+    }
 }
