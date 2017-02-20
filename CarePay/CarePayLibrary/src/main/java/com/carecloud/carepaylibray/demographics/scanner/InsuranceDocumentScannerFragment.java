@@ -105,7 +105,7 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
 
     private void initUpdateButton(View view){
         Button addButton = (Button)view.findViewById(R.id.saveHealthInsuranceButton);
-        addButton.setText(globalLabelsDTO.getDemographicsInsuranceSave());
+        addButton.setText(globalLabelsDTO.getDemographicsInsuranceUpdateButton());
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

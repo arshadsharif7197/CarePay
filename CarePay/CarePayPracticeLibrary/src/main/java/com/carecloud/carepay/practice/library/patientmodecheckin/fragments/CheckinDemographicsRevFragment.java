@@ -36,6 +36,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsuranc
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.demographics.fragments.CheckinDemographicsFragment;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.practice.FlowStateInfo;
 import com.carecloud.carepaylibray.utils.DateUtil;
