@@ -8,12 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepaylibray.base.BaseFragment;
 
 /**
  * Created by lsoco_user on 11/17/2016.
  */
 
-public class CheckinInsuranceScannerFragment extends Fragment {
+public class CheckinInsuranceScannerFragment extends BaseFragment {
 
     @Nullable
     @Override

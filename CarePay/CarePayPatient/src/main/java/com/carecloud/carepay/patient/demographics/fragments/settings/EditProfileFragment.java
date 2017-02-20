@@ -209,7 +209,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
 
                                         Gson gson = new Gson();
                                         String jsonInString = gson.toJson(demographicPayload);
-                                        WorkflowServiceHelper.getInstance().execute(demographicsSettingsUpdateDemographicsDTO, updateProfileCallback, jsonInString, header);
+                                        getWorkflowServiceHelper().execute(demographicsSettingsUpdateDemographicsDTO, updateProfileCallback, jsonInString, header);
                                     }
                                 }
                                 header = new HashMap<>();

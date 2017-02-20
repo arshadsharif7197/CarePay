@@ -20,6 +20,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentMetadataModel;
 import com.carecloud.carepaylibray.appointments.models.QRCodePayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -88,7 +89,7 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
             Gson gson = new Gson();
             QueryStrings queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
 
-            WorkflowServiceHelper.getInstance().execute(appointmentMetadataModel.getTransitions()
+            ((ISession) context).getWorkflowServiceHelper().execute(appointmentMetadataModel.getTransitions()
                     .getCheckinAtOffice(), qrCodeCallBack, getQueryParam(queryStrings));
         } else {
             /*Error in generating QR code*/

@@ -34,6 +34,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsAddressDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsAddressInfoDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCityDTO;
@@ -89,7 +90,7 @@ import java.util.Map;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DemographicsInformationFragment extends Fragment {
+public class DemographicsInformationFragment extends BaseFragment {
     private static final String LOG_TAG = DemographicsSettingsFragment.class.getSimpleName();
     private AppCompatActivity appCompatActivity;
     private DemographicsSettingsDTO demographicsSettingsDTO = null;
@@ -1016,7 +1017,7 @@ public class DemographicsInformationFragment extends Fragment {
 
                                         Gson gson = new Gson();
                                         String jsonInString = gson.toJson(demographicPayload);
-                                        WorkflowServiceHelper.getInstance().execute(demographicsSettingsUpdateDemographicsDTO, updateDemographicsCallback, jsonInString, header);
+                                        getWorkflowServiceHelper().execute(demographicsSettingsUpdateDemographicsDTO, updateDemographicsCallback, jsonInString, header);
                                     }
                                 }
                                 header = new HashMap<>();

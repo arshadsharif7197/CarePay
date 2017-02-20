@@ -30,6 +30,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
@@ -55,7 +56,7 @@ import org.json.JSONObject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnCheckedChangeListener {
+public class ChooseCreditCardFragment extends BaseFragment implements RadioGroup.OnCheckedChangeListener {
 
     private RadioGroup chooseCreditCardRadioGroup;
     private Button nextButton;
@@ -248,7 +249,7 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
                     header.put("transition", "true");
 
                     TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment();
-                    WorkflowServiceHelper.getInstance().execute(transitionDTO, makePaymentCallback, payload.toString(), queries, header);
+                    getWorkflowServiceHelper().execute(transitionDTO, makePaymentCallback, payload.toString(), queries, header);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

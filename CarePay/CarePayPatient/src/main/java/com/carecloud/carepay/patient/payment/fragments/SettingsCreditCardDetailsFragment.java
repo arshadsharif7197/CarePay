@@ -26,6 +26,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
@@ -45,7 +46,7 @@ import org.json.JSONObject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SettingsCreditCardDetailsFragment extends Fragment {
+public class SettingsCreditCardDetailsFragment extends BaseFragment {
 
     private DemographicsSettingsDTO demographicsSettingsDTO = null;
     private DemographicsSettingsCreditCardsPayloadDTO creditCardsPayloadDTO = null;
@@ -178,7 +179,7 @@ public class SettingsCreditCardDetailsFragment extends Fragment {
             setAsDefaultPayload.put("is_default", true);
             String body = setAsDefaultPayload.toString();
             TransitionDTO transitionDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getTransitions().getUpdateCreditCard();
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, creditCardOperationCallback, body, null, WorkflowServiceHelper.getPreferredLanguageHeader());
+            getWorkflowServiceHelper().execute(transitionDTO, creditCardOperationCallback, body, null, getWorkflowServiceHelper().getPreferredLanguageHeader());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -190,7 +191,7 @@ public class SettingsCreditCardDetailsFragment extends Fragment {
             queryMap.put("card_id", creditCardsPayloadDTO.getPayload().getHashCreditCardsId());
 
             TransitionDTO transitionDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getTransitions().getDeleteCreditCard();
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, creditCardOperationCallback, queryMap, WorkflowServiceHelper.getPreferredLanguageHeader());
+            getWorkflowServiceHelper().execute(transitionDTO, creditCardOperationCallback, queryMap, getWorkflowServiceHelper().getPreferredLanguageHeader());
         } catch (Exception e) {
             e.printStackTrace();
         }

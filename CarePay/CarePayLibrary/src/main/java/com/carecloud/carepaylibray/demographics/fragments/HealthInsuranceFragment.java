@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographics.adapters.InsuranceLineItemsListAdapter;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
@@ -37,7 +38,7 @@ import java.util.List;
  * Created by jorge on 07/02/17.
  */
 
-public class HealthInsuranceFragment extends Fragment {
+public class HealthInsuranceFragment extends BaseFragment {
     private List<DemographicInsurancePayloadDTO>   insurancePayloadDTOs;
     private DemographicDTO                         demographicDTO;
     private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;

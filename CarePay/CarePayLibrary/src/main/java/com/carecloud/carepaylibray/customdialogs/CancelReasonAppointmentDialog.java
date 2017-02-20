@@ -34,6 +34,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.CancellationReasonDTO;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -258,7 +259,7 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
         String body = postBodyObj.toString();
 
         TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCancel();
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, transitionToCancelCallback, body, queries);
+        ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, transitionToCancelCallback, body, queries);
     }
 
     private WorkflowServiceCallback transitionToCancelCallback = new WorkflowServiceCallback() {

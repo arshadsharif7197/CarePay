@@ -20,6 +20,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog;
 import com.carecloud.carepaylibray.customdialogs.QrCodeViewDialog;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
@@ -125,10 +126,10 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         queries.put(queryStrings.getPracticeId().getName(), appointmentDTO.getMetadata().getPracticeId());
         queries.put(queryStrings.getAppointmentId().getName(), appointmentDTO.getMetadata().getAppointmentId());
 
-        Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
+        Map<String, String> header = ((ISession) context).getWorkflowServiceHelper().getPreferredLanguageHeader();
         header.put("transition", "true");
 
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, callback, queries, header);
+        ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, callback, queries, header);
     }
 
     private WorkflowServiceCallback demographicsVerifyCallback = new WorkflowServiceCallback() {

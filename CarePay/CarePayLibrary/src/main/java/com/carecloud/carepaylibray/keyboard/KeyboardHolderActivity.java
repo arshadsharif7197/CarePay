@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 import android.widget.EditText;
 
+import com.carecloud.carepaylibray.base.BaseActivity;
+
 import java.util.List;
 
 /**
@@ -13,7 +15,7 @@ import java.util.List;
  * Activity that supports a custom keyboard
  * It has two fragment holders : one for content, one for keyboard
  */
-public abstract class KeyboardHolderActivity extends AppCompatActivity {
+public abstract class KeyboardHolderActivity extends BaseActivity {
 
     public static final String LOG_TAG     = KeyboardHolderActivity.class.getSimpleName();
     public static final String KEY_LANG_ID = "language";

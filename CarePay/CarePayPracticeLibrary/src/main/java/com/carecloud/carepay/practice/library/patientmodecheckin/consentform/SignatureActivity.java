@@ -1,6 +1,5 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.consentform;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -18,10 +17,10 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforauthorization.ConsentFormAuthorizationPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforhipaa.ConsentFormHippaPayloadDTO;
@@ -31,12 +30,6 @@ import com.carecloud.carepaylibray.consentforms.models.payload.ConseFormsPayload
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormPayloadDTO;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
-
 import com.github.gcacace.signaturepad.views.SignaturePad;
 import com.google.gson.Gson;
 
@@ -45,8 +38,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
 
-public class SignatureActivity extends AppCompatActivity {
+public class SignatureActivity extends BaseActivity {
 
     public static boolean isBackButtonClicked = false;
     public static int numOfLaunches = 0;
@@ -360,13 +357,13 @@ public class SignatureActivity extends AppCompatActivity {
         queries.put("appointment_id", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getAppointmentId());
 
 
-        Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
+        Map<String, String> header = getWorkflowServiceHelper().getPreferredLanguageHeader();
         header.put("transition", "true");
 
         Gson gson = new Gson();
         String body = gson.toJson(consentFormPayloadDTO);
         TransitionDTO transitionDTO = consentFormDTO.getMetadata().getTransitions().getUpdateConsent();
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, updateconsentformCallBack, body, queries, header);
+        getWorkflowServiceHelper().execute(transitionDTO, updateconsentformCallBack, body, queries, header);
     }
 
     private void addToPayload() {

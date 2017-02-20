@@ -127,10 +127,10 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
     private void addNewCreditCardCall() {
         Gson gson = new Gson();
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
+        queryMap.put("language", getApplicationPreferences().getUserLanguage());
         TransitionDTO transitionDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getTransitions().getAddCreditCard();
         String body = gson.toJson(creditCardsPayloadDTO);
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, addNewCreditCardCallback, body, queryMap, WorkflowServiceHelper.getPreferredLanguageHeader());
+        getWorkflowServiceHelper().execute(transitionDTO, addNewCreditCardCallback, body, queryMap, getWorkflowServiceHelper().getPreferredLanguageHeader());
     }
 
     @Override

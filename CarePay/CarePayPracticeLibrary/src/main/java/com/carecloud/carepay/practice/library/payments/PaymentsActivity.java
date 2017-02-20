@@ -221,7 +221,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 queryMap.put("patient_id", patient.getPatientId());
 
                 TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getPaymentsPatientBalances();
-                WorkflowServiceHelper.getInstance().execute(transitionDTO, patientBalancesCallback, queryMap);
+                getWorkflowServiceHelper().execute(transitionDTO, patientBalancesCallback, queryMap);
             }
         });
     }

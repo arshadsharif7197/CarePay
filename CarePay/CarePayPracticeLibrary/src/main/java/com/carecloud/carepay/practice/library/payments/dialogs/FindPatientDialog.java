@@ -24,6 +24,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.payments.models.PatientDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -109,7 +110,7 @@ public class FindPatientDialog extends Dialog {
                     postModel.add(editText.getText().toString());
                     String postBody = postModel.toString();
 
-                    WorkflowServiceHelper.getInstance().execute(transitionDTO, findPatientCallback, postBody, queryMap);
+                    ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, findPatientCallback, postBody, queryMap);
                     return true;
                 }
                 return false;

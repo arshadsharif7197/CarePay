@@ -343,13 +343,13 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
         queries.put("appointment_id", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getAppointmentId());
         queries.put("patient_id", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getPatientId());
 
-        Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
+        Map<String, String> header = getWorkflowServiceHelper().getPreferredLanguageHeader();
         header.put("transition", "true");
 
         Gson gson = new Gson();
         String body = gson.toJson(jsonResponse);
         TransitionDTO transitionDTO = consentFormDTO.getMetadata().getTransitions().getUpdateConsent();
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, updateconsentformCallBack, body, queries, header);
+        getWorkflowServiceHelper().execute(transitionDTO, updateconsentformCallBack, body, queries, header);
     }
 
     private WorkflowServiceCallback updateconsentformCallBack = new WorkflowServiceCallback() {

@@ -30,6 +30,7 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
@@ -46,7 +47,7 @@ import java.util.Map;
  * Created by harish_revuri on 9/7/2016.
  * The fragment corresponding to SignUp screen.
  */
-public class SigninFragment extends Fragment {
+public class SigninFragment extends BaseFragment {
 
     public static final String LOG_TAG = SigninFragment.class.getSimpleName();
 
@@ -87,7 +88,7 @@ public class SigninFragment extends Fragment {
             Map<String, String> query = new HashMap<>();
             Map<String, String> header = new HashMap<>();
             header.put("Accept-Language",langaueid);
-            WorkflowServiceHelper.getInstance().execute(signInSignUpDTO.getMetadata().getTransitions().getAuthenticate(), loginCallback,query,header);
+            getWorkflowServiceHelper().execute(signInSignUpDTO.getMetadata().getTransitions().getAuthenticate(), loginCallback,query,header);
             progressBar.setVisibility(View.INVISIBLE);
         }
 
@@ -116,7 +117,7 @@ public class SigninFragment extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_signin, container, false);
-        langaueid=ApplicationPreferences.Instance.getUserLanguage();
+        langaueid=getApplicationPreferences().getUserLanguage();
         signInLablesDTO = ((SigninSignupActivity) getActivity()).getSignInLablesDTO();
         signInSignUpDTO = ((SigninSignupActivity) getActivity()).getSignInSignUpDTO();
         parentLayout = (LinearLayout) view.findViewById(R.id.signin_layout);
@@ -194,7 +195,7 @@ public class SigninFragment extends Fragment {
                 header.put("transition", "true");
                 header.put("x-api-key", HttpConstants.getApiStartKey());
                 TransitionDTO transitionDTO = signInSignUpDTO.getMetadata().getTransitions().getLanguage();
-                WorkflowServiceHelper.getInstance().execute(transitionDTO, loginCallback, queryMap, header);
+                getWorkflowServiceHelper().execute(transitionDTO, loginCallback, queryMap, header);
             }
         });
     }

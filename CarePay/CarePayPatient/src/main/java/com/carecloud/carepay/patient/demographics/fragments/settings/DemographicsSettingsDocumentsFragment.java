@@ -27,6 +27,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemInsuranceDTO;
@@ -61,7 +62,7 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 
-public class DemographicsSettingsDocumentsFragment extends Fragment {
+public class DemographicsSettingsDocumentsFragment extends BaseFragment {
 
     private FragmentManager                        fm;
     private View                                   view;
@@ -351,7 +352,7 @@ public class DemographicsSettingsDocumentsFragment extends Fragment {
                                     }
                                     Gson gson = new Gson();
                                     String jsonInString = gson.toJson(demographicsSettingsPayloadDTO);
-                                    WorkflowServiceHelper.getInstance().execute(demographicsSettingsUpdateDemographicsDTO, updateDocumentsCallback, jsonInString, header);
+                                    getWorkflowServiceHelper().execute(demographicsSettingsUpdateDemographicsDTO, updateDocumentsCallback, jsonInString, header);
                                 }
                             }
                             header = new HashMap<>();

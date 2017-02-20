@@ -32,6 +32,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
@@ -272,41 +273,38 @@ public class AppointmentDetailDialog extends Dialog {
             } else {
                 queryStringObject = checkInDTO.getMetadata().getLinks().getCheckinStatus().getQueryString();
                 queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
-                querymap = getQueryParam(queryStrings);
+                querymap = getStatusQueryParam(queryStrings);
                 transition = checkInDTO.getMetadata().getLinks().getCheckinStatus();
                 callback = getStatusCallBack;
             }
 
-            WorkflowServiceHelper.getInstance().execute(transition, callback, querymap);
+            ((ISession) context).getWorkflowServiceHelper().execute(transition, callback, querymap);
         }
     }
 
     /**
-     * @param queryStrings the query strings for the url
+     * @param queryStrings the query strings for the queue url
      * @return queryMap
      */
-    private Map<String, String> getQueryParam(QueryStrings queryStrings) {
+    private Map<String, String> getQueueQueryParam(QueryStrings queryStrings) {
         Map<String, String> queryMap = new HashMap<>();
-        if (appointmentPayloadDTO != null && pendingBalanceDTO != null) {
-            queryMap.put(queryStrings.getAppointmentId().getName(), appointmentPayloadDTO.getId());
-            queryMap.put(queryStrings.getPracticeManagement().getName(), pendingBalanceDTO.getMetadata().getPracticeMgmt());
-            queryMap.put(queryStrings.getPracticeId().getName(), pendingBalanceDTO.getMetadata().getPracticeId());
+        if (appointmentPayloadDTO != null) {
+            queryMap.put(queryStrings.getPatientId().getName(), appointmentPayloadDTO.getPatient().getId());
         }
 
         return queryMap;
     }
 
     /**
-     * @param queryStrings the query strings for the url
+     * @param queryStrings the query strings for the status url
      * @return queryMap
      */
-    private Map<String, String> getQueueQueryParam(QueryStrings queryStrings) {
+    private Map<String, String> getStatusQueryParam(QueryStrings queryStrings) {
         Map<String, String> queryMap = new HashMap<>();
-        if (appointmentPayloadDTO != null && pendingBalanceDTO != null) {
-            queryMap.put(queryStrings.getPatientId().getName(), appointmentPayloadDTO.getId());
-            queryMap.put(queryStrings.getPracticeManagement().getName(), pendingBalanceDTO.getMetadata().getPracticeMgmt());
-            queryMap.put(queryStrings.getPracticeId().getName(), pendingBalanceDTO.getMetadata().getPracticeId());
+        if (appointmentPayloadDTO != null) {
+            queryMap.put(queryStrings.getAppointmentId().getName(), appointmentPayloadDTO.getId());
         }
+
         return queryMap;
     }
 

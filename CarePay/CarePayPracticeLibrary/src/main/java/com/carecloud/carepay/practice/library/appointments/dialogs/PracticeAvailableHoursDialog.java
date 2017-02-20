@@ -27,6 +27,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPa
 import com.carecloud.carepaylibray.appointments.models.AppointmentLocationsDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -235,7 +236,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
 
     private void getAvailableHoursTimeSlots() {
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
+        queryMap.put("language", ((ISession) context).getApplicationPreferences().getUserLanguage());
         queryMap.put("practice_mgmt", resourcesToScheduleDTO.getPayload().getResourcesToSchedule().get(0).getPractice().getPracticeMgmt());
         queryMap.put("practice_id", resourcesToScheduleDTO.getPayload().getResourcesToSchedule().get(0).getPractice().getPracticeId());
         queryMap.put("visit_reason_id", ((ScheduleAppointmentActivity) context).getSelectedVisitTypeDTO().getId() + "");
@@ -253,7 +254,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
 
         TransitionDTO transitionDTO = resourcesToScheduleDTO.getMetadata().getLinks().getAppointmentAvailability();
 
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, getAppointmentsAvailabilitySlotsCallback, queryMap);
+        ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, getAppointmentsAvailabilitySlotsCallback, queryMap);
     }
 
     private WorkflowServiceCallback getAppointmentsAvailabilitySlotsCallback = new WorkflowServiceCallback() {

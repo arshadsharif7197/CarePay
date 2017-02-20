@@ -20,6 +20,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
@@ -145,7 +146,7 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
             queryMap.put("pin", pin);
             queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
             queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
-            WorkflowServiceHelper.getInstance().execute(this.transitionDTOPinLink, commonTransitionCallback, queryMap);
+            ((ISession) context).getWorkflowServiceHelper().execute(this.transitionDTOPinLink, commonTransitionCallback, queryMap);
         }
     }
 

@@ -31,6 +31,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
@@ -50,7 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PaymentPlanFragment extends Fragment {
+public class PaymentPlanFragment extends BaseFragment {
 
     private static final String LOG_TAG = PaymentPlanFragment.class.getSimpleName();
 
@@ -561,7 +562,7 @@ public class PaymentPlanFragment extends Fragment {
                     paymentsModel.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPatientId());
 
             TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getAddPaymentPlan();
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, createPlanCallback, queries);
+            getWorkflowServiceHelper().execute(transitionDTO, createPlanCallback, queries);
         }
     }
 

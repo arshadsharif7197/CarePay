@@ -1,7 +1,6 @@
 package com.carecloud.carepay.patient.demographics.fragments.review;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,13 +15,13 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.demographics.activities.NewReviewDemographicsActivity;
-import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
@@ -41,22 +40,18 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
-
 import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
-
-
-public class CheckinDemographicsRevFragment extends Fragment implements View.OnClickListener {
+public class CheckinDemographicsRevFragment extends BaseFragment implements View.OnClickListener {
 
     private static final int MAX_INSURANCES = 3;
 
@@ -493,15 +488,15 @@ public class CheckinDemographicsRevFragment extends Fragment implements View.OnC
             queries.put("practice_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
             queries.put("appointment_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId());
 
-            Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
+            Map<String, String> header = getWorkflowServiceHelper().getPreferredLanguageHeader();
             header.put("transition", "true");
 
             Gson gson = new Gson();
             String demogrPayloadString = gson.toJson(demographicDTO.getPayload().getDemographics().getPayload());
             TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getUpdateDemographics();
-            ApplicationPreferences.Instance.saveObjectToSharedPreference(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE,
+            getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE,
                     demographicDTO.getPayload().getDemographics().getPayload().getAddress());
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, consentformcallback, demogrPayloadString, queries, header);
+            getWorkflowServiceHelper().execute(transitionDTO, consentformcallback, demogrPayloadString, queries, header);
 
         } else if (view == updateInformationUpdate) {
             // transition

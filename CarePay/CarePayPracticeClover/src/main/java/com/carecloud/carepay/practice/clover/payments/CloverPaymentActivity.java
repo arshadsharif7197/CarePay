@@ -15,6 +15,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -44,7 +45,7 @@ import java.util.Set;
 /**
  * The type Clover payment activity.
  */
-public class CloverPaymentActivity extends AppCompatActivity {
+public class CloverPaymentActivity extends BaseActivity {
     /**
      * The constant creditCardIntentID.
      */
@@ -337,7 +338,7 @@ public class CloverPaymentActivity extends AppCompatActivity {
             header.put("transition", "true");
 
             TransitionDTO transitionDTO = gson.fromJson(paymentTransitionString, TransitionDTO.class);
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, makePaymentCallback, payload.toString(), queries, header);
+            getWorkflowServiceHelper().execute(transitionDTO, makePaymentCallback, payload.toString(), queries, header);
         } catch (JSONException e) {
             e.printStackTrace();
         }

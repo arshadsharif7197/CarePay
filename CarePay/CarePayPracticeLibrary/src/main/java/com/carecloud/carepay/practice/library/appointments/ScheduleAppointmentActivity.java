@@ -80,7 +80,7 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
         if (viewId == R.id.provider_logout) {
             logout();
         } else if (viewId == R.id.btnHome) {
-            WorkflowServiceHelper.getInstance().execute(scheduleResourcesModel.getMetadata()
+            getWorkflowServiceHelper().execute(scheduleResourcesModel.getMetadata()
                     .getTransitions().getLogout(), homeCall);
         }
     }
@@ -114,7 +114,7 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
         Map<String, String> query = new HashMap<>();
         query.put("transition", "true");
 
-        WorkflowServiceHelper.getInstance().execute(scheduleResourcesModel.getMetadata()
+        getWorkflowServiceHelper().execute(scheduleResourcesModel.getMetadata()
                 .getTransitions().getLogout(), logOutCall, query, headers);
     }
 
@@ -182,7 +182,7 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
         AppointmentsResultModel appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
         setPatientId(ApplicationMode.getInstance().getPatientId()==null?"":ApplicationMode.getInstance().getPatientId());
         TransitionDTO resourcesToSchedule = appointmentsResultModel.getMetadata().getLinks().getResourcesToSchedule();
-        WorkflowServiceHelper.getInstance().execute(resourcesToSchedule, scheduleResourcesCallback, queryMap);
+        getWorkflowServiceHelper().execute(resourcesToSchedule, scheduleResourcesCallback, queryMap);
     }
 
     private WorkflowServiceCallback scheduleResourcesCallback = new WorkflowServiceCallback() {

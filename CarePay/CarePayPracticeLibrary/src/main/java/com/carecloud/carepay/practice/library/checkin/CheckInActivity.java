@@ -381,7 +381,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         }
         queryMap.put("appointment_id" , appointmentDTO.getId());
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getCheckinAppointment();
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, checkInAppointmentCallback, queryMap);
+        getWorkflowServiceHelper().execute(transitionDTO, checkInAppointmentCallback, queryMap);
     }
 
     private WorkflowServiceCallback checkInAppointmentCallback = new WorkflowServiceCallback() {

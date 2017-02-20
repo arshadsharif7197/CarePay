@@ -541,7 +541,7 @@ public class PatientPaymentPlanFragment extends BaseCheckinFragment {
                     paymentsModel.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPatientId());
 
             TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getAddPaymentPlan();
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, createPlanCallback, queries);
+            getWorkflowServiceHelper().execute(transitionDTO, createPlanCallback, queries);
         }
     }
 

@@ -34,6 +34,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -83,7 +84,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * creation and sending of requests and handling responses. Applications may use this fragment as
  * a drop in replacement of a confirmation button in case the user has chosen to use Google Wallet.
  */
-public class FullWalletConfirmationButtonFragment extends Fragment
+public class FullWalletConfirmationButtonFragment extends BaseFragment
         implements ConnectionCallbacks, OnConnectionFailedListener {
 
     /**
@@ -650,7 +651,7 @@ public class FullWalletConfirmationButtonFragment extends Fragment
             header.put("transition", "true");
 
             TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment();
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, makePaymentCallback, payload.toString(), queries, header);
+            getWorkflowServiceHelper().execute(transitionDTO, makePaymentCallback, payload.toString(), queries, header);
         } catch (JSONException e) {
             e.printStackTrace();
         }

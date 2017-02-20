@@ -27,22 +27,11 @@ import retrofit2.Response;
 public class WorkflowServiceHelper {
 
 
-    private static WorkflowServiceHelper instance;
+    private ApplicationPreferences applicationPreferences;
 
 
-    private WorkflowServiceHelper() {
-    }
-
-    /**
-     * Return singleton object
-     *
-     * @return singleton object
-     */
-    public static WorkflowServiceHelper getInstance() {
-        if (instance == null) {
-            instance = new WorkflowServiceHelper();
-        }
-        return instance;
+    public WorkflowServiceHelper(ApplicationPreferences applicationPreferences) {
+        this.applicationPreferences = applicationPreferences;
     }
 
     /**
@@ -86,23 +75,26 @@ public class WorkflowServiceHelper {
     /**
      * @return app start headers
      */
-    public static Map<String, String> getApplicationStartHeaders() {
+    public Map<String, String> getApplicationStartHeaders() {
         Map<String, String> appStartHeaders = new HashMap<>();
         appStartHeaders.put("x-api-key", HttpConstants.getApiStartKey());
-        if( ApplicationPreferences.Instance.getUserLanguage().isEmpty()) {
+        if( applicationPreferences.getUserLanguage().isEmpty()) {
             appStartHeaders.put("Accept-Language", "en");
         } else {
-            appStartHeaders.put("Accept-Language", ApplicationPreferences.Instance.getUserLanguage());
+            appStartHeaders.put("Accept-Language", applicationPreferences.getUserLanguage());
         }
         return appStartHeaders;
     }
 
-    public static  Map<String, String> getPreferredLanguageHeader(){
+    /**
+     * @return map with language header
+     */
+    public  Map<String, String> getPreferredLanguageHeader(){
         Map<String, String> prefredLanguage = new HashMap<>();
-        if( ApplicationPreferences.Instance.getUserLanguage().isEmpty()) {
+        if( applicationPreferences.getUserLanguage().isEmpty()) {
             prefredLanguage.put("Accept-Language", "en");
         } else {
-            prefredLanguage.put("Accept-Language", ApplicationPreferences.Instance.getUserLanguage());
+            prefredLanguage.put("Accept-Language", applicationPreferences.getUserLanguage());
         }
         return prefredLanguage;
     }
@@ -144,7 +136,7 @@ public class WorkflowServiceHelper {
         executeRequest(transitionDTO, callback, jsonBody, queryMap, addCustomHeaders(customHeaders));
     }
 
-    private void updateQueryMapWithDefault(Map<String, String> queryMap) {
+    private static void updateQueryMapWithDefault(Map<String, String> queryMap) {
         if (queryMap == null) {
             queryMap = new HashMap<>();
         }
@@ -154,7 +146,7 @@ public class WorkflowServiceHelper {
         }
     }
 
-    private void executeRequest(@NonNull TransitionDTO transitionDTO, @NonNull final WorkflowServiceCallback callback, String jsonBody, Map<String, String> queryMap, Map<String, String> headers) {
+    private static void executeRequest(@NonNull TransitionDTO transitionDTO, @NonNull final WorkflowServiceCallback callback, String jsonBody, Map<String, String> queryMap, Map<String, String> headers) {
         callback.onPreExecute();
         updateQueryMapWithDefault(queryMap);
         WorkflowService workflowService = ServiceGenerator.getInstance().createService(WorkflowService.class, headers); //, String token, String searchString
@@ -212,7 +204,7 @@ public class WorkflowServiceHelper {
         executeCallback(callback, call);
     }
 
-    private void executeCallback(@NonNull final WorkflowServiceCallback callback, Call<WorkflowDTO> call) {
+    private static void executeCallback(@NonNull final WorkflowServiceCallback callback, Call<WorkflowDTO> call) {
         call.enqueue(new Callback<WorkflowDTO>() {
             @Override
             public void onResponse(Call<WorkflowDTO> call, Response<WorkflowDTO> response) {
@@ -239,7 +231,7 @@ public class WorkflowServiceHelper {
         });
     }
 
-    private boolean isNullOrEmpty(String string) {
+    private static boolean isNullOrEmpty(String string) {
         return (string == null || string.trim().equals(""));
     }
 

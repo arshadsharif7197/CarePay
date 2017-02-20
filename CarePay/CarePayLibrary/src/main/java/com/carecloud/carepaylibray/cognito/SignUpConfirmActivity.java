@@ -19,12 +19,13 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.GenericHa
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.VerificationHandler;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
 
 /**
  * Activity used to confirm a signed-up user
  */
-public class SignUpConfirmActivity extends AppCompatActivity {
+public class SignUpConfirmActivity extends BaseActivity {
     private EditText username;
     private EditText confCode;
 

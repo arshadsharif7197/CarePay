@@ -24,6 +24,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicPayloadDTO;
@@ -44,7 +45,7 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediu
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DemographicsSettingsFragment extends Fragment {
+public class DemographicsSettingsFragment extends BaseFragment {
     private static final String LOG_TAG = DemographicsSettingsFragment.class.getSimpleName();
     private AppCompatActivity appCompatActivity;
     private DemographicsSettingsDTO demographicsSettingsDTO = null;
@@ -190,7 +191,7 @@ public class DemographicsSettingsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 signOutButton.setEnabled(false);
-                WorkflowServiceHelper.getInstance().executeApplicationStartRequest(logOutCall);
+                getWorkflowServiceHelper().executeApplicationStartRequest(logOutCall);
 
             }
         });

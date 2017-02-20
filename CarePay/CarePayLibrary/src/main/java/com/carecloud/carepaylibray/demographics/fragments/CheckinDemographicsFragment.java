@@ -696,15 +696,15 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         queries.put("practice_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
         queries.put("appointment_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId());
 
-        Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
+        Map<String, String> header = getWorkflowServiceHelper().getPreferredLanguageHeader();
         header.put("transition", "true");
 
         Gson gson = new Gson();
         String demogrPayloadString = gson.toJson(demographicDTO.getPayload().getDemographics().getPayload());
         TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getUpdateDemographics();
-        ApplicationPreferences.Instance.saveObjectToSharedPreference(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE,
+        getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE,
                 demographicDTO.getPayload().getDemographics().getPayload().getAddress());
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, consentformcallback, demogrPayloadString, queries, header);
+        getWorkflowServiceHelper().execute(transitionDTO, consentformcallback, demogrPayloadString, queries, header);
     }
 
     private WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {

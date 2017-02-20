@@ -220,7 +220,7 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
                         header.put("transition", "true");
 
                         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment();
-                        WorkflowServiceHelper.getInstance().execute(transitionDTO, makePaymentCallback, payload.toString(), queries, header);
+                        getWorkflowServiceHelper().execute(transitionDTO, makePaymentCallback, payload.toString(), queries, header);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

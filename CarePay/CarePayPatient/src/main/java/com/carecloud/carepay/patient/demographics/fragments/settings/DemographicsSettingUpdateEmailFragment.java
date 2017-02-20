@@ -34,6 +34,7 @@ import com.carecloud.carepay.service.library.dtos.DemographicsSettingsMaintainan
 import com.carecloud.carepay.service.library.dtos.DemographicsSettingsProposedEmailDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
@@ -55,7 +56,7 @@ import org.json.JSONObject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DemographicsSettingUpdateEmailFragment extends Fragment {
+public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
     private AppCompatActivity appCompatActivity;
     private DemographicsSettingsDTO demographicsSettingsDTO = null;
 
@@ -295,7 +296,7 @@ public class DemographicsSettingUpdateEmailFragment extends Fragment {
 
                                             Gson gson = new Gson();
                                             String jsonInString = gson.toJson(demographicsSettingsPayloadDTO);
-                                            WorkflowServiceHelper.getInstance().execute(demographicsSettingsUpdateEmailDTO, updateEmailCallback,null, null, header);
+                                            getWorkflowServiceHelper().execute(demographicsSettingsUpdateEmailDTO, updateEmailCallback,null, null, header);
                                         }
                                     }
 

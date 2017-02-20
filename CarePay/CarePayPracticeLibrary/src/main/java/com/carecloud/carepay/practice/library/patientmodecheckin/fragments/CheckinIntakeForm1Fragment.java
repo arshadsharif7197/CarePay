@@ -97,7 +97,7 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
         header.put("appointment_id", inTakeForm.getPayload().getFindings().getMetadata().getAppointmentId());
         header.put("practice_mgmt", inTakeForm.getPayload().getFindings().getMetadata().getPracticeMgmt());
 
-        WorkflowServiceHelper.getInstance().execute(inTakeForm.getMetadata().getLinks().getIntake(), intakeFormCallback, header);
+        getWorkflowServiceHelper().execute(inTakeForm.getMetadata().getLinks().getIntake(), intakeFormCallback, header);
     }
 
     /**
@@ -279,7 +279,7 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
         //retrofit is not taking null as query parameters
         queryString.put("findings_id", inTakeForm.getPayload().getFindings().getMetadata().getFindingsId()==null?"":inTakeForm.getPayload().getFindings().getMetadata().getFindingsId());
 
-        WorkflowServiceHelper.getInstance().execute(inTakeForm.getMetadata().getTransitions().getUpdateIntake(), updateIntakeFormCallBack, jsonAnswers, queryString, header);
+        getWorkflowServiceHelper().execute(inTakeForm.getMetadata().getTransitions().getUpdateIntake(), updateIntakeFormCallBack, jsonAnswers, queryString, header);
 
     }
 

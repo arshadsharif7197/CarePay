@@ -104,11 +104,11 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
         patientListView.setCallback(new TwoColumnPatientListView.TwoColumnPatientListViewListener() {
             @Override
             public void onPatientTapped(Object dto) {
-                AppointmentDTO appointmentDTO = (AppointmentDTO) dto;
-                PatientDTO patientDTO = appointmentDTO.getPayload().getPatient();
-                String name = patientDTO.getFirstName() + " " + patientDTO.getLastName();
-
-                Toast.makeText(getContext(), name, Toast.LENGTH_SHORT).show();
+//                AppointmentDTO appointmentDTO = (AppointmentDTO) dto;
+//                PatientDTO patientDTO = appointmentDTO.getPayload().getPatient();
+//                String name = patientDTO.getFirstName() + " " + patientDTO.getLastName();
+//
+//                Toast.makeText(getContext(), name, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -280,7 +280,7 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
         queryMap.put("start_date", DateUtil.getInstance().setDate(startDate).toStringWithFormatYyyyDashMmDashDd());
         queryMap.put("end_date", DateUtil.getInstance().setDate(endDate).toStringWithFormatYyyyDashMmDashDd());
 
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, workflowServiceCallback, queryMap);
+        getWorkflowServiceHelper().execute(transitionDTO, workflowServiceCallback, queryMap);
     }
 
     WorkflowServiceCallback workflowServiceCallback = new WorkflowServiceCallback() {

@@ -36,6 +36,7 @@ import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.cognito.SignUpConfirmActivity;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
@@ -50,7 +51,7 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
  * Created by harish_revuri on 9/7/2016.
  * Signup screen.
  */
-public class SignupFragment extends Fragment {
+public class SignupFragment extends BaseFragment {
 
     private SignInSignUpDTO signInSignUpDTO;
     private SignInLablesDTO signInLablesDTO;
@@ -118,7 +119,7 @@ public class SignupFragment extends Fragment {
         public void onLoginSuccess() {
             progressBar.setVisibility(View.INVISIBLE);
             TransitionDTO transitionDTO = signInSignUpDTO.getMetadata().getTransitions().getAuthenticate();
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, signUpWorkflowCallback);
+            getWorkflowServiceHelper().execute(transitionDTO, signUpWorkflowCallback);
         }
 
         @Override

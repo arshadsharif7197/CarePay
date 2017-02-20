@@ -24,6 +24,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDT
 import com.carecloud.carepaylibray.appointments.models.AppointmentLocationsDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
@@ -167,7 +168,7 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
     private void onRequestAppointment() {
 
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
+        queryMap.put("language", ((ISession) context).getApplicationPreferences().getUserLanguage());
         queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
         queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
 
@@ -191,7 +192,7 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
 
         TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getMakeAppointment();
 
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, getMakeAppointmentCallback,makeAppointmentJSONObj
+        ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, getMakeAppointmentCallback,makeAppointmentJSONObj
                 .toString(), queryMap);
     }
 

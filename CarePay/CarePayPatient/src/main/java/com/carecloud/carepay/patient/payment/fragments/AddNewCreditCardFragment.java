@@ -162,13 +162,13 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
     private void addNewCreditCardCall() {
         Gson gson = new Gson();
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
+        queryMap.put("language", getApplicationPreferences().getUserLanguage());
         queryMap.put("practice_mgmt", intakePaymentModel.getPaymentPayload().getPaymentSettings().getMetadata().getPracticeMgmt());
         queryMap.put("practice_id", intakePaymentModel.getPaymentPayload().getPaymentSettings().getMetadata().getPracticeId());
         queryMap.put("patient_id", intakePaymentModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getPatientId());
         TransitionDTO transitionDTO = intakePaymentModel.getPaymentsMetadata().getPaymentsTransitions().getAddCreditCard();
         String body = gson.toJson(creditCardsPayloadDTO);
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, addNewCreditCardCallback, body, queryMap, WorkflowServiceHelper.getPreferredLanguageHeader());
+        getWorkflowServiceHelper().execute(transitionDTO, addNewCreditCardCallback, body, queryMap, getWorkflowServiceHelper().getPreferredLanguageHeader());
     }
 
     private void makePaymentCall() {
@@ -206,7 +206,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             header.put("transition", "true");
             TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment();
 
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, makePaymentCallback, payload.toString(), queries, header);
+            getWorkflowServiceHelper().execute(transitionDTO, makePaymentCallback, payload.toString(), queries, header);
         } catch (JSONException e) {
             e.printStackTrace();
         }

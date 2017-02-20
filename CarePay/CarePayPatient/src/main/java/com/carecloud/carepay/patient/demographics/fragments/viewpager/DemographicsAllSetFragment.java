@@ -2,7 +2,6 @@ package com.carecloud.carepay.patient.demographics.fragments.viewpager;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +13,10 @@ import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
@@ -27,9 +26,6 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadD
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -37,12 +33,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+
 
 /**
  * Created by lsoco_user on 9/2/2016.
  * Screen for demographics onboarding confirmation
  */
-public class DemographicsAllSetFragment extends Fragment {
+public class DemographicsAllSetFragment extends BaseFragment {
 
     private View                 view;
     private Button               gotoCarePay;
@@ -144,7 +142,7 @@ public class DemographicsAllSetFragment extends Fragment {
         String body = gson.toJson(demographicPayloadDTO);
         TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getConfirmDemographics();
 
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, confirmDemWorkflowCallback, body,queries,WorkflowServiceHelper.getPreferredLanguageHeader());
+        getWorkflowServiceHelper().execute(transitionDTO, confirmDemWorkflowCallback, body,queries,getWorkflowServiceHelper().getPreferredLanguageHeader());
 
     }
 }

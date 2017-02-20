@@ -29,6 +29,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeDialog;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -41,7 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ChooseProviderFragment extends Fragment implements ProviderAdapter.OnProviderListItemClickListener,
+public class ChooseProviderFragment extends BaseFragment implements ProviderAdapter.OnProviderListItemClickListener,
         VisitTypeDialog.OnDialogListItemClickListener {
 
     private RecyclerView providersRecyclerView;
@@ -133,7 +134,7 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
 
 
         TransitionDTO resourcesToSchedule = appointmentsResultModel.getMetadata().getLinks().getResourcesToSchedule();
-        WorkflowServiceHelper.getInstance().execute(resourcesToSchedule, scheduleResourcesCallback, queryMap);
+        getWorkflowServiceHelper().execute(resourcesToSchedule, scheduleResourcesCallback, queryMap);
     }
 
     private WorkflowServiceCallback scheduleResourcesCallback = new WorkflowServiceCallback() {

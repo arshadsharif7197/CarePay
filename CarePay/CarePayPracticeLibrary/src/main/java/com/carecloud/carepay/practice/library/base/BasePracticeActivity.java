@@ -1,6 +1,5 @@
 package com.carecloud.carepay.practice.library.base;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -9,7 +8,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.customdialog.IConfirmPracticeAppPin;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibray.base.BaseVisibilityHintActivity;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
@@ -19,7 +18,7 @@ import com.google.gson.Gson;
  * Use for holding the common DTO which will be converted to the desire DTO using getConvertedDTO
  */
 
-public abstract class BasePracticeActivity extends BaseVisibilityHintActivity
+public abstract class BasePracticeActivity extends BaseActivity
         implements IConfirmPracticeAppPin {
 
     @Override
@@ -94,10 +93,6 @@ public abstract class BasePracticeActivity extends BaseVisibilityHintActivity
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_IMMERSIVE;
         decorView.setSystemUiVisibility(uiOptions);
-    }
-
-    public Context getContext(){
-        return this;
     }
 
     protected boolean setViewTextById(int id, String text) {

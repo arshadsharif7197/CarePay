@@ -10,16 +10,21 @@ import android.util.Log;
 
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
+import com.carecloud.carepaylibray.base.ISession;
 
 /**
  * Created by Jahirul Bhuiyan on 10/24/2016.
  */
 
 public class CarePayApplication extends MultiDexApplication
-        implements Application.ActivityLifecycleCallbacks {
+        implements Application.ActivityLifecycleCallbacks, ISession {
+
+    private ApplicationPreferences applicationPreferences;
+    private WorkflowServiceHelper workflowServiceHelper;
 
     @Override
     public void onCreate() {
@@ -27,7 +32,6 @@ public class CarePayApplication extends MultiDexApplication
         setHttpConstants();
 
         ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
-        ApplicationPreferences.createPreferences(this);
         registerActivityLifecycleCallbacks(this);
     }
 
@@ -80,5 +84,23 @@ public class CarePayApplication extends MultiDexApplication
             //CognitoAppHelper.getPool().getUser().signOut();
             //CognitoAppHelper.setUser(null);
         }
+    }
+
+    @Override
+    public ApplicationPreferences getApplicationPreferences() {
+        if (applicationPreferences == null) {
+            applicationPreferences = new ApplicationPreferences(this);
+        }
+
+        return applicationPreferences;
+    }
+
+    @Override
+    public WorkflowServiceHelper getWorkflowServiceHelper() {
+        if (workflowServiceHelper == null) {
+            workflowServiceHelper = new WorkflowServiceHelper(getApplicationPreferences());
+        }
+
+        return workflowServiceHelper;
     }
 }

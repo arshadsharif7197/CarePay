@@ -37,6 +37,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
@@ -71,7 +72,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PaymentMethodFragment extends Fragment implements RadioGroup.OnCheckedChangeListener,
+public class PaymentMethodFragment extends BaseFragment implements RadioGroup.OnCheckedChangeListener,
         GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "PaymentMethodFragment";
@@ -392,7 +393,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                     paymentChoiceButton.setEnabled(false);
                     TransitionDTO transitionDTO = paymentsDTO.getPaymentsMetadata()
                             .getPaymentsLinks().getPaymentsCreditCards();
-                    WorkflowServiceHelper.getInstance().execute(transitionDTO, getCreditCardsCallback);
+                    getWorkflowServiceHelper().execute(transitionDTO, getCreditCardsCallback);
                     break;
 
                 default:

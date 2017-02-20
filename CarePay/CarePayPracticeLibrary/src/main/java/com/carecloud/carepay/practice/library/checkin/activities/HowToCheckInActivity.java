@@ -118,14 +118,14 @@ public class HowToCheckInActivity extends BasePracticeActivity {
         @Override
         public void onClick(View view) {
             /*Map<String, String> queryMap = new HashMap<>();
-            queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
+            queryMap.put("language", getApplicationPreferences().getUserLanguage());
             queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
             queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
 
             Map<String, String> headers = new HashMap<>();
             headers.put("transition", "true");
             TransitionDTO transitionDTO = signinPatientModeDTO.getMetadata().getLinks().getLogin();
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, patientModeSignInCallback, queryMap, headers);*/
+            getWorkflowServiceHelper().execute(transitionDTO, patientModeSignInCallback, queryMap, headers);*/
             Intent intent = new Intent(HowToCheckInActivity.this, SigninActivity.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable(WorkflowDTO.class.getSimpleName(), signinPatientModeDTO.toString());
@@ -268,7 +268,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
            // ApplicationMode.getInstance().getUserPracticeDTO().setUserName(scanQRCodeResultDTO.getUserName());
             Map<String, String> queryMap = new HashMap<String, String>();
             queryMap.put("appointment_id", scanQRCodeResultDTO.getAppointmentId());
-            WorkflowServiceHelper.getInstance().execute(signinPatientModeDTO.getMetadata()
+            getWorkflowServiceHelper().execute(signinPatientModeDTO.getMetadata()
                             .getTransitions().getAction(), appointmentCallBack, queryMap);
 
         }else{
