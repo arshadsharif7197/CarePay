@@ -14,16 +14,16 @@ public class ConsentFormMetadataDTO {
 
     @SerializedName("labels")
     @Expose
-    private ConsentFormLabelsDTO label;
+    private ConsentFormLabelsDTO label = new ConsentFormLabelsDTO();
     @SerializedName("links")
     @Expose
-    private ConsentFormLinksDTO links;
+    private ConsentFormLinksDTO links = new ConsentFormLinksDTO();
     @SerializedName("transitions")
     @Expose
-    private ConsentFormTransitionsDTO transitions;
+    private ConsentFormTransitionsDTO transitions = new ConsentFormTransitionsDTO();
     @SerializedName("data_models")
     @Expose
-    private ConsentFormDataModelDTO dataModels;
+    private ConsentFormDataModelDTO dataModels = new ConsentFormDataModelDTO();
 
     /**
      * @return The label

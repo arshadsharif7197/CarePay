@@ -11,10 +11,10 @@ public class DemographicsSettingsDemographicsDTO {
 
     @SerializedName("metadata")
     @Expose
-    private DemographicsSettingsCreditCardMetadataDTO metadata;
+    private DemographicsSettingsCreditCardMetadataDTO metadata = new DemographicsSettingsCreditCardMetadataDTO();
     @SerializedName("payload")
     @Expose
-    private DemographicsSettingsDemographicPayloadDTO payload;
+    private DemographicsSettingsDemographicPayloadDTO payload = new DemographicsSettingsDemographicPayloadDTO();
 
     public DemographicsSettingsCreditCardMetadataDTO getMetadata() {
         return metadata;

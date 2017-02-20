@@ -12,13 +12,13 @@ public class ConsentFormConsentHippaPropertiesDTO {
 
     @SerializedName("signed_by_patient")
     @Expose
-    private ConsentFormHippaSignedByPatientDTO signedByPatient;
+    private ConsentFormHippaSignedByPatientDTO signedByPatient = new ConsentFormHippaSignedByPatientDTO();
     @SerializedName("signed_by_legal")
     @Expose
-    private ConsentFormHippaSignedByLegalDTO signedByLegal;
+    private ConsentFormHippaSignedByLegalDTO signedByLegal = new ConsentFormHippaSignedByLegalDTO();
     @SerializedName("signature")
     @Expose
-    private ConsentFormConsentHippaSignatureDTO signature;
+    private ConsentFormConsentHippaSignatureDTO signature = new ConsentFormConsentHippaSignatureDTO();
 
     /**
      * @return The signedByPatient

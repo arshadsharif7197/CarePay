@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.genera
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ public class MetadataActionDTO {
     public String url;
 
     @SerializedName("allowed_ops") @Expose
-    public List<MetadataAllowedOpDTO> allowedOps;
+    public List<MetadataAllowedOpDTO> allowedOps = new ArrayList<>();
 
     @SerializedName("path") @Expose
     public String path;

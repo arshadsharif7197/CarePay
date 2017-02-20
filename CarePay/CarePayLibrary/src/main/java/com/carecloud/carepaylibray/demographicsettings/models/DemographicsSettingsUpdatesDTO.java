@@ -1,8 +1,10 @@
 package com.carecloud.carepaylibray.demographicsettings.models;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by harshal_patil on 1/5/2017.
@@ -14,16 +16,16 @@ public class DemographicsSettingsUpdatesDTO {
     private String type;
     @SerializedName("properties")
     @Expose
-    private DemographicsSettingsPropertiesDTO properties;
+    private DemographicsSettingsPropertiesDTO properties = new DemographicsSettingsPropertiesDTO();
     @SerializedName("method")
     @Expose
-    private DemographicsSettingsMethodDTO method;
+    private DemographicsSettingsMethodDTO method = new DemographicsSettingsMethodDTO();
     @SerializedName("label")
     @Expose
     private String label;
     @SerializedName("options")
     @Expose
-    private List<DemographicsSettingsOptionDTO> options = null;
+    private List<DemographicsSettingsOptionDTO> options = new ArrayList<>();
 
     public String getType() {
         return type;

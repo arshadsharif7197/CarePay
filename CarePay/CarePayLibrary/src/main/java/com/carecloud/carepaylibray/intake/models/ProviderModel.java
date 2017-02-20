@@ -22,7 +22,7 @@ public class ProviderModel {
     private String phoneNumber;
     @SerializedName("specialty")
     @Expose
-    private Specialty specialty;
+    private Specialty specialty = new Specialty();
 
     /**
      * 

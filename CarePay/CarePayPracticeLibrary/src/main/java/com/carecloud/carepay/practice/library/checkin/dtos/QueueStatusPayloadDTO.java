@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
 public class QueueStatusPayloadDTO {
     @SerializedName("queue_status")
     @Expose
-    private QueueStatusDTO queueStatus;
+    private QueueStatusDTO queueStatus = new QueueStatusDTO();
 
     public QueueStatusDTO getQueueStatus() {
         return queueStatus;

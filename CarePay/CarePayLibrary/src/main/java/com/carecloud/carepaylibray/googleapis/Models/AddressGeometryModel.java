@@ -7,16 +7,16 @@ import com.google.gson.annotations.SerializedName;
 public class AddressGeometryModel {
     @SerializedName("bounds")
     @Expose
-    private GeometryBoundsModel bounds;
+    private GeometryBoundsModel bounds = new GeometryBoundsModel();
     @SerializedName("location")
     @Expose
-    private GeometryLocationModel location;
+    private GeometryLocationModel location = new GeometryLocationModel();
     @SerializedName("location_type")
     @Expose
     private String locationType;
     @SerializedName("viewport")
     @Expose
-    private GeometryViewportModel viewport;
+    private GeometryViewportModel viewport = new GeometryViewportModel();
 
     /**
      *

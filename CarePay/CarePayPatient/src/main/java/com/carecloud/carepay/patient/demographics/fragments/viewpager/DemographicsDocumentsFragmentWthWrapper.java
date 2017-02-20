@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 
-import com.carecloud.carepay.patient.demographics.fragments.review.CheckinDemographicsFragment;
+import com.carecloud.carepaylibray.demographics.fragments.CheckinDemographicsFragment;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 

@@ -14,13 +14,13 @@ import java.util.List;
 public class PracticeHomeScreenPayloadDTO {
     @SerializedName("appointment_counts")
     @Expose
-    private HomeScreenAppointmentCountsDTO appointmentCounts;
+    private HomeScreenAppointmentCountsDTO appointmentCounts = new HomeScreenAppointmentCountsDTO();
     @SerializedName("alerts")
     @Expose
-    private HomeScreenAlertsDTO alerts;
+    private HomeScreenAlertsDTO alerts = new HomeScreenAlertsDTO();
     @SerializedName("user_practices")
     @Expose
-    private List<UserPracticeDTO> userPractices = new ArrayList<UserPracticeDTO>();
+    private List<UserPracticeDTO> userPractices = new ArrayList<>();
 
 
     /**

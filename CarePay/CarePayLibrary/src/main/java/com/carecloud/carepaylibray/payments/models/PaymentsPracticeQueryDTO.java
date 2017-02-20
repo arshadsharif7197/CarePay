@@ -9,13 +9,13 @@ public class PaymentsPracticeQueryDTO {
 
     @SerializedName("practice")
     @Expose
-    private PaymentsPracticeDTO paymentsPractice;
+    private PaymentsPracticeDTO paymentsPractice = new PaymentsPracticeDTO();
     @SerializedName("business_entity_id")
     @Expose
-    private BaseTransitionsPropertyModel paymentsBusinessEntityId;
+    private BaseTransitionsPropertyModel paymentsBusinessEntityId = new BaseTransitionsPropertyModel();
     @SerializedName("appointment_id")
     @Expose
-    private BaseTransitionsPropertyModel paymentsAppointmentId;
+    private BaseTransitionsPropertyModel paymentsAppointmentId = new BaseTransitionsPropertyModel();
 
     /**
      * 

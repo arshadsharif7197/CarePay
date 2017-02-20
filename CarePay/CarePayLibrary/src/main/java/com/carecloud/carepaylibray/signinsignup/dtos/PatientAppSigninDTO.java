@@ -14,7 +14,7 @@ public class PatientAppSigninDTO {
 
     @SerializedName("cognito")
     @Expose
-    private CognitoDTO cognito;
+    private CognitoDTO cognito = new CognitoDTO();
 
     /**
      * @return The cognito

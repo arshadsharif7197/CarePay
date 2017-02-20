@@ -18,10 +18,10 @@ public class ConsentFormUpdateConsentDTO {
     private String url;
     @SerializedName("query_string")
     @Expose
-    private ConsentFormQueryStringDTO queryString;
+    private ConsentFormQueryStringDTO queryString = new ConsentFormQueryStringDTO();
     @SerializedName("data")
     @Expose
-    private ConsentFormDataDTO data;
+    private ConsentFormDataDTO data = new ConsentFormDataDTO();
 
     /**
      * @return The method

@@ -2,7 +2,6 @@ package com.carecloud.carepaylibray.demographicsettings.models;
 
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemInsuranceDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -13,27 +12,19 @@ import com.google.gson.annotations.SerializedName;
 public class DemographicsSettingsDetailsDTO {
     @SerializedName("address")
     @Expose
-    private DemographicsSettingsAddressDTO address;
+    private DemographicsSettingsAddressInfoDTO address = new DemographicsSettingsAddressInfoDTO();
     @SerializedName("personal_details")
     @Expose
-    private DemographicsSettingsPersonalDetailsPropertiesDTO personalDetails;
+    private DemographicsSettingsPersonalDetailsPropertiesDTO personalDetails = new DemographicsSettingsPersonalDetailsPropertiesDTO();
     @SerializedName("identity_documents")
     @Expose
-    private DemographicMetadataEntityIdDocsDTO identityDocuments;
+    private DemographicMetadataEntityIdDocsDTO identityDocuments = new DemographicMetadataEntityIdDocsDTO();
     @SerializedName("insurances")
     @Expose
-    private DemographicMetadataEntityInsurancesDTO insurances;
+    private DemographicMetadataEntityInsurancesDTO insurances = new DemographicMetadataEntityInsurancesDTO();
     @SerializedName("updates")
     @Expose
-    private DemographicsSettingsUpdatesDTO updates;
-
-    public DemographicsSettingsAddressDTO getAddress() {
-        return address;
-    }
-
-    public void setAddress(DemographicsSettingsAddressDTO address) {
-        this.address = address;
-    }
+    private DemographicsSettingsUpdatesDTO updates = new DemographicsSettingsUpdatesDTO();
 
     public DemographicsSettingsPersonalDetailsPropertiesDTO getPersonalDetails() {
         return personalDetails;
@@ -67,4 +58,11 @@ public class DemographicsSettingsDetailsDTO {
         this.updates = updates;
     }
 
+    public DemographicsSettingsAddressInfoDTO getAddress() {
+        return address;
+    }
+
+    public void setAddress(DemographicsSettingsAddressInfoDTO address) {
+        this.address = address;
+    }
 }

@@ -4,19 +4,20 @@ package com.carecloud.carepaylibray.appointments.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ResourcesToScheduleDTO {
 
     @SerializedName("practice")
     @Expose
-    private ResourcesPracticeDTO practice;
+    private ResourcesPracticeDTO practice = new ResourcesPracticeDTO();
     @SerializedName("locations")
     @Expose
-    private List<AppointmentLocationsDTO> locations = null;
+    private List<AppointmentLocationsDTO> locations = new ArrayList<>();
     @SerializedName("resources")
     @Expose
-    private List<AppointmentResourcesDTO> resources = null;
+    private List<AppointmentResourcesDTO> resources = new ArrayList<>();
 
     /**
      *

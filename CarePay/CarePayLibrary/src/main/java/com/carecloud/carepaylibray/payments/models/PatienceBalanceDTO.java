@@ -11,11 +11,11 @@ public class PatienceBalanceDTO {
 
     @SerializedName("metadata")
     @Expose
-    private PaymentPayloadMetaDataDTO metadata;
+    private PaymentPayloadMetaDataDTO metadata = new PaymentPayloadMetaDataDTO();
 
     @SerializedName("payload")
     @Expose
-    private List<PatiencePayloadDTO> payload = new ArrayList<PatiencePayloadDTO>();
+    private List<PatiencePayloadDTO> payload = new ArrayList<>();
 
     public PaymentPayloadMetaDataDTO getMetadata() {
         return metadata;

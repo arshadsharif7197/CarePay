@@ -15,12 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppBaseTheme">
         <activity
-            android:name="com.carecloud.carepay.patient.demographics.activities.DemographicsActivity"
-            android:windowSoftInputMode="stateVisible|adjustPan" />
-        <activity android:name="com.carecloud.carepay.patient.demographics.activities.DemographicReviewActivity" />
-        <activity android:name="com.carecloud.carepay.patient.intakeforms.activities.InTakeActivity" />
-        <activity
             android:name="com.carecloud.carepaylibray.cognito.SignUpConfirmActivity"
+            android:screenOrientation="sensorPortrait"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name="com.carecloud.carepaylibray.carepaycamera.CarePayCameraActivity" android:screenOrientation="portrait"/>
         <activity

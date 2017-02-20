@@ -25,15 +25,18 @@
         tools:replace="android:theme, android:icon">
         <activity
             android:name="com.carecloud.carepay.practice.library.splash.SplashActivity"
-            android:theme="@style/Theme.AppCompat.Translucent">
+            android:theme="@style/Theme.AppCompat.Translucent"
+            android:screenOrientation="sensorLandscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.carecloud.carepay.practice.library.signin.SigninActivity" />
-        <activity android:name="com.carecloud.carepay.practice.library.homescreen.CloverMainActivity">
+        <activity android:name="com.carecloud.carepay.practice.library.signin.SigninActivity"
+            android:screenOrientation="sensorLandscape"/>
+        <activity android:name="com.carecloud.carepay.practice.library.homescreen.CloverMainActivity"
+            android:screenOrientation="sensorLandscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -41,36 +44,59 @@
         </activity>
         <activity
             android:name="com.carecloud.carepay.practice.library.checkin.CheckInActivity"
-            android:parentActivityName="com.carecloud.carepay.practice.library.homescreen.CloverMainActivity">
+            android:parentActivityName="com.carecloud.carepay.practice.library.homescreen.CloverMainActivity"
+            android:screenOrientation="sensorLandscape">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.carecloud.carepay.practice.library.homescreen.CloverMainActivity" />
         </activity>
-        <activity android:name="com.carecloud.carepay.practice.library.payments.PatientResponsibilityActivity" />
-        <activity android:name="com.carecloud.carepay.practice.library.payments.RotateActivity" />
-        <activity android:name="com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInActivity" />
-        <activity android:name="com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity" />
-        <activity android:name="com.carecloud.carepay.practice.library.appointments.AppointmentsActivity" />
-        <activity android:name="com.carecloud.carepay.practice.library.appointments.ScheduleAppointmentActivity" />
-        <activity android:name="com.carecloud.carepay.practice.library.checkin.activities.PersonalInformationActivity" />
-        <activity android:name="com.carecloud.carepay.practice.library.payments.PaymentsActivity"/>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.appointments.PracticeAppointmentsActivity"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.payments.PatientResponsibilityActivity"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.payments.RotateActivity"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInActivity"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.appointments.AppointmentsActivity"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.appointments.ScheduleAppointmentActivity"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.checkin.activities.PersonalInformationActivity"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.payments.PaymentsActivity"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PracticeAppSignatureActivity"
+            android:theme="@style/Theme.MyDialog"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name="com.carecloud.carepaylibray.qrcodescanner.ScannerActivity"
+            android:screenOrientation="sensorLandscape"/>
         <activity
             android:name="com.carecloud.carepay.practice.clover.cloverqrcodescanner.CloverQRScannerActivity"
-            android:label="@string/qr_code_scanner">
+            android:label="@string/qr_code_scanner"
+            android:screenOrientation="sensorLandscape">
             <intent-filter>
                 <action android:name="com.carecloud.carepay.practice.clover.qrscanner.CloverQRScannerActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity"
-            android:windowSoftInputMode="adjustNothing" />
-        <activity android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PracticeAppSignatureActivity"
-            android:theme="@style/Theme.MyDialog"/>
-
-        <activity
-            android:name="com.carecloud.carepaylibray.qrcodescanner.ScannerActivity"
-            android:screenOrientation="landscape" />
         <activity
             android:name="com.carecloud.carepay.practice.clover.payments.CloverPaymentActivity"
             android:label="@string/clover_payment_activity">

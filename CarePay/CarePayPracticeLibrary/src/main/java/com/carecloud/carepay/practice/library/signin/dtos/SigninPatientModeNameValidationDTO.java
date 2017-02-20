@@ -20,7 +20,7 @@ public class SigninPatientModeNameValidationDTO {
     private String type;
     @SerializedName("validations")
     @Expose
-    private List<SigninPatientModeValidationDTO> validations = new ArrayList<SigninPatientModeValidationDTO>();
+    private List<SigninPatientModeValidationDTO> validations = new ArrayList<>();
 
     /**
      * 

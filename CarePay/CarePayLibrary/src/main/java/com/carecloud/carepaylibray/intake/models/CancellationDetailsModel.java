@@ -10,66 +10,35 @@ public class CancellationDetailsModel {
 
     @SerializedName("id")
     @Expose
-    private Object id;
+    private String id;
     @SerializedName("detail")
     @Expose
-    private Object detail;
+    private String detail;
     @SerializedName("comments")
     @Expose
-    private Object comments;
+    private String comments;
 
-    /**
-     * 
-     * @return
-     *     The id
-     */
-    public Object getId() {
+    public String getId() {
         return id;
     }
 
-    /**
-     * 
-     * @param id
-     *     The id
-     */
-    public void setId(Object id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    /**
-     * 
-     * @return
-     *     The detail
-     */
-    public Object getDetail() {
+    public String getDetail() {
         return detail;
     }
 
-    /**
-     * 
-     * @param detail
-     *     The detail
-     */
-    public void setDetail(Object detail) {
+    public void setDetail(String detail) {
         this.detail = detail;
     }
 
-    /**
-     * 
-     * @return
-     *     The comments
-     */
-    public Object getComments() {
+    public String getComments() {
         return comments;
     }
 
-    /**
-     * 
-     * @param comments
-     *     The comments
-     */
-    public void setComments(Object comments) {
+    public void setComments(String comments) {
         this.comments = comments;
     }
-
 }

@@ -11,7 +11,7 @@ import com.google.gson.annotations.SerializedName;
 public class SignInTransitionsDTO {
     @SerializedName("authenticate")
     @Expose
-    private TransitionDTO authenticate;
+    private TransitionDTO authenticate = new TransitionDTO();
 
     /**
      *

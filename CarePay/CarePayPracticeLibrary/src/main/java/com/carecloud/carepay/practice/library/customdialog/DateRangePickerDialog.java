@@ -6,12 +6,14 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
+import com.carecloud.carepaylibray.customdialogs.BaseDialogFragment;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.timessquare.CalendarPickerView;
@@ -28,45 +30,83 @@ import org.joda.time.DateTime;
  * Created by cocampo on 2/14/17.
  */
 
-public class DateRangePickerDialog extends BasePracticeDialog {
+public class DateRangePickerDialog extends BaseDialogFragment {
 
-    private final Context context;
     private CalendarPickerView calendarPickerView;
     private CustomGothamRoundedMediumButton applyDateRangeButton;
-    private LayoutInflater inflater;
-    private View view;
 
     private DateRangePickerDialogListener callback;
 
     private Date startDate;
     private Date endDate;
 
-    private final String dialogTitle;
-    private final String todayLabel;
+    private String dialogTitle;
+    private String todayLabel;
 
     public interface DateRangePickerDialogListener {
         void onRangeSelected(Date start, Date end);
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            callback = (DateRangePickerDialogListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement DateRangePickerDialogListener");
+        }
+    }
+
     /**
-     * @param context the context
      * @param dialogTitle title to be shown at the top of the dialog
      * @param closeText label below the close icon
      * @param todayLabel today in current language
-     * @param start current start date
-     * @param end current end date
-     * @param callback to be executed when dates change
+     * @param startDate current start date
+     * @param endDate current end date
+     * @return new instance of DateRangePickerDialog 
      */
-    public DateRangePickerDialog(Context context, String dialogTitle, String closeText, String todayLabel, Date start, Date end, DateRangePickerDialogListener callback) {
-        super(context, closeText, false);
-        this.context = context;
-        this.dialogTitle = dialogTitle;
-        this.todayLabel = todayLabel;
-        this.startDate = start;
-        this.endDate = end;
-        this.callback = callback;
-        inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public static DateRangePickerDialog newInstance(String dialogTitle, String closeText, String todayLabel, Date startDate, Date endDate) {
+        // Supply num input as an argument
+        Bundle args = new Bundle();
+        args.putString("cancelString", closeText);
+        args.putBoolean("isFooterVisible", false);
+        args.putString("dialogTitle", dialogTitle);
+        args.putString("todayLabel", todayLabel);
+        args.putSerializable("startDate", startDate);
+        args.putSerializable("endDate", endDate);
+
+        DateRangePickerDialog dialog = new DateRangePickerDialog();
+        dialog.setArguments(args);
+
+        return dialog;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Bundle arguments = getArguments();
+        this.dialogTitle = arguments.getString("dialogTitle");
+        this.todayLabel = arguments.getString("todayLabel");
+        this.startDate = (Date) arguments.getSerializable("startDate");
+        this.endDate = (Date) arguments.getSerializable("endDate");
+
         checkDates();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+
+        onAddContentView(inflater);
+        initCalendarView(view);
+        inflateToolbar(view);
+
+        return view;
     }
 
     private void checkDates() {
@@ -87,14 +127,6 @@ public class DateRangePickerDialog extends BasePracticeDialog {
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        onAddContentView(inflater);
-        initCalendarView(view);
-        inflateToolbar(view);
-    }
-
     /**
      * Method to inflate toolbar to UI
      *
@@ -106,7 +138,7 @@ public class DateRangePickerDialog extends BasePracticeDialog {
 
         TextView dialogTitleTextView = (TextView) view.findViewById(R.id.dialog_date_range_picker_dialog_title);
         dialogTitleTextView.setText(dialogTitle);
-        SystemUtil.setGothamRoundedMediumTypeface(context, dialogTitleTextView);
+        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), dialogTitleTextView);
 
         Button todayButton = (Button) view.findViewById(R.id.dialog_date_range_picker_today_button);
         todayButton.setText(todayLabel);
@@ -136,8 +168,9 @@ public class DateRangePickerDialog extends BasePracticeDialog {
     @SuppressLint("InflateParams")
     @Override
     protected void onAddContentView(LayoutInflater inflater) {
-        view = inflater.inflate(R.layout.dialog_date_range_picker, null);
-        ((FrameLayout) findViewById(R.id.base_dialog_content_layout)).addView(view);
+        View view = inflater.inflate(R.layout.dialog_date_range_picker, null);
+
+        ((FrameLayout) this.view.findViewById(R.id.base_dialog_content_layout)).addView(view);
 
         inflateUIComponents(view);
     }
@@ -164,7 +197,7 @@ public class DateRangePickerDialog extends BasePracticeDialog {
             }
         });
 
-        SystemUtil.setGothamRoundedBoldTypeface(context, applyDateRangeButton);
+        SystemUtil.setGothamRoundedBoldTypeface(getActivity(), applyDateRangeButton);
     }
 
     /**

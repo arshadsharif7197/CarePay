@@ -11,13 +11,13 @@ public class ConsentFormQueryStringDTO {
 
     @SerializedName("practice_mgmt")
     @Expose
-    private ConsentFormsPracticeMgmtDTO practiceMgmt;
+    private ConsentFormsPracticeMgmtDTO practiceMgmt = new ConsentFormsPracticeMgmtDTO();
     @SerializedName("practice_id")
     @Expose
-    private ConsentFormsPracticeIDDTO practiceId;
+    private ConsentFormsPracticeIDDTO practiceId = new ConsentFormsPracticeIDDTO();
     @SerializedName("appointment_id")
     @Expose
-    private ConsentFormsAppointmentIDDTO appointmentId;
+    private ConsentFormsAppointmentIDDTO appointmentId = new ConsentFormsAppointmentIDDTO();
 
     /**
      * @return The practiceMgmt

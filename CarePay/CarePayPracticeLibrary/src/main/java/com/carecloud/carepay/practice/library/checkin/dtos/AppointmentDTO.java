@@ -11,10 +11,10 @@ public class AppointmentDTO {
 
     @SerializedName("metadata")
     @Expose
-    private AppointmentMetadataDTO metadata;
+    private AppointmentMetadataDTO metadata = new AppointmentMetadataDTO();
     @SerializedName("payload")
     @Expose
-    private AppointmentPayloadDTO payload;
+    private AppointmentPayloadDTO payload = new AppointmentPayloadDTO();
 
     /**
      *

@@ -34,7 +34,7 @@ public class AppointmentChargeDTO {
     private Integer locationId;
     @SerializedName("location")
     @Expose
-    private AppointmentLocationsDTO location;
+    private AppointmentLocationsDTO location = new AppointmentLocationsDTO();
     @SerializedName("attending_provider_id")
     @Expose
     private Integer attendingProviderId;
@@ -43,7 +43,7 @@ public class AppointmentChargeDTO {
     private Integer providerId;
     @SerializedName("provider")
     @Expose
-    private AppointmentProviderDTO provider;
+    private AppointmentProviderDTO provider = new AppointmentProviderDTO();
     @SerializedName("units")
     @Expose
     private String units;

@@ -13,7 +13,7 @@ public class TransitionsDTO {
 
     @SerializedName("signin")
     @Expose
-    private TransitionDTO signin;
+    private TransitionDTO signin = new TransitionDTO();
 
     /**
      *

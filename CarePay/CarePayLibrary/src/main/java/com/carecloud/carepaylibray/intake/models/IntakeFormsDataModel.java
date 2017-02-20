@@ -16,7 +16,7 @@ public class IntakeFormsDataModel {
     private String type;
     @SerializedName("properties")
     @Expose
-    private PropertiesModel properties;
+    private PropertiesModel properties = new PropertiesModel();
 
     /**
      * 

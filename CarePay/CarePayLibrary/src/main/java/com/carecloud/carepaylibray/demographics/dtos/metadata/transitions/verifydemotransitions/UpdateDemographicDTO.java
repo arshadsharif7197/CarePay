@@ -17,7 +17,7 @@ public class UpdateDemographicDTO {
     private String url;
     @SerializedName("data")
     @Expose
-    private VerifyDemographicDataDTO data;
+    private VerifyDemographicDataDTO data = new VerifyDemographicDataDTO();
 
     /**
      * @return The method

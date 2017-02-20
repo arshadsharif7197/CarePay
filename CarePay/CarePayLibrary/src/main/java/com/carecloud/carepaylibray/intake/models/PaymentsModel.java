@@ -1,18 +1,18 @@
 package com.carecloud.carepaylibray.intake.models;
 
-import java.util.ArrayList;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
 
 public class PaymentsModel {
 
     @SerializedName("metadata")
     @Expose
-    private MetadataPaymentModel metadata;
+    private MetadataPaymentModel metadata = new MetadataPaymentModel();
     @SerializedName("payload")
     @Expose
-    private ArrayList<PayloadPaymentModel> payload = new ArrayList<PayloadPaymentModel>();
+    private ArrayList<PayloadPaymentModel> payload = new ArrayList<>();
 
     /**
      * 

@@ -11,10 +11,10 @@ public class DataDTO {
 
     @SerializedName("cancellation_comments")
     @Expose
-    private QueryString cancellationComments;
+    private QueryString cancellationComments = new QueryString();
     @SerializedName("appointment_id")
     @Expose
-    private QueryString appointmentId;
+    private QueryString appointmentId = new QueryString();
 
     /**
      * 

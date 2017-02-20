@@ -10,16 +10,16 @@ import com.google.gson.annotations.SerializedName;
 public class SigninMetadataDTO {
     @SerializedName("labels")
     @Expose
-    private SigninLabelsDTO labels;
+    private SigninLabelsDTO labels = new SigninLabelsDTO();
     @SerializedName("links")
     @Expose
-    private SigninLinksDTO links;
+    private SigninLinksDTO links = new SigninLinksDTO();
     @SerializedName("transitions")
     @Expose
-    private SignInTransitionsDTO transitions;
+    private SignInTransitionsDTO transitions = new SignInTransitionsDTO();
     @SerializedName("data_models")
     @Expose
-    private SignInDataModelDTO dataModels;
+    private SignInDataModelDTO dataModels = new SignInDataModelDTO();
 
     /**
      * @return The labels

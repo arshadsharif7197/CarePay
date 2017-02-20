@@ -80,6 +80,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
         holder.appointmentStatusCartView.setProviderName(appointmentItem.getProvider().getName());
         holder.appointmentStatusCartView.setAppointmentTime(DateUtil.getInstance().setDateRaw(appointmentItem.getStartTime()).getDate().getTime());
         holder.appointmentStatusCartView.setTag(appointmentItem);
+        holder.appointmentStatusCartView.setWaitingRoom(isWaitingRoom);
         holder.appointmentStatusCartView.setShortName(StringUtil.onShortDrName(patientModel.getFirstName() + " " + patientModel.getLastName()));
         /*Picasso.with(context).load(patientModel.getPhoto()).transform(
                 new CircleImageTransform()).resize(160, 160).into(holder.patientPicImageView);

@@ -1,9 +1,11 @@
 
 package com.carecloud.carepay.practice.library.signin.dtos;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GenderDTO {
 
@@ -15,7 +17,7 @@ public class GenderDTO {
     private String label;
     @SerializedName("validations")
     @Expose
-    private List<GenderValidationDTO> validations = null;
+    private List<GenderValidationDTO> validations = new ArrayList<>();
     @SerializedName("options")
     @Expose
     private List<GenderOptionDTO> options = null;

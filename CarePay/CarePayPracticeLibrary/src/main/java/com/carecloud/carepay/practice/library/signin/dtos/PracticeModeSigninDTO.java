@@ -12,7 +12,7 @@ public class PracticeModeSigninDTO {
 
     @SerializedName("cognito")
     @Expose
-    private CognitoDTO cognito;
+    private CognitoDTO cognito = new CognitoDTO();
 
     /**
      *

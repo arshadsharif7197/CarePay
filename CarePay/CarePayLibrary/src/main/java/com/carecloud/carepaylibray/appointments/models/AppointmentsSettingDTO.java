@@ -1,22 +1,24 @@
 package com.carecloud.carepaylibray.appointments.models;
 
 
-import java.io.Serializable;
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AppointmentsSettingDTO implements Serializable
 {
     @SerializedName("checkin")
     @Expose
-    private AppointmentsCheckinDTO checkin;
+    private AppointmentsCheckinDTO checkin = new AppointmentsCheckinDTO();
     @SerializedName("requests")
     @Expose
-    private AppointmentsRequestsDTO requests;
+    private AppointmentsRequestsDTO requests = new AppointmentsRequestsDTO();
     @SerializedName("pre_payments")
     @Expose
-    private List<AppointmentsPrePaymentDTO> prePayments = null;
+    private List<AppointmentsPrePaymentDTO> prePayments = new ArrayList<>();
     @SerializedName("practice_id")
     @Expose
     private String practiceId;

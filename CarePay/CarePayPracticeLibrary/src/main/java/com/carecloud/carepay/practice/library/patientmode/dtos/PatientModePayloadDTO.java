@@ -8,16 +8,17 @@ import com.carecloud.carepay.practice.library.signin.dtos.LanguageOptionDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PatientModePayloadDTO {
 
     @SerializedName("patient_mode_start")
     @Expose
-    private PatientModesStartDTO patientModeStart;
+    private PatientModesStartDTO patientModeStart = new PatientModesStartDTO();
     @SerializedName("languages")
     @Expose
-    private List<LanguageOptionDTO> languages;
+    private List<LanguageOptionDTO> languages = new ArrayList<>();
 
     /**
      *

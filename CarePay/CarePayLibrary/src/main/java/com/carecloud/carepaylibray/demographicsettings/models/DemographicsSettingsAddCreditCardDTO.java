@@ -14,10 +14,10 @@ public class DemographicsSettingsAddCreditCardDTO {
     private String url;
     @SerializedName("query_string")
     @Expose
-    private DemographicsSettingsQueryStringDTO queryString;
+    private DemographicsSettingsQueryStringDTO queryString = new DemographicsSettingsQueryStringDTO();
     @SerializedName("post_model")
     @Expose
-    private DemographicsSettingsPostModelDTO demographicsSettingsPostModelDTO;
+    private DemographicsSettingsPostModelDTO demographicsSettingsPostModelDTO = new DemographicsSettingsPostModelDTO();
 
     public String getMethod() {
         return method;

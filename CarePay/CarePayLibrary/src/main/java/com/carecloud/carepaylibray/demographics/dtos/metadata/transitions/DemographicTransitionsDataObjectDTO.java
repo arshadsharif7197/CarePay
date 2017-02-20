@@ -11,23 +11,23 @@ import com.google.gson.annotations.SerializedName;
 class DemographicTransitionsDataObjectDTO {
     @SerializedName("address")
     @Expose
-    private DemographicTransitionsDataDTO address;
+    private DemographicTransitionsDataDTO address = new DemographicTransitionsDataDTO();
 
     @SerializedName("personal_details")
     @Expose
-    private DemographicTransitionsDataDTO personalDetails;
+    private DemographicTransitionsDataDTO personalDetails = new DemographicTransitionsDataDTO();
 
     @SerializedName("drivers_license")
     @Expose
-    private DemographicTransitionsDataDTO driversLicense;
+    private DemographicTransitionsDataDTO driversLicense = new DemographicTransitionsDataDTO();
 
     @SerializedName("insurances")
     @Expose
-    private DemographicTransitionsDataDTO insurances;
+    private DemographicTransitionsDataDTO insurances = new DemographicTransitionsDataDTO();
 
     @SerializedName("updates")
     @Expose
-    private Object updates;
+    private String updates;
 
     /**
      *
@@ -71,11 +71,11 @@ class DemographicTransitionsDataObjectDTO {
         this.insurances = insurances;
     }
 
-    public Object getUpdates() {
+    public String getUpdates() {
         return updates;
     }
 
-    public void setUpdates(Object updates) {
+    public void setUpdates(String updates) {
         this.updates = updates;
     }
 }

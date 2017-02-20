@@ -17,7 +17,7 @@ public class PatientModeSwitchPinResponseDTO {
 
     @SerializedName("payload")
     @Expose
-    private PatientModeSwitchPinPaylodDTO payload;
+    private PatientModeSwitchPinPaylodDTO payload = new PatientModeSwitchPinPaylodDTO();
 
     public JsonObject getMetadata() {
         return metadata;
