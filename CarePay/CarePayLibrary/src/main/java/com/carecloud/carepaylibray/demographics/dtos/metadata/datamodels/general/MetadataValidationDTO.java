@@ -14,7 +14,7 @@ public class MetadataValidationDTO {
     public String type;
 
     @SerializedName("value") @Expose
-    public String value;
+    public Object value;
 
     @SerializedName("error_message") @Expose
     private String errorMessage;
