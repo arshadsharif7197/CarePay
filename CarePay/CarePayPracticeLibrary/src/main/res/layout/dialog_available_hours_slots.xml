@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:layout_gravity="center"
-    android:orientation="vertical"
-    android:background="@color/white">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="wrap_content"
+              android:layout_height="match_parent"
+              android:layout_gravity="center"
+              android:orientation="vertical"
+              android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -79,13 +79,41 @@
 
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/available_hours_recycler_view"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"
-        android:paddingLeft="@dimen/apt_available_hours_list_padding"
-        android:paddingRight="@dimen/apt_available_hours_list_padding" />
+        android:layout_weight="4">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/available_hours_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/apt_available_hours_list_padding"
+            android:paddingRight="@dimen/apt_available_hours_list_padding"/>
+
+        <FrameLayout
+            android:layout_width="@dimen/dimen_60dp"
+            android:layout_height="@dimen/dimen_60dp"
+            android:layout_gravity="center"
+            android:id="@+id/progressview">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/bg_progress_spinner"/>
+
+            <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/dimen_8dp"
+                android:indeterminateDrawable="@drawable/progress_indeterminate_custom"
+                android:indeterminate="true"/>
+
+        </FrameLayout>
+
+
+    </FrameLayout>
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/edit_date_range_button"
