@@ -161,8 +161,7 @@ public class AppointmentDetailDialog extends Dialog {
         if(checkInDTO.getMetadata().hasPaymentEnabled())
         {
             bgShapePaymentButton.setColor(ContextCompat.getColor(context, R.color.yellowGreen));
-        }
-        else
+        }else
         {
             bgShapePaymentButton.setColor(ContextCompat.getColor(context, R.color.light_gray));
         }
@@ -171,8 +170,7 @@ public class AppointmentDetailDialog extends Dialog {
         if(checkInDTO.getMetadata().hasAssistEnabled())
         {
             bgShapeAssistButton.setColor(ContextCompat.getColor(context, R.color.colorPrimary));
-        }
-        else
+        }else
         {
             bgShapeAssistButton.setColor(ContextCompat.getColor(context, R.color.light_gray));
         }
@@ -181,8 +179,7 @@ public class AppointmentDetailDialog extends Dialog {
         if(checkInDTO.getMetadata().hasPageEnabled())
         {
             bgShapePageButton.setColor(ContextCompat.getColor(context, R.color.rose_madder));
-        }
-        else
+        }else
         {
             bgShapePageButton.setColor(ContextCompat.getColor(context, R.color.light_gray));
         }

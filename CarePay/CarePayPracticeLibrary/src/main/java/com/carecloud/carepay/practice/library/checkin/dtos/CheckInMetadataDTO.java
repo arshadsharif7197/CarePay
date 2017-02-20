@@ -81,9 +81,11 @@ public class CheckInMetadataDTO {
     public Boolean hasPaymentEnabled(){
         return false ;
     }
+
     public Boolean hasAssistEnabled(){
         return false ;
     }
+
     public Boolean hasPageEnabled(){
         return false ;
     }
