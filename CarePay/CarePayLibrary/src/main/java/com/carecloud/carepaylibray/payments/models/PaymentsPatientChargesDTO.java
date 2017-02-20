@@ -14,10 +14,10 @@ import java.util.List;
 public class PaymentsPatientChargesDTO {
     @SerializedName("metadata")
     @Expose
-    PaymentPayloadMetaDataDTO metadata;
+    private PaymentPayloadMetaDataDTO metadata = new PaymentPayloadMetaDataDTO();
     @SerializedName("payload")
     @Expose
-    List<AppointmentChargeDTO> charges = new ArrayList<>();
+    private List<AppointmentChargeDTO> charges = new ArrayList<>();
 
     public List<AppointmentChargeDTO> getCharges() {
         return charges;

@@ -8,7 +8,7 @@ public class PaymentReceiptPayloadDTO {
 
     @SerializedName("metadata")
     @Expose
-    private PaymentPayloadMetaDataDTO metadata;
+    private PaymentPayloadMetaDataDTO metadata = new PaymentPayloadMetaDataDTO();
 
     public PaymentPayloadMetaDataDTO getMetadata() {
         return metadata;

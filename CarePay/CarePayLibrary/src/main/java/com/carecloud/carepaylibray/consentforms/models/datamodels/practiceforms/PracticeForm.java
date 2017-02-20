@@ -8,7 +8,7 @@ public class PracticeForm {
 
     @SerializedName("payload")
     @Expose
-    private Payload payload;
+    private Payload payload = new Payload();
 
     public Payload getPayload() {
         return payload;

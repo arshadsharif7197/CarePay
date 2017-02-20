@@ -11,34 +11,34 @@ public class DemographicsSettingsPersonalDetailsDTO {
 
     @SerializedName("first_name")
     @Expose
-    private DemographicsSettingsFirstNameDTO firstName;
+    private DemographicsSettingsFirstNameDTO firstName = new DemographicsSettingsFirstNameDTO();
     @SerializedName("last_name")
     @Expose
-    private DemographicsSettingsLastNameDTO lastName;
+    private DemographicsSettingsLastNameDTO lastName = new DemographicsSettingsLastNameDTO();
     @SerializedName("middle_name")
     @Expose
-    private DemographicsSettingsMiddleNameDTO middleName;
+    private DemographicsSettingsMiddleNameDTO middleName = new DemographicsSettingsMiddleNameDTO();
     @SerializedName("date_of_birth")
     @Expose
-    private DemographicsSettingsDateOfBirthDTO dateOfBirth;
+    private DemographicsSettingsDateOfBirthDTO dateOfBirth = new DemographicsSettingsDateOfBirthDTO();
     @SerializedName("gender")
     @Expose
-    private DemographicsSettingsGenderDTO gender;
+    private DemographicsSettingsGenderDTO gender = new DemographicsSettingsGenderDTO();
     @SerializedName("primary_race")
     @Expose
-    private DemographicsSettingsPrimaryRaceDTO primaryRace;
+    private DemographicsSettingsPrimaryRaceDTO primaryRace = new DemographicsSettingsPrimaryRaceDTO();
     @SerializedName("secondary_race")
     @Expose
-    private DemographicsSettingsPrimaryRaceDTO secondaryRace;
+    private DemographicsSettingsPrimaryRaceDTO secondaryRace = new DemographicsSettingsPrimaryRaceDTO();
     @SerializedName("ethnicity")
     @Expose
-    private DemographicsSettingsEthnicityDTO ethnicity;
+    private DemographicsSettingsEthnicityDTO ethnicity = new DemographicsSettingsEthnicityDTO();
     @SerializedName("preferred_language")
     @Expose
-    private DemographicsSettingsPreferredLanguageDTO preferredLanguage;
+    private DemographicsSettingsPreferredLanguageDTO preferredLanguage = new DemographicsSettingsPreferredLanguageDTO();
     @SerializedName("profile_photo")
     @Expose
-    private DemographicsSettingsProfilePhotoDTO profilePhoto;
+    private DemographicsSettingsProfilePhotoDTO profilePhoto = new DemographicsSettingsProfilePhotoDTO();
 
     public DemographicsSettingsFirstNameDTO getFirstName() {
         return firstName;

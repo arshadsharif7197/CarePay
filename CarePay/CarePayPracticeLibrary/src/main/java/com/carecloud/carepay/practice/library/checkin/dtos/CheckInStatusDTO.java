@@ -10,10 +10,10 @@ import com.google.gson.annotations.SerializedName;
 public class CheckInStatusDTO {
     @SerializedName("metadata")
     @Expose
-    private CheckInMetadataDTO metadata;
+    private CheckInMetadataDTO metadata = new CheckInMetadataDTO();
     @SerializedName("payload")
     @Expose
-    private CheckInStatusPayloadDTO payload;
+    private CheckInStatusPayloadDTO payload = new CheckInStatusPayloadDTO();
     @SerializedName("state")
     @Expose
     private String state;

@@ -12,10 +12,11 @@ public class PatientModeTransitionsDTO {
 
     @SerializedName("start")
     @Expose
-    private TransitionDTO start;
+    private TransitionDTO start = new TransitionDTO();
 
-    @SerializedName("practice_mode") @Expose
-    private TransitionDTO practiceMode;
+    @SerializedName("practice_mode")
+    @Expose
+    private TransitionDTO practiceMode = new TransitionDTO();
 
     /**
      * @return The start

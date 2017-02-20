@@ -13,18 +13,23 @@ import com.google.gson.annotations.SerializedName;
  * Object holding metadata entities (eg 'address', 'personal_details', 'id_document')
  */
 public class DemographicMetadataEntitiesDTO {
-    @SerializedName("address") @Expose
-    public DemographicMetadataEntityAddressDTO address;
+    @SerializedName("address")
+    @Expose
+    public DemographicMetadataEntityAddressDTO address = new DemographicMetadataEntityAddressDTO();
 
-    @SerializedName("personal_details") @Expose
-    public DemographicMetadataEntityPersDetailsDTO personalDetails;
+    @SerializedName("personal_details")
+    @Expose
+    public DemographicMetadataEntityPersDetailsDTO personalDetails = new DemographicMetadataEntityPersDetailsDTO();
 
-    @SerializedName("identity_documents") @Expose
-    public DemographicMetadataEntityIdDocsDTO identityDocuments;
+    @SerializedName("identity_documents")
+    @Expose
+    public DemographicMetadataEntityIdDocsDTO identityDocuments = new DemographicMetadataEntityIdDocsDTO();
 
-    @SerializedName("insurances") @Expose
-    public DemographicMetadataEntityInsurancesDTO insurances;
+    @SerializedName("insurances")
+    @Expose
+    public DemographicMetadataEntityInsurancesDTO insurances = new DemographicMetadataEntityInsurancesDTO();
 
-    @SerializedName("updates") @Expose
-    public DemographicMetadataEntityUpdatesDTO updates;
+    @SerializedName("updates")
+    @Expose
+    public DemographicMetadataEntityUpdatesDTO updates = new DemographicMetadataEntityUpdatesDTO();
 }

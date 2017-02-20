@@ -17,7 +17,7 @@ public class PaymentsSettingsPayloadDTO {
     private List<PaymentsMethodsDTO> paymentMethods = new ArrayList<>();
     @SerializedName("payment_plans")
     @Expose
-    private PaymentsSettingsPayloadPlansDTO paymentPlans;
+    private PaymentsSettingsPayloadPlansDTO paymentPlans = new PaymentsSettingsPayloadPlansDTO();
     @SerializedName("credit_card_type")
     @Expose
     private List<PaymentsSettingsPayloadCreditCardTypesDTO> creditCardType = new ArrayList<>();

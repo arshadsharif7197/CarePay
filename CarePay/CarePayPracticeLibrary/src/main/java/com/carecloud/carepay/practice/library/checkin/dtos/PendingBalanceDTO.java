@@ -4,16 +4,17 @@ package com.carecloud.carepay.practice.library.checkin.dtos;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PendingBalanceDTO {
 
     @SerializedName("metadata")
     @Expose
-    private PendingBalanceMetadataDTO metadata;
+    private PendingBalanceMetadataDTO metadata = new PendingBalanceMetadataDTO();
     @SerializedName("payload")
     @Expose
-    private List<PendingBalancePayloadDTO> payload = null;
+    private List<PendingBalancePayloadDTO> payload = new ArrayList<>();
 
     public PendingBalanceMetadataDTO getMetadata() {
         return metadata;

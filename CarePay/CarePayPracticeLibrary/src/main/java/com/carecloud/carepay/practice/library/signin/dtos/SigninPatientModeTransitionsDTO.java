@@ -10,10 +10,10 @@ public class SigninPatientModeTransitionsDTO {
 
     @SerializedName("action")
     @Expose
-    private TransitionDTO action;
+    private TransitionDTO action = new TransitionDTO();
     @SerializedName("qrcode")
     @Expose
-    private TransitionDTO qrcode;
+    private TransitionDTO qrcode = new TransitionDTO();
 
     public TransitionDTO getAction() {
         return action;

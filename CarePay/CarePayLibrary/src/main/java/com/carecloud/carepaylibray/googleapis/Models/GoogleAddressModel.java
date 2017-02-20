@@ -11,7 +11,7 @@ import java.util.List;
 public class GoogleAddressModel {
     @SerializedName("results")
     @Expose
-    private List<GoogleAddressResultModel> results = new ArrayList<GoogleAddressResultModel>();
+    private List<GoogleAddressResultModel> results = new ArrayList<>();
     @SerializedName("status")
     @Expose
     private String status;

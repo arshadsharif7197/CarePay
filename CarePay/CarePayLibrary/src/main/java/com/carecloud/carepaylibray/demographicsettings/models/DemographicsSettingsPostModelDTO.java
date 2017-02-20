@@ -14,7 +14,7 @@ public class DemographicsSettingsPostModelDTO {
     private String type;
     @SerializedName("properties")
     @Expose
-    private DemographicsSettingsPropertiesDTO demographicsSettingsPropertiesDTO;
+    private DemographicsSettingsPropertiesDTO demographicsSettingsPropertiesDTO = new DemographicsSettingsPropertiesDTO();
 
     public String get$schema() {
         return $schema;

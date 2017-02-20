@@ -12,7 +12,7 @@ public class SigninPayloadPatientModeDTO {
 
     @SerializedName("cognito")
     @Expose
-    private CognitoDTO cognito;
+    private CognitoDTO cognito = new CognitoDTO();
 
     /**
      *

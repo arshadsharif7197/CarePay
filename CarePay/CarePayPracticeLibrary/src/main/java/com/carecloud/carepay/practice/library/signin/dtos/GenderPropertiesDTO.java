@@ -9,7 +9,7 @@ public class GenderPropertiesDTO {
 
     @SerializedName("gender")
     @Expose
-    private GenderDTO gender;
+    private GenderDTO gender = new GenderDTO();
 
 
     public GenderDTO getGender() {

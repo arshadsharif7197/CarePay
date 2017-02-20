@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.demographicsettings.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public class DemographicsSettingsEthnicityDTO {
     private String label;
     @SerializedName("options")
     @Expose
-    private List<DemographicsSettingsOptionDTO> options = null;
+    private List<DemographicsSettingsOptionDTO> options = new ArrayList<>();
 
     public String getType() {
         return type;

@@ -11,7 +11,7 @@ public class DemographicsSettingsBillingInformationDTO {
     private String type;
     @SerializedName("properties")
     @Expose
-    private DemographicsSettingsBillingInfoPropertiesDTO properties;
+    private DemographicsSettingsBillingInfoPropertiesDTO properties = new DemographicsSettingsBillingInfoPropertiesDTO();
 
     public String getType() {
         return type;

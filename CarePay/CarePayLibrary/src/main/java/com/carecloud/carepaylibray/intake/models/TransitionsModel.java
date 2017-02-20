@@ -8,19 +8,19 @@ public class TransitionsModel {
 
     @SerializedName("confirm_payment")
     @Expose
-    private ConfirmPaymentModel confirmPaymentModel;
+    private ConfirmPaymentModel confirmPaymentModel = new ConfirmPaymentModel();
     @SerializedName("transition_appointments")
     @Expose
-    private TransitionAppointmentsModel transitionAppointments;
+    private TransitionAppointmentsModel transitionAppointments = new TransitionAppointmentsModel();
     @SerializedName("checkin_appointment")
     @Expose
-    private CheckInAppointmentModel checkInAppointmentModel;
+    private CheckInAppointmentModel checkInAppointmentModel = new CheckInAppointmentModel();
     @SerializedName("update_payment")
     @Expose
-    private UpdatePaymentModel updatePayment;
+    private UpdatePaymentModel updatePayment = new UpdatePaymentModel();
     @SerializedName("update_intake")
     @Expose
-    private TransitionDTO updateIntake;
+    private TransitionDTO updateIntake = new TransitionDTO();
 
     /**
      *

@@ -34,7 +34,7 @@ public class PatientModel {
     private String email;
     @SerializedName("patient_status")
     @Expose
-    private Object patientStatus;
+    private String patientStatus;
     @SerializedName("primary_phone_number")
     @Expose
     private String primaryPhoneNumber;
@@ -188,7 +188,7 @@ public class PatientModel {
      * @return
      *     The patientStatus
      */
-    public Object getPatientStatus() {
+    public String getPatientStatus() {
         return patientStatus;
     }
 
@@ -197,7 +197,7 @@ public class PatientModel {
      * @param patientStatus
      *     The patient_status
      */
-    public void setPatientStatus(Object patientStatus) {
+    public void setPatientStatus(String patientStatus) {
         this.patientStatus = patientStatus;
     }
 

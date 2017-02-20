@@ -13,14 +13,14 @@ import java.util.List;
 public class PatientBalanceDTO {
     @SerializedName("metadata")
     @Expose
-    private PatientBalanceMetadataDTO metadata;
+    private PatientBalanceMetadataDTO metadata = new PatientBalanceMetadataDTO();
     @SerializedName("payload")
     @Expose
-    private List<PatientBalancePayloadDTO> payload = new ArrayList<PatientBalancePayloadDTO>();
+    private List<PatientBalancePayloadDTO> payload = new ArrayList<>();
 
     @SerializedName("pending_balances")
     @Expose
-    private List<PendingBalanceDTO> pendingBalances = null;
+    private List<PendingBalanceDTO> pendingBalances = new ArrayList<>();
 
     public List<PendingBalanceDTO> getPendingBalances() {
         return pendingBalances;

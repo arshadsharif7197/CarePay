@@ -14,7 +14,7 @@ public class PatientModePersonalInfoCheckDTO {
 
     @SerializedName("metadata")
     @Expose
-    private PatientModePersonalInfoCheckMetadataDTO metadata;
+    private PatientModePersonalInfoCheckMetadataDTO metadata = new PatientModePersonalInfoCheckMetadataDTO();
 
     /**
      *

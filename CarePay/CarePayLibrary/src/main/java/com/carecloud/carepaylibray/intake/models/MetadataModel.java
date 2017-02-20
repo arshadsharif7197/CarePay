@@ -7,16 +7,16 @@ public class MetadataModel {
 
     @SerializedName("labels")
     @Expose
-    private LabelModel label;
+    private LabelModel label = new LabelModel();
     @SerializedName("links")
     @Expose
-    private LinksModel links;
+    private LinksModel links = new LinksModel();
     @SerializedName("transitions")
     @Expose
-    private TransitionsModel transitions;
+    private TransitionsModel transitions = new TransitionsModel();
     @SerializedName("data_models")
     @Expose
-    private DataModelsMetadataModel dataModels;
+    private DataModelsMetadataModel dataModels = new DataModelsMetadataModel();
     /**
      *
      * @return

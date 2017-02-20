@@ -10,6 +10,7 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class DemographicMetadataPropertiesListIdDocDTO {
-    @SerializedName("items") @Expose
-    public DemographicMetadataItemIdDocDTO items; // expected to be of type DemographicMetadataPropertiesIdDocDTO
+    @SerializedName("items")
+    @Expose
+    public DemographicMetadataItemIdDocDTO items = new DemographicMetadataItemIdDocDTO(); // expected to be of type DemographicMetadataPropertiesIdDocDTO
 }

@@ -16,7 +16,7 @@ public class ConsentFormMinorGenderValidationDTO {
     private String type;
     @SerializedName("value")
     @Expose
-    private ConsentFormValueDTO value;
+    private ConsentFormValueDTO value = new ConsentFormValueDTO();
     @SerializedName("error_message")
     @Expose
     private String errorMessage;

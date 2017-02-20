@@ -11,22 +11,22 @@ public class QueryStrings {
 
     @SerializedName("start_date")
     @Expose
-    private QueryString startDate;
+    private QueryString startDate = new QueryString();
     @SerializedName("end_date")
     @Expose
-    private QueryString endDate;
+    private QueryString endDate = new QueryString();
     @SerializedName("practice_mgmt")
     @Expose
-    private QueryString practiceMgmt;
+    private QueryString practiceMgmt = new QueryString();
     @SerializedName("practice_id")
     @Expose
-    private QueryString practiceId;
+    private QueryString practiceId = new QueryString();
     @SerializedName("appointment_id")
     @Expose
-    private QueryString appointmentId;
+    private QueryString appointmentId = new QueryString();
     @SerializedName("patient_id")
     @Expose
-    private QueryString patientId;
+    private QueryString patientId = new QueryString();
 
     /**
      * 

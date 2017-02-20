@@ -8,10 +8,10 @@ public class PaymentsQueryDTO {
 
     @SerializedName("start_date")
     @Expose
-    private PaymentsStartDateDTO paymentsStartDate;
+    private PaymentsStartDateDTO paymentsStartDate = new PaymentsStartDateDTO();
     @SerializedName("end_date")
     @Expose
-    private PaymentsEndDateDTO paymentsEndDate;
+    private PaymentsEndDateDTO paymentsEndDate = new PaymentsEndDateDTO();
 
     /**
      * 

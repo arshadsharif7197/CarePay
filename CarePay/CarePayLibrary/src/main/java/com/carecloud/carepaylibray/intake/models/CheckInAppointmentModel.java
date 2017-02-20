@@ -16,7 +16,7 @@ public class CheckInAppointmentModel {
     private String url;
     @SerializedName("data")
     @Expose
-    private DataModel data;
+    private DataModel data = new DataModel();
 
     /**
      * 

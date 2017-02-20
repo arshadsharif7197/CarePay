@@ -22,7 +22,7 @@ public class PaymentsPracticeDTO {
     private String type;
     @SerializedName("validations")
     @Expose
-    private List<BaseFieldValidationModel> validations = new ArrayList<BaseFieldValidationModel>();
+    private List<BaseFieldValidationModel> validations = new ArrayList<>();
 
     /**
      * 

@@ -14,7 +14,7 @@ public class DemographicsSettingsUpdateDocumentsDTO {
     private String url;
     @SerializedName("query_string")
     @Expose
-    private DemographicsSettingsQueryStringDTO queryString;
+    private DemographicsSettingsQueryStringDTO queryString = new DemographicsSettingsQueryStringDTO();
 
     public String getMethod() {
         return method;

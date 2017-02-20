@@ -13,10 +13,10 @@ public class  AppointmentDTO implements Serializable {
 
     @SerializedName("metadata")
     @Expose
-    private AppointmentsMetadataDTO metadata;
+    private AppointmentsMetadataDTO metadata = new AppointmentsMetadataDTO();
     @SerializedName("payload")
     @Expose
-    private AppointmentsPayloadDTO payload;
+    private AppointmentsPayloadDTO payload = new AppointmentsPayloadDTO();
 
     /**
      * 

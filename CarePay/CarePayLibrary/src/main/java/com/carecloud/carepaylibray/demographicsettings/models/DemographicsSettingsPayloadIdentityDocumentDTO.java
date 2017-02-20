@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.demographicsettings.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ public class DemographicsSettingsPayloadIdentityDocumentDTO {
     private String identityDocumentState;
     @SerializedName("identity_document_photos")
     @Expose
-    private List<DemographicsSettingsIdentityDocumentPhotoDTO> identityDocumentPhotos = null;
+    private List<DemographicsSettingsIdentityDocumentPhotoDTO> identityDocumentPhotos = new ArrayList<>();
 
     public String getIdentityDocumentType() {
         return identityDocumentType;

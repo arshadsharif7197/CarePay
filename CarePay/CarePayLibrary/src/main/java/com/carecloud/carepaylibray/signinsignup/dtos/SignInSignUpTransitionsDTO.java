@@ -12,11 +12,13 @@ import com.google.gson.annotations.SerializedName;
 
 public class SignInSignUpTransitionsDTO {
 
-    @SerializedName("authenticate") @Expose
-    private TransitionDTO authenticate;
+    @SerializedName("authenticate")
+    @Expose
+    private TransitionDTO authenticate = new TransitionDTO();
 
-    @SerializedName("language") @Expose
-    private TransitionDTO language;
+    @SerializedName("language")
+    @Expose
+    private TransitionDTO language = new TransitionDTO();
 
     /**
      *

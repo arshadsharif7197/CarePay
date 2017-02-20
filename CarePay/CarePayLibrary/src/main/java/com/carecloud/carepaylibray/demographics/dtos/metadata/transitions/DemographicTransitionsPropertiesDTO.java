@@ -12,7 +12,7 @@ class DemographicTransitionsPropertiesDTO {
 
     @SerializedName("phone")
     @Expose
-    private BaseTransitionsPropertyModel phone;
+    private BaseTransitionsPropertyModel phone = new BaseTransitionsPropertyModel();
 
     public BaseTransitionsPropertyModel getPhone() {
         return phone;
