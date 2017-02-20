@@ -9,10 +9,10 @@ public class IntakeResponseModel implements Serializable {
 
     @SerializedName("metadata")
     @Expose
-    private MetadataModel metadata;
+    private MetadataModel metadata = new MetadataModel();
     @SerializedName("payload")
     @Expose
-    private PayloadModel payload;
+    private PayloadModel payload = new PayloadModel();
     @SerializedName("state")
     @Expose
     private String state;

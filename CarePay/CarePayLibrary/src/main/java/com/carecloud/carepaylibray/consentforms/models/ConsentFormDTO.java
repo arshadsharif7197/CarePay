@@ -12,11 +12,11 @@ public class ConsentFormDTO {
 
     @SerializedName("metadata")
     @Expose
-    private ConsentFormMetadataDTO metadata;
+    private ConsentFormMetadataDTO metadata = new ConsentFormMetadataDTO();
 
     @SerializedName("payload")
     @Expose
-    private ConsentFormPayloadDTO consentFormPayloadDTO;
+    private ConsentFormPayloadDTO consentFormPayloadDTO = new ConsentFormPayloadDTO();
 
     @SerializedName("state")
     @Expose

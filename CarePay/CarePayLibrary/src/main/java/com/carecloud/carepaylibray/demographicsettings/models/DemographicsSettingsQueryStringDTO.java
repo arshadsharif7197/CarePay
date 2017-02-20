@@ -8,10 +8,10 @@ public class DemographicsSettingsQueryStringDTO {
 
     @SerializedName("practice_mgmt")
     @Expose
-    private DemographicsSettingsPracticeMgmtDTO demographicsSettingsPracticeMgmtDTO;
+    private DemographicsSettingsPracticeMgmtDTO demographicsSettingsPracticeMgmtDTO = new DemographicsSettingsPracticeMgmtDTO();
     @SerializedName("practice_id")
     @Expose
-    private DemographicsSettingsPracticeIdDTO demographicsSettingsPracticeIdDTO;
+    private DemographicsSettingsPracticeIdDTO demographicsSettingsPracticeIdDTO = new DemographicsSettingsPracticeIdDTO();
 
     public DemographicsSettingsPracticeMgmtDTO getPracticeMgmt() {
         return demographicsSettingsPracticeMgmtDTO;

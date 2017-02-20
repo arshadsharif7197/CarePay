@@ -23,7 +23,7 @@ public class QueryString {
     private String type;
     @SerializedName("validations")
     @Expose
-    private List<ValidationDTO> validations = new ArrayList<ValidationDTO>();
+    private List<ValidationDTO> validations = new ArrayList<>();
 
     /**
      * @return The name

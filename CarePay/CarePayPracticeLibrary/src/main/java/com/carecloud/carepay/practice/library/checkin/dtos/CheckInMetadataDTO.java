@@ -11,13 +11,13 @@ public class CheckInMetadataDTO {
 
     @SerializedName("labels")
     @Expose
-    private CheckInLabelDTO label;
+    private CheckInLabelDTO label = new CheckInLabelDTO();
     @SerializedName("links")
     @Expose
-    private LinksDTO links;
+    private LinksDTO links = new LinksDTO();
     @SerializedName("transitions")
     @Expose
-    private CheckInTransitionsDTO transitions;
+    private CheckInTransitionsDTO transitions = new CheckInTransitionsDTO();
 
     /**
      *
@@ -25,6 +25,10 @@ public class CheckInMetadataDTO {
      * The label
      */
     public CheckInLabelDTO getLabel() {
+        if (null == label) {
+            return new CheckInLabelDTO();
+        }
+
         return label;
     }
 

@@ -312,6 +312,17 @@ public class DemographicLabelsDTO {
     @Expose
     private String practiceCheckinDemogrInsAddAnother;
 
+    @SerializedName("demographics_i_dont_have_health_insurance_label")
+    @Expose
+    private String demographicsDontHaveHealthInsuranceLabel;
+
+    @SerializedName("demographics_i_have_health_insurance_label")
+    @Expose
+    private String demographicsHaveHealthInsuranceLabel;
+
+    @SerializedName("demographics_add_health_insurance_button_title")
+    @Expose
+    private String demographicsAddHealthInsuranceButtonTitle;
     @SerializedName("demographics_setup_insurance_title")
     @Expose
     private String demographicsSetupInsuranceTitle;
@@ -1122,6 +1133,9 @@ public class DemographicLabelsDTO {
         this.practiceCheckinDemogrInsAddAnother = practiceCheckinDemogrInsAddAnother;
     }
 
+    public String getDemographicsDontHaveHealthInsuranceLabel() {
+        return StringUtil.getLabelForView(demographicsDontHaveHealthInsuranceLabel);
+    }
     public String getDemographicsSetupInsuranceTitle() {
         return StringUtil.getLabelForView(demographicsSetupInsuranceTitle);
     }
@@ -1147,4 +1161,23 @@ public class DemographicLabelsDTO {
     }
 
 
+    public void setDemographicsDontHaveHealthInsuranceLabel(String demographicsDontHaveHealthInsuranceLabel) {
+        this.demographicsDontHaveHealthInsuranceLabel = demographicsDontHaveHealthInsuranceLabel;
+    }
+
+    public String getDemographicsHaveHealthInsuranceLabel() {
+        return StringUtil.getLabelForView(demographicsHaveHealthInsuranceLabel);
+    }
+
+    public void setDemographicsHaveHealthInsuranceLabel(String demographicsHaveHealthInsuranceLabel) {
+        this.demographicsHaveHealthInsuranceLabel = demographicsHaveHealthInsuranceLabel;
+    }
+
+    public String getDemographicsAddHealthInsuranceButtonTitle() {
+        return StringUtil.getLabelForView(demographicsAddHealthInsuranceButtonTitle);
+    }
+
+    public void setDemographicsAddHealthInsuranceButtonTitle(String demographicsAddHealthInsuranceButtonTitle) {
+        this.demographicsAddHealthInsuranceButtonTitle = demographicsAddHealthInsuranceButtonTitle;
+    }
 }

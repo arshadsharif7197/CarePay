@@ -338,7 +338,7 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(getContext()).dismiss();
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(getActivity(), workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
             nextButton.setClickable(true);
         }
 
@@ -356,10 +356,8 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        Activity activity = null;
-
         if (context instanceof PatientModeCheckinActivity) {
-            activity = (Activity) context;
+            Activity activity = (Activity) context;
             try {
                 fragmentCallback = (IFragmentCallback) activity;
             } catch (Exception e) {

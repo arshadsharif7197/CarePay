@@ -12,10 +12,10 @@ public class PatientModeLinksDTO {
 
     @SerializedName("self")
     @Expose
-    private PatientModesSelfDTO self;
+    private PatientModesSelfDTO self = new PatientModesSelfDTO();
     @SerializedName("pinpad")
     @Expose
-    private TransitionDTO pinpad;
+    private TransitionDTO pinpad = new TransitionDTO();
 
     /**
      * @return The self

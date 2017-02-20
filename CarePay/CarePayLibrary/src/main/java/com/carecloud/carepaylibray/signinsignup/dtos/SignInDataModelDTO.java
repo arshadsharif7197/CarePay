@@ -13,10 +13,10 @@ public class SignInDataModelDTO {
 
     @SerializedName("signin")
     @Expose
-    private SignInDTO signin;
+    private SignInDTO signin = new SignInDTO();
     @SerializedName("signup")
     @Expose
-    private SignUpDTO signup;
+    private SignUpDTO signup = new SignUpDTO();
 
     /**
      * @return The signin

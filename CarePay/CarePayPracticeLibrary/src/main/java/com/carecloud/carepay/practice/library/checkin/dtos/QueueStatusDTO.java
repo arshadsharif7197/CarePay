@@ -11,7 +11,7 @@ public class QueueStatusDTO {
 
     @SerializedName("payload")
     @Expose
-    private QueueStatusInnerPayloadDTO queueStatusInnerPayload;
+    private QueueStatusInnerPayloadDTO queueStatusInnerPayload = new QueueStatusInnerPayloadDTO();
 
     public QueueStatusInnerPayloadDTO getQueueStatusInnerPayload() {
         return queueStatusInnerPayload;

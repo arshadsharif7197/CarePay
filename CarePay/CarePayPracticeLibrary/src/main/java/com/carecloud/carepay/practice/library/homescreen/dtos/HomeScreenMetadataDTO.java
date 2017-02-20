@@ -11,7 +11,7 @@ import com.google.gson.annotations.SerializedName;
 public class HomeScreenMetadataDTO {
     @SerializedName("labels")
     @Expose
-    private HomeScreenLabelDTO labels;
+    private HomeScreenLabelDTO labels = new HomeScreenLabelDTO();
 
     @SerializedName("links")
     @Expose

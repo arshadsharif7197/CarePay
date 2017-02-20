@@ -11,17 +11,21 @@ import com.google.gson.annotations.SerializedName;
  * Master DTO for demographics meta-data
  */
 public class DemographicMetadataDTO {
-    @SerializedName("labels") @Expose
-    private DemographicLabelsDTO labels;
+    @SerializedName("labels")
+    @Expose
+    private DemographicLabelsDTO labels = new DemographicLabelsDTO();
 
-    @SerializedName("links") @Expose
-    private DemographicLinksDTO links;
+    @SerializedName("links")
+    @Expose
+    private DemographicLinksDTO links = new DemographicLinksDTO();
 
-    @SerializedName("transitions") @Expose
-    private DemographicTransitionsDTO transitions;
+    @SerializedName("transitions")
+    @Expose
+    private DemographicTransitionsDTO transitions = new DemographicTransitionsDTO();
 
-    @SerializedName("data_models") @Expose
-    private DemographicMetadataDataModelsDTO dataModels;
+    @SerializedName("data_models")
+    @Expose
+    private DemographicMetadataDataModelsDTO dataModels = new DemographicMetadataDataModelsDTO();
 
     /**
      *

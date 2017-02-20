@@ -8,10 +8,10 @@ public class DemographicsSettingsPaymentSettingsDTO {
 
     @SerializedName("metadata")
     @Expose
-    private DemographicsSettingsMetadataDTO metadata;
+    private DemographicsSettingsMetadataDTO metadata = new DemographicsSettingsMetadataDTO();
     @SerializedName("payload")
     @Expose
-    private DemographicsSettingsPayloadDTO payload;
+    private DemographicsSettingsPayloadDTO payload = new DemographicsSettingsPayloadDTO();
 
     public DemographicsSettingsMetadataDTO getMetadata() {
         return metadata;

@@ -21,7 +21,7 @@ public class PaymentsStartDateDTO {
     private String type;
     @SerializedName("validations")
     @Expose
-    private List<BaseFieldValidationModel> paymentValidations = new ArrayList<BaseFieldValidationModel>();
+    private List<BaseFieldValidationModel> paymentValidations = new ArrayList<>();
 
     /**
      * 

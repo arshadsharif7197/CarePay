@@ -103,6 +103,5 @@
     <color name="light_gray_dialog">#eceff1</color>
     <color name="overlay_green">#7ED321</color>
     <!--<color name="button_default">#329AD6</color>-->
-    <color name="gray_white">#80ffffff</color>
     <!--<color name="blue_de_france">#35a5e1</color>-->
 </resources>

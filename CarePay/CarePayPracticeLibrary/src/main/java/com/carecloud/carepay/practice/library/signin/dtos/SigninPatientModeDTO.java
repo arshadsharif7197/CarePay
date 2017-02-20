@@ -9,13 +9,13 @@ public class SigninPatientModeDTO {
 
     @SerializedName("metadata")
     @Expose
-    private SigninPatientModeMetadataDTO metadata;
+    private SigninPatientModeMetadataDTO metadata = new SigninPatientModeMetadataDTO();
     @SerializedName("state")
     @Expose
     private String state;
     @SerializedName("payload")
     @Expose
-    private PatientModeSigninPayloadDTO payload;
+    private PatientModeSigninPayloadDTO payload = new PatientModeSigninPayloadDTO();
 
     /**
      * 

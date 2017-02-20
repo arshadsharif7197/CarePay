@@ -1,6 +1,5 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -72,13 +71,9 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
     private EditText legalLastNameET;
     private TextInputLayout legalFirstName;
     private TextInputLayout legalLastName;
-   private String headerTitle;
-    private ImageView closeButton;
+    private String headerTitle;
 
     private ConsentFormLabelsDTO consentFormLabelsDTO;
-
-
-    private Map<Integer, List<String>> stringMap = new HashMap<>();
 
     private String signatureAsBase64;
     private boolean isLegalFirstNameEmpty;
@@ -101,7 +96,7 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(PracticeAppSignatureActivity.this).dismiss();
             //ConsentActivity.this.finish();
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(PracticeAppSignatureActivity.this, workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(PracticeAppSignatureActivity.this, workflowDTO);
         }
 
         @Override
@@ -548,17 +543,4 @@ public class PracticeAppSignatureActivity extends AppCompatActivity {
                 break;
         }
     }
-
-    /**
-     *
-     * @param workflowJson intake forms json
-     */
-
-    public void launchIntake(String workflowJson) {
-        Intent intent = new Intent();
-        intent.setAction("NEW_CHECKEDIN_NOTIFICATION");
-        intent.putExtra("INTAKE_WORKFLOW", workflowJson);
-        sendBroadcast(intent);
-    }
-
 }

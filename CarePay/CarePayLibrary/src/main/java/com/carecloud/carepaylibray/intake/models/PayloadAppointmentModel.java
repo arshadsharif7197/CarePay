@@ -121,7 +121,7 @@ public class PayloadAppointmentModel {
     private String preferredConfirmationMethod;
     @SerializedName("provider")
     @Expose
-    private ProviderModel provider;
+    private ProviderModel provider = new ProviderModel();
 
     /**
      * 

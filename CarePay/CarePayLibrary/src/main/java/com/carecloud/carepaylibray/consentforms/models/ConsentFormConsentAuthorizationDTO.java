@@ -13,7 +13,7 @@ public class ConsentFormConsentAuthorizationDTO {
 
     @SerializedName("properties")
     @Expose
-    private ConsentFormConsentAuthPropertiesDTO properties;
+    private ConsentFormConsentAuthPropertiesDTO properties = new ConsentFormConsentAuthPropertiesDTO();
 
     /**
      * @return The properties

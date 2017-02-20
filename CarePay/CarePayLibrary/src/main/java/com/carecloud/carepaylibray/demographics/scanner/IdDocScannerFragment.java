@@ -149,7 +149,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         });
 
         stateLabel = (TextView) view.findViewById(R.id.demogrDocsLicenseStateLabel);
-        label = idDocsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDriversLicenseAddStateLabel();
+        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDriversLicenseAddStateLabel();
         stateLabel.setText(label);
 
         idStateClickable = (TextView) view.findViewById(R.id.demogrDocsStateClickable);

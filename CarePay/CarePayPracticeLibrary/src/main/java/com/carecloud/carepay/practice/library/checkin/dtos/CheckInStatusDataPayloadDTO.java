@@ -11,10 +11,10 @@ public class CheckInStatusDataPayloadDTO {
 
     @SerializedName("metadata")
     @Expose
-    private CheckInStatusDataPayloadMetadataDTO metadata;
+    private CheckInStatusDataPayloadMetadataDTO metadata = new CheckInStatusDataPayloadMetadataDTO();
     @SerializedName("payload")
     @Expose
-    private CheckInStatusDataPayloadValueDTO payload;
+    private CheckInStatusDataPayloadValueDTO payload = new CheckInStatusDataPayloadValueDTO();
 
     /**
      * @return The metadata

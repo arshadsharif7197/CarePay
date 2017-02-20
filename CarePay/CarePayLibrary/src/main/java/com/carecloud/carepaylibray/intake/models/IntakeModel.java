@@ -13,7 +13,7 @@ public class IntakeModel {
     private String type;
     @SerializedName("properties")
     @Expose
-    private PropertiesIntakeModel properties;
+    private PropertiesIntakeModel properties = new PropertiesIntakeModel();
 
     /**
      * 

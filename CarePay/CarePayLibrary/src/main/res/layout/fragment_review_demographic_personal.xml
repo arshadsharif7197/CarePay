@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout android:id="@+id/reviewdemographicsPersonalContainer"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              >
+
+    <TextView
+        android:id="@+id/reviewdemogrPersonalInfoLabel"
+        style="@style/reviewDemographicBlue."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/reviewdemogrFirstNameTextInput"
+        style="@style/TextInputLayoutStyle"
+        android:layout_marginTop="18dp"
+        app:hintTextAppearance="@style/FloatingLabelStyle">
+
+        <EditText
+            android:id="@+id/reviewdemogrFirstNameEdit"
+            style="@style/SigninSignupEditStyle"
+            android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ "
+            android:inputType="textPersonName"
+            android:maxLength="100"
+            android:nextFocusForward="@+id/reviewdemogrMiddleNameEdit" />
+    </android.support.design.widget.TextInputLayout>
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/reviewdemogrMiddleNameTextInputLayout"
+            style="@style/SigninSignupTextInputStyle"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
+
+            <EditText
+                android:id="@+id/reviewdemogrMiddleNameEdit"
+                style="@style/SigninSignupEditStyle"
+                android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ "
+                android:imeOptions="actionNext"
+                android:inputType="textPersonName"
+                android:maxLength="100"
+                android:nextFocusForward="@+id/reviewdemogrsLastNameEdit" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:id="@+id/reviewdemogrMiddleNameOptionalLabel"
+            style="@style/SignupRequireHintStyle"
+            android:textColor="@color/cadet_gray" />
+    </FrameLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/reviewdemogrLastNameTextInput"
+        style="@style/SigninSignupTextInputStyle"
+        app:hintTextAppearance="@style/FloatingLabelStyle">
+
+        <EditText
+            android:id="@+id/reviewdemogrLastNameEdit"
+            style="@style/SigninSignupEditStyle"
+            android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ "
+            android:imeOptions="actionNext"
+            android:inputType="textPersonName"
+            android:maxLength="100"
+            android:nextFocusForward="@+id/reviewdemogrEmailEdit" />
+    </android.support.design.widget.TextInputLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/reviewdemogrDOBTextInput"
+            style="@style/SigninSignupTextInputStyle"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
+
+            <EditText
+                android:id="@+id/revewidemogrDOBEdit"
+                style="@style/SigninSignupEditStyle"
+                android:digits="0123456789/"
+                android:imeOptions="actionNext"
+                android:inputType="date"
+                android:maxLength="10"
+                android:nextFocusForward="@+id/revewidemoPhoneNumberEdit" />
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:id="@+id/dobformatlabel"
+            style="@style/SignupRequireHintStyle"
+            android:textColor="@color/cadet_gray" />
+    </FrameLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/reviewdemogrPhoneNumberTextInput"
+        style="@style/SigninSignupTextInputStyle"
+        app:hintTextAppearance="@style/FloatingLabelStyle">
+
+        <EditText
+            android:id="@+id/reviewgrdemoPhoneNumberEdit"
+            style="@style/SigninSignupEditStyle"
+            android:digits="0123456789-"
+            android:imeOptions="actionNext"
+            android:inputType="phone"
+            android:maxLength="12"
+            android:nextFocusForward="@+id/driverLicenseEditText" />
+    </android.support.design.widget.TextInputLayout>
+
+
+</LinearLayout>

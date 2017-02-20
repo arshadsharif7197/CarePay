@@ -11,7 +11,7 @@ public class DemographicsSettingsHeaderDTO {
 
         @SerializedName("maintenance")
         @Expose
-        private DemographicsSettingsMaintainanceDTO maintenance;
+        private DemographicsSettingsMaintainanceDTO maintenance = new DemographicsSettingsMaintainanceDTO();
 
         public DemographicsSettingsMaintainanceDTO getMaintenance() {
             return maintenance;

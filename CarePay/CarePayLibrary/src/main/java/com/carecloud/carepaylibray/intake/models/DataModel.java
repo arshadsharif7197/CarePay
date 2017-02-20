@@ -7,7 +7,7 @@ public class DataModel {
 
     @SerializedName("appointment_id")
     @Expose
-    private AppointmentModel appointmentId;
+    private AppointmentModel appointmentId = new AppointmentModel();
 
     @SerializedName("link")
     @Expose

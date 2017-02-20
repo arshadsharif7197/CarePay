@@ -13,7 +13,7 @@ public class ConsentFormConsentHippaDTO {
 
     @SerializedName("properties")
     @Expose
-    private ConsentFormConsentHippaPropertiesDTO properties;
+    private ConsentFormConsentHippaPropertiesDTO properties = new ConsentFormConsentHippaPropertiesDTO();
 
     /**
      * @return The properties

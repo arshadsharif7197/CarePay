@@ -356,7 +356,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
         Gson gson = new Gson();
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-            DtoHelper.getConvertedDTO(PracticeHomeScreenTransitionsDTO.class, transitionsAsJsonObject);
             PracticeHomeScreenTransitionsDTO transitionsDTO = DtoHelper.getConvertedDTO(PracticeHomeScreenTransitionsDTO.class, transitionsAsJsonObject);
             TransitionDTO transitionDTO = transitionsDTO.getPracticeAppointments();
             Map<String, String> queryMap = new HashMap<>();
@@ -365,7 +364,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             WorkflowServiceHelper.getInstance().execute(transitionDTO, checkInCallback, queryMap);
 
         } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
-            PracticeNavigationHelper.getInstance().setIsPatientModeAppointments(true);
+            PracticeNavigationHelper.setIsPatientModeAppointments(true);
             PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
             TransitionDTO transitionDTO = transitionsDTO.getPatientAppointments();
             Map<String, String> queryMap = new HashMap<>();
@@ -401,7 +400,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
             WorkflowServiceHelper.getInstance().execute(transitionDTO, checkInCallback, queryMap);
         } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
-            PracticeNavigationHelper.getInstance().setIsPatientModeAppointments(false);
+            PracticeNavigationHelper.setIsPatientModeAppointments(false);
             PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
             TransitionDTO transitionDTO = transitionsDTO.getPatientCheckin();
             Map<String, String> queryMap = new HashMap<>();
@@ -463,7 +462,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(getContext()).dismiss();
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(CloverMainActivity.this, workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
 
         @Override
@@ -488,7 +487,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             // log out previous user from Cognito
             CognitoAppHelper.getPool().getUser().signOut();
             CognitoAppHelper.setUser(null);
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(CloverMainActivity.this, workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
             CloverMainActivity.this.finish();
         }
 
@@ -509,7 +508,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(getContext()).dismiss();
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(CloverMainActivity.this, workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
 
         @Override
@@ -550,7 +549,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(getContext()).dismiss();
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
 
         @Override
@@ -597,7 +596,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         Intent intent = new Intent(this, PatientModeCheckinActivity.class);
         // pass the object into the gson
         Gson gson = new Gson();
-        intent.putExtra(getApplicationContext().getClass().getSimpleName(), gson.toJson(demographicDTO, DemographicDTO.class));
+        intent.putExtra(WorkflowDTO.class.getSimpleName(), gson.toJson(demographicDTO, DemographicDTO.class));
 
         startActivity(intent);
     }

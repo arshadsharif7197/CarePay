@@ -13,13 +13,13 @@ import com.google.gson.annotations.SerializedName;
 public class ConseFormsPayloadDTO {
     @SerializedName("consent_for_medicare")
     @Expose
-    private ConsentFormMedicarePayloadDTO consentFormMedicarePayload;
+    private ConsentFormMedicarePayloadDTO consentFormMedicarePayload = new ConsentFormMedicarePayloadDTO();
     @SerializedName("consent_for_authorization")
     @Expose
-    private ConsentFormAuthorizationPayloadDTO consentFormAuthorizationPayloadDTO;
+    private ConsentFormAuthorizationPayloadDTO consentFormAuthorizationPayloadDTO = new ConsentFormAuthorizationPayloadDTO();
     @SerializedName("consent_for_hipaa")
     @Expose
-    private ConsentFormHippaPayloadDTO consentFormHippaPayload;
+    private ConsentFormHippaPayloadDTO consentFormHippaPayload = new ConsentFormHippaPayloadDTO();
 
     public ConsentFormMedicarePayloadDTO getConsentFormMedicarePayload() {
         return consentFormMedicarePayload;

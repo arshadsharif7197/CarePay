@@ -8,6 +8,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.customdialog.IConfirmPracticeAppPin;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseVisibilityHintActivity;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
@@ -18,7 +19,8 @@ import com.google.gson.Gson;
  * Use for holding the common DTO which will be converted to the desire DTO using getConvertedDTO
  */
 
-public abstract class BasePracticeActivity extends BaseVisibilityHintActivity implements IConfirmPracticeAppPin{
+public abstract class BasePracticeActivity extends BaseVisibilityHintActivity
+        implements IConfirmPracticeAppPin {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,7 +41,7 @@ public abstract class BasePracticeActivity extends BaseVisibilityHintActivity im
 
         if (bundle != null) {
             Gson gson = new Gson();
-            return gson.fromJson(bundle.getString(getApplicationContext().getClass().getSimpleName()), dtoClass);
+            return gson.fromJson(bundle.getString(WorkflowDTO.class.getSimpleName()), dtoClass);
         }
         return null;
     }
@@ -134,6 +136,10 @@ public abstract class BasePracticeActivity extends BaseVisibilityHintActivity im
 
     public boolean disappearViewById(int id) {
         return setVisibilityById(id, View.GONE);
+    }
+
+    public boolean hideViewById(int id) {
+        return setVisibilityById(id, View.INVISIBLE);
     }
 
     private boolean setVisibilityById(int id, int visibility) {

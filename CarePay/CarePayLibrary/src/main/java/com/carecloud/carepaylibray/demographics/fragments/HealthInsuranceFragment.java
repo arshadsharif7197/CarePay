@@ -12,9 +12,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.adapters.InsuranceLineItemsListAdapter;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
@@ -41,11 +43,22 @@ public class HealthInsuranceFragment extends Fragment {
     private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
     private DemographicLabelsDTO                   globalLabelsMetaDTO;
     private InsuranceDocumentScannerListener       documentCallback;
+    private boolean                                isPractice;
 
+    private View.OnClickListener addNewElementListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            DemographicInsurancePayloadDTO insurance = new DemographicInsurancePayloadDTO();
+            insurance.getInsurancePhotos().add(new DemographicInsurancePhotoDTO());
+            insurance.getInsurancePhotos().add(new DemographicInsurancePhotoDTO());
+            documentCallback.navigateToInsuranceDocumentFragment(CarePayConstants.NO_INDEX, insurance);
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_health_insurance_main, container, false);
+        isPractice = ApplicationMode.getInstance().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
         initDTOs();
         initTitle(view);
         initSwitch(view);
@@ -60,25 +73,39 @@ public class HealthInsuranceFragment extends Fragment {
         SystemUtil.setProximaNovaSemiboldTypeface(getContext(), healthInsuranceTitleTextView);
     }
 
-    private void initActiveSection(View view) {
+    /**
+     * enable or disable sections
+     * @param view main view
+     */
+    public void initActiveSection(View view) {
         boolean loadResources = insurancePayloadDTOs.size() > 0;
-        view.findViewById(R.id.setupContainer).setVisibility(loadResources? View.GONE : View.VISIBLE);
+        boolean isSetup = !isPractice && !loadResources;
+        boolean isRatio = isPractice && !loadResources;
+        view.findViewById(R.id.setupContainer).setVisibility( isSetup ? View.VISIBLE : View.GONE );
+        view.findViewById(R.id.setupInsurancePracticeContainer).setVisibility( isRatio ? View.VISIBLE : View.GONE );
         view.findViewById(R.id.existingContainer).setVisibility(loadResources? View.VISIBLE : View.GONE);
         if( loadResources ){
             fillDetailAdapter(view);
             initAddButton(view);
-        } else {
-            ((TextView)view.findViewById(R.id.setupInsuranceLabel)).setText(globalLabelsMetaDTO.getDemographicsSetupInsuranceTitle());
+        } else if(!isPractice){
+            ((TextView)view.findViewById(R.id.setupInsuranceLabel)).setText(globalLabelsMetaDTO.getDemographicsInsuranceSetupHealthInsurance());
             TextView setup = (TextView)view.findViewById(R.id.setupLabel);
-            setup.setText(globalLabelsMetaDTO.getDemographicsSetupInsuranceLabel());
-            setup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DemographicInsurancePayloadDTO insurance = new DemographicInsurancePayloadDTO();
-                insurance.getInsurancePhotos().add(new DemographicInsurancePhotoDTO());
-                insurance.getInsurancePhotos().add(new DemographicInsurancePhotoDTO());
-                documentCallback.navigateToInsuranceDocumentFragment(CarePayConstants.NO_INDEX, insurance);
-            }
+            setup.setText(globalLabelsMetaDTO.getDemographicsInsuranceSetup());
+            setup.setOnClickListener(addNewElementListener);
+
+        } else {
+            initAddOtherButton(view);
+            RadioButton dontHaveInsurance = (RadioButton)view.findViewById(R.id.dontHaveInsurance);
+            dontHaveInsurance.setText(globalLabelsMetaDTO.getDemographicsDontHaveHealthInsuranceLabel());
+            RadioButton haveInsurance = (RadioButton)view.findViewById(R.id.haveInsurance);
+            haveInsurance.setText(globalLabelsMetaDTO.getDemographicsHaveHealthInsuranceLabel());
+            final Button addButton = (Button)view.findViewById(R.id.addNewButton);
+            haveInsurance.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
+                    addButton.setEnabled(on);
+                    documentCallback.disableMainButton(on);
+                }
             });
 
         }
@@ -87,15 +114,13 @@ public class HealthInsuranceFragment extends Fragment {
     private void initAddButton(View view){
         Button addButton = (Button)view.findViewById(R.id.addInsuranceButton);
         addButton.setText(globalLabelsMetaDTO.getPracticeCheckinDemogrInsAddAnother());
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DemographicInsurancePayloadDTO insurance = new DemographicInsurancePayloadDTO();
-                insurance.getInsurancePhotos().add(new DemographicInsurancePhotoDTO());
-                insurance.getInsurancePhotos().add(new DemographicInsurancePhotoDTO());
-                documentCallback.navigateToInsuranceDocumentFragment(CarePayConstants.NO_INDEX, insurance);
-            }
-        });
+        addButton.setOnClickListener(addNewElementListener);
+    }
+
+    private void initAddOtherButton(View view){
+        Button addButton = (Button)view.findViewById(R.id.addNewButton);
+        addButton.setText(globalLabelsMetaDTO.getDemographicsAddHealthInsuranceButtonTitle());
+        addButton.setOnClickListener(addNewElementListener);
     }
 
     protected void fillDetailAdapter(View view){
@@ -115,6 +140,7 @@ public class HealthInsuranceFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
                 setupInsuranceHolders.setVisibility(on ? View.VISIBLE : View.GONE);
+                documentCallback.disableMainButton(on);
             }
         });
         String label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsDocumentsSwitchLabel();
@@ -158,5 +184,7 @@ public class HealthInsuranceFragment extends Fragment {
         public void navigateToParentFragment();
 
         public void updateInsuranceDTO(int index, DemographicInsurancePayloadDTO model);
+
+        public void disableMainButton(boolean isDisabled);
     }
 }

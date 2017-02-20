@@ -9,13 +9,13 @@ public class SigninPatientModeLinksDTO {
 
     @SerializedName("self")
     @Expose
-    private TransitionDTO self;
+    private TransitionDTO self = new TransitionDTO();
     @SerializedName("login")
     @Expose
-    private TransitionDTO login;
+    private TransitionDTO login = new TransitionDTO();
     @SerializedName("personal_info")
     @Expose
-    private TransitionDTO personalInfo;
+    private TransitionDTO personalInfo = new TransitionDTO();
 
     /**
      * 

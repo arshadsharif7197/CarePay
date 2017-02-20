@@ -10,10 +10,10 @@ import com.google.gson.annotations.SerializedName;
 public class SignInModelDTO {
     @SerializedName("labels")
     @Expose
-    private String              labels;
+    private String labels;
     @SerializedName("properties")
     @Expose
-    private SignInPropertiesDTO properties;
+    private SignInPropertiesDTO properties = new SignInPropertiesDTO();
 
     /**
      * @return The labels

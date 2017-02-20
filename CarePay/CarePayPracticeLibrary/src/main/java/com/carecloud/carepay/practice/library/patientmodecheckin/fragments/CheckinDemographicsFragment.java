@@ -200,7 +200,7 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
         address2EditText = (EditText) view.findViewById(R.id.addressEditText2Id);
         zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeId);
         cityEditText = (EditText) view.findViewById(R.id.cityId);
-        stateEditText = (EditText) view.findViewById(R.id.stateAutoCompleteTextView);
+        stateEditText = (EditText) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView);
         stateEditText.setHint(addressMetaDTO.properties.state.getLabel());
 
         driverlicenseEditText = (EditText) view.findViewById(R.id.driverLicenseEditText);

@@ -1,10 +1,10 @@
 package com.carecloud.carepaylibray.intake.models;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AppointmentModel {
 
@@ -22,7 +22,7 @@ public class AppointmentModel {
     private Boolean visible;
     @SerializedName("validations")
     @Expose
-    private List<ValidationModel> validations = new ArrayList<ValidationModel>();
+    private List<ValidationModel> validations = new ArrayList<>();
 
     /**
      * @return The name

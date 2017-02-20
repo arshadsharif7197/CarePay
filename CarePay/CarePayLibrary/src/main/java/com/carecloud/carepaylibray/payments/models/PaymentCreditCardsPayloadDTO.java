@@ -32,7 +32,7 @@ public class PaymentCreditCardsPayloadDTO {
     private String token;
     @SerializedName("billing_information")
     @Expose
-    private PaymentsCreditCardBillingInformationDTO billingInformation;
+    private PaymentsCreditCardBillingInformationDTO billingInformation = new PaymentsCreditCardBillingInformationDTO();
 
     /**
      * @return The cardType

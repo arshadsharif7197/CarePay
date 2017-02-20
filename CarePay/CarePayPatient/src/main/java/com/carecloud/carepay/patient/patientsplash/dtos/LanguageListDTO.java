@@ -15,7 +15,7 @@ public class LanguageListDTO {
 
     @SerializedName("options")
     @Expose
-    private List<OptionsDTO> options = new ArrayList<OptionsDTO>();
+    private List<OptionsDTO> options = new ArrayList<>();
 
     /**
      * @return The options

@@ -128,8 +128,7 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(getContext()).dismiss();
             ScheduleAppointmentActivity.this.finish();
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(
-                    ScheduleAppointmentActivity.this, workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
 
         @Override
@@ -150,8 +149,7 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(getContext()).dismiss();
             ScheduleAppointmentActivity.this.finish();
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(
-                    ScheduleAppointmentActivity.this, workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
 
         @Override

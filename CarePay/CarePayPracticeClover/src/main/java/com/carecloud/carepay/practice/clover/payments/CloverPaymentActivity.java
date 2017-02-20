@@ -1,7 +1,6 @@
 package com.carecloud.carepay.practice.clover.payments;
 
 import android.accounts.Account;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -200,8 +199,6 @@ public class CloverPaymentActivity extends AppCompatActivity {
         }.execute();
     }
 
-
-
     private class OrderAsyncTask extends AsyncTask<Void, Void, Order> {
 
         @Override
@@ -358,7 +355,7 @@ public class CloverPaymentActivity extends AppCompatActivity {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(CloverPaymentActivity.this).dismiss();
             CloverPaymentActivity.this.finish();
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(CloverPaymentActivity.this, workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(CloverPaymentActivity.this, workflowDTO);
         }
 
         @Override

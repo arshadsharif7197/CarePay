@@ -1,9 +1,11 @@
 
 package com.carecloud.carepaylibray.demographicsettings.models;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DemographicsSettingsExpireDateDTO {
 
@@ -15,7 +17,7 @@ public class DemographicsSettingsExpireDateDTO {
     private Boolean required;
     @SerializedName("enum")
     @Expose
-    private List<String> _enum = null;
+    private List<String> _enum = new ArrayList<>();
 
     public String getType() {
         return type;

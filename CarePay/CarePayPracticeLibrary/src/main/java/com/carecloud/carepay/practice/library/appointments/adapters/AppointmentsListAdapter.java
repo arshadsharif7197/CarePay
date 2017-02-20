@@ -172,7 +172,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(context).dismiss();
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(context, workflowDTO);
         }
 
         @Override

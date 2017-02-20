@@ -10,10 +10,10 @@ import com.google.gson.annotations.SerializedName;
 public class SigninDTO {
     @SerializedName("metadata")
     @Expose
-    private SigninMetadataDTO metadata;
+    private SigninMetadataDTO metadata = new SigninMetadataDTO();
     @SerializedName("payload")
     @Expose
-    private SigninPayloadDTO payload;
+    private SigninPayloadDTO payload = new SigninPayloadDTO();
     @SerializedName("state")
     @Expose
     private String state;

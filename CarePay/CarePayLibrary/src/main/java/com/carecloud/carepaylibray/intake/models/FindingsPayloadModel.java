@@ -10,10 +10,10 @@ public class FindingsPayloadModel {
 
     @SerializedName("payload")
     @Expose
-    private PayloadFindingsModel payload;
+    private PayloadFindingsModel payload = new PayloadFindingsModel();
     @SerializedName("metadata")
     @Expose
-    private MetadataFindingsModel metadata;
+    private MetadataFindingsModel metadata = new MetadataFindingsModel();
 
     /**
      * 

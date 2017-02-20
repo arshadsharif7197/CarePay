@@ -8,13 +8,13 @@ public class PaymentsMetadataModel {
 
     @SerializedName("labels")
     @Expose
-    private PaymentsLabelDTO paymentsLabel;
+    private PaymentsLabelDTO paymentsLabel = new PaymentsLabelDTO();
     @SerializedName("links")
     @Expose
-    private PaymentsLinksDTO paymentsLinks;
+    private PaymentsLinksDTO paymentsLinks = new PaymentsLinksDTO();
     @SerializedName("transitions")
     @Expose
-    private PaymentsTransitionsDTO paymentsTransitions;
+    private PaymentsTransitionsDTO paymentsTransitions = new PaymentsTransitionsDTO();
 
     /**
      * 

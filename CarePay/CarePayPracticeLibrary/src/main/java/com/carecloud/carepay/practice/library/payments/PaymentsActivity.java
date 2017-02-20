@@ -13,30 +13,35 @@ import com.carecloud.carepay.practice.library.customdialog.FilterDialog;
 import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepay.practice.library.payments.dialogs.FindPatientDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityDialog;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.LocationDTO;
 import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PatientDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderDTO;
+import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class PaymentsActivity extends BasePracticeActivity implements FilterDialog.FilterCallBack {
 
     private PaymentsLabelDTO paymentsLabel;
     private PaymentsModel paymentsModel;
     private FilterModel filter;
-
-    private ArrayList<FilterDataDTO> patients;
-    private ArrayList<FilterDataDTO> locations = new ArrayList<>();
-    private ArrayList<FilterDataDTO> doctors = new ArrayList<>();
 
     private String practiceCheckinFilterDoctorsLabel;
     private String practiceCheckinFilterLocationsLabel;
@@ -52,6 +57,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_practice_payment);
         setNavigationBarVisibility();
+
+        filter = new FilterModel();
         paymentsModel = getConvertedDTO(PaymentsModel.class);
 
         setLabels();
@@ -84,12 +91,10 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
             List<PaymentsPatientBalancessDTO> patientBalancesList = paymentsModel.getPaymentPayload().getPatientBalances();
 
-            addProviderOnProviderFilterList(paymentsModel);
-            addLocationOnFilterList(paymentsModel);
-            addPatientOnFilterList(patientBalancesList);
+            filter.setDoctors(addProviderOnProviderFilterList(paymentsModel));
+            filter.setLocations(addLocationOnFilterList(paymentsModel));
+            filter.setPatients(addPatientOnFilterList(patientBalancesList));
 
-            applyFilterSortByName(doctors);
-            applyFilterSortByName(locations);
             initializePatientListView();
 
             setViewTextById(R.id.practice_payment_in_office_count,
@@ -120,30 +125,35 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         });
     }
 
-    private void addProviderOnProviderFilterList(PaymentsModel paymentsModel) {
-        doctors = new ArrayList<>();
-        List<ProviderDTO> providers = paymentsModel.getPaymentPayload().getProviders();
-        for (ProviderDTO provider : providers) {
+    private ArrayList<FilterDataDTO> addProviderOnProviderFilterList(PaymentsModel paymentsModel) {
+        ArrayList<FilterDataDTO> doctors = new ArrayList<>();
+
+        for (ProviderDTO provider : paymentsModel.getPaymentPayload().getProviders()) {
             FilterDataDTO filterDataDTO = new FilterDataDTO(provider.getId(), provider.getName(), FilterDataDTO.FilterDataType.PROVIDER);
             if (doctors.indexOf(filterDataDTO) < 0) {
                 doctors.add(filterDataDTO);
             }
         }
+
+        return doctors;
     }
 
-    private void addLocationOnFilterList(PaymentsModel paymentsModel) {
-        this.locations = new ArrayList<>();
-        List<LocationDTO> locations = paymentsModel.getPaymentPayload().getLocations();
-        for (LocationDTO location : locations) {
+    private ArrayList<FilterDataDTO> addLocationOnFilterList(PaymentsModel paymentsModel) {
+        ArrayList<FilterDataDTO> locations = new ArrayList<>();
+
+        for (LocationDTO location : paymentsModel.getPaymentPayload().getLocations()) {
             FilterDataDTO filterDataDTO = new FilterDataDTO(location.getId(), location.getName(), FilterDataDTO.FilterDataType.LOCATION);
-            if (this.locations.indexOf(filterDataDTO) < 0) {
-                this.locations.add(filterDataDTO);
+            if (locations.indexOf(filterDataDTO) < 0) {
+                locations.add(filterDataDTO);
             }
         }
+
+        return locations;
     }
 
-    private void addPatientOnFilterList(List<PaymentsPatientBalancessDTO> balances) {
-        patients = new ArrayList<>();
+    private ArrayList<FilterDataDTO> addPatientOnFilterList(List<PaymentsPatientBalancessDTO> balances) {
+        ArrayList<FilterDataDTO> patients = new ArrayList<>();
+
         for (PaymentsPatientBalancessDTO patientBalances : balances) {
 
             DemographicsSettingsPersonalDetailsPayloadDTO personalDetails
@@ -156,6 +166,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 patients.add(filterDataDTO);
             }
         }
+
+        return patients;
     }
 
     private String getPatientId(PaymentsPatientBalancessDTO patientBalances) {
@@ -167,27 +179,16 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         return balances.get(0).getMetadata().getPatientId();
     }
 
-    private void applyFilterSortByName(ArrayList<FilterDataDTO> filterableList) {
-        Collections.sort(filterableList, new Comparator<FilterDataDTO>() {
-            //@TargetApi(Build.VERSION_CODES.KITKAT)
-            @Override
-            public int compare(FilterDataDTO lhs, FilterDataDTO rhs) {
-                return lhs.getDisplayText().compareTo(rhs.getDisplayText());
-            }
-        });
-    }
-
     @NonNull
     private View.OnClickListener onFilterIconClick() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                filter = new FilterModel(doctors, locations, patients,
+                FilterDialog filterDialog = new FilterDialog(PaymentsActivity.this,
+                        findViewById(R.id.activity_practice_payment), filter,
                         practiceCheckinFilterDoctorsLabel, practiceCheckinFilterLocationsLabel,
                         practicePaymentsFilter, practicePaymentsFilterFindPatientByName,
                         practicePaymentsFilterClearFilters);
-                FilterDialog filterDialog = new FilterDialog(PaymentsActivity.this,
-                        findViewById(R.id.activity_practice_payment), filter);
 
                 filterDialog.showPopWindow();
             }
@@ -204,10 +205,51 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 FindPatientDialog findPatientDialog = new FindPatientDialog(PaymentsActivity.this,
                         transitionDTO, paymentsLabel.getPracticePaymentsDetailDialogCloseButton(),
                         paymentsLabel.getPracticePaymentsFindPatientLabel());
+                setOnItemClickedListener(findPatientDialog);
                 findPatientDialog.show();
             }
         };
     }
+
+    private void setOnItemClickedListener(FindPatientDialog findPatientDialog) {
+        findPatientDialog.setClickedListener(new FindPatientDialog.OnItemClickedListener() {
+            @Override
+            public void onItemClicked(PatientDTO patient) {
+                Map<String, String> queryMap = new HashMap<>();
+                queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
+                queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+                queryMap.put("patient_id", patient.getPatientId());
+
+                TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getPaymentsPatientBalances();
+                WorkflowServiceHelper.getInstance().execute(transitionDTO, patientBalancesCallback, queryMap);
+            }
+        });
+    }
+
+    private WorkflowServiceCallback patientBalancesCallback = new WorkflowServiceCallback() {
+
+        @Override
+        public void onPreExecute() {
+            ProgressDialogUtil.getInstance(getContext()).show();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            PaymentsModel patientDetails = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
+
+            if (patientDetails != null) {
+                PaymentsPatientBalancessDTO paymentsPatientBalancessDTO = patientDetails.getPaymentPayload().getPatientBalances().get(0);
+                ProgressDialogUtil.getInstance(getContext()).dismiss();
+                ResponsibilityDialog responsibilityDialog = new ResponsibilityDialog(getContext(), paymentsModel, paymentsPatientBalancessDTO);
+                responsibilityDialog.show();
+            }
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            ProgressDialogUtil.getInstance(getContext()).dismiss();
+        }
+    };
 
     @Override
     public void applyFilter() {

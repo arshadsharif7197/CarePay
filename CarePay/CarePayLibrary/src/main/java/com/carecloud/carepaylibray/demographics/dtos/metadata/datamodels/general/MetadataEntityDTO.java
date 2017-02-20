@@ -5,6 +5,7 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,20 +19,25 @@ import java.util.List;
 
 public class MetadataEntityDTO {
 
-    @SerializedName("label") @Expose
+    @SerializedName("label")
+    @Expose
     private String label;
 
-    @SerializedName("type") @Expose
+    @SerializedName("type")
+    @Expose
     public String type;
 
-    @SerializedName("method") @Expose
-    public MetadataActionDTO method;
+    @SerializedName("method")
+    @Expose
+    public MetadataActionDTO method = new MetadataActionDTO();
 
-    @SerializedName("options") @Expose
-    public List<MetadataOptionDTO> options;
+    @SerializedName("options")
+    @Expose
+    public List<MetadataOptionDTO> options = new ArrayList<>();
 
-    @SerializedName("validations") @Expose
-    public List<MetadataValidationDTO> validations;
+    @SerializedName("validations")
+    @Expose
+    public List<MetadataValidationDTO> validations = new ArrayList<>();
 
     /**
      * Getter
