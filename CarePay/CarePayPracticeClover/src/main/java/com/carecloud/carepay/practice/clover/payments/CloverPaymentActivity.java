@@ -296,6 +296,9 @@ public class CloverPaymentActivity extends AppCompatActivity {
                     isPaymentComplete = true;
                     postPaymentConfirmation(payment);
                 }
+            } else if(resultCode == RESULT_CANCELED) {
+                Toast.makeText(getApplicationContext(), getString(R.string.payment_cancelled), Toast.LENGTH_SHORT).show();
+                finish();
             } else {
                 Toast.makeText(getApplicationContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
                 finish();
