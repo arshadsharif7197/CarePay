@@ -19,6 +19,7 @@ public class CheckInMetadataDTO {
     @Expose
     private CheckInTransitionsDTO transitions = new CheckInTransitionsDTO();
 
+
     /**
      *
      * @return
@@ -76,4 +77,17 @@ public class CheckInMetadataDTO {
     public void setTransitions(CheckInTransitionsDTO transitions) {
         this.transitions = transitions;
     }
+
+    public Boolean hasPaymentEnabled(){
+        return false ;
+    }
+
+    public Boolean hasAssistEnabled(){
+        return false ;
+    }
+
+    public Boolean hasPageEnabled(){
+        return false ;
+    }
+
 }

@@ -114,8 +114,8 @@ public class AppointmentDetailDialog extends Dialog {
 
         callGetCheckinStatusAPI(); //API call for getting check-in status
         onInitialization();
-        onSettingStyle();
         onSetValuesFromDTO();
+        onSettingStyle();
 
         if (balanceValueLabel.getText().toString().trim().equalsIgnoreCase(CarePayConstants.ZERO_BALANCE)) {
             paymentButton.setVisibility(View.GONE);
@@ -159,13 +159,31 @@ public class AppointmentDetailDialog extends Dialog {
         checkingInLabel.setTextColor(ContextCompat.getColor(context, R.color.white));
 
         GradientDrawable bgShapePaymentButton = (GradientDrawable) paymentButton.getBackground();
-        bgShapePaymentButton.setColor(ContextCompat.getColor(context, R.color.yellowGreen));
+        if(checkInDTO.getMetadata().hasPaymentEnabled())
+        {
+            bgShapePaymentButton.setColor(ContextCompat.getColor(context, R.color.yellowGreen));
+        }else
+        {
+            bgShapePaymentButton.setColor(ContextCompat.getColor(context, R.color.light_gray));
+        }
 
         GradientDrawable bgShapeAssistButton = (GradientDrawable) assistButton.getBackground();
-        bgShapeAssistButton.setColor(ContextCompat.getColor(context, R.color.colorPrimary));
+        if(checkInDTO.getMetadata().hasAssistEnabled())
+        {
+            bgShapeAssistButton.setColor(ContextCompat.getColor(context, R.color.colorPrimary));
+        }else
+        {
+            bgShapeAssistButton.setColor(ContextCompat.getColor(context, R.color.light_gray));
+        }
 
         GradientDrawable bgShapePageButton = (GradientDrawable) pageButton.getBackground();
-        bgShapePageButton.setColor(ContextCompat.getColor(context, R.color.rose_madder));
+        if(checkInDTO.getMetadata().hasPageEnabled())
+        {
+            bgShapePageButton.setColor(ContextCompat.getColor(context, R.color.rose_madder));
+        }else
+        {
+            bgShapePageButton.setColor(ContextCompat.getColor(context, R.color.light_gray));
+        }
     }
 
     /**
@@ -227,6 +245,15 @@ public class AppointmentDetailDialog extends Dialog {
 
         checkingInLabel.bringToFront();
         hourLabel.bringToFront();
+
+        enableActionItems();
+    }
+
+    private void enableActionItems()
+    {
+        paymentButton.setEnabled(checkInDTO.getMetadata().hasPaymentEnabled());
+        assistButton.setEnabled(checkInDTO.getMetadata().hasAssistEnabled());
+        pageButton.setEnabled(checkInDTO.getMetadata().hasPageEnabled());
     }
 
     private View.OnClickListener paymentActionListener = new View.OnClickListener() {
