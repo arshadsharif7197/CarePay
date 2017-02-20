@@ -100,6 +100,7 @@ public class CarePayConstants {
     public static final String CLOVER_DEVICE = "Clover";
     public static final String DEMOGRAPHICS_SETTINGS_BUNDLE  = "demographics_settings_bundle";
     public static final String DEMOGRAPHICS_ADDRESS_BUNDLE  = "demographics_address_bundle";
+    public static final String PAYEEZY_MERCHANT_SERVICE_BUNDLE  = "payeezy_merchant_service_bundle";
     public static final String CREDIT_CARD_BUNDLE  = "credit_card_bundle";
 
     public static final int ANDROID_PAY_BUTTON_HEIGHT= 58;
