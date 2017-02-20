@@ -92,9 +92,13 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         SystemUtil.setGothamRoundedBookTypeface(context,requestAppointmentButton);
 
         DateUtil.getInstance().setDateRaw(appointmentsSlotsDTO.getStartTime());
-        CarePayTextView appointmentDateTextView = (CarePayTextView)view.findViewById(R.id.appointment_date);
-        appointmentDateTextView.setText(DateUtil.getInstance().getDateAsDayMonthDayOrdinalYear());
-        SystemUtil.setProximaNovaSemiboldTypeface(context,appointmentDateTextView);
+//        CarePayTextView appointmentDateTextView = (CarePayTextView)view.findViewById(R.id.appointment_date);
+//        appointmentDateTextView.setText(DateUtil.getInstance().getDateAsDayMonthDayOrdinalYear());
+//        SystemUtil.setProximaNovaSemiboldTypeface(context,appointmentDateTextView);
+
+        setDialogTitle(DateUtil.getInstance().getDateAsDayMonthDayOrdinalYear());
+
+
         CarePayTextView appointmentTimeTextView = (CarePayTextView)view.findViewById(R.id.appointment_time);
         appointmentTimeTextView.setText(DateUtil.getInstance().getTime12Hour());
         SystemUtil.setGothamRoundedBoldTypeface(context,appointmentTimeTextView);

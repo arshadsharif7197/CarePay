@@ -280,6 +280,9 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     }
 
     private void disableUnavailableItems(){
+        if(homeScreenMode == HomeScreenMode.PATIENT_HOME){
+            setViewsDisabled((ViewGroup) findViewById(R.id.homePaymentsClickable));
+        }
         setViewsDisabled((ViewGroup) findViewById(R.id.homeCheckoutClickable));
         setViewsDisabled((ViewGroup) findViewById(R.id.homeShopClickable));
         setViewsDisabled((ViewGroup) findViewById(R.id.homeNewsClickable));
