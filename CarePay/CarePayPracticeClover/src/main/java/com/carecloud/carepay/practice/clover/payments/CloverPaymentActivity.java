@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.carecloud.carepay.practice.clover.paymentDTO.CloverPaymentDTO;
+import com.carecloud.carepay.practice.clover.models.CloverPaymentDTO;
 import com.carecloud.carepay.practice.clover.R;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -307,8 +307,6 @@ public class CloverPaymentActivity extends AppCompatActivity {
         String jsonInString = payment.getJSONObject().toString();
         JSONObject payload = new JSONObject();
         try {
-            Gson gson  =new Gson();
-            CloverPaymentDTO cloverPaymentDTO = gson.fromJson(payment.getJSONObject().toString(), CloverPaymentDTO.class);
 
             JSONObject paymentMethod = new JSONObject();
             JSONObject creditCard = new JSONObject(jsonInString);
@@ -319,9 +317,10 @@ public class CloverPaymentActivity extends AppCompatActivity {
             JSONObject billingInformation = new JSONObject();
             billingInformation.put("same_as_patient", true);
             creditCard.put("billing_information", billingInformation);
+
+            Gson gson  =new Gson();
+            CloverPaymentDTO cloverPaymentDTO = gson.fromJson(payment.getJSONObject().toString(), CloverPaymentDTO.class);
             creditCard.put("card_type", cloverPaymentDTO.getCloverCardTransactionInfo().getCardType());
-
-
 
             paymentMethod.put("credit_card", creditCard);
             paymentMethod.put("type", "credit_card");
