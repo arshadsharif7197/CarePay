@@ -113,6 +113,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         changeScreenMode(homeScreenMode);
 
         registerReceiver(newCheckedInReceiver, new IntentFilter("NEW_CHECKEDIN_NOTIFICATION"));
+
     }
 
     private void initUIFields() {
