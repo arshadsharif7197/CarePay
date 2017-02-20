@@ -299,7 +299,7 @@ public class AppointmentDetailDialog extends Dialog {
             } else {
                 queryStringObject = checkInDTO.getMetadata().getLinks().getCheckinStatus().getQueryString();
                 queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
-                querymap = getQueryParam(queryStrings);
+                querymap = getStatusQueryParam(queryStrings);
                 transition = checkInDTO.getMetadata().getLinks().getCheckinStatus();
                 callback = getStatusCallBack;
             }
@@ -312,12 +312,10 @@ public class AppointmentDetailDialog extends Dialog {
      * @param queryStrings the query strings for the url
      * @return queryMap
      */
-    private Map<String, String> getQueryParam(QueryStrings queryStrings) {
+    private Map<String, String> getStatusQueryParam(QueryStrings queryStrings) {
         Map<String, String> queryMap = new HashMap<>();
-        if (appointmentPayloadDTO != null && pendingBalanceDTO != null) {
+        if (appointmentPayloadDTO != null) {
             queryMap.put(queryStrings.getAppointmentId().getName(), appointmentPayloadDTO.getId());
-            queryMap.put(queryStrings.getPracticeManagement().getName(), pendingBalanceDTO.getMetadata().getPracticeMgmt());
-            queryMap.put(queryStrings.getPracticeId().getName(), pendingBalanceDTO.getMetadata().getPracticeId());
         }
 
         return queryMap;
@@ -329,10 +327,8 @@ public class AppointmentDetailDialog extends Dialog {
      */
     private Map<String, String> getQueueQueryParam(QueryStrings queryStrings) {
         Map<String, String> queryMap = new HashMap<>();
-        if (appointmentPayloadDTO != null && pendingBalanceDTO != null) {
-            queryMap.put(queryStrings.getPatientId().getName(), appointmentPayloadDTO.getId());
-            queryMap.put(queryStrings.getPracticeManagement().getName(), pendingBalanceDTO.getMetadata().getPracticeMgmt());
-            queryMap.put(queryStrings.getPracticeId().getName(), pendingBalanceDTO.getMetadata().getPracticeId());
+        if (appointmentPayloadDTO != null) {
+            queryMap.put(queryStrings.getPatientId().getName(), appointmentPayloadDTO.getPatient().getId());
         }
         return queryMap;
     }
