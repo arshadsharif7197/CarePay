@@ -1,4 +1,4 @@
-package com.carecloud.carepay.practice.clover.DTO;
+package com.carecloud.carepay.practice.clover.paymentDTO;
 
 import com.clover.sdk.v3.payments.VaultedCard;
 import com.google.gson.annotations.Expose;

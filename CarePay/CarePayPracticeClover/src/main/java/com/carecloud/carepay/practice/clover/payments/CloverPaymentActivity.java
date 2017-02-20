@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.carecloud.carepay.practice.clover.DTO.CloverPaymentDTO;
+import com.carecloud.carepay.practice.clover.paymentDTO.CloverPaymentDTO;
 import com.carecloud.carepay.practice.clover.R;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
