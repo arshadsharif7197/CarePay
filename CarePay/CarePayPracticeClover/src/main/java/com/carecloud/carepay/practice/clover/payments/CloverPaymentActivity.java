@@ -297,6 +297,7 @@ public class CloverPaymentActivity extends AppCompatActivity {
                 }
             } else {
                 Toast.makeText(getApplicationContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
+                finish();
             }
         }
     }

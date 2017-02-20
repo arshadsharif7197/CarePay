@@ -76,6 +76,7 @@
             android:screenOrientation="sensorLandscape"/>
         <activity
             android:name="com.carecloud.carepay.practice.library.payments.PaymentsActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="sensorLandscape"/>
         <activity
             android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PracticeAppSignatureActivity"
