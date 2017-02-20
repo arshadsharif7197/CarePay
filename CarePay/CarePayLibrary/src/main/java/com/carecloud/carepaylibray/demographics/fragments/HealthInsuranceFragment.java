@@ -68,9 +68,9 @@ public class HealthInsuranceFragment extends Fragment {
             fillDetailAdapter(view);
             initAddButton(view);
         } else {
-            ((TextView)view.findViewById(R.id.setupInsuranceLabel)).setText(globalLabelsMetaDTO.getDemographicsInsuranceSetupHealthInsurance());
+            ((TextView)view.findViewById(R.id.setupInsuranceLabel)).setText(globalLabelsMetaDTO.getDemographicsSetupInsuranceTitle());
             TextView setup = (TextView)view.findViewById(R.id.setupLabel);
-            setup.setText(globalLabelsMetaDTO.getDemographicsInsuranceSetup());
+            setup.setText(globalLabelsMetaDTO.getDemographicsSetupInsuranceLabel());
             setup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
