@@ -44,7 +44,7 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
 
         try {
-            ApplicationPreferences.Instance.saveObjectToSharedPreference(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE,
+            getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE,
                     demographicsSettingsDTO.getPayload().getDemographics().getPayload().getAddress());
         } catch (Exception e) {
             e.printStackTrace();
