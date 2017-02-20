@@ -1136,6 +1136,7 @@ public class DemographicLabelsDTO {
     public String getDemographicsDontHaveHealthInsuranceLabel() {
         return StringUtil.getLabelForView(demographicsDontHaveHealthInsuranceLabel);
     }
+
     public String getDemographicsSetupInsuranceTitle() {
         return StringUtil.getLabelForView(demographicsSetupInsuranceTitle);
     }
