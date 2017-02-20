@@ -135,19 +135,19 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
     private WorkflowServiceCallback getMakeAppointmentCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            ((ISession) context).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) context).hideProgressDialog();
             isAppointmentAdded = true;
             ((AppCompatActivity) context).finish();
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) context).hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(context);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

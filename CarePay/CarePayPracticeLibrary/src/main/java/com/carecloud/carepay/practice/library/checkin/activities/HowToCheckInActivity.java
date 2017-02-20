@@ -194,18 +194,18 @@ public class HowToCheckInActivity extends BasePracticeActivity {
     WorkflowServiceCallback patientModeSignInCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(HowToCheckInActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -295,19 +295,19 @@ public class HowToCheckInActivity extends BasePracticeActivity {
     WorkflowServiceCallback appointmentCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
             dismissDialog();
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(HowToCheckInActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

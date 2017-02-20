@@ -375,13 +375,13 @@ public class AppointmentsListFragment extends BaseFragment {
     WorkflowServiceCallback pageRefreshCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
             appointmentProgressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             appointmentProgressBar.setVisibility(View.GONE);
             if (appointmentInfo != null) {
                 Gson gson = new Gson();
@@ -393,7 +393,7 @@ public class AppointmentsListFragment extends BaseFragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             appointmentProgressBar.setVisibility(View.GONE);
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);

@@ -89,19 +89,19 @@ public class SignatureActivity extends BaseActivity {
     private WorkflowServiceCallback updateconsentformCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(SignatureActivity.this).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(SignatureActivity.this).dismiss();
+            hideProgressDialog();
             //ConsentActivity.this.finish();
             PatientNavigationHelper.getInstance(SignatureActivity.this).navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(SignatureActivity.this).dismiss();
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(SignatureActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

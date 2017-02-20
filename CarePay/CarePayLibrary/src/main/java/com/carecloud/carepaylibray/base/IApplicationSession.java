@@ -4,11 +4,11 @@ import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 
 /**
- * Created by cocampo on 2/17/17.
+ * Created by cocampo on 2/20/17.
  */
 
-public interface ISession extends IApplicationSession {
-    void showProgressDialog();
+public interface IApplicationSession {
+    ApplicationPreferences getApplicationPreferences();
 
-    void hideProgressDialog();
+    WorkflowServiceHelper getWorkflowServiceHelper();
 }

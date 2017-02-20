@@ -355,14 +355,14 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
     private WorkflowServiceCallback updateconsentformCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
             nextButton.setClickable(false);
             progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             PatientNavigationHelper.getInstance(ConsentActivity.this).navigateToWorkflow(workflowDTO);
             nextButton.setClickable(true);
             progressBar.setVisibility(View.INVISIBLE);
@@ -370,7 +370,7 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(ConsentActivity.this);
             nextButton.setClickable(true);
             progressBar.setVisibility(View.INVISIBLE);

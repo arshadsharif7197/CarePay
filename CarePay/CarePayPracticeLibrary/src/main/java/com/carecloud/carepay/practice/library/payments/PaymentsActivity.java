@@ -230,7 +230,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
@@ -239,7 +239,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
             if (patientDetails != null) {
                 PaymentsPatientBalancessDTO paymentsPatientBalancessDTO = patientDetails.getPaymentPayload().getPatientBalances().get(0);
-                ProgressDialogUtil.getInstance(getContext()).dismiss();
+                hideProgressDialog();
                 ResponsibilityDialog responsibilityDialog = new ResponsibilityDialog(getContext(), paymentsModel, paymentsPatientBalancessDTO);
                 responsibilityDialog.show();
             }
@@ -247,7 +247,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
         }
     };
 

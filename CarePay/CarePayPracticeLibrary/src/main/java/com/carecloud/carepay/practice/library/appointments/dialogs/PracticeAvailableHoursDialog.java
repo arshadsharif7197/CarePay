@@ -260,12 +260,12 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     private WorkflowServiceCallback getAppointmentsAvailabilitySlotsCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(context).show();
+            ((ISession) context).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(context).dismiss();
+            ((ISession) context).hideProgressDialog();
             Gson gson = new Gson();
             availabilityDTO = gson.fromJson(workflowDTO.toString(), AppointmentAvailabilityDTO.class);
 
@@ -276,7 +276,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(context).dismiss();
+            ((ISession) context).hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(context);
             Log.e(context.getString(R.string.alert_title_server_error), exceptionMessage);
         }

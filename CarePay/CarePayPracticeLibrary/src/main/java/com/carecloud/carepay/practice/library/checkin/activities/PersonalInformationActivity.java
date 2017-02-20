@@ -421,12 +421,12 @@ public class PersonalInformationActivity extends BasePracticeActivity {
     WorkflowServiceCallback findMyAppointmentsCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             findMyAppointmentButton.setEnabled(true);
             Map<String, String> queryMap = new HashMap<>();
             TransitionDTO transitionDTO;
@@ -449,7 +449,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             findMyAppointmentButton.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(PersonalInformationActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
@@ -459,19 +459,19 @@ public class PersonalInformationActivity extends BasePracticeActivity {
     WorkflowServiceCallback patientModeAppointmentsCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             findMyAppointmentButton.setEnabled(true);
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             findMyAppointmentButton.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(PersonalInformationActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);

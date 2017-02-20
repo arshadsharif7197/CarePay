@@ -319,12 +319,12 @@ public class DemographicsSettingsFragment extends BaseFragment {
     WorkflowServiceCallback logOutCall = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             signOutButton.setEnabled(true);
             // log out previous user from Cognito
             CognitoAppHelper.getPool().getUser().signOut();
@@ -334,7 +334,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             signOutButton.setEnabled(true);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

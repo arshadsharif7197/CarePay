@@ -63,12 +63,12 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
     WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             correctInformationButton.setEnabled(true);
             demographicProgressBar.setVisibility(View.GONE);
             PracticeNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
@@ -76,7 +76,7 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             correctInformationButton.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);

@@ -145,19 +145,19 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
     private WorkflowServiceCallback paymentsCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             PatientNavigationHelper.setAccessPaymentsBalances(true);
             PatientNavigationHelper.getInstance(MenuPatientActivity.this).navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             //SystemUtil.showDefaultFailureDialog(InTakeWebViewActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -166,13 +166,13 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
     private WorkflowServiceCallback demographicsSettingsCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
 
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
 
             PatientNavigationHelper.getInstance(MenuPatientActivity.this).navigateToWorkflow(workflowDTO);
         }
@@ -181,7 +181,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         public void onFailure(String exceptionMessage) {
             SystemUtil.showDefaultFailureDialog(MenuPatientActivity.this);
 
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
 
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -190,18 +190,18 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
     private WorkflowServiceCallback appointmentsWorkflowCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             PatientNavigationHelper.getInstance(MenuPatientActivity.this).navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(MenuPatientActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -210,12 +210,12 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
     private WorkflowServiceCallback purchaseWorkflowCallback = new WorkflowServiceCallback() {//TODO this is currently pointed at appointments endpoint
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             //need to manually redirect this response to the notifications screen temporarily
             workflowDTO.setState(PatientNavigationStateConstants.PURCHASE);
             PatientNavigationHelper.getInstance(MenuPatientActivity.this).navigateToWorkflow(workflowDTO);
@@ -223,7 +223,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(MenuPatientActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -231,12 +231,12 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
     private WorkflowServiceCallback notificationsWorkflowCallback = new WorkflowServiceCallback() {//TODO this is currently pointed at appointments endpoint
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             //need to manually redirect this response to the notifications screen temporarily
             workflowDTO.setState(PatientNavigationStateConstants.NOTIFICATION);
             PatientNavigationHelper.getInstance(MenuPatientActivity.this).navigateToWorkflow(workflowDTO);
@@ -244,7 +244,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(MenuPatientActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

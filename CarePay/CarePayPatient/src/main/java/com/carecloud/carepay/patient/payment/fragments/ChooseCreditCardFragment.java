@@ -261,12 +261,12 @@ public class ChooseCreditCardFragment extends BaseFragment implements RadioGroup
     WorkflowServiceCallback makePaymentCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             Gson gson = new Gson();
             PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(getActivity(),
                     gson.fromJson(workflowDTO.toString(), PaymentsModel.class));
@@ -275,7 +275,7 @@ public class ChooseCreditCardFragment extends BaseFragment implements RadioGroup
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             System.out.print(exceptionMessage);
         }
     };

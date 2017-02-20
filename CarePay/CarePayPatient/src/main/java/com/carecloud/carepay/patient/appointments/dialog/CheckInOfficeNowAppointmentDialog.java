@@ -135,19 +135,19 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
     private WorkflowServiceCallback demographicsVerifyCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            ((ISession) context).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) context).hideProgressDialog();
             checkInNowButton.setEnabled(true);
             PatientNavigationHelper.getInstance(context).navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) context).hideProgressDialog();
             checkInNowButton.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(getContext());
             Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);

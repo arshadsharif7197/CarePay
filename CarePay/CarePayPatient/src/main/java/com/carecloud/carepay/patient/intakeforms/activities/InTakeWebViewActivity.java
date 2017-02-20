@@ -276,19 +276,19 @@ public class InTakeWebViewActivity extends BasePatientActivity {
     private WorkflowServiceCallback updateIntakeFormCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             PatientNavigationHelper.setAccessPaymentsBalances(false);
             PatientNavigationHelper.getInstance(InTakeWebViewActivity.this).navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(InTakeWebViewActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -300,12 +300,12 @@ public class InTakeWebViewActivity extends BasePatientActivity {
     WorkflowServiceCallback intakeFormCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             inTakeForm = new Gson().fromJson(workflowDTO.toString(), IntakeResponseModel.class);
             initForm();
             initWebView();
@@ -313,7 +313,7 @@ public class InTakeWebViewActivity extends BasePatientActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(InTakeWebViewActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

@@ -62,19 +62,19 @@ public class SigninActivity extends BasePracticeActivity {
     WorkflowServiceCallback signinCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
             signInButton.setClickable(true);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             signInButton.setClickable(true);
             SystemUtil.showDefaultFailureDialog(SigninActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
@@ -83,19 +83,19 @@ public class SigninActivity extends BasePracticeActivity {
     WorkflowServiceCallback signinPatientModeAppointmentsCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
             signInButton.setClickable(true);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             signInButton.setClickable(true);
             SystemUtil.showDefaultFailureDialog(SigninActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
@@ -122,12 +122,12 @@ public class SigninActivity extends BasePracticeActivity {
     WorkflowServiceCallback signinPatientModeCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             Map<String, String> queryMap = new HashMap<>();
 
             Gson gson = new Gson();
@@ -146,7 +146,7 @@ public class SigninActivity extends BasePracticeActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             signInButton.setClickable(true);
             SystemUtil.showDefaultFailureDialog(SigninActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);

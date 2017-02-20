@@ -350,19 +350,19 @@ public class CloverPaymentActivity extends BaseActivity {
      WorkflowServiceCallback makePaymentCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(CloverPaymentActivity.this).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(CloverPaymentActivity.this).dismiss();
+            hideProgressDialog();
             CloverPaymentActivity.this.finish();
             PracticeNavigationHelper.navigateToWorkflow(CloverPaymentActivity.this, workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(CloverPaymentActivity.this).dismiss();
+            hideProgressDialog();
             System.out.print(exceptionMessage);
             finish();
         }

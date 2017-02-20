@@ -71,4 +71,14 @@ public abstract class BaseFragment extends Fragment implements ISession {
     public WorkflowServiceHelper getWorkflowServiceHelper() {
         return ((ISession) getActivity()).getWorkflowServiceHelper();
     }
+
+    @Override
+    public void showProgressDialog() {
+        ((ISession) getActivity()).showProgressDialog();
+    }
+
+    @Override
+    public void hideProgressDialog() {
+        ((ISession) getActivity()).hideProgressDialog();
+    }
 }

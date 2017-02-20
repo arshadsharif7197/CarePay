@@ -13,14 +13,14 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
-import com.carecloud.carepaylibray.base.ISession;
+import com.carecloud.carepaylibray.base.IApplicationSession;
 
 /**
  * Created by Jahirul Bhuiyan on 10/24/2016.
  */
 
 public class CarePayApplication extends Application
-        implements Application.ActivityLifecycleCallbacks, ISession {
+        implements Application.ActivityLifecycleCallbacks, IApplicationSession {
 
     private ApplicationPreferences applicationPreferences;
     private WorkflowServiceHelper workflowServiceHelper;

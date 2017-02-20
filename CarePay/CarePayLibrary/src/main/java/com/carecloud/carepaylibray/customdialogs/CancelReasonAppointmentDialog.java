@@ -265,12 +265,12 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
     private WorkflowServiceCallback transitionToCancelCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            ((ISession) context).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) context).hideProgressDialog();
             CancelAppointmentDialog cancelAppointmentDialog = new CancelAppointmentDialog(context, appointmentDTO,
                     appointmentInfo, BaseDoctorInfoDialog.AppointmentType.CANCELLED_APPOINTMENT, listCallback);
             cancelAppointmentDialog.setCancelledSuccess(true);
@@ -279,7 +279,7 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) context).hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(context);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

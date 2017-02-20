@@ -200,18 +200,18 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
 
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(context).show();
+            ((ISession) context).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(context).dismiss();
+            ((ISession) context).hideProgressDialog();
             ((ScheduleAppointmentActivity) context).showAppointmentConfirmation();
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(context).dismiss();
+            ((ISession) context).hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(context);
             Log.e(context.getString(R.string.alert_title_server_error), exceptionMessage);
         }

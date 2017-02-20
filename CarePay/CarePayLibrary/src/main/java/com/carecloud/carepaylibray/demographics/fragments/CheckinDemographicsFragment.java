@@ -710,12 +710,12 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     private WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             buttonConfirmData.setEnabled(true);
             demographicProgressBar.setVisibility(View.GONE);
             ((CheckinDemographicsInterface)getActivity()).navigateToConsentFlow(workflowDTO);
@@ -723,7 +723,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             buttonConfirmData.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);

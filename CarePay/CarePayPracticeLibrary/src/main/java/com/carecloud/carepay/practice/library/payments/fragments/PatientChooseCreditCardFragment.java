@@ -232,12 +232,12 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
     WorkflowServiceCallback makePaymentCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             Gson gson = new Gson();
             PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(getActivity(),
                     gson.fromJson(workflowDTO.toString(), PaymentsModel.class),paymentsModel);
@@ -246,7 +246,7 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             System.out.print(exceptionMessage);
         }
     };

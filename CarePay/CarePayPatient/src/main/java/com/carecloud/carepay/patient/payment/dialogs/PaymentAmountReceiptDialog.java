@@ -142,12 +142,12 @@ public class PaymentAmountReceiptDialog extends Dialog implements View.OnClickLi
     private WorkflowServiceCallback paymentsCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            ((ISession) context).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) context).hideProgressDialog();
             ViewPaymentBalanceHistoryActivity.setIsPaymentDone(true);
             PatientNavigationHelper.setAccessPaymentsBalances(true);
             PatientNavigationHelper.getInstance(context).navigateToWorkflow(workflowDTO);
@@ -155,7 +155,7 @@ public class PaymentAmountReceiptDialog extends Dialog implements View.OnClickLi
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) context).hideProgressDialog();
             //SystemUtil.showDefaultFailureDialog(InTakeWebViewActivity.this);
             Log.e(context.getString(R.string.alert_title_server_error), exceptionMessage);
         }

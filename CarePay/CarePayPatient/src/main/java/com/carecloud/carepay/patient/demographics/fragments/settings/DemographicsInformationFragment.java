@@ -1038,13 +1038,13 @@ public class DemographicsInformationFragment extends BaseFragment {
     WorkflowServiceCallback updateDemographicsCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
             progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             updateProfileButton.setEnabled(true);
             progressBar.setVisibility(View.GONE);
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
@@ -1052,7 +1052,7 @@ public class DemographicsInformationFragment extends BaseFragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             updateProfileButton.setEnabled(true);
             progressBar.setVisibility(View.GONE);
 

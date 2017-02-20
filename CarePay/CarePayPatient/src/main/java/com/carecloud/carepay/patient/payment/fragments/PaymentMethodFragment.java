@@ -405,12 +405,12 @@ public class PaymentMethodFragment extends BaseFragment implements RadioGroup.On
     WorkflowServiceCallback getCreditCardsCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             paymentChoiceButton.setEnabled(true);
             Gson gson = new Gson();
             PaymentsModel paymentsModel = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
@@ -453,7 +453,7 @@ public class PaymentMethodFragment extends BaseFragment implements RadioGroup.On
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             paymentChoiceButton.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);

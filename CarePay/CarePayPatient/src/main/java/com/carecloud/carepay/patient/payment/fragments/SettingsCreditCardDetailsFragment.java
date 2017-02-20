@@ -200,13 +200,13 @@ public class SettingsCreditCardDetailsFragment extends BaseFragment {
     private WorkflowServiceCallback creditCardOperationCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getActivity()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             try {
-                ProgressDialogUtil.getInstance(getActivity()).dismiss();
+                hideProgressDialog();
                 Gson gson = new Gson();
                 DemographicsSettingsDTO removeCreditCardResponseDTO = gson.fromJson(workflowDTO.toString(),
                         DemographicsSettingsDTO.class);
@@ -224,7 +224,7 @@ public class SettingsCreditCardDetailsFragment extends BaseFragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getActivity()).dismiss();
+            hideProgressDialog();
             System.out.print(exceptionMessage);
             SystemUtil.showDefaultFailureDialog(getActivity());
         }

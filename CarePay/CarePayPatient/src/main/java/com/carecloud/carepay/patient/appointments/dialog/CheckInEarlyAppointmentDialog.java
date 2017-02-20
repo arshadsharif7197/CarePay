@@ -88,12 +88,12 @@ public class CheckInEarlyAppointmentDialog extends BaseDoctorInfoDialog {
     WorkflowServiceCallback logincallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            ((ISession) context).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) context).hideProgressDialog();
             PatientNavigationHelper.getInstance(context).navigateToWorkflow(workflowDTO);
 
             // end-splash activity and transition
@@ -102,7 +102,7 @@ public class CheckInEarlyAppointmentDialog extends BaseDoctorInfoDialog {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) context).hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(context);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

@@ -1,14 +1,16 @@
 package com.carecloud.carepaylibray.base;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 
 public abstract class BaseActivity extends AppCompatActivity implements ISession {
 
-    private ApplicationPreferences applicationPreferences;
+    private Dialog progressDialog;
     private boolean isVisible = false;
 
     @Override
@@ -29,15 +31,36 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
 
     @Override
     public ApplicationPreferences getApplicationPreferences() {
-        return ((ISession) getApplication()).getApplicationPreferences();
+        return ((IApplicationSession) getApplication()).getApplicationPreferences();
     }
 
     @Override
     public WorkflowServiceHelper getWorkflowServiceHelper() {
-        return ((ISession) getApplication()).getWorkflowServiceHelper();
+        return ((IApplicationSession) getApplication()).getWorkflowServiceHelper();
     }
 
     public Context getContext(){
         return this;
+    }
+
+    @Override
+    public void showProgressDialog() {
+        if(progressDialog!=null && progressDialog.isShowing()) {
+            return;
+        }
+
+        if(progressDialog == null) {
+            progressDialog = new ProgressDialogUtil(this);
+        }
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
+    @Override
+    public void hideProgressDialog() {
+        if(progressDialog != null && progressDialog.isShowing()){
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
     }
 }

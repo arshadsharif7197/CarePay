@@ -140,13 +140,13 @@ public class ChooseProviderFragment extends BaseFragment implements ProviderAdap
     private WorkflowServiceCallback scheduleResourcesCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
             appointmentProgressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             Gson gson = new Gson();
             resourcesToScheduleModel = gson.fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
 
@@ -180,7 +180,7 @@ public class ChooseProviderFragment extends BaseFragment implements ProviderAdap
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(getActivity());
             appointmentProgressBar.setVisibility(View.GONE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);

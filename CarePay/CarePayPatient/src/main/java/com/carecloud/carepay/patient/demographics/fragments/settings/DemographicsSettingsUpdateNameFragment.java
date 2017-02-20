@@ -432,12 +432,12 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
     WorkflowServiceCallback updateProfileCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             updateProfileButton.setEnabled(true);
 
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
@@ -445,7 +445,7 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             updateProfileButton.setEnabled(true);
 
             SystemUtil.showDefaultFailureDialog(getActivity());
