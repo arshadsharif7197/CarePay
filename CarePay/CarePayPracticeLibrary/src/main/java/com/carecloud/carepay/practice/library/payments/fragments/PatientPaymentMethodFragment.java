@@ -88,7 +88,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
         isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals("Clover") ;
         TextView title = (TextView) view.findViewById(R.id.paymentMethodTitleLabel);
 
-       // Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        // Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         //TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         //toolbar.setTitle("");
@@ -376,20 +376,25 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
     {
         try
         {
-        PaymentsPatientBalancessDTO patientPayments = paymentsDTO.getPaymentPayload().getPatientBalances().get(0);
-        Gson gson = new Gson();
-        String patientPaymentMetaDataString = gson.toJson(patientPayments.getBalances().get(0).getMetadata());
-        String paymentTransitionString = gson.toJson(paymentsDTO.getPaymentsMetadata().getPaymentsTransitions().getMakePayment());
-        Intent intent = new Intent();
-        intent.setAction("com.carecloud.carepay.practice.clover.payments.CloverPaymentActivity");
-        intent.putExtra("PAYMENT_METADATA", patientPaymentMetaDataString);
-        intent.putExtra("PAYMENT_AMOUNT", patientPayments.getBalances().get(0).getPayload().get(0).getAmount().doubleValue());
-        intent.putExtra("PAYMENT_TRANSITION", paymentTransitionString);
-        if(StringUtil.isNullOrEmpty(patientPayments.getBalances().get(0).getPayload().get(0).getType()))
-        {
-            intent.putExtra("ITEM_NAME", patientPayments.getBalances().get(0).getPayload().get(0).getType());
-        }
-        getContext().startActivity(intent, new Bundle());
+            PaymentsPatientBalancessDTO patientPayments = paymentsDTO.getPaymentPayload().getPatientBalances().get(0);
+
+            double paymentAmount = getArguments().getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
+            if(paymentAmount==0){
+                paymentAmount = patientPayments.getBalances().get(0).getPayload().get(0).getAmount().doubleValue();
+            }
+            Gson gson = new Gson();
+            String patientPaymentMetaDataString = gson.toJson(patientPayments.getBalances().get(0).getMetadata());
+            String paymentTransitionString = gson.toJson(paymentsDTO.getPaymentsMetadata().getPaymentsTransitions().getMakePayment());
+            Intent intent = new Intent();
+            intent.setAction("com.carecloud.carepay.practice.clover.payments.CloverPaymentActivity");
+            intent.putExtra("PAYMENT_METADATA", patientPaymentMetaDataString);
+            intent.putExtra("PAYMENT_AMOUNT", paymentAmount);
+            intent.putExtra("PAYMENT_TRANSITION", paymentTransitionString);
+            if(StringUtil.isNullOrEmpty(patientPayments.getBalances().get(0).getPayload().get(0).getType()))
+            {
+                intent.putExtra("ITEM_NAME", patientPayments.getBalances().get(0).getPayload().get(0).getType());
+            }
+            getContext().startActivity(intent, new Bundle());
         }
         catch (Exception e)
         {
