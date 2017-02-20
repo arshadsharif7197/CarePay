@@ -139,10 +139,11 @@ public class ResponsibilityDialog extends Dialog {
                     paymentsLabel.getPracticePaymentsDetailDialogBalance() + ": "
                             + StringUtil.getFormattedBalanceAmount(totalAmount));
 
-            Button paymentPlan = (Button) findViewById(R.id.payment_plan_button);
-            paymentPlan.setText(paymentsLabel.getPracticePaymentsDetailDialogPaymentPlan());
-            SystemUtil.setGothamRoundedMediumTypeface(context, paymentPlan);
-            paymentPlan.setOnClickListener(new View.OnClickListener() {
+            Button paymentPlanButton = (Button) findViewById(R.id.payment_plan_button);
+            paymentPlanButton.setText(paymentsLabel.getPracticePaymentsDetailDialogPaymentPlan());
+            SystemUtil.setGothamRoundedMediumTypeface(context, paymentPlanButton);
+            paymentPlanButton.setEnabled(paymentsModel.getPaymentsMetadata().hasPaymentPlan());
+            paymentPlanButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
