@@ -323,6 +323,18 @@ public class DemographicLabelsDTO {
     @SerializedName("demographics_add_health_insurance_button_title")
     @Expose
     private String demographicsAddHealthInsuranceButtonTitle;
+    @SerializedName("demographics_setup_insurance_title")
+    @Expose
+    private String demographicsSetupInsuranceTitle;
+
+    @SerializedName("demographics_setup_insurance_label")
+    @Expose
+    private String demographicsSetupInsuranceLabel;
+
+    @SerializedName("demographics_insurance_label")
+    @Expose
+    private String demographicsInsuranceTitle;
+
 
     /**
      * @return The demographicsUpdateButton
@@ -1124,6 +1136,31 @@ public class DemographicLabelsDTO {
     public String getDemographicsDontHaveHealthInsuranceLabel() {
         return StringUtil.getLabelForView(demographicsDontHaveHealthInsuranceLabel);
     }
+
+    public String getDemographicsSetupInsuranceTitle() {
+        return StringUtil.getLabelForView(demographicsSetupInsuranceTitle);
+    }
+
+    public void setDemographicsSetupInsuranceTitle(String demographicsSetupInsuranceTitle) {
+        this.demographicsSetupInsuranceTitle = demographicsSetupInsuranceTitle;
+    }
+
+    public String getDemographicsSetupInsuranceLabel() {
+        return StringUtil.getLabelForView(demographicsSetupInsuranceLabel);
+    }
+
+    public void setDemographicsSetupInsuranceLabel(String demographicsSetupInsuranceLabel) {
+        this.demographicsSetupInsuranceLabel = demographicsSetupInsuranceLabel;
+    }
+
+    public String getDemographicsInsuranceTitle() {
+        return StringUtil.getLabelForView(demographicsInsuranceTitle);
+    }
+
+    public void setDemographicsInsuranceTitle(String demographicsInsuranceTitle) {
+        this.demographicsInsuranceTitle = demographicsInsuranceTitle;
+    }
+
 
     public void setDemographicsDontHaveHealthInsuranceLabel(String demographicsDontHaveHealthInsuranceLabel) {
         this.demographicsDontHaveHealthInsuranceLabel = demographicsDontHaveHealthInsuranceLabel;

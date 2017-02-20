@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.library.appointments.dialogs;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -61,6 +62,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     private TextView titleView;
     private View singleLocation;
     private TextView singleLocationText;
+    private View progressView;
 
     private List<AppointmentLocationsDTO> selectedLocations = new LinkedList<>();
     private SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
@@ -88,7 +90,17 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         onAddContentView(inflater);
-        getAvailableHoursTimeSlots();
+
+        Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                getAvailableHoursTimeSlots();
+                if(progressView!=null){
+                    progressView.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     @SuppressLint("InflateParams")
@@ -134,6 +146,9 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
 
         setCancelImage(R.drawable.icn_arrow_up);
         setCancelable(false);
+
+        progressView = view.findViewById(R.id.progressview);
+        progressView.setVisibility(View.VISIBLE);
 
         updateDateRange();
     }

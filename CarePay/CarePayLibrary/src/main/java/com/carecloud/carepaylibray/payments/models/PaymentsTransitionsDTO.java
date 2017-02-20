@@ -9,22 +9,22 @@ public class PaymentsTransitionsDTO {
 
     @SerializedName("make_payment")
     @Expose
-    private TransitionDTO makePayment;
+    private TransitionDTO makePayment = new TransitionDTO();
     @SerializedName("add_credit_card")
     @Expose
-    private TransitionDTO addCreditCard;
+    private TransitionDTO addCreditCard = new TransitionDTO();
     @SerializedName("delete_credit_card")
     @Expose
-    private PaymentsDeleteCreditCardsDTO deleteCreditCard;
+    private PaymentsDeleteCreditCardsDTO deleteCreditCard = new PaymentsDeleteCreditCardsDTO();
     @SerializedName("add_payment_plan")
     @Expose
-    private TransitionDTO addPaymentPlan;
+    private TransitionDTO addPaymentPlan = new TransitionDTO();
     @SerializedName("delete_payment_plan")
     @Expose
-    private PayementsDeletePaymentPlanDTO deletePaymentPlan;
+    private PayementsDeletePaymentPlanDTO deletePaymentPlan = new PayementsDeletePaymentPlanDTO();
     @SerializedName("modify_payment_plan")
     @Expose
-    private PaymentsModifyPaymentPlanDTO modifyPaymentPlan;
+    private PaymentsModifyPaymentPlanDTO modifyPaymentPlan = new PaymentsModifyPaymentPlanDTO();
 
     /**
      *

@@ -11,10 +11,10 @@ public class PaymentsPayloadSettingsDTO {
 
     @SerializedName("metadata")
     @Expose
-    private PaymentPayloadMetaDataDTO metadata;
+    private PaymentPayloadMetaDataDTO metadata = new PaymentPayloadMetaDataDTO();
     @SerializedName("payload")
     @Expose
-    private PaymentsSettingsPayloadDTO payload;
+    private PaymentsSettingsPayloadDTO payload = new PaymentsSettingsPayloadDTO();
 
     /**
      *

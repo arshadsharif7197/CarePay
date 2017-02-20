@@ -21,8 +21,7 @@ public class ConsentFormMinorDateofBirthDTO {
     private String label;
     @SerializedName("validations")
     @Expose
-    private List<ConsentFormMinorDateofBirthValidationDTO> validations =
-            new ArrayList<ConsentFormMinorDateofBirthValidationDTO>();
+    private List<ConsentFormMinorDateofBirthValidationDTO> validations = new ArrayList<>();
 
     /**
      * @return The type

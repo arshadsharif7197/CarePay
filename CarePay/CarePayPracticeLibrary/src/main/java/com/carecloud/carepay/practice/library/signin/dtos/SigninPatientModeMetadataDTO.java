@@ -8,16 +8,16 @@ public class SigninPatientModeMetadataDTO {
 
     @SerializedName("labels")
     @Expose
-    private SigninPatientModeLabelsDTO labels;
+    private SigninPatientModeLabelsDTO labels = new SigninPatientModeLabelsDTO();
     @SerializedName("links")
     @Expose
-    private SigninPatientModeLinksDTO links;
+    private SigninPatientModeLinksDTO links = new SigninPatientModeLinksDTO();
     @SerializedName("transitions")
     @Expose
-    private SigninPatientModeTransitionsDTO transitions;
+    private SigninPatientModeTransitionsDTO transitions = new SigninPatientModeTransitionsDTO();
     @SerializedName("data_models")
     @Expose
-    private SignInPatientModeDataModelDTO dataModels;
+    private SignInPatientModeDataModelDTO dataModels = new SignInPatientModeDataModelDTO();
 
     /**
      * 

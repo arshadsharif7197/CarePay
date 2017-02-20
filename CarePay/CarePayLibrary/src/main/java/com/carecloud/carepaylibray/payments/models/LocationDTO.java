@@ -19,7 +19,7 @@ public class LocationDTO {
     private Boolean isVisibleAppointmentScheduler;
     @SerializedName("address")
     @Expose
-    private AddressDTO address;
+    private AddressDTO address = new AddressDTO();
 
     /**
      *

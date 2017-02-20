@@ -11,13 +11,14 @@ public class CheckInMetadataDTO {
 
     @SerializedName("labels")
     @Expose
-    private CheckInLabelDTO label;
+    private CheckInLabelDTO label = new CheckInLabelDTO();
     @SerializedName("links")
     @Expose
-    private LinksDTO links;
+    private LinksDTO links = new LinksDTO();
     @SerializedName("transitions")
     @Expose
-    private CheckInTransitionsDTO transitions;
+    private CheckInTransitionsDTO transitions = new CheckInTransitionsDTO();
+
 
     /**
      *
@@ -76,4 +77,17 @@ public class CheckInMetadataDTO {
     public void setTransitions(CheckInTransitionsDTO transitions) {
         this.transitions = transitions;
     }
+
+    public Boolean hasPaymentEnabled(){
+        return false ;
+    }
+
+    public Boolean hasAssistEnabled(){
+        return false ;
+    }
+
+    public Boolean hasPageEnabled(){
+        return false ;
+    }
+
 }

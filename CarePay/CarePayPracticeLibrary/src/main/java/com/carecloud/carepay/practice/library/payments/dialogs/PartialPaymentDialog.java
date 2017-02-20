@@ -98,7 +98,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
                 List<PatiencePayloadDTO> paymentList
                         = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
 
-                if (paymentList != null && paymentList.size() > 1) {
+                if (paymentList != null && !paymentList.isEmpty()) {
                     for (PatiencePayloadDTO payment : paymentList) {
                         if (payment.getType().equalsIgnoreCase(CarePayConstants.PATIENT_BALANCE)) {
                             patientBalance = payment.getAmount();
@@ -207,7 +207,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         }
     }
 
-    private void onPaymentClick() {
+    private void onPaymentClick() {//TODO this work needs to be managed by the underlying activity not an inner fragment
         if (context instanceof PatientModeCheckinActivity) {
 
             FragmentManager fragmentmanager = ((PatientModeCheckinActivity) context).getSupportFragmentManager();

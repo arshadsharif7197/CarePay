@@ -4,6 +4,8 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPay
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -14,21 +16,21 @@ public class DemographicsSettingsDemographicPayloadDTO {
 
     @SerializedName("drivers_license")
     @Expose
-    private DemographicsSettingsDriversLicenseDTO driversLicense;
+    private DemographicsSettingsDriversLicenseDTO driversLicense = new DemographicsSettingsDriversLicenseDTO();
     @SerializedName("insurances")
     @Expose
     //private List<DemographicsSettingsPayloadInsurancesDTO> insurances = null;
-    private List<DemographicInsurancePayloadDTO> insurances = null;
+    private List<DemographicInsurancePayloadDTO> insurances = new ArrayList<>();
     @SerializedName("personal_details")
     @Expose
-    private DemographicsSettingsPersonalDetailsPayloadDTO personalDetails;
+    private DemographicsSettingsPersonalDetailsPayloadDTO personalDetails = new DemographicsSettingsPersonalDetailsPayloadDTO();
     @SerializedName("address")
     @Expose
-    private DemographicsSettingsPayloadAddressDTO address;
+    private DemographicsSettingsPayloadAddressDTO address = new DemographicsSettingsPayloadAddressDTO();
     @SerializedName("identity_documents")
     @Expose
     //private List<DemographicsSettingsPayloadIdentityDocumentDTO> identityDocuments = null;
-    private List<DemographicIdDocPayloadDTO> identityDocuments = null;
+    private List<DemographicIdDocPayloadDTO> identityDocuments = new ArrayList<>();
 
     public DemographicsSettingsDriversLicenseDTO getDriversLicense() {
         return driversLicense;

@@ -13,19 +13,19 @@ import java.util.List;
 public class CheckInPayloadDTO {
     @SerializedName("patient_balances")
     @Expose
-    private List<PatientBalanceDTO> patientBalances = new ArrayList<PatientBalanceDTO>();
+    private List<PatientBalanceDTO> patientBalances = new ArrayList<>();
     @SerializedName("appointments")
     @Expose
-    private List<AppointmentDTO> appointments = new ArrayList<AppointmentDTO>();
+    private List<AppointmentDTO> appointments = new ArrayList<>();
     @SerializedName("provider_index")
     @Expose
-    private List<ProviderIndexDTO> providerIndex;
+    private List<ProviderIndexDTO> providerIndex = new ArrayList<>();
     @SerializedName("location_index")
     @Expose
-    private List<LocationIndexDTO> locationIndex;
+    private List<LocationIndexDTO> locationIndex = new ArrayList<>();
     @SerializedName("appointment_counts")
     @Expose
-    private AppointmentCountsDTO appointmentCounts;
+    private AppointmentCountsDTO appointmentCounts = new AppointmentCountsDTO();
 
     /**
      *

@@ -23,7 +23,7 @@ public class RepeatPasswordDTO {
     private String label;
     @SerializedName("validations")
     @Expose
-    private List<RepeatPasswordValidationDTO> validations = new ArrayList<RepeatPasswordValidationDTO>();
+    private List<RepeatPasswordValidationDTO> validations = new ArrayList<>();
 
     /**
      * @return The type

@@ -5,7 +5,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@android:color/transparent"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:layout_gravity="center">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -258,9 +259,7 @@
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal"
-                android:paddingBottom="@dimen/custom_appointment_dialog_layout_padding"
-                android:paddingTop="@dimen/custom_appointment_dialog_layout_padding"
-                android:weightSum="4">
+                android:padding="@dimen/custom_appointment_dialog_layout_padding">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayButton
                     android:id="@+id/paymentButton"
@@ -286,7 +285,8 @@
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="@dimen/custom_appointment_dialog_button_textsize"
-                    app:customAssetFont="gotham_rounded_medium" />
+                    app:customAssetFont="gotham_rounded_medium"
+                    android:visibility="gone"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayButton
                     android:id="@+id/pageButton"
@@ -327,4 +327,22 @@
             android:textSize="@dimen/custom_appointment_dialog_view_textsize_small"
             app:customAssetFont="proxima_nova_semi_bold" />
     </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_26dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/round_semi_transparent_bg"
+            android:src="@drawable/icn_close" />
+
+    </LinearLayout>
+
 </LinearLayout>

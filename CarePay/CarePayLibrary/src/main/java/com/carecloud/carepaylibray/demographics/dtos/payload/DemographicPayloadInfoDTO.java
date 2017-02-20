@@ -11,10 +11,10 @@ public class DemographicPayloadInfoDTO {
 
     @SerializedName("metadata")
     @Expose
-    private DemographicPayloadInfoMetaDataDTO metadata;
+    private DemographicPayloadInfoMetaDataDTO metadata = new DemographicPayloadInfoMetaDataDTO();
     @SerializedName("payload")
     @Expose
-    private DemographicPayloadDTO             payload;
+    private DemographicPayloadDTO payload = new DemographicPayloadDTO();
 
     /**
      *

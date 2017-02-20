@@ -30,7 +30,7 @@ public class ProvidersScheduleDTO implements Serializable {
     private String phone;
     @SerializedName("resource")
     @Expose
-    private AppointmentResourceDTO resource;
+    private AppointmentResourceDTO resource = new AppointmentResourceDTO();
     @SerializedName("reasons")
     @Expose
     private List<ProvidersReasonDTO> reasons = new ArrayList<>();

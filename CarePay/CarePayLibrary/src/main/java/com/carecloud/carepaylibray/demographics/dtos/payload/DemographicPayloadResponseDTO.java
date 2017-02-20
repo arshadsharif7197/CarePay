@@ -17,7 +17,7 @@ public class DemographicPayloadResponseDTO {
     private String qrCode;
     @SerializedName("demographics")
     @Expose
-    private DemographicPayloadInfoDTO demographics;
+    private DemographicPayloadInfoDTO demographics = new DemographicPayloadInfoDTO();
     @SerializedName("appointments")
     @Expose
     private List<AppointmentPayloadDTO> appointmentpayloaddto = new ArrayList<>();

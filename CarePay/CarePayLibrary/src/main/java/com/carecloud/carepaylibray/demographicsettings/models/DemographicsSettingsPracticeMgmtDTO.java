@@ -1,9 +1,11 @@
 
 package com.carecloud.carepaylibray.demographicsettings.models;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DemographicsSettingsPracticeMgmtDTO {
 
@@ -18,7 +20,7 @@ public class DemographicsSettingsPracticeMgmtDTO {
     private String type;
     @SerializedName("validations")
     @Expose
-    private List<DemographicsSettingsValidationDTO> demographicsSettingsValidationDTOs = null;
+    private List<DemographicsSettingsValidationDTO> demographicsSettingsValidationDTOs = new ArrayList<>();
 
     public String getName() {
         return name;

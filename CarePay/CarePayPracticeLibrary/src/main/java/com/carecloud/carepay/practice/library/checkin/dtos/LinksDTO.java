@@ -12,13 +12,13 @@ public class LinksDTO {
 
     @SerializedName("self")
     @Expose
-    private TransitionDTO self;
+    private TransitionDTO self = new TransitionDTO();
     @SerializedName("checkin_status")
     @Expose
-    private TransitionDTO checkinStatus;
+    private TransitionDTO checkinStatus = new TransitionDTO();
     @SerializedName("queue_status")
     @Expose
-    private TransitionDTO queueStatus;
+    private TransitionDTO queueStatus = new TransitionDTO();
 
     /**
      * @return The self

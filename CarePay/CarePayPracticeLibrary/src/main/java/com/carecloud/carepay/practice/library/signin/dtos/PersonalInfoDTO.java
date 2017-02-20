@@ -11,7 +11,7 @@ public class PersonalInfoDTO {
     private String label;
     @SerializedName("properties")
     @Expose
-    private GenderPropertiesDTO properties;
+    private GenderPropertiesDTO properties = new GenderPropertiesDTO();
 
     public String getLabel() {
         return label;

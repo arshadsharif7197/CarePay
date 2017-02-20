@@ -16,7 +16,7 @@ public class PaymentsPatientBalancessDTO implements Serializable {
 
     @SerializedName("metadata")
     @Expose
-    private PaymentPayloadMetaDataDTO metadata;
+    private PaymentPayloadMetaDataDTO metadata = new PaymentPayloadMetaDataDTO();
     @SerializedName("payload")
     @Expose
     private List<PaymentPatientBalancesPayloadDTO> payload = new ArrayList<>();
@@ -25,7 +25,7 @@ public class PaymentsPatientBalancessDTO implements Serializable {
     private List<PatienceBalanceDTO> balances = new ArrayList<>();
     @SerializedName("demographics")
     @Expose
-    private DemographicsSettingsDemographicsDTO demographics;
+    private DemographicsSettingsDemographicsDTO demographics = new DemographicsSettingsDemographicsDTO();
     @SerializedName("responsibility")
     @Expose
     private String pendingRepsonsibility;

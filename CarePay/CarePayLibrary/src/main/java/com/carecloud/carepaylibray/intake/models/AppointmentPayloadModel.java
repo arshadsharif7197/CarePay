@@ -10,10 +10,10 @@ public class AppointmentPayloadModel {
 
     @SerializedName("metadata")
     @Expose
-    private AppointmentMetadataModel metadata;
+    private AppointmentMetadataModel metadata = new AppointmentMetadataModel();
     @SerializedName("payload")
     @Expose
-    private PayloadAppointmentModel payload;
+    private PayloadAppointmentModel payload = new PayloadAppointmentModel();
 
     /**
      * 

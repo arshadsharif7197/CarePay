@@ -259,6 +259,8 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
             Gson gson = new Gson();
             String paymentsDTOString = gson.toJson(paymentsModel);
             args.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+            args.putString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE, gson.toJson(paymentsModel
+                    .getPaymentPayload().getPapiAccounts()));
             args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(intakePaymentModel));
             args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amountToMakePayment);
 

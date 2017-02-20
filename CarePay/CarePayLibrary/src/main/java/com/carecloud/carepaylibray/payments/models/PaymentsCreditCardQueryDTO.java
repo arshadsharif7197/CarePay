@@ -9,7 +9,7 @@ public class PaymentsCreditCardQueryDTO {
 
     @SerializedName("credit_card_id")
     @Expose
-    private BaseTransitionsPropertyModel paymentsCreditCardId;
+    private BaseTransitionsPropertyModel paymentsCreditCardId = new BaseTransitionsPropertyModel();
 
     /**
      * 

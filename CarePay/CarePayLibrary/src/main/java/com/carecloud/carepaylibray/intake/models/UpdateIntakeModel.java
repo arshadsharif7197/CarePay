@@ -19,10 +19,10 @@ public class UpdateIntakeModel {
     private String url;
     @SerializedName("query_string")
     @Expose
-    private UpdateIntakeQueryModel queryString;
+    private UpdateIntakeQueryModel queryString = new UpdateIntakeQueryModel();
     @SerializedName("data")
     @Expose
-    private DataModel data;
+    private DataModel data = new DataModel();
 
     /**
      * 

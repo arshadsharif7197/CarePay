@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
 public class CheckInStatusPayloadDTO {
     @SerializedName("checkin_status")
     @Expose
-    private CheckInStatusDataPayloadDTO checkinStatus;
+    private CheckInStatusDataPayloadDTO checkinStatus = new CheckInStatusDataPayloadDTO();
 
     /**
      * @return The checkinStatus

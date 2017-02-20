@@ -14,7 +14,7 @@ public class PaymentsHistoryDTO {
     private String url;
     @SerializedName("query_string")
     @Expose
-    private PaymentsQueryDTO paymentsQuery;
+    private PaymentsQueryDTO paymentsQuery = new PaymentsQueryDTO();
 
     /**
      * 

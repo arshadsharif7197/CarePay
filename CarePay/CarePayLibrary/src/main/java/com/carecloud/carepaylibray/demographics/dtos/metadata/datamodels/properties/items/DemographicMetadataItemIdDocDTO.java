@@ -9,6 +9,7 @@ import com.google.gson.annotations.SerializedName;
  * Specific metadata for id doc
  */
 public class DemographicMetadataItemIdDocDTO {
-    @SerializedName("identity_document") @Expose
-    public DemographicMetadataEntityItemIdDocDTO identityDocument;
+    @SerializedName("identity_document")
+    @Expose
+    public DemographicMetadataEntityItemIdDocDTO identityDocument = new DemographicMetadataEntityItemIdDocDTO();
 }

@@ -15,7 +15,7 @@ public class AppointmentAvailabilityDataDTO implements Serializable {
 
     @SerializedName("metadata")
     @Expose
-    private AppointmentAvailabilityMetadataDTO metadata;
+    private AppointmentAvailabilityMetadataDTO metadata = new AppointmentAvailabilityMetadataDTO();
     @SerializedName("payload")
     @Expose
     private List<AppointmentAvailabilityPayloadDTO> payload = new ArrayList<AppointmentAvailabilityPayloadDTO>();

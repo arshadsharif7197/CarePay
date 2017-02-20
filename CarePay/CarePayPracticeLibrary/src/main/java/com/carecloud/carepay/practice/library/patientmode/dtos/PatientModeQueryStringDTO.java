@@ -12,7 +12,7 @@ public class PatientModeQueryStringDTO {
 
     @SerializedName("language")
     @Expose
-    private PatientModeLanguageDTO language;
+    private PatientModeLanguageDTO language = new PatientModeLanguageDTO();
 
     /**
      *

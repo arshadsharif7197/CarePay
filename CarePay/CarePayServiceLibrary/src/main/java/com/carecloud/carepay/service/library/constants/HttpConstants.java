@@ -10,9 +10,9 @@ public class HttpConstants {
 
     public static final int CONNECT_TIMEOUT_MS = 15000;
 
-    public static final int READ_TIMEOUT_MS = 15000;
+    public static final int READ_TIMEOUT_MS = 60000;
 
-    public static final int WRITE_TIMEOUT_MS = 15000;
+    public static final int WRITE_TIMEOUT_MS = 60000;
 
     private static String apiBaseUrl;
 

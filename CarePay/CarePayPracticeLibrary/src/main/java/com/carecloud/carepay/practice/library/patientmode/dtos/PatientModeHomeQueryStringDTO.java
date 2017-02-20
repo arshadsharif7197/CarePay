@@ -9,7 +9,7 @@ public class PatientModeHomeQueryStringDTO {
 
     @SerializedName("pin")
     @Expose
-    private PatientModeHomeNameValidationDTO pin;
+    private PatientModeHomeNameValidationDTO pin = new PatientModeHomeNameValidationDTO();
 
     /**
      * 

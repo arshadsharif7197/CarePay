@@ -10,37 +10,37 @@ public class PracticeSettingLinksDTO {
 
     @SerializedName("self")
     @Expose
-    private PracticeSettingMethodDTO self;
+    private PracticeSettingMethodDTO self = new PracticeSettingMethodDTO();
     @SerializedName("language")
     @Expose
-    private PracticeSettingMethodDTO language;
+    private PracticeSettingMethodDTO language = new PracticeSettingMethodDTO();
     @SerializedName("authentication")
     @Expose
-    private PracticeSettingMethodDTO authentication;
+    private PracticeSettingMethodDTO authentication = new PracticeSettingMethodDTO();
     @SerializedName("consent_forms")
     @Expose
-    private PracticeSettingMethodDTO consentForms;
+    private PracticeSettingMethodDTO consentForms = new PracticeSettingMethodDTO();
     @SerializedName("intake_forms")
     @Expose
-    private PracticeSettingMethodDTO intakeForms;
+    private PracticeSettingMethodDTO intakeForms = new PracticeSettingMethodDTO();
     @SerializedName("marketing")
     @Expose
-    private PracticeSettingMethodDTO marketing;
+    private PracticeSettingMethodDTO marketing = new PracticeSettingMethodDTO();
     @SerializedName("payment")
     @Expose
-    private PracticeSettingMethodDTO payment;
+    private PracticeSettingMethodDTO payment = new PracticeSettingMethodDTO();
     @SerializedName("queue")
     @Expose
-    private PracticeSettingMethodDTO queue;
+    private PracticeSettingMethodDTO queue = new PracticeSettingMethodDTO();
     @SerializedName("inventory")
     @Expose
-    private PracticeSettingMethodDTO inventory;
+    private PracticeSettingMethodDTO inventory = new PracticeSettingMethodDTO();
     @SerializedName("check_out")
     @Expose
-    private PracticeSettingMethodDTO checkOut;
+    private PracticeSettingMethodDTO checkOut = new PracticeSettingMethodDTO();
     @SerializedName("other")
     @Expose
-    private PracticeSettingMethodDTO other;
+    private PracticeSettingMethodDTO other = new PracticeSettingMethodDTO();
 
     /**
      *

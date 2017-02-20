@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -63,10 +62,10 @@ public class ResponsibilityDialog extends Dialog {
         setCancelable(false);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
-        WindowManager.LayoutParams params = getWindow().getAttributes();
-        params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.53);
-        getWindow().setAttributes(params);
+//        WindowManager.LayoutParams params = getWindow().getAttributes();
+//        params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+//        params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.53);
+//        getWindow().setAttributes(params);
 
         onInitialization();
         handleException();
@@ -140,10 +139,11 @@ public class ResponsibilityDialog extends Dialog {
                     paymentsLabel.getPracticePaymentsDetailDialogBalance() + ": "
                             + StringUtil.getFormattedBalanceAmount(totalAmount));
 
-            Button paymentPlan = (Button) findViewById(R.id.payment_plan_button);
-            paymentPlan.setText(paymentsLabel.getPracticePaymentsDetailDialogPaymentPlan());
-            SystemUtil.setGothamRoundedMediumTypeface(context, paymentPlan);
-            paymentPlan.setOnClickListener(new View.OnClickListener() {
+            Button paymentPlanButton = (Button) findViewById(R.id.payment_plan_button);
+            paymentPlanButton.setText(paymentsLabel.getPracticePaymentsDetailDialogPaymentPlan());
+            SystemUtil.setGothamRoundedMediumTypeface(context, paymentPlanButton);
+            paymentPlanButton.setEnabled(paymentsModel.getPaymentsMetadata().hasPaymentPlan());
+            paymentPlanButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 

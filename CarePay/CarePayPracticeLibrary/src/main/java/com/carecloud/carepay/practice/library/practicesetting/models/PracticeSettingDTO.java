@@ -12,10 +12,10 @@ public class PracticeSettingDTO implements Serializable {
 
     @SerializedName("metadata")
     @Expose
-    private PracticeSettingMetadataDTO metadata;
+    private PracticeSettingMetadataDTO metadata = new PracticeSettingMetadataDTO();
     @SerializedName("payload")
     @Expose
-    private PracticeSettingPayloadDTO payload;
+    private PracticeSettingPayloadDTO payload = new PracticeSettingPayloadDTO();
     @SerializedName("state")
     @Expose
     private String state;
@@ -57,5 +57,12 @@ public class PracticeSettingDTO implements Serializable {
         this.state = state;
     }
 
+    public PracticeSettingPayloadDTO getPayload() {
+        return payload;
+    }
+
+    public void setPayload(PracticeSettingPayloadDTO payload) {
+        this.payload = payload;
+    }
 }
 

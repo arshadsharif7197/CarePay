@@ -24,7 +24,7 @@ public class SignUpEmailDTO {
     private String label;
     @SerializedName("validations")
     @Expose
-    private List<SignUpEmailValidationDTO> validations = new ArrayList<SignUpEmailValidationDTO>();
+    private List<SignUpEmailValidationDTO> validations = new ArrayList<>();
 
     /**
      * @return The type

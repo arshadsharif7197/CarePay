@@ -14,16 +14,16 @@ public class AppointmentsPayloadDTO {
     private String id;
     @SerializedName("appointment_status")
     @Expose
-    private AppointmentStatusDTO appointmentStatusModel;
+    private AppointmentStatusDTO appointmentStatusModel = new AppointmentStatusDTO();
     @SerializedName("patient")
     @Expose
-    private AppointmentPatientDTO patient;
+    private AppointmentPatientDTO patient = new AppointmentPatientDTO();
     @SerializedName("location")
     @Expose
-    private AppointmentLocationsDTO location;
+    private AppointmentLocationsDTO location = new AppointmentLocationsDTO();
     @SerializedName("cancellation_details")
     @Expose
-    private AppointmentCancellationDetailsDTO cancellationDetails;
+    private AppointmentCancellationDetailsDTO cancellationDetails = new AppointmentCancellationDetailsDTO();
     @SerializedName("chief_complaint")
     @Expose
     private Object chiefComplaint;
@@ -98,10 +98,10 @@ public class AppointmentsPayloadDTO {
     private Object encounterId;
     @SerializedName("provider")
     @Expose
-    private AppointmentProviderDTO provider;
+    private AppointmentProviderDTO provider = new AppointmentProviderDTO();
     @SerializedName("resource")
     @Expose
-    private AppointmentResourceDTO resource;
+    private AppointmentResourceDTO resource = new AppointmentResourceDTO();
 
     /**
      * 

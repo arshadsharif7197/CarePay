@@ -1,7 +1,13 @@
 package com.carecloud.carepaylibray.utils;
 
+import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.os.Build;
+import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.carecloud.carepaylibrary.R;
 
@@ -38,13 +44,8 @@ public class ProgressDialogUtil {
         }
 
         if(progressDialog == null) {
-            progressDialog = new Dialog(mContext, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
-            progressDialog.setContentView(R.layout.dialog_progress);
+            progressDialog = new FullScreenProgressDialog(mContext, R.style.ProgressDialogFullscreenWithTitlebar);
         }
-//        progressDialog.setMessage("Loading");
-//        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//        progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.show();
     }
@@ -59,4 +60,45 @@ public class ProgressDialogUtil {
         }
     }
 
+
+    public static class FullScreenProgressDialog extends Dialog {
+
+        int theme;
+
+        public FullScreenProgressDialog(Context context) {
+            this(context, R.style.ProgressDialogFullscreenWithTitlebar);
+        }
+
+        public FullScreenProgressDialog(Context context, int themeResId){
+            super(context, themeResId);
+            this.theme = themeResId;
+        }
+
+        @Override
+        public void onCreate(Bundle icicle){
+            super.onCreate(icicle);
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            setContentView(R.layout.dialog_progress);
+
+            int[] attributes = {R.attr.keepStatusBar};
+            TypedArray typedArray = getContext().obtainStyledAttributes(theme, attributes);
+            boolean keepStatusBar = typedArray.getBoolean(0, false);
+            if(keepStatusBar){
+                adjustForStatusBar();
+            }
+        }
+
+        private void adjustForStatusBar(){
+            WindowManager.LayoutParams attrs = getWindow().getAttributes();
+            attrs.flags &= ~WindowManager.LayoutParams.FLAG_FULLSCREEN;
+            getWindow().setAttributes(attrs);
+            setStatusBarColor();
+        }
+
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+        private void setStatusBarColor(){
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            getWindow().setStatusBarColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
+        }
+    }
 }

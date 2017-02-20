@@ -11,7 +11,7 @@ public class DemographicsSettingsDataModelsDTO {
 
     @SerializedName("demographic")
     @Expose
-    private DemographicsSettingsDetailsDTO demographic;
+    private DemographicsSettingsDetailsDTO demographic = new DemographicsSettingsDetailsDTO();
 
     public DemographicsSettingsDetailsDTO getDemographic() {
         return demographic;

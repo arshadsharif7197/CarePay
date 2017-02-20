@@ -11,11 +11,11 @@ import com.google.gson.annotations.SerializedName;
 public class DemographicTransitionsDTO {
     @SerializedName("confirm_demographics")
     @Expose
-    private TransitionDTO confirmDemographics;
+    private TransitionDTO confirmDemographics = new TransitionDTO();
 
     @SerializedName("update_demographics")
     @Expose
-    private TransitionDTO updateDemographics;
+    private TransitionDTO updateDemographics = new TransitionDTO();
 
     /**
      *

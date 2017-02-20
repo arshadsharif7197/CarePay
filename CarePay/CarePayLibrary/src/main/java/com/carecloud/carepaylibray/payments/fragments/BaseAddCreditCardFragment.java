@@ -30,6 +30,8 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialog;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialogFragment;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiAccountsDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiMetadataMerchantServiceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
 import com.carecloud.carepaylibray.payments.utils.CardPattern;
@@ -40,7 +42,10 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.payeezysdk.sdk.payeezydirecttransactions.RequestTask;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.smartystreets.api.us_zipcode.City;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -86,6 +91,7 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
     private City smartyStreetsResponse;
     protected double amountToMakePayment = 1;
     private DemographicAddressPayloadDTO addressPayloadDTO;
+    private List<DemographicsSettingsPapiAccountsDTO> papiAccountsDTO;
     protected PaymentCreditCardsPayloadDTO creditCardsPayloadDTO;
     protected PaymentsCreditCardBillingInformationDTO billingInformationDTO;
     protected IAuthoriseCreditCardResponse authoriseCreditCardResponseCallback;
@@ -104,6 +110,10 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
                 addressPayloadDTO = new DemographicAddressPayloadDTO();
                 if (addressPayloadString.length() > 1) {
                     addressPayloadDTO = gson.fromJson(addressPayloadString, DemographicAddressPayloadDTO.class);
+                }
+                if (arguments.containsKey(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE)){
+                    addressPayloadString = arguments.getString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE);
+                    papiAccountsDTO = gson.fromJson(addressPayloadString, new TypeToken<List<DemographicsSettingsPapiAccountsDTO>>(){}.getType());
                 }
                 if (arguments.containsKey(CarePayConstants.PAYMENT_AMOUNT_BUNDLE)) {
                     amountToMakePayment = arguments.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
@@ -420,7 +430,13 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
         String city = billingInformationDTO.getCity();
 
         try {
-            RequestTask requestTask = new RequestTask(getActivity(), BaseAddCreditCardFragment.this);
+            DemographicsSettingsPapiMetadataMerchantServiceDTO merchantServiceDTO = null;
+            for (DemographicsSettingsPapiAccountsDTO papiAccountDTO : papiAccountsDTO) {
+                if (papiAccountDTO.getType().contains("payeezy")) {
+                    merchantServiceDTO = papiAccountDTO.getMetadata().getMerchantService();
+                }
+            }
+            RequestTask requestTask = new RequestTask(getActivity(), BaseAddCreditCardFragment.this, merchantServiceDTO);
             requestTask.execute("authorize", amount, currency, paymentMethod, cvv, expiryDate, name, type, number, state, addressline1, zip, country, city);
             System.out.println("first authorize call end");
         } catch (Exception e) {

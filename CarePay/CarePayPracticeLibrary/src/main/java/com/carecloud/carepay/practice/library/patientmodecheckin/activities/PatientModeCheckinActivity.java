@@ -29,6 +29,7 @@ import com.carecloud.carepaylibray.demographics.fragments.CheckinDemographicsFra
 import com.carecloud.carepaylibray.demographics.fragments.DemographicsCheckInDocumentsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
 import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterface;
+import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinConsentForm1Fragment;
@@ -62,7 +63,7 @@ import java.util.Locale;
  * Main activity for patient check in flow
  */
 public class PatientModeCheckinActivity extends BasePracticeActivity implements IFragmentCallback,
-                                                                                DemographicsReviewLabelsHolder,
+                                                                                DemographicsReviewLabelsHolder, DemographicsLabelsHolder,
                                                                                 CheckinDemographicsFragment.CheckinDemographicsFragmentListener,
                                                                                 DemographicsCheckInDocumentsFragment.DemographicsCheckInDocumentsFragmentListener,
                                                                                 HealthInsuranceFragment.InsuranceDocumentScannerListener,

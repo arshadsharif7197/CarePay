@@ -518,6 +518,8 @@ public class PatientPaymentPlanFragment extends BaseCheckinFragment {
         Gson gson = new Gson();
         String paymentsDTOString = gson.toJson(paymentsModel);
         args.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+        args.putString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE, gson.toJson(paymentsModel.getPaymentPayload()
+                .getPapiAccounts()));
         fragment.setArguments(args);
 
         ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);

@@ -7,7 +7,7 @@ public class CancellationReasonDTO {
 
     @SerializedName("appointment_cancellation_reason")
     @Expose
-    private AppointmentCancellationReasonDTO appointmentCancellationReason;
+    private AppointmentCancellationReasonDTO appointmentCancellationReason = new AppointmentCancellationReasonDTO();
 
     /**
      * @return The appointmentCancellationReason

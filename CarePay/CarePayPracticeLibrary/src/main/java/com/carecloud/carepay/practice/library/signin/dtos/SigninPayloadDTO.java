@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.library.signin.dtos;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,10 +13,10 @@ import java.util.List;
 public class SigninPayloadDTO {
     @SerializedName("practice_mode_signin")
     @Expose
-    private PracticeModeSigninDTO practiceModeSignin;
+    private PracticeModeSigninDTO practiceModeSignin = new PracticeModeSigninDTO();
     @SerializedName("languages")
     @Expose
-    private List<LanguageOptionDTO> languages = null;
+    private List<LanguageOptionDTO> languages = new ArrayList<>();
 
     /**
      *

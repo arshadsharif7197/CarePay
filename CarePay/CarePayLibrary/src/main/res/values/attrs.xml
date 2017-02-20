@@ -15,4 +15,6 @@
     <declare-styleable name="BarcodeScannerView">
         <attr name="shouldScaleToFill" format="boolean" />
     </declare-styleable>
+
+    <attr name="keepStatusBar" format="boolean"/>
 </resources>

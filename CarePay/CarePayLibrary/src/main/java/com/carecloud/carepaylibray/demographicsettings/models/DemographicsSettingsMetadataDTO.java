@@ -8,16 +8,16 @@ public class DemographicsSettingsMetadataDTO {
 
     @SerializedName("labels")
     @Expose
-    private DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO;
+    private DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO = new DemographicsSettingsLabelsDTO();
     @SerializedName("links")
     @Expose
-    private DemographicsSettingsLinksDTO demographicsSettingsLinksDTO;
+    private DemographicsSettingsLinksDTO demographicsSettingsLinksDTO = new DemographicsSettingsLinksDTO();
     @SerializedName("transitions")
     @Expose
-    private DemographicsSettingsTransitionsDTO demographicsSettingsTransitionsDTO;
+    private DemographicsSettingsTransitionsDTO demographicsSettingsTransitionsDTO = new DemographicsSettingsTransitionsDTO();
     @SerializedName("data_models")
     @Expose
-    private DemographicsSettingsDataModelsDTO dataModels;
+    private DemographicsSettingsDataModelsDTO dataModels = new DemographicsSettingsDataModelsDTO();
 
     public DemographicsSettingsLabelsDTO getLabels() {
         return demographicsSettingsLabelsDTO;
