@@ -329,6 +329,8 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                         fragment = new PatientChooseCreditCardFragment();
                     } else {
                         args.putString(CarePayConstants.INTAKE_BUNDLE, gson.toJson(paymentsModel));
+                        args.putString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE, gson.toJson(paymentsModel
+                                .getPaymentPayload().getPapiAccounts()));
                         args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(paymentsDTO));
                         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE,  getArguments()
                                 .getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE));

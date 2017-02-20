@@ -27,10 +27,10 @@ public class DemographicsSettingsPapiAccountsDTO {
     private String defaultBankAccountToken;
     @SerializedName("bank_account")
     @Expose
-    private DemographicsSettingsPapiBankAccountDTO bankAccount;
+    private DemographicsSettingsPapiBankAccountDTO bankAccount = new DemographicsSettingsPapiBankAccountDTO();
     @SerializedName("metadata")
     @Expose
-    private DemographicsSettingsPapiMetadataDTO metadata;
+    private DemographicsSettingsPapiMetadataDTO metadata = new DemographicsSettingsPapiMetadataDTO();
 
     /**
      * Gets id.

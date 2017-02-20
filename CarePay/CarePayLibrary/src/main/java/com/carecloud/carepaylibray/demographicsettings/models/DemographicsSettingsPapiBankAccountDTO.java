@@ -15,7 +15,7 @@ public class DemographicsSettingsPapiBankAccountDTO {
     private String token;
     @SerializedName("metadata")
     @Expose
-    private DemographicsSettingsPapiBankAccountMetadataDTO metadata;
+    private DemographicsSettingsPapiBankAccountMetadataDTO metadata = new DemographicsSettingsPapiBankAccountMetadataDTO();
 
     /**
      * Gets id.

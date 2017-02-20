@@ -18,7 +18,7 @@ public class DemographicsSettingsPapiMetadataDTO {
     private String formFinishUrl;
     @SerializedName("merchant_service")
     @Expose
-    private DemographicsSettingsPapiMetadataMerchantServiceDTO merchantService;
+    private DemographicsSettingsPapiMetadataMerchantServiceDTO merchantService = new DemographicsSettingsPapiMetadataMerchantServiceDTO();
 
     /**
      * Gets form sid.
