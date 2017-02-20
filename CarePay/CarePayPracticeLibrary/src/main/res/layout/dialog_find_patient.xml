@@ -10,11 +10,11 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/contain_close"
         android:layout_marginEnd="@dimen/dimen_26dp"
         android:layout_gravity="center_vertical"
         android:gravity="center"
-        android:orientation="vertical"
-        android:layout_toStartOf="@+id/find_patient_scroll">
+        android:orientation="vertical">
 
         <ImageButton
             android:id="@+id/find_patient_close_button"
@@ -39,7 +39,8 @@
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/find_patient_scroll">
+        android:id="@+id/find_patient_scroll"
+        android:layout_toEndOf="@id/contain_close">
 
         <LinearLayout
             android:layout_width="wrap_content"

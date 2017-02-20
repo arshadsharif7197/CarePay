@@ -156,9 +156,9 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dimen_5dp"
             android:layout_weight="1"
-            android:background="@drawable/bg_blue_border"
+            android:background="@drawable/bg_blue_border_selector"
             android:textAllCaps="false"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/primary_color_enabled_selector"
             android:textStyle="bold" />
 
         <Button
