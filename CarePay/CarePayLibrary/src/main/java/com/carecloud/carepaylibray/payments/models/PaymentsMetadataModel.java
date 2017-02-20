@@ -70,4 +70,8 @@ public class PaymentsMetadataModel {
         this.paymentsTransitions = paymentsTransitions;
     }
 
+    public Boolean hasPaymentPlan(){
+        return false ;
+    }
+
 }
