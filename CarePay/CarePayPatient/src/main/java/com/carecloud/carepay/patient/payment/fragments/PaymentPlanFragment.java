@@ -531,7 +531,9 @@ public class PaymentPlanFragment extends Fragment {
         }
 
         Bundle args = new Bundle();
+        Gson gson = new Gson();
         args.putSerializable(CarePayConstants.INTAKE_BUNDLE, paymentsModel);
+        args.putString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE, gson.toJson(paymentsModel.getPaymentPayload().getPapiAccounts()));
         fragment.setArguments(args);
 
         if (getActivity() instanceof PaymentActivity) {

@@ -1,7 +1,6 @@
 package com.carecloud.carepay.practice.library.payments;
 
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -24,7 +23,6 @@ public class PatientResponsibilityActivity extends AppCompatActivity {
         responsPrevBalanceTextView = (TextView) findViewById(R.id.responsPrevBalanceTextView);
         responsCoPayTTextView = (TextView) findViewById(R.id.responsCoPayTTextView);
         responsPayButton= (TextView) findViewById(R.id.responsPayButton);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Intent intent = getIntent();
         if (intent.hasExtra("total_pay_balance")) {

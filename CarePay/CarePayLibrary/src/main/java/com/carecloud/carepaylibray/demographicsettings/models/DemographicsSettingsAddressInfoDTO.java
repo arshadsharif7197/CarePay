@@ -3,14 +3,11 @@ package com.carecloud.carepaylibray.demographicsettings.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by harshal_patil on 1/5/2017.
  */
 
-public class DemographicsSettingsAddressDTO {
+public class DemographicsSettingsAddressInfoDTO {
     @SerializedName("label")
     @Expose
     private String label;
@@ -20,9 +17,9 @@ public class DemographicsSettingsAddressDTO {
     @SerializedName("type")
     @Expose
     private String type;
-    @SerializedName("validations")
+    @SerializedName("properties")
     @Expose
-    private List<DemographicsSettingsValidationDTO> validations = new ArrayList<>();
+    private DemographicsSettingsMetadataPropertiesDTO properties = new DemographicsSettingsMetadataPropertiesDTO();
 
     public String getLabel() {
         return label;
@@ -48,12 +45,12 @@ public class DemographicsSettingsAddressDTO {
         this.type = type;
     }
 
-    public List<DemographicsSettingsValidationDTO> getValidations() {
-        return validations;
+    public DemographicsSettingsMetadataPropertiesDTO getProperties() {
+        return properties;
     }
 
-    public void setValidations(List<DemographicsSettingsValidationDTO> validations) {
-        this.validations = validations;
+    public void setProperties(DemographicsSettingsMetadataPropertiesDTO properties) {
+        this.properties = properties;
     }
 
 }

@@ -74,4 +74,8 @@
         <item name="android:src">@drawable/icn_home</item>
     </style>
 
+    <style name="ProgressDialogFullscreenWithTitlebar" parent="android:Theme.Translucent.NoTitleBar.Fullscreen">
+        <item name="keepStatusBar">false</item>
+    </style>
+
 </resources>

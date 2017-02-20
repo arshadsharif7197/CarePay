@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.demographics.fragments.settings;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,7 +18,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.payment.fragments.SettingsCreditCardListFragment;
+import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -61,11 +62,37 @@ public class DemographicsSettingsFragment extends Fragment {
     private CarePayTextView creditCardsTextview;
     private CarePayTextView messagesTextview = null;
     private ImageView profileImageview = null;
+    private IDemographicsSettingsFragmentListener activityCallback;
+
+    public interface IDemographicsSettingsFragmentListener {
+        void initializeCreditCardListFragment();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            activityCallback = (IDemographicsSettingsFragmentListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement IDemographicsSettingsFragmentListener");
+        }
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         appCompatActivity = (AppCompatActivity) getActivity();
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            Gson gson = new Gson();
+            bundle = getArguments();
+            String demographicsSettingsDTOString = bundle.getString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE);
+            demographicsSettingsDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsDTO.class);
+        }
     }
 
     public DemographicsSettingsFragment() {
@@ -81,13 +108,7 @@ public class DemographicsSettingsFragment extends Fragment {
         setGothamRoundedMediumTypeface(appCompatActivity, title);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_close));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            Gson gson = new Gson();
-            bundle = getArguments();
-            String demographicsSettingsDTOString = bundle.getString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE);
-            demographicsSettingsDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsDTO.class);
-        }
+
         getSettingsLabels();
         String userId = CognitoAppHelper.getCurrUser();
         demographicsTextview = (CarePayTextView) view.findViewById(R.id.demographicsTextView);
@@ -262,28 +283,16 @@ public class DemographicsSettingsFragment extends Fragment {
         creditCardsTextview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                Gson gson = new Gson();
-                String demographicsSettingsDTOString = gson.toJson(demographicsSettingsDTO);
-                bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
-
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                SettingsCreditCardListFragment fragment = (SettingsCreditCardListFragment)
-                        fm.findFragmentByTag(SettingsCreditCardListFragment.class.getSimpleName());
-                if (fragment == null) {
-                    fragment = new SettingsCreditCardListFragment();
-                }
-
-                //fix for random crashes
-                if (fragment.getArguments() != null) {
-                    fragment.getArguments().putAll(bundle);
+            try {
+                if(demographicsSettingsDTO.getPayload().getPatientCreditCards()!=null &&
+                        !demographicsSettingsDTO.getPayload().getPatientCreditCards().isEmpty()){
+                    activityCallback.initializeCreditCardListFragment();
                 } else {
-                    fragment.setArguments(bundle);
+                    ((DemographicsSettingsActivity)getActivity()).initializeAddNewCreditCardFragment();
                 }
-
-                fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
-                        SettingsCreditCardListFragment.class.getSimpleName()).addToBackStack(null).commit();
-
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             }
         });
     }
@@ -329,5 +338,16 @@ public class DemographicsSettingsFragment extends Fragment {
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+    /**
+     * Update credit cards list.
+     *
+     * @param demographicsSettingsDTO the demographics settings dto
+     */
+    public void updateCreditCardsList(DemographicsSettingsDTO demographicsSettingsDTO) {
+        if (demographicsSettingsDTO != null) {
+            this.demographicsSettingsDTO = demographicsSettingsDTO;
+        }
+    }
 }
 
