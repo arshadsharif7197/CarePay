@@ -287,9 +287,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         setViewsDisabled((ViewGroup) findViewById(R.id.homeCheckoutClickable));
         setViewsDisabled((ViewGroup) findViewById(R.id.homeShopClickable));
         setViewsDisabled((ViewGroup) findViewById(R.id.homeNewsClickable));
-        if(homeScreenMode == HomeScreenMode.PRACTICE_HOME){
-            setViewsDisabled((ViewGroup) findViewById(R.id.homeAppointmentsClickable));
-        }
     }
 
     private void setViewsDisabled(ViewGroup viewGroup){
