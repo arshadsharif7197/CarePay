@@ -113,8 +113,8 @@ public class AppointmentDetailDialog extends Dialog {
 
         callGetCheckinStatusAPI(); //API call for getting check-in status
         onInitialization();
-        onSettingStyle();
         onSetValuesFromDTO();
+        onSettingStyle();
 
         if (balanceValueLabel.getText().toString().trim().equalsIgnoreCase(CarePayConstants.ZERO_BALANCE)) {
             paymentButton.setVisibility(View.GONE);
@@ -158,13 +158,31 @@ public class AppointmentDetailDialog extends Dialog {
         checkingInLabel.setTextColor(ContextCompat.getColor(context, R.color.white));
 
         GradientDrawable bgShapePaymentButton = (GradientDrawable) paymentButton.getBackground();
-        bgShapePaymentButton.setColor(ContextCompat.getColor(context, R.color.yellowGreen));
+        if(checkInDTO.getMetadata().hasPaymentEnabled())
+        {
+            bgShapePaymentButton.setColor(ContextCompat.getColor(context, R.color.yellowGreen));
+        }else
+        {
+            bgShapePaymentButton.setColor(ContextCompat.getColor(context, R.color.light_gray));
+        }
 
         GradientDrawable bgShapeAssistButton = (GradientDrawable) assistButton.getBackground();
-        bgShapeAssistButton.setColor(ContextCompat.getColor(context, R.color.colorPrimary));
+        if(checkInDTO.getMetadata().hasAssistEnabled())
+        {
+            bgShapeAssistButton.setColor(ContextCompat.getColor(context, R.color.colorPrimary));
+        }else
+        {
+            bgShapeAssistButton.setColor(ContextCompat.getColor(context, R.color.light_gray));
+        }
 
         GradientDrawable bgShapePageButton = (GradientDrawable) pageButton.getBackground();
-        bgShapePageButton.setColor(ContextCompat.getColor(context, R.color.rose_madder));
+        if(checkInDTO.getMetadata().hasPageEnabled())
+        {
+            bgShapePageButton.setColor(ContextCompat.getColor(context, R.color.rose_madder));
+        }else
+        {
+            bgShapePageButton.setColor(ContextCompat.getColor(context, R.color.light_gray));
+        }
     }
 
     /**
@@ -226,6 +244,15 @@ public class AppointmentDetailDialog extends Dialog {
 
         checkingInLabel.bringToFront();
         hourLabel.bringToFront();
+
+        enableActionItems();
+    }
+
+    private void enableActionItems()
+    {
+        paymentButton.setEnabled(checkInDTO.getMetadata().hasPaymentEnabled());
+        assistButton.setEnabled(checkInDTO.getMetadata().hasAssistEnabled());
+        pageButton.setEnabled(checkInDTO.getMetadata().hasPageEnabled());
     }
 
     private View.OnClickListener paymentActionListener = new View.OnClickListener() {
@@ -272,7 +299,7 @@ public class AppointmentDetailDialog extends Dialog {
             } else {
                 queryStringObject = checkInDTO.getMetadata().getLinks().getCheckinStatus().getQueryString();
                 queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
-                querymap = getQueryParam(queryStrings);
+                querymap = getStatusQueryParam(queryStrings);
                 transition = checkInDTO.getMetadata().getLinks().getCheckinStatus();
                 callback = getStatusCallBack;
             }
@@ -285,12 +312,10 @@ public class AppointmentDetailDialog extends Dialog {
      * @param queryStrings the query strings for the url
      * @return queryMap
      */
-    private Map<String, String> getQueryParam(QueryStrings queryStrings) {
+    private Map<String, String> getStatusQueryParam(QueryStrings queryStrings) {
         Map<String, String> queryMap = new HashMap<>();
-        if (appointmentPayloadDTO != null && pendingBalanceDTO != null) {
+        if (appointmentPayloadDTO != null) {
             queryMap.put(queryStrings.getAppointmentId().getName(), appointmentPayloadDTO.getId());
-            queryMap.put(queryStrings.getPracticeManagement().getName(), pendingBalanceDTO.getMetadata().getPracticeMgmt());
-            queryMap.put(queryStrings.getPracticeId().getName(), pendingBalanceDTO.getMetadata().getPracticeId());
         }
 
         return queryMap;
@@ -302,10 +327,8 @@ public class AppointmentDetailDialog extends Dialog {
      */
     private Map<String, String> getQueueQueryParam(QueryStrings queryStrings) {
         Map<String, String> queryMap = new HashMap<>();
-        if (appointmentPayloadDTO != null && pendingBalanceDTO != null) {
-            queryMap.put(queryStrings.getPatientId().getName(), appointmentPayloadDTO.getId());
-            queryMap.put(queryStrings.getPracticeManagement().getName(), pendingBalanceDTO.getMetadata().getPracticeMgmt());
-            queryMap.put(queryStrings.getPracticeId().getName(), pendingBalanceDTO.getMetadata().getPracticeId());
+        if (appointmentPayloadDTO != null) {
+            queryMap.put(queryStrings.getPatientId().getName(), appointmentPayloadDTO.getPatient().getId());
         }
         return queryMap;
     }
