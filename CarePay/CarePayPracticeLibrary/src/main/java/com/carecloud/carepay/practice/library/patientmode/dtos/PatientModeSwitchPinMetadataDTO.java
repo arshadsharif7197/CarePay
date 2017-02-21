@@ -11,7 +11,7 @@ public class PatientModeSwitchPinMetadataDTO {
 
     @SerializedName("user_id")
     @Expose
-    private PatientModeUserIdDTO patientModeUserIdDTO;
+    private String userId;
     @SerializedName("username")
     @Expose
     private String username;
@@ -19,19 +19,19 @@ public class PatientModeSwitchPinMetadataDTO {
     /**
      *
      * @return
-     * The patientModeUserIdDTO
+     * The userId
      */
-    public PatientModeUserIdDTO getPatientModeUserIdDTO() {
-        return patientModeUserIdDTO;
+    public String getUserId() {
+        return userId;
     }
 
     /**
      *
-     * @param patientModeUserIdDTO
+     * @param userId
      * The user_id
      */
-    public void setPatientModeUserIdDTO(PatientModeUserIdDTO patientModeUserIdDTO) {
-        this.patientModeUserIdDTO = patientModeUserIdDTO;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     /**
