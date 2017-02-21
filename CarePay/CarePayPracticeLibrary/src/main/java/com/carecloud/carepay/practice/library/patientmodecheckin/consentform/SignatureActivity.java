@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -28,13 +27,11 @@ import com.carecloud.carepaylibray.consentforms.models.datamodels.consentformedi
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConseFormsPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormPayloadDTO;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.github.gcacace.signaturepad.views.SignaturePad;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -47,8 +44,6 @@ public class SignatureActivity extends BaseActivity {
 
     public static boolean isBackButtonClicked = false;
     public static int numOfLaunches = 0;
-    static SignatureActivity signatureActivity;
-    private static ConseFormsPayloadDTO payloadDTO;
     private TextView titleTextView;
     private TextView beforesignWarningTextView;
     private TextView signatureHelpTextView;
@@ -63,12 +58,6 @@ public class SignatureActivity extends BaseActivity {
 
     private ConsentFormLabelsDTO consentFormLabelsDTO;
 
-
-    private Map<Integer, List<String>> stringMap = new HashMap<>();
-    private String patientSignature;
-    private String legalSignature;
-    private String legalFirstNameLabel;
-    private String legalLastNameLabel;
     private String signatureAsBase64;
     private boolean signedByPatient = true;
     private boolean signedByLegal = false;
@@ -138,7 +127,6 @@ public class SignatureActivity extends BaseActivity {
         setTypefaces();
         setEditTexts();
         onClickListeners();
-        signatureActivity = this;
     }
 
     /**

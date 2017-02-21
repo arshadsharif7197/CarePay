@@ -56,8 +56,6 @@ public class SignatureActivity extends BaseActivity {
 
     public static boolean isBackButtonClicked = false;
     public static int numOfLaunches = 0;
-    static SignatureActivity signatureActivity;
-    private static ConseFormsPayloadDTO payloadDTO;
     private TextView titleTextView;
     private TextView beforesignWarningTextView;
     private TextView signatureHelpTextView;
@@ -71,9 +69,6 @@ public class SignatureActivity extends BaseActivity {
     private TextInputLayout legalLastName;
 
     private ConsentFormLabelsDTO consentFormLabelsDTO;
-
-
-    private Map<Integer, List<String>> stringMap = new HashMap<>();
 
     private String signatureAsBase64;
     private boolean isLegalFirstNameEmpty;
@@ -142,7 +137,6 @@ public class SignatureActivity extends BaseActivity {
         setTypefaces();
         setEditTexts();
         onClickListeners();
-        signatureActivity = this;
 
         isLegalFirstNameEmpty = true;
         isLegalLastNameEmpty = true;

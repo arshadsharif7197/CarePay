@@ -59,8 +59,6 @@ public class PracticeAppSignatureActivity extends BaseActivity {
 
     public static boolean isBackButtonClicked = false;
     public static int numOfLaunches = 0;
-    static PracticeAppSignatureActivity signatureActivity;
-    private static ConseFormsPayloadDTO payloadDTO;
     private TextView titleTextView;
     private TextView beforesignWarningTextView;
     private TextView signatureHelpTextView;
@@ -155,7 +153,6 @@ public class PracticeAppSignatureActivity extends BaseActivity {
         setTypefaces();
         setEditTexts();
         onClickListeners();
-        signatureActivity = this;
 
         isLegalFirstNameEmpty = true;
         isLegalLastNameEmpty = true;
