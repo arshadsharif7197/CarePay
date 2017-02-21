@@ -172,8 +172,6 @@ public class WorkflowServiceHelper {
                 call = workflowService.executePost(transitionDTO.getUrl(), jsonBody, queryMap);
             } else if (jsonBody != null) {
                 call = workflowService.executePost(transitionDTO.getUrl(), jsonBody, queryMap);
-            } else if (jsonBody != null) {
-                call = workflowService.executePost(transitionDTO.getUrl(), jsonBody, queryMap);
             } else {
                 call = workflowService.executePost(transitionDTO.getUrl());
             }
@@ -196,8 +194,6 @@ public class WorkflowServiceHelper {
                 call = workflowService.executePut(transitionDTO.getUrl(), jsonBody, queryMap);
             } else if (jsonBody != null) {
                 call = workflowService.executePut(transitionDTO.getUrl(), jsonBody, queryMap);
-            } else if (jsonBody != null) {
-                call = workflowService.executePut(transitionDTO.getUrl(), jsonBody, queryMap);
             } else {
                 call = workflowService.executePut(transitionDTO.getUrl());
             }
@@ -214,12 +210,12 @@ public class WorkflowServiceHelper {
                     callback.onPostExecute(response.body());
                 } else {
                     try {
-                        if(call.request().method() == "GET" && retryAttempts < 1) // TODO: 2/20/17 get retry attempt from backend.
+                        if(call.request().method().equalsIgnoreCase("GET") && retryAttempts < 1) // TODO: 2/20/17 get retry attempt from backend.
                         {
                             retryAttempts++;
                             call.clone();
                             call.execute();
-                        } else if(response!=null && response.errorBody()!=null) {
+                        } else if(response.errorBody()!=null) {
                             callback.onFailure(response.errorBody().string());
                         } else {
                             callback.onFailure("");
