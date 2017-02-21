@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.carecloud.carepay.practice.clover.models.CloverPaymentDTO;
 import com.carecloud.carepay.practice.clover.R;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -294,8 +295,11 @@ public class CloverPaymentActivity extends BaseActivity {
 
                 if (payment != null) {
                     isPaymentComplete = true;
-                    postPaymentConfirmation(payment.getJSONObject().toString());
+                    postPaymentConfirmation(payment);
                 }
+            } else if(resultCode == RESULT_CANCELED) {
+                Toast.makeText(getApplicationContext(), getString(R.string.payment_cancelled), Toast.LENGTH_SHORT).show();
+                finish();
             } else {
                 Toast.makeText(getApplicationContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
                 finish();
@@ -303,8 +307,9 @@ public class CloverPaymentActivity extends BaseActivity {
         }
     }
 
-    private void postPaymentConfirmation(String jsonInString)
+    private void postPaymentConfirmation(Payment payment)
     {
+        String jsonInString = payment.getJSONObject().toString();
         JSONObject payload = new JSONObject();
         try {
 
@@ -318,6 +323,10 @@ public class CloverPaymentActivity extends BaseActivity {
             billingInformation.put("same_as_patient", true);
             creditCard.put("billing_information", billingInformation);
 
+            Gson gson  =new Gson();
+            CloverPaymentDTO cloverPaymentDTO = gson.fromJson(payment.getJSONObject().toString(), CloverPaymentDTO.class);
+            creditCard.put("card_type", cloverPaymentDTO.getCloverCardTransactionInfo().getCardType());
+
             paymentMethod.put("credit_card", creditCard);
             paymentMethod.put("type", "credit_card");
             paymentMethod.put("execution", "clover");
@@ -325,8 +334,6 @@ public class CloverPaymentActivity extends BaseActivity {
             JSONArray paymentMethods = new JSONArray();
             paymentMethods.put(paymentMethod);
             payload.put("payment_methods", paymentMethods);
-
-            Gson gson = new Gson();
 
             PaymentPayloadMetaDataDTO metadataDTO = gson.fromJson(patientPaymentMetaDataString, PaymentPayloadMetaDataDTO.class);
             Map<String, String> queries = new HashMap<>();

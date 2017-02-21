@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
@@ -235,13 +236,19 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+
             PaymentsModel patientDetails = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
 
-            if (patientDetails != null) {
+            if (patientDetails != null && patientDetails.getPaymentPayload().getPatientBalances() != null && !patientDetails.getPaymentPayload().getPatientBalances().isEmpty()) {
                 PaymentsPatientBalancessDTO paymentsPatientBalancessDTO = patientDetails.getPaymentPayload().getPatientBalances().get(0);
-                hideProgressDialog();
+
                 ResponsibilityDialog responsibilityDialog = new ResponsibilityDialog(getContext(), paymentsModel, paymentsPatientBalancessDTO);
                 responsibilityDialog.show();
+            }
+            else
+            {
+                Toast.makeText(getContext(), "Patient has no balance", Toast.LENGTH_LONG).show() ;
             }
         }
 

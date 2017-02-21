@@ -28,6 +28,7 @@ public class WorkflowServiceHelper {
 
 
     private ApplicationPreferences applicationPreferences;
+    private static int retryAttempts = 0;
 
 
     public WorkflowServiceHelper(ApplicationPreferences applicationPreferences) {
@@ -213,7 +214,12 @@ public class WorkflowServiceHelper {
                     callback.onPostExecute(response.body());
                 } else {
                     try {
-                        if(response!=null && response.errorBody()!=null) {
+                        if(call.request().method() == "GET" && retryAttempts < 1) // TODO: 2/20/17 get retry attempt from backend.
+                        {
+                            retryAttempts++;
+                            call.clone();
+                            call.execute();
+                        } else if(response!=null && response.errorBody()!=null) {
                             callback.onFailure(response.errorBody().string());
                         } else {
                             callback.onFailure("");

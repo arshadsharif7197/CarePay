@@ -202,6 +202,7 @@ public class FilterDialog extends PopupWindow
 
     @Override
     public void onFilterChanged(FilterDataDTO filteredDataDTO) {
+        clearFiltersButton.setVisibility(View.VISIBLE);
         filterCallBack.applyFilter();
     }
 
