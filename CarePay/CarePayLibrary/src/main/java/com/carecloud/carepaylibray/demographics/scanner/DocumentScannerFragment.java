@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.PermissionsUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -28,7 +29,7 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
  * Created by lsoco_user on 9/13/2016.
  * Generic fragment that incorporates camera scanning functionality
  */
-public abstract class DocumentScannerFragment extends BaseFragment {
+public abstract class DocumentScannerFragment extends BaseCheckinFragment {
 
     protected boolean hasImageChanged;
     protected ImageCaptureHelper imageCaptureHelper;

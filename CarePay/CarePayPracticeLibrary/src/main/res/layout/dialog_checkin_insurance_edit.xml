@@ -126,12 +126,17 @@
         style="@style/Consent_Form_View_Style"
         android:layout_width="match_parent" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
     <android.support.design.widget.TextInputLayout
         android:id="@+id/insurancecardNumberLabel"
         style="@style/TextInputLayoutStyle"
         android:minHeight="@dimen/dimen_40dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_weight="1"
         app:hintTextAppearance="@style/FloatingLabelStyle">
 
         <EditText
@@ -143,12 +148,13 @@
             android:inputType="textFilter" />
     </android.support.design.widget.TextInputLayout>
 
-    <!--android.support.design.widget.TextInputLayout
+    <android.support.design.widget.TextInputLayout
         android:id="@+id/insuranceGroupNumberLabel"
         style="@style/TextInputLayoutStyle"
         android:minHeight="@dimen/dimen_40dp"
-        android:layout_height="@dimen/dimen_40dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_weight="1"
         app:hintTextAppearance="@style/FloatingLabelStyle">
 
         <EditText
@@ -158,8 +164,9 @@
             android:imeOptions="actionNone"
             android:maxLength="100"
             android:inputType="textFilter" />
-    </android.support.design.widget.TextInputLayout-->
+    </android.support.design.widget.TextInputLayout>
 
+            </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_40dp"
@@ -183,11 +190,6 @@
         style="@style/Consent_Form_View_Style"
         android:layout_width="match_parent" />
 
-    <View
-        android:layout_height="@dimen/dimen_1dp"
-        android:layout_marginTop="@dimen/dimen_18dp"
-        android:background="@color/light_gray"
-        android:layout_width="match_parent" />
 </LinearLayout>
 </ScrollView>
     <LinearLayout
@@ -200,12 +202,12 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/removeutton"
+            android:id="@+id/removeButton"
             android:layout_width="@dimen/dimen_144dp"
             android:layout_height="@dimen/dimen_50dp"
             android:background="@drawable/button_rounded_rose"
             android:textColor="@color/white"
-            android:enabled="false"
+            android:enabled="true"
             android:textSize="@dimen/text_size_22sp"
             android:textAllCaps="false" />
 
