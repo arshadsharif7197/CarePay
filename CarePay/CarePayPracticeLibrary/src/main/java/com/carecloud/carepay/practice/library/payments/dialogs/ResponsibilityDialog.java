@@ -1,7 +1,6 @@
 package com.carecloud.carepay.practice.library.payments.dialogs;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -231,8 +230,8 @@ public class ResponsibilityDialog extends Dialog {
 
         intent.putExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS, gson.toJson(paymentLineItems));
 
-        ((Activity)getContext()).startActivityForResult(intent, CarePayConstants.CLOVER_PAYMENT_INTENT_REQUEST_CODE, new Bundle());
-//        ((Activity)getContext()).startActivity(intent, new Bundle());
+//        ((Activity)getContext()).startActivityForResult(intent, CarePayConstants.CLOVER_PAYMENT_INTENT_REQUEST_CODE, new Bundle());
+        getContext().startActivity(intent, new Bundle());
         dismiss();
     }
 }
