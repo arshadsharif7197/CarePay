@@ -278,8 +278,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                     }
                 }
 
-                // Balance of at least $20
-                if ((previousBalance + coPay) > CarePayConstants.PAYMENT_PLAN_REQUIRED_BALANCE) {
+                if ((previousBalance + coPay) > 0) {
                     PatientPaymentPlanFragment fragment = new PatientPaymentPlanFragment();
 
                     Bundle arguments = getArguments();
@@ -290,9 +289,6 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                     fragment.setArguments(args);
 
                     ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
-                } else {
-                    Toast.makeText(getActivity(), paymentsModel.getPaymentsMetadata().getPaymentsLabel()
-                            .getPaymentPlanCreateConditionError(), Toast.LENGTH_SHORT).show();
                 }
             }
         }
