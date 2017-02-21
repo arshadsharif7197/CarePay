@@ -33,6 +33,7 @@ public class ProgressDialogUtil extends Dialog {
         int[] attributes = {R.attr.keepStatusBar};
         TypedArray typedArray = getContext().obtainStyledAttributes(theme, attributes);
         boolean keepStatusBar = typedArray.getBoolean(0, false);
+        typedArray.recycle();
         if(keepStatusBar){
             adjustForStatusBar();
         }
