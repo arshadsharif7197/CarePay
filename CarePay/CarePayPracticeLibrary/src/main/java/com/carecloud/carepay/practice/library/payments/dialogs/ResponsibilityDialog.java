@@ -130,7 +130,7 @@ public class ResponsibilityDialog extends Dialog {
                         StringUtil.getFormattedBalanceAmount(totalAmount));
                 amountDetails.addView(chargeRow);
 
-                if (i == 0) {
+                if (i == 0 && payload.size() > 1) {
                     detailsView.setVisibility(View.VISIBLE);
                 }
             }
