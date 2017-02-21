@@ -10,17 +10,7 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
-
     <include layout="@layout/toolbar_demographics_review" />
-
-    <ProgressBar
-        android:id="@+id/demographicReviewProgressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-8dp"
-        android:indeterminate="true" />
-
 
     <ScrollView
         android:id="@+id/adddemoScrollview"
