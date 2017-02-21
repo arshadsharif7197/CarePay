@@ -340,6 +340,8 @@ public class CloverPaymentActivity extends AppCompatActivity {
             header.put("transition", "true");
 
             TransitionDTO transitionDTO = gson.fromJson(paymentTransitionString, TransitionDTO.class);
+            transitionDTO.setUrl("https://ix1uhlyid1.execute-api.us-east-1.amazonaws.com/qa/workflow/shamrock/practice_mode/practice_payments/make_payment");
+
             WorkflowServiceHelper.getInstance().execute(transitionDTO, makePaymentCallback, payload.toString(), queries, header);
         } catch (JSONException e) {
             e.printStackTrace();
