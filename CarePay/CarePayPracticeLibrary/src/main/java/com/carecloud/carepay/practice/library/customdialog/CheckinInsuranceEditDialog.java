@@ -73,7 +73,6 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
     private Button btnScanFrontInsurance;
     private Button btnScanBackInsurance;
     private EditText insuranceCardNumEditText;
-    private EditText insuranceGroupNumEditText;
     private TextView planTextView;
     private TextView providerTextView;
     private TextView cardTypeTextView;
@@ -156,12 +155,14 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
             public void onClick(View view) {
                 if (index>=0) {
                     onRemoveChanges();
+                    insuranceDocumentScannerListener.updateInsuranceDTO(-2,
+                                                                        insuranceDTO);
                 }
                 dismiss();
             }
         });
 
-        saveChangesButton.setText(this.globalLabelsDTO.getDemographicsInsuranceSave());
+        saveChangesButton.setText(this.globalLabelsDTO.getDemographicsInsuranceUpdateButton());
         removeButton.setText(this.globalLabelsDTO.getDocumentsRemove());
         insurancePlanLabel = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.demogr_insurance_plan_label);
         insurancePlanLabel.setText(this.globalLabelsDTO.getDemographicsDocumentsChoosePlanLabel() );
@@ -170,10 +171,13 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
         insuranceProviderLabel.setText(this.globalLabelsDTO.getDemographicsTitleSelectProvider() );
 
         insuranceTypeLabel = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.demogr_insurance_card_type_abel);
-        insuranceTypeLabel.setText(this.globalLabelsDTO.getDemographicsDocumentsInsTypeLabel());
+        insuranceTypeLabel.setText(this.globalLabelsDTO.getDemographicsInsuranceTypeLabel());
 
         insuranceCardNumEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.reviewinsurncecardnum);
         insuranceCardNumEditText.setHint(this.globalLabelsDTO.getDemographicsInsuranceScanInsuranceCard());
+
+        EditText insuranceGroupNumEditText = (EditText) view.findViewById(R.id.reviewinsurnceGroupnum);
+        insuranceGroupNumEditText.setHint(insuranceMetadataDTO.properties.insuranceGroupId.getLabel());
 
         frontInsuranceImageView = (ImageView) view.findViewById(com.carecloud.carepaylibrary.R.id.demogr_insurance_frontimage);
         insuranceFrontScanHelper = new ImageCaptureHelper((Activity) context, frontInsuranceImageView, globalLabelsDTO);
@@ -249,11 +253,6 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
         insuranceCardNumEditText.setTag(insuranceCardNumberTextInput);
         insuranceCardNumEditText.setHint(hint);
 
-        /*TextInputLayout insuranceGroupNumberTextInput = (TextInputLayout) view.findViewById(R.id.insuranceGroupNumberLabel);
-        EditText insuranceGroupNumEditText = (EditText) view.findViewById(R.id.reviewinsurnceGroupnum);
-        hint = insuranceMetadataDTO == null ? CarePayConstants.NOT_DEFINED : insuranceMetadataDTO.properties.insuranceMemberId.getLabel();*/
-
-
         setChangeFocusListeners();
         insuranceCardNumEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -288,6 +287,57 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
         });
 
         insuranceCardNumEditText.clearFocus();
+
+        TextInputLayout insuranceGroupNumberTextInput = (TextInputLayout) view.findViewById(R.id.insuranceGroupNumberLabel);
+        final EditText insuranceGroupNumEditText = (EditText) view.findViewById(R.id.reviewinsurnceGroupnum);
+        hint = insuranceMetadataDTO == null ? CarePayConstants.NOT_DEFINED : insuranceMetadataDTO.properties.insuranceGroupId.getLabel();
+        insuranceGroupNumberTextInput.setTag(hint);
+        insuranceGroupNumEditText.setTag(insuranceGroupNumberTextInput);
+        insuranceGroupNumEditText.setHint(hint);
+
+        insuranceGroupNumEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String groupNumber = insuranceGroupNumEditText.getText().toString();
+                if (!StringUtil.isNullOrEmpty(groupNumber)) {
+                    insuranceDTO.setInsuranceGroupId(groupNumber);
+                }
+            }
+        });
+
+        insuranceGroupNumEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int inputType, KeyEvent keyEvent) {
+                if (inputType == EditorInfo.IME_ACTION_NONE) {
+                    SystemUtil.hideSoftKeyboard((Activity) context);
+                    insuranceGroupNumEditText.clearFocus();
+                    view.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        insuranceGroupNumEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
+                    SystemUtil.showSoftKeyboard((Activity) context);
+                }
+                SystemUtil.handleHintChange(view, hasFocus);
+            }
+        });
+
+        insuranceGroupNumEditText.clearFocus();
     }
 
     private void setChangeFocusListeners() {
@@ -318,6 +368,15 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
             setProximaNovaExtraboldTypefaceInput(context, insuranceCardNumberTextInput);
         } else {
             setProximaNovaSemiboldTextInputLayout(context, insuranceCardNumberTextInput);
+        }
+
+        EditText insuranceGroupNumEditText = (EditText) view.findViewById(R.id.reviewinsurnceGroupnum);
+        setProximaNovaRegularTypeface(context, insuranceGroupNumEditText);
+        TextInputLayout insuranceGroupNumberTextInput = (TextInputLayout) view.findViewById(R.id.insuranceGroupNumberLabel);
+        if (!StringUtil.isNullOrEmpty(insuranceGroupNumEditText.getText().toString())) {
+            setProximaNovaExtraboldTypefaceInput(context, insuranceGroupNumberTextInput);
+        } else {
+            setProximaNovaSemiboldTextInputLayout(context, insuranceGroupNumberTextInput);
         }
     }
 
@@ -495,6 +554,15 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
                 insuranceCardNumEditText.requestFocus(); // required for CAPS hint
                 view.requestFocus();
             }
+
+            EditText insuranceGroupNumEditText = (EditText)view.findViewById(R.id.reviewinsurnceGroupnum);
+            String groupNum = insuranceDTO.getInsuranceGroupId();
+            if (!StringUtil.isNullOrEmpty(groupNum)) {
+                insuranceGroupNumEditText.setText(groupNum);
+                insuranceGroupNumEditText.requestFocus();
+                view.requestFocus();
+            }
+
             String insCardType = insuranceDTO.getInsuranceType();
             if (!StringUtil.isNullOrEmpty(insCardType)) {
                 cardTypeTextView.setText(insCardType);

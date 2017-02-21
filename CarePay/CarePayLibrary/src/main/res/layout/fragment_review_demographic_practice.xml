@@ -78,7 +78,7 @@
                     android:id="@+id/headerLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:orientation="horizontal"
                     android:layout_alignParentTop="true"
                     android:layout_marginRight="@dimen/dimen_20dp"
                     android:layout_marginLeft="@dimen/dimen_20dp"
@@ -86,23 +86,38 @@
                     android:gravity="left"
                     android:background="@drawable/bottom_rounded_background_gray"
                     android:paddingStart="0dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/apt_popup_icon_margin"
+                        android:src="@drawable/icn_notification_basic" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                    >
                     <TextView
                         android:id="@+id/reviewtitle"
                         style="@style/DemographicsFragmentsHeadingStyle"
                         android:layout_width="wrap_content"
                         android:layout_gravity="left"
+                        android:gravity="left"
                         android:textColor="@color/white"
-                        android:paddingRight="@dimen/dimen_20dp"
-                        android:paddingLeft="@dimen/dimen_20dp"
                         android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/reviewSubtitle"
                         style="@style/DemographicsFragmentsSubHeadingStyle"
                         android:layout_width="wrap_content"
-                        android:textAlignment="viewStart"
+                        android:layout_gravity="left"
+                        android:gravity="left"
+                        android:layout_marginLeft="0dp"
                         android:textColor="@color/white"
                         android:layout_height="wrap_content" />
+                    </LinearLayout>
                 </LinearLayout>
 
 
@@ -126,6 +141,8 @@
                         android:id="@+id/updateProfileImageButton"
                         style="@style/DemographicsDocsButtonStyle"
                         android:layout_marginStart="0dp"
+                        android:paddingLeft="@dimen/dimen_10dp"
+                        android:paddingRight="@dimen/dimen_10dp"
                         android:layout_marginTop="@dimen/dimen_10dp"
                         android:layout_gravity="center_horizontal"
                         android:layout_width="wrap_content"

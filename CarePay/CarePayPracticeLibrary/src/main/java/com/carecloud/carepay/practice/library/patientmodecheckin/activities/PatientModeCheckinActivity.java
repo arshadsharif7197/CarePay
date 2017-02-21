@@ -677,7 +677,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
                 getSupportFragmentManager().findFragmentById(R.id.checkInContentHolderId);
         onDemographicDtoChanged(checkinFragment.updateModels());
 
-        CheckinInsuranceEditDialog checkinInsuranceEditDialog = new CheckinInsuranceEditDialog(this,true,demographicDTO,index, this);
+        CheckinInsuranceEditDialog checkinInsuranceEditDialog = new CheckinInsuranceEditDialog(this,false,demographicDTO,index, this);
         checkinInsuranceEditDialog.show();
     }
 
@@ -698,7 +698,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
                 .getInsurances();
         if (index>=0){
             insurances.set(index, model);
-        } else {
+        } else if (index == CarePayConstants.NO_INDEX) {
             insurances.add(model);
         }
         disableMainButton(false);
