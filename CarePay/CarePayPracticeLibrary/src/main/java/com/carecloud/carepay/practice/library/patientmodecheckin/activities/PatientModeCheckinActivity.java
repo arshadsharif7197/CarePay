@@ -31,6 +31,7 @@ import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragmen
 import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterface;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinConsentForm1Fragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinConsentForm2Fragment;
@@ -751,4 +752,18 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
 
         return demographicIdDocPayloadDTO;
     }
+
+
+    @Override
+    protected void processExternalPayment(PaymentExecution execution, Intent data){
+        switch (execution){
+            case clover:{
+                //TODO get the updated Patient Object and look throught the original list to update balance or remove
+            }
+            default:
+                //nothing
+                return;
+        }
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.payments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -27,12 +28,11 @@ import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderDTO;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -263,4 +263,18 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         TwoColumnPatientListView patientListView = (TwoColumnPatientListView) findViewById(R.id.list_patients);
         patientListView.applyFilter(filter);
     }
+
+
+    @Override
+    protected void processExternalPayment(PaymentExecution execution, Intent data){
+        switch (execution){
+            case clover:{
+                //TODO get the updated Patient Object and look throught the original list to update balance or remove
+            }
+            default:
+                //nothing
+                return;
+        }
+    }
+
 }

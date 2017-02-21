@@ -42,10 +42,7 @@ public class PaymentPostModel {
      * @return true if payment model is valid
      */
     public boolean isPaymentModelValid(){
-        if(amount <0){
-            return false;
-        }
-        if(paymentMethods.isEmpty()){
+        if(amount <0 || paymentMethods.isEmpty()){
             return false;
         }
         double payAmount = 0;

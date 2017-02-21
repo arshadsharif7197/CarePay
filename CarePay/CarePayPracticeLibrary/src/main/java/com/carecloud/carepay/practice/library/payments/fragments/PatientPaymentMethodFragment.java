@@ -395,7 +395,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
             intent.putExtra(CarePayConstants.CLOVER_PAYMENT_TRANSITION, paymentTransitionString);
 
             List<PaymentLineItem> paymentLineItems = new ArrayList<>();
-            List<PatienceBalanceDTO> balances = new ArrayList<>();//= paymentsDTO.getPaymentPayload().getPatientBalances().get(0);
+            List<PatienceBalanceDTO> balances = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances();
             for(PatienceBalanceDTO balance : balances) {
 
                 PaymentLineItem paymentLineItem = new PaymentLineItem();
