@@ -17,6 +17,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
@@ -25,6 +26,8 @@ import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItemMetadata;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -32,6 +35,7 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ResponsibilityDialog extends Dialog {
@@ -39,6 +43,7 @@ public class ResponsibilityDialog extends Dialog {
     private Context context;
     private PaymentsModel paymentsModel;
     private PaymentsPatientBalancessDTO patientPayments;
+    private List<PatienceBalanceDTO> balances;
 
     /**
      * Constructor
@@ -105,9 +110,9 @@ public class ResponsibilityDialog extends Dialog {
         }
 
         PaymentsLabelDTO paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
-        List<PatienceBalanceDTO> balances = patientPayments.getBalances();
+        balances = patientPayments.getBalances();
         if (balances != null && balances.size() > 0) {
-            ScrollView amountDetails = (ScrollView) findViewById(R.id.payment_responsibility_balance_details);
+            ScrollView amountDetails = (ScrollView) findViewById(R.id.payment_responsibility_balance_details);//TODO this needs to be in an adapter
 
             double totalAmount = 0;
             List<PatiencePayloadDTO> payload = balances.get(0).getPayload();
@@ -201,14 +206,31 @@ public class ResponsibilityDialog extends Dialog {
         String patientPaymentMetaDataString = gson.toJson(patientPayments.getBalances().get(0).getMetadata());
         String paymentTransitionString = gson.toJson(paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment());
         Intent intent = new Intent();
-        intent.setAction("com.carecloud.carepay.practice.clover.payments.CloverPaymentActivity");
-        intent.putExtra("PAYMENT_METADATA", patientPaymentMetaDataString);
-        intent.putExtra("PAYMENT_AMOUNT", patientPayments.getBalances().get(0).getPayload().get(0).getAmount().doubleValue());
-        intent.putExtra("PAYMENT_TRANSITION", paymentTransitionString);
-        if(StringUtil.isNullOrEmpty(patientPayments.getBalances().get(0).getPayload().get(0).getType()))
-        {
-            intent.putExtra("ITEM_NAME", patientPayments.getBalances().get(0).getPayload().get(0).getType());
+        intent.setAction(CarePayConstants.CLOVER_PAYMENT_INTENT);
+        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_METADATA, patientPaymentMetaDataString);
+        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, patientPayments.getBalances().get(0).getPayload().get(0).getAmount());
+        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_TRANSITION, paymentTransitionString);
+        List<PaymentLineItem> paymentLineItems = new ArrayList<>();
+
+        for(PatienceBalanceDTO balance : balances) {
+
+            PaymentLineItem paymentLineItem = new PaymentLineItem();
+            paymentLineItem.setAmount(balance.getPayload().get(0).getAmount());
+            paymentLineItem.setDescription(balance.getPayload().get(0).getType());
+
+            PaymentLineItemMetadata metadata = new PaymentLineItemMetadata();
+            metadata.setPatientID(balance.getMetadata().getPatientId());
+            metadata.setPracticeID(balance.getMetadata().getPracticeId());
+//                metadata.setProviderID(balance.getMetadata().getProviderID()); //TODO this is missing in the DTO
+//                metadata.setLocationID(balance.getMetadata().getLocationID()); //TODO this is missing in the DTO
+
+            paymentLineItems.add(paymentLineItem);
+
         }
+
+        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS, gson.toJson(paymentLineItems));
+
+//        ((Activity)getContext()).startActivityForResult(intent, CarePayConstants.CLOVER_PAYMENT_INTENT_REQUEST_CODE, new Bundle());
         getContext().startActivity(intent, new Bundle());
         dismiss();
     }

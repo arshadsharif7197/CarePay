@@ -1,6 +1,5 @@
 package com.carecloud.carepay.practice.clover.models;
 
-import com.clover.sdk.v3.payments.VaultedCard;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -42,7 +41,7 @@ public class CloverCardTransactionInfo {
     private String cardType;
     @SerializedName("vaultedCard")
     @Expose
-    private VaultedCard vaultedCard;
+    private CloverVaultedCard vaultedCard = new CloverVaultedCard();
 
     public String getCardholderName() {
         return cardholderName;
@@ -124,11 +123,11 @@ public class CloverCardTransactionInfo {
         this.cardType = cardType;
     }
 
-    public VaultedCard getVaultedCard() {
+    public CloverVaultedCard getVaultedCard() {
         return vaultedCard;
     }
 
-    public void setVaultedCard(VaultedCard vaultedCard) {
+    public void setVaultedCard(CloverVaultedCard vaultedCard) {
         this.vaultedCard = vaultedCard;
     }
 

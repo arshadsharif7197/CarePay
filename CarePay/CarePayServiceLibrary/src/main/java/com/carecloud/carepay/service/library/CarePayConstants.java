@@ -110,4 +110,11 @@ public class CarePayConstants {
     public static final int NAVIGATION_ITEM_INDEX_NOTIFICATION= 3;
 
 
+    //Clover Constants
+    public static final String CLOVER_PAYMENT_INTENT = "com.carecloud.carepay.practice.clover.payments.CloverPaymentActivity";
+    public static final int CLOVER_PAYMENT_INTENT_REQUEST_CODE = 0x37;
+    public static final String CLOVER_PAYMENT_AMOUNT = "clover_payment_amount";
+    public static final String CLOVER_PAYMENT_METADATA = "clover_payment_metadata";
+    public static final String CLOVER_PAYMENT_TRANSITION = "clover_payment_transition";
+    public static final String CLOVER_PAYMENT_LINE_ITEMS = "clover_payment_line_items";
 }
