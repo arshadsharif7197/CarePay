@@ -92,6 +92,7 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
 
     public interface CheckinInsuranceEditDialogListener {
         void onInsuranceSaved(DemographicInsurancePayloadDTO insuranceDTO);
+
         void onInsuranceRemoved();
     }
 
