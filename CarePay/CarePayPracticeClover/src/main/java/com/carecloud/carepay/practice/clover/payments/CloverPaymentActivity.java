@@ -232,12 +232,9 @@ public class CloverPaymentActivity extends AppCompatActivity {
                             orderConnector.addCustomLineItem(order.getId(), lineItem, false);
                         }
                     }else{
-                        LineItem lineItem = new LineItem();
-                        lineItem.setName("test item");
-                        lineItem.setPrice(amountLong);
-
-                        orderConnector.addCustomLineItem(order.getId(), lineItem, false);
-
+                        setResult(RESULT_CANCELED);
+                        Toast.makeText(getApplicationContext(), getString(R.string.payment_cancelled), Toast.LENGTH_SHORT).show();
+                        finish();
                     }
                 }
 
@@ -326,9 +323,11 @@ public class CloverPaymentActivity extends AppCompatActivity {
                 }
             } else if(resultCode == RESULT_CANCELED) {
                 Toast.makeText(getApplicationContext(), getString(R.string.payment_cancelled), Toast.LENGTH_SHORT).show();
+                setResult(resultCode);
                 finish();
             } else {
                 Toast.makeText(getApplicationContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
+                setResult(resultCode);
                 finish();
             }
         }
@@ -426,8 +425,6 @@ public class CloverPaymentActivity extends AppCompatActivity {
         Gson gson = new Gson();
         PaymentPayloadMetaDataDTO metadataDTO = gson.fromJson(patientPaymentMetaDataString, PaymentPayloadMetaDataDTO.class);
         Map<String, String> queries = new HashMap<>();
-        queries.put("practice_mgmt", metadataDTO.getPracticeMgmt());
-        queries.put("practice_id", metadataDTO.getPracticeId());
         queries.put("patient_id", metadataDTO.getPatientId());
 
         Map<String, String> header = new HashMap<>();
