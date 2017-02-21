@@ -119,7 +119,11 @@ public class PracticeNavigationHelper {
             }
 
             case PracticeNavigationStateConstants.PRACTICE_PAYMENT: {
+                if(!(context instanceof BasePracticeActivity)){//TODO payment model is empty from Clover Payments so screen does not load properly
+                    return;
+                }
                 intent = new Intent(context, PaymentsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             }
 

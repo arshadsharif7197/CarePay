@@ -1,5 +1,7 @@
 package com.carecloud.carepay.practice.library.base;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -7,10 +9,14 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.customdialog.IConfirmPracticeAppPin;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
+
+import org.apache.commons.lang3.NotImplementedException;
 
 /**
  * Created by Jahirul Bhuiyan on 10/24/2016.
@@ -147,4 +153,31 @@ public abstract class BasePracticeActivity extends BaseActivity
 
         return true;
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        switch (requestCode){
+            case CarePayConstants.CLOVER_PAYMENT_INTENT_REQUEST_CODE:{
+                if(resultCode == RESULT_OK){
+                    processExternalPayment(PaymentExecution.clover, data);
+                }else{
+                    processExternalPaymentFailure(PaymentExecution.clover);
+                }
+
+                break;
+            }
+            default:{
+                super.onActivityResult(requestCode, resultCode, data);
+            }
+        }
+    }
+
+    protected void processExternalPayment(PaymentExecution paymentExecution, Intent data){
+        throw new NotImplementedException("Process external payment has not been implemented by "+getClass().getSimpleName());
+    }
+
+    protected void processExternalPaymentFailure(PaymentExecution paymentExecution){
+
+    }
+
 }

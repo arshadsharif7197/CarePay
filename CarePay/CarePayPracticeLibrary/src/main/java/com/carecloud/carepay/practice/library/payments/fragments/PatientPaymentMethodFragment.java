@@ -19,21 +19,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
-import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
-import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
+import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItemMetadata;
+import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -380,20 +383,36 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
 
             double paymentAmount = getArguments().getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
             if(paymentAmount==0){
-                paymentAmount = patientPayments.getBalances().get(0).getPayload().get(0).getAmount().doubleValue();
+                paymentAmount = patientPayments.getBalances().get(0).getPayload().get(0).getAmount();
             }
             Gson gson = new Gson();
             String patientPaymentMetaDataString = gson.toJson(patientPayments.getBalances().get(0).getMetadata());
             String paymentTransitionString = gson.toJson(paymentsDTO.getPaymentsMetadata().getPaymentsTransitions().getMakePayment());
             Intent intent = new Intent();
-            intent.setAction("com.carecloud.carepay.practice.clover.payments.CloverPaymentActivity");
-            intent.putExtra("PAYMENT_METADATA", patientPaymentMetaDataString);
-            intent.putExtra("PAYMENT_AMOUNT", paymentAmount);
-            intent.putExtra("PAYMENT_TRANSITION", paymentTransitionString);
-            if(StringUtil.isNullOrEmpty(patientPayments.getBalances().get(0).getPayload().get(0).getType()))
-            {
-                intent.putExtra("ITEM_NAME", patientPayments.getBalances().get(0).getPayload().get(0).getType());
+            intent.setAction(CarePayConstants.CLOVER_PAYMENT_INTENT);
+            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_METADATA, patientPaymentMetaDataString);
+            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, paymentAmount);
+            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_TRANSITION, paymentTransitionString);
+
+            List<PaymentLineItem> paymentLineItems = new ArrayList<>();
+            List<PatienceBalanceDTO> balances = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances();
+            for(PatienceBalanceDTO balance : balances) {
+
+                PaymentLineItem paymentLineItem = new PaymentLineItem();
+                paymentLineItem.setAmount(balance.getPayload().get(0).getAmount());
+                paymentLineItem.setDescription(balance.getPayload().get(0).getType());
+
+                PaymentLineItemMetadata metadata = new PaymentLineItemMetadata();
+                metadata.setPatientID(balance.getMetadata().getPatientId());
+                metadata.setPracticeID(balance.getMetadata().getPracticeId());
+//                metadata.setProviderID(balance.getMetadata().getProviderID()); //TODO this is missing in the DTO
+//                metadata.setLocationID(balance.getMetadata().getLocationID()); //TODO this is missing in the DTO
+
+                paymentLineItems.add(paymentLineItem);
+
             }
+
+            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS, gson.toJson(paymentLineItems));
             getContext().startActivity(intent, new Bundle());
         }
         catch (Exception e)

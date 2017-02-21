@@ -17,9 +17,13 @@ public class CloverPaymentDTO {
     @Expose
     private boolean offline = false;
 
-    @SerializedName("cardTransacton")
+    @SerializedName("cardTransaction")
     @Expose
     private CloverCardTransactionInfo cloverCardTransactionInfo = new CloverCardTransactionInfo();
+
+    @SerializedName("id")
+    @Expose
+    private String id;
 
     public String getResult() {
         return result;
@@ -43,5 +47,13 @@ public class CloverPaymentDTO {
 
     public void setCloverCardTransactionInfo(CloverCardTransactionInfo cloverCardTransactionInfo) {
         this.cloverCardTransactionInfo = cloverCardTransactionInfo;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
