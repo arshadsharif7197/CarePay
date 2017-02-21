@@ -85,6 +85,10 @@ public class PaymentMethod {
         this.bankAccountToken = bankAccountToken;
     }
 
+    /**
+     * Verify Payment Method Validity
+     * @return true is payment method is valid
+     */
     public boolean isPaymentMethodValid(){
         switch (type){
             case credit_card:{

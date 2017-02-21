@@ -37,6 +37,10 @@ public class PaymentPostModel {
         paymentMethods.add(paymentMethod);
     }
 
+    /**
+     * Verify validity of payment model
+     * @return true if payment model is valid
+     */
     public boolean isPaymentModelValid(){
         if(amount <0){
             return false;

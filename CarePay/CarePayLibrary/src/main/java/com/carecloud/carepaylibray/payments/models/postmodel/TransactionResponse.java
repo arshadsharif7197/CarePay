@@ -32,6 +32,10 @@ public class TransactionResponse {
         this.response = response;
     }
 
+    /**
+     * Verify validity of transaction response object
+     * @return true if valid
+     */
     public boolean isValid(){
         return transactionID != null;
     }

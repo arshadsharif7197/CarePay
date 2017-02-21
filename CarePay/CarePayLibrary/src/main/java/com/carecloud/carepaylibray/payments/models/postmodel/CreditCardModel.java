@@ -98,6 +98,10 @@ public class CreditCardModel {
         this.billingInformation = billingInformation;
     }
 
+    /**
+     * Verivy validity of Credit Card
+     * @return true if credit card is valid
+     */
     public boolean isValidCreditCard(){
         return cardNumber != null &&
                 cardType != null &&
