@@ -89,7 +89,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     private String[] gender;
     private String[] race;
     private String[] ethnicity;
-    private ProgressBar demographicProgressBar;
 
     private DemographicMetadataEntityAddressDTO addressMetaDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
@@ -183,11 +182,8 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         isPractice = ApplicationMode.getInstance().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
-        if (isPractice){
-            view = inflater.inflate(R.layout.fragment_review_demographic_practice, container, false);
-        }else{
-            view = inflater.inflate(R.layout.fragment_review_demographic, container, false);
-        }
+        view = inflater.inflate(R.layout.fragment_review_demographic, container, false);
+
         initializeDemographicsDTO();
 
         rootview = (LinearLayout) view.findViewById(R.id.demographicsReviewRootLayout);
@@ -241,7 +237,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
     private void initialiseUIFields() {
 
-
         profileImageview = (ImageView) view.findViewById(R.id.patientPicImageView);
         imageCaptureHelper = new ImageCaptureHelper(getActivity(), profileImageview, globalLabelsMetaDTO);
         updateProfileImageButton = (Button) view.findViewById(R.id.updateProfileImageButton);
@@ -280,9 +275,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                 stateAbbr = adapter.getItem(position);
             }
         });
-
-        demographicProgressBar = (ProgressBar) view.findViewById(R.id.demographicReviewProgressBar);
-        demographicProgressBar.setVisibility(View.GONE);
 
         buttonConfirmData = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
 
@@ -717,7 +709,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ProgressDialogUtil.getInstance(getContext()).dismiss();
             buttonConfirmData.setEnabled(true);
-            demographicProgressBar.setVisibility(View.GONE);
             ((CheckinDemographicsInterface)getActivity()).navigateToConsentFlow(workflowDTO);
         }
 
@@ -1068,19 +1059,8 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             String imageUrl = demographicPersDetailsPayloadDTO.getProfilePhoto();
             if (!StringUtil.isNullOrEmpty(imageUrl)) {
                 Picasso.with(getActivity()).load(imageUrl).transform(
-                        new CircleImageTransform()).resize(160, 160).into(this.profileImageview);
-                if(isPractice){
-                    Picasso.Builder builder = new Picasso.Builder(getContext());
-                    RequestCreator load = builder.build().load(imageUrl);
-                    load.fit().into((ImageView) view.findViewById(R.id.chknin_profile_bg_image));
-                    updateProfileImageButton.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_silver_overlay));
-                    updateProfileImageButton.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
-                }
+                        new CircleImageTransform()).fit().into(this.profileImageview);
             }else{
-                if(isPractice) {
-                    view.findViewById(R.id.review_profile_chkin_header).setBackgroundColor(ContextCompat.getColor(getContext(), R.color.light_gray));
-
-                }
                 profileImageview.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.icn_placeholder_user_profile_png));
             }
 
