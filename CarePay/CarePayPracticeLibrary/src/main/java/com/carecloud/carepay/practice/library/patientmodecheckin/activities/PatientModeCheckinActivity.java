@@ -595,8 +595,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
                     super.onBackPressed();
                 } else {
                     getFragmentManager().popBackStack();
-                    CheckinIntakeForm1Fragment intakeForm1Fragment = (CheckinIntakeForm1Fragment)
-                            getSupportFragmentManager().findFragmentByTag(CheckinIntakeForm1Fragment.class.getSimpleName());
                 }
             } else {
                 super.onBackPressed();
@@ -672,12 +670,25 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     }
 
     @Override
-    public void navigateToInsuranceDocumentFragment(int index, DemographicInsurancePayloadDTO model) {
+    public void navigateToInsuranceDocumentFragment(final int index, DemographicInsurancePayloadDTO model) {
         CheckinDemographicsFragment checkinFragment = (CheckinDemographicsFragment)
                 getSupportFragmentManager().findFragmentById(R.id.checkInContentHolderId);
         onDemographicDtoChanged(checkinFragment.updateModels());
 
-        CheckinInsuranceEditDialog checkinInsuranceEditDialog = new CheckinInsuranceEditDialog(this,false,demographicDTO,index, this, this);
+        CheckinInsuranceEditDialog.CheckinInsuranceEditDialogListener listener = new CheckinInsuranceEditDialog.CheckinInsuranceEditDialogListener() {
+            @Override
+            public void onInsuranceSaved(DemographicInsurancePayloadDTO insuranceDTO) {
+                updateInsuranceDTO(index, insuranceDTO);
+            }
+
+            @Override
+            public void onInsuranceRemoved() {
+                disableMainButton(false);
+                initializeInsurancesFragment();
+            }
+        };
+
+        CheckinInsuranceEditDialog checkinInsuranceEditDialog = new CheckinInsuranceEditDialog(this,false,demographicDTO, index, listener);
         checkinInsuranceEditDialog.show();
     }
 

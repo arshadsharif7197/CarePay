@@ -179,12 +179,12 @@ public class HealthInsuranceFragment extends Fragment {
     }
 
     public interface InsuranceDocumentScannerListener {
-        public void navigateToInsuranceDocumentFragment(int index, DemographicInsurancePayloadDTO model);
+        void navigateToInsuranceDocumentFragment(int index, DemographicInsurancePayloadDTO model);
 
-        public void navigateToParentFragment();
+        void navigateToParentFragment();
 
-        public void updateInsuranceDTO(int index, DemographicInsurancePayloadDTO model);
+        void updateInsuranceDTO(int index, DemographicInsurancePayloadDTO model);
 
-        public void disableMainButton(boolean isDisabled);
+        void disableMainButton(boolean isDisabled);
     }
 }

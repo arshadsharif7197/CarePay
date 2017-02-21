@@ -29,8 +29,6 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePhotoDTO;
-import com.carecloud.carepaylibray.demographics.fragments.CheckinDemographicsFragment;
-import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
 import com.carecloud.carepaylibray.demographics.scanner.InsuranceScannerFragment;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
@@ -53,14 +51,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
-/**
- * Created by prem_mourya on 11/23/2016.
- */
-
 public class CheckinInsuranceEditDialog extends BasePracticeDialog {
 
+    private final CheckinInsuranceEditDialogListener listener;
     private Context context;
     private LayoutInflater inflater;
     private View view;
@@ -93,14 +86,14 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
     private byte[] scanDocFrontByte;
     private byte[] scanDocBackByte;
     private Button saveChangesButton;
-    private Button removeButton;
     private int index;
-
-    private HealthInsuranceFragment.InsuranceDocumentScannerListener  insuranceDocumentScannerListener;
-    private CheckinDemographicsFragment.CheckinDemographicsFragmentListener checkInListener;
 
     protected Bitmap bitmap;
 
+    public interface CheckinInsuranceEditDialogListener {
+        void onInsuranceSaved(DemographicInsurancePayloadDTO insuranceDTO);
+        void onInsuranceRemoved();
+    }
 
     /**
      * for insurance Dialog edit
@@ -110,15 +103,13 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
      *   @param index for index
      */
     public CheckinInsuranceEditDialog(Context context,boolean isFooterVisibity,DemographicDTO demographicDTO,int index,
-                                      HealthInsuranceFragment.InsuranceDocumentScannerListener  insuranceDocumentScannerListener,
-                                      CheckinDemographicsFragment.CheckinDemographicsFragmentListener checkInListener){
+                                      CheckinInsuranceEditDialogListener listener){
         super(context,demographicDTO.getMetadata().getLabels().getDemographicsCancelLabel(),isFooterVisibity);
-        this.insuranceDocumentScannerListener = insuranceDocumentScannerListener;
+        this.listener = listener;
         this.context = context;
-        this.checkInListener = checkInListener;
         this.index =index;
         this.demographicDTO =demographicDTO;
-        if( index >=0 ){
+        if (index >= 0) {
             insuranceDTO = demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(index);
         } else {
             insuranceDTO = new DemographicInsurancePayloadDTO();
@@ -141,27 +132,24 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
     }
 
     private void initializeUIFields() {
-
         getOptions();
 
-
         saveChangesButton = (Button)view.findViewById(R.id.saveChangesButton);
-        removeButton = (Button)view.findViewById(R.id.removeutton);
         saveChangesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                insuranceDocumentScannerListener.updateInsuranceDTO(index,
-                                                                    insuranceDTO);
+                listener.onInsuranceSaved(insuranceDTO);
                 dismiss();
             }
         });
+
+        Button removeButton = (Button) view.findViewById(R.id.removeButton);
         removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (index>=0) {
+                if (index >= 0) {
                     onRemoveChanges();
-                    insuranceDocumentScannerListener.disableMainButton(false);
-                    checkInListener.initializeInsurancesFragment();
+                    listener.onInsuranceRemoved();
                 }
                 dismiss();
             }

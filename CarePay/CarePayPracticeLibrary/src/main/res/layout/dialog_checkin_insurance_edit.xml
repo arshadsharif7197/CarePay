@@ -202,7 +202,7 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/removeutton"
+            android:id="@+id/removeButton"
             android:layout_width="@dimen/dimen_144dp"
             android:layout_height="@dimen/dimen_50dp"
             android:background="@drawable/button_rounded_rose"
