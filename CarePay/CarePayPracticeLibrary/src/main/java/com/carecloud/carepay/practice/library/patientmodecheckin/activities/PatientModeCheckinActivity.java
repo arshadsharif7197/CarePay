@@ -759,6 +759,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         switch (execution){
             case clover:{
                 //TODO get the updated Patient Object and look throught the original list to update balance or remove
+                break;
             }
             default:
                 //nothing

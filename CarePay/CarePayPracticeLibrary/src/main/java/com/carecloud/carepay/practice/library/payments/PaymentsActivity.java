@@ -270,6 +270,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         switch (execution){
             case clover:{
                 //TODO get the updated Patient Object and look throught the original list to update balance or remove
+                break;
             }
             default:
                 //nothing
