@@ -45,20 +45,25 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
 
     @Override
     public void showProgressDialog() {
-        if(progressDialog!=null && progressDialog.isShowing()) {
+        if (!isVisible()) {
             return;
         }
 
-        if(progressDialog == null) {
+        if(null != progressDialog && progressDialog.isShowing()) {
+            return;
+        }
+
+        if(null == progressDialog) {
             progressDialog = new ProgressDialogUtil(this);
         }
+
         progressDialog.setCancelable(false);
         progressDialog.show();
     }
 
     @Override
     public void hideProgressDialog() {
-        if(progressDialog != null && progressDialog.isShowing()){
+        if(null != progressDialog && progressDialog.isShowing()){
             progressDialog.dismiss();
             progressDialog = null;
         }
