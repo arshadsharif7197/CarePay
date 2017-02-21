@@ -349,7 +349,6 @@ public class SigninActivity extends BasePracticeActivity {
             @Override
             public void onClick(View v) {
                 if (areAllValid()) {
-                    signInButton.setClickable(false);
                     signInUser();
                 }
             }
@@ -520,12 +519,13 @@ public class SigninActivity extends BasePracticeActivity {
     }
 
     private void signInUser() {
-        Log.v(LOG_TAG, "sign in user");
+        Log.d(LOG_TAG, "Sign in user");
+
+        signInButton.setClickable(false);
         String userName = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
-        Log.v(this.getClass().getSimpleName(), "passw: " + password);
-        CognitoAppHelper.signIn(userName, password, cognitoActionCallback);
 
+        CognitoAppHelper.signIn(userName, password, cognitoActionCallback);
     }
 
     public void setTypeFace() {
