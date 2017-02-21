@@ -677,7 +677,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
                 getSupportFragmentManager().findFragmentById(R.id.checkInContentHolderId);
         onDemographicDtoChanged(checkinFragment.updateModels());
 
-        CheckinInsuranceEditDialog checkinInsuranceEditDialog = new CheckinInsuranceEditDialog(this,false,demographicDTO,index, this);
+        CheckinInsuranceEditDialog checkinInsuranceEditDialog = new CheckinInsuranceEditDialog(this,false,demographicDTO,index, this, this);
         checkinInsuranceEditDialog.show();
     }
 

@@ -29,6 +29,7 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePhotoDTO;
+import com.carecloud.carepaylibray.demographics.fragments.CheckinDemographicsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
 import com.carecloud.carepaylibray.demographics.scanner.InsuranceScannerFragment;
 
@@ -96,6 +97,7 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
     private int index;
 
     private HealthInsuranceFragment.InsuranceDocumentScannerListener  insuranceDocumentScannerListener;
+    private CheckinDemographicsFragment.CheckinDemographicsFragmentListener checkInListener;
 
     protected Bitmap bitmap;
 
@@ -107,10 +109,13 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
      *  @param demographicDTO DTO
      *   @param index for index
      */
-    public CheckinInsuranceEditDialog(Context context,boolean isFooterVisibity,DemographicDTO demographicDTO,int index, HealthInsuranceFragment.InsuranceDocumentScannerListener  insuranceDocumentScannerListener){
+    public CheckinInsuranceEditDialog(Context context,boolean isFooterVisibity,DemographicDTO demographicDTO,int index,
+                                      HealthInsuranceFragment.InsuranceDocumentScannerListener  insuranceDocumentScannerListener,
+                                      CheckinDemographicsFragment.CheckinDemographicsFragmentListener checkInListener){
         super(context,demographicDTO.getMetadata().getLabels().getDemographicsCancelLabel(),isFooterVisibity);
         this.insuranceDocumentScannerListener = insuranceDocumentScannerListener;
         this.context = context;
+        this.checkInListener = checkInListener;
         this.index =index;
         this.demographicDTO =demographicDTO;
         if( index >=0 ){
@@ -155,8 +160,8 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
             public void onClick(View view) {
                 if (index>=0) {
                     onRemoveChanges();
-                    insuranceDocumentScannerListener.updateInsuranceDTO(-2,
-                                                                        insuranceDTO);
+                    insuranceDocumentScannerListener.disableMainButton(false);
+                    checkInListener.initializeInsurancesFragment();
                 }
                 dismiss();
             }
@@ -540,32 +545,39 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
             insurancebackPhotoDto = new DemographicInsurancePhotoDTO();
             insurancefrontPhotoDto = new DemographicInsurancePhotoDTO();
 
-            String insProvider = insuranceDTO.getInsuranceProvider();
-            if (!StringUtil.isNullOrEmpty(insProvider)) {
-                providerTextView.setText(insuranceDTO.getInsuranceProvider());
-            }
-            String insPlan = insuranceDTO.getInsurancePlan();
-            if (!StringUtil.isNullOrEmpty(insPlan)) {
-                planTextView.setText(insPlan);
-            }
-            String insNum = insuranceDTO.getInsuranceMemberId();
-            if (!StringUtil.isNullOrEmpty(insNum)) {
-                insuranceCardNumEditText.setText(insNum);
-                insuranceCardNumEditText.requestFocus(); // required for CAPS hint
-                view.requestFocus();
-            }
+            try {
 
-            EditText insuranceGroupNumEditText = (EditText)view.findViewById(R.id.reviewinsurnceGroupnum);
-            String groupNum = insuranceDTO.getInsuranceGroupId();
-            if (!StringUtil.isNullOrEmpty(groupNum)) {
-                insuranceGroupNumEditText.setText(groupNum);
-                insuranceGroupNumEditText.requestFocus();
-                view.requestFocus();
-            }
+                String insProvider = insuranceDTO.getInsuranceProvider();
+                if (!StringUtil.isNullOrEmpty(insProvider)) {
+                    providerTextView.setText(insuranceDTO.getInsuranceProvider());
+                }
+                String insPlan = insuranceDTO.getInsurancePlan();
+                if (!StringUtil.isNullOrEmpty(insPlan)) {
+                    planTextView.setText(insPlan);
+                }
+                String insNum = insuranceDTO.getInsuranceMemberId();
+                if (!StringUtil.isNullOrEmpty(insNum)) {
+                    insuranceCardNumEditText.setText(insNum);
+                    insuranceCardNumEditText.requestFocus(); // required for CAPS hint
+                    view.requestFocus();
+                }
 
-            String insCardType = insuranceDTO.getInsuranceType();
-            if (!StringUtil.isNullOrEmpty(insCardType)) {
-                cardTypeTextView.setText(insCardType);
+                EditText insuranceGroupNumEditText = (EditText) view.findViewById(R.id.reviewinsurnceGroupnum);
+                String groupNum = insuranceDTO.getInsuranceGroupId();
+                if (!StringUtil.isNullOrEmpty(groupNum)) {
+                    insuranceGroupNumEditText.setText(groupNum);
+                    insuranceGroupNumEditText.requestFocus();
+                    view.requestFocus();
+                }
+
+                String insCardType = insuranceDTO.getInsuranceType();
+                if (!StringUtil.isNullOrEmpty(insCardType)) {
+                    cardTypeTextView.setText(insCardType);
+                }
+            } catch (Exception e) {
+                SystemUtil.showDefaultFailureDialog(context);
+                Log.e(LOG_TAG, e.getMessage());
+                e.printStackTrace();
             }
         }
     }
