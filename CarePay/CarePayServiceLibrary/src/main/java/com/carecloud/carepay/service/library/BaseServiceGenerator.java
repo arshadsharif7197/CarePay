@@ -44,6 +44,7 @@ public class BaseServiceGenerator {
                 .baseUrl(API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create());
     }
+
     /**
      * Create the retrofil service for the specific service class
      * @param serviceClass Specific service class for converting in to retrofit service model

@@ -111,7 +111,6 @@ public class DemographicsSettingsFragment extends BaseFragment {
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         getSettingsLabels();
-        String userId = getCognitoAppHelper().getCurrUser();
         demographicsTextview = (CarePayTextView) view.findViewById(R.id.demographicsTextView);
         documentsTextview = (CarePayTextView) view.findViewById(R.id.documentsTextView);
         creditCardsTextview = (CarePayTextView) view.findViewById(R.id.creditCardsTextView);
@@ -131,7 +130,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
         signOutButton.setText(signOutString);
         title.setText(settingsString);
         patientNameTextview.setText(getUserName());
-        patientIdTextview.setText(userId);
+        patientIdTextview.setText(getCognitoAppHelper().getCurrUser());
         try {
          DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
          DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();

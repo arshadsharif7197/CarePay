@@ -80,10 +80,11 @@ public class CognitoAppHelper {
 
     private Set<String> currUserAttributes;
 
-    /*
-    * initialize cognito from the application
-    * default value assign for variables
-    * */
+    /**
+     * initialize cognito from the application
+     * default value assign for variables
+     * @param context the context
+     */
     public CognitoAppHelper(Context context) {
         setData();
 
