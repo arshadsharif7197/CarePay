@@ -174,7 +174,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         idNumberEdit = (EditText) view.findViewById(R.id.demogrDocsLicenseNumEdit);
         idNumberInputText = (TextInputLayout) view.findViewById(R.id.demogrDocsNumberInputLayout);
 
-        label = StringUtil.captialize(globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDriversLicenseNumber());
+        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDriversLicenseNumber();
         idNumberInputText.setTag(label);
         idNumberEdit.setTag(idNumberInputText);
         idNumberEdit.setHint(label);
