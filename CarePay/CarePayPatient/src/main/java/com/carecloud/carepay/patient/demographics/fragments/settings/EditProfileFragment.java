@@ -118,7 +118,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
             Picasso.with(appCompatActivity).load(imageUrl).transform(
                     new CircleImageTransform()).resize(160, 160).into(profileImageview);
         }
-        String userId = CognitoAppHelper.getCurrUser();
+        String userId = getCognitoAppHelper().getCurrUser();
 
         CarePayTextView patientNameValue = (CarePayTextView) view.findViewById(R.id.patientNameTextView);
         patientNameValue.setText(firstNameValString + " " + middleNameValString+" " + lastNameValString);

@@ -10,6 +10,7 @@ import android.util.Log;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
@@ -24,6 +25,7 @@ public class CarePayApplication extends Application
 
     private ApplicationPreferences applicationPreferences;
     private WorkflowServiceHelper workflowServiceHelper;
+    private CognitoAppHelper cognitoAppHelper;
 
     @Override
     public void onCreate() {
@@ -87,8 +89,8 @@ public class CarePayApplication extends Application
         if(activity instanceof SigninActivity) {
             // log out previous user from Cognito
             Log.v(this.getClass().getSimpleName(), "sign out Cognito");
-            //CognitoAppHelper.getPool().getUser().signOut();
-            //CognitoAppHelper.setUser(null);
+            //getCognitoAppHelper().getPool().getUser().signOut();
+            //getCognitoAppHelper().setUser(null);
         }
     }
 
@@ -108,5 +110,15 @@ public class CarePayApplication extends Application
         }
 
         return workflowServiceHelper;
+    }
+
+    @Override
+    public CognitoAppHelper getCognitoAppHelper() {
+        if (cognitoAppHelper == null) {
+            cognitoAppHelper = new CognitoAppHelper(this);
+            getWorkflowServiceHelper().setCognitoAppHelper(cognitoAppHelper);
+        }
+
+        return cognitoAppHelper;
     }
 }

@@ -47,8 +47,8 @@ public class PaymentMethodActivity extends BasePatientActivity {
     }
 
     private void getPaymentInformation() {
-        PaymentsService paymentService = (new BaseServiceGenerator(PaymentMethodActivity.this))
-                .createService(PaymentsService.class);
+        PaymentsService paymentService = (new BaseServiceGenerator())
+                .createService(getCognitoAppHelper(), PaymentsService.class);
         Call<PaymentsModel> call = paymentService.fetchPaymentInformation();
         call.enqueue(new Callback<PaymentsModel>() {
             @Override

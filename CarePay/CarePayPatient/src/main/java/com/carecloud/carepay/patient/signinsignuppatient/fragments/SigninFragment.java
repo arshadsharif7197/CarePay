@@ -394,7 +394,7 @@ public class SigninFragment extends BaseFragment {
         String userName = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
-        CognitoAppHelper.signIn(userName, password, cognitoActionCallback);
+        getCognitoAppHelper().signIn(userName, password, cognitoActionCallback);
 
     }
 

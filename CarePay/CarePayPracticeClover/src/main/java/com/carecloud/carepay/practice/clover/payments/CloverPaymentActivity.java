@@ -66,7 +66,7 @@ public class CloverPaymentActivity extends BaseActivity {
     private Account account;
     private OrderConnector orderConnector;
     private Order order;
-    private Long amountLong=new Long(0);
+    private Long amountLong = 0L;
     private double amountDouble;
     private String paymentTransitionString ;
     private String patientPaymentMetaDataString;
@@ -83,7 +83,7 @@ public class CloverPaymentActivity extends BaseActivity {
             Intent intent = getIntent();
             if (intent.hasExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT)) {
                 amountDouble = intent.getDoubleExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, 0.00);
-                amountLong = new Long((long) (amountDouble*100));
+                amountLong = (long) (amountDouble * 100);
             }
             if (intent.hasExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS)) {
                 Gson gson = new Gson();
@@ -111,7 +111,6 @@ public class CloverPaymentActivity extends BaseActivity {
                 if (account == null) {
                     Toast.makeText(this, getString(R.string.no_account), Toast.LENGTH_SHORT).show();
                     finish();
-                    return;
                 }
             }
 

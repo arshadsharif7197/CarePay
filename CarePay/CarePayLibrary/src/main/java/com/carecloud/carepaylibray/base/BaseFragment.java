@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 
 /**
  * Created by cocampo on 2/6/17.
@@ -70,6 +71,11 @@ public abstract class BaseFragment extends Fragment implements ISession {
     @Override
     public WorkflowServiceHelper getWorkflowServiceHelper() {
         return ((ISession) getActivity()).getWorkflowServiceHelper();
+    }
+
+    @Override
+    public CognitoAppHelper getCognitoAppHelper() {
+        return ((IApplicationSession) getActivity()).getCognitoAppHelper();
     }
 
     @Override

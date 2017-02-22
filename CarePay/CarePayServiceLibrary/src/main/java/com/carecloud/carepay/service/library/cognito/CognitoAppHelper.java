@@ -44,33 +44,22 @@ public class CognitoAppHelper {
 
     // App settings
 
-    private static List<String>        attributeDisplaySeq;
-    private static Map<String, String> signUpFieldsC2O;
-    private static Map<String, String> signUpFieldsO2C;
+    private List<String>        attributeDisplaySeq;
+    private Map<String, String> signUpFieldsC2O;
+    private Map<String, String> signUpFieldsO2C;
 
-    private static CognitoAppHelper cognitoAppHelper;
-    private static CognitoUserPool  userPool;
-    private static String           user;
-    private static String           patientUser;
-    private static CognitoDevice    newDevice;
-    private static int              itemCount;
-
-    private static Context context;
-
-   /* private static final String userPoolId = CognitoConstants.USER_POOL_ID;
-    private static final String clientId   = CognitoConstants.CLIENT_ID;*/
-
-
-    private CognitoAppHelper() {
-    }
-
+    private CognitoUserPool  userPool;
+    private String           user;
+    private String           patientUser;
+    private CognitoDevice    newDevice;
+    private int              itemCount;
 
     /**
      * App secret associated with your app id - if the App id does not have an associated App secret,
      * set the App secret to null.
      * e.g. clientSecret = null;
      */
-    private static final String clientSecret = null; /* "j9n2l7ul6jnrq68hb0c0dc4oea8i44ifm5jmictv9eisk711f67";*/
+    private final String clientSecret = null; /* "j9n2l7ul6jnrq68hb0c0dc4oea8i44ifm5jmictv9eisk711f67";*/
 
     /**
      * Set Your User Pools region.
@@ -79,41 +68,31 @@ public class CognitoAppHelper {
     private static final Regions cognitoRegion = Regions.US_EAST_1; /* Regions.US_WEST_2;*/
 
     // User details from the service
-    private static CognitoUserSession currSession;
-    private static CognitoUserDetails userDetails;
+    private CognitoUserSession currSession;
+    private CognitoUserDetails userDetails;
 
     // User details to display - they are the current values, including any local modification
-    private static boolean phoneVerified;
-    private static boolean emailVerified;
+    private boolean phoneVerified;
+    private boolean emailVerified;
 
-    private static boolean phoneAvailable;
-    private static boolean emailAvailable;
+    private boolean phoneAvailable;
+    private boolean emailAvailable;
 
-    private static Set<String> currUserAttributes;
+    private Set<String> currUserAttributes;
 
     /*
     * initialize cognito from the application
     * default value assign for variables
     * */
-    public static void init(Context context) {
+    public CognitoAppHelper(Context context) {
         setData();
-        CognitoAppHelper.context = context;
-        if (cognitoAppHelper != null && userPool != null) {
-            return;
-        }
 
-        if (cognitoAppHelper == null) {
-            cognitoAppHelper = new CognitoAppHelper();
-        }
-
-        if (userPool == null) {
-            // Create a user pool with default ClientConfiguration
-            userPool = new CognitoUserPool(context,
-                    ApplicationMode.getInstance().getCognitoDTO().getUserPoolId(),
-                    ApplicationMode.getInstance().getCognitoDTO().getClientId(),
-                    clientSecret,
-                    cognitoRegion);
-        }
+        // Create a user pool with default ClientConfiguration
+        userPool = new CognitoUserPool(context,
+                ApplicationMode.getInstance().getCognitoDTO().getUserPoolId(),
+                ApplicationMode.getInstance().getCognitoDTO().getClientId(),
+                clientSecret,
+                cognitoRegion);
 
         phoneVerified = false;
         phoneAvailable = false;
@@ -124,23 +103,23 @@ public class CognitoAppHelper {
         newDevice = null;
     }
 
-    public static CognitoUserPool getPool() {
+    public CognitoUserPool getPool() {
         return userPool;
     }
 
-    public static Map<String, String> getSignUpFieldsC2O() {
+    public Map<String, String> getSignUpFieldsC2O() {
         return signUpFieldsC2O;
     }
 
-    private static void setCurrSession(CognitoUserSession session) {
+    private void setCurrSession(CognitoUserSession session) {
         currSession = session;
     }
 
-    public static CognitoUserSession getCurrSession() {
+    public CognitoUserSession getCurrSession() {
         return currSession;
     }
 
-    public static void setUserDetails(CognitoUserDetails details) {
+    public void setUserDetails(CognitoUserDetails details) {
         userDetails = details;
         refreshWithSync();
     }
@@ -149,7 +128,7 @@ public class CognitoAppHelper {
      * Gives current user
      * @return current user
      */
-    public static String getCurrUser() {
+    public String getCurrUser() {
         if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             return patientUser;
         }
@@ -160,7 +139,7 @@ public class CognitoAppHelper {
      * Set current user
      * @param newUser user
      */
-    public static void setUser(String newUser) {
+    public void setUser(String newUser) {
         if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             patientUser = newUser;
         } else {
@@ -168,19 +147,19 @@ public class CognitoAppHelper {
         }
     }
 
-    public static boolean isPhoneVerified() {
+    public boolean isPhoneVerified() {
         return phoneVerified;
     }
 
-    public static boolean isEmailVerified() {
+    public boolean isEmailVerified() {
         return emailVerified;
     }
 
-    public static boolean isPhoneAvailable() {
+    public boolean isPhoneAvailable() {
         return phoneAvailable;
     }
 
-    public static boolean isEmailAvailable() {
+    public boolean isEmailAvailable() {
         return emailAvailable;
     }
 
@@ -201,15 +180,15 @@ public class CognitoAppHelper {
         return formattedString;
     }
 
-    public static int getItemCount() {
+    public int getItemCount() {
         return itemCount;
     }
 
-    private static void newDevice(CognitoDevice device) {
+    private void newDevice(CognitoDevice device) {
         newDevice = device;
     }
 
-    private static void setData() {
+    private void setData() {
         // Set attribute display sequence
         attributeDisplaySeq = new ArrayList<>();
         attributeDisplaySeq.add("given_name");
@@ -241,7 +220,7 @@ public class CognitoAppHelper {
 
     }
 
-    private static void refreshWithSync() {
+    private void refreshWithSync() {
         // This will refresh the current items to display list with the attributes fetched from service
         List<String> tempKeys = new ArrayList<>();
         List<String> tempValues = new ArrayList<>();
@@ -281,26 +260,26 @@ public class CognitoAppHelper {
      * @param password        The password
      * @param successCallback callback to be execruted on completion
      */
-    public static void signIn(String username,
+    public void signIn(String username,
                               final String password,
                               final CognitoActionCallback successCallback) {
         AuthenticationHandler authenticationHandler = executeUserAuthentication(password, successCallback);
         // set the username
-        CognitoAppHelper.setUser(username);
+        setUser(username);
         // perform the authentication
-        CognitoAppHelper.getPool().getUser(username).getSessionInBackground(authenticationHandler);
+        getPool().getUser(username).getSessionInBackground(authenticationHandler);
     }
 
     /**
      * @param successAction The action to be executed on user found
      * @return Whether the current user has is signed in
      */
-    public static boolean findCurrentUser(final CognitoActionCallback successAction) {
+    public boolean findCurrentUser(final CognitoActionCallback successAction) {
         AuthenticationHandler authenticationHandler = executeUserAuthentication("", successAction);
-        CognitoUser user = CognitoAppHelper.getPool().getCurrentUser();
+        CognitoUser user = getPool().getCurrentUser();
         String userName = user.getUserId();
         if (userName != null) {
-            CognitoAppHelper.setUser(userName);
+            setUser(userName);
             user.getSessionInBackground(authenticationHandler);
             return true;
         }
@@ -308,7 +287,7 @@ public class CognitoAppHelper {
     }
 
 
-    private static AuthenticationHandler executeUserAuthentication(final String password, final CognitoActionCallback successCallback) {
+    private AuthenticationHandler executeUserAuthentication(final String password, final CognitoActionCallback successCallback) {
         if (successCallback != null) {
             successCallback.onBeforeLogin();
         }
@@ -316,9 +295,9 @@ public class CognitoAppHelper {
         return new AuthenticationHandler() {
             @Override
             public void onSuccess(CognitoUserSession cognitoUserSession, CognitoDevice device) {
-                Log.v(context.getClass().getSimpleName(), "Auth Success");
-                CognitoAppHelper.setCurrSession(cognitoUserSession);
-                CognitoAppHelper.newDevice(device);
+                Log.v("CognitoAppHelper", "Auth Success");
+                setCurrSession(cognitoUserSession);
+                newDevice(device);
                 if (successCallback != null) {
                     successCallback.onLoginSuccess();
                 }
@@ -337,9 +316,9 @@ public class CognitoAppHelper {
 
             @Override
             public void onFailure(Exception exception) {
-                Log.e(context.getClass().getSimpleName(), CognitoAppHelper.formatException(exception));
+                Log.e("CognitoAppHelper", formatException(exception));
                 if (successCallback != null) {
-                    successCallback.onLoginFailure(CognitoAppHelper.formatException(exception));
+                    successCallback.onLoginFailure(formatException(exception));
                 }
             }
 
@@ -357,9 +336,9 @@ public class CognitoAppHelper {
      * @param username     The user name (eg email)
      * @param password     The password
      */
-    private static void getUserAuthentication(AuthenticationContinuation continuation, String username, String password) {
+    private void getUserAuthentication(AuthenticationContinuation continuation, String username, String password) {
         if (username != null) {
-            CognitoAppHelper.setUser(username);
+            setUser(username);
         }
         AuthenticationDetails authenticationDetails = new AuthenticationDetails(username, password, null);
         continuation.setAuthenticationDetails(authenticationDetails);

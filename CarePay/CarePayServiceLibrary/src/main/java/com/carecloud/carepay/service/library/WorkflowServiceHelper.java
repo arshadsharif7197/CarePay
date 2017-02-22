@@ -26,13 +26,17 @@ import retrofit2.Response;
 
 public class WorkflowServiceHelper {
 
-
+    private CognitoAppHelper cognitoAppHelper;
     private ApplicationPreferences applicationPreferences;
     private static int retryAttempts = 0;
 
 
     public WorkflowServiceHelper(ApplicationPreferences applicationPreferences) {
         this.applicationPreferences = applicationPreferences;
+    }
+
+    public void setCognitoAppHelper(CognitoAppHelper cognitoAppHelper) {
+        this.cognitoAppHelper = cognitoAppHelper;
     }
 
     /**
@@ -47,14 +51,14 @@ public class WorkflowServiceHelper {
                 || ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)
                 && ApplicationMode.getInstance().getUserPracticeDTO() != null) {
             userAuthHeaders.put("username", ApplicationMode.getInstance().getUserPracticeDTO().getUserName());
-            userAuthHeaders.put("Authorization", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
+            userAuthHeaders.put("Authorization", cognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
            if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
-               userAuthHeaders.put("username_patient", CognitoAppHelper.getCurrUser());
+               userAuthHeaders.put("username_patient", cognitoAppHelper.getCurrUser());
             }
-        } else if (!isNullOrEmpty(CognitoAppHelper.getCurrUser())) {
-            userAuthHeaders.put("username", CognitoAppHelper.getCurrUser());
-            if (CognitoAppHelper.getCurrSession() != null && !isNullOrEmpty(CognitoAppHelper.getCurrSession().getIdToken().getJWTToken())) {
-                userAuthHeaders.put("Authorization", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
+        } else if (!isNullOrEmpty(cognitoAppHelper.getCurrUser())) {
+            userAuthHeaders.put("username", cognitoAppHelper.getCurrUser());
+            if (cognitoAppHelper.getCurrSession() != null && !isNullOrEmpty(cognitoAppHelper.getCurrSession().getIdToken().getJWTToken())) {
+                userAuthHeaders.put("Authorization", cognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
             }
         }
         userAuthHeaders.putAll(getPreferredLanguageHeader());

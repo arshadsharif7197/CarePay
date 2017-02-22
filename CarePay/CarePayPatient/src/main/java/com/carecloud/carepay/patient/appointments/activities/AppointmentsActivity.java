@@ -144,9 +144,9 @@ public class AppointmentsActivity extends MenuPatientActivity {
             drawer.closeDrawer(GravityCompat.START);
         }
 
-        if (CognitoAppHelper.getPool().getUser() != null) {
-            CognitoAppHelper.getPool().getUser().signOut();
-            CognitoAppHelper.setUser(null);
+        if (getCognitoAppHelper().getPool().getUser() != null) {
+            getCognitoAppHelper().getPool().getUser().signOut();
+            getCognitoAppHelper().setUser(null);
         }
         // finish the app
         finishAffinity();

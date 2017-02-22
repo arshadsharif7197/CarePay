@@ -6,6 +6,7 @@ import android.provider.Settings;
 
 import com.carecloud.carepay.patient.BuildConfig;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
@@ -21,6 +22,7 @@ public class CarePayPatientApplication extends Application implements IApplicati
 
     private ApplicationPreferences applicationPreferences;
     private WorkflowServiceHelper workflowServiceHelper;
+    private CognitoAppHelper cognitoAppHelper;
 
     @Override
     public void onCreate() {
@@ -61,5 +63,15 @@ public class CarePayPatientApplication extends Application implements IApplicati
         }
 
         return workflowServiceHelper;
+    }
+
+    @Override
+    public CognitoAppHelper getCognitoAppHelper() {
+        if (cognitoAppHelper == null) {
+            cognitoAppHelper = new CognitoAppHelper(this);
+            getWorkflowServiceHelper().setCognitoAppHelper(cognitoAppHelper);
+        }
+
+        return cognitoAppHelper;
     }
 }
