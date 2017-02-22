@@ -23,6 +23,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -37,7 +38,7 @@ import java.util.Map;
  * Created by lsoco_user on 9/2/2016.
  * Select Language
  */
-public class SelectLanguageFragment extends Fragment implements LanguageListAdapter.OnItemClickListener {
+public class SelectLanguageFragment extends BaseFragment implements LanguageListAdapter.OnItemClickListener {
 
     private static final String LOG_TAG = SelectLanguageFragment.class.getSimpleName();
     RecyclerView languageListView;
@@ -48,12 +49,12 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
     WorkflowServiceCallback signinscreencallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             languageConfirmButton.setEnabled(true);
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
 
@@ -61,7 +62,7 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             languageConfirmButton.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
@@ -95,10 +96,10 @@ public class SelectLanguageFragment extends Fragment implements LanguageListAdap
             @Override
             public void onClick(View onClickListener) {
                 languageConfirmButton.setEnabled(false);
-                ApplicationPreferences.Instance.setUserLanguage(languageId);
+                getApplicationPreferences().setUserLanguage(languageId);
                 Map<String, String> query = new HashMap<>();
-                //   WorkflowServiceHelper.getInstance().executeApplicationStartRequest(signinscreencallback);
-                WorkflowServiceHelper.getInstance().execute(languageSelectionDTO.getMetadata().getTransitions().getSignin(), signinscreencallback, query, WorkflowServiceHelper.getApplicationStartHeaders());
+                //   getWorkflowServiceHelper().executeApplicationStartRequest(signinscreencallback);
+                getWorkflowServiceHelper().execute(languageSelectionDTO.getMetadata().getTransitions().getSignin(), signinscreencallback, query, getWorkflowServiceHelper().getApplicationStartHeaders());
             }
         });
 

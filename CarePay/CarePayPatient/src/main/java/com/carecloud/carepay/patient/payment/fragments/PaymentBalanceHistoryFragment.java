@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
@@ -28,7 +29,7 @@ import java.util.List;
  * Created by jorge on 29/12/16.
  */
 
-public class PaymentBalanceHistoryFragment  extends Fragment  {
+public class PaymentBalanceHistoryFragment  extends BaseFragment {
 
     private View noPaymentsLayout;
     private View pagerLayout;

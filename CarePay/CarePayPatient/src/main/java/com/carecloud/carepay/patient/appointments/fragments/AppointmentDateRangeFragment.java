@@ -21,6 +21,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customcomponents.CustomCalendarCellDecorator;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -39,7 +40,7 @@ import java.util.concurrent.TimeUnit;
  * Created by arpit_jain1 on 10/10/2016.
  * Custom Calendar Fragment
  */
-public class AppointmentDateRangeFragment extends Fragment {
+public class AppointmentDateRangeFragment extends BaseFragment {
 
     private CalendarPickerView calendarPickerView;
     private CustomGothamRoundedMediumButton applyDateRangeButton;

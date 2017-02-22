@@ -541,24 +541,24 @@ public class PatientPaymentPlanFragment extends BaseCheckinFragment {
                     paymentsModel.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPatientId());
 
             TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getAddPaymentPlan();
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, createPlanCallback, queries);
+            getWorkflowServiceHelper().execute(transitionDTO, createPlanCallback, queries);
         }
     }
 
     private WorkflowServiceCallback createPlanCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

@@ -32,7 +32,6 @@ import com.carecloud.carepay.practice.library.patientmodecheckin.activities.Pati
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
@@ -208,7 +207,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
                     public void onClick(DialogInterface dialog, int id) {
                         // if this button is clicked, close
                         // current activity
-                        WorkflowServiceHelper.getInstance().executeApplicationStartRequest(logOutCall);
+                        getWorkflowServiceHelper().executeApplicationStartRequest(logOutCall);
                         //CloverMainActivity.this.onBackPressed();
                         dialog.dismiss();
                     }
@@ -320,7 +319,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 //            PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
 //            transitionDTO = transitionsDTO.getOfficeNews();
 //        }
-//        WorkflowServiceHelper.getInstance().execute(transitionDTO, commonTransitionCallback);
+//        getWorkflowServiceHelper().execute(transitionDTO, commonTransitionCallback);
 
         // TODO: 11/17/2016  (for build/test); remove after testing ready
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
@@ -339,7 +338,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
             transitionDTO = transitionsDTO.getShop();
         }
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, commonTransitionCallback);
+        getWorkflowServiceHelper().execute(transitionDTO, commonTransitionCallback);
     }
 
     private void checkOut() {
@@ -353,7 +352,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
             transitionDTO = transitionsDTO.getPatientCheckout();
         }
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, commonTransitionCallback);
+        getWorkflowServiceHelper().execute(transitionDTO, commonTransitionCallback);
     }
 
     private void navigateToAppointments() {
@@ -365,16 +364,16 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
             queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, checkInCallback, queryMap);
+            getWorkflowServiceHelper().execute(transitionDTO, checkInCallback, queryMap);
 
         } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
-            PracticeNavigationHelper.setIsPatientModeAppointments(true);
+            getApplicationPreferences().setNavigateToAppointments(true);
             PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
             TransitionDTO transitionDTO = transitionsDTO.getPatientAppointments();
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
             queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, checkInCallback, queryMap);
+            getWorkflowServiceHelper().execute(transitionDTO, checkInCallback, queryMap);
         }
     }
 
@@ -390,7 +389,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
             transitionDTO = transitionsDTO.getPatientPayments();
         }
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, commonTransitionCallback);
+        getWorkflowServiceHelper().execute(transitionDTO, commonTransitionCallback);
     }
 
     private void navigateToCheckIn() {
@@ -402,15 +401,15 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
             queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, checkInCallback, queryMap);
+            getWorkflowServiceHelper().execute(transitionDTO, checkInCallback, queryMap);
         } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
-            PracticeNavigationHelper.setIsPatientModeAppointments(false);
+            getApplicationPreferences().setNavigateToAppointments(false);
             PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
             TransitionDTO transitionDTO = transitionsDTO.getPatientCheckin();
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
             queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, checkInCallback, queryMap);
+            getWorkflowServiceHelper().execute(transitionDTO, checkInCallback, queryMap);
         }
     }
 
@@ -432,7 +431,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
                 Map<String, String> query = new HashMap<>();
                 query.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
                 query.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
-                WorkflowServiceHelper.getInstance().execute(transitionsDTO.getPatientMode(), commonTransitionCallback, query);
+                getWorkflowServiceHelper().execute(transitionsDTO.getPatientMode(), commonTransitionCallback, query);
             }
         }, new ChangeModeDialog.LogoutClickListener() {
             @Override
@@ -453,25 +452,25 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         headers.put("x-api-key", HttpConstants.getApiStartKey());
         headers.put("Authorization", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
         query.put("transition", "true");
-        WorkflowServiceHelper.getInstance().execute(transitionsDTO, logOutCall, query, headers);
+        getWorkflowServiceHelper().execute(transitionsDTO, logOutCall, query, headers);
 
     }
 
     WorkflowServiceCallback checkInCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
 //            findViewById(R.id.homeCheckinClickable).setEnabled(true);
 //            findViewById(R.id.homeAppointmentsClickable).setEnabled(true);
             SystemUtil.showDefaultFailureDialog(CloverMainActivity.this);
@@ -482,12 +481,12 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     WorkflowServiceCallback logOutCall = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             // log out previous user from Cognito
             CognitoAppHelper.getPool().getUser().signOut();
             CognitoAppHelper.setUser(null);
@@ -497,7 +496,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(CloverMainActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -506,18 +505,18 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     WorkflowServiceCallback commonTransitionCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
 //            findViewById(R.id.homeCheckinClickable).setEnabled(true);
 //            findViewById(R.id.homeModeSwitchClickable).setEnabled(true);
 //            findViewById(R.id.homePaymentsClickable).setEnabled(true);
@@ -540,25 +539,25 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("transition", "true");
         // pass the pin when supported
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, practiceModeCallback, queryMap);
+        getWorkflowServiceHelper().execute(transitionDTO, practiceModeCallback, queryMap);
     }
 
     WorkflowServiceCallback practiceModeCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
 
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(CloverMainActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

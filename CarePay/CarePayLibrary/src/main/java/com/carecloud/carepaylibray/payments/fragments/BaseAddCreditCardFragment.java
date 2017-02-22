@@ -106,7 +106,7 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
             Bundle arguments = getArguments();
             if (arguments != null) {
                 Gson gson = new Gson();
-                String addressPayloadString = ApplicationPreferences.Instance.readStringFromSharedPref(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE);
+                String addressPayloadString = getApplicationPreferences().readStringFromSharedPref(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE);
                 addressPayloadDTO = new DemographicAddressPayloadDTO();
                 if (addressPayloadString.length() > 1) {
                     addressPayloadDTO = gson.fromJson(addressPayloadString, DemographicAddressPayloadDTO.class);
