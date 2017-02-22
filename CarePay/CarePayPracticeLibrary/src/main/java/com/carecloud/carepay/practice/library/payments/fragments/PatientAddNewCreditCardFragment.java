@@ -157,8 +157,6 @@ public class PatientAddNewCreditCardFragment extends BaseAddCreditCardFragment i
         Gson gson = new Gson();
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("language", getApplicationPreferences().getUserLanguage());
-        //queryMap.put("practice_mgmt", intakePaymentModel.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPracticeMgmt());
-        //queryMap.put("practice_id", intakePaymentModel.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPracticeId());
         queryMap.put("patient_id", intakePaymentModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getPatientId());
         TransitionDTO transitionDTO = intakePaymentModel.getPaymentsMetadata().getPaymentsTransitions().getAddCreditCard();
         String body = gson.toJson(creditCardsPayloadDTO);
