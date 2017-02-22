@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/dimen_25dp"
-    android:background="@color/colorPrimary"
+    android:background="@drawable/screen_background"
     tools:context=".appointments.ScheduleAppointmentActivity">
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView

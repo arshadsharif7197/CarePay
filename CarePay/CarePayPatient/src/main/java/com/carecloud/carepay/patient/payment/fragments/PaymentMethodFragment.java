@@ -341,8 +341,7 @@ public class PaymentMethodFragment extends BaseFragment implements RadioGroup.On
                     }
                 }
 
-                // Balance of at least $20
-                if ((previousBalance + coPay) > CarePayConstants.PAYMENT_PLAN_REQUIRED_BALANCE) {
+                if ((previousBalance + coPay) > 0) {
                     FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
                     PaymentPlanFragment fragment = (PaymentPlanFragment) fragmentmanager
                             .findFragmentByTag(PaymentPlanFragment.class.getSimpleName());
@@ -367,9 +366,6 @@ public class PaymentMethodFragment extends BaseFragment implements RadioGroup.On
                         ((ViewPaymentBalanceHistoryActivity) getActivity()).navigateToFragment(fragment, true);
                     }
 
-                } else {
-                    Toast.makeText(getActivity(), paymentsDTO.getPaymentsMetadata().getPaymentsLabel()
-                            .getPaymentPlanCreateConditionError(), Toast.LENGTH_SHORT).show();
                 }
             }
         }
