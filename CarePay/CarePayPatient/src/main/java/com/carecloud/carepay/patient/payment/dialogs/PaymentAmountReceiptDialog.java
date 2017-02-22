@@ -23,6 +23,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.payments.models.PaymentDetailsItemDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
@@ -135,18 +136,18 @@ public class PaymentAmountReceiptDialog extends Dialog implements View.OnClickLi
         queryString.put("patient_id", metadata.getPatientId());
 
         TransitionDTO transitionBalance = paymentReceiptModel.getPaymentsMetadata().getPaymentsLinks().getPaymentsPatientBalances();
-        WorkflowServiceHelper.getInstance().execute(transitionBalance, paymentsCallBack, queryString);
+        ((ISession) context).getWorkflowServiceHelper().execute(transitionBalance, paymentsCallBack, queryString);
     }
 
     private WorkflowServiceCallback paymentsCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            ((ISession) context).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) context).hideProgressDialog();
             ViewPaymentBalanceHistoryActivity.setIsPaymentDone(true);
             PatientNavigationHelper.setAccessPaymentsBalances(true);
             PatientNavigationHelper.getInstance(context).navigateToWorkflow(workflowDTO);
@@ -154,7 +155,7 @@ public class PaymentAmountReceiptDialog extends Dialog implements View.OnClickLi
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) context).hideProgressDialog();
             //SystemUtil.showDefaultFailureDialog(InTakeWebViewActivity.this);
             Log.e(context.getString(R.string.alert_title_server_error), exceptionMessage);
         }

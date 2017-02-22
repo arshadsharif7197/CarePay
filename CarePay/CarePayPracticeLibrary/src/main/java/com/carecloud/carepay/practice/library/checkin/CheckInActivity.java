@@ -381,18 +381,18 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         }
         queryMap.put("appointment_id" , appointmentDTO.getId());
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getCheckinAppointment();
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, checkInAppointmentCallback, queryMap);
+        getWorkflowServiceHelper().execute(transitionDTO, checkInAppointmentCallback, queryMap);
     }
 
     private WorkflowServiceCallback checkInAppointmentCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             findViewById(R.id.drop_down_area_view).setVisibility(View.GONE);
 
             // Reset to original state
@@ -403,7 +403,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             findViewById(R.id.drop_down_area_view).setVisibility(View.GONE);
         }
     };

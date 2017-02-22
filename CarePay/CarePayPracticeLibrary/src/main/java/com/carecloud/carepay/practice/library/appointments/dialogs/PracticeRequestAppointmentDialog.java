@@ -24,6 +24,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDT
 import com.carecloud.carepaylibray.appointments.models.AppointmentLocationsDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
@@ -167,7 +168,7 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
     private void onRequestAppointment() {
 
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
+        queryMap.put("language", ((ISession) context).getApplicationPreferences().getUserLanguage());
         queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
         queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
 
@@ -191,7 +192,7 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
 
         TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getMakeAppointment();
 
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, getMakeAppointmentCallback,makeAppointmentJSONObj
+        ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, getMakeAppointmentCallback,makeAppointmentJSONObj
                 .toString(), queryMap);
     }
 
@@ -199,18 +200,18 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
 
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(context).show();
+            ((ISession) context).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(context).dismiss();
+            ((ISession) context).hideProgressDialog();
             ((ScheduleAppointmentActivity) context).showAppointmentConfirmation();
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(context).dismiss();
+            ((ISession) context).hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(context);
             Log.e(context.getString(R.string.alert_title_server_error), exceptionMessage);
         }

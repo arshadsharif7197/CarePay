@@ -21,6 +21,9 @@ public class PaymentsSettingsPayloadDTO {
     @SerializedName("credit_card_type")
     @Expose
     private List<PaymentsSettingsPayloadCreditCardTypesDTO> creditCardType = new ArrayList<>();
+    @SerializedName("regular_payments")
+    @Expose
+    private PaymentsSettingsRegularPaymentsDTO regularPayments = new PaymentsSettingsRegularPaymentsDTO();
 
     /**
      * @return The paymentMethods
@@ -64,4 +67,21 @@ public class PaymentsSettingsPayloadDTO {
         this.creditCardType = creditCardType;
     }
 
+    /**
+     * Gets regular payments.
+     *
+     * @return the regular payments
+     */
+    public PaymentsSettingsRegularPaymentsDTO getRegularPayments() {
+        return regularPayments;
+    }
+
+    /**
+     * Sets regular payments.
+     *
+     * @param regularPayments the regular payments
+     */
+    public void setRegularPayments(PaymentsSettingsRegularPaymentsDTO regularPayments) {
+        this.regularPayments = regularPayments;
+    }
 }

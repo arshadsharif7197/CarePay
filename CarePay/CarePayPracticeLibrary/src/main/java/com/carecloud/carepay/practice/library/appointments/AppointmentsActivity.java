@@ -97,11 +97,11 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
             Map<String, String> headers = new HashMap<>();
             headers.put("x-api-key", HttpConstants.getApiStartKey());
             query.put("transition", "true");
-            WorkflowServiceHelper.getInstance().execute(appointmentsResultModel.getMetadata()
+            getWorkflowServiceHelper().execute(appointmentsResultModel.getMetadata()
                     .getTransitions().getLogout(), logOutCall, query, headers);
         } else if (viewId == R.id.btnHome) {
             findViewById(R.id.btnHome).setEnabled(false);
-            WorkflowServiceHelper.getInstance().execute(appointmentsResultModel.getMetadata()
+            getWorkflowServiceHelper().execute(appointmentsResultModel.getMetadata()
                     .getTransitions().getLogout(), homeCall);
         }
     }
@@ -109,12 +109,12 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
     WorkflowServiceCallback logOutCall = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             findViewById(R.id.logoutTextview).setEnabled(true);
             AppointmentsActivity.this.finish();
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
@@ -122,7 +122,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             findViewById(R.id.logoutTextview).setEnabled(true);
             SystemUtil.showDefaultFailureDialog(AppointmentsActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
@@ -132,12 +132,12 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
     WorkflowServiceCallback homeCall = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             findViewById(R.id.btnHome).setEnabled(true);
             AppointmentsActivity.this.finish();
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
@@ -145,7 +145,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             findViewById(R.id.btnHome).setEnabled(false);
             SystemUtil.showDefaultFailureDialog(AppointmentsActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
@@ -206,19 +206,19 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
 
         // API call to fetch latest appointments
         TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getLinks().getAppointments();
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, pageRefreshCallback);
+        getWorkflowServiceHelper().execute(transitionDTO, pageRefreshCallback);
     }
 
     WorkflowServiceCallback pageRefreshCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
             appointmentProgressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             appointmentProgressBar.setVisibility(View.GONE);
             if (appointmentsResultModel != null) {
                 Gson gson = new Gson();
@@ -229,7 +229,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             appointmentProgressBar.setVisibility(View.GONE);
             SystemUtil.showDefaultFailureDialog(AppointmentsActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);

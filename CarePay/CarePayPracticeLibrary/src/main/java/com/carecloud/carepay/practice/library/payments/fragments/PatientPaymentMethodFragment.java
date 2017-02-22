@@ -82,7 +82,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
             Gson gson = new Gson();
             String paymentInfo = bundle.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
             paymentsModel = gson.fromJson(paymentInfo, PaymentsModel.class);
-            paymentList = paymentsModel.getPaymentPayload().getPaymentSettings().getPayload().getPaymentMethods();
+            paymentList = paymentsModel.getPaymentPayload().getPaymentSettings().getPayload().getRegularPayments().getPaymentMethods();
 
             paymentInfo = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
             paymentsDTO = gson.fromJson(paymentInfo, PaymentsModel.class);
@@ -281,8 +281,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                     }
                 }
 
-                // Balance of at least $20
-                if ((previousBalance + coPay) > CarePayConstants.PAYMENT_PLAN_REQUIRED_BALANCE) {
+                if ((previousBalance + coPay) > 0) {
                     PatientPaymentPlanFragment fragment = new PatientPaymentPlanFragment();
 
                     Bundle arguments = getArguments();
@@ -293,9 +292,6 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                     fragment.setArguments(args);
 
                     ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
-                } else {
-                    Toast.makeText(getActivity(), paymentsModel.getPaymentsMetadata().getPaymentsLabel()
-                            .getPaymentPlanCreateConditionError(), Toast.LENGTH_SHORT).show();
                 }
             }
         }

@@ -10,91 +10,129 @@ import com.google.gson.Gson;
  * Created by Jahirul Bhuiyan on 9/6/2016.
  */
 public class ApplicationPreferences {
-    private static SharedPreferences sharedPreferences;
-    private static SharedPreferences.Editor editor;
-    private static Context context;
-    public static ApplicationPreferences Instance;
-    private String patientId = null;
-    private String practiceId = null;
-    private String practiceManagement = null;
-    private String prefix = null;
-    private String userId = null;
 
-    private ApplicationPreferences() {
+    private static final String DEFAULT_STRING_PREFERENCES = "-";
 
+    private static final String PREFERENCE_CAREPAY = "Preference_CarePay";
+
+    private static final String PREFERENCE_USER_SELECTED_LANGUAGE = "user_selected_language";
+
+    private static final String PREFERENCE_PRACTICE_SELECTED_LANGUAGE = "practice_user_selected_language";
+
+    private static final String PREFERENCE_PATIENT_ID = "patient_id";
+
+    private static final String PREFERENCE_PRACTICE_ID = "practice_id";
+
+    private static final String PREFERENCE_PRACTICE_MANAGEMENT = "practice_management";
+
+    private static final String PREFERENCE_PREFIX = "prefix";
+
+    private static final String PREFERENCE_USER_ID = "user_id";
+
+    private static final String PREFERENCE_IS_PATIENT_MODE_APPOINTMENTS = "is_patient_mode_appointments";
+
+    private Context context;
+
+    private String patientId;
+    private String practiceId;
+    private String practiceManagement;
+    private String prefix;
+    private String userId;
+    private String userLanguage;
+    private String practiceLanguage;
+    private Boolean navigateToAppointments;
+
+    public ApplicationPreferences(Context context) {
+        this.context = context;
     }
 
-    public static void createPreferences(Context mContext){
-        if (Instance == null) {
-            context = mContext;
-            Instance = new ApplicationPreferences();
-            sharedPreferences = context.getSharedPreferences(CarePayConstants.PREFERENCE_CAREPAY, Context.MODE_PRIVATE);
-            editor=sharedPreferences.edit();
+    public void setNavigateToAppointments(boolean newValue) {
+        navigateToAppointments = newValue;
+        writeStringToSharedPref(PREFERENCE_USER_SELECTED_LANGUAGE, userLanguage);
+    }
+
+    /**
+     * @return true if app is navigating to appointments
+     */
+    public boolean isNavigatingToAppointments() {
+        if (null != navigateToAppointments) {
+            return navigateToAppointments;
         }
+
+        return readBooleanFromSharedPref(PREFERENCE_IS_PATIENT_MODE_APPOINTMENTS);
     }
 
-    public void setUserLanguage(String language) {
-        editor.putString(CarePayConstants.PREFERENCE_USER_SELECTED_LANGUAGE, language);
-        editor.apply();
+    public void setUserLanguage(String newValue) {
+        userLanguage = newValue;
+        writeStringToSharedPref(PREFERENCE_USER_SELECTED_LANGUAGE, userLanguage);
     }
 
+    /**
+     * @return user preferred language. Returns default value if not set.
+     */
     public String getUserLanguage() {
-        return sharedPreferences.getString(CarePayConstants.PREFERENCE_USER_SELECTED_LANGUAGE, "en");
+        if (null != userLanguage) {
+            return userLanguage;
+        }
+
+        return readStringFromSharedPref(PREFERENCE_USER_SELECTED_LANGUAGE, "en");
     }
 
     /**
+     * @return user preferred language. Returns null if not set.
      *
-     * @param language language
      */
-    public void setPracticeLanguage(String language) {
-        editor.putString(CarePayConstants.PREFERENCE_PRACTICE_SELECTED_LANGUAGE, language);
-        editor.apply();
+    public String getUserLanguageRaw() {
+        if (null != userLanguage) {
+            return userLanguage;
+        }
+
+        return readStringFromSharedPref(PREFERENCE_USER_SELECTED_LANGUAGE);
     }
 
+    public void setPracticeLanguage(String newValue) {
+        practiceLanguage = newValue;
+        writeStringToSharedPref(PREFERENCE_PRACTICE_SELECTED_LANGUAGE, userLanguage);
+    }
+
+    /**
+     * @return practice preferred language
+     */
     public String getPracticeLanguage() {
-        return sharedPreferences.getString(CarePayConstants.PREFERENCE_PRACTICE_SELECTED_LANGUAGE, "en");
-    }
+        if (null != practiceLanguage) {
+            return practiceLanguage;
+        }
 
-    public void writeStringToSharedPref(String key, String value) {
-        editor.putString(key, value);
-        editor.apply();
-    }
-
-    public String readStringFromSharedPref(String key) {
-        return sharedPreferences.getString(key, CarePayConstants.DEFAULT_STRING_PREFERENCES);
-    }
-
-    public void saveObjectToSharedPreference(String key, Object object){
-        editor.putString(key, new Gson().toJson(object));
-        editor.apply();
+        return readStringFromSharedPref(PREFERENCE_PRACTICE_SELECTED_LANGUAGE, "en");
     }
 
     /**
      *
-     * @param patientId patientId
+     * @param newValue patientId
      */
-    public void setPatientId(String patientId) {
-        this.patientId=patientId;
-        editor.putString(CarePayConstants.PREFERENCE_PATIENT_ID, patientId);
-        editor.apply();
+    public void setPatientId(String newValue) {
+        patientId = newValue;
+        writeStringToSharedPref(PREFERENCE_PATIENT_ID, patientId);
     }
 
     /**
-     *
      * @return patientId
      */
     public String getPatientId() {
-        return sharedPreferences.getString(CarePayConstants.PREFERENCE_PATIENT_ID, patientId);
+        if (null != patientId) {
+            return patientId;
+        }
+
+        return readStringFromSharedPref(PREFERENCE_PATIENT_ID);
     }
 
     /**
      *
-     * @param practiceId practiceId
+     * @param newValue practiceId
      */
-    public void setPracticeId(String practiceId) {
-        this.practiceId=practiceId;
-        editor.putString(CarePayConstants.PREFERENCE_PRACTICE_ID, practiceId);
-        editor.apply();
+    public void setPracticeId(String newValue) {
+        practiceId = newValue;
+        writeStringToSharedPref(PREFERENCE_PRACTICE_ID, practiceId);
     }
 
     /**
@@ -102,17 +140,20 @@ public class ApplicationPreferences {
      * @return practiceId
      */
     public String getPracticeId() {
-        return sharedPreferences.getString(CarePayConstants.PREFERENCE_PRACTICE_ID, practiceId);
+        if (null != practiceId) {
+            return practiceId;
+        }
+
+        return readStringFromSharedPref(PREFERENCE_PRACTICE_ID);
     }
 
     /**
      *
-     * @param practiceManagement practiceManagement
+     * @param newValue practiceManagement
      */
-    public void setPracticeManagement(String practiceManagement) {
-        this.practiceManagement=practiceManagement;
-        editor.putString(CarePayConstants.PREFERENCE_PRACTICE_MANAGEMENT, practiceManagement);
-        editor.apply();
+    public void setPracticeManagement(String newValue) {
+        practiceManagement = newValue;
+        writeStringToSharedPref(PREFERENCE_PRACTICE_MANAGEMENT, practiceManagement);
     }
 
     /**
@@ -120,17 +161,20 @@ public class ApplicationPreferences {
      * @return practiceManagement
      */
     public String getPracticeManagement() {
-        return sharedPreferences.getString(CarePayConstants.PREFERENCE_PRACTICE_MANAGEMENT, practiceManagement);
+        if (null != practiceManagement) {
+            return practiceManagement;
+        }
+
+        return readStringFromSharedPref(PREFERENCE_PRACTICE_MANAGEMENT);
     }
 
     /**
      *
-     * @param userId the userId
+     * @param newValue the userId
      */
-    public void setUserId(String userId) {
-        this.userId=userId;
-        editor.putString(CarePayConstants.PREFERENCE_USER_ID, userId);
-        editor.apply();
+    public void setUserId(String newValue) {
+        userId = newValue;
+        writeStringToSharedPref(PREFERENCE_USER_ID, userId);
     }
 
     /**
@@ -138,17 +182,20 @@ public class ApplicationPreferences {
      * @return userId
      */
     public String getUserId() {
-        return sharedPreferences.getString(CarePayConstants.PREFERENCE_USER_ID, userId);
+        if (null != userId) {
+            return userId;
+        }
+
+        return readStringFromSharedPref(PREFERENCE_USER_ID);
     }
 
     /**
      *
-     * @param prefix the prefix
+     * @param newValue the prefix
      */
-    public void setPrefix(String prefix) {
-        this.prefix=prefix;
-        editor.putString(CarePayConstants.PREFERENCE_PREFIX, prefix);
-        editor.apply();
+    public void setPrefix(String newValue) {
+        prefix = newValue;
+        writeStringToSharedPref(PREFERENCE_PREFIX, prefix);
     }
 
     /**
@@ -156,6 +203,40 @@ public class ApplicationPreferences {
      * @return prefix
      */
     public String getPrefix() {
-        return sharedPreferences.getString(CarePayConstants.PREFERENCE_PREFIX, prefix);
+        if (null != prefix) {
+            return prefix;
+        }
+
+        return readStringFromSharedPref(PREFERENCE_PREFIX);
+    }
+
+    private void writeStringToSharedPref(String key, String value) {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
+    public void writeObjectToSharedPreference(String key, Object object){
+        writeStringToSharedPref(key, new Gson().toJson(object));
+    }
+
+    public String readStringFromSharedPref(String key) {
+        return readStringFromSharedPref(key, DEFAULT_STRING_PREFERENCES);
+    }
+
+    public String readStringFromSharedPref(String key, String value) {
+        return getSharedPreferences().getString(key, value);
+    }
+
+    private boolean readBooleanFromSharedPref(String key) {
+        return readBooleanFromSharedPref(key, false);
+    }
+
+    private boolean readBooleanFromSharedPref(String key, boolean value) {
+        return getSharedPreferences().getBoolean(key, value);
+    }
+
+    private SharedPreferences getSharedPreferences() {
+        return context.getSharedPreferences(PREFERENCE_CAREPAY, Context.MODE_PRIVATE);
     }
 }

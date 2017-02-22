@@ -64,12 +64,12 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
     WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             correctInformationButton.setEnabled(true);
             demographicProgressBar.setVisibility(View.GONE);
             PracticeNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
@@ -77,7 +77,7 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             correctInformationButton.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
@@ -492,17 +492,17 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
             queries.put("practice_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
             queries.put("appointment_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId());
 
-            Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
+            Map<String, String> header = getWorkflowServiceHelper().getPreferredLanguageHeader();
             header.put("transition", "true");
             header.put("username_patient", demographicDTO.getPayload().getDemographics().getMetadata().getUsername());
 
             Gson gson = new Gson();
             String demogrPayloadString = gson.toJson(demographicDTO.getPayload().getDemographics().getPayload());
             TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getUpdateDemographics();
-            ApplicationPreferences.Instance.saveObjectToSharedPreference(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE,
+            getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE,
                     demographicDTO.getPayload().getDemographics().getPayload().getAddress());
 
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, consentformcallback, demogrPayloadString, queries, header);
+            getWorkflowServiceHelper().execute(transitionDTO, consentformcallback, demogrPayloadString, queries, header);
 
         } else if (view == updateInformationUpdate) {
             updateInformationUpdate.setEnabled(false);

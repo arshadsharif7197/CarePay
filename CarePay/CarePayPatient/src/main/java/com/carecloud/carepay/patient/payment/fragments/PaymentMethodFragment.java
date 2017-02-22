@@ -37,6 +37,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
@@ -71,7 +72,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PaymentMethodFragment extends Fragment implements RadioGroup.OnCheckedChangeListener,
+public class PaymentMethodFragment extends BaseFragment implements RadioGroup.OnCheckedChangeListener,
         GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "PaymentMethodFragment";
@@ -135,7 +136,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
             String pametsDtoString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
             paymentsDTO = gson.fromJson(pametsDtoString, PaymentsModel.class);
         }
-        paymentMethodsList = paymentsDTO.getPaymentPayload().getPaymentSettings().getPayload().getPaymentMethods();
+        paymentMethodsList = paymentsDTO.getPaymentPayload().getPaymentSettings().getPayload().getRegularPayments().getPaymentMethods();
 
         getLabels();
         initializeViews(view);
@@ -340,8 +341,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                     }
                 }
 
-                // Balance of at least $20
-                if ((previousBalance + coPay) > CarePayConstants.PAYMENT_PLAN_REQUIRED_BALANCE) {
+                if ((previousBalance + coPay) > 0) {
                     FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
                     PaymentPlanFragment fragment = (PaymentPlanFragment) fragmentmanager
                             .findFragmentByTag(PaymentPlanFragment.class.getSimpleName());
@@ -366,9 +366,6 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                         ((ViewPaymentBalanceHistoryActivity) getActivity()).navigateToFragment(fragment, true);
                     }
 
-                } else {
-                    Toast.makeText(getActivity(), paymentsDTO.getPaymentsMetadata().getPaymentsLabel()
-                            .getPaymentPlanCreateConditionError(), Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -392,7 +389,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
                     paymentChoiceButton.setEnabled(false);
                     TransitionDTO transitionDTO = paymentsDTO.getPaymentsMetadata()
                             .getPaymentsLinks().getPaymentsCreditCards();
-                    WorkflowServiceHelper.getInstance().execute(transitionDTO, getCreditCardsCallback);
+                    getWorkflowServiceHelper().execute(transitionDTO, getCreditCardsCallback);
                     break;
 
                 default:
@@ -404,12 +401,12 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
     WorkflowServiceCallback getCreditCardsCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             paymentChoiceButton.setEnabled(true);
             Gson gson = new Gson();
             PaymentsModel paymentsModel = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
@@ -452,7 +449,7 @@ public class PaymentMethodFragment extends Fragment implements RadioGroup.OnChec
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             paymentChoiceButton.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);

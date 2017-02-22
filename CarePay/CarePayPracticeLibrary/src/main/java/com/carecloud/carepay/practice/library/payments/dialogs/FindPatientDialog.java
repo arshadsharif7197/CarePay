@@ -24,6 +24,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.payments.models.PatientDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -109,7 +110,7 @@ public class FindPatientDialog extends Dialog {
                     postModel.add(editText.getText().toString());
                     String postBody = postModel.toString();
 
-                    WorkflowServiceHelper.getInstance().execute(transitionDTO, findPatientCallback, postBody, queryMap);
+                    ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, findPatientCallback, postBody, queryMap);
                     return true;
                 }
                 return false;
@@ -142,12 +143,12 @@ public class FindPatientDialog extends Dialog {
 
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            ((ISession) context).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) context).hideProgressDialog();
 
             PaymentsModel searchResult = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
             if (searchResult != null) {
@@ -158,7 +159,7 @@ public class FindPatientDialog extends Dialog {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) context).hideProgressDialog();
         }
     };
 

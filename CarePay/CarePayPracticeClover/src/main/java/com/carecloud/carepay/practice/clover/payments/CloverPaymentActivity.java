@@ -18,6 +18,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.CreditCardModel;
@@ -56,7 +57,7 @@ import java.util.Set;
 /**
  * The type Clover payment activity.
  */
-public class CloverPaymentActivity extends AppCompatActivity {
+public class CloverPaymentActivity extends BaseActivity {
     /**
      * The constant creditCardIntentID.
      */
@@ -372,9 +373,7 @@ public class CloverPaymentActivity extends AppCompatActivity {
             header.put("transition", "true");
 
             TransitionDTO transitionDTO = gson.fromJson(paymentTransitionString, TransitionDTO.class);
-//            transitionDTO.setUrl("https://ix1uhlyid1.execute-api.us-east-1.amazonaws.com/qa/workflow/shamrock/practice_mode/practice_payments/make_payment");
-
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, makePaymentCallback, payload.toString(), queries, header);
+            getWorkflowServiceHelper().execute(transitionDTO, makePaymentCallback, payload.toString(), queries, header);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -434,7 +433,7 @@ public class CloverPaymentActivity extends AppCompatActivity {
         TransitionDTO transitionDTO = gson.fromJson(paymentTransitionString, TransitionDTO.class);
 //        transitionDTO.setUrl("https://ix1uhlyid1.execute-api.us-east-1.amazonaws.com/qa/workflow/shamrock/practice_mode/practice_payments/make_payment");
 
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, makePaymentCallback, paymentModelJson, queries, header);
+        getWorkflowServiceHelper().execute(transitionDTO, makePaymentCallback, paymentModelJson, queries, header);
 
     }
 
@@ -483,19 +482,19 @@ public class CloverPaymentActivity extends AppCompatActivity {
     WorkflowServiceCallback makePaymentCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(CloverPaymentActivity.this).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(CloverPaymentActivity.this).dismiss();
+            hideProgressDialog();
             CloverPaymentActivity.this.finish();
             PracticeNavigationHelper.navigateToWorkflow(CloverPaymentActivity.this, workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(CloverPaymentActivity.this).dismiss();
+            hideProgressDialog();
             System.out.print(exceptionMessage);
             finish();
         }
