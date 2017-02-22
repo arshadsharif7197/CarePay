@@ -97,7 +97,7 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
         header.put("appointment_id", inTakeForm.getPayload().getFindings().getMetadata().getAppointmentId());
         header.put("practice_mgmt", inTakeForm.getPayload().getFindings().getMetadata().getPracticeMgmt());
 
-        WorkflowServiceHelper.getInstance().execute(inTakeForm.getMetadata().getLinks().getIntake(), intakeFormCallback, header);
+        getWorkflowServiceHelper().execute(inTakeForm.getMetadata().getLinks().getIntake(), intakeFormCallback, header);
     }
 
     /**
@@ -106,18 +106,18 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
     WorkflowServiceCallback intakeFormCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             inTakeForm = new Gson().fromJson(workflowDTO.toString(), IntakeResponseModel.class);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -279,7 +279,7 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
         //retrofit is not taking null as query parameters
         queryString.put("findings_id", inTakeForm.getPayload().getFindings().getMetadata().getFindingsId()==null?"":inTakeForm.getPayload().getFindings().getMetadata().getFindingsId());
 
-        WorkflowServiceHelper.getInstance().execute(inTakeForm.getMetadata().getTransitions().getUpdateIntake(), updateIntakeFormCallBack, jsonAnswers, queryString, header);
+        getWorkflowServiceHelper().execute(inTakeForm.getMetadata().getTransitions().getUpdateIntake(), updateIntakeFormCallBack, jsonAnswers, queryString, header);
 
     }
 
@@ -289,18 +289,18 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
     private WorkflowServiceCallback updateIntakeFormCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             PracticeNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

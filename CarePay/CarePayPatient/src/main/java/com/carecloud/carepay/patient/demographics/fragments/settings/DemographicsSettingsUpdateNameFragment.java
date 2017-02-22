@@ -28,6 +28,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDataModelsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicPayloadDTO;
@@ -58,7 +59,7 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DemographicsSettingsUpdateNameFragment extends Fragment {
+public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
     private static final String LOG_TAG = DemographicsSettingsFragment.class.getSimpleName();
     private AppCompatActivity appCompatActivity;
     private DemographicsSettingsDTO demographicsSettingsDTO = null;
@@ -410,7 +411,7 @@ public class DemographicsSettingsUpdateNameFragment extends Fragment {
 
                                         Gson gson = new Gson();
                                         String jsonInString = gson.toJson(demographicPayload);
-                                        WorkflowServiceHelper.getInstance().execute(demographicsSettingsUpdateDemographicsDTO, updateProfileCallback, jsonInString, header);
+                                        getWorkflowServiceHelper().execute(demographicsSettingsUpdateDemographicsDTO, updateProfileCallback, jsonInString, header);
                                     }
                                 }
                                 header = new HashMap<>();
@@ -431,12 +432,12 @@ public class DemographicsSettingsUpdateNameFragment extends Fragment {
     WorkflowServiceCallback updateProfileCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             updateProfileButton.setEnabled(true);
 
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
@@ -444,7 +445,7 @@ public class DemographicsSettingsUpdateNameFragment extends Fragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             updateProfileButton.setEnabled(true);
 
             SystemUtil.showDefaultFailureDialog(getActivity());

@@ -30,6 +30,7 @@ import com.carecloud.carepay.patient.consentforms.interfaces.IFragmentCallback;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDataModelDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforauthorization.ConsentFormMinorDateofBirthDTO;
@@ -52,7 +53,7 @@ import java.util.List;
 
 
 
-public class ConsentForm2Fragment extends Fragment {
+public class ConsentForm2Fragment extends BaseFragment {
 
     Date date = new Date();
     private TextView titleTextView;

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.intake.models.IntakeFormModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -16,7 +17,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
  * Created by lsoco_user on 9/11/2016.
  * Generic fragment for an intake form
  */
-public class InTakeFragment extends Fragment implements View.OnClickListener {
+public class InTakeFragment extends BaseFragment implements View.OnClickListener {
     private IntakeFormModel form;
 
     @Nullable

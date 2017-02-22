@@ -62,19 +62,19 @@ public class SigninActivity extends BasePracticeActivity {
     WorkflowServiceCallback signinCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
             signInButton.setClickable(true);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             signInButton.setClickable(true);
             SystemUtil.showDefaultFailureDialog(SigninActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
@@ -83,19 +83,19 @@ public class SigninActivity extends BasePracticeActivity {
     WorkflowServiceCallback signinPatientModeAppointmentsCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
             signInButton.setClickable(true);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             signInButton.setClickable(true);
             SystemUtil.showDefaultFailureDialog(SigninActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
@@ -122,17 +122,17 @@ public class SigninActivity extends BasePracticeActivity {
     WorkflowServiceCallback signinPatientModeCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             Map<String, String> queryMap = new HashMap<>();
 
             Gson gson = new Gson();
             SigninPatientModeDTO signinPatientModeDTOLocal = gson.fromJson(workflowDTO.toString(), SigninPatientModeDTO.class);
-            queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
+            queryMap.put("language", getApplicationPreferences().getUserLanguage());
             queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
             queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
             queryMap.put("patient_id", signinPatientModeDTOLocal.getPayload().getPatientModeLoginData().getPatientModeLoginDataMetadata().getPatientId());
@@ -141,12 +141,12 @@ public class SigninActivity extends BasePracticeActivity {
             headers.put("transition", "false");
             TransitionDTO transitionDTO;
             transitionDTO = signinPatientModeDTO.getMetadata().getTransitions().getAction();
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, signinPatientModeAppointmentsCallback, queryMap, headers);
+            getWorkflowServiceHelper().execute(transitionDTO, signinPatientModeAppointmentsCallback, queryMap, headers);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             signInButton.setClickable(true);
             SystemUtil.showDefaultFailureDialog(SigninActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
@@ -159,15 +159,15 @@ public class SigninActivity extends BasePracticeActivity {
             //launchHomescreen();
             Map<String, String> queryMap = new HashMap<>();
             TransitionDTO transitionDTO;
-            queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
+            queryMap.put("language", getApplicationPreferences().getUserLanguage());
             if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
                 transitionDTO = signinDTO.getMetadata().getTransitions().getAuthenticate();
-                WorkflowServiceHelper.getInstance().execute(transitionDTO, signinCallback, queryMap);
+                getWorkflowServiceHelper().execute(transitionDTO, signinCallback, queryMap);
             } else if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
                 transitionDTO = signinPatientModeDTO.getMetadata().getLinks().getLogin();
                 queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
                 queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
-                WorkflowServiceHelper.getInstance().execute(transitionDTO, signinPatientModeCallback, queryMap);
+                getWorkflowServiceHelper().execute(transitionDTO, signinPatientModeCallback, queryMap);
             }
         }
         //launchHomescreen
@@ -266,11 +266,11 @@ public class SigninActivity extends BasePracticeActivity {
             langSpinner.setAdapter(spinnerArrayAdapter);
 
             // this should be always true, as there's always a default option
-            if (defaultLangOption != null && !ApplicationPreferences.Instance.getUserLanguage().isEmpty()) {
-                langSpinner.setSelection(spinnerArrayAdapter.getPosition(ApplicationPreferences.Instance.getUserLanguage().toUpperCase()));
+            if (defaultLangOption != null && !getApplicationPreferences().getUserLanguage().isEmpty()) {
+                langSpinner.setSelection(spinnerArrayAdapter.getPosition(getApplicationPreferences().getUserLanguage().toUpperCase()));
             } else {
                 langSpinner.setSelection(indexDefault);
-                ApplicationPreferences.Instance.setPracticeLanguage(defaultLangOption.getCode());
+                getApplicationPreferences().setPracticeLanguage(defaultLangOption.getCode());
             }
         }
 
@@ -358,7 +358,7 @@ public class SigninActivity extends BasePracticeActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // save selected in preferences
-                ApplicationPreferences.Instance.setUserLanguage(languages.get(position).toLowerCase());
+                getApplicationPreferences().setUserLanguage(languages.get(position).toLowerCase());
             }
 
             @Override

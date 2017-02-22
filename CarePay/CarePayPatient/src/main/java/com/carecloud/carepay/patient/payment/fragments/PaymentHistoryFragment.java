@@ -20,6 +20,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
@@ -36,7 +37,7 @@ import java.util.Map;
  * Created by jorge on 02/01/17.
  */
 
-public class PaymentHistoryFragment extends Fragment implements PaymentBalancesAdapter.OnBalanceListItemClickListener, PaymentDetailsDialog.PayNowClickListener{
+public class PaymentHistoryFragment extends BaseFragment implements PaymentBalancesAdapter.OnBalanceListItemClickListener, PaymentDetailsDialog.PayNowClickListener{
 
     private static final String LOG = PaymentHistoryFragment.class.getSimpleName();
     private PaymentsModel paymentDTO;
@@ -94,7 +95,7 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
                     queryString.put("practice_id",  metadata.getPracticeId() );
                     queryString.put("practice_mgmt", metadata.getPracticeMgmt());
                     queryString.put("patient_id", metadata.getPatientId());
-                    WorkflowServiceHelper.getInstance().execute(
+                    getWorkflowServiceHelper().execute(
                             paymentsLinks.getPaymentsPatientBalances(), balancesCallback, queryString);
                     break;
 
@@ -104,7 +105,7 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
                     queryString.put("patient_id", metadata.getPatientId());
                     queryString.put("start_date", "2015-01-01");
                     queryString.put("end_date", "2030-01-01");
-                    WorkflowServiceHelper.getInstance().execute(
+                    getWorkflowServiceHelper().execute(
                             paymentsLinks.getPaymentsHistory(), historyCallback, queryString);
                     break;
 
@@ -124,12 +125,12 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
     private WorkflowServiceCallback balancesCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             Gson gson = new Gson();
             try {
                 paymentDTO = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
@@ -158,7 +159,7 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -167,12 +168,12 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
     private WorkflowServiceCallback historyCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             Gson gson = new Gson();
             try {
                 paymentDTO = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
@@ -199,7 +200,7 @@ public class PaymentHistoryFragment extends Fragment implements PaymentBalancesA
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

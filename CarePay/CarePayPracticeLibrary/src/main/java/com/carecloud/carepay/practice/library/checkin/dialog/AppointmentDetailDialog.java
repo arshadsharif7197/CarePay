@@ -32,6 +32,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
@@ -304,12 +305,25 @@ public class AppointmentDetailDialog extends Dialog {
                 callback = getStatusCallBack;
             }
 
-            WorkflowServiceHelper.getInstance().execute(transition, callback, querymap);
+            ((ISession) context).getWorkflowServiceHelper().execute(transition, callback, querymap);
         }
     }
 
     /**
-     * @param queryStrings the query strings for the url
+     * @param queryStrings the query strings for the queue url
+     * @return queryMap
+     */
+    private Map<String, String> getQueueQueryParam(QueryStrings queryStrings) {
+        Map<String, String> queryMap = new HashMap<>();
+        if (appointmentPayloadDTO != null) {
+            queryMap.put(queryStrings.getPatientId().getName(), appointmentPayloadDTO.getPatient().getId());
+        }
+
+        return queryMap;
+    }
+
+    /**
+     * @param queryStrings the query strings for the status url
      * @return queryMap
      */
     private Map<String, String> getStatusQueryParam(QueryStrings queryStrings) {
@@ -321,33 +335,21 @@ public class AppointmentDetailDialog extends Dialog {
         return queryMap;
     }
 
-    /**
-     * @param queryStrings the query strings for the url
-     * @return queryMap
-     */
-    private Map<String, String> getQueueQueryParam(QueryStrings queryStrings) {
-        Map<String, String> queryMap = new HashMap<>();
-        if (appointmentPayloadDTO != null) {
-            queryMap.put(queryStrings.getPatientId().getName(), appointmentPayloadDTO.getPatient().getId());
-        }
-        return queryMap;
-    }
-
     private WorkflowServiceCallback getStatusCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            ((ISession) context).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) context).hideProgressDialog();
             updateUI(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) context).hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(context);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -356,18 +358,18 @@ public class AppointmentDetailDialog extends Dialog {
     private WorkflowServiceCallback getQueueCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            ((ISession) context).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) context).hideProgressDialog();
             updateQueueStatus(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) context).hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(context);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

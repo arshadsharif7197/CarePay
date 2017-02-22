@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.EditText;
 
+import com.carecloud.carepaylibray.base.BaseFragment;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +15,7 @@ import java.util.List;
  * Created by lsoco_user on 9/4/2016.
  * Base class for the fragments containing edit texts that are to be used with the custom keyboard
  */
-public class GenericEditsFragment extends Fragment {
+public class GenericEditsFragment extends BaseFragment {
 
     private static final String LOG_TAG = GenericEditsFragment.class.getSimpleName();
     protected KeyboardHolderActivity mActivity;

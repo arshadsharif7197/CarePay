@@ -101,12 +101,12 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
     private WorkflowServiceCallback addNewCreditCardCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getActivity()).dismiss();
+            hideProgressDialog();
             Gson gson = new Gson();
             DemographicsSettingsDTO removeCreditCardResponseDTO = gson.fromJson(workflowDTO.toString(),
                     DemographicsSettingsDTO.class);
@@ -118,7 +118,7 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getActivity()).dismiss();
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -127,10 +127,10 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
     private void addNewCreditCardCall() {
         Gson gson = new Gson();
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
+        queryMap.put("language", getApplicationPreferences().getUserLanguage());
         TransitionDTO transitionDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getTransitions().getAddCreditCard();
         String body = gson.toJson(creditCardsPayloadDTO);
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, addNewCreditCardCallback, body, queryMap, WorkflowServiceHelper.getPreferredLanguageHeader());
+        getWorkflowServiceHelper().execute(transitionDTO, addNewCreditCardCallback, body, queryMap, getWorkflowServiceHelper().getPreferredLanguageHeader());
     }
 
     @Override
@@ -141,6 +141,6 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
     @Override
     public void onAuthorizeCreditCardFailed() {
         SystemUtil.showDefaultFailureDialog(getActivity());
-        ProgressDialogUtil.getInstance(getActivity()).dismiss();
+        hideProgressDialog();
     }
 }

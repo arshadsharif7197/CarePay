@@ -22,7 +22,7 @@ public class SplashActivity extends BasePracticeActivity {
         super.onCreate(savedInstanceState);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash);
-        WorkflowServiceHelper.getInstance().executeApplicationStartRequest(applicationStartCallback);
+        getWorkflowServiceHelper().executeApplicationStartRequest(applicationStartCallback);
     }
 
     WorkflowServiceCallback applicationStartCallback=new WorkflowServiceCallback() {

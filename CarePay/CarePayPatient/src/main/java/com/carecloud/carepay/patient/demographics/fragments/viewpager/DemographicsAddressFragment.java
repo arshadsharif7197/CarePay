@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
@@ -49,7 +50,7 @@ import com.smartystreets.api.us_zipcode.City;
  * Created by lsoco_user on 9/2/2016.
  * Fragment for on-boarding demographics address.
  */
-public class DemographicsAddressFragment extends Fragment {
+public class DemographicsAddressFragment extends BaseFragment {
 
     View view;
 

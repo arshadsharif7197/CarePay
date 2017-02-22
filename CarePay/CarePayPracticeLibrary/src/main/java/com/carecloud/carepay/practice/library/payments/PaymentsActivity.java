@@ -222,7 +222,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 queryMap.put("patient_id", patient.getPatientId());
 
                 TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getPaymentsPatientBalances();
-                WorkflowServiceHelper.getInstance().execute(transitionDTO, patientBalancesCallback, queryMap);
+                getWorkflowServiceHelper().execute(transitionDTO, patientBalancesCallback, queryMap);
             }
         });
     }
@@ -231,12 +231,12 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
 
             PaymentsModel patientDetails = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
 
@@ -254,7 +254,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
         }
     };
 
