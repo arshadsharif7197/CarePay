@@ -74,11 +74,21 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
      *
      * @param context      the context
      * @param cancelString the cancel string
+     * @param visitTypeDTO      visit type
+     * @param callback          dialog callback
      */
     public PracticeAvailableHoursDialog(Context context, String cancelString, VisitTypeDTO visitTypeDTO, PracticeAvailableHoursDialogListener callback) {
         this(context, cancelString, visitTypeDTO, callback, null, null);
     }
 
+    /**
+     * @param context           the context
+     * @param cancelString      the cancel string
+     * @param visitTypeDTO      visit type
+     * @param callback          dialog callback
+     * @param startDate         start date to pick from
+     * @param endDate           end date to pick from
+     */
     public PracticeAvailableHoursDialog(Context context, String cancelString, VisitTypeDTO visitTypeDTO, PracticeAvailableHoursDialogListener callback, Date startDate, Date endDate) {
         super(context, cancelString, false);
         this.context = context;

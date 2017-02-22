@@ -352,6 +352,10 @@ public class DateUtil {
         monthLiteralAbbr = DateFormatSymbols.getInstance(Locale.getDefault()).getShortMonths()[month];
     }
 
+    /**
+     * @param days to add
+     * @return updated DateUtil
+     */
     public DateUtil addDays(int days) {
         if (null != date) {
             Calendar calendar = Calendar.getInstance(Locale.getDefault());
