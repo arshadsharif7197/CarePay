@@ -30,6 +30,8 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -53,8 +55,8 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private OnItemTappedListener tapListener;
     private MapFilterModel filterModel;
 
-    int sizeFilteredPatients;
-    int sizeFilteredPendingPatients;
+    private int sizeFilteredPatients;
+    private int sizeFilteredPendingPatients;
 
     public interface OnItemTappedListener {
         void onItemTap(Object dto);
@@ -238,6 +240,8 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         for (AppointmentDTO appointmentDTO : appointments) {
             this.allPatients.add(new Patient(appointmentDTO, appointmentDTO.getPayload()));
         }
+
+        sortListByDate(this.allPatients);
     }
 
     private void loadPatients(PaymentsModel paymentsModel) {
@@ -248,6 +252,19 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         for (PaymentsPatientBalancessDTO dto : dtoList) {
             createPatient(providerMap, dto);
         }
+    }
+
+    private void sortListByDate(List<Patient> list) {
+        Collections.sort(list, new Comparator<Patient>() {
+            //@TargetApi(Build.VERSION_CODES.KITKAT)
+            @Override
+            public int compare(Patient lhs, Patient rhs) {
+                if (lhs != null && rhs != null) {
+                    return lhs.appointmentTime.compareTo(rhs.appointmentTime);
+                }
+                return -1;
+            }
+        });
     }
 
     private void createPatient(Map<String, ProviderIndexDTO> providerMap, PaymentsPatientBalancessDTO dto) {
