@@ -136,7 +136,7 @@ public class PaymentMethodFragment extends BaseFragment implements RadioGroup.On
             String pametsDtoString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
             paymentsDTO = gson.fromJson(pametsDtoString, PaymentsModel.class);
         }
-        paymentMethodsList = paymentsDTO.getPaymentPayload().getPaymentSettings().getPayload().getPaymentMethods();
+        paymentMethodsList = paymentsDTO.getPaymentPayload().getPaymentSettings().getPayload().getRegularPayments().getPaymentMethods();
 
         getLabels();
         initializeViews(view);
