@@ -15,8 +15,8 @@ import com.carecloud.carepay.practice.library.customdialog.FilterDialog;
 import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepay.practice.library.payments.dialogs.FindPatientDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityDialog;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -29,12 +29,15 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
+import com.carecloud.carepaylibray.payments.models.updatebalance.PaymentUpdateBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 
@@ -269,7 +272,12 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     protected void processExternalPayment(PaymentExecution execution, Intent data){
         switch (execution){
             case clover:{
-                //TODO get the updated Patient Object and look throught the original list to update balance or remove
+                String jsonPayload = data.getStringExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA);
+                if(jsonPayload!=null) {
+                    Gson gson = new Gson();
+                    PaymentUpdateBalanceDTO updateBalanceDTO = gson.fromJson(jsonPayload, PaymentUpdateBalanceDTO.class);
+                    updatePatientBalance(updateBalanceDTO.getUpdatePatientBalancesDTO());
+                }
                 break;
             }
             default:
@@ -277,5 +285,39 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 return;
         }
     }
+
+
+    private void updatePatientBalance(UpdatePatientBalancesDTO updateBalance){
+        ListIterator<PaymentsPatientBalancessDTO> iterator = paymentsModel.getPaymentPayload().getPatientBalances().listIterator();
+        while (iterator.hasNext()){
+            PaymentsPatientBalancessDTO paymentsPatientBalancessDTO = iterator.next();
+            if(isObject(paymentsPatientBalancessDTO, updateBalance)){
+                try {
+                    double pendingResponsibility = Double.parseDouble(updateBalance.getPendingRepsonsibility());
+                    if (pendingResponsibility== 0d){
+                        iterator.remove();
+                    }else{
+                        paymentsPatientBalancessDTO.setPendingRepsonsibility(updateBalance.getPendingRepsonsibility());
+                        paymentsPatientBalancessDTO.setBalances(updateBalance.getBalances());
+                    }
+                    break;
+                }catch (NumberFormatException nfe){
+                    nfe.printStackTrace();
+                }
+            }
+        }
+
+        //reload list data
+        TwoColumnPatientListView patientListView = (TwoColumnPatientListView) findViewById(R.id.list_patients);
+        patientListView.setPaymentsModel(paymentsModel);
+
+    }
+
+
+    private boolean isObject(PaymentsPatientBalancessDTO paymentsPatientBalance, UpdatePatientBalancesDTO updateBalance){
+        return paymentsPatientBalance.getDemographics().getMetadata().getUserId().equals(updateBalance.getDemographics().getMetadata().getUserId()) &&
+                paymentsPatientBalance.getBalances().get(0).getMetadata().getPatientId().equals(updateBalance.getBalances().get(0).getMetadata().getPatientId());
+    }
+
 
 }

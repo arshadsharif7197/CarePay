@@ -5,17 +5,14 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.carecloud.carepay.practice.clover.R;
 import com.carecloud.carepay.practice.clover.models.CloverCardTransactionInfo;
 import com.carecloud.carepay.practice.clover.models.CloverPaymentDTO;
-import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
@@ -28,7 +25,6 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentMethod;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentType;
 import com.carecloud.carepaylibray.payments.models.postmodel.TransactionResponse;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.util.CloverAuth;
 import com.clover.sdk.v1.BindingException;
@@ -488,13 +484,17 @@ public class CloverPaymentActivity extends BaseActivity {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            CloverPaymentActivity.this.finish();
-            PracticeNavigationHelper.navigateToWorkflow(CloverPaymentActivity.this, workflowDTO);
+            Intent intent = getIntent();
+            setResult(RESULT_OK);
+            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA, workflowDTO.getPayload().toString());
+            finish();
+//            PracticeNavigationHelper.navigateToWorkflow(CloverPaymentActivity.this, workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
+            setResult(RESULT_CANCELED);
             System.out.print(exceptionMessage);
             finish();
         }
