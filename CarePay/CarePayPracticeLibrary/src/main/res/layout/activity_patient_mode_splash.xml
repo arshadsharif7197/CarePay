@@ -6,7 +6,7 @@
     android:id="@+id/activity_patient_mode_splash"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@drawable/screen_background"
     android:orientation="vertical"
     tools:context="com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity">
 
