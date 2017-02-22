@@ -27,6 +27,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
@@ -44,6 +45,9 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemibol
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 
 import com.smartystreets.api.us_zipcode.City;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lsoco_user on 9/2/2016.
@@ -99,7 +103,7 @@ public class DemographicsAddressFragment extends Fragment {
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
     private DemographicLabelsDTO                    globalLabelsMetaDTO;
     private DemographicsAddressFragmentListener demographicsAddressFragmentListener;
-
+    private String[] states;
 
     @Override
     public void onAttach(Context context) {
@@ -240,10 +244,11 @@ public class DemographicsAddressFragment extends Fragment {
         stateTextInputLayout.setTag(hint);
         stateAutoCompleteTextView.setTag(stateTextInputLayout);
         stateAutoCompleteTextView.setHint(hint);
+        getOptions();
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
                                                                 R.layout.autocomplete_state_item,
                                                                 R.id.text1,
-                                                                AddressUtil.states);
+                                                                states);
         stateAutoCompleteTextView.setThreshold(1);
         stateAutoCompleteTextView.setAdapter(adapter);
         stateAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -298,6 +303,23 @@ public class DemographicsAddressFragment extends Fragment {
 
         // populate views
         populateViewsWithData();
+    }
+
+    private void getOptions() {
+        // init states
+        if (addressMetaDTO != null
+                && addressMetaDTO.properties != null
+                && addressMetaDTO.properties.state != null) {
+            List<MetadataOptionDTO> optionDTOs = addressMetaDTO.properties.state.options;
+            List<String> statesStrings = new ArrayList<>();
+            for (MetadataOptionDTO optionDTO : optionDTOs) {
+                statesStrings.add(optionDTO.getLabel());
+            }
+            states = statesStrings.toArray(new String[0]);
+        } else {
+            states = new String[1];
+            states[0] = CarePayConstants.NOT_DEFINED;
+        }
     }
 
     /**
