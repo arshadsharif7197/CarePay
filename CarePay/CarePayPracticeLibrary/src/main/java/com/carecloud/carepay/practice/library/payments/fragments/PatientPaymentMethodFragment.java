@@ -82,7 +82,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
             Gson gson = new Gson();
             String paymentInfo = bundle.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
             paymentsModel = gson.fromJson(paymentInfo, PaymentsModel.class);
-            paymentList = paymentsModel.getPaymentPayload().getPaymentSettings().getPayload().getPaymentMethods();
+            paymentList = paymentsModel.getPaymentPayload().getPaymentSettings().getPayload().getRegularPayments().getPaymentMethods();
 
             paymentInfo = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
             paymentsDTO = gson.fromJson(paymentInfo, PaymentsModel.class);
