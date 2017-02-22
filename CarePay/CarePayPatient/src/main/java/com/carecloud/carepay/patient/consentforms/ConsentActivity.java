@@ -343,26 +343,26 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
         queries.put("appointment_id", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getAppointmentId());
         queries.put("patient_id", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getPatientId());
 
-        Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
+        Map<String, String> header = getWorkflowServiceHelper().getPreferredLanguageHeader();
         header.put("transition", "true");
 
         Gson gson = new Gson();
         String body = gson.toJson(jsonResponse);
         TransitionDTO transitionDTO = consentFormDTO.getMetadata().getTransitions().getUpdateConsent();
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, updateconsentformCallBack, body, queries, header);
+        getWorkflowServiceHelper().execute(transitionDTO, updateconsentformCallBack, body, queries, header);
     }
 
     private WorkflowServiceCallback updateconsentformCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
             nextButton.setClickable(false);
             progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             PatientNavigationHelper.getInstance(ConsentActivity.this).navigateToWorkflow(workflowDTO);
             nextButton.setClickable(true);
             progressBar.setVisibility(View.INVISIBLE);
@@ -370,7 +370,7 @@ public class ConsentActivity extends BasePatientActivity implements IFragmentCal
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(ConsentActivity.this);
             nextButton.setClickable(true);
             progressBar.setVisibility(View.INVISIBLE);

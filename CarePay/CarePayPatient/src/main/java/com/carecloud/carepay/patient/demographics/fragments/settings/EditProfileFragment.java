@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.appointments.utils.PatientAppUtil;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -78,7 +79,6 @@ public class EditProfileFragment extends DocumentScannerFragment {
 
         final Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
-        disappearViewById(R.id.demographicReviewProgressBar);
 
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
         setGothamRoundedMediumTypeface(appCompatActivity, title);
@@ -209,7 +209,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
 
                                         Gson gson = new Gson();
                                         String jsonInString = gson.toJson(demographicPayload);
-                                        WorkflowServiceHelper.getInstance().execute(demographicsSettingsUpdateDemographicsDTO, updateProfileCallback, jsonInString, header);
+                                        getWorkflowServiceHelper().execute(demographicsSettingsUpdateDemographicsDTO, updateProfileCallback, jsonInString, header);
                                     }
                                 }
                                 header = new HashMap<>();
@@ -318,24 +318,22 @@ public class EditProfileFragment extends DocumentScannerFragment {
     WorkflowServiceCallback updateProfileCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
-//            updateProfileButton.setEnabled(true);
-
+            hideProgressDialog();
+            PatientAppUtil.showSuccessNotification(getActivity(), getView(), demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getLabels().getSettingsSavedSuccessMessage());
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
-//            updateProfileButton.setEnabled(true);
-
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+
         }
     };
 

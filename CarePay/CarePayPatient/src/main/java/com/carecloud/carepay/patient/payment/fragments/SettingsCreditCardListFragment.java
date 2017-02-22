@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.payment.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.adapter.SettingsCreditCardListAdapter;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
@@ -30,11 +32,30 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SettingsCreditCardListFragment extends Fragment implements SettingsCreditCardListAdapter.IOnCreditCardDetailClickListener {
+public class SettingsCreditCardListFragment extends BaseFragment implements SettingsCreditCardListAdapter.IOnCreditCardDetailClickListener {
 
     private RecyclerView creditCardsListRecyclerView;
     private DemographicsSettingsDTO demographicsSettingsDTO = null;
     private DemographicsSettingsLabelsDTO settingsLabelsDTO;
+    private ISettingsCreditCardListFragmentListener activityCallback;
+
+    public interface ISettingsCreditCardListFragmentListener {
+        void initializeAddNewCreditCardFragment();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            activityCallback = (ISettingsCreditCardListFragmentListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement SettingsCreditCardListFragmentListener");
+        }
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,22 +116,7 @@ public class SettingsCreditCardListFragment extends Fragment implements Settings
     private View.OnClickListener addNewCardButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
-            SettingAddCreditCardFragment fragment = (SettingAddCreditCardFragment)
-                    fragmentmanager.findFragmentByTag(SettingAddCreditCardFragment.class.getSimpleName());
-            if (fragment == null) {
-                fragment = new SettingAddCreditCardFragment();
-            }
-
-            Bundle bundle = new Bundle();
-            Gson gson = new Gson();
-            bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, gson.toJson(demographicsSettingsDTO));
-            fragment.setArguments(bundle);
-
-            FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
-            fragmentTransaction.replace(com.carecloud.carepay.patient.R.id.activity_demographics_settings, fragment);
-            fragmentTransaction.addToBackStack(SettingAddCreditCardFragment.class.getSimpleName());
-            fragmentTransaction.commit();
+            activityCallback.initializeAddNewCreditCardFragment();
         }
     };
 

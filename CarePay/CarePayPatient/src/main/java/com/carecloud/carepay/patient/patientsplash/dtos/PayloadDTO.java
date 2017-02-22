@@ -8,17 +8,18 @@ package com.carecloud.carepay.patient.patientsplash.dtos;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PayloadDTO {
 
     @SerializedName("language_selection")
     @Expose
-    private LanguageSelectionDTO languageSelection;
+    private LanguageSelectionDTO languageSelection = new LanguageSelectionDTO();
 
     @SerializedName("languages")
     @Expose
-    private List<OptionsDTO> languages = null;
+    private List<OptionsDTO> languages = new ArrayList<>();
 
     /**
      *

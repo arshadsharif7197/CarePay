@@ -231,6 +231,17 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     @SerializedName("settings_password_help_text")
     @Expose
     private String passwordHelpLabel;
+    @SerializedName("settings_saved_success_message")
+    @Expose
+    private String settingsSavedSuccessMessage;
+
+    public String getSettingsSavedSuccessMessage() {
+        return StringUtil.getLabelForView(settingsSavedSuccessMessage);
+    }
+
+    public void setSettingsSavedSuccessMessage(String settingsSavedSuccessMessage) {
+        this.settingsSavedSuccessMessage = settingsSavedSuccessMessage;
+    }
 
 
     /**

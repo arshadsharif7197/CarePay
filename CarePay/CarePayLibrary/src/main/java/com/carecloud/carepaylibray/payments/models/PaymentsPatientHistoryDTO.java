@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
 public class PaymentsPatientHistoryDTO {
     @SerializedName("charges")
     @Expose
-    PaymentsPatientChargesDTO paymentsPatientCharges;
+    private PaymentsPatientChargesDTO paymentsPatientCharges = new PaymentsPatientChargesDTO();
 
     public PaymentsPatientChargesDTO getPaymentsPatientCharges() {
         return paymentsPatientCharges;

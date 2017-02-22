@@ -170,7 +170,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerInParent">true</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textSize">@dimen/signup_textview_existing_account_size</item>
         <item name="android:textStyle">bold</item>
         <item name="android:layout_marginTop">@dimen/margintop</item>
@@ -238,12 +238,14 @@
     </style>
 
     <style name="ResponsibilityToolbarTextStyle" parent="android:Widget.TextView">
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/respons_toolbar_title_text_size</item>
         <item name="android:textStyle">normal</item>
         <item name="android:gravity">start</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
 
@@ -306,7 +308,7 @@
     <style name="DemographicsDocsNumberStyle" parent="android:Widget.TextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textSize">@dimen/demographics_docs_number_text_size</item>
     </style>
 
@@ -526,7 +528,7 @@
     </style>
 
     <style name="ConsentActivityDoctornameTextStyle" parent="android:Widget.TextView">
-        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textSize">18.0sp</item>
         <item name="android:lineSpacingExtra">17.0sp</item>
         <item name="android:gravity">left</item>
@@ -549,7 +551,7 @@
         <item name="android:drawSelectorOnTop">true</item>
         <item name="android:gravity">right</item>
         <item name="android:textSize">@dimen/consent_minor_textsize</item>
-        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
     <style name="Consent_Form_View_Style">
@@ -568,7 +570,7 @@
     </style>
 
     <style name="Consent_Form_Edit_Text">s
-        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textColorHint">@color/payne_gray</item>
         <item name="android:inputType">textPersonName</item>
         <item name="android:singleLine">true</item>
@@ -661,9 +663,17 @@
         <item name="android:fontFamily">ProximaNova-Regular</item>
     </style>
 
+    <style name="AppointmentAvailableLocationsListRowText" parent="android:Widget.TextView">
+        <item name="android:gravity">left</item>
+        <item name="android:textColor">@color/charcoal</item>
+        <item name="android:textSize">@dimen/apt_available_locations_list_row_text</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">ProximaNova-Regular</item>
+    </style>
+
     <style name="AppointmentAvailableHoursListHeaderText" parent="android:Widget.TextView">
         <item name="android:gravity">left</item>
-        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textColor">@color/charcoal</item>
         <item name="android:textSize">@dimen/apt_available_hours_list_header_text</item>
         <item name="android:textStyle">normal</item>
         <item name="android:fontFamily">ProximaNova-Semibold</item>
@@ -720,7 +730,6 @@
         <item name="android:textSize">@dimen/respons_button_text_size</item>
         <item name="android:textStyle">normal</item>
         <item name="android:background">@color/colorPrimary</item>
-        <item name="android:textAllCaps">true</item>
         <item name="android:gravity">center</item>
     </style>
 
@@ -728,16 +737,16 @@
         <item name="colorAccent">@android:color/white</item>
         <item name="android:textColorHint">@color/payne_gray</item>
         <item name="colorControlNormal">@color/lightSlateGray</item>
-        <item name="colorControlActivated">@color/bright_cerulean</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
         <item name="android:textAllCaps">true</item>
-        <item name="colorControlHighlight">@color/bright_cerulean</item>
+        <item name="colorControlHighlight">@color/colorPrimary</item>
         <item name="android:textSize">10sp</item>
         <item name="android:fontFamily">ProximaNova-Extrabld</item>
     </style>
 
     <style name="PaymentEditTextStyle" parent="android:Widget.EditText">
         <item name="android:textColorHint">@color/payne_gray</item>
-        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">16sp</item>
@@ -751,11 +760,11 @@
         <item name="android:drawSelectorOnTop">true</item>
         <item name="android:gravity">right</item>
         <item name="android:textSize">@dimen/payment_pick_date_label_text_size</item>
-        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
     <style name="DefaultTextAppearanceProxyNovaSemiBoldLabel">
-        <item name="android:textColor">@color/bright_cerulean</item>
+        <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
     <style name="DefaultTextAppearanceProxyNovaRegularLabel">
@@ -828,5 +837,9 @@
         <item name="android:textStyle">normal</item>
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:gravity">center</item>
+    </style>
+
+    <style name="ProgressDialogFullscreenWithTitlebar" parent="android:Theme.Translucent.NoTitleBar.Fullscreen">
+        <item name="keepStatusBar">true</item>
     </style>
 </resources>

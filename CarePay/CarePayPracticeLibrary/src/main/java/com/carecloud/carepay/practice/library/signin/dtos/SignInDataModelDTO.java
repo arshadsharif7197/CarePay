@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
 public class SignInDataModelDTO {
     @SerializedName("signin")
     @Expose
-    private SignInModelDTO signin;
+    private SignInModelDTO signin = new SignInModelDTO();
 
     /**
      * @return The signin

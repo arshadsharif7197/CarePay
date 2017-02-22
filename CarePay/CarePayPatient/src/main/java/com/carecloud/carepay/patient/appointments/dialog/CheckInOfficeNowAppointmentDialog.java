@@ -20,6 +20,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog;
 import com.carecloud.carepaylibray.customdialogs.QrCodeViewDialog;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
@@ -125,28 +126,28 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         queries.put(queryStrings.getPracticeId().getName(), appointmentDTO.getMetadata().getPracticeId());
         queries.put(queryStrings.getAppointmentId().getName(), appointmentDTO.getMetadata().getAppointmentId());
 
-        Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
+        Map<String, String> header = ((ISession) context).getWorkflowServiceHelper().getPreferredLanguageHeader();
         header.put("transition", "true");
 
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, callback, queries, header);
+        ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, callback, queries, header);
     }
 
     private WorkflowServiceCallback demographicsVerifyCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            ((ISession) context).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) context).hideProgressDialog();
             checkInNowButton.setEnabled(true);
             PatientNavigationHelper.getInstance(context).navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) context).hideProgressDialog();
             checkInNowButton.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(getContext());
             Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);

@@ -74,4 +74,15 @@
         <item name="android:src">@drawable/icn_home</item>
     </style>
 
+    <style name="ProgressDialogFullscreenWithTitlebar" parent="android:Theme.Translucent.NoTitleBar.Fullscreen">
+        <item name="keepStatusBar">false</item>
+    </style>
+
+    <style name="PaymentPlanButtonStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingBottom">@dimen/dimen_14dp</item>
+        <item name="android:paddingTop">@dimen/dimen_14dp</item>
+        <item name="android:textColor">@drawable/text_color</item>
+        <item name="android:textSize">@dimen/text_size_22sp</item>
+    </style>
 </resources>

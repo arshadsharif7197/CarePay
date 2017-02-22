@@ -55,19 +55,19 @@ public class SplashActivity extends BasePatientActivity {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
 
-            if (!SystemUtil.isNotEmptyString(ApplicationPreferences.Instance.getUserLanguage())) {
+            if (!SystemUtil.isNotEmptyString(getApplicationPreferences().getUserLanguage())) {
                 PatientNavigationHelper.getInstance(SplashActivity.this).navigateToWorkflow(workflowDTO);
-            } else if (SystemUtil.isNotEmptyString(ApplicationPreferences.Instance.getUserLanguage())) {
-              String languageid=  ApplicationPreferences.Instance.getUserLanguage();
+            } else if (SystemUtil.isNotEmptyString(getApplicationPreferences().getUserLanguage())) {
+              String languageid=  getApplicationPreferences().getUserLanguage();
 
                 // Convert to SignInSignUpDTO
                 Gson gson = new Gson();
                 SelectLanguageDTO signInSignUpDTO = gson.fromJson(workflowDTO.toString(), SelectLanguageDTO.class);
 
-                Map<String, String> header = WorkflowServiceHelper.getApplicationStartHeaders();
+                Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
                 header.put("Accept-Language", languageid);
 
-                WorkflowServiceHelper.getInstance().execute(signInSignUpDTO.getMetadata().getTransitions().getSignin(), signInCallback, null, null, header);
+                getWorkflowServiceHelper().execute(signInSignUpDTO.getMetadata().getTransitions().getSignin(), signInCallback, null, null, header);
             }
 
         }
@@ -85,7 +85,7 @@ public class SplashActivity extends BasePatientActivity {
         setContentView(R.layout.activity_splash);
 
         // dynamic transition
-        WorkflowServiceHelper.getInstance().executeApplicationStartRequest(applicationStartCallback);
+        getWorkflowServiceHelper().executeApplicationStartRequest(applicationStartCallback);
 
     }
 }

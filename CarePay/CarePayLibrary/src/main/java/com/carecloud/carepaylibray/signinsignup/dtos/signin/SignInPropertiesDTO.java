@@ -12,10 +12,10 @@ public class SignInPropertiesDTO {
 
     @SerializedName("email")
     @Expose
-    private SignInEmailDTO email;
+    private SignInEmailDTO email = new SignInEmailDTO();
     @SerializedName("password")
     @Expose
-    private SignInPasswordDTO password;
+    private SignInPasswordDTO password = new SignInPasswordDTO();
 
     /**
      *

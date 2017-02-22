@@ -15,7 +15,7 @@ public class PatientModeSwitchpinPadDTO {
     private Boolean payload;
     @SerializedName("metadata")
     @Expose
-    private PatientModeSwitchPinMetadataDTO metadata;
+    private PatientModeSwitchPinMetadataDTO metadata = new PatientModeSwitchPinMetadataDTO();
 
     /**
      *

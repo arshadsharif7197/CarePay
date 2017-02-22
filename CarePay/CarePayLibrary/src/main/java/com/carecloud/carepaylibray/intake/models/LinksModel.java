@@ -8,13 +8,13 @@ public class LinksModel {
 
     @SerializedName("self")
     @Expose
-    private SelfModel self;
+    private SelfModel self = new SelfModel();
     @SerializedName("payments")
     @Expose
-    private PaymentModel payments;
+    private PaymentModel payments = new PaymentModel();
     @SerializedName("intake")
     @Expose
-    private TransitionDTO intake;
+    private TransitionDTO intake = new TransitionDTO();
 
 
     /**

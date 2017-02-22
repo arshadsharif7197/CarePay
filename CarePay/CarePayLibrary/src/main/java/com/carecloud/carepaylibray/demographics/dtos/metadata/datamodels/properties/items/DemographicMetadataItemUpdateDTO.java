@@ -9,6 +9,7 @@ import com.google.gson.annotations.SerializedName;
  * Specific metadata DTO for 'updates' -> 'items' -> 'update'
  */
 public class DemographicMetadataItemUpdateDTO {
-    @SerializedName("update") @Expose
-    public DemographicMetadataEntityItemUpdateDTO update;
+    @SerializedName("update")
+    @Expose
+    public DemographicMetadataEntityItemUpdateDTO update = new DemographicMetadataEntityItemUpdateDTO();
 }

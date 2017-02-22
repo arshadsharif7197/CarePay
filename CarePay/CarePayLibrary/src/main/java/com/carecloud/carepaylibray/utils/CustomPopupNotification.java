@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.appointments.utils;
+package com.carecloud.carepaylibray.utils;
 
 import android.content.Context;
 import android.os.Handler;
@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
  * Created by sudhir_pingale on 9/22/2016.
@@ -100,9 +99,9 @@ public class CustomPopupNotification extends PopupWindow {
                 popupIcon.setImageResource(R.drawable.icn_notification_error);
                 break;
             case AUTO_DISSMISS_SUCCESS_NOTIFICATION:
-                popupWindowLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.success));
+                popupWindowLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.emerald));
                 popupMessageLabel.setTextColor(ContextCompat.getColor(context, R.color.white));
-                popupIcon.setImageResource(R.drawable.icn_check);
+                popupIcon.setImageResource(R.drawable.icn_notification_basic_white_check);
                 break;
             default:
         }

@@ -93,7 +93,7 @@
             android:layout_width="wrap_content"
             android:layout_marginEnd="15dp"
             android:layout_marginTop="15dp"
-            android:layout_weight="1"
+            android:layout_weight="0"
             android:text="@string/demogr_insurance_provider"/>
 
         <TextView
@@ -102,7 +102,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:layout_weight="0"
+            android:textAlignment="viewEnd"
+            android:layout_weight="1"
             android:text="@string/demogr_tv_choose_label"/>
 
     </LinearLayout>
@@ -145,6 +146,20 @@
         <EditText
             android:id="@+id/reviewinsurncecardnum"
             style="@style/SigninSignupEditStyle"
+            android:imeOptions="actionNone"
+            android:maxLength="100"
+            android:inputType="textFilter"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/insurancegroupNumberLabel"
+        style="@style/TextInputLayoutStyle"
+        app:hintTextAppearance="@style/FloatingLabelStyle">
+
+        <EditText
+            android:id="@+id/reviewinsurncegroupnum"
+            style="@style/SigninSignupEditStyle"
+            android:maxLength="100"
             android:imeOptions="actionNone"
             android:inputType="textFilter"/>
     </android.support.design.widget.TextInputLayout>

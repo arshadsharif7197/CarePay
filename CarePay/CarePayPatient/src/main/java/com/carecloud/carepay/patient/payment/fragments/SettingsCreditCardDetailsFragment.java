@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.appointments.utils.PatientAppUtil;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -24,6 +26,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
@@ -43,11 +46,12 @@ import org.json.JSONObject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SettingsCreditCardDetailsFragment extends Fragment {
+public class SettingsCreditCardDetailsFragment extends BaseFragment {
 
     private DemographicsSettingsDTO demographicsSettingsDTO = null;
     private DemographicsSettingsCreditCardsPayloadDTO creditCardsPayloadDTO = null;
     private DemographicsSettingsLabelsDTO settingsLabelsDTO;
+    private static final String TAG = SettingsCreditCardDetailsFragment.class.getName();
 
     public interface IOnCreditCardOperationSuccess {
         void onCreditCardOperation(DemographicsSettingsDTO demographicsSettingsDTO);
@@ -175,7 +179,7 @@ public class SettingsCreditCardDetailsFragment extends Fragment {
             setAsDefaultPayload.put("is_default", true);
             String body = setAsDefaultPayload.toString();
             TransitionDTO transitionDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getTransitions().getUpdateCreditCard();
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, creditCardOperationCallback, body, null, WorkflowServiceHelper.getPreferredLanguageHeader());
+            getWorkflowServiceHelper().execute(transitionDTO, creditCardOperationCallback, body, null, getWorkflowServiceHelper().getPreferredLanguageHeader());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -187,7 +191,7 @@ public class SettingsCreditCardDetailsFragment extends Fragment {
             queryMap.put("card_id", creditCardsPayloadDTO.getPayload().getHashCreditCardsId());
 
             TransitionDTO transitionDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getTransitions().getDeleteCreditCard();
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, creditCardOperationCallback, queryMap, WorkflowServiceHelper.getPreferredLanguageHeader());
+            getWorkflowServiceHelper().execute(transitionDTO, creditCardOperationCallback, queryMap, getWorkflowServiceHelper().getPreferredLanguageHeader());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -196,24 +200,31 @@ public class SettingsCreditCardDetailsFragment extends Fragment {
     private WorkflowServiceCallback creditCardOperationCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getActivity()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getActivity()).dismiss();
-            Gson gson = new Gson();
-            DemographicsSettingsDTO removeCreditCardResponseDTO = gson.fromJson(workflowDTO.toString(),
-                    DemographicsSettingsDTO.class);
-            demographicsSettingsDTO.getPayload().setPatientCreditCards(removeCreditCardResponseDTO.getPayload()
-                    .getPatientCreditCards());
-            ((DemographicsSettingsActivity) getActivity()).onCreditCardOperation(demographicsSettingsDTO);
-            getActivity().onBackPressed();
+            try {
+                hideProgressDialog();
+                Gson gson = new Gson();
+                DemographicsSettingsDTO removeCreditCardResponseDTO = gson.fromJson(workflowDTO.toString(),
+                        DemographicsSettingsDTO.class);
+                demographicsSettingsDTO.getPayload().setPatientCreditCards(removeCreditCardResponseDTO.getPayload()
+                        .getPatientCreditCards());
+                ((DemographicsSettingsActivity) getActivity()).onCreditCardOperation(demographicsSettingsDTO);
+                getActivity().onBackPressed();
+
+                PatientAppUtil.showSuccessNotification(getActivity(), getView(), demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getLabels().getSettingsSavedSuccessMessage());
+            } catch(Exception e) {
+                Log.e(TAG, "Credit Card onPostExecute" + e.getMessage());
+            }
+
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getActivity()).dismiss();
+            hideProgressDialog();
             System.out.print(exceptionMessage);
             SystemUtil.showDefaultFailureDialog(getActivity());
         }

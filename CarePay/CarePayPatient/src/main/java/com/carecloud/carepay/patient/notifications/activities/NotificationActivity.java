@@ -43,6 +43,7 @@ public class NotificationActivity extends MenuPatientActivity {
         transaction.commit();
 
         inflateDrawer();
+        navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_NOTIFICATION).setChecked(true);
     }
 
 }

@@ -9,11 +9,13 @@ import com.google.gson.annotations.SerializedName;
  * Model for links.
  */
 public class DemographicLinksDTO {
-    @SerializedName("self")  @Expose
-    private BaseLinkModel self;
+    @SerializedName("self")
+    @Expose
+    private BaseLinkModel self = new BaseLinkModel();
 
-    @SerializedName("demographics") @Expose
-    private BaseLinkModel demographics;
+    @SerializedName("demographics")
+    @Expose
+    private BaseLinkModel demographics = new BaseLinkModel();
 
     /**
      *

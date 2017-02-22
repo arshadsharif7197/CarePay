@@ -9,11 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseFragment;
 
 /**
  * Supporting fragment for MyKeyboard
  */
-public class MyKeyboardFragment extends Fragment {
+public class MyKeyboardFragment extends BaseFragment {
 
     // hash map with references to all mEdits
     private MyKeyboard mKeyboard; // the keyboard

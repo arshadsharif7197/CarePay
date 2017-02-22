@@ -273,12 +273,14 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
         // Get current date/time in required format
         Date currentDate = DateUtil.getInstance().setToCurrent().getDate();
+        String cancellationNoticePeriodStr = appointmentInfo.getPayload().getAppointmentsSettings().get(0).getCheckin().getCancellationNoticePeriod();
 
         if (appointmentTime != null && currentDate != null) {
             long differenceInMilli = appointmentTime.getTime() - currentDate.getTime();
             long differenceInMinutes = TimeUnit.MILLISECONDS.toMinutes(differenceInMilli);
+            long cancellationNoticePeriod = Long.parseLong(cancellationNoticePeriodStr);
 
-            if (differenceInMinutes > CarePayConstants.APPOINTMENT_CANCEL_TIME_IN_MINUTES) {
+            if (differenceInMinutes > cancellationNoticePeriod) {
                 return true;
             }
         }
@@ -356,6 +358,13 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             boolean isCheckedIn = payloadDTO.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.CHECKED_IN);
             boolean isCanceled = payloadDTO.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.CANCELLED);
             boolean isRequested = payloadDTO.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.REQUESTED);
+            boolean allowEarlyCheckin = appointmentInfo.getPayload().getAppointmentsSettings().get(0).getCheckin().getAllowEarlyCheckin();
+            String allowEarlyCheckinPeriodStr = appointmentInfo.getPayload().getAppointmentsSettings().get(0).getCheckin().getEarlyCheckinPeriod();
+            long allowEarlyCheckinPeriod = Long.parseLong(allowEarlyCheckinPeriodStr);
+            String appointmentTimeStr = item.getPayload().getStartTime();
+            Date appointmentTime = DateUtil.getInstance().setDateRaw(appointmentTimeStr).getDate();
+            // Get current date/time in required format
+            Date currentDate = DateUtil.getInstance().setToCurrent().getDate();
 
             // Missed Appointment
             if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER) && !isCheckedIn) {
@@ -383,12 +392,19 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                         BaseDoctorInfoDialog.AppointmentType.REQUESTED_APPOINTMENT, null).show();
 
             } else if (isPending) {
-                if (sectionHeaderTitle.equals(appointmentLabels.getTodayAppointmentsHeading())) {
+                if (sectionHeaderTitle.equals(appointmentLabels.getTodayAppointmentsHeading() )) {
 
                     // Pending Appointment && Appointments for the current business day
                     new CheckInOfficeNowAppointmentDialog(context, false, item, appointmentInfo).show();
 
-                } else if (isAppointmentCancellable(item)) {
+                }else if (sectionHeaderTitle.equals(appointmentLabels.getUpcomingAppointmentsHeading() ) && appointmentTime != null && currentDate != null) {
+                    long differenceInMilli = appointmentTime.getTime() - currentDate.getTime();
+                    long differenceInMinutes = TimeUnit.MILLISECONDS.toMinutes(differenceInMilli);
+
+                    if ((differenceInMinutes < allowEarlyCheckinPeriod) && allowEarlyCheckin) {
+                        new CheckInOfficeNowAppointmentDialog(context, false, item, appointmentInfo).show();
+                    }
+                }else if (isAppointmentCancellable(item)) {
                     // Appointment as long as it's 24 hours or more in the future
                     new CancelAppointmentDialog(context, item, appointmentInfo,
                             BaseDoctorInfoDialog.AppointmentType.CANCEL_APPOINTMENT,

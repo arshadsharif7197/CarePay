@@ -29,6 +29,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeDialog;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -41,7 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ChooseProviderFragment extends Fragment implements ProviderAdapter.OnProviderListItemClickListener,
+public class ChooseProviderFragment extends BaseFragment implements ProviderAdapter.OnProviderListItemClickListener,
         VisitTypeDialog.OnDialogListItemClickListener {
 
     private RecyclerView providersRecyclerView;
@@ -127,25 +128,25 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
 
     private void getResourcesInformation() {
         Map<String, String> queryMap = new HashMap<>();
-        if (appointmentsResultModel.getPayload().getAppointments() != null && appointmentsResultModel.getPayload().getAppointments().size() > 0) {
-            queryMap.put("practice_mgmt", appointmentsResultModel.getPayload().getAppointments().get(0).getMetadata().getPracticeMgmt());
-            queryMap.put("practice_id", appointmentsResultModel.getPayload().getAppointments().get(0).getMetadata().getPracticeId());
-        }
+        //TODO this will need to be updated once multiple practice support has been implemented
+        queryMap.put("practice_mgmt", appointmentsResultModel.getPayload().getPractice_patient_ids().get(0).getPracticeManagement());
+        queryMap.put("practice_id", appointmentsResultModel.getPayload().getPractice_patient_ids().get(0).getPracticeId());
+
 
         TransitionDTO resourcesToSchedule = appointmentsResultModel.getMetadata().getLinks().getResourcesToSchedule();
-        WorkflowServiceHelper.getInstance().execute(resourcesToSchedule, scheduleResourcesCallback, queryMap);
+        getWorkflowServiceHelper().execute(resourcesToSchedule, scheduleResourcesCallback, queryMap);
     }
 
     private WorkflowServiceCallback scheduleResourcesCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
             appointmentProgressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             Gson gson = new Gson();
             resourcesToScheduleModel = gson.fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
 
@@ -179,7 +180,7 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(getActivity());
             appointmentProgressBar.setVisibility(View.GONE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
@@ -225,17 +226,15 @@ public class ChooseProviderFragment extends Fragment implements ProviderAdapter.
         if (visitTypeFragment == null) {
             visitTypeFragment = new AvailableHoursFragment();
         }
-        if(appointmentsResultModel.getPayload().getAppointments().size()<1){
-            return;
-        }
 
         Bundle bundle = new Bundle();
         Gson gson = new Gson();
+        String patientID = appointmentsResultModel.getPayload().getPractice_patient_ids().get(0).getPatientId(); //TODO this should be updated for multi practice support
+
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(selectedResource));
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(selectedVisitType));
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(resourcesToScheduleModel));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID,
-                appointmentsResultModel.getPayload().getAppointments().get(0).getMetadata().getPatientId());
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID, patientID);
         visitTypeFragment.setArguments(bundle);
 
         fragmentManager.beginTransaction().replace(R.id.add_appointments_frag_holder, visitTypeFragment,

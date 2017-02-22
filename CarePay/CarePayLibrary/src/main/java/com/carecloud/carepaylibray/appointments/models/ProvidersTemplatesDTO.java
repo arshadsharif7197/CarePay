@@ -8,7 +8,7 @@ public class ProvidersTemplatesDTO {
 
     @SerializedName("appointment_template")
     @Expose
-    private ProvidersTemplateDTO appointmentTemplate;
+    private ProvidersTemplateDTO appointmentTemplate = new ProvidersTemplateDTO();
 
     /**
      * 

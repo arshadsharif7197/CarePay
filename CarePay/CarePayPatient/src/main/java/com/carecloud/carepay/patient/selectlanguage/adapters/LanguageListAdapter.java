@@ -13,6 +13,7 @@ import android.widget.RadioButton;
 import com.carecloud.carepay.patient.selectlanguage.models.LanguageOptionModel;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.List;
@@ -53,7 +54,7 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
         String languageName = languageSelected.getValue();
         holder.languageNameRadioButton.setText(languageName);
 
-        if (ApplicationPreferences.Instance.getUserLanguage().equals(languageSelected.getLanguageId())) {
+        if (((ISession) context).getApplicationPreferences().getUserLanguage().equals(languageSelected.getLanguageId())) {
             selectedLanguage = holder.languageNameRadioButton;
             selectedLanguage.setChecked(true);
             selectedLanguage.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));

@@ -12,10 +12,10 @@ public class MetaDataDTO {
 
     @SerializedName("links")
     @Expose
-    private LinksDTO links;
+    private LinksDTO links = new LinksDTO();
     @SerializedName("transitions")
     @Expose
-    private TransitionsDTO transitions;
+    private TransitionsDTO transitions = new TransitionsDTO();
 
     /**
      * @return The links

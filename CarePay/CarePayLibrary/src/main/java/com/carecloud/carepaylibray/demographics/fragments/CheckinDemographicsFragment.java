@@ -1,6 +1,8 @@
-package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
+package com.carecloud.carepaylibray.demographics.fragments;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -18,20 +20,28 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
@@ -39,50 +49,65 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressP
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
-import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
-import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
+import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterface;
+import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.utils.AddressUtil;
+import com.carecloud.carepaylibray.utils.CircleImageTransform;
+import com.carecloud.carepaylibray.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
+import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.gson.Gson;
 import com.smartystreets.api.us_zipcode.City;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-/**
- * Fragment to update the demographisc info (except insurances)
- */
-public class CheckinDemographicsFragment extends BaseCheckinFragment implements View.OnClickListener {
 
+public class CheckinDemographicsFragment extends DocumentScannerFragment implements View.OnClickListener {
+
+    private static final String LOG_TAG = CheckinDemographicsFragment.class.getSimpleName();
     int selectedDataArray;
-    private Button      buttonAddDemographicInfo;
-    private View        view;
-    private String[]    gender;
-    private String[]    race;
-    private String[]    ethnicity;
-    private ProgressBar demographicProgressBar;
+    private Button buttonConfirmData;
+    private View view;
+    private String[] gender;
+    private String[] race;
+    private String[] ethnicity;
 
-    private DemographicMetadataEntityAddressDTO     addressMetaDTO;
+    private DemographicMetadataEntityAddressDTO addressMetaDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
-    private DemographicMetadataEntityIdDocsDTO      idDocsMetaDTO;
-    private DemographicLabelsDTO                    globalLabelsMetaDTO;
-    private DemographicPersDetailsPayloadDTO        demographicPersDetailsPayloadDTO;
-    private DemographicAddressPayloadDTO            demographicAddressPayloadDTO;
-    private List<DemographicInsurancePayloadDTO>    insurances;
-    private DemographicIdDocPayloadDTO              demographicIdDocPayloadDTO;
-    private DemographicDTO                          demographicDTO;
+    private DemographicLabelsDTO globalLabelsMetaDTO;
+    private DemographicPersDetailsPayloadDTO demographicPersDetailsPayloadDTO;
+    private DemographicAddressPayloadDTO demographicAddressPayloadDTO;
+    private DemographicIdDocPayloadDTO demographicIdDocPayloadDTO;
+    private DemographicDTO demographicDTO;
+
+    //profile image
+    private ImageView profileImageview;
+    private Button updateProfileImageButton;
 
     private EditText phoneNumberEditText;
     private EditText zipCodeEditText;
     private EditText address1EditText;
     private EditText address2EditText;
     private EditText dobEditText;
-    private EditText stateEditText;
-    private EditText driverlicenseEditText;
+    private AutoCompleteTextView stateEditText;
     private EditText cityEditText;
     private EditText firstNameText;
     private EditText middleNameText;
@@ -94,12 +119,11 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
     private TextInputLayout phoneNumberLabel;
     private TextInputLayout address1Label;
     private TextInputLayout address2Label;
-    private TextInputLayout driverLicenseLabel;
     private TextInputLayout cityLabel;
     private TextInputLayout stateLabel;
     private TextInputLayout zipcodeLabel;
     private TextInputLayout doblabel;
-    private LinearLayout    rootview;
+    private LinearLayout rootview;
 
     private TextView addressSectionTextView;
     private TextView peronalInfoSectionTextview;
@@ -110,9 +134,10 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
     private TextView ethnicityLabelTextView;
     private TextView selectGender;
     private TextView genderLabelTextView;
-    private TextView updateDemoGraphicTitleTextView;
     private TextView dateformatLabelTextView;
     private TextView optinalLabelTextView;
+    private TextView reviewTitleTextView;
+    private TextView reviewSubtitileTextView;
 
     private boolean isFirstNameEmpty;
     private boolean isLastNameEmpty;
@@ -121,12 +146,34 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
     private boolean isCityEmpty;
     private boolean isStateEmtpy;
     private boolean isZipEmpty;
-
-    private LinearLayout addDemoLineraLayout;
+    private boolean isPractice;
 
     private String stateAbbr = null;
     private City smartyStreetsResponse;
 
+    private CheckinDemographicsFragmentListener activityCallback;
+
+    public interface CheckinDemographicsFragmentListener {
+        void onDemographicDtoChanged(DemographicDTO demographicDTO);
+
+        void initializeDocumentFragment();
+
+        void initializeInsurancesFragment();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            activityCallback = (CheckinDemographicsFragmentListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement CheckinDemographicsFragmentListener");
+        }
+    }
 
     public CheckinDemographicsFragment() {
     }
@@ -134,54 +181,68 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        view = inflater.inflate(R.layout.fragment_review_demographic_tmp, container, false);
+        isPractice = ApplicationMode.getInstance().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
+        view = inflater.inflate(R.layout.fragment_review_demographic, container, false);
 
         initializeDemographicsDTO();
-        //initModels();
-        rootview = (LinearLayout) view.findViewById(R.id.demographicsReviewRoot);
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.demographics_review_toolbar);
-        TextView title = (TextView) toolbar.findViewById(R.id.demographics_review_toolbar_title);
-        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
-        toolbar.setTitle("");
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        toolbar.setVisibility(view.GONE);
+        rootview = (LinearLayout) view.findViewById(R.id.demographicsReviewRootLayout);
+
 
         initialiseUIFields();
         setEditTexts(view);
         setTypefaces(view);
         initViewFromModels();
 
+        if (!isPractice) {
+            Toolbar toolbar = (Toolbar) view.findViewById(R.id.demographics_review_toolbar);
+            TextView title = (TextView) toolbar.findViewById(R.id.demographics_review_toolbar_title);
+            SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
+            title.setText(globalLabelsMetaDTO.getDemographicsReviewToolbarTitle());
+            toolbar.setTitle("");
+            toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getActivity().finish();
+                }
+            });
+        }
 
         formatEditText();
+        ((ScrollView)view.findViewById(R.id.adddemoScrollview)).smoothScrollTo(0,0);
         return view;
     }
 
     private void initializeDemographicsDTO() {
-        demographicDTO = ((PatientModeCheckinActivity) getActivity()).getDemographicDTO();
+        demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
         globalLabelsMetaDTO = demographicDTO.getMetadata().getLabels();
         addressMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.address;
         persDetailsMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.personalDetails;
-        idDocsMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.identityDocuments;
 
         if (demographicDTO.getPayload().getDemographics() != null) {
             demographicPersDetailsPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
             demographicAddressPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getAddress();
             int size = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().size();
-            for (int i = 0; i > size; i++) {
+            for (int i = 0; i < size; i++) {
                 demographicIdDocPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(i);
             }
         }
 
+        if(demographicIdDocPayloadDTO == null){
+            demographicIdDocPayloadDTO = new DemographicIdDocPayloadDTO();
+        }
     }
 
     private void initialiseUIFields() {
 
-        addDemoLineraLayout = (LinearLayout) view.findViewById(R.id.adddemoLinearLayout);
-        addDemoLineraLayout.setPadding(20, 0, 20, 0);
+        profileImageview = (ImageView) view.findViewById(R.id.patientPicImageView);
+        imageCaptureHelper = new ImageCaptureHelper(getActivity(), profileImageview, globalLabelsMetaDTO);
+        updateProfileImageButton = (Button) view.findViewById(R.id.updateProfileImageButton);
 
-        updateDemoGraphicTitleTextView = (TextView) view.findViewById(R.id.detailsReviewHeading);
+        reviewTitleTextView = (TextView) view.findViewById(R.id.reviewtitle);
+        reviewSubtitileTextView = (TextView) view.findViewById(R.id.reviewSubtitle);
         peronalInfoSectionTextview = (TextView) view.findViewById(R.id.reviewdemogrPersonalInfoLabel);
         demographicSectionTextView = (TextView) view.findViewById(R.id.demographicsSectionLabel);
         addressSectionTextView = (TextView) view.findViewById(R.id.demographicsAddressSectionLabel);
@@ -200,14 +261,22 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
         address2EditText = (EditText) view.findViewById(R.id.addressEditText2Id);
         zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeId);
         cityEditText = (EditText) view.findViewById(R.id.cityId);
-        stateEditText = (EditText) view.findViewById(R.id.stateAutoCompleteTextView);
+        stateEditText = (AutoCompleteTextView) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView);
         stateEditText.setHint(addressMetaDTO.properties.state.getLabel());
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
+                R.layout.autocomplete_state_item,
+                R.id.text1,
+                AddressUtil.states);
+        stateEditText.setThreshold(1);
+        stateEditText.setAdapter(adapter);
+        stateEditText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                stateAbbr = adapter.getItem(position);
+            }
+        });
 
-        driverlicenseEditText = (EditText) view.findViewById(R.id.driverLicenseEditText);
-        demographicProgressBar = (ProgressBar) view.findViewById(R.id.demographicReviewProgressBar);
-        demographicProgressBar.setVisibility(View.GONE);
-
-        buttonAddDemographicInfo = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
+        buttonConfirmData = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
 
 
         raceDataTextView = (TextView) view.findViewById(R.id.raceListDataTextView);
@@ -223,7 +292,6 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
         lastNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrLastNameTextInput);
         doblabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
         phoneNumberLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
-        driverLicenseLabel = (TextInputLayout) view.findViewById(R.id.reviewDriverLicenseLabel);
         address1Label = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
         address2Label = (TextInputLayout) view.findViewById(R.id.address2TextInputLayout);
         zipcodeLabel = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
@@ -232,8 +300,9 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
         initializeLabels();
         initializeOptionsArray();
 
-
     }
+
+
 
     private void initializeOptionsArray() {
 
@@ -264,8 +333,9 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
         firstNameText.setHint(persDetailsMetaDTO.properties.firstName.getLabel());
         lastNameText.setHint(persDetailsMetaDTO.properties.lastName.getLabel());
         middleNameText.setHint(persDetailsMetaDTO.properties.middleName.getLabel());
-
-        updateDemoGraphicTitleTextView.setText(globalLabelsMetaDTO.getDemographicsUpdateDemographicTitle());
+        updateProfileImageButton.setText(globalLabelsMetaDTO.getDemographicsProfileReCaptureCaption().toUpperCase());
+        reviewTitleTextView.setText(globalLabelsMetaDTO.getDemographicsReviewScreenTitle());
+        reviewSubtitileTextView.setText(globalLabelsMetaDTO.getDemographicsReviewScreenSubtitle());
         peronalInfoSectionTextview.setText(globalLabelsMetaDTO.getDemographicsReviewPeronsonalinfoSection().toUpperCase());
         demographicSectionTextView.setText(globalLabelsMetaDTO.getDemographicSectionTitle().toUpperCase());
         addressSectionTextView.setHint(globalLabelsMetaDTO.getDemographicsAddressSection().toUpperCase());
@@ -280,8 +350,6 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
         cityEditText.setHint(addressMetaDTO.properties.city.getLabel());
         zipCodeEditText.setHint(addressMetaDTO.properties.zipcode.getLabel());
 
-        driverlicenseEditText.setHint(idDocsMetaDTO.properties.items.identityDocument.properties.identityDocumentType.options.get(0).getLabel());
-
         selectGender.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
         selectGender.setOnClickListener(this);
 
@@ -295,8 +363,10 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
         raceDataTextView.setOnClickListener(this);
 
         raceLabelTextView.setText(persDetailsMetaDTO.properties.primaryRace.getLabel());
-        buttonAddDemographicInfo.setOnClickListener(this);
-        buttonAddDemographicInfo.setText(globalLabelsMetaDTO.getDemographicsUpdateButton().toUpperCase());
+        buttonConfirmData.setOnClickListener(this);
+        buttonConfirmData.setText(globalLabelsMetaDTO.getDemographicsReviewCorrectButton().toUpperCase());
+
+        enableButton(isAllFieldsValid());
 
     }
 
@@ -324,6 +394,7 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
                     firstNameLabel.setError(firstNameError);
                     firstNameLabel.setErrorEnabled(true);
                 }
+                checkIfEnableButton();
             }
         });
 
@@ -355,6 +426,7 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
                     doblabel.setError(null);
                 }
                 StringUtil.autoFormatDateOfBirth(editable, prevLen);
+                checkIfEnableButton();
             }
         });
         dobEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -400,6 +472,7 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
                 }
                 // auto-format as typing
                 StringUtil.autoFormatPhone(phonenumber, len);
+                checkIfEnableButton();
             }
         });
         lastNameText.addTextChangedListener(new TextWatcher() {
@@ -424,7 +497,7 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
                     lastNameLabel.setError(lastNameError);
                     lastNameLabel.setErrorEnabled(true);
                 }
-
+                checkIfEnableButton();
             }
         });
 
@@ -450,6 +523,7 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
                     address1Label.setError(lastNameError);
                     address1Label.setErrorEnabled(true);
                 }
+                checkIfEnableButton();
 
             }
         });
@@ -476,6 +550,7 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
                 }
 
                 StringUtil.autoFormatZipcode(editable, prevLen);
+                checkIfEnableButton();
             }
         });
 
@@ -502,6 +577,7 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
                     cityLabel.setErrorEnabled(true);
                 }
 
+                checkIfEnableButton();
             }
         });
 
@@ -527,11 +603,17 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
                     stateLabel.setError(lastNameError);
                     stateLabel.setErrorEnabled(true);
                 }
-
+                checkIfEnableButton();
             }
         });
 
+        updateProfileImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectImage(imageCaptureHelper, ImageCaptureHelper.CameraType.DEFAULT_CAMERA);
+            }
 
+        });
     }
 
     private boolean isZipCodeValid() {
@@ -540,11 +622,10 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
             return true;
         }
         // apply validate from backend
-        boolean isValidFormat = ValidationHelper.applyPatternValidationToWrappedEdit(zipCodeEditText,
-                                                                                     zipcodeLabel,
-                                                                                     addressMetaDTO.properties.zipcode,
-                                                                                     null);
-        return isValidFormat;
+        return ValidationHelper.applyPatternValidationToWrappedEdit(zipCodeEditText,
+                zipcodeLabel,
+                addressMetaDTO.properties.zipcode,
+                null);
     }
 
     private boolean isPhoneNumberValid() {
@@ -593,18 +674,61 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
             dobEditText.requestFocus();
         }
 
+        boolean isGenderValid = !globalLabelsMetaDTO.getDemographicsChooseLabel().equals(selectGender.getText().toString());
+        boolean isEthnicityValid = !globalLabelsMetaDTO.getDemographicsChooseLabel().equals(ethnicityDataTextView.getText().toString());
+        boolean isRaceValid = !globalLabelsMetaDTO.getDemographicsChooseLabel().equals(raceDataTextView.getText().toString());
 
-        return isPhoneValid && isZipValid && isdobValid && !isAddressEmpty && !isFirstNameEmpty && !isLastNameEmpty && !isCityEmpty && !isStateEmtpy;
+        return isPhoneValid && isZipValid && isdobValid && isRaceValid && isEthnicityValid && isGenderValid && !isAddressEmpty && !isFirstNameEmpty && !isLastNameEmpty && !isCityEmpty && !isStateEmtpy;
 
     }
+
+    private void openNextFragment(){
+        Map<String, String> queries = new HashMap<>();
+        queries.put("practice_mgmt", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
+        queries.put("practice_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
+        queries.put("appointment_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId());
+
+        Map<String, String> header = getWorkflowServiceHelper().getPreferredLanguageHeader();
+        header.put("transition", "true");
+
+        Gson gson = new Gson();
+        String demogrPayloadString = gson.toJson(demographicDTO.getPayload().getDemographics().getPayload());
+        TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getUpdateDemographics();
+        getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE,
+                demographicDTO.getPayload().getDemographics().getPayload().getAddress());
+        getWorkflowServiceHelper().execute(transitionDTO, consentformcallback, demogrPayloadString, queries, header);
+    }
+
+    private WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            buttonConfirmData.setEnabled(true);
+            ((CheckinDemographicsInterface)getActivity()).navigateToConsentFlow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            buttonConfirmData.setEnabled(true);
+            SystemUtil.showDefaultFailureDialog(getActivity());
+            Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
 
     @Override
     public void onClick(View view) {
         String cancelLabel = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsCancelLabel();
-        if (view == buttonAddDemographicInfo) {
+        if (view == buttonConfirmData) {
 
             //   openNewFragment();
             if (isAllFieldsValid()) {
+                buttonConfirmData.setEnabled(false);
                 // update the model
                 updateModels();
 
@@ -612,25 +736,28 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
 //                postUpdates();
 
                 // next
-                openNewFragment();
+                openNextFragment();
 
                 // hide the keyboard
                 SystemUtil.hideSoftKeyboard(getActivity());
+            } else {
+                CustomPopupNotification popup = new CustomPopupNotification(getActivity(), getActivity().getWindow().getCurrentFocus(),
+                        globalLabelsMetaDTO.getDemographicsMissingInformation(), CustomPopupNotification.TYPE_ERROR_NOTIFICATION);
+                    popup.showPopWindow();
             }
-
         } else if (view == selectGender) {
             selectedDataArray = 1;
-            final String title = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsTitleSelectGender();
+            final String title = globalLabelsMetaDTO.getDemographicsTitleSelectGender();
             showAlertDialogWithListview(gender, title, cancelLabel);
 
         } else if (view == raceDataTextView) {
             selectedDataArray = 2;
-            final String title = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsTitleSelectRace();
+            final String title = globalLabelsMetaDTO.getDemographicsTitleSelectRace();
             showAlertDialogWithListview(race, title, cancelLabel);
 
         } else if (view == ethnicityDataTextView) {
             selectedDataArray = 3;
-            final String title = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsTitleSelectEthnicity();
+            final String title = globalLabelsMetaDTO.getDemographicsTitleSelectEthnicity();
             showAlertDialogWithListview(ethnicity, title, cancelLabel);
 
         }
@@ -681,7 +808,11 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
         });
     }
 
-    private void updateModels() {
+    /**
+     * update demographic DTO
+     * @return main demographic DTO
+     */
+    public DemographicDTO updateModels() {
 
         // save the personal details
         if (demographicPersDetailsPayloadDTO == null) {
@@ -703,8 +834,8 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
         if (!StringUtil.isNullOrEmpty(dateOfBirth)) {
             // the date is DateUtil as
             demographicPersDetailsPayloadDTO.setDateOfBirth(
-                            DateUtil.getInstance().setDateRaw(dateOfBirth).toStringWithFormatIso8601()
-                    );
+                    DateUtil.getInstance().setDateRaw(dateOfBirth).toStringWithFormatYyyyDashMmDashDd()
+            );
         }
         String gender = selectGender.getText().toString();
         if (!StringUtil.isNullOrEmpty(gender)) {
@@ -724,10 +855,7 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
         if (demographicIdDocPayloadDTO == null) {
             demographicIdDocPayloadDTO = new DemographicIdDocPayloadDTO();
         }
-        String driverLicense = driverlicenseEditText.getText().toString();
-        if (!StringUtil.isNullOrEmpty(driverLicense)) {
-            demographicIdDocPayloadDTO.setIdNumber(driverLicense);
-        }
+
         List<DemographicIdDocPayloadDTO> ids = new ArrayList<>();
         ids.add(demographicIdDocPayloadDTO);
         demographicDTO.getPayload().getDemographics().getPayload().setIdDocuments(ids);
@@ -764,9 +892,14 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
         }
         demographicDTO.getPayload().getDemographics().getPayload().setAddress(demographicAddressPayloadDTO);
 
-        // update gson in the activity
-        Gson gson = new Gson();
-        ((PatientModeCheckinActivity) getActivity()).resetDemographicDTO(gson.toJson(demographicDTO));
+        // update DTO in the activity
+        activityCallback.onDemographicDtoChanged(demographicDTO);
+
+//        if (bitmap != null) {
+//            String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
+//            demographicPersDetailsPayloadDTO.setProfilePhoto(imageAsBase64);
+//        }
+        return demographicDTO;
     }
 
     private void setEditTexts(View view) {
@@ -789,10 +922,6 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
 
         phoneNumberLabel.setTag(addressMetaDTO.properties.phone.getLabel());
         phoneNumberEditText.setTag(phoneNumberLabel);
-
-
-        driverLicenseLabel.setTag(idDocsMetaDTO.properties.items.identityDocument.properties.identityDocumentType.options.get(0).getLabel());
-        driverlicenseEditText.setTag(driverLicenseLabel);
 
 
         address1Label.setTag(addressMetaDTO.properties.address1.getLabel());
@@ -818,7 +947,7 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
         setChangeFocusListeners();
     }
 
-    private void setChangeFocusListeners() {
+    protected void setChangeFocusListeners() {
         firstNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean bool) {
@@ -868,15 +997,6 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
             }
         });
 
-        driverlicenseEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
 
         address1EditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -933,8 +1053,17 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
     }
 
     private void initViewFromModels() {
-
+        activityCallback.initializeDocumentFragment();
+        activityCallback.initializeInsurancesFragment();
         if (demographicPersDetailsPayloadDTO != null) {
+            String imageUrl = demographicPersDetailsPayloadDTO.getProfilePhoto();
+            if (!StringUtil.isNullOrEmpty(imageUrl)) {
+                Picasso.with(getActivity()).load(imageUrl).transform(
+                        new CircleImageTransform()).fit().into(this.profileImageview);
+            }else{
+                profileImageview.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.icn_placeholder_user_profile_png));
+            }
+
             //Personal Details
             String firstName = demographicPersDetailsPayloadDTO.getFirstName();
             if (SystemUtil.isNotEmptyString(firstName)) {
@@ -954,7 +1083,7 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
                 middleNameText.requestFocus();
 
             } else {
-                Log.v(KeyboardHolderActivity.LOG_TAG, "middle name field is empty");
+                Log.v(LOG_TAG, "middle name field is empty");
             }
             String datetime = demographicPersDetailsPayloadDTO.getDateOfBirth();
             if (datetime != null) {
@@ -962,7 +1091,7 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
                 dobEditText.setText(dateOfBirthString);
                 dobEditText.requestFocus();
             } else {
-                Log.v(KeyboardHolderActivity.LOG_TAG, "date is null");
+                Log.v(LOG_TAG, "date is null");
             }
             String getGender = demographicPersDetailsPayloadDTO.getGender();
             if (SystemUtil.isNotEmptyString(getGender)) {
@@ -986,18 +1115,9 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
             }
 
         } else {
-            Log.v(KeyboardHolderActivity.LOG_TAG, "demographic personal details is empty");
+            Log.v(LOG_TAG, "demographic personal details is empty");
         }
 
-        if (demographicIdDocPayloadDTO != null) {
-            String driverlicense = demographicIdDocPayloadDTO.getIdNumber();
-            if (driverlicense != null) {
-                driverlicenseEditText.setText(driverlicense);
-                driverlicenseEditText.requestFocus();
-            }
-        } else {
-            Log.v(KeyboardHolderActivity.LOG_TAG, "demographic personal details is empty");
-        }
 
         if (demographicAddressPayloadDTO != null) {
             //Address
@@ -1028,6 +1148,7 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
             if (SystemUtil.isNotEmptyString(zipcode)) {
                 zipCodeEditText.setText(StringUtil.formatZipCode(zipcode));
                 zipCodeEditText.requestFocus();
+
             }
 
             String phoneumber = demographicAddressPayloadDTO.getPhone();
@@ -1037,98 +1158,96 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
             }
 
         } else {
-            Log.v(KeyboardHolderActivity.LOG_TAG, "Demographic adress is empty ");
+            Log.v(LOG_TAG, "Demographic adress is empty ");
         }
 
         rootview.requestFocus();
-        SystemUtil.hideSoftKeyboard(getActivity());
+        hideSoftKeyboard(getActivity());
+
     }
 
-    private void openNewFragment() {
-        buttonAddDemographicInfo.setEnabled(false);
-        CheckinInsurancesSummaryFragment fragment = new CheckinInsurancesSummaryFragment();
-        ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
-        ((PatientModeCheckinActivity) getActivity()).toggleVisibleBackButton(true);
-    }
-
-    private void setTypefaces(View view) {
-        SystemUtil.setGothamRoundedMediumTypeface(getActivity(),
-                (TextView) view.findViewById(R.id.detailsReviewHeading));
+    protected void setTypefaces(View view) {
+        setGothamRoundedMediumTypeface(getActivity(), reviewTitleTextView);
+        setProximaNovaRegularTypeface(getActivity(), reviewSubtitileTextView);
 
         if (!StringUtil.isNullOrEmpty(firstNameText.getText().toString())) {
-            SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), firstNameLabel);
+            setProximaNovaExtraboldTypefaceInput(getActivity(), firstNameLabel);
         } else {
-            SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), firstNameLabel);
+            setProximaNovaRegularTypefaceLayout(getActivity(), firstNameLabel);
         }
 
+
         if (!StringUtil.isNullOrEmpty(lastNameText.getText().toString())) {
-            SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), lastNameLabel);
+            setProximaNovaExtraboldTypefaceInput(getActivity(), lastNameLabel);
         } else {
-            SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), lastNameLabel);
+            setProximaNovaRegularTypefaceLayout(getActivity(), lastNameLabel);
         }
 
         if (!StringUtil.isNullOrEmpty(middleNameText.getText().toString())) {
-            SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), middleNameLabel);
+            setProximaNovaExtraboldTypefaceInput(getActivity(), middleNameLabel);
         } else {
-            SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), middleNameLabel);
+            setProximaNovaRegularTypefaceLayout(getActivity(), middleNameLabel);
         }
 
         if (!StringUtil.isNullOrEmpty(dobEditText.getText().toString())) {
-            SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), doblabel);
+            setProximaNovaExtraboldTypefaceInput(getActivity(), doblabel);
         } else {
-            SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), doblabel);
+            setProximaNovaRegularTypefaceLayout(getActivity(), doblabel);
         }
 
         if (!StringUtil.isNullOrEmpty(phoneNumberEditText.getText().toString())) {
-            SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), phoneNumberLabel);
+            setProximaNovaExtraboldTypefaceInput(getActivity(), phoneNumberLabel);
         } else {
-            SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), phoneNumberLabel);
+            setProximaNovaRegularTypefaceLayout(getActivity(), phoneNumberLabel);
         }
 
         if (!StringUtil.isNullOrEmpty(address1EditText.getText().toString())) {
-            SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), address1Label);
+            setProximaNovaExtraboldTypefaceInput(getActivity(), address1Label);
         } else {
-            SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), address1Label);
+            setProximaNovaRegularTypefaceLayout(getActivity(), address1Label);
         }
 
+
         if (!StringUtil.isNullOrEmpty(address2EditText.getText().toString())) {
-            SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), address2Label);
+            setProximaNovaExtraboldTypefaceInput(getActivity(), address2Label);
         } else {
-            SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), address2Label);
+            setProximaNovaRegularTypefaceLayout(getActivity(), address2Label);
         }
 
         if (!StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString())) {
-            SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), zipcodeLabel);
+            setProximaNovaExtraboldTypefaceInput(getActivity(), zipcodeLabel);
         } else {
-            SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), zipcodeLabel);
+            setProximaNovaRegularTypefaceLayout(getActivity(), zipcodeLabel);
         }
 
         if (!StringUtil.isNullOrEmpty(cityEditText.getText().toString())) {
-            SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), cityLabel);
+            setProximaNovaExtraboldTypefaceInput(getActivity(), cityLabel);
         } else {
-            SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), cityLabel);
+            setProximaNovaRegularTypefaceLayout(getActivity(), cityLabel);
         }
 
         if (!StringUtil.isNullOrEmpty(stateEditText.getText().toString())) {
-            SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), stateLabel);
+            setProximaNovaExtraboldTypefaceInput(getActivity(), stateLabel);
         } else {
-            SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), stateLabel);
-        }
-        if (!StringUtil.isNullOrEmpty(driverlicenseEditText.getText().toString())) {
-            SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), driverLicenseLabel);
-        } else {
-            SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), driverLicenseLabel);
+            setProximaNovaRegularTypefaceLayout(getActivity(), stateLabel);
         }
 
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), peronalInfoSectionTextview);
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), demographicSectionTextView);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), raceLabelTextView);
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), raceDataTextView);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), genderLabelTextView);
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), selectGender);
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), addressSectionTextView);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), ethnicityLabelTextView);
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), ethnicityDataTextView);
+
+        setProximaNovaSemiboldTypeface(getActivity(), peronalInfoSectionTextview);
+        setProximaNovaSemiboldTypeface(getActivity(), demographicSectionTextView);
+
+
+        setProximaNovaRegularTypeface(getActivity(), raceLabelTextView);
+        setProximaNovaSemiboldTypeface(getActivity(), raceDataTextView);
+
+        setProximaNovaRegularTypeface(getActivity(), genderLabelTextView);
+        setProximaNovaSemiboldTypeface(getActivity(), selectGender);
+
+        setProximaNovaSemiboldTypeface(getActivity(), addressSectionTextView);
+
+
+        setProximaNovaRegularTypeface(getActivity(), ethnicityLabelTextView);
+        setProximaNovaSemiboldTypeface(getActivity(), ethnicityDataTextView);
     }
 
     /**
@@ -1162,10 +1281,55 @@ public class CheckinDemographicsFragment extends BaseCheckinFragment implements 
         }.execute(zipcode);
     }
 
+    public void checkIfEnableButton(){
+        checkIfDisableButton(false);
+    }
+
+    public void checkIfDisableButton(boolean isDisabled){
+        enableButton(isAllFieldsValid() && !isDisabled);
+    }
+
+    /**
+     * Enable or disable main button
+     * @param isEnabled is Button enabled
+     */
+    public void enableButton(boolean isEnabled){
+        if(isPractice){
+            buttonConfirmData.setBackground(ContextCompat.getDrawable(getContext(),isEnabled? R.drawable.bg_green_overlay  : R.drawable.bg_silver_overlay));
+            buttonConfirmData.setPadding(20, 0, 20, 0);
+        } else {
+            buttonConfirmData.setBackground(ContextCompat.getDrawable(getContext(),isEnabled? R.drawable.language_button_selector  : R.drawable.button_light_gray_bg));
+        }
+        buttonConfirmData.setEnabled(isEnabled);
+    }
+
     @Override
-    public void onResume() {
-        super.onResume();
-        buttonAddDemographicInfo.setEnabled(true);
+    public ImageCaptureHelper.ImageShape getImageShape() {
+        return ImageCaptureHelper.ImageShape.CIRCULAR;
+    }
+
+    @Override
+    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner, Bitmap bitmap) {
+
+    }
+
+    @Override
+    public void populateViewsFromModel(View view) {
+
+    }
+
+    @Override
+    protected void updateModel(TextView selectionDestination) {
+
+    }
+
+    @Override
+    protected void setInsuranceDTO(DemographicInsurancePayloadDTO insuranceDTO, String placeholderBase64) {
+
+    }
+
+    @Override
+    protected void enablePlanClickable(boolean enabled) {
 
     }
 }

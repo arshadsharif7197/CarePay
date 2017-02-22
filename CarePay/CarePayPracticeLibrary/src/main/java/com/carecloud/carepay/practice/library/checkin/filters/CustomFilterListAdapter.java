@@ -27,13 +27,10 @@ public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     // The items to display in your RecyclerView
     private List<FilterDataDTO> filterableDataDTOList;
-    private List<FilterDataDTO> originalFilterableDataDTOList;
     private Context context;
     private static final int ROW_SECTION_HEADER = 0;
     private static final int ROW_ITEM = 1;
-    private Filter filterableDataDTOFilter;
 
-    // private boolean isPatientListData = false;
     private OnFilterOptionChangedListener onFilterOptionChangedListener;
 
     /**
@@ -59,7 +56,6 @@ public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.V
                                    List<FilterDataDTO> items) {
         this.context = context;
         this.filterableDataDTOList = items;
-        this.originalFilterableDataDTOList = items;
         this.onFilterOptionChangedListener = onFilterOptionChangedListener;
     }
 
@@ -173,10 +169,4 @@ public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.V
             this.headerItemTextView = textViewSectionHeader;
         }
     }
-
-    void resetData() {
-        filterableDataDTOList = originalFilterableDataDTOList;
-    }
-
-
 }

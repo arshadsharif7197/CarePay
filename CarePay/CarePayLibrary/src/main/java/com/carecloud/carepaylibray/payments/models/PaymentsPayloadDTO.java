@@ -1,5 +1,7 @@
 package com.carecloud.carepaylibray.payments.models;
 
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMerchantServicesDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiAccountsDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -15,42 +17,57 @@ public class PaymentsPayloadDTO implements Serializable {
 
     @SerializedName("intake_forms")
     @Expose
-    private PaymentsPayloadIntakeFormsDTO intakeForms;
+    private PaymentsPayloadIntakeFormsDTO intakeForms = new PaymentsPayloadIntakeFormsDTO();
     @SerializedName("payment_settings")
     @Expose
-    private PaymentsPayloadSettingsDTO paymentSettings;
+    private PaymentsPayloadSettingsDTO paymentSettings = new PaymentsPayloadSettingsDTO();
     @SerializedName("patient_payment_plans")
     @Expose
-    private PaymentsPatientsPlansDTO patientPaymentPlans;
+    private PaymentsPatientsPlansDTO patientPaymentPlans = new PaymentsPatientsPlansDTO();
     @SerializedName("patient_history")
     @Expose
-    private PaymentsPatientHistoryDTO patientHistory;
+    private PaymentsPatientHistoryDTO patientHistory = new PaymentsPatientHistoryDTO();
     @SerializedName("patient_credit_cards")
     @Expose
-    private List<PaymentsPatientsCreditCardsPayloadListDTO> patientCreditCards = new ArrayList<>();;
-
+    private List<PaymentsPatientsCreditCardsPayloadListDTO> patientCreditCards = new ArrayList<>();
     @SerializedName("provider_index")
     @Expose
-    private List<ProviderIndexDTO> providerIndex;
+    private List<ProviderIndexDTO> providerIndex = new ArrayList<>();
     @SerializedName("location_index")
     @Expose
-    private List<LocationIndexDTO> locationIndex;
+    private List<LocationIndexDTO> locationIndex = new ArrayList<>();
     @SerializedName("in_office_counts")
     @Expose
     private Integer inOfficeCounts;
     @SerializedName("patient_balances")
     @Expose
     private List<PaymentsPatientBalancessDTO> patientBalances = new ArrayList<>();
-
     @SerializedName("providers")
     @Expose
-    private List<ProviderDTO> providers = null;
+    private List<ProviderDTO> providers = new ArrayList<>();
     @SerializedName("locations")
     @Expose
-    private List<LocationDTO> locations = null;
+    private List<LocationDTO> locations = new ArrayList<>();
     @SerializedName("patient_payments")
     @Expose
-    private PatientPaymentsDTO patientPayments;
+    private PatientPaymentsDTO patientPayments = new PatientPaymentsDTO();
+    @SerializedName("patients")
+    @Expose
+    private List<PatientDTO> patients = new ArrayList<>();
+    @SerializedName("papi_accounts")
+    @Expose
+    private List<DemographicsSettingsPapiAccountsDTO> papiAccounts = new ArrayList<>();
+    @SerializedName("merchant_services")
+    @Expose
+    private List<DemographicsSettingsMerchantServicesDTO> merchantServices = new ArrayList<>();
+
+    public List<PatientDTO> getPatients() {
+        return patients;
+    }
+
+    public void setPatients(List<PatientDTO> patients) {
+        this.patients = patients;
+    }
 
     public PatientPaymentsDTO getPatientPayments() {
         return patientPayments;
@@ -194,5 +211,41 @@ public class PaymentsPayloadDTO implements Serializable {
 
     public void setLocations(List<LocationDTO> locations) {
         this.locations = locations;
+    }
+
+    /**
+     * Gets papi accounts.
+     *
+     * @return the papi accounts
+     */
+    public List<DemographicsSettingsPapiAccountsDTO> getPapiAccounts() {
+        return papiAccounts;
+    }
+
+    /**
+     * Sets papi accounts.
+     *
+     * @param papiAccounts the papi accounts
+     */
+    public void setPapiAccounts(List<DemographicsSettingsPapiAccountsDTO> papiAccounts) {
+        this.papiAccounts = papiAccounts;
+    }
+
+    /**
+     * Gets merchant services.
+     *
+     * @return the merchant services
+     */
+    public List<DemographicsSettingsMerchantServicesDTO> getMerchantServices() {
+        return merchantServices;
+    }
+
+    /**
+     * Sets merchant services.
+     *
+     * @param merchantServices the merchant services
+     */
+    public void setMerchantServices(List<DemographicsSettingsMerchantServicesDTO> merchantServices) {
+        this.merchantServices = merchantServices;
     }
 }

@@ -12,25 +12,25 @@ public class PatientHomeScreenTransitionsDTO {
 
     @SerializedName("practice_mode")
     @Expose
-    private TransitionDTO practiceMode;
+    private TransitionDTO practiceMode = new TransitionDTO();
     @SerializedName("patient_checkin")
     @Expose
-    private TransitionDTO patientCheckin;
+    private TransitionDTO patientCheckin = new TransitionDTO();
     @SerializedName("patient_appointments")
     @Expose
-    private TransitionDTO patientAppointments;
+    private TransitionDTO patientAppointments = new TransitionDTO();
     @SerializedName("patient_payments")
     @Expose
-    private TransitionDTO patientPayments;
+    private TransitionDTO patientPayments = new TransitionDTO();
     @SerializedName("patient_checkout")
     @Expose
-    private TransitionDTO patientCheckout;
+    private TransitionDTO patientCheckout = new TransitionDTO();
     @SerializedName("shop")
     @Expose
-    private TransitionDTO shop;
+    private TransitionDTO shop = new TransitionDTO();
     @SerializedName("office_news")
     @Expose
-    private TransitionDTO officeNews;
+    private TransitionDTO officeNews = new TransitionDTO();
 
     public TransitionDTO getPracticeMode() {
         return practiceMode;

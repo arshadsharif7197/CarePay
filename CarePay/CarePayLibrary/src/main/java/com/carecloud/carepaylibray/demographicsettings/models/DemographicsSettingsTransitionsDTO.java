@@ -9,31 +9,31 @@ public class DemographicsSettingsTransitionsDTO {
 
     @SerializedName("update_profile")
     @Expose
-    private DemographicsSettingsUpdateProfileDTO demographicsSettingsUpdateProfileDTO;
+    private DemographicsSettingsUpdateProfileDTO demographicsSettingsUpdateProfileDTO = new DemographicsSettingsUpdateProfileDTO();
     @SerializedName("add_credit_card")
     @Expose
-    private TransitionDTO demographicsSettingsAddCreditCardDTO;
+    private TransitionDTO demographicsSettingsAddCreditCardDTO = new TransitionDTO();
     @SerializedName("delete_credit_card")
     @Expose
-    private TransitionDTO demographicsSettingsDeleteCreditCardDTO;
+    private TransitionDTO demographicsSettingsDeleteCreditCardDTO = new TransitionDTO();
     @SerializedName("update_documents")
     @Expose
-    private TransitionDTO demographicsSettingsUpdateDocumentsDTO;
+    private TransitionDTO demographicsSettingsUpdateDocumentsDTO = new TransitionDTO();
     @SerializedName("update_demographics")
     @Expose
-    private TransitionDTO demographicsSettingsUpdateDemographicsDTO;
+    private TransitionDTO demographicsSettingsUpdateDemographicsDTO = new TransitionDTO();
     @SerializedName("update_notifications")
     @Expose
-    private DemographicsSettingsUpdateNotificationsDTO demographicsSettingsUpdateNotificationsDTO;
+    private DemographicsSettingsUpdateNotificationsDTO demographicsSettingsUpdateNotificationsDTO = new DemographicsSettingsUpdateNotificationsDTO();
     @SerializedName("update_credit_card")
     @Expose
-    private TransitionDTO updateCreditCard;
+    private TransitionDTO updateCreditCard = new TransitionDTO();
     @SerializedName("change_login_email")
     @Expose
-    private TransitionDTO changeLoginEmail;
+    private TransitionDTO changeLoginEmail = new TransitionDTO();
     @SerializedName("change_password")
     @Expose
-    private TransitionDTO changePassword;
+    private TransitionDTO changePassword = new TransitionDTO();
 
 
     public DemographicsSettingsUpdateProfileDTO getUpdateProfile() {

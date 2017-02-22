@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/sig_pad"
         android:background="@color/white"
-        app:penColor="@color/bright_cerulean" />
+        app:penColor="@color/colorPrimary" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -27,7 +27,7 @@
         android:layout_height="24dp"
         android:id="@+id/clearBtn"
         android:background="@drawable/button_blue_border"
-        android:textColor="@color/rich_electric_blue"
+        android:textColor="@color/colorPrimary"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
         android:layout_marginTop="@dimen/dimen_10dp"

@@ -8,20 +8,23 @@ import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
-import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
-import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
+import com.carecloud.carepaylibray.base.IApplicationSession;
 
 /**
  * Created by Jahirul Bhuiyan on 10/24/2016.
  */
 
-public class CarePayApplication extends MultiDexApplication implements Application.ActivityLifecycleCallbacks {
+public class CarePayApplication extends MultiDexApplication
+        implements Application.ActivityLifecycleCallbacks, IApplicationSession {
+
+    private ApplicationPreferences applicationPreferences;
+    private WorkflowServiceHelper workflowServiceHelper;
 
     @Override
     public void onCreate() {
@@ -29,8 +32,6 @@ public class CarePayApplication extends MultiDexApplication implements Applicati
         setHttpConstants();
 
         ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
-        PracticeNavigationHelper.initInstance(this);
-        ApplicationPreferences.createPreferences(this);
         registerActivityLifecycleCallbacks(this);
     }
 
@@ -45,7 +46,6 @@ public class CarePayApplication extends MultiDexApplication implements Applicati
         HttpConstants.setApiStartKey(BuildConfig.X_API_KEY);
         HttpConstants.setPushNotificationWebclientUrl(BuildConfig.WEBCLIENT_URL);
     }
-
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
@@ -84,5 +84,23 @@ public class CarePayApplication extends MultiDexApplication implements Applicati
             //CognitoAppHelper.getPool().getUser().signOut();
             //CognitoAppHelper.setUser(null);
         }
+    }
+
+    @Override
+    public ApplicationPreferences getApplicationPreferences() {
+        if (applicationPreferences == null) {
+            applicationPreferences = new ApplicationPreferences(this);
+        }
+
+        return applicationPreferences;
+    }
+
+    @Override
+    public WorkflowServiceHelper getWorkflowServiceHelper() {
+        if (workflowServiceHelper == null) {
+            workflowServiceHelper = new WorkflowServiceHelper(getApplicationPreferences());
+        }
+
+        return workflowServiceHelper;
     }
 }

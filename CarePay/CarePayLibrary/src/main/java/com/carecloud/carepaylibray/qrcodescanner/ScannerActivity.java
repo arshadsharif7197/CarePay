@@ -1,15 +1,15 @@
 package com.carecloud.carepaylibray.qrcodescanner;
 
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.google.zxing.Result;
 
-public class ScannerActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
+public class ScannerActivity extends BaseActivity implements ZXingScannerView.ResultHandler {
 
     private ZXingScannerView zxingcannerView;
 
@@ -20,7 +20,6 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
         ViewGroup contentFrame = (ViewGroup) findViewById(R.id.content_frame);
         zxingcannerView = new ZXingScannerView(this);
         contentFrame.addView(zxingcannerView);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
 
     @Override

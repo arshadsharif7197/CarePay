@@ -12,28 +12,28 @@ public class PracticeHomeScreenTransitionsDTO {
 
     @SerializedName("patient_mode")
     @Expose
-    private TransitionDTO patientMode;
+    private TransitionDTO patientMode = new TransitionDTO();
     @SerializedName("logout")
     @Expose
-    private TransitionDTO logout;
+    private TransitionDTO logout = new TransitionDTO();
     @SerializedName("practice_checkin")
     @Expose
-    private TransitionDTO practiceCheckin;
+    private TransitionDTO practiceCheckin = new TransitionDTO();
     @SerializedName("practice_payments")
     @Expose
-    private TransitionDTO practicePayments;
+    private TransitionDTO practicePayments = new TransitionDTO();
     @SerializedName("practice_appointments")
     @Expose
-    private TransitionDTO practiceAppointments;
+    private TransitionDTO practiceAppointments = new TransitionDTO();
     @SerializedName("practice_checkout")
     @Expose
-    private TransitionDTO practiceCheckout;
+    private TransitionDTO practiceCheckout = new TransitionDTO();
     @SerializedName("shop")
     @Expose
-    private TransitionDTO shop;
+    private TransitionDTO shop = new TransitionDTO();
     @SerializedName("office_news")
     @Expose
-    private TransitionDTO officeNews;
+    private TransitionDTO officeNews = new TransitionDTO();
 
     /**
      *

@@ -12,10 +12,10 @@ public class PatientModeSplashDTO {
 
     @SerializedName("metadata")
     @Expose
-    private PatientModeMetaDataDTO metadata;
+    private PatientModeMetaDataDTO metadata = new PatientModeMetaDataDTO();
     @SerializedName("payload")
     @Expose
-    private PatientModePayloadDTO payload;
+    private PatientModePayloadDTO payload = new PatientModePayloadDTO();
     @SerializedName("state")
     @Expose
     private String state;

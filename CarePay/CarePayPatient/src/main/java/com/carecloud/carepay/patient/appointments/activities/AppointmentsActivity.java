@@ -41,18 +41,18 @@ public class AppointmentsActivity extends MenuPatientActivity {
     private WorkflowServiceCallback transitionToDemographicsVerifyCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             PatientNavigationHelper.getInstance(AppointmentsActivity.this).navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(AppointmentsActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -80,11 +80,11 @@ public class AppointmentsActivity extends MenuPatientActivity {
                 patientId = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPatientId();
                 prefix = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPrefix();
                 userId = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getUserId();
-                ApplicationPreferences.Instance.setPatientId(patientId);
-                ApplicationPreferences.Instance.setPracticeManagement(practiceMgmt);
-                ApplicationPreferences.Instance.setPracticeId(practiceId);
-                ApplicationPreferences.Instance.setUserId(userId);
-                ApplicationPreferences.Instance.setPrefix(prefix);
+                getApplicationPreferences().setPatientId(patientId);
+                getApplicationPreferences().setPracticeManagement(practiceMgmt);
+                getApplicationPreferences().setPracticeId(practiceId);
+                getApplicationPreferences().setUserId(userId);
+                getApplicationPreferences().setPrefix(prefix);
            }catch(Exception e){
                e.printStackTrace();
                System.out.println(e.getMessage());
@@ -189,9 +189,9 @@ public class AppointmentsActivity extends MenuPatientActivity {
 //            queries.put("practice_id", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeId());
 //            queries.put("appointment_id", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getAppointmentId());
 //
-//            Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
+//            Map<String, String> header = getWorkflowServiceHelper().getPreferredLanguageHeader();
 //            header.put("transition", "true");
-//            WorkflowServiceHelper.getInstance().execute(appointmentsDTO.getMetadata().getTransitions().getCheckingIn(),
+//            getWorkflowServiceHelper().execute(appointmentsDTO.getMetadata().getTransitions().getCheckingIn(),
 //                    transitionToDemographicsVerifyCallback, queries, header);
 //        }
 

@@ -20,7 +20,6 @@ import android.widget.ProgressBar;
 import com.carecloud.carepay.patient.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.appointments.adapters.AppointmentsAdapter;
-import com.carecloud.carepay.patient.appointments.utils.CustomPopupNotification;
 import com.carecloud.carepay.patient.appointments.utils.PatientAppUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -32,6 +31,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -45,7 +45,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-public class AppointmentsListFragment extends Fragment {
+public class AppointmentsListFragment extends BaseFragment {
 
 //    private static final String LOG_TAG = AppointmentsListFragment.class.getSimpleName();
 
@@ -70,7 +70,7 @@ public class AppointmentsListFragment extends Fragment {
 //            popup.dismiss();
 //            popup = null;
 //
-//            ApplicationPreferences.Instance.writeStringToSharedPref(
+//            getApplicationPreferences().writeStringToSharedPref(
 //                    CarePayConstants.PREF_LAST_REMINDER_POPUP_APPT_ID,
 //                    appointmentsItems.get(0).getPayload().getId());
 //        }
@@ -82,7 +82,7 @@ public class AppointmentsListFragment extends Fragment {
 //            popup.dismiss();
 //            popup = null;
 //
-//            ApplicationPreferences.Instance.writeStringToSharedPref(
+//            getApplicationPreferences().writeStringToSharedPref(
 //                    CarePayConstants.PREF_LAST_REMINDER_POPUP_APPT_ID,
 //                    appointmentsItems.get(0).getPayload().getId());
 //
@@ -103,7 +103,7 @@ public class AppointmentsListFragment extends Fragment {
 //        header.put("transition", "true");
 //
 //        TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCheckingIn();
-//        WorkflowServiceHelper.getInstance().execute(transitionDTO, transitionToDemographicsVerifyCallback, queries, header);
+//        getWorkflowServiceHelper().execute(transitionDTO, transitionToDemographicsVerifyCallback, queries, header);
 //    }
 
 //    private WorkflowServiceCallback transitionToDemographicsVerifyCallback = new WorkflowServiceCallback() {
@@ -369,19 +369,19 @@ public class AppointmentsListFragment extends Fragment {
 
         // API call to fetch latest appointments
         TransitionDTO transitionDTO = appointmentInfo.getMetadata().getLinks().getAppointments();
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, pageRefreshCallback);
+        getWorkflowServiceHelper().execute(transitionDTO, pageRefreshCallback);
     }
 
     WorkflowServiceCallback pageRefreshCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
             appointmentProgressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             appointmentProgressBar.setVisibility(View.GONE);
             if (appointmentInfo != null) {
                 Gson gson = new Gson();
@@ -393,7 +393,7 @@ public class AppointmentsListFragment extends Fragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             appointmentProgressBar.setVisibility(View.GONE);
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);

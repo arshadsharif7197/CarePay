@@ -3,6 +3,7 @@
     <color name="colorPrimary">#5BC5D0</color>
     <color name="colorPrimaryDark">#489DA6</color>
     <color name="left_panel_color">#4EAAB3</color>
+    <color name="screen_gradient">#41949D</color>
 
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
@@ -11,7 +12,7 @@
 
     <color name="colorAccent">#acacac</color>
     <color name="slateGray">#607d8b</color>
-
+    <color name="find_patient_bg">#CC142C2E</color>
     <color name="charcoal">#ff37474f</color>
     <!--<color name="rich_electric_blue">#ff009bde</color>-->
 
@@ -103,6 +104,5 @@
     <color name="light_gray_dialog">#eceff1</color>
     <color name="overlay_green">#7ED321</color>
     <!--<color name="button_default">#329AD6</color>-->
-    <color name="gray_white">#80ffffff</color>
     <!--<color name="blue_de_france">#35a5e1</color>-->
 </resources>

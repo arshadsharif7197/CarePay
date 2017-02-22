@@ -18,8 +18,7 @@ public class ConsentFormHippaSignedByPatientDTO {
     private String type;
     @SerializedName("validations")
     @Expose
-    private List<ConsentFormHippaSignedByPatientValidationDTO> validations =
-            new ArrayList<ConsentFormHippaSignedByPatientValidationDTO>();
+    private List<ConsentFormHippaSignedByPatientValidationDTO> validations = new ArrayList<>();
 
     /**
      * @return The type

@@ -12,25 +12,25 @@ public class ConsentFormConsentAuthPropertiesDTO {
 
     @SerializedName("minor_first_name")
     @Expose
-    private ConsentFormMinorFirstNameDTO minorFirstName;
+    private ConsentFormMinorFirstNameDTO minorFirstName = new ConsentFormMinorFirstNameDTO();
     @SerializedName("minor_last_name")
     @Expose
-    private ConsentFormMinorLastNameDTO minorLastName;
+    private ConsentFormMinorLastNameDTO minorLastName = new ConsentFormMinorLastNameDTO();
     @SerializedName("minor_date_of_birth")
     @Expose
-    private ConsentFormMinorDateofBirthDTO minorDateOfBirth;
+    private ConsentFormMinorDateofBirthDTO minorDateOfBirth = new ConsentFormMinorDateofBirthDTO();
     @SerializedName("minor_gender")
     @Expose
-    private ConsentFormMinorGenderDTO minorGender;
+    private ConsentFormMinorGenderDTO minorGender = new ConsentFormMinorGenderDTO();
     @SerializedName("signed_by_patient")
     @Expose
-    private ConsentFormAuthorizationSignByPatientDTO signedByPatient;
+    private ConsentFormAuthorizationSignByPatientDTO signedByPatient = new ConsentFormAuthorizationSignByPatientDTO();
     @SerializedName("signed_by_legal")
     @Expose
-    private ConsentFormAuthorizationSignByLegalDTO signedByLegal;
+    private ConsentFormAuthorizationSignByLegalDTO signedByLegal = new ConsentFormAuthorizationSignByLegalDTO();
     @SerializedName("signature")
     @Expose
-    private ConsentFormConsentAuthSignatureDTO signature;
+    private ConsentFormConsentAuthSignatureDTO signature = new ConsentFormConsentAuthSignatureDTO();
 
     /**
      * @return The minorFirstName

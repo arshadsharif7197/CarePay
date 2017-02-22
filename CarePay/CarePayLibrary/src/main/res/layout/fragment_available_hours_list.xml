@@ -1,9 +1,10 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.carecloud.carepay.patient.appointments.fragments.AvailableHoursFragment">
+    android:orientation="vertical">
 
     <include layout="@layout/add_appointment_toolbar" />
 
@@ -11,8 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/add_apt_available_hours_edit_range_height"
         android:background="@color/date_range_header"
-        android:orientation="horizontal"
-        android:weightSum="3">
+        android:orientation="horizontal">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/date_range_custom_text_view"
@@ -23,7 +23,8 @@
             android:layout_weight="2"
             android:maxLines="1"
             android:textColor="@color/glitter"
-            android:textSize="@dimen/checked_in_label_font" />
+            android:textSize="@dimen/checked_in_label_font"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/add_appointment_date_pick"
@@ -34,7 +35,45 @@
             android:background="@color/transparent_apt"
             android:text="@string/edit_range_button_label"
             android:textColor="@color/white"
-            android:textSize="@dimen/apt_list_upcoming_month_txt_size" />
+            android:textSize="@dimen/apt_list_upcoming_month_txt_size"
+            android:visibility="gone"/>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/location_text"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/dimen_16dp"
+            android:layout_marginEnd="@dimen/dimen_8dp"
+            android:text="@string/locations_label"
+            android:textColor="@color/white"
+            app:customAssetFont="proxima_nova_regular"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/available_locations_recycler"
+            android:visibility="visible"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:foregroundGravity="center"
+            android:id="@+id/appointment_available_single_location"
+            android:visibility="gone">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:id="@+id/available_single_location_text"
+                android:layout_marginRight="@dimen/dimen_8dp"
+                android:text="Location"
+                android:ellipsize="end"
+                android:background="@drawable/rounded_button_blue_border_selected"
+                app:customAssetFont="proxima_nova_regular"/>
+
+        </FrameLayout>
 
     </LinearLayout>
 
@@ -53,7 +92,7 @@
         android:layout_margin="@dimen/apt_available_hours_list_padding"
         android:background="@drawable/button_blue_border"
         android:text="@string/edit_date_range_button_label"
-        android:textColor="@color/bright_cerulean"
+        android:textColor="@color/colorPrimary"
         android:textSize="@dimen/apt_list_upcoming_month_txt_size"
         android:visibility="gone" />
 

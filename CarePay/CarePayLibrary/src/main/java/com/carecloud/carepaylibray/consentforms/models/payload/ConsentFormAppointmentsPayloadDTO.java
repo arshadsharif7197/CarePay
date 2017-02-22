@@ -11,10 +11,10 @@ public class ConsentFormAppointmentsPayloadDTO {
 
     @SerializedName("metadata")
     @Expose
-    private ConsentFormAppoMetadataDTO appointmentMetadata;
+    private ConsentFormAppoMetadataDTO appointmentMetadata = new ConsentFormAppoMetadataDTO();
     @SerializedName("payload")
     @Expose
-    private ConsentFormAppoPayloadDTO appointmentPayload;
+    private ConsentFormAppoPayloadDTO appointmentPayload = new ConsentFormAppoPayloadDTO();
 
     public ConsentFormAppoPayloadDTO getAppointmentPayload() {
         return appointmentPayload;

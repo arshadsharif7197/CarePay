@@ -12,10 +12,11 @@ import com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInAct
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
-import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PracticeAppSignatureActivity;
 import com.carecloud.carepay.practice.library.payments.PaymentsActivity;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 
@@ -28,47 +29,13 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 
 public class PracticeNavigationHelper {
 
-    private static PracticeNavigationHelper instance;
-    private static Context context;
-
     /**
-     * Getting same state form 2 endpoints hence added this flag to differentiate app flow,
-     * whether call is from Check-in or Appointments on Home screen.
-     * Remove this flag dependency once two separate state received.
-     */
-    private static boolean isPatientModeAppointments;
-
-    private PracticeNavigationHelper() {
-
-    }
-
-    /**
-     * PracticeNavigationHelper singleton initialization from Application class
+     * Navigation using application context
      *
-     * @param context application context
-     */
-    public static void initInstance(Context context) {
-        PracticeNavigationHelper.context = context;
-        if (instance == null) {
-            instance = new PracticeNavigationHelper();
-        }
-    }
-
-    public static PracticeNavigationHelper getInstance() {
-        return instance;
-    }
-
-    public void setIsPatientModeAppointments(boolean isPatientModeAppointments) {
-        PracticeNavigationHelper.isPatientModeAppointments = isPatientModeAppointments;
-    }
-
-    /**
-     * Navigation using activity context
-     *
-     * @param context     activity context
+     *  @param context    activity context
      * @param workflowDTO WorkflowDTO
      */
-    public void navigateToWorkflow(Context context, WorkflowDTO workflowDTO) {
+    public static void navigateToWorkflow(Context context, WorkflowDTO workflowDTO) {
         Intent intent = null;
         if (workflowDTO == null || StringUtil.isNullOrEmpty(workflowDTO.getState())) {
             return;
@@ -99,7 +66,8 @@ public class PracticeNavigationHelper {
             }
 
             case PracticeNavigationStateConstants.PATIENT_APPOINTMENTS: {
-                intent = new Intent(context,  isPatientModeAppointments
+                ApplicationPreferences applicationPreferences = ((ISession) context).getApplicationPreferences();
+                intent = new Intent(context,  applicationPreferences.isNavigatingToAppointments()
                                 ? ScheduleAppointmentActivity.class : AppointmentsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
@@ -151,7 +119,11 @@ public class PracticeNavigationHelper {
             }
 
             case PracticeNavigationStateConstants.PRACTICE_PAYMENT: {
+                if(!(context instanceof BasePracticeActivity)){//TODO payment model is empty from Clover Payments so screen does not load properly
+                    return;
+                }
                 intent = new Intent(context, PaymentsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             }
 
@@ -165,19 +137,10 @@ public class PracticeNavigationHelper {
 
         //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         Bundle bundle = new Bundle();
-        bundle.putSerializable(PracticeNavigationHelper.context.getClass().getSimpleName(), workflowDTO.toString());
+        bundle.putSerializable(WorkflowDTO.class.getSimpleName(), workflowDTO.toString());
         if (intent != null) {
             intent.putExtras(bundle);
             context.startActivity(intent);
         }
-    }
-
-    /**
-     * Navigation using application context
-     *
-     * @param workflowDTO WorkflowDTO
-     */
-    public void navigateToWorkflow(WorkflowDTO workflowDTO) {
-        navigateToWorkflow(PracticeNavigationHelper.context, workflowDTO);
     }
 }

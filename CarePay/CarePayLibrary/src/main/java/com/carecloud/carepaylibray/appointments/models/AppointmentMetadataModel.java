@@ -12,13 +12,13 @@ public class AppointmentMetadataModel implements Serializable {
 
     @SerializedName("labels")
     @Expose
-    private AppointmentLabelDTO label;
+    private AppointmentLabelDTO label = new AppointmentLabelDTO();
     @SerializedName("links")
     @Expose
-    private LinksDTO links;
+    private LinksDTO links = new LinksDTO();
     @SerializedName("transitions")
     @Expose
-    private TransitionsDTO transitions;
+    private TransitionsDTO transitions = new TransitionsDTO();
 
     /**
      * @return The label

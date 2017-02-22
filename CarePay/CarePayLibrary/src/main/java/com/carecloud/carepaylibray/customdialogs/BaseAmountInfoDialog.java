@@ -94,7 +94,7 @@ public class BaseAmountInfoDialog extends Dialog implements View.OnClickListener
     private void onSettingStyle() {
         paymentAmountTextView.setTextColor(ContextCompat.getColor(context, R.color.white));
         userShortnameTextView.setTextColor(ContextCompat.getColor(context, R.color.white));
-        userNameTextView.setTextColor(ContextCompat.getColor(context, R.color.button_bright_cerulean));
+        userNameTextView.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
     }
 
     private void onSetListener() {

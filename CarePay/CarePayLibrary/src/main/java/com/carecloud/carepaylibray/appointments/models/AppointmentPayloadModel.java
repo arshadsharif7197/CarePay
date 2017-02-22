@@ -15,7 +15,7 @@ public class AppointmentPayloadModel implements Serializable {
 
     @SerializedName("languages")
     @Expose
-    private List<ResourceLanguageDTO> languages = null;
+    private List<ResourceLanguageDTO> languages = new ArrayList<>();
     @SerializedName("appointments")
     @Expose
     private List<AppointmentDTO> appointments = new ArrayList<>();
@@ -39,10 +39,13 @@ public class AppointmentPayloadModel implements Serializable {
     private List<CancellationReasonDTO> cancellationReasons = new ArrayList<CancellationReasonDTO>();
     @SerializedName("appointment_availability")
     @Expose
-    private AppointmentAvailabilityDataDTO appointmentAvailability;
+    private AppointmentAvailabilityDataDTO appointmentAvailability = new AppointmentAvailabilityDataDTO();
     @SerializedName("resources_to_schedule")
     @Expose
-    private List<ResourcesToScheduleDTO> resourcesToSchedule = null;
+    private List<ResourcesToScheduleDTO> resourcesToSchedule = new ArrayList<>();
+    @SerializedName("appointments_settings")
+    @Expose
+    private List<AppointmentsSettingDTO> appointmentsSettings = new ArrayList<AppointmentsSettingDTO>();
 
     /**
      * @return languages
@@ -188,5 +191,21 @@ public class AppointmentPayloadModel implements Serializable {
      */
     public void setPractice_patient_ids(List<IdsDTO> practicePatientIds) {
         this.practicePatientIds = practicePatientIds;
+    }
+
+    /**
+     *
+     * @return appointmentsSettings
+     */
+    public List<AppointmentsSettingDTO> getAppointmentsSettings() {
+        return appointmentsSettings;
+    }
+
+    /**
+     *
+     * @param appointmentsSettings appointmentsSettings
+     */
+    public void setAppointmentsSettings(List<AppointmentsSettingDTO> appointmentsSettings) {
+        this.appointmentsSettings = appointmentsSettings;
     }
 }

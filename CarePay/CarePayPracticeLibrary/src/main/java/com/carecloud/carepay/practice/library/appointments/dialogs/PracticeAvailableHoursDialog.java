@@ -3,18 +3,19 @@ package com.carecloud.carepay.practice.library.appointments.dialogs;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.ScheduleAppointmentActivity;
 import com.carecloud.carepay.practice.library.appointments.adapters.PracticeAvailableHoursAdapter;
+import com.carecloud.carepay.practice.library.appointments.adapters.PracticeAvailableLocationsAdapter;
 import com.carecloud.carepay.practice.library.customdialog.BasePracticeDialog;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -22,20 +23,25 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPayloadDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentLocationsDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
-import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
-import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -43,16 +49,24 @@ import java.util.Map;
  * Created by sudhir_pingale on 1/2/2017.
  */
 
-public class PracticeAvailableHoursDialog extends BasePracticeDialog implements PracticeAvailableHoursAdapter.SelectAppointmentTimeSlotCallback {
+public class PracticeAvailableHoursDialog extends BasePracticeDialog implements PracticeAvailableHoursAdapter.SelectAppointmentTimeSlotCallback, PracticeAvailableLocationsAdapter.SelectLocationCallback {
 
+    private Date startDate;
+    private Date endDate;
     private Context context;
     private LayoutInflater inflater;
     private AppointmentAvailabilityDTO availabilityDTO;
+    private AppointmentsResultModel resourcesToScheduleDTO;
+
     private RecyclerView availableHoursRecycleView;
-    private Date startDate;
-    private Date endDate;
-    private CarePayTextView dateRangeCustomTextView;
-    private String rangeEndDateString;
+    private RecyclerView availableLocationsRecycleView;
+    private TextView titleView;
+    private View singleLocation;
+    private TextView singleLocationText;
+    private View progressView;
+
+    private List<AppointmentLocationsDTO> selectedLocations = new LinkedList<>();
+    private SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
 
     /**
      * Instantiates a new Practice available hours dialog.
@@ -61,9 +75,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
      * @param cancelString the cancel string
      */
     public PracticeAvailableHoursDialog(Context context, String cancelString) {
-        super(context, cancelString, false);
-        this.context = context;
-        inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this(context, cancelString, null, null);
     }
 
     public PracticeAvailableHoursDialog(Context context, String cancelString, Date startDate, Date endDate) {
@@ -72,13 +84,24 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
         this.startDate = startDate;
         this.endDate = endDate;
         inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.resourcesToScheduleDTO = ((ScheduleAppointmentActivity)context).getResourcesToSchedule();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         onAddContentView(inflater);
-        getAvailableHoursTimeSlots();
+
+        Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                getAvailableHoursTimeSlots();
+                if(progressView!=null){
+                    progressView.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     @SuppressLint("InflateParams")
@@ -90,24 +113,82 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     }
 
     private void inflateUIComponents(View view) {
-        Button editRangeButton = (Button)
-                view.findViewById(R.id.add_appointment_date_pick);
-        editRangeButton.setOnClickListener(dateRangeClickListener);
-        SystemUtil.setGothamRoundedBoldTypeface(context, editRangeButton);
-        dateRangeCustomTextView = (CarePayTextView)view.findViewById(R.id.date_range_custom_text_view);
-        updateDateRange();
+        singleLocation = view.findViewById(R.id.practice_available_single_location);
+        singleLocationText = (TextView) view.findViewById(R.id.practice_single_location_text);
 
         LinearLayoutManager availableHoursLayoutManager = new LinearLayoutManager(context);
         availableHoursLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        availableHoursRecycleView = (RecyclerView)
-                view.findViewById(com.carecloud.carepaylibrary.R.id.available_hours_recycler_view);
+        availableHoursRecycleView = (RecyclerView) view.findViewById(R.id.available_hours_recycler_view);
         availableHoursRecycleView.setLayoutManager(availableHoursLayoutManager);
-        setDialogTitle(((ScheduleAppointmentActivity) context).getResourcesToSchedule().getMetadata().getLabel()
-                .getAvailableHoursHeading());
+
+        LinearLayoutManager availableLocationsLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        availableLocationsRecycleView = (RecyclerView) view.findViewById(R.id.available_locations_recycler);
+        availableLocationsRecycleView.setLayoutManager(availableLocationsLayoutManager);
+
+        String range = null;
+        try {
+            range = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentEditDateRangeButton();
+
+            String location = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentLocationsLabel();
+            TextView locationsLabel = (TextView) view.findViewById(R.id.location_text);
+            locationsLabel.setText(location != null ? location : context.getString(R.string.locations_label));
+
+            setDialogTitle(resourcesToScheduleDTO.getMetadata().getLabel()
+                    .getAvailableHoursHeading());
+        }catch (NullPointerException ex){
+            ex.printStackTrace();
+        }
+
+        TextView editRangeButton = (TextView) view.findViewById(R.id.edit_date_range_button);
+        editRangeButton.setText(range != null ? range : context.getString(R.string.edit_date_range_button_label));
+        editRangeButton.setOnClickListener(dateRangeClickListener);
+        SystemUtil.setGothamRoundedBoldTypeface(context, editRangeButton);
+
         setCancelImage(R.drawable.icn_arrow_up);
         setCancelable(false);
+
+        progressView = view.findViewById(R.id.progressview);
+        progressView.setVisibility(View.VISIBLE);
+
+        updateDateRange();
     }
+
+    private void setAdapters(){
+        try {
+            List<AppointmentLocationsDTO> locations = extractAvailableLocations(availabilityDTO);
+
+            if (availableHoursRecycleView.getAdapter() == null) {
+                availableHoursRecycleView.setAdapter(new PracticeAvailableHoursAdapter(context,
+                        getAvailableHoursListWithHeader(), PracticeAvailableHoursDialog.this, locations.size() > 1));
+            } else {
+                PracticeAvailableHoursAdapter availableHoursAdapter = (PracticeAvailableHoursAdapter) availableHoursRecycleView.getAdapter();
+                availableHoursAdapter.setItems(getAvailableHoursListWithHeader());
+                availableHoursAdapter.setMultiLocationStyle(locations.size() > 1);
+                availableHoursAdapter.notifyDataSetChanged();
+            }
+
+            if (locations.size() > 1) {
+                availableLocationsRecycleView.setVisibility(View.VISIBLE);
+                singleLocation.setVisibility(View.GONE);
+                if (availableLocationsRecycleView.getAdapter() == null) {
+                    String all = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentAllLocationsItem();
+                    availableLocationsRecycleView.setAdapter(new PracticeAvailableLocationsAdapter(getContext(), locations, this, all));
+                } else {
+                    PracticeAvailableLocationsAdapter availableLocationsAdapter = (PracticeAvailableLocationsAdapter) availableLocationsRecycleView.getAdapter();
+                    availableLocationsAdapter.setItems(locations);
+                    availableLocationsAdapter.notifyDataSetChanged();
+                }
+            } else {
+                availableLocationsRecycleView.setVisibility(View.GONE);
+                singleLocation.setVisibility(View.VISIBLE);
+                singleLocationText.setText(locations.get(0).getName());
+            }
+        }catch (NullPointerException ex){
+            ex.printStackTrace();
+        }
+    }
+
 
     /**
      * Click listener for edit range and edit date range button
@@ -137,68 +218,27 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     /**
      * Method to update date range that is selected on calendar
      */
-    private void updateDateRange() {
-
-        SystemUtil.setProximaNovaRegularTypeface(context, dateRangeCustomTextView);
-        dateRangeCustomTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.glitter));
-
-        String selectedRangeLabel = ((ScheduleAppointmentActivity) context).getResourcesToSchedule().getMetadata().getLabel().getAddAppointmentFromToText();
-
-        if (startDate != null && endDate != null) {
-            DateUtil.getInstance().setDate(startDate);
-            String formattedStartDate = getFormattedDate();
-
-            DateUtil.getInstance().setDate(endDate);
-            String formattedEndDate = getFormattedDate();
-
-            if (!StringUtil.isNullOrEmpty(rangeEndDateString)) {
-                formattedEndDate = rangeEndDateString;
-            }
-
-            dateRangeCustomTextView.setText(String.format(selectedRangeLabel, formattedStartDate, formattedEndDate));
-        } else {
-            /*To show by default one week as range from today*/
-            Calendar rangeStart = Calendar.getInstance();
-            rangeStart.add(Calendar.DAY_OF_MONTH, 0);
-            Calendar rangeEnd = Calendar.getInstance();
-            rangeEnd.add(Calendar.DAY_OF_MONTH, 6);
-
-//            startDate = rangeStart.getTime();
-//            endDate = rangeEnd.getTime();
-            DateUtil.getInstance().setDate(endDate);
-
-            String formattedEndDate = getFormattedDate();
-
-            if (!StringUtil.isNullOrEmpty(rangeEndDateString)) {
-                formattedEndDate = rangeEndDateString;
-            }
-
-            dateRangeCustomTextView.setText(String.format(selectedRangeLabel, ((ScheduleAppointmentActivity) context)
-                    .getResourcesToSchedule().getMetadata().getLabel().getTodayAppointmentsHeading().toLowerCase(), formattedEndDate));
-        }
-    }
-
-    private String getFormattedDate(){
-        String formattedDate = DateUtil.getInstance().getDateAsMonthLiteralDayOrdinal();
-
-        if(DateUtil.getInstance().isToday()){
-            formattedDate = ((ScheduleAppointmentActivity) context)
-                    .getResourcesToSchedule().getMetadata().getLabel().getTodayAppointmentsHeading()
-                    .toLowerCase();
-        } else if(DateUtil.getInstance().isTomorrow()){
-            formattedDate = ((ScheduleAppointmentActivity) context)
-                    .getResourcesToSchedule().getMetadata().getLabel().getAddAppointmentTomorrow()
-                    .toLowerCase();
+    private void updateDateRange(){
+        if(startDate == null || endDate == null){
+            startDate = Calendar.getInstance().getTime();//today
+            endDate = startDate;
         }
 
-        return formattedDate;
+        String today = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentsTodayHeadingSmall();
+        String tomorrow = resourcesToScheduleDTO.getMetadata().getLabel().getAddAppointmentTomorrow();
+        String thisMonth = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentThisMonthTitle();
+        String nextDay = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentNextDaysTitle();
+
+        String formattedDate = DateUtil.getFormattedDate(startDate, endDate, today, tomorrow, thisMonth, nextDay);
+        setDialogTitle(formattedDate);
     }
+
 
     private void getAvailableHoursTimeSlots() {
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
-        queryMap.put("practice_mgmt", ((ScheduleAppointmentActivity) context).getResourcesToSchedule().getPayload().getResourcesToSchedule().get(0).getPractice().getPracticeMgmt());
-        queryMap.put("practice_id", ((ScheduleAppointmentActivity) context).getResourcesToSchedule().getPayload().getResourcesToSchedule().get(0).getPractice().getPracticeId());
+        queryMap.put("language", ((ISession) context).getApplicationPreferences().getUserLanguage());
+        queryMap.put("practice_mgmt", resourcesToScheduleDTO.getPayload().getResourcesToSchedule().get(0).getPractice().getPracticeMgmt());
+        queryMap.put("practice_id", resourcesToScheduleDTO.getPayload().getResourcesToSchedule().get(0).getPractice().getPracticeId());
         queryMap.put("visit_reason_id", ((ScheduleAppointmentActivity) context).getSelectedVisitTypeDTO().getId() + "");
         queryMap.put("resource_ids", ((ScheduleAppointmentActivity) context).getSelectedResource().getResource().getId() + "");
 
@@ -212,40 +252,60 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
             queryMap.put("end_date", DateUtil.getInstance().toStringWithFormatYyyyDashMmDashDd());
         }
 
-        TransitionDTO transitionDTO = ((ScheduleAppointmentActivity) context).getResourcesToSchedule().getMetadata().getLinks().getAppointmentAvailability();
+        TransitionDTO transitionDTO = resourcesToScheduleDTO.getMetadata().getLinks().getAppointmentAvailability();
 
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, getAppointmentsAvailabilitySlotsCallback, queryMap);
+        ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, getAppointmentsAvailabilitySlotsCallback, queryMap);
     }
 
     private WorkflowServiceCallback getAppointmentsAvailabilitySlotsCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(context).show();
+            ((ISession) context).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(context).dismiss();
+            ((ISession) context).hideProgressDialog();
             Gson gson = new Gson();
             availabilityDTO = gson.fromJson(workflowDTO.toString(), AppointmentAvailabilityDTO.class);
-            availableHoursRecycleView.setAdapter(new PracticeAvailableHoursAdapter(context,
-                    getAvailableHoursListWithHeader(), PracticeAvailableHoursDialog.this));
+
+            setAdapters();
+
             updateDateRange();
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(context).dismiss();
+            ((ISession) context).hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(context);
-            Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            Log.e(context.getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+
+    private void resetLocatonSelections(boolean clearAll){
+        RecyclerView.LayoutManager layoutManager = availableLocationsRecycleView.getLayoutManager();
+        for(int i=0; i<layoutManager.getChildCount(); i++) {
+            layoutManager.getChildAt(i).findViewById(R.id.available_location).setSelected(false);
+        }
+        ((PracticeAvailableLocationsAdapter) availableLocationsRecycleView.getAdapter()).resetLocationsSelected(clearAll);
+        selectedLocations.clear();
+    }
+
+    private void updateSelectedLocationsForAdapter(){
+        if(selectedLocations.isEmpty()){//if user removed last location reset everything
+            resetLocatonSelections(true);
+        }else{
+            ((PracticeAvailableLocationsAdapter) availableLocationsRecycleView.getAdapter()).updateSelectedLocations(selectedLocations);
+        }
+    }
 
     private ArrayList<Object> getAvailableHoursListWithHeader() {
         ArrayList<Object> timeSlotsListWithHeaders = new ArrayList<>();
 
         if (availabilityDTO != null && availabilityDTO.getPayload().getAppointmentAvailability().getPayload().size()>0) {
-            List<AppointmentsSlotsDTO> appointmentsSlotsDTOList = availabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getSlots();
+            List<AppointmentAvailabilityPayloadDTO> availabilityPayloadDTOs = availabilityDTO.getPayload().getAppointmentAvailability().getPayload();
+            List<AppointmentsSlotsDTO> appointmentsSlotsDTOList = groupAllLocatonSlotsByTime(availabilityPayloadDTOs);
             if (appointmentsSlotsDTOList != null && appointmentsSlotsDTOList.size() > 0) {
                 // To sort appointment time slots list based on time
                 Collections.sort(appointmentsSlotsDTOList, new Comparator<AppointmentsSlotsDTO>() {
@@ -300,11 +360,11 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
                         timeSlotsListWithHeaders.add(timSlotsDTO);
                     }
                 }
-                if(!StringUtil.isNullOrEmpty(headerTitle) && headerTitle.contains(",")) {
-                    rangeEndDateString = headerTitle.split(", ")[1];
-                } else {
-                    rangeEndDateString = headerTitle.toLowerCase();
-                }
+//                if(!StringUtil.isNullOrEmpty(headerTitle) && headerTitle.contains(",")) {
+//                    rangeEndDateString = headerTitle.split(", ")[1];
+//                } else {
+//                    rangeEndDateString = headerTitle.toLowerCase();
+//                }
             }
         }
         return timeSlotsListWithHeaders;
@@ -341,8 +401,75 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     @Override
     public void onSelectAppointmentTimeSlot(AppointmentsSlotsDTO appointmentsSlotsDTO) {
         // Call Request appointment Summary dialog from here
-        new PracticeRequestAppointmentDialog(context, ((ScheduleAppointmentActivity) context).getResourcesToSchedule()
-                .getMetadata().getLabel().getAvailableHoursBack(), appointmentsSlotsDTO, availabilityDTO).show();
+        new PracticeRequestAppointmentDialog(context, resourcesToScheduleDTO.getMetadata().getLabel().getAvailableHoursBack(), appointmentsSlotsDTO, availabilityDTO).show();
         dismiss();
     }
+
+    @Override
+    public void onSelectLocation(AppointmentLocationsDTO appointmentLocationsDTO) {
+        if(appointmentLocationsDTO == null) {//selected ALL locations
+            resetLocatonSelections(true);
+        }else{
+            if(selectedLocations.isEmpty()) {//Initial state, reset location selections to remove the All selected status
+                resetLocatonSelections(false);
+            }
+            if(!selectedLocations.contains(appointmentLocationsDTO)){
+                selectedLocations.add(appointmentLocationsDTO);
+            }else if(selectedLocations.contains(appointmentLocationsDTO)){
+                selectedLocations.remove(appointmentLocationsDTO);
+            }
+
+            updateSelectedLocationsForAdapter();
+
+        }
+
+    }
+
+
+    private List<AppointmentLocationsDTO> extractAvailableLocations(AppointmentAvailabilityDTO availabilityDTO){
+        List<AppointmentLocationsDTO> locationsDTOs = new LinkedList<>();
+        List<AppointmentAvailabilityPayloadDTO> availableAppointments = availabilityDTO.getPayload().getAppointmentAvailability().getPayload();
+        for(AppointmentAvailabilityPayloadDTO availableAppointment : availableAppointments){
+            locationsDTOs.add(availableAppointment.getLocation());
+        }
+        return locationsDTOs;
+    }
+
+    private List<AppointmentsSlotsDTO> groupAllLocatonSlotsByTime(List<AppointmentAvailabilityPayloadDTO> appointmentAvailabilityPayloadDTOs){
+        List<AppointmentsSlotsDTO> appointmentsSlots = new LinkedList<>();
+        String locationName = null;
+        for(AppointmentAvailabilityPayloadDTO availabilityPayloadDTO : appointmentAvailabilityPayloadDTOs){
+            if(isLocationSelected(availabilityPayloadDTO.getLocation())) {
+                locationName = availabilityPayloadDTO.getLocation().getName();
+                for (AppointmentsSlotsDTO slotsDTO : availabilityPayloadDTO.getSlots()) {
+                    slotsDTO.setLocationName(locationName);
+                    appointmentsSlots.add(slotsDTO);
+                }
+            }
+        }
+
+        //need to sort the slots by time just in case there are multiple locations and times are out of order
+        Collections.sort(appointmentsSlots, new Comparator<AppointmentsSlotsDTO>() {
+            @Override
+            public int compare(AppointmentsSlotsDTO o1, AppointmentsSlotsDTO o2) {
+                try {
+                    Date d1 = dateFormater.parse(o1.getStartTime());
+                    Date d2 = dateFormater.parse(o2.getStartTime());
+
+                    return d1.compareTo(d2);
+                }catch (ParseException pxe){
+                    pxe.printStackTrace();
+                }
+
+                return 0;
+            }
+        });
+
+        return appointmentsSlots;
+    }
+
+    private boolean isLocationSelected(AppointmentLocationsDTO appointmentLocationsDTO){
+        return selectedLocations.isEmpty() || selectedLocations.contains(appointmentLocationsDTO);
+    }
+
 }

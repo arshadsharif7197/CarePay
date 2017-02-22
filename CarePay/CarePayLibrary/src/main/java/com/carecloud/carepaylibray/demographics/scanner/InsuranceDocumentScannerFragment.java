@@ -105,7 +105,7 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
 
     private void initUpdateButton(View view){
         Button addButton = (Button)view.findViewById(R.id.saveHealthInsuranceButton);
-        addButton.setText(globalLabelsDTO.getDemographicsInsuranceSave());
+        addButton.setText(globalLabelsDTO.getDemographicsInsuranceUpdateButton());
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,7 +119,7 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.demographics_review_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.demographics_review_toolbar_title);
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
-        title.setText(globalLabelsDTO.getDemographicsUpdateInsuranceToolbarTitle().toUpperCase());
+        title.setText(globalLabelsDTO.getDemographicsInsuranceTitle().toUpperCase());
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -151,6 +151,10 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
         TextView insuranceCardNumEditText = (EditText) view.findViewById(R.id.reviewinsurncecardnum);
         label = insuranceMetadataDTO == null ? CarePayConstants.NOT_DEFINED : insuranceMetadataDTO.properties.insuranceMemberId.getLabel();
         insuranceCardNumEditText.setHint(label);
+
+        TextView insuranceGroupNumEditText = (EditText) view.findViewById(R.id.reviewinsurncegroupnum);
+        label = insuranceMetadataDTO == null ? CarePayConstants.NOT_DEFINED : insuranceMetadataDTO.properties.insuranceGroupId.getLabel();
+        insuranceGroupNumEditText.setHint(label);
 
         ImageView frontInsuranceImageView = (ImageView) view.findViewById(R.id.demogr_insurance_frontimage);
         insuranceFrontScanHelper = new ImageCaptureHelper(getActivity(), frontInsuranceImageView, globalLabelsDTO);
@@ -323,6 +327,7 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
     public void populateViewsFromModel(View view) {
 
         TextView insuranceCardNumEditText = (EditText) view.findViewById(R.id.reviewinsurncecardnum);
+        TextView insuranceGroupNumEditText = (EditText) view.findViewById(R.id.reviewinsurncegroupnum);
         ImageView frontInsuranceImageView = (ImageView) view.findViewById(R.id.demogr_insurance_frontimage);
         Button btnScanFrontInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_frontbtn);
         ImageView backInsuranceImageView = (ImageView) view.findViewById(R.id.demogr_insurance_backimage);
@@ -397,6 +402,13 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
                 insuranceCardNumEditText.requestFocus(); // required for CAPS hint
                 view.requestFocus();
             }
+
+            String groupNum = insuranceDTO.getInsuranceGroupId();
+            if (!StringUtil.isNullOrEmpty(groupNum)) {
+                insuranceGroupNumEditText.setText(groupNum);
+                insuranceGroupNumEditText.requestFocus();
+                view.requestFocus();
+            }
             String insCardType = insuranceDTO.getInsuranceType();
             if (!StringUtil.isNullOrEmpty(insCardType)) {
                 cardTypeTextView.setText(insCardType);
@@ -448,12 +460,52 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
         });
 
         insuranceCardNumEditText.clearFocus();
+
+        TextInputLayout insuranceGroupNumberTextInput = (TextInputLayout) view.findViewById(R.id.insurancegroupNumberLabel);
+        final EditText insuranceGroupNumEditText = (EditText) view.findViewById(R.id.reviewinsurncegroupnum);
+        hint = insuranceMetadataDTO == null ? CarePayConstants.NOT_DEFINED : insuranceMetadataDTO.properties.insuranceGroupId.getLabel();
+        insuranceGroupNumberTextInput.setTag(hint);
+        insuranceGroupNumEditText.setTag(insuranceGroupNumberTextInput);
+        insuranceGroupNumEditText.setHint(hint);
+
+        insuranceGroupNumEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String groupNumber = insuranceGroupNumEditText.getText().toString();
+                if (!StringUtil.isNullOrEmpty(groupNumber)) {
+                    insuranceDTO.setInsuranceGroupId(groupNumber);
+                }
+            }
+        });
+
+        insuranceGroupNumEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int inputType, KeyEvent keyEvent) {
+                if (inputType == EditorInfo.IME_ACTION_NONE) {
+                    SystemUtil.hideSoftKeyboard(getActivity());
+                    insuranceGroupNumEditText.clearFocus();
+                    view.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        insuranceGroupNumEditText.clearFocus();
     }
 
     @Override
     protected void setChangeFocusListeners() {
-        TextView insuranceCardNumEditText = (EditText) view.findViewById(R.id.reviewinsurncecardnum);
-        insuranceCardNumEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        View.OnFocusChangeListener focusListener =  new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if (hasFocus) {
@@ -461,7 +513,12 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
                 }
                 SystemUtil.handleHintChange(view, hasFocus);
             }
-        });
+        };
+        TextView insuranceCardNumEditText = (EditText) view.findViewById(R.id.reviewinsurncecardnum);
+        insuranceCardNumEditText.setOnFocusChangeListener(focusListener);
+
+        TextView insuranceGroupNumEditText = (EditText) view.findViewById(R.id.reviewinsurncegroupnum);
+        insuranceGroupNumEditText.setOnFocusChangeListener(focusListener);
     }
 
     @Override
@@ -491,6 +548,15 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
             SystemUtil.setProximaNovaExtraboldTypefaceInput(context, insuranceCardNumberTextInput);
         } else {
             SystemUtil.setProximaNovaSemiboldTextInputLayout(context, insuranceCardNumberTextInput);
+        }
+
+        TextView insuranceGroupNumEditText = (EditText) view.findViewById(R.id.reviewinsurncegroupnum);
+        SystemUtil.setProximaNovaRegularTypeface(context, insuranceGroupNumEditText);
+        TextInputLayout insuranceGroupNumberTextInput = (TextInputLayout) view.findViewById(R.id.insurancegroupNumberLabel);
+        if (!StringUtil.isNullOrEmpty(insuranceGroupNumEditText.getText().toString())) {
+            SystemUtil.setProximaNovaExtraboldTypefaceInput(context, insuranceGroupNumberTextInput);
+        } else {
+            SystemUtil.setProximaNovaSemiboldTextInputLayout(context, insuranceGroupNumberTextInput);
         }
     }
 

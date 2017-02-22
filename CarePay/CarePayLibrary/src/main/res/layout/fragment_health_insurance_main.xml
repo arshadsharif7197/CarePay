@@ -62,24 +62,25 @@
                     android:padding="0dp"
                     android:layout_marginLeft="0dp"
                     android:layout_marginRight="0dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/setupInsuranceLabel"
                         style="@style/DemographicsDocsLabelStyle"
-                        android:layout_width="match_parent"
-                        android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
+                        android:layout_width="wrap_content"
+                        android:textStyle="normal"
+                        android:textAlignment="viewStart"
                         android:layout_marginEnd="15dp"
-                        android:theme="@style/HaveHealthInsurance"
                         />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/setupLabel"
                         style="@style/DemographicsDocsLabelStyle"
-                        android:layout_width="match_parent"
-                        android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
+                        android:layout_width="wrap_content"
+                        android:textAlignment="viewEnd"
+                        android:textStyle="normal"
                         android:layout_marginEnd="15dp"
-                        android:theme="@style/HaveHealthInsurance"
                         android:textColor="@color/colorPrimary"
                         />
                 </LinearLayout>
@@ -89,6 +90,61 @@
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
                     android:layout_marginTop="10dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setupInsurancePracticeContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:padding="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:orientation="vertical">
+
+                <RadioGroup
+                    android:id="@+id/setupInsuranceGroup"
+                    android:layout_marginTop="@dimen/dimen_15dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true">
+
+                    <RadioButton
+                        android:id="@+id/dontHaveInsurance"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:button="@null"
+                        android:drawableRight="@android:drawable/btn_radio"
+                        android:gravity="left"
+                        style="@style/DemographicsDocsLabelStyle"
+                        android:theme="@style/HaveHealthInsurance"
+                        android:checked="true" />
+
+                    <View
+                        style="@style/Consent_Form_View_Style"
+                        android:layout_width="match_parent" />
+
+                    <RadioButton
+                        android:id="@+id/haveInsurance"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:button="@null"
+                        android:drawableRight="@android:drawable/btn_radio"
+                        android:gravity="left"
+                        style="@style/DemographicsDocsLabelStyle"
+                        android:theme="@style/HaveHealthInsurance" />
+                </RadioGroup>
+                <Button
+                    android:id="@+id/addNewButton"
+                    style="@style/DemographicsDocsButtonStyle"
+                    android:enabled="false"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:textAlignment="center"
+                    android:layout_width="match_parent"
+                    />
+
             </LinearLayout>
 
             <LinearLayout
@@ -104,22 +160,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/dimen_10dp" />
+
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:gravity="right"
+                    android:paddingStart="0dp">
+
+                    <Button
+                        android:id="@+id/addInsuranceButton"
+                        style="@style/DemographicsDocsButtonStyle"
+                        android:textAlignment="center"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.5"/>
+                </LinearLayout>
              </LinearLayout>
-
-            <LinearLayout android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="@dimen/dimen_10dp"
-                android:gravity="right"
-                android:paddingStart="0dp">
-
-                <Button
-                    android:id="@+id/addInsuranceButton"
-                    style="@style/DemographicsDocsButtonStyle"
-                    android:textAlignment="center"
-                    android:layout_width="0dp"
-                    android:layout_weight="0.5"/>
-            </LinearLayout>
 
         </LinearLayout>
 

@@ -10,10 +10,10 @@ public class PropertiesIntakeModel {
 
     @SerializedName("intake_config_uuid")
     @Expose
-    private IntakeConfigUuidModel intakeConfigUuid;
+    private IntakeConfigUuidModel intakeConfigUuid = new IntakeConfigUuidModel();
     @SerializedName("findings")
     @Expose
-    private FindingsModel findings;
+    private FindingsModel findings = new FindingsModel();
 
     /**
      * 

@@ -2,9 +2,7 @@ package com.carecloud.carepay.practice.library.checkin.activities;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -67,7 +65,6 @@ public class HowToCheckInActivity extends BasePracticeActivity {
         signinPatientModeDTO = getConvertedDTO(SigninPatientModeDTO.class);
 
         setContentView(R.layout.activity_how_to_check_in);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setNavigationBarVisibility();
 
 
@@ -121,17 +118,17 @@ public class HowToCheckInActivity extends BasePracticeActivity {
         @Override
         public void onClick(View view) {
             /*Map<String, String> queryMap = new HashMap<>();
-            queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
+            queryMap.put("language", getApplicationPreferences().getUserLanguage());
             queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
             queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
 
             Map<String, String> headers = new HashMap<>();
             headers.put("transition", "true");
             TransitionDTO transitionDTO = signinPatientModeDTO.getMetadata().getLinks().getLogin();
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, patientModeSignInCallback, queryMap, headers);*/
+            getWorkflowServiceHelper().execute(transitionDTO, patientModeSignInCallback, queryMap, headers);*/
             Intent intent = new Intent(HowToCheckInActivity.this, SigninActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putSerializable(getApplicationContext().getClass().getSimpleName(), signinPatientModeDTO.toString());
+            bundle.putSerializable(WorkflowDTO.class.getSimpleName(), signinPatientModeDTO.toString());
             intent.putExtras(bundle);
             startActivity(intent);
             finish();
@@ -158,7 +155,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
             /*To implement click event for Manual Search */
             Intent intent = new Intent(HowToCheckInActivity.this, PersonalInformationActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putSerializable(getApplicationContext().getClass().getSimpleName(), signinPatientModeDTO.toString());
+            bundle.putSerializable(WorkflowDTO.class.getSimpleName(), signinPatientModeDTO.toString());
             intent.putExtras(bundle);
             startActivity(intent);
             finish();
@@ -197,18 +194,18 @@ public class HowToCheckInActivity extends BasePracticeActivity {
     WorkflowServiceCallback patientModeSignInCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
+            hideProgressDialog();
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(HowToCheckInActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -271,7 +268,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
            // ApplicationMode.getInstance().getUserPracticeDTO().setUserName(scanQRCodeResultDTO.getUserName());
             Map<String, String> queryMap = new HashMap<String, String>();
             queryMap.put("appointment_id", scanQRCodeResultDTO.getAppointmentId());
-            WorkflowServiceHelper.getInstance().execute(signinPatientModeDTO.getMetadata()
+            getWorkflowServiceHelper().execute(signinPatientModeDTO.getMetadata()
                             .getTransitions().getAction(), appointmentCallBack, queryMap);
 
         }else{
@@ -298,20 +295,19 @@ public class HowToCheckInActivity extends BasePracticeActivity {
     WorkflowServiceCallback appointmentCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(HowToCheckInActivity.this,
-                    workflowDTO);
+            hideProgressDialog();
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
             dismissDialog();
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(HowToCheckInActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

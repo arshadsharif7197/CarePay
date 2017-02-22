@@ -1,13 +1,10 @@
 package com.carecloud.carepay.patient.base;
 
-import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibray.base.BaseVisibilityHintActivity;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
@@ -17,12 +14,12 @@ import com.google.gson.Gson;
  * Use for holding the common DTO which will be converted to the desire DTO using getConvertedDTO
  */
 
-public abstract class BasePatientActivity extends BaseVisibilityHintActivity {
+public abstract class BasePatientActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
     }
 
@@ -58,9 +55,5 @@ public abstract class BasePatientActivity extends BaseVisibilityHintActivity {
             return gson.fromJson(jsonString, dtoClass);
         }
         return null;
-    }
-
-    public Context getContext(){
-        return this;
     }
 }

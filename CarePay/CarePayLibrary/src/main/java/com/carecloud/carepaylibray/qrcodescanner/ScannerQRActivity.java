@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.google.zxing.Result;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -15,7 +16,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
  * Reads a qr code and returned to activity
  * @since 1.0
  * */
-public class ScannerQRActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
+public class ScannerQRActivity extends BaseActivity implements ZXingScannerView.ResultHandler {
     private ZXingScannerView zXingScannerView;
     public static final String EXTRA_QR_CODE = "QR_CODE";
     private String headerTitle;

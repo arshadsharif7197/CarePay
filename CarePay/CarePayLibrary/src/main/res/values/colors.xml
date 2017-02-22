@@ -11,7 +11,7 @@
     <color name="lightSlateGray">#78909C</color>
     <color name="charcoal">#ff37474f</color>
     <color name="cadet_gray">#ff90a4ae</color>
-    <color name="rich_electric_blue">#ff009bde</color>
+    <!--<color name="rich_electric_blue">#ff009bde</color>-->
     <color name="light_gray">#CFD8DC</color>
 
     <color name="glitter">#ccebf9</color>
@@ -21,16 +21,16 @@
     <color name="button_bright_cerulean">#1F9BDE</color>
 
     <color name="textview_default_textcolor">#37474F</color>
-    <color name="bright_cerulean">#ff1f9bde</color>
+    <!--<color name="bright_cerulean">#ff1f9bde</color>-->
     <color name="dark_gray">#ff9fa7ab</color>
     <color name="munsell">#ffeceff1</color>
     <color name="payne_gray">#FF546E7A</color>
-    <color name="darkblue">#176D9C</color>
+    <!--<color name="darkblue">#176D9C</color>-->
 
     <color name="overlay_green">#7ED321</color>
     <color name="light_gray_dialog">#eceff1</color>
 
-    <color name="button_default">#329AD6</color>
+    <!--<color name="button_default">#329AD6</color>-->
     <color name="emerald">#5BD063</color>
     <color name="harvard_crimson">#d0021b</color>
     <color name="paint_color_thumbnail">#BAB399</color>
@@ -41,9 +41,9 @@
     <color name="toolbar_items">#CBCBCB</color>
     <color name="alert">#AC1600</color>
     <color name="success">#37A51C</color>
-    <color name="button_pressed">#2A5C91</color>
-    <color name="text_border_selected">#4EA9DC</color>
-    <color name="curious_blue">#0092d1</color>
+    <!--<color name="button_pressed">#2A5C91</color>-->
+    <!--<color name="text_border_selected">#4EA9DC</color>-->
+    <!--<color name="curious_blue">#0092d1</color>-->
     <color name="warning">#E94700</color>
     <color name="grey_100">#F5F7F7</color>
     <color name="grey_300">#8D9496</color>
@@ -70,7 +70,7 @@
     <color name="viewfinder_mask">#60000000</color>
     <color name="viewfinder_laser">#00cc0000</color>
     <color name="viewfinder_border">#ffafed44</color>
-    <color name="consent_title">#ff35a5e1</color>
+    <color name="gray_white">#80ffffff</color>
 
     <!--Android Pay-->
     <color name="android_pay_background_color">#78C257</color>

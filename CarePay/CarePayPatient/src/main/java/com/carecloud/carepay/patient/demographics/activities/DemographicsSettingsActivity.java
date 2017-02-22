@@ -10,8 +10,10 @@ import android.view.MenuItem;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsSettingsFragment;
+import com.carecloud.carepay.patient.payment.fragments.SettingAddCreditCardFragment;
 import com.carecloud.carepay.patient.payment.fragments.SettingsCreditCardDetailsFragment;
 import com.carecloud.carepay.patient.payment.fragments.SettingsCreditCardListFragment;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -23,7 +25,9 @@ import java.util.List;
  * Main activity for Settings workflow
  */
 public class DemographicsSettingsActivity extends BasePatientActivity implements
-        SettingsCreditCardDetailsFragment.IOnCreditCardOperationSuccess {
+        SettingsCreditCardDetailsFragment.IOnCreditCardOperationSuccess,
+        SettingsCreditCardListFragment.ISettingsCreditCardListFragmentListener,
+        DemographicsSettingsFragment.IDemographicsSettingsFragmentListener {
     DemographicsSettingsDTO demographicsSettingsDTO;
 
     @Override
@@ -39,6 +43,12 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         String demographicsSettingsDTOString = gson.toJson(demographicsSettingsDTO);
         bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
 
+        try {
+            getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE,
+                    demographicsSettingsDTO.getPayload().getDemographics().getPayload().getAddress());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         FragmentManager fm = getSupportFragmentManager();
         DemographicsSettingsFragment fragment = (DemographicsSettingsFragment)
                 fm.findFragmentByTag(DemographicsSettingsFragment.class.getSimpleName());
@@ -88,7 +98,9 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
             for (Fragment fragment : fragmentList) {
                 if (fragment.getClass().getName().equalsIgnoreCase(SettingsCreditCardListFragment.class.getName())) {
                     ((SettingsCreditCardListFragment) fragment).loadCreditCardsList(demographicsSettingsDTO);
-                    break;
+                } else if (fragment.getClass().getName().equalsIgnoreCase(DemographicsSettingsFragment.class.getName())) {
+                    this.demographicsSettingsDTO = demographicsSettingsDTO;
+                    ((DemographicsSettingsFragment) fragment).updateCreditCardsList(demographicsSettingsDTO );
                 }
             }
         }
@@ -108,5 +120,46 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
             transaction.addToBackStack(fragment.getClass().getName());
         }
         transaction.commitAllowingStateLoss();
+    }
+
+    @Override
+    public void initializeAddNewCreditCardFragment() {
+        FragmentManager fragmentmanager = getSupportFragmentManager();
+        SettingAddCreditCardFragment fragment = (SettingAddCreditCardFragment)
+                fragmentmanager.findFragmentByTag(SettingAddCreditCardFragment.class.getSimpleName());
+        if (fragment == null) {
+            fragment = new SettingAddCreditCardFragment();
+        }
+
+        Bundle bundle = new Bundle();
+        Gson gson = new Gson();
+        bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, gson.toJson(demographicsSettingsDTO));
+        bundle.putString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE, gson.toJson(demographicsSettingsDTO.getPayload().getPapiAccounts()));
+        fragment.setArguments(bundle);
+        navigateToFragment(fragment,true);
+    }
+
+    @Override
+    public void initializeCreditCardListFragment() {
+        Bundle bundle = new Bundle();
+        Gson gson = new Gson();
+        String demographicsSettingsDTOString = gson.toJson(demographicsSettingsDTO);
+        bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
+
+        FragmentManager fm = getSupportFragmentManager();
+        SettingsCreditCardListFragment fragment = (SettingsCreditCardListFragment)
+                fm.findFragmentByTag(SettingsCreditCardListFragment.class.getSimpleName());
+        if (fragment == null) {
+            fragment = new SettingsCreditCardListFragment();
+        }
+
+        //fix for random crashes
+        if (fragment.getArguments() != null) {
+            fragment.getArguments().putAll(bundle);
+        } else {
+            fragment.setArguments(bundle);
+        }
+
+        navigateToFragment(fragment,true);
     }
 }
