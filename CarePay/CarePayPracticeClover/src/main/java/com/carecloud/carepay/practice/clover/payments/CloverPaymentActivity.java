@@ -322,9 +322,10 @@ public class CloverPaymentActivity extends AppCompatActivity {
 //     postPaymentConfirmation(payment);
                 }
             } else if(resultCode == RESULT_CANCELED) {
-                Toast.makeText(getApplicationContext(), getString(R.string.payment_cancelled), Toast.LENGTH_SHORT).show();
-                setResult(resultCode);
-                finish();
+                fakePaymentResponse();
+//                Toast.makeText(getApplicationContext(), getString(R.string.payment_cancelled), Toast.LENGTH_SHORT).show();
+//                setResult(resultCode);
+//                finish();
             } else {
                 Toast.makeText(getApplicationContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
                 setResult(resultCode);
@@ -434,6 +435,44 @@ public class CloverPaymentActivity extends AppCompatActivity {
 //        transitionDTO.setUrl("https://ix1uhlyid1.execute-api.us-east-1.amazonaws.com/qa/workflow/shamrock/practice_mode/practice_payments/make_payment");
 
         WorkflowServiceHelper.getInstance().execute(transitionDTO, makePaymentCallback, paymentModelJson, queries, header);
+
+    }
+
+    private void fakePaymentResponse(){
+        CreditCardModel creditCardModel = new CreditCardModel();
+        creditCardModel.setCardType("MASTERCARD");
+        creditCardModel.setCardNumber("1212");
+        creditCardModel.setExpiryDate("1020");
+        creditCardModel.setNameOnCard("Leo Menendez");
+        creditCardModel.setToken("FDLKN4LN44KBJL4"+ System.currentTimeMillis()%5);
+
+        PaymentsCreditCardBillingInformationDTO billingInformation = new PaymentsCreditCardBillingInformationDTO();
+        billingInformation.setSameAsPatient(true);
+        creditCardModel.setBillingInformation(billingInformation);
+
+        PaymentMethod paymentMethod = new PaymentMethod();
+        paymentMethod.setType(PaymentType.credit_card);
+        paymentMethod.setExecution(PaymentExecution.clover);
+        paymentMethod.setAmount(amountDouble);
+        paymentMethod.setCreditCard(creditCardModel);
+
+        TransactionResponse transactionResponse = new TransactionResponse();
+        transactionResponse.setTransactionID(String.valueOf(System.currentTimeMillis()));
+        transactionResponse.setResponse(new JSONObject());
+        paymentMethod.setTransactionResponse(transactionResponse);
+
+        PaymentPostModel paymentPostModel = new PaymentPostModel();
+        paymentPostModel.setAmount(amountDouble);
+        paymentPostModel.addPaymentMethod(paymentMethod);
+
+        Gson gson = new Gson();
+        if(paymentPostModel.isPaymentModelValid()){
+            postPayment(gson.toJson(paymentPostModel));
+        }else{
+            Toast.makeText(getApplicationContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
 
     }
 
