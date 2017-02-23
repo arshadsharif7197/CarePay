@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
@@ -23,7 +22,6 @@ import com.carecloud.carepaylibray.appointments.models.QueryStrings;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog;
 import com.carecloud.carepaylibray.customdialogs.QrCodeViewDialog;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -120,10 +118,10 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
             queries.put("patient_id", appointmentDTO.getMetadata().getPatientId());
 
 
-            Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
+            Map<String, String> header = ((ISession) context).getWorkflowServiceHelper().getPreferredLanguageHeader();
 //            header.put("transition", "true");
 
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, testMedicationsCallback, queries, header);
+            ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, testMedicationsCallback, queries, header);
 
 
 /*
@@ -138,19 +136,18 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
     private WorkflowServiceCallback testMedicationsCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            ((ISession) context).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) context).hideProgressDialog();
             PatientNavigationHelper.getInstance(getContext()).navigateToWorkflow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
-
+            ((ISession) context).hideProgressDialog();
         }
     };
 

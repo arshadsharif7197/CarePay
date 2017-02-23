@@ -13,17 +13,16 @@ import android.view.ViewGroup;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.medications.adapters.MedicationAllergySearchAdapter;
 import com.carecloud.carepaylibray.medications.models.MedicationAllergiesLinkDTO;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
 import com.carecloud.carepaylibray.medications.models.MedicationsObject;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -132,9 +131,9 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
         queryMap.put(searchDTO.getQueryStrings().getPracticeMgmt().getName(), medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPracticeMgmt());
         queryMap.put(searchDTO.getQueryStrings().getSearch().getName(), searchQuery);
 
-        Map<String, String> headers = WorkflowServiceHelper.getPreferredLanguageHeader();
+        Map<String, String> headers = ((ISession) getContext()).getWorkflowServiceHelper().getPreferredLanguageHeader();
 
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, medicationSearchCallback, queryMap, headers);
+        ((ISession) getContext()).getWorkflowServiceHelper().execute(transitionDTO, medicationSearchCallback, queryMap, headers);
 
     }
 
@@ -179,12 +178,11 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
     private WorkflowServiceCallback medicationSearchCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
-        }
+            ((ISession) getContext()).showProgressDialog();        }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) getContext()).hideProgressDialog();
 
             Gson gson = new Gson();
             medicationsAllergiesDTO =gson.fromJson(workflowDTO.toString(), MedicationsAllergiesResultsModel.class);
@@ -197,7 +195,7 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) getContext()).hideProgressDialog();
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

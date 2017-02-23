@@ -12,11 +12,11 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.medications.adapters.MedicationAllergiesAdapter;
 import com.carecloud.carepaylibray.medications.models.MedicationAllergiesAction;
 import com.carecloud.carepaylibray.medications.models.MedicationAllergiesLabelsDTO;
@@ -25,7 +25,6 @@ import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesQueryStrings;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
 import com.carecloud.carepaylibray.medications.models.MedicationsObject;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -247,14 +246,14 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
             MedicationsAllergiesQueryStrings medicationsAllergiesQueryStrings = gson.fromJson(transitionDTO.getQueryString().toString(), MedicationsAllergiesQueryStrings.class);
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put(medicationsAllergiesQueryStrings.getPatientId().getName(), medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPatientId());
-            queryMap.put(medicationsAllergiesQueryStrings.getPracticeMgmt().getName(), medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPracticeMgmt());
             queryMap.put(medicationsAllergiesQueryStrings.getPracticeId().getName(), medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPracticeId());
+            queryMap.put(medicationsAllergiesQueryStrings.getPracticeMgmt().getName(), medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPracticeMgmt());
 
-            Map<String, String> headers = WorkflowServiceHelper.getPreferredLanguageHeader();
+            Map<String, String> headers = ((ISession) getContext()).getWorkflowServiceHelper().getPreferredLanguageHeader();
             headers.put("transition", "true");
 
             String jsonBody = gson.toJson(getAllModifiedItems());
-            WorkflowServiceHelper.getInstance().execute(transitionDTO, submitMedicationAllergiesCallback, jsonBody, queryMap, headers);
+            ((ISession) getContext()).getWorkflowServiceHelper().execute(transitionDTO, submitMedicationAllergiesCallback, jsonBody, queryMap, headers);
 
 
         }
@@ -270,19 +269,17 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
     private WorkflowServiceCallback submitMedicationAllergiesCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            ((ISession) getContext()).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
-
+            ((ISession) getContext()).hideProgressDialog();
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
-
+            ((ISession) getContext()).hideProgressDialog();
         }
     };
 
