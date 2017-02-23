@@ -34,7 +34,6 @@ import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinConsentForm1Fragment;
-import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinConsentForm2Fragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinIntakeForm1Fragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.IFragmentCallback;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityFragment;
@@ -346,13 +345,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
             CheckinConsentForm1Fragment consentForm1Fragment = new CheckinConsentForm1Fragment();
             consentForm1Fragment.setArguments(bundle);
             return consentForm1Fragment;
-        } else if (showingForm == FormId.FORM2) {
-            consentFormIndex = 2;
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(CarePayConstants.FORM_DATA, getConsentFormData("form2"));
-            CheckinConsentForm2Fragment consentForm2Fragment = new CheckinConsentForm2Fragment();
-            consentForm2Fragment.setArguments(bundle);
-            return consentForm2Fragment;
         } else {
             consentFormIndex = 3;
             Bundle bundle = new Bundle();
