@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.base;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,6 +29,15 @@ import com.carecloud.carepaylibray.utils.StringUtil;
  */
 
 public class PracticeNavigationHelper {
+
+    private static boolean shouldExpectResult = false;
+    private static int expectRequestCode = -1;
+
+    public static void navigateToWorkflow(Context context, WorkflowDTO workflowDTO, boolean expectsResult, int requestCode) {
+        shouldExpectResult = expectsResult;
+        expectRequestCode = requestCode;
+        navigateToWorkflow(context, workflowDTO);
+    }
 
     /**
      * Navigation using application context
@@ -90,7 +100,7 @@ public class PracticeNavigationHelper {
 
             case PracticeNavigationStateConstants.PATIENT_MODE_CHECKIN_SUBFLOW: {
                 intent = new Intent(context, PatientModeCheckinActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             }
 
@@ -137,7 +147,13 @@ public class PracticeNavigationHelper {
         bundle.putSerializable(WorkflowDTO.class.getSimpleName(), workflowDTO.toString());
         if (intent != null) {
             intent.putExtras(bundle);
-            context.startActivity(intent);
+            if(shouldExpectResult && context instanceof Activity){
+                ((Activity)context).startActivityForResult(intent, expectRequestCode);
+                shouldExpectResult = false;
+                expectRequestCode = -1;
+            }else {
+                context.startActivity(intent);
+            }
         }
     }
 }

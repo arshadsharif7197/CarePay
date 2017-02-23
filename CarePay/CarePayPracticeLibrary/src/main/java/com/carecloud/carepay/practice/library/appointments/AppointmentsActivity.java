@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.appointments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,8 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
+import com.carecloud.carepaylibray.payments.models.updatebalance.PaymentUpdateBalanceDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -195,7 +198,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         }
     }
 
-    private void refreshAppointmentList(){
+    private void refreshAppointmentList() {
 
         if (appointmentsItems != null) {
             appointmentsItems.clear();
@@ -232,5 +235,44 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+
+    @Override
+    protected void processExternalPayment(PaymentExecution execution, Intent data) {
+        switch (execution){
+            case clover:{
+                String jsonPayload = data.getStringExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA);
+                if(jsonPayload!=null) {
+                    Gson gson = new Gson();
+                    PaymentUpdateBalanceDTO updateBalanceDTO = gson.fromJson(jsonPayload, PaymentUpdateBalanceDTO.class);
+                    updateAppointments(updateBalanceDTO.getUpdateAppointments().get(0));
+                }
+                break;
+            }
+            default:
+                //nothing
+                return;
+        }
+    }
+
+    private void updateAppointments(AppointmentDTO updateAppointmentDTO){
+        for(AppointmentDTO appointmentDTO:appointmentsItems){
+            if(isObject(appointmentDTO, updateAppointmentDTO)){
+                appointmentDTO.setMetadata(updateAppointmentDTO.getMetadata());
+                appointmentDTO.setPayload(updateAppointmentDTO.getPayload());
+                break;
+            }
+        }
+
+        AppointmentsListAdapter adapter = (AppointmentsListAdapter) appointmentsRecyclerView.getAdapter();
+        adapter.setList(appointmentsItems);
+        adapter.notifyDataSetChanged();
+
+    }
+
+    private boolean isObject(AppointmentDTO appointmentDTO, AppointmentDTO updateAppointmentDTO){
+        return appointmentDTO.getPayload().getId().equals(updateAppointmentDTO.getPayload().getId()) &&
+                appointmentDTO.getPayload().getPatient().getId().equals(updateAppointmentDTO.getPayload().getPatient().getId());
+    }
 
 }

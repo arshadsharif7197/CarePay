@@ -20,25 +20,14 @@ import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.customdialog.CheckinInsuranceEditDialog;
 import com.carecloud.carepay.practice.library.patientmodecheckin.consentform.FormData;
-import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.PracticeIdDocScannerFragment;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
-import com.carecloud.carepaylibray.demographics.fragments.CheckinDemographicsFragment;
-import com.carecloud.carepaylibray.demographics.fragments.DemographicsCheckInDocumentsFragment;
-import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
-import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterface;
-import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
-import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
-import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinConsentForm1Fragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinConsentForm2Fragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinIntakeForm1Fragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.IFragmentCallback;
+import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.PracticeIdDocScannerFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormMetadataDTO;
@@ -47,9 +36,20 @@ import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormAppoin
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormPayloadDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.fragments.CheckinDemographicsFragment;
+import com.carecloud.carepaylibray.demographics.fragments.DemographicsCheckInDocumentsFragment;
+import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
+import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterface;
+import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHolder;
+import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
+import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.practice.FlowStateInfo;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -139,6 +139,9 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         initializeViews();
         // place the initial fragment
         navigateToParentFragment();
+        initializeDocumentFragment();
+        initializeInsurancesFragment();
+        initializeIdDocScannerFragment();
 
         // Intake form Navigation TODO: will be managed by fragment
         registerReceiver(intakeFormReceiver, new IntentFilter("NEW_CHECKEDIN_NOTIFICATION"));
@@ -697,7 +700,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     public void navigateToParentFragment() {
         CheckinDemographicsFragment fragment = new CheckinDemographicsFragment();
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, demographicDTO);
+        DtoHelper.bundleBaseDTO(args, getIntent(), demographicDTO.getClass());
+
         fragment.setArguments(args);
 
         navigateToFragment(fragment, false);
@@ -767,15 +771,12 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
 
     @Override
     protected void processExternalPayment(PaymentExecution execution, Intent data){
-        switch (execution){
-            case clover:{
-                //TODO get the updated Patient Object and look throught the original list to update balance or remove
-                break;
-            }
-            default:
-                //nothing
-                return;
+        if(data.hasExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA)) {
+            Intent intent = getIntent();
+            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA, data.getStringExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA));
+            setResult(RESULT_OK, intent);
         }
+        finish();
     }
 
 }
