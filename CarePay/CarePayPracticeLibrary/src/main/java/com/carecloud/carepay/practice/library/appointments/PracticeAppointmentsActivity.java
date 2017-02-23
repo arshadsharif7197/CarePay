@@ -93,7 +93,7 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
                     checkInLabelDTO.getTomorrow(),
                     checkInLabelDTO.getThisMonthLabel(),
                     checkInLabelDTO.getNextDaysLabel()
-            );
+            ).toUpperCase(Locale.getDefault());
             setViewTextById(R.id.practice_patient_count_label, practiceCountLabel);
         }
     }

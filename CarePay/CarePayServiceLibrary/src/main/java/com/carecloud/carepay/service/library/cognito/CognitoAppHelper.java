@@ -32,6 +32,7 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.Mult
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
 import com.amazonaws.regions.Regions;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.dtos.CognitoDTO;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,6 +49,7 @@ public class CognitoAppHelper {
     private Map<String, String> signUpFieldsC2O;
     private Map<String, String> signUpFieldsO2C;
 
+    private ApplicationMode applicationMode;
     private CognitoUserPool  userPool;
     private String           user;
     private String           patientUser;
@@ -85,13 +87,15 @@ public class CognitoAppHelper {
      * default value assign for variables
      * @param context the context
      */
-    public CognitoAppHelper(Context context) {
+    public CognitoAppHelper(Context context, ApplicationMode applicationMode) {
+        this.applicationMode = applicationMode;
         setData();
 
         // Create a user pool with default ClientConfiguration
+        CognitoDTO cognitoDTO = applicationMode.getCognitoDTO();
         userPool = new CognitoUserPool(context,
-                ApplicationMode.getInstance().getCognitoDTO().getUserPoolId(),
-                ApplicationMode.getInstance().getCognitoDTO().getClientId(),
+                cognitoDTO.getUserPoolId(),
+                cognitoDTO.getClientId(),
                 clientSecret,
                 cognitoRegion);
 
@@ -130,7 +134,7 @@ public class CognitoAppHelper {
      * @return current user
      */
     public String getCurrUser() {
-        if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+        if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             return patientUser;
         }
         return user;
@@ -141,7 +145,7 @@ public class CognitoAppHelper {
      * @param newUser user
      */
     public void setUser(String newUser) {
-        if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+        if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             patientUser = newUser;
         } else {
             user = newUser;

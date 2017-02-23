@@ -119,8 +119,8 @@ public class HowToCheckInActivity extends BasePracticeActivity {
         public void onClick(View view) {
             /*Map<String, String> queryMap = new HashMap<>();
             queryMap.put("language", getApplicationPreferences().getUserLanguage());
-            queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
-            queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+            queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+            queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
 
             Map<String, String> headers = new HashMap<>();
             headers.put("transition", "true");
@@ -261,11 +261,11 @@ public class HowToCheckInActivity extends BasePracticeActivity {
         QRCodeScanResultDTO scanQRCodeResultDTO = gson.fromJson(qrCodeData, QRCodeScanResultDTO.class);
 
         if(scanQRCodeResultDTO!=null && scanQRCodeResultDTO.getPracticeMgmt()
-                .equals(ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt())
+                .equals(getApplicationMode().getUserPracticeDTO().getPracticeMgmt())
                 && scanQRCodeResultDTO.getPracticeId()
-                .equals(ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId())){
+                .equals(getApplicationMode().getUserPracticeDTO().getPracticeId())){
             getCognitoAppHelper().setUser(scanQRCodeResultDTO.getUserName());
-           // ApplicationMode.getInstance().getUserPracticeDTO().setUserName(scanQRCodeResultDTO.getUserName());
+           // getApplicationMode().getUserPracticeDTO().setUserName(scanQRCodeResultDTO.getUserName());
             Map<String, String> queryMap = new HashMap<String, String>();
             queryMap.put("appointment_id", scanQRCodeResultDTO.getAppointmentId());
             getWorkflowServiceHelper().execute(signinPatientModeDTO.getMetadata()

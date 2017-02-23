@@ -16,13 +16,13 @@ public class ApplicationMode {
         PATIENT, PRACTICE, PRACTICE_PATIENT_MODE
     }
 
-    private static ApplicationMode instance;
     private ApplicationType applicationType;
     private CognitoDTO cognitoDTO;
 
-    // use for seting practice maganement information
+    // use for setting practice management information
     private UserPracticeDTO userPracticeDTO;
     private String patientId;
+
     public UserPracticeDTO getUserPracticeDTO() {
         return userPracticeDTO;
     }
@@ -30,21 +30,6 @@ public class ApplicationMode {
     public void setUserPracticeDTO(CognitoAppHelper cognitoAppHelper, UserPracticeDTO userPracticeDTO) {
         this.userPracticeDTO = userPracticeDTO;
         this.userPracticeDTO.setUserName(cognitoAppHelper.getCurrUser());
-    }
-
-
-    private ApplicationMode() {
-    }
-
-    /**
-     * Return singleton object
-     * @return singleton object
-     */
-    public static ApplicationMode getInstance() {
-        if (instance == null) {
-            instance = new ApplicationMode();
-        }
-        return instance;
     }
 
     public ApplicationType getApplicationType() {
