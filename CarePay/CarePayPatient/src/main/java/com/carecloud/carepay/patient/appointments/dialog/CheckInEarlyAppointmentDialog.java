@@ -17,6 +17,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -81,18 +82,18 @@ public class CheckInEarlyAppointmentDialog extends BaseDoctorInfoDialog {
      * call check-in Now api.
      */
     private void onCheckInEarly() {
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, logincallback);
+        ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, logincallback);
     }
 
     WorkflowServiceCallback logincallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            ((ISession) context).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) context).hideProgressDialog();
             PatientNavigationHelper.getInstance(context).navigateToWorkflow(workflowDTO);
 
             // end-splash activity and transition
@@ -101,7 +102,7 @@ public class CheckInEarlyAppointmentDialog extends BaseDoctorInfoDialog {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) context).hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(context);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

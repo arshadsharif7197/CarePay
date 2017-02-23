@@ -23,6 +23,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicPayloadDTO;
@@ -43,7 +44,7 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediu
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DemographicsSettingsFragment extends Fragment {
+public class DemographicsSettingsFragment extends BaseFragment {
     private static final String LOG_TAG = DemographicsSettingsFragment.class.getSimpleName();
     private AppCompatActivity appCompatActivity;
     private DemographicsSettingsDTO demographicsSettingsDTO = null;
@@ -189,7 +190,7 @@ public class DemographicsSettingsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 signOutButton.setEnabled(false);
-                WorkflowServiceHelper.getInstance().executeApplicationStartRequest(logOutCall);
+                getWorkflowServiceHelper().executeApplicationStartRequest(logOutCall);
 
             }
         });
@@ -317,12 +318,12 @@ public class DemographicsSettingsFragment extends Fragment {
     WorkflowServiceCallback logOutCall = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             signOutButton.setEnabled(true);
             // log out previous user from Cognito
             CognitoAppHelper.getPool().getUser().signOut();
@@ -332,7 +333,7 @@ public class DemographicsSettingsFragment extends Fragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             signOutButton.setEnabled(true);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

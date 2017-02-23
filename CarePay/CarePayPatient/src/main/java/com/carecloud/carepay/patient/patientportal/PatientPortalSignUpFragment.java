@@ -12,13 +12,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
  * Created by Rahul on 10/13/16.
  */
 
-public class PatientPortalSignUpFragment extends Fragment implements View.OnClickListener {
+public class PatientPortalSignUpFragment extends BaseFragment implements View.OnClickListener {
 
     private View view;
     private Button signupPortalButton;

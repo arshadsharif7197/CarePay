@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.adapter.SettingsCreditCardListAdapter;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
@@ -31,7 +32,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SettingsCreditCardListFragment extends Fragment implements SettingsCreditCardListAdapter.IOnCreditCardDetailClickListener {
+public class SettingsCreditCardListFragment extends BaseFragment implements SettingsCreditCardListAdapter.IOnCreditCardDetailClickListener {
 
     private RecyclerView creditCardsListRecyclerView;
     private LinearLayout noCreditCardsView;

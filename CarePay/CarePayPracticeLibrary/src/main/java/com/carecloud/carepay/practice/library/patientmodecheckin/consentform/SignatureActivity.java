@@ -1,12 +1,10 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.consentform;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,10 +16,10 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforauthorization.ConsentFormAuthorizationPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.consentforhipaa.ConsentFormHippaPayloadDTO;
@@ -29,29 +27,23 @@ import com.carecloud.carepaylibray.consentforms.models.datamodels.consentformedi
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConseFormsPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormPayloadDTO;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.github.gcacace.signaturepad.views.SignaturePad;
+import com.google.gson.Gson;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
 
-import com.github.gcacace.signaturepad.views.SignaturePad;
-import com.google.gson.Gson;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-
-public class SignatureActivity extends AppCompatActivity {
+public class SignatureActivity extends BaseActivity {
 
     public static boolean isBackButtonClicked = false;
     public static int numOfLaunches = 0;
-    static SignatureActivity signatureActivity;
-    private static ConseFormsPayloadDTO payloadDTO;
     private TextView titleTextView;
     private TextView beforesignWarningTextView;
     private TextView signatureHelpTextView;
@@ -66,12 +58,6 @@ public class SignatureActivity extends AppCompatActivity {
 
     private ConsentFormLabelsDTO consentFormLabelsDTO;
 
-
-    private Map<Integer, List<String>> stringMap = new HashMap<>();
-    private String patientSignature;
-    private String legalSignature;
-    private String legalFirstNameLabel;
-    private String legalLastNameLabel;
     private String signatureAsBase64;
     private boolean signedByPatient = true;
     private boolean signedByLegal = false;
@@ -83,12 +69,12 @@ public class SignatureActivity extends AppCompatActivity {
     private WorkflowServiceCallback updateconsentformCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(SignatureActivity.this).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(SignatureActivity.this).dismiss();
+            hideProgressDialog();
 
             //ConsentActivity.this.finish();
            // PatientNavigationHelper.getInstance(SignatureActivity.this).navigateToWorkflow(workflowDTO);
@@ -101,7 +87,7 @@ public class SignatureActivity extends AppCompatActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(SignatureActivity.this).dismiss();
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(SignatureActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -141,7 +127,6 @@ public class SignatureActivity extends AppCompatActivity {
         setTypefaces();
         setEditTexts();
         onClickListeners();
-        signatureActivity = this;
     }
 
     /**
@@ -360,13 +345,13 @@ public class SignatureActivity extends AppCompatActivity {
         queries.put("appointment_id", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getAppointmentId());
 
 
-        Map<String, String> header = WorkflowServiceHelper.getPreferredLanguageHeader();
+        Map<String, String> header = getWorkflowServiceHelper().getPreferredLanguageHeader();
         header.put("transition", "true");
 
         Gson gson = new Gson();
         String body = gson.toJson(consentFormPayloadDTO);
         TransitionDTO transitionDTO = consentFormDTO.getMetadata().getTransitions().getUpdateConsent();
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, updateconsentformCallBack, body, queries, header);
+        getWorkflowServiceHelper().execute(transitionDTO, updateconsentformCallBack, body, queries, header);
     }
 
     private void addToPayload() {

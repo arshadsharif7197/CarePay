@@ -33,6 +33,7 @@ import com.carecloud.carepay.service.library.dtos.DemographicsSettingsMaintainan
 import com.carecloud.carepay.service.library.dtos.DemographicsSettingsProposedEmailDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicPayloadDTO;
@@ -62,7 +63,7 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediu
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DemographicsSettingsChangePasswordFragment extends Fragment {
+public class DemographicsSettingsChangePasswordFragment extends BaseFragment {
     private static final String LOG_TAG = DemographicsSettingsFragment.class.getSimpleName();
     private AppCompatActivity appCompatActivity;
     private DemographicsSettingsDTO demographicsSettingsDTO = null;
@@ -349,7 +350,7 @@ public class DemographicsSettingsChangePasswordFragment extends Fragment {
 
                                                 Gson gson = new Gson();
                                                 String jsonInString = gson.toJson(demographicsSettingsPayloadDTO);
-                                                WorkflowServiceHelper.getInstance().execute(demographicsSettingsUpdatePasswordDTO, updatePasswordCallback,null, null, header);
+                                                getWorkflowServiceHelper().execute(demographicsSettingsUpdatePasswordDTO, updatePasswordCallback,null, null, header);
                                             }
                                         }
 

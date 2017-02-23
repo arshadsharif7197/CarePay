@@ -6,9 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.google.zxing.Result;
 
-public class ScannerActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
+public class ScannerActivity extends BaseActivity implements ZXingScannerView.ResultHandler {
 
     private ZXingScannerView zxingcannerView;
 
