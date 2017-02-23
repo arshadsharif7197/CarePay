@@ -339,6 +339,9 @@ public class DemographicLabelsDTO {
     @Expose
     private String demographicsInsuranceTypeLabel;
 
+    @SerializedName("demographics_state")
+    @Expose
+    private String demographicsState;
 
     /**
      * @return The demographicsUpdateButton
@@ -1192,5 +1195,13 @@ public class DemographicLabelsDTO {
 
     public void setDemographicsInsuranceTypeLabel(String demographicsInsuranceTypeLabel) {
         this.demographicsInsuranceTypeLabel = demographicsInsuranceTypeLabel;
+    }
+
+    public String getDemographicsState() {
+        return StringUtil.getLabelForView(demographicsState);
+    }
+
+    public void setDemographicsState(String demographicsState) {
+        this.demographicsState = demographicsState;
     }
 }

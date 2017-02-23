@@ -85,14 +85,6 @@ public class NewReviewDemographicsActivity extends BasePatientActivity
     public void onDemographicDtoChanged(DemographicDTO demographicDTO) {
         this.demographicDTO = demographicDTO;
 
-        /*CheckinInsurancesSummaryFragment checkinInsurancesSummaryFragment = (CheckinInsurancesSummaryFragment)
-                getSupportFragmentManager().findFragmentById(R.id.insuranceCapturer);
-
-        if (checkinInsurancesSummaryFragment != null) {
-            demographicDTO.getPayload().getDemographics().getPayload()
-                    .setInsurances(checkinInsurancesSummaryFragment.getInsurancePayloadDTOs());
-        }*/
-
         IdDocScannerFragment idDocScannerFragment = (IdDocScannerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.demographicsDocsLicense);
 

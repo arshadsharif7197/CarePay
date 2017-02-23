@@ -92,6 +92,7 @@
                 android:id="@+id/cityTextInputLayout"
                 style="@style/SigninSignupTextInputStyle"
                 android:layout_weight="1"
+                android:layout_marginTop="@dimen/dimen_4dp"
                 app:hintTextAppearance="@style/FloatingLabelStyle">
 
                 <EditText
@@ -101,21 +102,31 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/stateTextInputLayout"
-                style="@style/SigninSignupTextInputStyle"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_weight="1"
-                app:hintTextAppearance="@style/FloatingLabelStyle">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <AutoCompleteTextView
+                <TextView
+                    android:id="@+id/stateTextInputLayout"
+                    style="@style/FloatingLabelStyle"
+                    android:paddingLeft="@dimen/dimen_15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+                <TextView
                     android:id="@+id/reviewDemographicsStateAutoCompleteTextView"
                     style="@style/SigninSignupEditStyle"
-                    android:digits="ABCDEFGHIJKLMNOPQURSTUVWXYZ"
-                    android:imeOptions="actionDone"
-                    android:inputType="textCapCharacters"
-                    android:maxLength="2" />
+                    android:layout_width="match_parent"
+                    android:clickable="true"/>
 
-            </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+
+
+
+
 
 
         </LinearLayout>
