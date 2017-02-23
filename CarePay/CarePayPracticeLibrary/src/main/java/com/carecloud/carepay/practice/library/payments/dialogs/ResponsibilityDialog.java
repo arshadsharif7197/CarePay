@@ -240,7 +240,9 @@ public class ResponsibilityDialog extends Dialog {
 
 
     public interface PayResponsibilityCallback{
+
         void payFullResponsibility(PatienceBalanceDTO balance);
+
         void payPartialResponsibility(PatienceBalanceDTO balance, double amount);
     }
 
