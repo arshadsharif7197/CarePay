@@ -133,10 +133,10 @@ public class SigninActivity extends BasePracticeActivity {
             Gson gson = new Gson();
             SigninPatientModeDTO signinPatientModeDTOLocal = gson.fromJson(workflowDTO.toString(), SigninPatientModeDTO.class);
             queryMap.put("language", getApplicationPreferences().getUserLanguage());
-            queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
-            queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+            queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+            queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
             queryMap.put("patient_id", signinPatientModeDTOLocal.getPayload().getPatientModeLoginData().getPatientModeLoginDataMetadata().getPatientId());
-            ApplicationMode.getInstance().setPatientId(signinPatientModeDTOLocal.getPayload().getPatientModeLoginData().getPatientModeLoginDataMetadata().getPatientId());
+            getApplicationMode().setPatientId(signinPatientModeDTOLocal.getPayload().getPatientModeLoginData().getPatientModeLoginDataMetadata().getPatientId());
             Map<String, String> headers = new HashMap<>();
             headers.put("transition", "false");
             TransitionDTO transitionDTO;
@@ -160,13 +160,13 @@ public class SigninActivity extends BasePracticeActivity {
             Map<String, String> queryMap = new HashMap<>();
             TransitionDTO transitionDTO;
             queryMap.put("language", getApplicationPreferences().getUserLanguage());
-            if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
+            if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
                 transitionDTO = signinDTO.getMetadata().getTransitions().getAuthenticate();
                 getWorkflowServiceHelper().execute(transitionDTO, signinCallback, queryMap);
-            } else if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            } else if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
                 transitionDTO = signinPatientModeDTO.getMetadata().getLinks().getLogin();
-                queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
-                queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+                queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+                queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
                 getWorkflowServiceHelper().execute(transitionDTO, signinPatientModeCallback, queryMap);
             }
         }
@@ -188,7 +188,6 @@ public class SigninActivity extends BasePracticeActivity {
         }
     };
     private Spinner langSpinner;
-    private List<String> modeSwitchOptions = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,20 +196,20 @@ public class SigninActivity extends BasePracticeActivity {
 
         // init cognito
         SignInScreenMode signinScreenMode = SignInScreenMode.PRACTICE_MODE_SIGNIN;
-        if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
+        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
             signinDTO = getConvertedDTO(SigninDTO.class);
             if (signinDTO != null && signinDTO.getPayload() != null && signinDTO.getPayload().getPracticeModeSignin() != null && signinDTO.getPayload().getPracticeModeSignin().getCognito() != null) {
-                ApplicationMode.getInstance().setCognitoDTO(signinDTO.getPayload().getPracticeModeSignin().getCognito());
-                CognitoAppHelper.init(this);
+                getApplicationMode().setCognitoDTO(signinDTO.getPayload().getPracticeModeSignin().getCognito());
+                getCognitoAppHelper();
                 signinScreenMode = SignInScreenMode.valueOf(signinDTO.getState().toUpperCase());
             }
-        } else if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+        } else if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             signinPatientModeDTO = getConvertedDTO(SigninPatientModeDTO.class);
             if (signinPatientModeDTO != null && signinPatientModeDTO.getPayload() != null
                     && signinPatientModeDTO.getPayload().getPatientModeSigninData() != null
                     && signinPatientModeDTO.getPayload().getPatientModeSigninData().getCognito() != null) {
-                ApplicationMode.getInstance().setCognitoDTO(signinPatientModeDTO.getPayload().getPatientModeSigninData().getCognito());
-                CognitoAppHelper.init(getApplicationContext());
+                getApplicationMode().setCognitoDTO(signinPatientModeDTO.getPayload().getPatientModeSigninData().getCognito());
+                getCognitoAppHelper();
                 signinScreenMode = SignInScreenMode.valueOf(signinPatientModeDTO.getState().toUpperCase());
             }
         }
@@ -525,7 +524,8 @@ public class SigninActivity extends BasePracticeActivity {
         String userName = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
-        CognitoAppHelper.signIn(userName, password, cognitoActionCallback);
+        getCognitoAppHelper().signIn(userName, password, cognitoActionCallback);
+
     }
 
     public void setTypeFace() {
@@ -552,10 +552,10 @@ public class SigninActivity extends BasePracticeActivity {
         super.onBackPressed();
         // log out previous user from Cognito
         Log.v(this.getClass().getSimpleName(), "sign out Cognito");
-        CognitoAppHelper.getPool().getUser().signOut();
-        CognitoAppHelper.setUser(null);
-        if (!(ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)){
-            ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
+        getCognitoAppHelper().getPool().getUser().signOut();
+        getCognitoAppHelper().setUser(null);
+        if (!(getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)){
+            getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
         }
 
     }

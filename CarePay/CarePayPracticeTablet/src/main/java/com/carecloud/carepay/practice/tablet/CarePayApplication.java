@@ -10,6 +10,7 @@ import android.util.Log;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
@@ -24,6 +25,8 @@ public class CarePayApplication extends Application
 
     private ApplicationPreferences applicationPreferences;
     private WorkflowServiceHelper workflowServiceHelper;
+    private CognitoAppHelper cognitoAppHelper;
+    private ApplicationMode applicationMode;
 
     @Override
     public void onCreate() {
@@ -36,10 +39,8 @@ public class CarePayApplication extends Application
      */
     public void start(){
         setHttpConstants();
-        ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
         registerActivityLifecycleCallbacks(this);
     }
-
 
     private void setHttpConstants() {
         DeviceIdentifierDTO deviceIdentifierDTO=new DeviceIdentifierDTO();
@@ -87,8 +88,8 @@ public class CarePayApplication extends Application
         if(activity instanceof SigninActivity) {
             // log out previous user from Cognito
             Log.v(this.getClass().getSimpleName(), "sign out Cognito");
-            //CognitoAppHelper.getPool().getUser().signOut();
-            //CognitoAppHelper.setUser(null);
+            //getCognitoAppHelper().getPool().getUser().signOut();
+            //getCognitoAppHelper().setUser(null);
         }
     }
 
@@ -104,9 +105,29 @@ public class CarePayApplication extends Application
     @Override
     public WorkflowServiceHelper getWorkflowServiceHelper() {
         if (workflowServiceHelper == null) {
-            workflowServiceHelper = new WorkflowServiceHelper(getApplicationPreferences());
+            workflowServiceHelper = new WorkflowServiceHelper(getApplicationPreferences(), getApplicationMode());
         }
 
         return workflowServiceHelper;
+    }
+
+    @Override
+    public CognitoAppHelper getCognitoAppHelper() {
+        if (cognitoAppHelper == null) {
+            cognitoAppHelper = new CognitoAppHelper(this, getApplicationMode());
+            getWorkflowServiceHelper().setCognitoAppHelper(cognitoAppHelper);
+        }
+
+        return cognitoAppHelper;
+    }
+
+    @Override
+    public ApplicationMode getApplicationMode() {
+        if (applicationMode == null) {
+            applicationMode = new ApplicationMode();
+            applicationMode.setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
+        }
+
+        return applicationMode;
     }
 }

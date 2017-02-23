@@ -94,7 +94,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
 
         for (PatientBalanceDTO patientBalanceDTO: patientBalances) {
             PendingBalanceDTO pendingBalanceDTO = patientBalanceDTO.getPendingBalances().get(0);
-            if (pendingBalanceDTO.getMetadata().getPatientId().equals(id)) {
+            if (pendingBalanceDTO.getMetadata().getPatientId().equals(id) && !pendingBalanceDTO.getPayload().isEmpty()) {
                 return pendingBalanceDTO.getPayload().get(0).getAmount();
             }
         }

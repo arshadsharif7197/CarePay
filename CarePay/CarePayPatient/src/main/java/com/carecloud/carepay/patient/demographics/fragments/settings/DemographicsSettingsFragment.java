@@ -111,7 +111,6 @@ public class DemographicsSettingsFragment extends BaseFragment {
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         getSettingsLabels();
-        String userId = CognitoAppHelper.getCurrUser();
         demographicsTextview = (CarePayTextView) view.findViewById(R.id.demographicsTextView);
         documentsTextview = (CarePayTextView) view.findViewById(R.id.documentsTextView);
         creditCardsTextview = (CarePayTextView) view.findViewById(R.id.creditCardsTextView);
@@ -131,7 +130,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
         signOutButton.setText(signOutString);
         title.setText(settingsString);
         patientNameTextview.setText(getUserName());
-        patientIdTextview.setText(userId);
+        patientIdTextview.setText(getCognitoAppHelper().getCurrUser());
         try {
          DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
          DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
@@ -327,8 +326,8 @@ public class DemographicsSettingsFragment extends BaseFragment {
             hideProgressDialog();
             signOutButton.setEnabled(true);
             // log out previous user from Cognito
-            CognitoAppHelper.getPool().getUser().signOut();
-            CognitoAppHelper.setUser(null);
+            getCognitoAppHelper().getPool().getUser().signOut();
+            getCognitoAppHelper().setUser(null);
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
         }
 
