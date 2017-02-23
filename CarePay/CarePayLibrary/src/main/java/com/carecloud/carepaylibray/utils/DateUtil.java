@@ -474,17 +474,6 @@ public class DateUtil {
 
     }
 
-
-    /**
-     * Check if given date corresponds to last day in month
-     *
-     * @return true if date is last day in month
-     */
-    public boolean endsThisMonth(){
-
-        return endsThisMonth(date);
-    }
-
     /**
      * Check whether the provided day corresponds to the last day of the current month
      * @param calendar Calendar to check
@@ -495,6 +484,16 @@ public class DateUtil {
         checkCal.set(Calendar.DAY_OF_MONTH, 1);
 
         return isSameDay(calendar, checkCal);
+    }
+
+    /**
+     * Check if given date corresponds to last day in month
+     *
+     * @return true if date is last day in month
+     */
+    public boolean endsThisMonth(){
+
+        return endsThisMonth(date);
     }
 
     /**
