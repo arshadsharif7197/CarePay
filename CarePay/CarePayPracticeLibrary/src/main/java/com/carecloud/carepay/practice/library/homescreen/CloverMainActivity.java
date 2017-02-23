@@ -41,7 +41,6 @@ import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.services.DemographicService;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -395,22 +394,20 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private void navigateToCheckIn() {
         JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
         Gson gson = new Gson();
+        TransitionDTO transitionDTO = null;
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
             PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
-            TransitionDTO transitionDTO = transitionsDTO.getPracticeCheckin();
-            Map<String, String> queryMap = new HashMap<>();
-            queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
-            queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
-            getWorkflowServiceHelper().execute(transitionDTO, checkInCallback, queryMap);
+            transitionDTO = transitionsDTO.getPracticeCheckin();
         } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
             getApplicationPreferences().setNavigateToAppointments(false);
             PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
-            TransitionDTO transitionDTO = transitionsDTO.getPatientCheckin();
-            Map<String, String> queryMap = new HashMap<>();
-            queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
-            queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
-            getWorkflowServiceHelper().execute(transitionDTO, checkInCallback, queryMap);
+            transitionDTO = transitionsDTO.getPatientCheckin();
         }
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
+        queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
+        getWorkflowServiceHelper().execute(transitionDTO, checkInCallback, queryMap);
+
     }
 
     private void navigateToPatientHome() {
