@@ -106,7 +106,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     private EditText address1EditText;
     private EditText address2EditText;
     private EditText dobEditText;
-    private EditText stateEditText;
+    private TextView stateEditText;
     private EditText cityEditText;
     private EditText firstNameText;
     private EditText middleNameText;
@@ -119,7 +119,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     private TextInputLayout address1Label;
     private TextInputLayout address2Label;
     private TextInputLayout cityLabel;
-    private TextInputLayout stateLabel;
+    private TextView stateLabel;
     private TextInputLayout zipcodeLabel;
     private TextInputLayout doblabel;
     private LinearLayout rootview;
@@ -259,7 +259,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         address2EditText = (EditText) view.findViewById(R.id.addressEditText2Id);
         zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeId);
         cityEditText = (EditText) view.findViewById(R.id.cityId);
-        stateEditText = (EditText) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView);
+        stateEditText = (TextView) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView);
         stateEditText.setOnClickListener(this);
 
         buttonConfirmData = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
@@ -282,7 +282,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         address2Label = (TextInputLayout) view.findViewById(R.id.address2TextInputLayout);
         zipcodeLabel = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
         cityLabel = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
-        stateLabel = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);
+        stateLabel = (TextView) view.findViewById(R.id.stateTextInputLayout);
         initializeLabels();
         initializeOptionsArray();
 
@@ -912,8 +912,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         cityLabel.setTag(addressMetaDTO.properties.city.getLabel());
         cityEditText.setTag(cityLabel);
 
-        stateLabel.setTag(addressMetaDTO.properties.state.getLabel());
-        stateEditText.setTag(stateLabel);
+        stateLabel.setText(addressMetaDTO.properties.state.getLabel().toUpperCase());
 
 
         setChangeFocusListeners();
@@ -1009,13 +1008,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                 if (bool) {
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
-
-        stateEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
                 SystemUtil.handleHintChange(view, bool);
             }
         });
@@ -1116,12 +1108,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             } else {
                 stateEditText.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
             }
-            stateEditText.requestFocus();
-            stateEditText.setOnKeyListener(new View.OnKeyListener() {
-                public boolean onKey(View view, int keyCode, KeyEvent event) {
-                    return true;
-                }
-            });
+
 
             String zipcode = demographicAddressPayloadDTO.getZipcode();
             if (SystemUtil.isNotEmptyString(zipcode)) {
@@ -1205,12 +1192,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             setProximaNovaRegularTypefaceLayout(getActivity(), cityLabel);
         }
 
-        if (!StringUtil.isNullOrEmpty(stateEditText.getText().toString())) {
-            setProximaNovaExtraboldTypefaceInput(getActivity(), stateLabel);
-        } else {
-            setProximaNovaRegularTypefaceLayout(getActivity(), stateLabel);
-        }
-
+        setProximaNovaSemiboldTypeface(getActivity(), stateLabel);
 
         setProximaNovaSemiboldTypeface(getActivity(), peronalInfoSectionTextview);
         setProximaNovaSemiboldTypeface(getActivity(), demographicSectionTextView);
