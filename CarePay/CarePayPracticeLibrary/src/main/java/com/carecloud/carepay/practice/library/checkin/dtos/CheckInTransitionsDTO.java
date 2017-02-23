@@ -11,13 +11,13 @@ import com.google.gson.annotations.SerializedName;
 public class CheckInTransitionsDTO {
     @SerializedName("practice_appointments")
     @Expose
-    private TransitionDTO practiceAppointments;
+    private TransitionDTO practiceAppointments = new TransitionDTO();
     @SerializedName("cancel_appointment")
     @Expose
-    private TransitionDTO cancelAppointment;
+    private TransitionDTO cancelAppointment = new TransitionDTO();
     @SerializedName("checkin_appointment")
     @Expose
-    private TransitionDTO checkinAppointment;
+    private TransitionDTO checkinAppointment = new TransitionDTO();
 
     /**
      *

@@ -3,17 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <!--<ImageView
-        android:id="@+id/patientPicImageView"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:background="@drawable/checkin_patient_pic_rounded_border"
-        android:layout_marginTop="18dp"
-        android:padding="12dp"
-        android:src="@drawable/icn_placeholder_user_profile" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

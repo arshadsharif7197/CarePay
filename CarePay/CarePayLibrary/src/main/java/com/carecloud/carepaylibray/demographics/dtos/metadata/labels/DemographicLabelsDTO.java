@@ -312,6 +312,33 @@ public class DemographicLabelsDTO {
     @Expose
     private String practiceCheckinDemogrInsAddAnother;
 
+    @SerializedName("demographics_i_dont_have_health_insurance_label")
+    @Expose
+    private String demographicsDontHaveHealthInsuranceLabel;
+
+    @SerializedName("demographics_i_have_health_insurance_label")
+    @Expose
+    private String demographicsHaveHealthInsuranceLabel;
+
+    @SerializedName("demographics_add_health_insurance_button_title")
+    @Expose
+    private String demographicsAddHealthInsuranceButtonTitle;
+    @SerializedName("demographics_setup_insurance_title")
+    @Expose
+    private String demographicsSetupInsuranceTitle;
+
+    @SerializedName("demographics_setup_insurance_label")
+    @Expose
+    private String demographicsSetupInsuranceLabel;
+
+    @SerializedName("demographics_insurance_label")
+    @Expose
+    private String demographicsInsuranceTitle;
+
+    @SerializedName("demographics_insurance_type_label")
+    @Expose
+    private String demographicsInsuranceTypeLabel;
+
 
     /**
      * @return The demographicsUpdateButton
@@ -1110,5 +1137,60 @@ public class DemographicLabelsDTO {
         this.practiceCheckinDemogrInsAddAnother = practiceCheckinDemogrInsAddAnother;
     }
 
+    public String getDemographicsDontHaveHealthInsuranceLabel() {
+        return StringUtil.getLabelForView(demographicsDontHaveHealthInsuranceLabel);
+    }
 
+    public String getDemographicsSetupInsuranceTitle() {
+        return StringUtil.getLabelForView(demographicsSetupInsuranceTitle);
+    }
+
+    public void setDemographicsSetupInsuranceTitle(String demographicsSetupInsuranceTitle) {
+        this.demographicsSetupInsuranceTitle = demographicsSetupInsuranceTitle;
+    }
+
+    public String getDemographicsSetupInsuranceLabel() {
+        return StringUtil.getLabelForView(demographicsSetupInsuranceLabel);
+    }
+
+    public void setDemographicsSetupInsuranceLabel(String demographicsSetupInsuranceLabel) {
+        this.demographicsSetupInsuranceLabel = demographicsSetupInsuranceLabel;
+    }
+
+    public String getDemographicsInsuranceTitle() {
+        return StringUtil.getLabelForView(demographicsInsuranceTitle);
+    }
+
+    public void setDemographicsInsuranceTitle(String demographicsInsuranceTitle) {
+        this.demographicsInsuranceTitle = demographicsInsuranceTitle;
+    }
+
+
+    public void setDemographicsDontHaveHealthInsuranceLabel(String demographicsDontHaveHealthInsuranceLabel) {
+        this.demographicsDontHaveHealthInsuranceLabel = demographicsDontHaveHealthInsuranceLabel;
+    }
+
+    public String getDemographicsHaveHealthInsuranceLabel() {
+        return StringUtil.getLabelForView(demographicsHaveHealthInsuranceLabel);
+    }
+
+    public void setDemographicsHaveHealthInsuranceLabel(String demographicsHaveHealthInsuranceLabel) {
+        this.demographicsHaveHealthInsuranceLabel = demographicsHaveHealthInsuranceLabel;
+    }
+
+    public String getDemographicsAddHealthInsuranceButtonTitle() {
+        return StringUtil.getLabelForView(demographicsAddHealthInsuranceButtonTitle);
+    }
+
+    public void setDemographicsAddHealthInsuranceButtonTitle(String demographicsAddHealthInsuranceButtonTitle) {
+        this.demographicsAddHealthInsuranceButtonTitle = demographicsAddHealthInsuranceButtonTitle;
+    }
+
+    public String getDemographicsInsuranceTypeLabel() {
+        return StringUtil.getLabelForView(demographicsInsuranceTypeLabel);
+    }
+
+    public void setDemographicsInsuranceTypeLabel(String demographicsInsuranceTypeLabel) {
+        this.demographicsInsuranceTypeLabel = demographicsInsuranceTypeLabel;
+    }
 }

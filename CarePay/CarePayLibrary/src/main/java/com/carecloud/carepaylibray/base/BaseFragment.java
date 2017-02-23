@@ -3,11 +3,14 @@ package com.carecloud.carepaylibray.base;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
+import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+
 /**
  * Created by cocampo on 2/6/17.
  */
 
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment implements ISession {
     public boolean enableViewById(int id) {
         return setEnabledViewById(id, true);
     }
@@ -57,5 +60,25 @@ public abstract class BaseFragment extends Fragment {
         }
 
         return rootView.findViewById(id);
+    }
+
+    @Override
+    public ApplicationPreferences getApplicationPreferences() {
+        return ((ISession) getActivity()).getApplicationPreferences();
+    }
+
+    @Override
+    public WorkflowServiceHelper getWorkflowServiceHelper() {
+        return ((ISession) getActivity()).getWorkflowServiceHelper();
+    }
+
+    @Override
+    public void showProgressDialog() {
+        ((ISession) getActivity()).showProgressDialog();
+    }
+
+    @Override
+    public void hideProgressDialog() {
+        ((ISession) getActivity()).hideProgressDialog();
     }
 }

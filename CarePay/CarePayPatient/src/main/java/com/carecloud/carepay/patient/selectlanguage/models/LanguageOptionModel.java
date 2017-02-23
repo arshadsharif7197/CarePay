@@ -26,7 +26,7 @@ public class LanguageOptionModel {
     private String value;
     @SerializedName("child")
     @Expose
-    private List<Object> child = new ArrayList<Object>();
+    private List<Object> child = new ArrayList<>();
     @SerializedName("isDefault")
     @Expose
     private Boolean isDefault;

@@ -22,11 +22,10 @@ public class ConsentFormMinorGenderDTO {
     private String label;
     @SerializedName("validations")
     @Expose
-    private List<ConsentFormMinorGenderValidationDTO> validations =
-            new ArrayList<ConsentFormMinorGenderValidationDTO>();
+    private List<ConsentFormMinorGenderValidationDTO> validations = new ArrayList<>();
     @SerializedName("options")
     @Expose
-    private List<ConsentFormOptionDTO> options = new ArrayList<ConsentFormOptionDTO>();
+    private List<ConsentFormOptionDTO> options = new ArrayList<>();
 
     /**
      * @return The type

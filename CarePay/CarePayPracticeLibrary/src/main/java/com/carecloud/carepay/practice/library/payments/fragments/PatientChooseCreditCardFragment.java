@@ -220,7 +220,7 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
                         header.put("transition", "true");
 
                         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment();
-                        WorkflowServiceHelper.getInstance().execute(transitionDTO, makePaymentCallback, payload.toString(), queries, header);
+                        getWorkflowServiceHelper().execute(transitionDTO, makePaymentCallback, payload.toString(), queries, header);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -232,12 +232,12 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
     WorkflowServiceCallback makePaymentCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             Gson gson = new Gson();
             PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(getActivity(),
                     gson.fromJson(workflowDTO.toString(), PaymentsModel.class),paymentsModel);
@@ -246,7 +246,7 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             System.out.print(exceptionMessage);
         }
     };
@@ -259,6 +259,8 @@ public class PatientChooseCreditCardFragment extends BaseCheckinFragment
             Gson gson = new Gson();
             String paymentsDTOString = gson.toJson(paymentsModel);
             args.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+            args.putString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE, gson.toJson(paymentsModel
+                    .getPaymentPayload().getPapiAccounts()));
             args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(intakePaymentModel));
             args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amountToMakePayment);
 

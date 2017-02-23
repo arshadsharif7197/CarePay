@@ -11,7 +11,7 @@ public class SignInLinksDTO {
 
     @SerializedName("self")
     @Expose
-    private SignInSelfDTO self;
+    private SignInSelfDTO self = new SignInSelfDTO();
 
     /**
      * @return The self

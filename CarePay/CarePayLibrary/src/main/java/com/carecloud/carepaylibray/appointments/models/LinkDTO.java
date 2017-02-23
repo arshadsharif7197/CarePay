@@ -17,7 +17,7 @@ public class LinkDTO {
     private String url;
     @SerializedName("query_string")
     @Expose
-    private QueryStrings queryStrings;
+    private QueryStrings queryStrings = new QueryStrings();
 
     /**
      * 

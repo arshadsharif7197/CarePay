@@ -17,7 +17,7 @@ public class SignInDTO {
     private String label;
     @SerializedName("properties")
     @Expose
-    private SignInPropertiesDTO properties;
+    private SignInPropertiesDTO properties = new SignInPropertiesDTO();
 
     /**
      * @return The label

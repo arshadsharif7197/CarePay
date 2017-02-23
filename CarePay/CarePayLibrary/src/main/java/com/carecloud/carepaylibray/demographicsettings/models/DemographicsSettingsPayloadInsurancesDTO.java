@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.demographicsettings.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ public class DemographicsSettingsPayloadInsurancesDTO {
     private String insurancePlan;
     @SerializedName("insurance_photos")
     @Expose
-    private List<DemographicsSettingsInsurancePhotoDTO> insurancePhotos = null;
+    private List<DemographicsSettingsInsurancePhotoDTO> insurancePhotos = new ArrayList<>();
 
     public String getInsuranceMemberId() {
         return insuranceMemberId;

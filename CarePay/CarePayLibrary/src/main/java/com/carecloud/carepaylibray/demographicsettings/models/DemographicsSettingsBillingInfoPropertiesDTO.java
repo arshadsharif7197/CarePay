@@ -8,25 +8,25 @@ public class DemographicsSettingsBillingInfoPropertiesDTO {
 
     @SerializedName("same_as_patient")
     @Expose
-    private DemographicsSettingsSameAsPatientDTO demographicsSettingsSameAsPatientDTO;
+    private DemographicsSettingsSameAsPatientDTO demographicsSettingsSameAsPatientDTO = new DemographicsSettingsSameAsPatientDTO();
     @SerializedName("line1")
     @Expose
-    private DemographicsSettingsCardTypeLineDTO demographicsSettingsCardTypeLineDTO;
+    private DemographicsSettingsCardTypeLineDTO demographicsSettingsCardTypeLineDTO = new DemographicsSettingsCardTypeLineDTO();
     @SerializedName("line2")
     @Expose
-    private DemographicsSettingsCardTypeLineDTO line2;
+    private DemographicsSettingsCardTypeLineDTO line2 = new DemographicsSettingsCardTypeLineDTO();
     @SerializedName("city")
     @Expose
-    private DemographicsSettingsCityDTO demographicsSettingsCityDTO;
+    private DemographicsSettingsCityDTO demographicsSettingsCityDTO = new DemographicsSettingsCityDTO();
     @SerializedName("state")
     @Expose
-    private DemographicsSettingsStateDTO demographicsSettingsStateDTO;
+    private DemographicsSettingsStateDTO demographicsSettingsStateDTO = new DemographicsSettingsStateDTO();
     @SerializedName("zip")
     @Expose
-    private DemographicsSettingsZipDTO demographicsSettingsZipDTO;
+    private DemographicsSettingsZipDTO demographicsSettingsZipDTO = new DemographicsSettingsZipDTO();
     @SerializedName("country")
     @Expose
-    private DemographicsSettingsCountryDTO demographicsSettingsCountryDTO;
+    private DemographicsSettingsCountryDTO demographicsSettingsCountryDTO = new DemographicsSettingsCountryDTO();
 
     public DemographicsSettingsSameAsPatientDTO getSameAsPatient() {
         return demographicsSettingsSameAsPatientDTO;

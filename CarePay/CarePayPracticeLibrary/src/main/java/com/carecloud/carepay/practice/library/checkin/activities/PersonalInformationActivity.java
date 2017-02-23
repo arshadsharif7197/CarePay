@@ -405,7 +405,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
 
     private void callGetFindMyAppointments(){
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
+        queryMap.put("language", getApplicationPreferences().getUserLanguage());
         queryMap.put("first_name", firstNameEditText.getText().toString());
         queryMap.put("last_name", lastNameEditText.getText().toString());
         queryMap.put("date_of_birth", selectDateButton.getText().toString());
@@ -415,32 +415,32 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         queryMap.put("gender",  ((CarePayButton) findViewById(R.id.selectGenderButton)).getText().toString());
         TransitionDTO transitionDTO;
         transitionDTO = signinPatientModeDTO.getMetadata().getLinks().getPersonalInfo();
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, findMyAppointmentsCallback, queryMap);
+        getWorkflowServiceHelper().execute(transitionDTO, findMyAppointmentsCallback, queryMap);
     }
 
     WorkflowServiceCallback findMyAppointmentsCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             findMyAppointmentButton.setEnabled(true);
             Map<String, String> queryMap = new HashMap<>();
             TransitionDTO transitionDTO;
             Gson gson = new Gson();
             SigninPatientModeDTO signinPatientModeDTOLocal = gson.fromJson(workflowDTO.toString(), SigninPatientModeDTO.class);
             if(signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getPersonalInfoCheckSuccessful()){
-                queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
+                queryMap.put("language", getApplicationPreferences().getUserLanguage());
                 queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
                 queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
                 queryMap.put("patient_id", signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getPatientId());
                 Map<String, String> headers = new HashMap<>();
                 CognitoAppHelper.setUser(signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getUsername());
                 transitionDTO = signinPatientModeDTO.getMetadata().getTransitions().getAction();
-                WorkflowServiceHelper.getInstance().execute(transitionDTO, patientModeAppointmentsCallback, queryMap, headers);
+                getWorkflowServiceHelper().execute(transitionDTO, patientModeAppointmentsCallback, queryMap, headers);
             } else {
                 SystemUtil.showFailureDialogMessage(PersonalInformationActivity.this, StringUtil.getLabelForView(labelsDTO.getSignInFailed()),
                         StringUtil.getLabelForView(labelsDTO.getPersonalInfoIncorrectDetails()));
@@ -449,7 +449,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             findMyAppointmentButton.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(PersonalInformationActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
@@ -459,19 +459,19 @@ public class PersonalInformationActivity extends BasePracticeActivity {
     WorkflowServiceCallback patientModeAppointmentsCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             findMyAppointmentButton.setEnabled(true);
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             findMyAppointmentButton.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(PersonalInformationActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);

@@ -12,7 +12,7 @@ public class VerifyDemographicTransitionsDTO {
 
     @SerializedName("update_demographics")
     @Expose
-    private UpdateDemographicDTO updateDemographics;
+    private UpdateDemographicDTO updateDemographics = new UpdateDemographicDTO();
 
     /**
      * @return The updateDemographics

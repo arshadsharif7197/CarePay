@@ -13,11 +13,11 @@ public class PatientModeSigninPayloadDTO {
 
     @SerializedName("patient_mode_signin")
     @Expose
-    private PatientModeSigninDataDTO patientModeSigninData;
+    private PatientModeSigninDataDTO patientModeSigninData = new PatientModeSigninDataDTO();
 
     @SerializedName("login")
     @Expose
-    private PatientModeLoginDataDTO payload;
+    private PatientModeLoginDataDTO payload = new PatientModeLoginDataDTO();
 
     @SerializedName("state")
     @Expose
@@ -25,7 +25,7 @@ public class PatientModeSigninPayloadDTO {
 
     @SerializedName("personal_info_check")
     @Expose
-    private PatientModePersonalInfoCheckDTO patientModePersonalInfoCheck;
+    private PatientModePersonalInfoCheckDTO patientModePersonalInfoCheck = new PatientModePersonalInfoCheckDTO();
 
     /**
      * 

@@ -17,11 +17,12 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 
-public class PaymentTermsFragment extends Fragment {
+public class PaymentTermsFragment extends BaseFragment {
 
     private TextView termsContentTextView;
     private Button agreeToPayButton;

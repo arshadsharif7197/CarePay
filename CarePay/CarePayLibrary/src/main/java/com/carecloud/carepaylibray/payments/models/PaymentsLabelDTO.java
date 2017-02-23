@@ -300,6 +300,19 @@ public class PaymentsLabelDTO {
     @SerializedName("no_payment_history_description")
     @Expose
     private String noPaymentHistoryDescription;
+    @SerializedName("payment_Pay_label")
+    @Expose
+    private String paymentPayLabel;
+    @SerializedName("payment_pay_using_paypal_label")
+    @Expose
+    private String paymentPayPalLabel;
+    @SerializedName("payment_pay_button")
+    @Expose
+    private String paymentPayButton;
+    @SerializedName("payment_swipe_now_alternate_payment_label")
+    @Expose
+    private String paymentCloverAlternatePayButton;
+
 
     public String getNoPendingPaymentDescription() {
         return noPendingPaymentDescription;
@@ -1804,5 +1817,70 @@ public class PaymentsLabelDTO {
      */
     public void setPaymentButtonLabel(String paymentButtonLabel) {
         this.paymentButtonLabel = paymentButtonLabel;
+    }
+
+    /**
+     *
+     * @return paymentPayLabel
+     */
+    public String getPaymentPayLabel() {
+        return StringUtil.getLabelForView(paymentPayLabel);
+
+    }
+
+    /**
+     *
+     * @param paymentPayLabel paymentPayLabel
+     */
+    public void setPaymentPayLabel(String paymentPayLabel) {
+        this.paymentPayLabel = paymentPayLabel;
+    }
+
+    /**
+     *
+     * @return paymentPayButton
+     */
+    public String getPaymentPayButton() {
+        return StringUtil.getLabelForView(paymentPayButton);
+    }
+
+    /**
+     *
+     * @param paymentPayButton paymentPayButton
+     */
+    public void setPaymentPayButton(String paymentPayButton) {
+        this.paymentPayButton = paymentPayButton;
+    }
+
+    /**
+     *
+     * @return paymentPayPalLabel
+     */
+    public String getPaymentPayPalLabel() {
+        return StringUtil.getLabelForView(paymentPayPalLabel);
+    }
+
+    /**
+     *
+     * @param paymentPayPalLabel paymentPayPalLabel
+     */
+    public void setPaymentPayPalLabel(String paymentPayPalLabel) {
+        this.paymentPayPalLabel = paymentPayPalLabel;
+    }
+
+    /**
+     *
+     * @return paymentCloverAlternatePayButton
+     */
+    public String getPaymentCloverAlternatePayButton() {
+        return StringUtil.getLabelForView(paymentCloverAlternatePayButton);
+    }
+
+    /**
+     *
+     * @param paymentCloverAlternatePayButton paymentCloverAlternatePayButton
+     */
+    public void setPaymentCloverAlternatePayButton(String paymentCloverAlternatePayButton) {
+        this.paymentCloverAlternatePayButton = paymentCloverAlternatePayButton;
     }
 }

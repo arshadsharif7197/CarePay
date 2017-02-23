@@ -2,7 +2,6 @@ package com.carecloud.carepaylibray.cognito;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -20,12 +19,13 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.GenericHa
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.VerificationHandler;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
 
 /**
  * Activity used to confirm a signed-up user
  */
-public class SignUpConfirmActivity extends AppCompatActivity {
+public class SignUpConfirmActivity extends BaseActivity {
     private EditText username;
     private EditText confCode;
 
@@ -40,7 +40,6 @@ public class SignUpConfirmActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up_confirm);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         signInLablesDTO = (SignInLablesDTO) getIntent().getExtras().get("signInLablesDTO");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");

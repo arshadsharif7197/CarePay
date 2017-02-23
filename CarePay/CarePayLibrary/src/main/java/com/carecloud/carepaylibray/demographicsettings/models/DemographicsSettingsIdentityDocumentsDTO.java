@@ -13,7 +13,7 @@ public class DemographicsSettingsIdentityDocumentsDTO {
     private String type;
     @SerializedName("method")
     @Expose
-    private DemographicsSettingsMethodDTO method;
+    private DemographicsSettingsMethodDTO method = new DemographicsSettingsMethodDTO();
     @SerializedName("properties")
     @Expose
     private DemographicsSettingsPropertiesDTO properties;

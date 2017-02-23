@@ -19,21 +19,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
-import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
-import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
+import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItemMetadata;
+import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -65,6 +68,8 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
     private TextView swipeCardSeparatorLabel ;
     private String swipeCardNowString;
     private String swipeCardSeparatorString;
+    private String swipeCardAlternateSeparatorString;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,7 +82,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
             Gson gson = new Gson();
             String paymentInfo = bundle.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
             paymentsModel = gson.fromJson(paymentInfo, PaymentsModel.class);
-            paymentList = paymentsModel.getPaymentPayload().getPaymentSettings().getPayload().getPaymentMethods();
+            paymentList = paymentsModel.getPaymentPayload().getPaymentSettings().getPayload().getRegularPayments().getPaymentMethods();
 
             paymentInfo = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
             paymentsDTO = gson.fromJson(paymentInfo, PaymentsModel.class);
@@ -86,7 +91,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
         isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals("Clover") ;
         TextView title = (TextView) view.findViewById(R.id.paymentMethodTitleLabel);
 
-       // Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        // Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         //TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         //toolbar.setTitle("");
@@ -172,20 +177,21 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
     private void setSwipeCardNowVisibility(View view)
     {
         swipeCreditCardNowLayout = (LinearLayout) view.findViewById(R.id.swipeCreditCardNowLayout);
+        swipeCreditCarNowButton = (Button) view.findViewById(R.id.swipeCreditCarNowButton);
+        swipeCardSeparatorLabel = (TextView) view.findViewById(R.id.swipeCardSeparatorLabel);
         if(isCloverDevice)
         {
-            swipeCreditCardNowLayout.setVisibility(View.VISIBLE);
-
-            swipeCreditCarNowButton = (Button) view.findViewById(R.id.swipeCreditCarNowButton);
+            swipeCreditCarNowButton.setEnabled(true);
             swipeCreditCarNowButton.setText(swipeCardNowString);
             swipeCreditCarNowButton.setOnClickListener(swipeCreditCarNowButtonClickListener);
 
-            swipeCardSeparatorLabel = (TextView) view.findViewById(R.id.swipeCardSeparatorLabel);
-            swipeCardSeparatorLabel.setText(swipeCardSeparatorString);
+            swipeCardSeparatorLabel.setText(swipeCardAlternateSeparatorString);
         }
         else
         {
-            swipeCreditCardNowLayout.setVisibility(View.GONE);
+            swipeCreditCarNowButton.setEnabled(false);
+            swipeCardSeparatorLabel.setText(swipeCardSeparatorString);
+
         }
 
     }
@@ -214,19 +220,25 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                 paymentChoiceButton.setTag(paymentList.get(i).getType());
                 if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CASH)){
                     shape.setColor(getActivity().getResources().getColor(R.color.overlay_green));
+                    paymentChoiceButton.setText(paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPayLabel());
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CREDIT_CARD)){
                     shape.setColor(getActivity().getResources().getColor(R.color.colorPrimary));
                     paymentChoiceButton.setText(paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentChooseCreditCardButton());
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CHECK)){
                     shape.setColor(getActivity().getResources().getColor(R.color.colorPrimary));
+                    paymentChoiceButton.setText(paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPayLabel());
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_GIFT_CARD)){
                     shape.setColor(getActivity().getResources().getColor(R.color.colorPrimary));
+                    paymentChoiceButton.setText(paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPayLabel());
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_PAYPAL)){
                     shape.setColor(getActivity().getResources().getColor(R.color.overlay_green));
+                    paymentChoiceButton.setText(paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPayPalLabel());
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_HSA)){
                     shape.setColor(getActivity().getResources().getColor(R.color.colorPrimary));
+                    paymentChoiceButton.setText(paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPayLabel());
                 }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_FSA)){
                     shape.setColor(getActivity().getResources().getColor(R.color.colorPrimary));
+                    paymentChoiceButton.setText(paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPayLabel());
                 }
             }
         }
@@ -269,8 +281,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                     }
                 }
 
-                // Balance of at least $20
-                if ((previousBalance + coPay) > CarePayConstants.PAYMENT_PLAN_REQUIRED_BALANCE) {
+                if ((previousBalance + coPay) > 0) {
                     PatientPaymentPlanFragment fragment = new PatientPaymentPlanFragment();
 
                     Bundle arguments = getArguments();
@@ -281,9 +292,6 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                     fragment.setArguments(args);
 
                     ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
-                } else {
-                    Toast.makeText(getActivity(), paymentsModel.getPaymentsMetadata().getPaymentsLabel()
-                            .getPaymentPlanCreateConditionError(), Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -320,6 +328,8 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                         fragment = new PatientChooseCreditCardFragment();
                     } else {
                         args.putString(CarePayConstants.INTAKE_BUNDLE, gson.toJson(paymentsModel));
+                        args.putString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE, gson.toJson(paymentsModel
+                                .getPaymentPayload().getPapiAccounts()));
                         args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(paymentsDTO));
                         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE,  getArguments()
                                 .getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE));
@@ -354,6 +364,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                     paymentCreatePlanString = paymentsLabelsDTO.getPaymentCreatePlanButton();
                     swipeCardNowString = paymentsLabelsDTO.getPaymentCloverSwipeNowButtonLabel();
                     swipeCardSeparatorString = paymentsLabelsDTO.getPaymentCloverSwipeNowSeparatorText();
+                    swipeCardAlternateSeparatorString = paymentsLabelsDTO.getPaymentCloverAlternatePayButton();
 
                 }
             }
@@ -364,20 +375,41 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
     {
         try
         {
-        PaymentsPatientBalancessDTO patientPayments = paymentsDTO.getPaymentPayload().getPatientBalances().get(0);
-        Gson gson = new Gson();
-        String patientPaymentMetaDataString = gson.toJson(patientPayments.getBalances().get(0).getMetadata());
-        String paymentTransitionString = gson.toJson(paymentsDTO.getPaymentsMetadata().getPaymentsTransitions().getMakePayment());
-        Intent intent = new Intent();
-        intent.setAction("com.carecloud.carepay.practice.clover.payments.CloverPaymentActivity");
-        intent.putExtra("PAYMENT_METADATA", patientPaymentMetaDataString);
-        intent.putExtra("PAYMENT_AMOUNT", patientPayments.getBalances().get(0).getPayload().get(0).getAmount().doubleValue());
-        intent.putExtra("PAYMENT_TRANSITION", paymentTransitionString);
-        if(StringUtil.isNullOrEmpty(patientPayments.getBalances().get(0).getPayload().get(0).getType()))
-        {
-            intent.putExtra("ITEM_NAME", patientPayments.getBalances().get(0).getPayload().get(0).getType());
-        }
-        getContext().startActivity(intent, new Bundle());
+            PaymentsPatientBalancessDTO patientPayments = paymentsDTO.getPaymentPayload().getPatientBalances().get(0);
+
+            double paymentAmount = getArguments().getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
+            if(paymentAmount==0){
+                paymentAmount = patientPayments.getBalances().get(0).getPayload().get(0).getAmount();
+            }
+            Gson gson = new Gson();
+            String patientPaymentMetaDataString = gson.toJson(patientPayments.getBalances().get(0).getMetadata());
+            String paymentTransitionString = gson.toJson(paymentsDTO.getPaymentsMetadata().getPaymentsTransitions().getMakePayment());
+            Intent intent = new Intent();
+            intent.setAction(CarePayConstants.CLOVER_PAYMENT_INTENT);
+            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_METADATA, patientPaymentMetaDataString);
+            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, paymentAmount);
+            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_TRANSITION, paymentTransitionString);
+
+            List<PaymentLineItem> paymentLineItems = new ArrayList<>();
+            List<PatienceBalanceDTO> balances = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances();
+            for(PatienceBalanceDTO balance : balances) {
+
+                PaymentLineItem paymentLineItem = new PaymentLineItem();
+                paymentLineItem.setAmount(balance.getPayload().get(0).getAmount());
+                paymentLineItem.setDescription(balance.getPayload().get(0).getType());
+
+                PaymentLineItemMetadata metadata = new PaymentLineItemMetadata();
+                metadata.setPatientID(balance.getMetadata().getPatientId());
+                metadata.setPracticeID(balance.getMetadata().getPracticeId());
+//                metadata.setProviderID(balance.getMetadata().getProviderID()); //TODO this is missing in the DTO
+//                metadata.setLocationID(balance.getMetadata().getLocationID()); //TODO this is missing in the DTO
+
+                paymentLineItems.add(paymentLineItem);
+
+            }
+
+            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS, gson.toJson(paymentLineItems));
+            getContext().startActivity(intent, new Bundle());
         }
         catch (Exception e)
         {

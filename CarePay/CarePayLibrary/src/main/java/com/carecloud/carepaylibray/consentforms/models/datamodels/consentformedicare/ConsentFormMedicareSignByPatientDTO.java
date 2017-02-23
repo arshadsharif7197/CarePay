@@ -17,7 +17,7 @@ public class ConsentFormMedicareSignByPatientDTO {
     private String type;
     @SerializedName("validations")
     @Expose
-    private List<ConsentFormMedicareSignByPatientValidationDTO> validations = new ArrayList<ConsentFormMedicareSignByPatientValidationDTO>();
+    private List<ConsentFormMedicareSignByPatientValidationDTO> validations = new ArrayList<>();
 
     /**
      * @return The type

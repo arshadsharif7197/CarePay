@@ -9,13 +9,13 @@ public class SigninPatientModeQueryStringDTO {
 
     @SerializedName("practice_mgmt")
     @Expose
-    private SigninPatientModeNameValidationDTO practiceMgmt;
+    private SigninPatientModeNameValidationDTO practiceMgmt = new SigninPatientModeNameValidationDTO();
     @SerializedName("practice_id")
     @Expose
-    private SigninPatientModeNameValidationDTO practiceId;
+    private SigninPatientModeNameValidationDTO practiceId = new SigninPatientModeNameValidationDTO();
     @SerializedName("patient_id")
     @Expose
-    private SigninPatientModeNameValidationDTO patientId;
+    private SigninPatientModeNameValidationDTO patientId = new SigninPatientModeNameValidationDTO();
 
     /**
      * 

@@ -1,9 +1,11 @@
 package com.carecloud.carepaylibray.demographicsettings.models;
 
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by harshal_patil on 1/5/2017.
@@ -12,10 +14,10 @@ public class DemographicsSettingsPatientCreditCardsDTO {
 
     @SerializedName("metadata")
     @Expose
-    private DemographicsSettingsCreditCardMetadataDTO metadata;
+    private DemographicsSettingsCreditCardMetadataDTO metadata = new DemographicsSettingsCreditCardMetadataDTO();
     @SerializedName("payload")
     @Expose
-    private List<DemographicsSettingsCreditCardsPayloadDTO> payload = null;
+    private List<DemographicsSettingsCreditCardsPayloadDTO> payload = new ArrayList<>();
 
     public DemographicsSettingsCreditCardMetadataDTO getMetadata() {
         return metadata;

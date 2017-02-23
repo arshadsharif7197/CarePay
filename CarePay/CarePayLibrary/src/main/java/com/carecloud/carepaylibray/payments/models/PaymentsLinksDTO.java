@@ -2,7 +2,6 @@
 package com.carecloud.carepaylibray.payments.models;
 
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepaylibray.appointments.models.LinkDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -10,28 +9,31 @@ public class PaymentsLinksDTO {
 
     @SerializedName("self")
     @Expose
-    private PaymentsSelfRefreshDTO paymentsSelfRefresh;
+    private PaymentsSelfRefreshDTO paymentsSelfRefresh = new PaymentsSelfRefreshDTO();
     @SerializedName("demographics")
     @Expose
-    private TransitionDTO paymentsDemographics;
+    private TransitionDTO paymentsDemographics = new TransitionDTO();
     @SerializedName("appointments")
     @Expose
-    private TransitionDTO appointments;
+    private TransitionDTO appointments = new TransitionDTO();
     @SerializedName("patient_balances")
     @Expose
-    private TransitionDTO paymentsPatientBalances;
+    private TransitionDTO paymentsPatientBalances = new TransitionDTO();
     @SerializedName("payment_methods")
     @Expose
-    private PaymentsMethodsDTO paymentsMethods;
+    private PaymentsMethodsDTO paymentsMethods = new PaymentsMethodsDTO();
     @SerializedName("credit_cards")
     @Expose
-    private TransitionDTO paymentsCreditCards;
+    private TransitionDTO paymentsCreditCards = new TransitionDTO();
     @SerializedName("payment_plans")
     @Expose
-    private PaymentsPlansDTO paymentsPlans;
+    private PaymentsPlansDTO paymentsPlans = new PaymentsPlansDTO();
     @SerializedName("payment_history")
     @Expose
-    private TransitionDTO paymentsHistory;
+    private TransitionDTO paymentsHistory = new TransitionDTO();
+    @SerializedName("find_patient")
+    @Expose
+    private TransitionDTO findPatient = new TransitionDTO();
 
     /**
      * 
@@ -177,4 +179,11 @@ public class PaymentsLinksDTO {
         this.paymentsHistory = paymentsHistory;
     }
 
+    public TransitionDTO getFindPatient() {
+        return findPatient;
+    }
+
+    public void setFindPatient(TransitionDTO findPatient) {
+        this.findPatient = findPatient;
+    }
 }

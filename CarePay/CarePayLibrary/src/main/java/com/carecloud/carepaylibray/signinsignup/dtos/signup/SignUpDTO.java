@@ -15,7 +15,7 @@ public class SignUpDTO {
     private String label;
     @SerializedName("properties")
     @Expose
-    private SignUpPropertiesDTO properties;
+    private SignUpPropertiesDTO properties = new SignUpPropertiesDTO();
 
     /**
      *

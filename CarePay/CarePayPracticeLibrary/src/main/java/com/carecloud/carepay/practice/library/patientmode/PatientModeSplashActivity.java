@@ -95,7 +95,7 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
                 langSpinner.setAdapter(spinnerArrayAdapter);
                 if (defaultLangOption != null) { // this should be always true, as there's always a default option
                     langSpinner.setSelection(indexDefault);
-                    ApplicationPreferences.Instance.setUserLanguage(defaultLangOption.getCode());
+                    getApplicationPreferences().setUserLanguage(defaultLangOption.getCode());
                 }
             }
         }
@@ -108,13 +108,13 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
                 getStartedButton.setEnabled(false);
 
                 Map<String, String> queryMap = new HashMap<>();
-                queryMap.put("language", ApplicationPreferences.Instance.getUserLanguage());
+                queryMap.put("language", getApplicationPreferences().getUserLanguage());
                 queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
                 queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
                 Map<String, String> headers = new HashMap<>();
                 headers.put("transition", "true");
                 TransitionDTO transitionDTO = patientModeSplashDTO.getMetadata().getTransitions().getStart();
-                WorkflowServiceHelper.getInstance().execute(transitionDTO, patientHomeCallback, queryMap, headers);
+                getWorkflowServiceHelper().execute(transitionDTO, patientHomeCallback, queryMap, headers);
             }
         });
 
@@ -123,7 +123,7 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // save selected in preferences
                 if(languages != null && languages.size() > position) {
-                    ApplicationPreferences.Instance.setUserLanguage(languages.get(position).toLowerCase());
+                    getApplicationPreferences().setUserLanguage(languages.get(position).toLowerCase());
                 }
             }
 
@@ -147,25 +147,25 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
         Map<String, String> query = new HashMap<>();
         query.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
         query.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
-        WorkflowServiceHelper.getInstance().execute(transitionDTO, patientHomeCallback, query);
+        getWorkflowServiceHelper().execute(transitionDTO, patientHomeCallback, query);
     }
 
     WorkflowServiceCallback patientHomeCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             getStartedButton.setEnabled(true);
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             getStartedButton.setEnabled(true);
             SystemUtil.showDefaultFailureDialog(PatientModeSplashActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);

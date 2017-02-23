@@ -6,8 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.carecloud.carepay.patient.appointments.fragments.ChooseProviderFragment;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseActivity;
 
-public class AddAppointmentActivity extends AppCompatActivity {
+public class AddAppointmentActivity extends BaseActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

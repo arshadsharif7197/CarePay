@@ -20,6 +20,7 @@ import com.carecloud.carepay.patient.consentforms.ConsentActivity;
 import com.carecloud.carepay.patient.consentforms.FormData;
 import com.carecloud.carepay.patient.consentforms.interfaces.IFragmentCallback;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -30,7 +31,7 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 import java.util.Date;
 
 
-public class ConsentForm1Fragment extends Fragment {
+public class ConsentForm1Fragment extends BaseFragment {
 
     Date date = new Date();
     private TextView titleTextView;

@@ -72,20 +72,24 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
         holder.paymentDetailLabel.setText(paymentLineItem.getType());
         holder.paymentDetailAmount.setText(StringUtil.getFormattedBalanceAmount(paymentLineItem.getAmount()));
 
-        if (paymentLineItem.getDetails() != null && paymentLineItem.getDetails().size() > 0) {
+        if (paymentLineItem.getDetails() != null && !paymentLineItem.getDetails().isEmpty()) {
             holder.lineItemNameLabelDetails.setVisibility(View.VISIBLE);
             holder.lineItemNameLabelDetails.setText(paymentReceiptModel.getPaymentsMetadata()
                     .getPaymentsLabel().getPaymentResponsibilityDetails());
 
-            holder.lineItemNameLabelDetails.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // Call for payment details dialog
-                    PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(context,
-                            paymentReceiptModel, paymentLineItem, payListener);
-                    detailsDialog.show();
-                }
-            });
+            if(paymentLineItem.getDetails().size()>1) {
+                holder.lineItemNameLabelDetails.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Call for payment details dialog
+                        PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(context,
+                                paymentReceiptModel, paymentLineItem, payListener);
+                        detailsDialog.show();
+                    }
+                });
+            }else{
+                holder.lineItemNameLabelDetails.setTextColor(context.getResources().getColor(R.color.light_gray));
+            }
         } else if (holder.lineItemNameLabelDetails.getVisibility() == View.VISIBLE) {
             holder.lineItemNameLabelDetails.setVisibility(View.GONE);
         }

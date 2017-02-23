@@ -10,7 +10,7 @@ public class PropertiesModel {
 
     @SerializedName("items")
     @Expose
-    private ItemsModel items;
+    private ItemsModel items = new ItemsModel();
 
     /**
      * 

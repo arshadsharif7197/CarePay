@@ -9,17 +9,18 @@ import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ConsentFormDataModelDTO {
 
     @SerializedName("post")
     @Expose
-    private ConsentFormPostDTO post;
+    private ConsentFormPostDTO post = new ConsentFormPostDTO();
 
     @SerializedName("practice_forms")
     @Expose
-    private List<PracticeForm> practiceForms = null;
+    private List<PracticeForm> practiceForms = new ArrayList<>();
 
     public List<PracticeForm> getPracticeForms() {
         return practiceForms;

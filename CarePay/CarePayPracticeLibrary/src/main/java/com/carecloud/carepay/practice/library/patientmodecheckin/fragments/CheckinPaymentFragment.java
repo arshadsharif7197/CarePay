@@ -9,12 +9,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepaylibray.base.BaseFragment;
 
 /**
  * Created by lsoco_user on 11/17/2016.
  */
 
-public class CheckinPaymentFragment extends Fragment {
+public class CheckinPaymentFragment extends BaseFragment {
 
     private Button payTotalButton;
 

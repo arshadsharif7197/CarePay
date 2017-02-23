@@ -17,7 +17,7 @@ public class PaymentsCheckinAppointmentDTO {
     private String url;
     @SerializedName("query_string")
     @Expose
-    private PaymentsPracticeQueryDTO queryString;
+    private PaymentsPracticeQueryDTO queryString = new PaymentsPracticeQueryDTO();
 
     /**
      * 

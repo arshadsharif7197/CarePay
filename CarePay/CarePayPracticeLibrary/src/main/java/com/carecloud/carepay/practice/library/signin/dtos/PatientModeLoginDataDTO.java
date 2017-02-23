@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
 public class PatientModeLoginDataDTO {
     @SerializedName("metadata")
     @Expose
-    private PatientModeLoginDataMetadataDTO metadata;
+    private PatientModeLoginDataMetadataDTO metadata = new PatientModeLoginDataMetadataDTO();
     @SerializedName("payload")
     @Expose
     private boolean isLoginSuccessful;

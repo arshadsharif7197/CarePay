@@ -32,6 +32,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
@@ -113,8 +114,8 @@ public class AppointmentDetailDialog extends Dialog {
 
         callGetCheckinStatusAPI(); //API call for getting check-in status
         onInitialization();
-        onSettingStyle();
         onSetValuesFromDTO();
+        onSettingStyle();
 
         if (balanceValueLabel.getText().toString().trim().equalsIgnoreCase(CarePayConstants.ZERO_BALANCE)) {
             paymentButton.setVisibility(View.GONE);
@@ -158,13 +159,31 @@ public class AppointmentDetailDialog extends Dialog {
         checkingInLabel.setTextColor(ContextCompat.getColor(context, R.color.white));
 
         GradientDrawable bgShapePaymentButton = (GradientDrawable) paymentButton.getBackground();
-        bgShapePaymentButton.setColor(ContextCompat.getColor(context, R.color.yellowGreen));
+        if(checkInDTO.getMetadata().hasPaymentEnabled())
+        {
+            bgShapePaymentButton.setColor(ContextCompat.getColor(context, R.color.yellowGreen));
+        }else
+        {
+            bgShapePaymentButton.setColor(ContextCompat.getColor(context, R.color.light_gray));
+        }
 
         GradientDrawable bgShapeAssistButton = (GradientDrawable) assistButton.getBackground();
-        bgShapeAssistButton.setColor(ContextCompat.getColor(context, R.color.colorPrimary));
+        if(checkInDTO.getMetadata().hasAssistEnabled())
+        {
+            bgShapeAssistButton.setColor(ContextCompat.getColor(context, R.color.colorPrimary));
+        }else
+        {
+            bgShapeAssistButton.setColor(ContextCompat.getColor(context, R.color.light_gray));
+        }
 
         GradientDrawable bgShapePageButton = (GradientDrawable) pageButton.getBackground();
-        bgShapePageButton.setColor(ContextCompat.getColor(context, R.color.rose_madder));
+        if(checkInDTO.getMetadata().hasPageEnabled())
+        {
+            bgShapePageButton.setColor(ContextCompat.getColor(context, R.color.rose_madder));
+        }else
+        {
+            bgShapePageButton.setColor(ContextCompat.getColor(context, R.color.light_gray));
+        }
     }
 
     /**
@@ -226,6 +245,15 @@ public class AppointmentDetailDialog extends Dialog {
 
         checkingInLabel.bringToFront();
         hourLabel.bringToFront();
+
+        enableActionItems();
+    }
+
+    private void enableActionItems()
+    {
+        paymentButton.setEnabled(checkInDTO.getMetadata().hasPaymentEnabled());
+        assistButton.setEnabled(checkInDTO.getMetadata().hasAssistEnabled());
+        pageButton.setEnabled(checkInDTO.getMetadata().hasPageEnabled());
     }
 
     private View.OnClickListener paymentActionListener = new View.OnClickListener() {
@@ -272,59 +300,56 @@ public class AppointmentDetailDialog extends Dialog {
             } else {
                 queryStringObject = checkInDTO.getMetadata().getLinks().getCheckinStatus().getQueryString();
                 queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
-                querymap = getQueryParam(queryStrings);
+                querymap = getStatusQueryParam(queryStrings);
                 transition = checkInDTO.getMetadata().getLinks().getCheckinStatus();
                 callback = getStatusCallBack;
             }
 
-            WorkflowServiceHelper.getInstance().execute(transition, callback, querymap);
+            ((ISession) context).getWorkflowServiceHelper().execute(transition, callback, querymap);
         }
     }
 
     /**
-     * @param queryStrings the query strings for the url
+     * @param queryStrings the query strings for the queue url
      * @return queryMap
      */
-    private Map<String, String> getQueryParam(QueryStrings queryStrings) {
+    private Map<String, String> getQueueQueryParam(QueryStrings queryStrings) {
         Map<String, String> queryMap = new HashMap<>();
-        if (appointmentPayloadDTO != null && pendingBalanceDTO != null) {
-            queryMap.put(queryStrings.getAppointmentId().getName(), appointmentPayloadDTO.getId());
-            queryMap.put(queryStrings.getPracticeManagement().getName(), pendingBalanceDTO.getMetadata().getPracticeMgmt());
-            queryMap.put(queryStrings.getPracticeId().getName(), pendingBalanceDTO.getMetadata().getPracticeId());
+        if (appointmentPayloadDTO != null) {
+            queryMap.put(queryStrings.getPatientId().getName(), appointmentPayloadDTO.getPatient().getId());
         }
 
         return queryMap;
     }
 
     /**
-     * @param queryStrings the query strings for the url
+     * @param queryStrings the query strings for the status url
      * @return queryMap
      */
-    private Map<String, String> getQueueQueryParam(QueryStrings queryStrings) {
+    private Map<String, String> getStatusQueryParam(QueryStrings queryStrings) {
         Map<String, String> queryMap = new HashMap<>();
-        if (appointmentPayloadDTO != null && pendingBalanceDTO != null) {
-            queryMap.put(queryStrings.getPatientId().getName(), appointmentPayloadDTO.getId());
-            queryMap.put(queryStrings.getPracticeManagement().getName(), pendingBalanceDTO.getMetadata().getPracticeMgmt());
-            queryMap.put(queryStrings.getPracticeId().getName(), pendingBalanceDTO.getMetadata().getPracticeId());
+        if (appointmentPayloadDTO != null) {
+            queryMap.put(queryStrings.getAppointmentId().getName(), appointmentPayloadDTO.getId());
         }
+
         return queryMap;
     }
 
     private WorkflowServiceCallback getStatusCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            ((ISession) context).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) context).hideProgressDialog();
             updateUI(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) context).hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(context);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -333,18 +358,18 @@ public class AppointmentDetailDialog extends Dialog {
     private WorkflowServiceCallback getQueueCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            ((ISession) context).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) context).hideProgressDialog();
             updateQueueStatus(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            ((ISession) context).hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(context);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

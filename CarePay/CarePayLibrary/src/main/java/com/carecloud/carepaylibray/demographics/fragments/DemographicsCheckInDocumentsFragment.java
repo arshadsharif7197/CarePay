@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
@@ -31,7 +32,7 @@ import java.util.List;
  * Created by lsoco_user on 9/2/2016.
  * Demographics documents scanning (driver's license and insurance card)
  */
-public class DemographicsCheckInDocumentsFragment extends Fragment {
+public class DemographicsCheckInDocumentsFragment extends BaseFragment {
 
     private DemographicIdDocPayloadDTO             demPayloadIdDocDTO;
     private DemographicMetadataEntityIdDocsDTO     idDocsMetaDTO;

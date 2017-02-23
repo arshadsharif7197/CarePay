@@ -8,10 +8,10 @@ public class DataDTO {
 
     @SerializedName("cancellation_comments")
     @Expose
-    private CancellationCommentsDTO cancellationComments;
+    private CancellationCommentsDTO cancellationComments = new CancellationCommentsDTO();
     @SerializedName("cancellation_reason_id")
     @Expose
-    private CancellationReasonIdDTO cancellationReasonId;
+    private CancellationReasonIdDTO cancellationReasonId = new CancellationReasonIdDTO();
 
     /**
      * @return The cancellationComments

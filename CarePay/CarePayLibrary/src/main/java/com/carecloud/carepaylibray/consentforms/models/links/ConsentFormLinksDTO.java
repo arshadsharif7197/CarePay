@@ -12,19 +12,19 @@ public class ConsentFormLinksDTO {
 
     @SerializedName("self")
     @Expose
-    private ConsentFormsSelfDTO self;
+    private ConsentFormsSelfDTO self = new ConsentFormsSelfDTO();
     @SerializedName("consent_forms")
     @Expose
-    private ConsentForms consentForms;
+    private ConsentForms consentForms = new ConsentForms();
     @SerializedName("demographics")
     @Expose
-    private ConsentFormDemographicsDTO demographics;
+    private ConsentFormDemographicsDTO demographics = new ConsentFormDemographicsDTO();
     @SerializedName("appointments")
     @Expose
-    private ConsentFormsAppointmentsDTO appointments;
+    private ConsentFormsAppointmentsDTO appointments = new ConsentFormsAppointmentsDTO();
     @SerializedName("patient_balances")
     @Expose
-    private ConsentFormPatientBalancesDTO patientBalances;
+    private ConsentFormPatientBalancesDTO patientBalances = new ConsentFormPatientBalancesDTO();
 
     /**
      * @return The self

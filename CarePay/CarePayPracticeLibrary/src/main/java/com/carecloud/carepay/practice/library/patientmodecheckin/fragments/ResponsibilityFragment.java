@@ -60,44 +60,47 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
 
         if (paymentDTO != null) {
             getPaymentLabels();
+            try {
+                ((TextView) view.findViewById(R.id.respons_title)).setText(paymentsTitleString);
 
-            ((TextView) view.findViewById(R.id.respons_title)).setText(paymentsTitleString);
+                List<PatiencePayloadDTO> paymentList = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
 
-            List<PatiencePayloadDTO> paymentList = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
-
-            total = 0;
-            if (paymentList != null && paymentList.size() > 0) {
-                for (PatiencePayloadDTO payment : paymentList) {
-                    total += payment.getAmount();
-                }
-
-                fillDetailAdapter(view, paymentList);
-
-                try {
-                    if (total > 0) {
-                        payTotalButton.setClickable(true);
-                        payTotalButton.setEnabled(true);
-                        payPartialButton.setEnabled(true);
-                        payPartialButton.setClickable(true);
-
-                        payTotalButton.setTextColor(Color.WHITE);
-                        payPartialButton.setTextColor(getResources().getColor(R.color.colorPrimary));
-                        GradientDrawable border = new GradientDrawable();
-                        border.setColor(Color.WHITE);
-                        border.setStroke(1, getResources().getColor(R.color.colorPrimary));
+                total = 0;
+                if (paymentList != null && paymentList.size() > 0) {
+                    for (PatiencePayloadDTO payment : paymentList) {
+                        total += payment.getAmount();
                     }
 
-                    NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
-                    responseTotal.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));
-                } catch (NumberFormatException ex) {
-                    ex.printStackTrace();
-                    Log.e(LOG_TAG, ex.getMessage());
-                }
-            }
+                    fillDetailAdapter(view, paymentList);
 
-            totalResponsibility.setText(totalResponsibilityString);
-            payTotalButton.setText(payTotalAmountString);
-            payPartialButton.setText(payPartialAmountString);
+                    try {
+                        if (total > 0) {
+                            payTotalButton.setClickable(true);
+                            payTotalButton.setEnabled(true);
+                            payPartialButton.setEnabled(true);
+                            payPartialButton.setClickable(true);
+
+                            payTotalButton.setTextColor(Color.WHITE);
+                            payPartialButton.setTextColor(getResources().getColor(R.color.colorPrimary));
+                            GradientDrawable border = new GradientDrawable();
+                            border.setColor(Color.WHITE);
+                            border.setStroke(1, getResources().getColor(R.color.colorPrimary));
+                        }
+
+                        NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
+                        responseTotal.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));
+                    } catch (NumberFormatException ex) {
+                        ex.printStackTrace();
+                        Log.e(LOG_TAG, ex.getMessage());
+                    }
+                }
+
+                totalResponsibility.setText(totalResponsibilityString);
+                payTotalButton.setText(payTotalAmountString);
+                payPartialButton.setText(payPartialAmountString);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         payTotalButton.setOnClickListener(new View.OnClickListener() {

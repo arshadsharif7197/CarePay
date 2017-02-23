@@ -15,7 +15,7 @@ public class PatientModePayloadLanguageDTO {
 
     @SerializedName("options")
     @Expose
-    private List<PatientModeOptionDTO> options = new ArrayList<PatientModeOptionDTO>();
+    private List<PatientModeOptionDTO> options = new ArrayList<>();
 
     /**
      * @return The options

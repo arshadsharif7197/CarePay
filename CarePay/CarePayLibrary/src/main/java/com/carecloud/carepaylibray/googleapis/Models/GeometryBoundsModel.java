@@ -7,10 +7,10 @@ import com.google.gson.annotations.SerializedName;
 public class GeometryBoundsModel {
     @SerializedName("northeast")
     @Expose
-    private LatLangModel northeast;
+    private LatLangModel northeast = new LatLangModel();
     @SerializedName("southwest")
     @Expose
-    private LatLangModel southwest;
+    private LatLangModel southwest = new LatLangModel();
 
     /**
      *

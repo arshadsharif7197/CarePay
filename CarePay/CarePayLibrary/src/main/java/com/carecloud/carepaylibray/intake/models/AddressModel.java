@@ -13,10 +13,10 @@ public class AddressModel {
     private String line1;
     @SerializedName("line2")
     @Expose
-    private Object line2;
+    private String line2;
     @SerializedName("line3")
     @Expose
-    private Object line3;
+    private String line3;
     @SerializedName("city")
     @Expose
     private String city;
@@ -25,7 +25,7 @@ public class AddressModel {
     private String zipCode;
     @SerializedName("county_name")
     @Expose
-    private Object countyName;
+    private String countyName;
     @SerializedName("latitude")
     @Expose
     private Double latitude;
@@ -59,7 +59,7 @@ public class AddressModel {
      * @return
      *     The line2
      */
-    public Object getLine2() {
+    public String getLine2() {
         return line2;
     }
 
@@ -68,7 +68,7 @@ public class AddressModel {
      * @param line2
      *     The line2
      */
-    public void setLine2(Object line2) {
+    public void setLine2(String line2) {
         this.line2 = line2;
     }
 
@@ -77,7 +77,7 @@ public class AddressModel {
      * @return
      *     The line3
      */
-    public Object getLine3() {
+    public String getLine3() {
         return line3;
     }
 
@@ -86,7 +86,7 @@ public class AddressModel {
      * @param line3
      *     The line3
      */
-    public void setLine3(Object line3) {
+    public void setLine3(String line3) {
         this.line3 = line3;
     }
 
@@ -131,7 +131,7 @@ public class AddressModel {
      * @return
      *     The countyName
      */
-    public Object getCountyName() {
+    public String getCountyName() {
         return countyName;
     }
 
@@ -140,7 +140,7 @@ public class AddressModel {
      * @param countyName
      *     The county_name
      */
-    public void setCountyName(Object countyName) {
+    public void setCountyName(String countyName) {
         this.countyName = countyName;
     }
 

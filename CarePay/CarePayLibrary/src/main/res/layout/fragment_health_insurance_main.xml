@@ -93,6 +93,61 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/setupInsurancePracticeContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:padding="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:orientation="vertical">
+
+                <RadioGroup
+                    android:id="@+id/setupInsuranceGroup"
+                    android:layout_marginTop="@dimen/dimen_15dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true">
+
+                    <RadioButton
+                        android:id="@+id/dontHaveInsurance"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:button="@null"
+                        android:drawableRight="@android:drawable/btn_radio"
+                        android:gravity="left"
+                        style="@style/DemographicsDocsLabelStyle"
+                        android:theme="@style/HaveHealthInsurance"
+                        android:checked="true" />
+
+                    <View
+                        style="@style/Consent_Form_View_Style"
+                        android:layout_width="match_parent" />
+
+                    <RadioButton
+                        android:id="@+id/haveInsurance"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:button="@null"
+                        android:drawableRight="@android:drawable/btn_radio"
+                        android:gravity="left"
+                        style="@style/DemographicsDocsLabelStyle"
+                        android:theme="@style/HaveHealthInsurance" />
+                </RadioGroup>
+                <Button
+                    android:id="@+id/addNewButton"
+                    style="@style/DemographicsDocsButtonStyle"
+                    android:enabled="false"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:textAlignment="center"
+                    android:layout_width="match_parent"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/existingContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

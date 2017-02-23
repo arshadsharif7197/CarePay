@@ -11,7 +11,7 @@ import com.google.gson.annotations.SerializedName;
 public class SigninLinksDTO {
     @SerializedName("self")
     @Expose
-    private BaseLinkModel self;
+    private BaseLinkModel self = new BaseLinkModel();
 
     /**
      *

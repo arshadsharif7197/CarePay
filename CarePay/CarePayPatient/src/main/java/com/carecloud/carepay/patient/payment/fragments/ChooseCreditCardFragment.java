@@ -30,6 +30,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
@@ -55,7 +56,7 @@ import org.json.JSONObject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnCheckedChangeListener {
+public class ChooseCreditCardFragment extends BaseFragment implements RadioGroup.OnCheckedChangeListener {
 
     private RadioGroup chooseCreditCardRadioGroup;
     private Button nextButton;
@@ -248,7 +249,7 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
                     header.put("transition", "true");
 
                     TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment();
-                    WorkflowServiceHelper.getInstance().execute(transitionDTO, makePaymentCallback, payload.toString(), queries, header);
+                    getWorkflowServiceHelper().execute(transitionDTO, makePaymentCallback, payload.toString(), queries, header);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -260,12 +261,12 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
     WorkflowServiceCallback makePaymentCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             Gson gson = new Gson();
             PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(getActivity(),
                     gson.fromJson(workflowDTO.toString(), PaymentsModel.class));
@@ -274,7 +275,7 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             System.out.print(exceptionMessage);
         }
     };
@@ -293,6 +294,7 @@ public class ChooseCreditCardFragment extends Fragment implements RadioGroup.OnC
             Gson gson = new Gson();
             String paymentsDTOString = gson.toJson(paymentsModel);
             bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+            bundle.putString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE, gson.toJson(intakePaymentModel.getPaymentPayload().getPapiAccounts()));
             bundle.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(intakePaymentModel));
             bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, getArguments().getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE));
             fragment.setArguments(bundle);

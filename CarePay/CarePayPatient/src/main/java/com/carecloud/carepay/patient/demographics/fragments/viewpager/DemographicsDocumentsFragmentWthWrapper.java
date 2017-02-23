@@ -13,7 +13,8 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 
-import com.carecloud.carepay.patient.demographics.fragments.review.CheckinDemographicsFragment;
+import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.demographics.fragments.CheckinDemographicsFragment;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 
@@ -33,7 +34,7 @@ import java.util.List;
  * Created by lsoco_user on 9/2/2016.
  * Demographics documents scanning (driver's license and insurance card)
  */
-public class DemographicsDocumentsFragmentWthWrapper extends Fragment {
+public class DemographicsDocumentsFragmentWthWrapper extends BaseFragment {
 
     private View                                   view;
     private FrameLayout                            idCardContainer;

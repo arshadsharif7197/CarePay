@@ -10,22 +10,22 @@ import com.google.gson.annotations.SerializedName;
 public class DemographicsSettingsMetadataPropertiesDTO {
     @SerializedName("phone")
     @Expose
-    private DemographicsSettingsPhoneDTO phone;
+    private DemographicsSettingsPhoneDTO phone = new DemographicsSettingsPhoneDTO();
     @SerializedName("zipcode")
     @Expose
-    private DemographicsSettingsZipDTO zipcode;
+    private DemographicsSettingsZipDTO zipcode = new DemographicsSettingsZipDTO();
     @SerializedName("address1")
     @Expose
-    private DemographicsSettingsAddressDTO address1;
+    private DemographicsSettingsAddressDTO address1 = new DemographicsSettingsAddressDTO();
     @SerializedName("address2")
     @Expose
-    private DemographicsSettingsAddressDTO address2;
+    private DemographicsSettingsAddressDTO address2 = new DemographicsSettingsAddressDTO();
     @SerializedName("city")
     @Expose
-    private DemographicsSettingsCityDTO city;
+    private DemographicsSettingsCityDTO city = new DemographicsSettingsCityDTO();
     @SerializedName("state")
     @Expose
-    private DemographicsSettingsStateDTO state;
+    private DemographicsSettingsStateDTO state = new DemographicsSettingsStateDTO();
     @SerializedName("country")
     @Expose
     private DemographicsSettingsCountryDTO country;

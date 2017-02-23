@@ -10,12 +10,12 @@ import com.google.gson.annotations.SerializedName;
 public class ConsentFormAppoPayloadDTO {
     @SerializedName("patient")
     @Expose
-    private ConsentFormAppoPatientDTO appointmentPatient;
+    private ConsentFormAppoPatientDTO appointmentPatient = new ConsentFormAppoPatientDTO();
 
 
     @SerializedName("provider")
     @Expose
-    private AppoPayloadProvider appoPayloadProvider;
+    private AppoPayloadProvider appoPayloadProvider = new AppoPayloadProvider();
 
     public ConsentFormAppoPatientDTO getAppointmentPatient() {
         return appointmentPatient;

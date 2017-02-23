@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.base;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -8,9 +9,14 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.customdialog.IConfirmPracticeAppPin;
-import com.carecloud.carepaylibray.base.BaseVisibilityHintActivity;
+import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.BaseActivity;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
+
+import org.apache.commons.lang3.NotImplementedException;
 
 /**
  * Created by Jahirul Bhuiyan on 10/24/2016.
@@ -18,7 +24,8 @@ import com.google.gson.Gson;
  * Use for holding the common DTO which will be converted to the desire DTO using getConvertedDTO
  */
 
-public abstract class BasePracticeActivity extends BaseVisibilityHintActivity implements IConfirmPracticeAppPin{
+public abstract class BasePracticeActivity extends BaseActivity
+        implements IConfirmPracticeAppPin {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,7 +46,7 @@ public abstract class BasePracticeActivity extends BaseVisibilityHintActivity im
 
         if (bundle != null) {
             Gson gson = new Gson();
-            return gson.fromJson(bundle.getString(getApplicationContext().getClass().getSimpleName()), dtoClass);
+            return gson.fromJson(bundle.getString(WorkflowDTO.class.getSimpleName()), dtoClass);
         }
         return null;
     }
@@ -94,10 +101,6 @@ public abstract class BasePracticeActivity extends BaseVisibilityHintActivity im
         decorView.setSystemUiVisibility(uiOptions);
     }
 
-    public Context getContext(){
-        return this;
-    }
-
     protected boolean setViewTextById(int id, String text) {
         View view = findViewById(id);
         if (null == view || !(view instanceof TextView)) {
@@ -136,6 +139,10 @@ public abstract class BasePracticeActivity extends BaseVisibilityHintActivity im
         return setVisibilityById(id, View.GONE);
     }
 
+    public boolean hideViewById(int id) {
+        return setVisibilityById(id, View.INVISIBLE);
+    }
+
     private boolean setVisibilityById(int id, int visibility) {
         View view = findViewById(id);
         if (null == view) {
@@ -146,4 +153,31 @@ public abstract class BasePracticeActivity extends BaseVisibilityHintActivity im
 
         return true;
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        switch (requestCode){
+            case CarePayConstants.CLOVER_PAYMENT_INTENT_REQUEST_CODE:{
+                if(resultCode == RESULT_OK){
+                    processExternalPayment(PaymentExecution.clover, data);
+                }else{
+                    processExternalPaymentFailure(PaymentExecution.clover);
+                }
+
+                break;
+            }
+            default:{
+                super.onActivityResult(requestCode, resultCode, data);
+            }
+        }
+    }
+
+    protected void processExternalPayment(PaymentExecution paymentExecution, Intent data){
+        throw new NotImplementedException("Process external payment has not been implemented by "+getClass().getSimpleName());
+    }
+
+    protected void processExternalPaymentFailure(PaymentExecution paymentExecution){
+
+    }
+
 }

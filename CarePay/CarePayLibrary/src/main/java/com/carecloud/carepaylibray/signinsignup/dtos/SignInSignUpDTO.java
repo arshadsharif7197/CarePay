@@ -12,10 +12,10 @@ public class SignInSignUpDTO {
 
     @SerializedName("metadata")
     @Expose
-    private SignInMetaDataDTO metadata;
+    private SignInMetaDataDTO metadata = new SignInMetaDataDTO();
     @SerializedName("payload")
     @Expose
-    private SignInPayloadDTO payload;
+    private SignInPayloadDTO payload = new SignInPayloadDTO();
     @SerializedName("state")
     @Expose
     private String state;

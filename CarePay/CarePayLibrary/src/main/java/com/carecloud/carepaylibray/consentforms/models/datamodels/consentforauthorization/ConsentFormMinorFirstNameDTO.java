@@ -22,8 +22,7 @@ public class ConsentFormMinorFirstNameDTO {
     private String label;
     @SerializedName("validations")
     @Expose
-    private List<ConsentFormMinorFirstNameValidationDTO> validations =
-            new ArrayList<ConsentFormMinorFirstNameValidationDTO>();
+    private List<ConsentFormMinorFirstNameValidationDTO> validations = new ArrayList<>();
 
     /**
      * @return The type

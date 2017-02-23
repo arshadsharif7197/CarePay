@@ -21,7 +21,7 @@ public class PracticeMgmtModel {
     private String type;
     @SerializedName("validations")
     @Expose
-    private List<ValidationModel> validations = new ArrayList<ValidationModel>();
+    private List<ValidationModel> validations = new ArrayList<>();
 
     /**
      * 

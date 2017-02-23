@@ -80,7 +80,7 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
         if (viewId == R.id.provider_logout) {
             logout();
         } else if (viewId == R.id.btnHome) {
-            WorkflowServiceHelper.getInstance().execute(scheduleResourcesModel.getMetadata()
+            getWorkflowServiceHelper().execute(scheduleResourcesModel.getMetadata()
                     .getTransitions().getLogout(), homeCall);
         }
     }
@@ -114,27 +114,26 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
         Map<String, String> query = new HashMap<>();
         query.put("transition", "true");
 
-        WorkflowServiceHelper.getInstance().execute(scheduleResourcesModel.getMetadata()
+        getWorkflowServiceHelper().execute(scheduleResourcesModel.getMetadata()
                 .getTransitions().getLogout(), logOutCall, query, headers);
     }
 
     WorkflowServiceCallback logOutCall = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             ScheduleAppointmentActivity.this.finish();
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(
-                    ScheduleAppointmentActivity.this, workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(ScheduleAppointmentActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -143,20 +142,19 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
     WorkflowServiceCallback homeCall = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             ScheduleAppointmentActivity.this.finish();
-            PracticeNavigationHelper.getInstance().navigateToWorkflow(
-                    ScheduleAppointmentActivity.this, workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(ScheduleAppointmentActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -184,18 +182,18 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
         AppointmentsResultModel appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
         setPatientId(ApplicationMode.getInstance().getPatientId()==null?"":ApplicationMode.getInstance().getPatientId());
         TransitionDTO resourcesToSchedule = appointmentsResultModel.getMetadata().getLinks().getResourcesToSchedule();
-        WorkflowServiceHelper.getInstance().execute(resourcesToSchedule, scheduleResourcesCallback, queryMap);
+        getWorkflowServiceHelper().execute(resourcesToSchedule, scheduleResourcesCallback, queryMap);
     }
 
     private WorkflowServiceCallback scheduleResourcesCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ProgressDialogUtil.getInstance(getContext()).show();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             Gson gson = new Gson();
             scheduleResourcesModel = gson.fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
 
@@ -237,7 +235,7 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ProgressDialogUtil.getInstance(getContext()).dismiss();
+            hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(ScheduleAppointmentActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
