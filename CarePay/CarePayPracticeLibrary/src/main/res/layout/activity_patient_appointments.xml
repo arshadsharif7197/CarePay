@@ -102,7 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/no_apt_message_title_margin_top"
             android:gravity="center"
-            android:textColor="@color/textview_default_textcolor"
+            android:textColor="@color/white"
             android:textSize="@dimen/text_size_21sp"
             app:customAssetFont="gotham_rounded_medium" />
 
@@ -114,7 +114,7 @@
             android:layout_marginStart="@dimen/no_apt_message_desc_margin"
             android:layout_marginTop="@dimen/consent_top"
             android:gravity="center"
-            android:textColor="@color/textview_default_textcolor"
+            android:textColor="@color/white"
             android:textSize="@dimen/text_size_18sp"
             app:customAssetFont="proxima_nova_regular" />
     </LinearLayout>

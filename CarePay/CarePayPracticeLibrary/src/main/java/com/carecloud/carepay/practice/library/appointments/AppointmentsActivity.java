@@ -1,6 +1,5 @@
 package com.carecloud.carepay.practice.library.appointments;
 
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,7 +14,6 @@ import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -23,7 +21,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -170,7 +167,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         populateWithLabels();
         if (appointmentsResultModel != null && appointmentsResultModel.getPayload() != null
                 && appointmentsResultModel.getPayload().getAppointments() != null
-                && appointmentsResultModel.getPayload().getAppointments().size() > 0) {
+                && !appointmentsResultModel.getPayload().getAppointments().isEmpty()) {
 
             findViewById(R.id.no_appointment_layout).setVisibility(View.GONE);
             appointmentsItems = appointmentsResultModel.getPayload().getAppointments();
