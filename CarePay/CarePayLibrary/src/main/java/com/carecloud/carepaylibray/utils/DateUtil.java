@@ -350,7 +350,22 @@ public class DateUtil {
         monthLiteral = DateFormatSymbols.getInstance(Locale.getDefault()).getMonths()[month];
         dayLiteralAbbr = DateFormatSymbols.getInstance(Locale.getDefault()).getShortWeekdays()[calendar.get(Calendar.DAY_OF_WEEK)];
         monthLiteralAbbr = DateFormatSymbols.getInstance(Locale.getDefault()).getShortMonths()[month];
+    }
 
+    /**
+     * @param days to add
+     * @return updated DateUtil
+     */
+    public DateUtil addDays(int days) {
+        if (null != date) {
+            Calendar calendar = Calendar.getInstance(Locale.getDefault());
+            calendar.setTime(date);
+            calendar.add(Calendar.DAY_OF_YEAR, days);
+            date = calendar.getTime();
+            updateFields();
+        }
+
+        return this;
     }
 
     /**
