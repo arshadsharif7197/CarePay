@@ -912,7 +912,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         cityLabel.setTag(addressMetaDTO.properties.city.getLabel());
         cityEditText.setTag(cityLabel);
 
-        stateLabel.setHint(addressMetaDTO.properties.state.getLabel());
+        stateLabel.setTag(addressMetaDTO.properties.state.getLabel());
         stateEditText.setTag(stateLabel);
 
 
@@ -1016,9 +1016,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         stateEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
                 SystemUtil.handleHintChange(view, bool);
             }
         });
@@ -1120,11 +1117,11 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                 stateEditText.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
             }
             stateEditText.requestFocus();
-            /*stateEditText.setOnKeyListener(new View.OnKeyListener() {
+            stateEditText.setOnKeyListener(new View.OnKeyListener() {
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
                     return true;
                 }
-            });*/
+            });
 
             String zipcode = demographicAddressPayloadDTO.getZipcode();
             if (SystemUtil.isNotEmptyString(zipcode)) {
