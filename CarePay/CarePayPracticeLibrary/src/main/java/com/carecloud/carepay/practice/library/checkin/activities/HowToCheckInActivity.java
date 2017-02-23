@@ -264,7 +264,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
                 .equals(ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt())
                 && scanQRCodeResultDTO.getPracticeId()
                 .equals(ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId())){
-            CognitoAppHelper.setUser(scanQRCodeResultDTO.getUserName());
+            getCognitoAppHelper().setUser(scanQRCodeResultDTO.getUserName());
            // ApplicationMode.getInstance().getUserPracticeDTO().setUserName(scanQRCodeResultDTO.getUserName());
             Map<String, String> queryMap = new HashMap<String, String>();
             queryMap.put("appointment_id", scanQRCodeResultDTO.getAppointmentId());

@@ -30,7 +30,6 @@ public class SigninSignupActivity extends BasePatientActivity {
         signInLablesDTO=signInSignUpDTO.getMetadata().getLabels();
         if(signInSignUpDTO!=null && signInSignUpDTO.getPayload()!=null && signInSignUpDTO.getPayload().getPatientAppSignin()!=null && signInSignUpDTO.getPayload().getPatientAppSignin().getCognito()!=null){
             ApplicationMode.getInstance().setCognitoDTO(signInSignUpDTO.getPayload().getPatientAppSignin().getCognito());
-            CognitoAppHelper.init(getApplicationContext());
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {

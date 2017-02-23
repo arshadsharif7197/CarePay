@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 
 public abstract class BaseActivity extends AppCompatActivity implements ISession {
@@ -37,6 +38,11 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
     @Override
     public WorkflowServiceHelper getWorkflowServiceHelper() {
         return ((IApplicationSession) getApplication()).getWorkflowServiceHelper();
+    }
+
+    @Override
+    public CognitoAppHelper getCognitoAppHelper() {
+        return ((IApplicationSession) getApplication()).getCognitoAppHelper();
     }
 
     public Context getContext(){
