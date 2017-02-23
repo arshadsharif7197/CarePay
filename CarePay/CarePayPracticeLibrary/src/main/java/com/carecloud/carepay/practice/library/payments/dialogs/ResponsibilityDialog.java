@@ -45,6 +45,7 @@ public class ResponsibilityDialog extends Dialog {
     private PaymentsModel paymentsModel;
     private PaymentsPatientBalancessDTO patientPayments;
     private List<PatienceBalanceDTO> balances;
+    private PayResponsibilityCallback callback;
 
     /**
      * Constructor
@@ -52,11 +53,12 @@ public class ResponsibilityDialog extends Dialog {
      * @param paymentsModel paymentsModel
      * @param patientPayments PaymentsPatientBalancessDTO
      */
-    public ResponsibilityDialog(Context context, PaymentsModel paymentsModel, PaymentsPatientBalancessDTO patientPayments) {
+    public ResponsibilityDialog(Context context, PaymentsModel paymentsModel, PaymentsPatientBalancessDTO patientPayments, PayResponsibilityCallback callback) {
         super(context);
         this.context = context;
         this.paymentsModel = paymentsModel;
         this.patientPayments = patientPayments;
+        this.callback = callback;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -204,12 +206,12 @@ public class ResponsibilityDialog extends Dialog {
     private void setCloverPayment()
     {
         Gson gson = new Gson();
-        String patientPaymentMetaDataString = gson.toJson(patientPayments.getBalances().get(0).getMetadata());
+        String patientPaymentMetaDataString = gson.toJson(balances.get(0).getMetadata());
         String paymentTransitionString = gson.toJson(paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment());
         Intent intent = new Intent();
         intent.setAction(CarePayConstants.CLOVER_PAYMENT_INTENT);
         intent.putExtra(CarePayConstants.CLOVER_PAYMENT_METADATA, patientPaymentMetaDataString);
-        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, patientPayments.getBalances().get(0).getPayload().get(0).getAmount());
+        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, balances.get(0).getPayload().get(0).getAmount());
         intent.putExtra(CarePayConstants.CLOVER_PAYMENT_TRANSITION, paymentTransitionString);
         List<PaymentLineItem> paymentLineItems = new ArrayList<>();
 
@@ -235,4 +237,11 @@ public class ResponsibilityDialog extends Dialog {
 //        getContext().startActivity(intent, new Bundle());
         dismiss();
     }
+
+
+    public interface PayResponsibilityCallback{
+        void payFullResponsibility(PatienceBalanceDTO balance);
+        void payPartialResponsibility(PatienceBalanceDTO balance, double amount);
+    }
+
 }

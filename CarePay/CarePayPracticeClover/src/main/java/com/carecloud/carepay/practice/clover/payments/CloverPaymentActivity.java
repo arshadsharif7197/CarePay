@@ -448,7 +448,7 @@ public class CloverPaymentActivity extends BaseActivity {
         PaymentMethod paymentMethod = new PaymentMethod();
         paymentMethod.setType(PaymentType.credit_card);
         paymentMethod.setExecution(PaymentExecution.clover);
-        paymentMethod.setAmount(amountDouble);
+        paymentMethod.setAmount(5.00);
         paymentMethod.setCreditCard(creditCardModel);
 
         TransactionResponse transactionResponse = new TransactionResponse();
@@ -457,7 +457,7 @@ public class CloverPaymentActivity extends BaseActivity {
         paymentMethod.setTransactionResponse(transactionResponse);
 
         PaymentPostModel paymentPostModel = new PaymentPostModel();
-        paymentPostModel.setAmount(amountDouble);
+        paymentPostModel.setAmount(5.00);
         paymentPostModel.addPaymentMethod(paymentMethod);
 
         Gson gson = new Gson();
@@ -485,8 +485,8 @@ public class CloverPaymentActivity extends BaseActivity {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             Intent intent = getIntent();
-            setResult(RESULT_OK);
             intent.putExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA, workflowDTO.getPayload().toString());
+            setResult(RESULT_OK, intent);
             finish();
 //            PracticeNavigationHelper.navigateToWorkflow(CloverPaymentActivity.this, workflowDTO);
         }

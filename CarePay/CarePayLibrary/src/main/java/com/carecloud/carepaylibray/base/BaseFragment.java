@@ -1,6 +1,6 @@
 package com.carecloud.carepaylibray.base;
 
-import android.support.v4.app.Fragment;
+import android.support.v4.app.DialogFragment;
 import android.view.View;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
@@ -10,7 +10,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
  * Created by cocampo on 2/6/17.
  */
 
-public abstract class BaseFragment extends Fragment implements ISession {
+public abstract class BaseFragment extends DialogFragment implements ISession {
     public boolean enableViewById(int id) {
         return setEnabledViewById(id, true);
     }

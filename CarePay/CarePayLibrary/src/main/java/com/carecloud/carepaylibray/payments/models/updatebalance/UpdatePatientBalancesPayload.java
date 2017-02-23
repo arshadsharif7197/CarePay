@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 public class UpdatePatientBalancesPayload {
 
     @SerializedName("charge")
-    private UpdatePatientBalancesCharge charge;
+    private UpdatePatientBalancesCharge charge = new UpdatePatientBalancesCharge();
 
     public UpdatePatientBalancesCharge getCharge() {
         return charge;

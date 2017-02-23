@@ -2,6 +2,9 @@ package com.carecloud.carepaylibray.payments.models.updatebalance;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by lmenendez on 2/22/17.
  */
@@ -9,10 +12,10 @@ import com.google.gson.annotations.SerializedName;
 public class PaymentUpdateBalanceDTO {
 
     @SerializedName("patient_payments")
-    private UpdatePatientPaymentsDTO updatePatientPaymentsDTO;
+    private UpdatePatientPaymentsDTO updatePatientPaymentsDTO = new UpdatePatientPaymentsDTO();
 
     @SerializedName("patient_balances")
-    private UpdatePatientBalancesDTO updatePatientBalancesDTO;
+    private List<UpdatePatientBalancesDTO> updatePatientBalancesDTO = new ArrayList<>();
 
     public UpdatePatientPaymentsDTO getUpdatePatientPaymentsDTO() {
         return updatePatientPaymentsDTO;
@@ -22,11 +25,11 @@ public class PaymentUpdateBalanceDTO {
         this.updatePatientPaymentsDTO = updatePatientPaymentsDTO;
     }
 
-    public UpdatePatientBalancesDTO getUpdatePatientBalancesDTO() {
+    public List<UpdatePatientBalancesDTO> getUpdatePatientBalancesDTO() {
         return updatePatientBalancesDTO;
     }
 
-    public void setUpdatePatientBalancesDTO(UpdatePatientBalancesDTO updatePatientBalancesDTO) {
+    public void setUpdatePatientBalancesDTO(List<UpdatePatientBalancesDTO> updatePatientBalancesDTO) {
         this.updatePatientBalancesDTO = updatePatientBalancesDTO;
     }
 }

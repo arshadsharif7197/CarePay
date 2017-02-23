@@ -41,7 +41,7 @@ import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 
-public class PaymentsActivity extends BasePracticeActivity implements FilterDialog.FilterCallBack {
+public class PaymentsActivity extends BasePracticeActivity implements FilterDialog.FilterCallBack, ResponsibilityDialog.PayResponsibilityCallback {
 
     private PaymentsLabelDTO paymentsLabel;
     private PaymentsModel paymentsModel;
@@ -123,7 +123,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             public void onPatientTapped(Object dto) {
                 PaymentsPatientBalancessDTO paymentsPatientBalancessDTO = (PaymentsPatientBalancessDTO) dto;
 
-                ResponsibilityDialog responsibilityDialog = new ResponsibilityDialog(getContext(), paymentsModel, paymentsPatientBalancessDTO);
+                ResponsibilityDialog responsibilityDialog = new ResponsibilityDialog(getContext(), paymentsModel, paymentsPatientBalancessDTO, PaymentsActivity.this);
                 responsibilityDialog.show();
             }
         });
@@ -246,7 +246,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             if (patientDetails != null && patientDetails.getPaymentPayload().getPatientBalances() != null && !patientDetails.getPaymentPayload().getPatientBalances().isEmpty()) {
                 PaymentsPatientBalancessDTO paymentsPatientBalancessDTO = patientDetails.getPaymentPayload().getPatientBalances().get(0);
 
-                ResponsibilityDialog responsibilityDialog = new ResponsibilityDialog(getContext(), paymentsModel, paymentsPatientBalancessDTO);
+                ResponsibilityDialog responsibilityDialog = new ResponsibilityDialog(getContext(), paymentsModel, paymentsPatientBalancessDTO, PaymentsActivity.this);
                 responsibilityDialog.show();
             }
             else
@@ -276,7 +276,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 if(jsonPayload!=null) {
                     Gson gson = new Gson();
                     PaymentUpdateBalanceDTO updateBalanceDTO = gson.fromJson(jsonPayload, PaymentUpdateBalanceDTO.class);
-                    updatePatientBalance(updateBalanceDTO.getUpdatePatientBalancesDTO());
+                    updatePatientBalance(updateBalanceDTO.getUpdatePatientBalancesDTO().get(0));
                 }
                 break;
             }
@@ -320,4 +320,13 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
 
+    @Override
+    public void payFullResponsibility(PatienceBalanceDTO balance) {
+
+    }
+
+    @Override
+    public void payPartialResponsibility(PatienceBalanceDTO balance, double amount) {
+
+    }
 }
