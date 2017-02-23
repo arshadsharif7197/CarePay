@@ -17,9 +17,7 @@ import com.carecloud.carepay.practice.library.appointments.ScheduleAppointmentAc
 import com.carecloud.carepay.practice.library.appointments.adapters.PracticeAvailableHoursAdapter;
 import com.carecloud.carepay.practice.library.appointments.adapters.PracticeAvailableLocationsAdapter;
 import com.carecloud.carepay.practice.library.customdialog.BasePracticeDialog;
-import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
@@ -27,9 +25,9 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPa
 import com.carecloud.carepaylibray.appointments.models.AppointmentLocationsDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
+import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.utils.DateUtil;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -45,22 +43,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by sudhir_pingale on 1/2/2017.
- */
-
 public class PracticeAvailableHoursDialog extends BasePracticeDialog implements PracticeAvailableHoursAdapter.SelectAppointmentTimeSlotCallback, PracticeAvailableLocationsAdapter.SelectLocationCallback {
 
+    private final PracticeAvailableHoursDialogListener callback;
     private Date startDate;
     private Date endDate;
     private Context context;
     private LayoutInflater inflater;
     private AppointmentAvailabilityDTO availabilityDTO;
     private AppointmentsResultModel resourcesToScheduleDTO;
+    private VisitTypeDTO visitTypeDTO;
 
     private RecyclerView availableHoursRecycleView;
     private RecyclerView availableLocationsRecycleView;
-    private TextView titleView;
     private View singleLocation;
     private TextView singleLocationText;
     private View progressView;
@@ -68,19 +63,37 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     private List<AppointmentLocationsDTO> selectedLocations = new LinkedList<>();
     private SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
 
+    public interface PracticeAvailableHoursDialogListener {
+        void onDateRangeTapped();
+
+        void onAppointmentTimeSelected(AppointmentAvailabilityDTO availabilityDTO, AppointmentsSlotsDTO appointmentsSlotsDTO);
+    }
+
     /**
      * Instantiates a new Practice available hours dialog.
      *
      * @param context      the context
      * @param cancelString the cancel string
+     * @param visitTypeDTO      visit type
+     * @param callback          dialog callback
      */
-    public PracticeAvailableHoursDialog(Context context, String cancelString) {
-        this(context, cancelString, null, null);
+    public PracticeAvailableHoursDialog(Context context, String cancelString, VisitTypeDTO visitTypeDTO, PracticeAvailableHoursDialogListener callback) {
+        this(context, cancelString, visitTypeDTO, callback, null, null);
     }
 
-    public PracticeAvailableHoursDialog(Context context, String cancelString, Date startDate, Date endDate) {
+    /**
+     * @param context           the context
+     * @param cancelString      the cancel string
+     * @param visitTypeDTO      visit type
+     * @param callback          dialog callback
+     * @param startDate         start date to pick from
+     * @param endDate           end date to pick from
+     */
+    public PracticeAvailableHoursDialog(Context context, String cancelString, VisitTypeDTO visitTypeDTO, PracticeAvailableHoursDialogListener callback, Date startDate, Date endDate) {
         super(context, cancelString, false);
         this.context = context;
+        this.visitTypeDTO = visitTypeDTO;
+        this.callback = callback;
         this.startDate = startDate;
         this.endDate = endDate;
         inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -196,7 +209,10 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     private View.OnClickListener dateRangeClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            new PracticeAvailableHoursDateRangeDialog(context, availabilityDTO, "", startDate, endDate).show();
+            if (null != callback) {
+                callback.onDateRangeTapped();
+            }
+
             dismiss();
         }
     };
@@ -208,10 +224,6 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
 
     @Override
     protected void onDialogCancel() {
-/*
-        new VisitTypeDialog(context, ((ScheduleAppointmentActivity)context).getSelectedResource(),
-                ((ScheduleAppointmentActivity)context), ((ScheduleAppointmentActivity)context).getResourcesToSchedule()).show();
-*/
         dismiss();
     }
 
@@ -233,13 +245,17 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
         setDialogTitle(formattedDate);
     }
 
-
     private void getAvailableHoursTimeSlots() {
+        if (null == visitTypeDTO) {
+            dismiss();
+            return;
+        }
+
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("language", ((ISession) context).getApplicationPreferences().getUserLanguage());
         queryMap.put("practice_mgmt", resourcesToScheduleDTO.getPayload().getResourcesToSchedule().get(0).getPractice().getPracticeMgmt());
         queryMap.put("practice_id", resourcesToScheduleDTO.getPayload().getResourcesToSchedule().get(0).getPractice().getPracticeId());
-        queryMap.put("visit_reason_id", ((ScheduleAppointmentActivity) context).getSelectedVisitTypeDTO().getId() + "");
+        queryMap.put("visit_reason_id", visitTypeDTO.getId() + "");
         queryMap.put("resource_ids", ((ScheduleAppointmentActivity) context).getSelectedResource().getResource().getId() + "");
 
         if (startDate != null) {
@@ -360,11 +376,6 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
                         timeSlotsListWithHeaders.add(timSlotsDTO);
                     }
                 }
-//                if(!StringUtil.isNullOrEmpty(headerTitle) && headerTitle.contains(",")) {
-//                    rangeEndDateString = headerTitle.split(", ")[1];
-//                } else {
-//                    rangeEndDateString = headerTitle.toLowerCase();
-//                }
             }
         }
         return timeSlotsListWithHeaders;
@@ -400,8 +411,10 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
 
     @Override
     public void onSelectAppointmentTimeSlot(AppointmentsSlotsDTO appointmentsSlotsDTO) {
-        // Call Request appointment Summary dialog from here
-        new PracticeRequestAppointmentDialog(context, resourcesToScheduleDTO.getMetadata().getLabel().getAvailableHoursBack(), appointmentsSlotsDTO, availabilityDTO).show();
+        if (null != callback) {
+            callback.onAppointmentTimeSelected(availabilityDTO, appointmentsSlotsDTO);
+        }
+
         dismiss();
     }
 
@@ -422,9 +435,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
             updateSelectedLocationsForAdapter();
 
         }
-
     }
-
 
     private List<AppointmentLocationsDTO> extractAvailableLocations(AppointmentAvailabilityDTO availabilityDTO){
         List<AppointmentLocationsDTO> locationsDTOs = new LinkedList<>();

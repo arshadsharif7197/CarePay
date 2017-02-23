@@ -159,7 +159,8 @@
             android:background="@drawable/bg_blue_border_selector"
             android:textAllCaps="false"
             android:textColor="@color/primary_color_enabled_selector"
-            android:textStyle="bold" />
+            android:textSize="@dimen/text_size_22"
+            />
 
         <Button
             android:id="@+id/paymentChoiceButton"
@@ -169,7 +170,7 @@
             android:layout_margin="@dimen/dimen_5dp"
             android:layout_weight="1"
             android:background="@drawable/bg_yellow_overlay"
-            android:textStyle="bold" />
+            />
 
     </LinearLayout>
 

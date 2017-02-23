@@ -26,13 +26,20 @@ import retrofit2.Response;
 
 public class WorkflowServiceHelper {
 
-
+    private CognitoAppHelper cognitoAppHelper;
     private ApplicationPreferences applicationPreferences;
+    private ApplicationMode applicationMode;
     private static int retryAttempts = 0;
 
 
-    public WorkflowServiceHelper(ApplicationPreferences applicationPreferences) {
+    public WorkflowServiceHelper(ApplicationPreferences applicationPreferences,
+                                 ApplicationMode applicationMode) {
         this.applicationPreferences = applicationPreferences;
+        this.applicationMode = applicationMode;
+    }
+
+    public void setCognitoAppHelper(CognitoAppHelper cognitoAppHelper) {
+        this.cognitoAppHelper = cognitoAppHelper;
     }
 
     /**
@@ -43,20 +50,24 @@ public class WorkflowServiceHelper {
     private Map<String, String> getUserAuthenticationHeaders() {
         Map<String, String> userAuthHeaders = new HashMap<>();
 
-        if ((ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE
-                || ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)
-                && ApplicationMode.getInstance().getUserPracticeDTO() != null) {
-            userAuthHeaders.put("username", ApplicationMode.getInstance().getUserPracticeDTO().getUserName());
-            userAuthHeaders.put("Authorization", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
-           if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
-               userAuthHeaders.put("username_patient", CognitoAppHelper.getCurrUser());
-            }
-        } else if (!isNullOrEmpty(CognitoAppHelper.getCurrUser())) {
-            userAuthHeaders.put("username", CognitoAppHelper.getCurrUser());
-            if (CognitoAppHelper.getCurrSession() != null && !isNullOrEmpty(CognitoAppHelper.getCurrSession().getIdToken().getJWTToken())) {
-                userAuthHeaders.put("Authorization", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
+        if (null != cognitoAppHelper) {
+
+            if ((applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE
+                    || applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)
+                    && applicationMode.getUserPracticeDTO() != null) {
+                userAuthHeaders.put("username", applicationMode.getUserPracticeDTO().getUserName());
+                userAuthHeaders.put("Authorization", cognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
+                if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+                    userAuthHeaders.put("username_patient", cognitoAppHelper.getCurrUser());
+                }
+            } else if (!isNullOrEmpty(cognitoAppHelper.getCurrUser())) {
+                userAuthHeaders.put("username", cognitoAppHelper.getCurrUser());
+                if (cognitoAppHelper.getCurrSession() != null && !isNullOrEmpty(cognitoAppHelper.getCurrSession().getIdToken().getJWTToken())) {
+                    userAuthHeaders.put("Authorization", cognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
+                }
             }
         }
+
         userAuthHeaders.putAll(getPreferredLanguageHeader());
         return userAuthHeaders;
     }
@@ -137,17 +148,17 @@ public class WorkflowServiceHelper {
         executeRequest(transitionDTO, callback, jsonBody, queryMap, addCustomHeaders(customHeaders));
     }
 
-    private static void updateQueryMapWithDefault(Map<String, String> queryMap) {
+    private void updateQueryMapWithDefault(Map<String, String> queryMap) {
         if (queryMap == null) {
             queryMap = new HashMap<>();
         }
-        if (ApplicationMode.getInstance().getUserPracticeDTO() != null && !queryMap.containsKey("practice_mgmt")) {
-            queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
-            queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+        if (applicationMode.getUserPracticeDTO() != null && !queryMap.containsKey("practice_mgmt")) {
+            queryMap.put("practice_mgmt", applicationMode.getUserPracticeDTO().getPracticeMgmt());
+            queryMap.put("practice_id", applicationMode.getUserPracticeDTO().getPracticeId());
         }
     }
 
-    private static void executeRequest(@NonNull TransitionDTO transitionDTO, @NonNull final WorkflowServiceCallback callback, String jsonBody, Map<String, String> queryMap, Map<String, String> headers) {
+    private void executeRequest(@NonNull TransitionDTO transitionDTO, @NonNull final WorkflowServiceCallback callback, String jsonBody, Map<String, String> queryMap, Map<String, String> headers) {
         callback.onPreExecute();
         updateQueryMapWithDefault(queryMap);
         WorkflowService workflowService = ServiceGenerator.getInstance().createService(WorkflowService.class, headers); //, String token, String searchString

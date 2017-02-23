@@ -103,8 +103,8 @@ public class FindPatientDialog extends Dialog {
                     manager.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
                     Map<String, String> queryMap = new HashMap<>();
-                    queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
-                    queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+                    queryMap.put("practice_mgmt", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+                    queryMap.put("practice_id", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeId());
 
                     JsonArray postModel = new JsonArray();
                     postModel.add(editText.getText().toString());

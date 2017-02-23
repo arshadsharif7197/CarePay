@@ -187,7 +187,7 @@ public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
     }
 
     private void getPersonalDetails() {
-        String userId = CognitoAppHelper.getCurrUser();
+        String userId = getCognitoAppHelper().getCurrUser();
 
         if (SystemUtil.isNotEmptyString(userId)) {
             emailEditText.setText(userId);

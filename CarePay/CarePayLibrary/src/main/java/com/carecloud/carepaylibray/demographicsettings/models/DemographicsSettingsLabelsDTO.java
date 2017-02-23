@@ -234,6 +234,12 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     @SerializedName("settings_saved_success_message")
     @Expose
     private String settingsSavedSuccessMessage;
+    @SerializedName("no_credit_card_label")
+    @Expose
+    private String noCreditCardLabel;
+    @SerializedName("no_credit_card_info")
+    @Expose
+    private String noCreditCardInfo;
 
     public String getSettingsSavedSuccessMessage() {
         return StringUtil.getLabelForView(settingsSavedSuccessMessage);
@@ -1385,4 +1391,19 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
         this.passwordHelpLabel = passwordHelpLabel;
     }
 
+    public String getNoCreditCardLabel() {
+        return StringUtil.getLabelForView(noCreditCardLabel);
+    }
+
+    public void setNoCreditCardLabel(String noCreditCardLabel) {
+        this.noCreditCardLabel = noCreditCardLabel;
+    }
+
+    public String getNoCreditCardInfo() {
+        return StringUtil.getLabelForView(noCreditCardInfo);
+    }
+
+    public void setNoCreditCardInfo(String noCreditCardInfo) {
+        this.noCreditCardInfo = noCreditCardInfo;
+    }
 }

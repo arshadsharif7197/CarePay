@@ -77,6 +77,7 @@ public class CarePayConstants {
     public static final String ADD_APPOINTMENT_PATIENT_ID = "add_appointment_patient_id";
     public static final String PAYMENT_CREDIT_CARD_INFO = "payment_credit_card_info";
     public static final String TAB_SECTION_NUMBER = "section_number";
+    public static final int    MAX_INSURANCE_DOC = 3;
 
     public static final String RAW_DATE_FORMAT_FOR_TESTS               = "yyyy-MM-dd'T'HH:mm:ssX";
     public static final String RAW_DATE_FORMAT_FOR_CALENDAR_DATE_RANGE = "EEE, MMM d, ''yy";

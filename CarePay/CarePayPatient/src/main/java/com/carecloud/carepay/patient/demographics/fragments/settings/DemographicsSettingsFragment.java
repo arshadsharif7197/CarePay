@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -111,7 +110,6 @@ public class DemographicsSettingsFragment extends BaseFragment {
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         getSettingsLabels();
-        String userId = CognitoAppHelper.getCurrUser();
         demographicsTextview = (CarePayTextView) view.findViewById(R.id.demographicsTextView);
         documentsTextview = (CarePayTextView) view.findViewById(R.id.documentsTextView);
         creditCardsTextview = (CarePayTextView) view.findViewById(R.id.creditCardsTextView);
@@ -131,7 +129,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
         signOutButton.setText(signOutString);
         title.setText(settingsString);
         patientNameTextview.setText(getUserName());
-        patientIdTextview.setText(userId);
+        patientIdTextview.setText(getCognitoAppHelper().getCurrUser());
         try {
          DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
          DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
@@ -284,16 +282,16 @@ public class DemographicsSettingsFragment extends BaseFragment {
         creditCardsTextview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            try {
-                if(demographicsSettingsDTO.getPayload().getPatientCreditCards()!=null &&
-                        !demographicsSettingsDTO.getPayload().getPatientCreditCards().isEmpty()){
-                    activityCallback.initializeCreditCardListFragment();
-                } else {
-                    ((DemographicsSettingsActivity)getActivity()).initializeAddNewCreditCardFragment();
+                try {
+//                    if (demographicsSettingsDTO.getPayload().getPatientCreditCards() != null &&
+//                            !demographicsSettingsDTO.getPayload().getPatientCreditCards().isEmpty()) {
+                        activityCallback.initializeCreditCardListFragment();
+//                    } else {
+//                        ((DemographicsSettingsActivity) getActivity()).initializeAddNewCreditCardFragment();
+//                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
             }
         });
     }
@@ -327,8 +325,8 @@ public class DemographicsSettingsFragment extends BaseFragment {
             hideProgressDialog();
             signOutButton.setEnabled(true);
             // log out previous user from Cognito
-            CognitoAppHelper.getPool().getUser().signOut();
-            CognitoAppHelper.setUser(null);
+            getCognitoAppHelper().getPool().getUser().signOut();
+            getCognitoAppHelper().setUser(null);
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
         }
 
