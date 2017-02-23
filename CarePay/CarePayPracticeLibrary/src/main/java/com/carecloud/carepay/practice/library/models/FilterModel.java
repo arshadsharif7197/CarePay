@@ -5,7 +5,6 @@ import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 /**
  * Created by cocampo on 2/13/17.
@@ -23,7 +22,7 @@ public class FilterModel {
      * @param newList new list of doctors
      */
     public void setDoctors(ArrayList<FilterDataDTO> newList) {
-        applyFilterSortByName(newList);
+        sortListByName(newList);
         checkPreviouslyChecked(this.doctors, newList);
         this.doctors = newList;
     }
@@ -32,7 +31,7 @@ public class FilterModel {
      * @param newList new list of locations
      */
     public void setLocations(ArrayList<FilterDataDTO> newList) {
-        applyFilterSortByName(newList);
+        sortListByName(newList);
         checkPreviouslyChecked(this.locations, newList);
         this.locations = newList;
     }
@@ -41,12 +40,12 @@ public class FilterModel {
      * @param newList new list of patients
      */
     public void setPatients(ArrayList<FilterDataDTO> newList) {
-        applyFilterSortByName(newList);
+        sortListByName(newList);
         checkPreviouslyChecked(this.patients, newList);
         this.patients = newList;
     }
 
-    private void applyFilterSortByName(ArrayList<FilterDataDTO> filterableList) {
+    private void sortListByName(ArrayList<FilterDataDTO> filterableList) {
         Collections.sort(filterableList, new Comparator<FilterDataDTO>() {
             //@TargetApi(Build.VERSION_CODES.KITKAT)
             @Override
