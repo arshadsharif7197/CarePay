@@ -410,8 +410,8 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         queryMap.put("last_name", lastNameEditText.getText().toString());
         queryMap.put("date_of_birth", selectDateButton.getText().toString());
         queryMap.put("phone", phoneNumberEditText.getText().toString());
-        queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
-        queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+        queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+        queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
         queryMap.put("gender",  ((CarePayButton) findViewById(R.id.selectGenderButton)).getText().toString());
         TransitionDTO transitionDTO;
         transitionDTO = signinPatientModeDTO.getMetadata().getLinks().getPersonalInfo();
@@ -434,8 +434,8 @@ public class PersonalInformationActivity extends BasePracticeActivity {
             SigninPatientModeDTO signinPatientModeDTOLocal = gson.fromJson(workflowDTO.toString(), SigninPatientModeDTO.class);
             if(signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getPersonalInfoCheckSuccessful()){
                 queryMap.put("language", getApplicationPreferences().getUserLanguage());
-                queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
-                queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+                queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+                queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
                 queryMap.put("patient_id", signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getPatientId());
                 Map<String, String> headers = new HashMap<>();
                 getCognitoAppHelper().setUser(signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getUsername());

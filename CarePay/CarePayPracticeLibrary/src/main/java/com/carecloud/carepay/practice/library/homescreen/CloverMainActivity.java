@@ -181,7 +181,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
     private void setPracticeUser(PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO) {
         if (practiceHomeScreenPayloadDTO.getUserPractices() != null && practiceHomeScreenPayloadDTO.getUserPractices().size() > 0) {
-            ApplicationMode.getInstance().setUserPracticeDTO(getCognitoAppHelper(), practiceHomeScreenPayloadDTO.getUserPractices().get(0));
+            getApplicationMode().setUserPracticeDTO(getCognitoAppHelper(), practiceHomeScreenPayloadDTO.getUserPractices().get(0));
         } else {
             showUnAuthorizedDialog();
             //SystemUtil.showSuccessDialogMessage(CloverMainActivity.this,getString(R.string.unauthorized),getString(R.string.unauthorized_practice_user));
@@ -428,8 +428,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             @Override
             public void onPatientModeSelected() {
                 Map<String, String> query = new HashMap<>();
-                query.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
-                query.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+                query.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+                query.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
                 getWorkflowServiceHelper().execute(transitionsDTO.getPatientMode(), commonTransitionCallback, query);
             }
         }, new ChangeModeDialog.LogoutClickListener() {
@@ -610,7 +610,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         Log.v(this.getClass().getSimpleName(), "sign out Cognito");
         getCognitoAppHelper().getPool().getUser().signOut();
         getCognitoAppHelper().setUser(null);
-        ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
+        getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
 
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
             Gson gson = new Gson();

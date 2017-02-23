@@ -23,13 +23,13 @@ public class CarePayPatientApplication extends Application implements IApplicati
     private ApplicationPreferences applicationPreferences;
     private WorkflowServiceHelper workflowServiceHelper;
     private CognitoAppHelper cognitoAppHelper;
+    private ApplicationMode applicationMode;
 
     @Override
     public void onCreate() {
         super.onCreate();
         setHttpConstants();
         registerActivityLifecycleCallbacks(new CarePayActivityLifecycleCallbacks());
-        ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PATIENT);
     }
 
     /**
@@ -59,7 +59,7 @@ public class CarePayPatientApplication extends Application implements IApplicati
     @Override
     public WorkflowServiceHelper getWorkflowServiceHelper() {
         if (workflowServiceHelper == null) {
-            workflowServiceHelper = new WorkflowServiceHelper(getApplicationPreferences());
+            workflowServiceHelper = new WorkflowServiceHelper(getApplicationPreferences(), getApplicationMode());
         }
 
         return workflowServiceHelper;
@@ -68,10 +68,20 @@ public class CarePayPatientApplication extends Application implements IApplicati
     @Override
     public CognitoAppHelper getCognitoAppHelper() {
         if (cognitoAppHelper == null) {
-            cognitoAppHelper = new CognitoAppHelper(this);
+            cognitoAppHelper = new CognitoAppHelper(this, getApplicationMode());
             getWorkflowServiceHelper().setCognitoAppHelper(cognitoAppHelper);
         }
 
         return cognitoAppHelper;
+    }
+
+    @Override
+    public ApplicationMode getApplicationMode() {
+        if (applicationMode == null) {
+            applicationMode = new ApplicationMode();
+            applicationMode.setApplicationType(ApplicationMode.ApplicationType.PATIENT);
+        }
+
+        return applicationMode;
     }
 }

@@ -217,8 +217,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             @Override
             public void onItemClicked(PatientDTO patient) {
                 Map<String, String> queryMap = new HashMap<>();
-                queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
-                queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+                queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+                queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
                 queryMap.put("patient_id", patient.getPatientId());
 
                 TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getPaymentsPatientBalances();

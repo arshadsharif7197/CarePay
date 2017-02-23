@@ -187,11 +187,11 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
      */
     private void getResourcesList() {
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
-        queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+        queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+        queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
 
         AppointmentsResultModel appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
-        setPatientId(ApplicationMode.getInstance().getPatientId()==null?"":ApplicationMode.getInstance().getPatientId());
+        setPatientId(getApplicationMode().getPatientId()==null?"":getApplicationMode().getPatientId());
         TransitionDTO resourcesToSchedule = appointmentsResultModel.getMetadata().getLinks().getResourcesToSchedule();
         getWorkflowServiceHelper().execute(resourcesToSchedule, scheduleResourcesCallback, queryMap);
     }
@@ -343,8 +343,8 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
     public void onAppointmentRequested(String comments) {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("language", getApplicationPreferences().getUserLanguage());
-        queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
-        queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+        queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+        queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
 
         JsonObject appointmentJSONObj = new JsonObject();
         JsonObject patientJSONObj = new JsonObject();

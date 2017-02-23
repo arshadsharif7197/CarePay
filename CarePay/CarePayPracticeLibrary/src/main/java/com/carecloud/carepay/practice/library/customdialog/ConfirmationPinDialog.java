@@ -144,8 +144,8 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
         if (pin.length() == 4) {
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("pin", pin);
-            queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
-            queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+            queryMap.put("practice_mgmt", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+            queryMap.put("practice_id", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeId());
             ((ISession) context).getWorkflowServiceHelper().execute(this.transitionDTOPinLink, commonTransitionCallback, queryMap);
         }
     }
@@ -203,7 +203,7 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
             if(patientModeSwitchPinResponseDTO.getPayload().getPinpad().getPayload()) {
                 ((BasePracticeActivity) context).onPinConfirmationCheck(true, pinEditText.getText().toString());
                 dismiss();
-                ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
+                ((ISession) context).getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
             }
         }
 

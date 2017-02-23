@@ -27,13 +27,13 @@ public class CarePayApplication extends MultiDexApplication
     private ApplicationPreferences applicationPreferences;
     private WorkflowServiceHelper workflowServiceHelper;
     private CognitoAppHelper cognitoAppHelper;
+    private ApplicationMode applicationMode;
 
     @Override
     public void onCreate() {
         super.onCreate();
         setHttpConstants();
 
-        ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
         registerActivityLifecycleCallbacks(this);
     }
 
@@ -100,7 +100,7 @@ public class CarePayApplication extends MultiDexApplication
     @Override
     public WorkflowServiceHelper getWorkflowServiceHelper() {
         if (workflowServiceHelper == null) {
-            workflowServiceHelper = new WorkflowServiceHelper(getApplicationPreferences());
+            workflowServiceHelper = new WorkflowServiceHelper(getApplicationPreferences(), getApplicationMode());
         }
 
         return workflowServiceHelper;
@@ -109,10 +109,20 @@ public class CarePayApplication extends MultiDexApplication
     @Override
     public CognitoAppHelper getCognitoAppHelper() {
         if (cognitoAppHelper == null) {
-            cognitoAppHelper = new CognitoAppHelper(this);
+            cognitoAppHelper = new CognitoAppHelper(this, getApplicationMode());
             getWorkflowServiceHelper().setCognitoAppHelper(cognitoAppHelper);
         }
 
         return cognitoAppHelper;
+    }
+
+    @Override
+    public ApplicationMode getApplicationMode() {
+        if (applicationMode == null) {
+            applicationMode = new ApplicationMode();
+            applicationMode.setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
+        }
+
+        return applicationMode;
     }
 }

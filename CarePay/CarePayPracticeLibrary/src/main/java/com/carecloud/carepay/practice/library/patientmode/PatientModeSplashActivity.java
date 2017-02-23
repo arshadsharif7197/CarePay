@@ -109,8 +109,8 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
 
                 Map<String, String> queryMap = new HashMap<>();
                 queryMap.put("language", getApplicationPreferences().getUserLanguage());
-                queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
-                queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+                queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+                queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
                 Map<String, String> headers = new HashMap<>();
                 headers.put("transition", "true");
                 TransitionDTO transitionDTO = patientModeSplashDTO.getMetadata().getTransitions().getStart();
@@ -145,8 +145,8 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
     public void onPinConfirmationCheck(boolean isCorrectPin,  String pin) {
         TransitionDTO transitionDTO = patientModeSplashDTO.getMetadata().getTransitions().getPracticeMode();
         Map<String, String> query = new HashMap<>();
-        query.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
-        query.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+        query.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+        query.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
         getWorkflowServiceHelper().execute(transitionDTO, patientHomeCallback, query);
     }
 
@@ -180,7 +180,7 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
         Log.v(this.getClass().getSimpleName(), "sign out Cognito");
         getCognitoAppHelper().getPool().getUser().signOut();
         getCognitoAppHelper().setUser(null);
-        ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
+        getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
     }
 
 

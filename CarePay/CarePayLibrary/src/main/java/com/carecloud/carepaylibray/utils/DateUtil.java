@@ -294,9 +294,15 @@ public class DateUtil {
         return this;
     }
 
-    public void setDate(Calendar calendar){
+    /**
+     * @param calendar as Date
+     * @return The current DateUtil object
+     */
+    public DateUtil setDate(Calendar calendar){
         this.date = calendar.getTime();
         updateFields(calendar);
+
+        return this;
     }
 
     /**
@@ -468,6 +474,17 @@ public class DateUtil {
 
     }
 
+    /**
+     * Check whether the provided day corresponds to the last day of the current month
+     * @param calendar Calendar to check
+     * @return true if day is first of the month
+     */
+    public static boolean startsThisMonth(Calendar calendar){
+        Calendar checkCal = Calendar.getInstance();
+        checkCal.set(Calendar.DAY_OF_MONTH, 1);
+
+        return isSameDay(calendar, checkCal);
+    }
 
     /**
      * Check if given date corresponds to last day in month
@@ -498,14 +515,11 @@ public class DateUtil {
      */
     public static boolean endsThisMonth(Calendar calendar){
         Calendar checkCal = Calendar.getInstance();
-        int calMonth = checkCal.get(Calendar.MONTH);
         int calMaxDayMonth = checkCal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        checkCal.set(Calendar.DAY_OF_MONTH, calMaxDayMonth);
 
-        return isSameYear(checkCal, calendar) &&
-                calMonth == calendar.get(Calendar.MONTH) &&
-                calMaxDayMonth == calendar.get(Calendar.DAY_OF_MONTH);
+        return isSameDay(calendar, checkCal);
     }
-
 
     /**
      * Get the number of days elapsed between two dates
@@ -701,42 +715,52 @@ public class DateUtil {
         startCal.setTime(startDate);
         endCal.setTime(endDate);
 
+        String fromText = getFormattedDate(startDate, today, tomorrow);
+
         //check for single Day
-        if(DateUtil.isSameDay(startCal, endCal)){
-            if(DateUtil.isToday(startCal)){           //check for today
-                return today;
-            }else if(DateUtil.isTomorrow(startCal)){  //check for tomorrow
-                return tomorrow;
-            }else{                                    //Just return this date in readable format
-                DateUtil dateUtil = DateUtil.getInstance();
-                dateUtil.setDate(startCal);
-                return dateUtil.getDateAsDayShortMonthDayOrdinal();
-            }
-        }else{
-            //check if the range starts today
-            if(DateUtil.isToday(startCal)){
-                //check if end date is month end
-                if(DateUtil.endsThisMonth(endCal)){
-                    return thisMonth;
-                }else{
-                    String daysElapsedText = nextDays;
-                    int days = DateUtil.getDaysElapsedInclusive(startCal, endCal);
-
-                    return String.format(daysElapsedText, days);
-                }
-            }else{
-                //return from:to format
-                DateUtil dateUtil = DateUtil.getInstance();
-                dateUtil.setDate(startDate);
-                String fromText = dateUtil.getDateAsMonthLiteralDayOrdinal();
-                dateUtil.setDate(endDate);
-                String toText = dateUtil.getDateAsMonthLiteralDayOrdinal();
-
-                String fromToText = "%s - %s";
-                return String.format(fromToText, fromText, toText);
-            }
+        if(isSameDay(startCal, endCal)){
+            return fromText;
         }
 
+        // Check for whole month
+        if(startsThisMonth(startCal) && endsThisMonth(endCal)){
+            return thisMonth;
+        }
+
+        int elapsedDays = getDaysElapsedInclusive(startCal, endCal);
+
+        //check if the range starts today
+        if(isToday(startCal) && elapsedDays < 32){
+            return String.format(nextDays, elapsedDays);
+        }
+
+        String toText = getFormattedDate(endDate, today, tomorrow);
+
+        //return from - to format
+        return String.format("%s - %s", fromText, toText);
     }
 
+    /**
+     * Convinience method for formatting a date range using contextual output
+     * @param today String to represent today output
+     * @param tomorrow String to represent tomorrow output
+     * @return Contextually formatted Date range
+     */
+    public static String getFormattedDate(Date date, String today, String tomorrow) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        //check for today
+        if(isToday(calendar)){
+            return today;
+        }
+
+        //check for tomorrow
+        if(isTomorrow(calendar)){
+            return tomorrow;
+        }
+
+        //Just return this date in readable format
+        return getInstance().setDate(date).getDateAsMonthLiteralDayOrdinal();
+    }
 }
