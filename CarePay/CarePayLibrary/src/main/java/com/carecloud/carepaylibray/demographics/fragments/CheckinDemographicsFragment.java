@@ -1118,7 +1118,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             }
             stateEditText.requestFocus();
             stateEditText.setOnKeyListener(new View.OnKeyListener() {
-                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                public boolean onKey(View view, int keyCode, KeyEvent event) {
                     return true;
                 }
             });
