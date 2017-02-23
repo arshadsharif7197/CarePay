@@ -116,6 +116,9 @@ public class HealthInsuranceFragment extends BaseFragment {
         Button addButton = (Button)view.findViewById(R.id.addInsuranceButton);
         addButton.setText(globalLabelsMetaDTO.getPracticeCheckinDemogrInsAddAnother());
         addButton.setOnClickListener(addNewElementListener);
+        if(insurancePayloadDTOs.size() >= CarePayConstants.MAX_INSURANCE_DOC){
+            addButton.setEnabled(false);
+        }
     }
 
     private void initAddOtherButton(View view){
