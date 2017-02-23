@@ -294,6 +294,10 @@ public class DateUtil {
         return this;
     }
 
+    /**
+     * @param calendar as Date
+     * @return The current DateUtil object
+     */
     public DateUtil setDate(Calendar calendar){
         this.date = calendar.getTime();
         updateFields(calendar);
@@ -482,18 +486,6 @@ public class DateUtil {
     }
 
     /**
-     * Check whether the provided date corresponds to the last day of the current month
-     * @param date Date to check
-     * @return true if date is last of the month
-     */
-    public static boolean endsThisMonth(Date date){
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-
-        return endsThisMonth(calendar);
-    }
-
-    /**
      * Check whether the provided day corresponds to the last day of the current month
      * @param calendar Calendar to check
      * @return true if day is first of the month
@@ -503,6 +495,18 @@ public class DateUtil {
         checkCal.set(Calendar.DAY_OF_MONTH, 1);
 
         return isSameDay(calendar, checkCal);
+    }
+
+    /**
+     * Check whether the provided date corresponds to the last day of the current month
+     * @param date Date to check
+     * @return true if date is last of the month
+     */
+    public static boolean endsThisMonth(Date date){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        return endsThisMonth(calendar);
     }
 
     /**
