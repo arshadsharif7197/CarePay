@@ -102,10 +102,8 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         boolean isMissed = false;
         long differenceInMilli = appointmentTime.getTime() - currentDate.getTime();
         long differenceInMinutes = TimeUnit.MILLISECONDS.toMinutes(differenceInMilli);
-        if (appointmentTime != null && currentDate != null) {
-            if (differenceInMinutes < 0) {
-                isMissed = true;
-            }
+        if (differenceInMinutes < 0) {
+            isMissed = true;
         }
 
         boolean allowEarlyCheckin = appointmentsResultModel.getPayload().getAppointmentsSettings().get(0).getCheckin().getAllowEarlyCheckin();
