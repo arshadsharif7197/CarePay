@@ -8,24 +8,43 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.itemDecorations.DividerItemDecoration;
+import com.carecloud.carepaylibray.itemdecorations.DividerItemDecoration;
 
 /**
  * Created by kkannan on 2/22/17.
+ *
+ *  Custom RecyclerView with divider decoration.
  */
-
 public class RecyclerViewWithDivider extends RecyclerView {
 
+    /**
+     * Instantiates a new Recycler view with divider.
+     *
+     * @param context  the context
+     * @param attrs    the attrs
+     * @param defStyle the def style
+     */
     public RecyclerViewWithDivider(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         setDivider(context);
     }
 
+    /**
+     * Instantiates a new Recycler view with divider.
+     *
+     * @param context the context
+     * @param attrs   the attrs
+     */
     public RecyclerViewWithDivider(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         setDivider(context);
     }
 
+    /**
+     * Instantiates a new Recycler view with divider.
+     *
+     * @param context the context
+     */
     public RecyclerViewWithDivider(Context context) {
         super(context);
         setDivider(context);

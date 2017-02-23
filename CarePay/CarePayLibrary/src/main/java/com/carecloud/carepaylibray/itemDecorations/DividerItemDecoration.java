@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.itemDecorations;
+package com.carecloud.carepaylibray.itemdecorations;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -12,10 +12,10 @@ import android.view.View;
 
 public class DividerItemDecoration extends RecyclerView.ItemDecoration{
 
-    private Drawable mDivider;
+    private Drawable dividerDrawable;
 
     public DividerItemDecoration(Drawable divider) {
-        mDivider = divider;
+        dividerDrawable = divider;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration{
             return;
         }
 
-        outRect.top = mDivider.getIntrinsicHeight();
+        outRect.top = dividerDrawable.getIntrinsicHeight();
     }
 
     @Override
@@ -41,10 +41,10 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration{
             RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
 
             int dividerTop = child.getBottom() + params.bottomMargin;
-            int dividerBottom = dividerTop + mDivider.getIntrinsicHeight();
+            int dividerBottom = dividerTop + dividerDrawable.getIntrinsicHeight();
 
-            mDivider.setBounds(dividerLeft, dividerTop, dividerRight, dividerBottom);
-            mDivider.draw(canvas);
+            dividerDrawable.setBounds(dividerLeft, dividerTop, dividerRight, dividerBottom);
+            dividerDrawable.draw(canvas);
         }
     }
 }
