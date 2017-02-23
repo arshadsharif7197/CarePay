@@ -319,10 +319,10 @@ public class CloverPaymentActivity extends BaseActivity {
 //     postPaymentConfirmation(payment);
                 }
             } else if(resultCode == RESULT_CANCELED) {
-                fakePaymentResponse();
-//                Toast.makeText(getApplicationContext(), getString(R.string.payment_cancelled), Toast.LENGTH_SHORT).show();
-//                setResult(resultCode);
-//                finish();
+//                fakePaymentResponse();
+                Toast.makeText(getApplicationContext(), getString(R.string.payment_cancelled), Toast.LENGTH_SHORT).show();
+                setResult(resultCode);
+                finish();
             } else {
                 Toast.makeText(getApplicationContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
                 setResult(resultCode);
