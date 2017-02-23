@@ -33,6 +33,14 @@ public class PracticeNavigationHelper {
     private static boolean shouldExpectResult = false;
     private static int expectRequestCode = -1;
 
+    /**
+     * Navigation using application context
+     *
+     * @param context activity context
+     * @param workflowDTO response DTO
+     * @param expectsResult should launch with startActivityForResult
+     * @param requestCode RequestCode for activity Result
+     */
     public static void navigateToWorkflow(Context context, WorkflowDTO workflowDTO, boolean expectsResult, int requestCode) {
         shouldExpectResult = expectsResult;
         expectRequestCode = requestCode;
