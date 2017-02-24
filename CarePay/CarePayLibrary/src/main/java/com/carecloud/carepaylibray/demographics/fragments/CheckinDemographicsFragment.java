@@ -317,7 +317,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         reviewSubtitileTextView.setText(globalLabelsMetaDTO.getDemographicsReviewScreenSubtitle());
         peronalInfoSectionTextview.setText(globalLabelsMetaDTO.getDemographicsReviewPeronsonalinfoSection().toUpperCase());
         demographicSectionTextView.setText(globalLabelsMetaDTO.getDemographicSectionTitle().toUpperCase());
-        addressSectionTextView.setHint(globalLabelsMetaDTO.getDemographicsAddressSection().toUpperCase());
+        addressSectionTextView.setText(globalLabelsMetaDTO.getDemographicsAddressSection().toUpperCase());
         optinalLabelTextView.setText(globalLabelsMetaDTO.getDemographicsDetailsOptionalHint());
 
 
