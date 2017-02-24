@@ -116,8 +116,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:button="@null"
-                        android:drawableRight="@android:drawable/btn_radio"
-                        android:gravity="left"
+                        android:drawableEnd="@drawable/cell_radio"
+                        android:gravity="start"
                         style="@style/DemographicsDocsLabelStyle"
                         android:theme="@style/HaveHealthInsurance"
                         android:checked="true" />
@@ -131,8 +131,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:button="@null"
-                        android:drawableRight="@android:drawable/btn_radio"
-                        android:gravity="left"
+                        android:drawableEnd="@drawable/cell_radio"
+                        android:gravity="start"
                         style="@style/DemographicsDocsLabelStyle"
                         android:theme="@style/HaveHealthInsurance" />
                 </RadioGroup>
