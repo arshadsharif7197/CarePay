@@ -55,6 +55,10 @@ public class MedicationAllergyActivity extends BasePatientActivity implements Me
         transaction.commit();
     }
 
+    /**
+     * Load new fragment
+     * @param fragment fragment to load
+     */
     public void changeFragment(Fragment fragment){
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.root_layout, fragment);

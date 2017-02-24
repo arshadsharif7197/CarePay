@@ -26,6 +26,12 @@ public class MedicationAllergySearchAdapter extends RecyclerView.Adapter<Medicat
     private List<? extends MedicationsAllergiesObject> items;
     private SearchItemSelectedCallback callback;
 
+    /**
+     *
+     * @param context Context for adapter
+     * @param items list of medication or allergies
+     * @param callback callback for selecting items
+     */
     public MedicationAllergySearchAdapter(Context context, List<? extends MedicationsAllergiesObject> items, SearchItemSelectedCallback callback){
         this.context = context;
         this.items = items;
@@ -45,7 +51,7 @@ public class MedicationAllergySearchAdapter extends RecyclerView.Adapter<Medicat
         holder.getItemText().setText(item.getDisplayName());
         holder.getRootView().setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 if(callback!=null){
                     callback.searchItemSelected(item);
                 }
@@ -62,11 +68,11 @@ public class MedicationAllergySearchAdapter extends RecyclerView.Adapter<Medicat
         this.items = items;
     }
 
-    public static class SearchViewHolder extends RecyclerView.ViewHolder{
+    static class SearchViewHolder extends RecyclerView.ViewHolder{
         private TextView itemText;
         private View rootView;
 
-        public SearchViewHolder(View itemView) {
+        SearchViewHolder(View itemView) {
             super(itemView);
             this.rootView = itemView;
             this.itemText = (TextView) itemView.findViewById(R.id.search_text_view);

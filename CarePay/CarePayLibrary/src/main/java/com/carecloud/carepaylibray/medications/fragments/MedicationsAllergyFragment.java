@@ -40,8 +40,11 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
 
     public interface MedicationAllergyCallback {
         void showMedicationSearch();
+
         void showAllergiesSearch();
+
         void medicationSubmitSuccess(WorkflowDTO workflowDTO);
+
         void medicationSubmitFail(String message);
     }
 
@@ -200,6 +203,10 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
 
     }
 
+    /**
+     * Exposed method to add an Medication or Allergy item to the list
+     * @param item item to add
+     */
     public void addItem(MedicationsAllergiesObject item){
         if(item instanceof  MedicationsObject){
             //check if exists
@@ -225,21 +232,21 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
 
     private View.OnClickListener chooseAllergyClickListener = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
             callback.showAllergiesSearch();
         }
     };
 
     private View.OnClickListener chooseMedicationClickListener = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
             callback.showMedicationSearch();
         }
     };
 
     private View.OnClickListener continueClickListener = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
             Gson gson = new Gson();
             TransitionDTO transitionDTO = medicationsAllergiesDTO.getMetadata().getTransitions().getMedications();
             MedicationAllergiesPostModel postModel = new MedicationAllergiesPostModel();
@@ -250,7 +257,7 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
             queryMap.put(medicationsAllergiesQueryStrings.getPatientId().getName(), medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPatientId());
             queryMap.put(medicationsAllergiesQueryStrings.getPracticeId().getName(), medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPracticeId());
             queryMap.put(medicationsAllergiesQueryStrings.getPracticeMgmt().getName(), medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPracticeMgmt());
-            queryMap.put(medicationsAllergiesQueryStrings.getAppointment_id().getName(), medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getAppointmentId());
+            queryMap.put(medicationsAllergiesQueryStrings.getAppointmentId().getName(), medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getAppointmentId());
 
             Map<String, String> headers = ((ISession) getContext()).getWorkflowServiceHelper().getPreferredLanguageHeader();
             headers.put("transition", "true");
@@ -264,7 +271,7 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
 
     private View.OnClickListener navigationClickListener = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
             getActivity().onBackPressed();
         }
     };

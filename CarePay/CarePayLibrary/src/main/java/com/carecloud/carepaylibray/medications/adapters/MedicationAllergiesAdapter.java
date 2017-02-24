@@ -49,7 +49,7 @@ public class MedicationAllergiesAdapter extends RecyclerView.Adapter<MedicationA
         holder.getDelete().setText(deleteLabel);
         holder.getDelete().setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 if(callback!=null){
                     callback.deleteItem(item);
                 }
@@ -66,11 +66,12 @@ public class MedicationAllergiesAdapter extends RecyclerView.Adapter<MedicationA
         this.items = items;
     }
 
-    public class MedicationAllergiesViewHolder extends RecyclerView.ViewHolder{
+
+    class MedicationAllergiesViewHolder extends RecyclerView.ViewHolder{
         private TextView name;
         private TextView delete;
 
-        public MedicationAllergiesViewHolder(View itemView) {
+        MedicationAllergiesViewHolder(View itemView) {
             super(itemView);
             this.name = (TextView) itemView.findViewById(R.id.medication_allergy_text_view);
             this.delete = (TextView) itemView.findViewById(R.id.medication_allergy_delete_button);

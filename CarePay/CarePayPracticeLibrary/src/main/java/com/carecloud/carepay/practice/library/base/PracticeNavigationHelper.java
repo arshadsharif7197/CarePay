@@ -111,7 +111,13 @@ public class PracticeNavigationHelper {
 //                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             }
-
+            case PracticeNavigationStateConstants.MEDICATION_ALLERGIES:{
+                if (context instanceof PatientModeCheckinActivity) {
+//                    ((PatientModeCheckinActivity) context).loadMedicationsAllergy(workflowDTO.toString());
+                    return;
+                }
+                break;
+            }
             case PracticeNavigationStateConstants.CONSENT_FORMS: {
                 if (context instanceof PatientModeCheckinActivity) {
                     ((PatientModeCheckinActivity) context).getConsentFormInformation(workflowDTO.toString());

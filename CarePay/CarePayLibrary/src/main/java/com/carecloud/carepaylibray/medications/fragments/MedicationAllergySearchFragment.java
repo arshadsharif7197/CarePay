@@ -146,7 +146,7 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
 
     private View.OnClickListener navigationClickListener = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
             getActivity().onBackPressed();
         }
     };
@@ -178,7 +178,8 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
     private WorkflowServiceCallback medicationSearchCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ((ISession) getContext()).showProgressDialog();        }
+            ((ISession) getContext()).showProgressDialog();
+        }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {

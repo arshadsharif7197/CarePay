@@ -49,7 +49,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 getActivity().onBackPressed();
             }
         });

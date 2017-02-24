@@ -26,13 +26,15 @@ public abstract class BaseDialogFragment extends DialogFragment {
     }
 
     public void setOnDismissListener(Dialog.OnDismissListener dismissListener){
-        if(dialog!=null)
+        if(dialog!=null) {
             dialog.setOnDismissListener(dismissListener);
+        }
     }
 
     public void setOnCancelListener(Dialog.OnCancelListener cancelListener){
-        if(dialog!=null)
+        if(dialog!=null) {
             dialog.setOnCancelListener(cancelListener);
+        }
     }
 
     public boolean enableViewById(int id) {
@@ -86,9 +88,15 @@ public abstract class BaseDialogFragment extends DialogFragment {
         return rootView.findViewById(id);
     }
 
+    /**
+     * Convinenece method for checking if label string is null
+     * @param text label string from DTO
+     * @return string if valid or undefined constant
+     */
     public String getTextForLabel(String text){
-        if(StringUtil.isNullOrEmpty(text))
+        if(StringUtil.isNullOrEmpty(text)) {
             return CarePayConstants.NOT_DEFINED;
+        }
         return text;
     }
 }
