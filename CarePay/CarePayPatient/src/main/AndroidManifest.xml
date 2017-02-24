@@ -45,9 +45,6 @@
             android:name=".demographics.activities.NewReviewDemographicsActivity"
             android:screenOrientation="sensorPortrait"/>
         <activity
-            android:name=".consentforms.SignatureActivity"
-            android:screenOrientation="sensorPortrait"/>
-        <activity
             android:name=".selectlanguage.SelectLanguageActivity"
             android:screenOrientation="sensorPortrait"/>
         <activity

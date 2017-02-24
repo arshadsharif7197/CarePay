@@ -1,6 +1,7 @@
 
 package com.carecloud.carepaylibray.payments.models;
 
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -51,7 +52,7 @@ public class PatientDTO {
     }
 
     public String getDateOfBirth() {
-        return StringUtil.getLabelForView(dateOfBirth);
+        return DateUtil.getInstance().setDateRaw(dateOfBirth).toStringWithFormatMmSlashDdSlashYyyy();
     }
 
     public void setDateOfBirth(String dateOfBirth) {

@@ -27,14 +27,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -57,17 +54,16 @@ import com.carecloud.carepaylibray.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.gson.Gson;
 import com.smartystreets.api.us_zipcode.City;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestCreator;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
@@ -184,10 +180,9 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         View view = inflater.inflate(R.layout.fragment_review_demographic, container, false);
 
 
-        initializeDemographicsDTO();
-
         rootview = (LinearLayout) view.findViewById(R.id.demographicsReviewRootLayout);
 
+        initializeDemographicsDTO();
 
         initialiseUIFields(view);
         setEditTexts(view);
@@ -211,9 +206,11 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         }
 
         formatEditText();
+        checkIfEnableButton();
         ((ScrollView)view.findViewById(R.id.adddemoScrollview)).smoothScrollTo(0,0);
         return view;
     }
+
 
     private void initializeDemographicsDTO() {
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
@@ -1018,8 +1015,8 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     }
 
     private void initViewFromModels() {
-        activityCallback.initializeDocumentFragment();
-        activityCallback.initializeInsurancesFragment();
+//        activityCallback. ();
+//        activityCallback.initializeInsurancesFragment();
         if (demographicPersDetailsPayloadDTO != null) {
             String imageUrl = demographicPersDetailsPayloadDTO.getProfilePhoto();
             if (!StringUtil.isNullOrEmpty(imageUrl)) {
@@ -1194,7 +1191,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             setProximaNovaRegularTypefaceLayout(getActivity(), cityLabel);
         }
 
-        setProximaNovaSemiboldTypeface(getActivity(), stateLabel);
+        setProximaNovaExtraboldTypeface(getActivity(), stateLabel);
 
         setProximaNovaSemiboldTypeface(getActivity(), peronalInfoSectionTextview);
         setProximaNovaSemiboldTypeface(getActivity(), demographicSectionTextView);

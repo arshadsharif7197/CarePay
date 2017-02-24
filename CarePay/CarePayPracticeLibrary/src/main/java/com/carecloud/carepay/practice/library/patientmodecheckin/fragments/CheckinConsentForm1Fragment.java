@@ -10,17 +10,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
@@ -28,29 +24,23 @@ import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
-import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.practice.FlowStateInfo;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-
-import static com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity.SUBFLOW_CONSENT;
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-
 import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import static com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity.SUBFLOW_CONSENT;
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 
 /**
@@ -60,25 +50,9 @@ import org.json.JSONObject;
 public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
 
 
-    private Button signConsentFormButton;
-    private TextView titleTextView;
-    private TextView descriptionTextView;
-    private TextView contentTextView;
-    private TextView dateTextView;
-    private Button signButton;
     private IFragmentCallback fragmentCallback;
-    private ScrollView consentFormScrollView;
-    private ConsentFormLabelsDTO consentFormLabelsDTO;
     private ConsentFormDTO consentFormDTO;
-    private LinearLayout mainContainer;
-    private View.OnClickListener clickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View clickListener) {
-            if (clickListener.getId() == com.carecloud.carepaylibrary.R.id.signButton && fragmentCallback != null) {
-                fragmentCallback.signButtonClicked();
-            }
-        }
-    };
+
     private int formIndex;
 
     private WebView webView;
@@ -369,42 +343,8 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        if (signConsentFormButton != null) {
-            signConsentFormButton.setOnClickListener(clickListener);
-        }
-
     }
 
-    private void setEnableNextButtonOnFullScroll() {
-        // enable next button on scrolling all the way to the bottom
-
-        if (consentFormScrollView.getScrollY() == 0) {
-            signConsentFormButton.setEnabled(true);
-        } else {
-
-            consentFormScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
-                @Override
-                public void onScrollChanged() {
-                    View view = consentFormScrollView.getChildAt(consentFormScrollView.getChildCount() - 1);
-                    int diff = (view.getBottom() - (consentFormScrollView.getHeight() + consentFormScrollView.getScrollY()));
-
-                    if (diff == 0) {
-                        signConsentFormButton.setEnabled(true);
-                    }
-                }
-            });
-
-        }
-    }
-
-    private void setTypefaces(View view) {
-        setGothamRoundedMediumTypeface(getActivity(), (TextView) view.findViewById(R.id.titleTv));
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.descriptionTv));
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.contentTv));
-        setProximaNovaRegularTypeface(getActivity(), (TextView) view.findViewById(R.id.dateTv));
-
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
