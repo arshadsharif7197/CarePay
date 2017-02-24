@@ -816,6 +816,10 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         finish();
     }
 
+    /**
+     * Entry point for navigating to medication fragment
+     * @param workflowDTO navigation dto
+     */
     public void loadMedicationsAllergy(String workflowDTO){
         MedicationsAllergyFragment medicationsAllergyFragment = new MedicationsAllergyFragment();
         medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class, workflowDTO);

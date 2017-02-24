@@ -33,6 +33,7 @@ public abstract class BaseDialogFragment extends DialogFragment {
         this.dialog = getDialog();
         initDialog(getDialog());
     }
+
     /**
      * Set a listener when the dialog is dimissed. Will be ignored if fragment is not shown as a dialog
      * @param dismissListener listener
