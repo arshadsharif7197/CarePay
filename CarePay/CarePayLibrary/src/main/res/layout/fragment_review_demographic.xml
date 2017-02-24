@@ -56,7 +56,6 @@
                 <Button
                     android:id="@+id/updateProfileImageButton"
                     android:layout_marginLeft="@dimen/dimen_20dp"
-                    android:paddingLeft="@dimen/dimen_20dp"
                     style="@style/DemographicsDocsButtonStyle"
                     android:textAlignment="center"
                     android:layout_width="0dp"
