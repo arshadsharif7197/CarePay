@@ -26,6 +26,7 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
 
     public interface CancelAppointmentDialogListener {
         void onRefreshAppointmentList(AppointmentDTO appointmentDTO);
+
         void onPreRegisterTapped(AppointmentDTO appointmentDTO, AppointmentsResultModel appointmentInfo);
     }
 
@@ -124,7 +125,7 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
     private View.OnClickListener getPreRegisterButtonClickListener() {
         return new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 if (null != callback) {
                     callback.onPreRegisterTapped(appointmentDTO, appointmentInfo);
                 }
