@@ -14,10 +14,6 @@ public class TransitionsDTO {
     @Expose
     private TransitionDTO cancel = new TransitionDTO();
 
-    @SerializedName("checkin")
-    @Expose
-    private TransitionDTO checkin = new TransitionDTO();
-
     @SerializedName("checkin_at_office")
     @Expose
     private TransitionDTO checkinAtOffice = new TransitionDTO();
@@ -65,20 +61,6 @@ public class TransitionsDTO {
      */
     public void setCancel(TransitionDTO cancel) {
         this.cancel = cancel;
-    }
-
-    /**
-     * @return The checkin
-     */
-    public TransitionDTO getCheckin() {
-        return checkin;
-    }
-
-    /**
-     * @param checkin The checkin
-     */
-    public void setCheckin(TransitionDTO checkin) {
-        this.checkin = checkin;
     }
 
     /**
