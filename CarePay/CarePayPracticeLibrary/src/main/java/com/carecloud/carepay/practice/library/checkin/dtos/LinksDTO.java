@@ -20,6 +20,14 @@ public class LinksDTO {
     @Expose
     private TransitionDTO queueStatus = new TransitionDTO();
 
+    @SerializedName("find_patient")
+    @Expose
+    private TransitionDTO findPatient = new TransitionDTO();
+
+    @SerializedName("patient_balances")
+    @Expose
+    private TransitionDTO patientBalances = new TransitionDTO();
+
     /**
      * @return The self
      */
@@ -60,5 +68,20 @@ public class LinksDTO {
      */
     public void setQueueStatus(TransitionDTO queueStatus) {
         this.queueStatus = queueStatus;
+    }
+
+    /**
+     * @return find patient link
+     */
+    public TransitionDTO getFindPatient() {
+        return findPatient;
+    }
+
+    /**
+     *
+     * @return patient balances link
+     */
+    public TransitionDTO getPatientBalances() {
+        return patientBalances;
     }
 }

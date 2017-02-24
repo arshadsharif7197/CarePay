@@ -17,7 +17,7 @@ import com.carecloud.carepay.practice.library.payments.dialogs.FindPatientDialog
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
@@ -29,6 +29,8 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItemMetadata;
 import com.carecloud.carepaylibray.payments.models.updatebalance.PaymentUpdateBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -41,7 +43,7 @@ import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 
-public class PaymentsActivity extends BasePracticeActivity implements FilterDialog.FilterCallBack, ResponsibilityDialog.PayResponsibilityCallback {
+public class PaymentsActivity extends BasePracticeActivity implements FilterDialog.FilterCallBack {
 
     private PaymentsLabelDTO paymentsLabel;
     private PaymentsModel paymentsModel;
@@ -121,10 +123,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         patientListView.setCallback(new TwoColumnPatientListView.TwoColumnPatientListViewListener() {
             @Override
             public void onPatientTapped(Object dto) {
-                PaymentsPatientBalancessDTO paymentsPatientBalancessDTO = (PaymentsPatientBalancessDTO) dto;
-
-                ResponsibilityDialog responsibilityDialog = new ResponsibilityDialog(getContext(), paymentsModel, paymentsPatientBalancessDTO, PaymentsActivity.this);
-                responsibilityDialog.show();
+                showResponsibilityDialog((PaymentsPatientBalancessDTO) dto);
             }
         });
     }
@@ -209,19 +208,17 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 FindPatientDialog findPatientDialog = new FindPatientDialog(PaymentsActivity.this,
                         transitionDTO, paymentsLabel.getPracticePaymentsDetailDialogCloseButton(),
                         paymentsLabel.getPracticePaymentsFindPatientLabel());
-                setOnItemClickedListener(findPatientDialog);
+                setFindPatientOnItemClickedListener(findPatientDialog);
                 findPatientDialog.show();
             }
         };
     }
 
-    private void setOnItemClickedListener(FindPatientDialog findPatientDialog) {
+    private void setFindPatientOnItemClickedListener(FindPatientDialog findPatientDialog) {
         findPatientDialog.setClickedListener(new FindPatientDialog.OnItemClickedListener() {
             @Override
             public void onItemClicked(PatientDTO patient) {
                 Map<String, String> queryMap = new HashMap<>();
-                queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
-                queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
                 queryMap.put("patient_id", patient.getPatientId());
 
                 TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getPaymentsPatientBalances();
@@ -246,8 +243,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             if (patientDetails != null && patientDetails.getPaymentPayload().getPatientBalances() != null && !patientDetails.getPaymentPayload().getPatientBalances().isEmpty()) {
                 PaymentsPatientBalancessDTO paymentsPatientBalancessDTO = patientDetails.getPaymentPayload().getPatientBalances().get(0);
 
-                ResponsibilityDialog responsibilityDialog = new ResponsibilityDialog(getContext(), paymentsModel, paymentsPatientBalancessDTO, PaymentsActivity.this);
-                responsibilityDialog.show();
+                showResponsibilityDialog(paymentsPatientBalancessDTO);
             }
             else
             {
@@ -313,20 +309,70 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     }
 
-
     private boolean isObject(PaymentsPatientBalancessDTO paymentsPatientBalance, UpdatePatientBalancesDTO updateBalance){
         return paymentsPatientBalance.getDemographics().getMetadata().getUserId().equals(updateBalance.getDemographics().getMetadata().getUserId()) &&
                 paymentsPatientBalance.getBalances().get(0).getMetadata().getPatientId().equals(updateBalance.getBalances().get(0).getMetadata().getPatientId());
     }
 
 
-    @Override
-    public void payFullResponsibility(PatienceBalanceDTO balance) {
-
+    private void showResponsibilityDialog(PaymentsPatientBalancessDTO balancessDTO) {
+        new ResponsibilityDialog(
+                getContext(),
+                paymentsLabel.getPracticePaymentsDetailDialogPaymentPlan(),
+                paymentsLabel.getPracticePaymentsDetailDialogPay(),
+                paymentsModel,
+                balancessDTO,
+                getResponsibilityDialogListener(balancessDTO)
+        ).show();
     }
 
-    @Override
-    public void payPartialResponsibility(PatienceBalanceDTO balance, double amount) {
+    private ResponsibilityDialog.PayResponsibilityCallback getResponsibilityDialogListener(final PaymentsPatientBalancessDTO patientPayments) {
+        return new ResponsibilityDialog.PayResponsibilityCallback() {
+            @Override
+            public void onLeftActionTapped() {
 
+            }
+
+            @Override
+            public void onRightActionTapped() {
+                if (HttpConstants.getDeviceInformation().getDeviceType().equals("Clover")) {
+                    setCloverPayment();
+                }
+            }
+
+            private void setCloverPayment()
+            {
+                List<PatienceBalanceDTO> balances = patientPayments.getBalances();
+                Gson gson = new Gson();
+                String patientPaymentMetaDataString = gson.toJson(balances.get(0).getMetadata());
+                String paymentTransitionString = gson.toJson(paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment());
+                Intent intent = new Intent();
+                intent.setAction(CarePayConstants.CLOVER_PAYMENT_INTENT);
+                intent.putExtra(CarePayConstants.CLOVER_PAYMENT_METADATA, patientPaymentMetaDataString);
+                intent.putExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, balances.get(0).getPayload().get(0).getAmount());
+                intent.putExtra(CarePayConstants.CLOVER_PAYMENT_TRANSITION, paymentTransitionString);
+                List<PaymentLineItem> paymentLineItems = new ArrayList<>();
+
+                for(PatienceBalanceDTO balance : balances) {
+
+                    PaymentLineItem paymentLineItem = new PaymentLineItem();
+                    paymentLineItem.setAmount(balance.getPayload().get(0).getAmount());
+                    paymentLineItem.setDescription(balance.getPayload().get(0).getType());
+
+                    PaymentLineItemMetadata metadata = new PaymentLineItemMetadata();
+                    metadata.setPatientID(balance.getMetadata().getPatientId());
+                    metadata.setPracticeID(balance.getMetadata().getPracticeId());
+//                metadata.setProviderID(balance.getMetadata().getProviderID()); //TODO this is missing in the DTO
+//                metadata.setLocationID(balance.getMetadata().getLocationID()); //TODO this is missing in the DTO
+
+                    paymentLineItems.add(paymentLineItem);
+
+                }
+
+                intent.putExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS, gson.toJson(paymentLineItems));
+
+                startActivityForResult(intent, CarePayConstants.CLOVER_PAYMENT_INTENT_REQUEST_CODE, new Bundle());
+            }
+        };
     }
 }

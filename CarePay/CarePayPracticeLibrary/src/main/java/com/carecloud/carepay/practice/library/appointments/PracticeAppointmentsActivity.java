@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
@@ -20,15 +21,17 @@ import com.carecloud.carepay.practice.library.customcomponent.TwoColumnPatientLi
 import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
 import com.carecloud.carepay.practice.library.customdialog.FilterDialog;
 import com.carecloud.carepay.practice.library.models.FilterModel;
+import com.carecloud.carepay.practice.library.payments.dialogs.FindPatientDialog;
+import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityDialog;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.payments.models.LocationDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
@@ -90,7 +93,7 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
                     startDate,
                     endDate,
                     checkInLabelDTO.getTodayLabel(),
-                    checkInLabelDTO.getTomorrow(),
+                    checkInLabelDTO.getTomorrowLabel(),
                     checkInLabelDTO.getThisMonthLabel(),
                     checkInLabelDTO.getNextDaysLabel()
             ).toUpperCase(Locale.getDefault());
@@ -104,16 +107,19 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
         patientListView.setCallback(new TwoColumnPatientListView.TwoColumnPatientListViewListener() {
             @Override
             public void onPatientTapped(Object dto) {
-//                AppointmentDTO appointmentDTO = (AppointmentDTO) dto;
-//                PatientDTO patientDTO = appointmentDTO.getPayload().getPatient();
-//                String name = patientDTO.getFirstName() + " " + patientDTO.getLastName();
-//
-//                Toast.makeText(getContext(), name, Toast.LENGTH_SHORT).show();
+                AppointmentDTO appointmentDTO = (AppointmentDTO) dto;
+                PatientDTO patientDTO = appointmentDTO.getPayload().getPatient();
+                String name = patientDTO.getFirstName() + " " + patientDTO.getLastName();
+
+                Toast.makeText(getContext(), name, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void initializeViews() {
+        TextView practicePaymentFindPatientTextView = (TextView) findViewById(R.id.practice_find_patient);
+        practicePaymentFindPatientTextView.setOnClickListener(getPracticePaymentFindPatientTextViewListener());
+
         if (checkInLabelDTO != null) {
             setViewTextById(R.id.practice_title, checkInLabelDTO.getActivityHeading());
             setViewTextById(R.id.practice_go_back, checkInLabelDTO.getGoBack());
@@ -121,6 +127,7 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
             setViewTextById(R.id.activity_practice_appointments_show_all_appointments_label, checkInLabelDTO.getAllAppointmentsLabel());
             setViewTextById(R.id.practice_patient_count_label, checkInLabelDTO.getTodayLabel());
             setViewTextById(R.id.practice_pending_count_label, checkInLabelDTO.getPendingLabel());
+            practicePaymentFindPatientTextView.setText(checkInLabelDTO.getPracticeCheckinFilterFindPatient());
         }
 
         findViewById(R.id.practice_go_back).setOnClickListener(new View.OnClickListener() {
@@ -297,6 +304,35 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
 
     }
 
+    private View.OnClickListener getPracticePaymentFindPatientTextViewListener() {
+        return new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getFindPatient();
+
+                FindPatientDialog findPatientDialog = new FindPatientDialog(getContext(),
+                        transitionDTO, checkInLabelDTO.getPracticeCheckinCloseLabel(),
+                        checkInLabelDTO.getPracticeCheckinFilterFindPatient());
+                findPatientDialog.setClickedListener(getFindPatientDialogListener());
+                findPatientDialog.show();
+            }
+        };
+    }
+
+    private FindPatientDialog.OnItemClickedListener getFindPatientDialogListener() {
+        return new FindPatientDialog.OnItemClickedListener() {
+            @Override
+            public void onItemClicked(com.carecloud.carepaylibray.payments.models.PatientDTO patient) {
+                Map<String, String> queryMap = new HashMap<>();
+                queryMap.put("patient_id", patient.getPatientId());
+
+                TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getPatientBalances();
+                getWorkflowServiceHelper().execute(transitionDTO, patientBalancesCallback, queryMap);
+            }
+        };
+    }
+
     WorkflowServiceCallback workflowServiceCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -319,4 +355,53 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+    private WorkflowServiceCallback patientBalancesCallback = new WorkflowServiceCallback() {
+
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+
+            PaymentsModel patientDetails = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
+
+            if (patientDetails != null && patientDetails.getPaymentPayload().getPatientBalances() != null && !patientDetails.getPaymentPayload().getPatientBalances().isEmpty()) {
+                PaymentsPatientBalancessDTO balancesDTO = patientDetails.getPaymentPayload().getPatientBalances().get(0);
+
+                new ResponsibilityDialog(
+                        getContext(),
+                        null,
+                        checkInLabelDTO.getCreateAppointmentLabel(),
+                        patientDetails,
+                        balancesDTO,
+                        getResponsibilityDialogListener(balancesDTO)
+                ).show();
+            } else {
+                Toast.makeText(getContext(), "Patient has no balance", Toast.LENGTH_LONG).show() ;
+            }
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+        }
+    };
+
+    private ResponsibilityDialog.PayResponsibilityCallback getResponsibilityDialogListener(final PaymentsPatientBalancessDTO patientPayments) {
+        return new ResponsibilityDialog.PayResponsibilityCallback() {
+            @Override
+            public void onLeftActionTapped() {
+
+            }
+
+            @Override
+            public void onRightActionTapped() {
+                Toast.makeText(getContext(), "Creating Appointment", Toast.LENGTH_SHORT).show();
+            }
+        };
+    }
 }

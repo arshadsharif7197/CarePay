@@ -1,10 +1,8 @@
 package com.carecloud.carepay.practice.library.payments.dialogs;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,8 +16,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
@@ -27,35 +23,41 @@ import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItem;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItemMetadata;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ResponsibilityDialog extends Dialog {
 
     private Context context;
+    private final String leftLabel;
+    private final String rightLabel;
     private PaymentsModel paymentsModel;
     private PaymentsPatientBalancessDTO patientPayments;
-    private List<PatienceBalanceDTO> balances;
     private PayResponsibilityCallback callback;
 
     /**
      * Constructor
      * @param context context
-     * @param paymentsModel paymentsModel
+     * @param leftLabel label for left button
+     * @param rightLabel label for right button
+     * @param paymentsModel Payments Model
      * @param patientPayments PaymentsPatientBalancessDTO
      */
-    public ResponsibilityDialog(Context context, PaymentsModel paymentsModel, PaymentsPatientBalancessDTO patientPayments, PayResponsibilityCallback callback) {
+    public ResponsibilityDialog(Context context,
+                                String leftLabel,
+                                String rightLabel,
+                                PaymentsModel paymentsModel,
+                                PaymentsPatientBalancessDTO patientPayments,
+                                PayResponsibilityCallback callback) {
         super(context);
         this.context = context;
+        this.leftLabel = leftLabel;
+        this.rightLabel = rightLabel;
         this.paymentsModel = paymentsModel;
         this.patientPayments = patientPayments;
         this.callback = callback;
@@ -70,11 +72,6 @@ public class ResponsibilityDialog extends Dialog {
         setCancelable(false);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
-//        WindowManager.LayoutParams params = getWindow().getAttributes();
-//        params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-//        params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.53);
-//        getWindow().setAttributes(params);
-
         onInitialization();
         handleException();
     }
@@ -86,6 +83,15 @@ public class ResponsibilityDialog extends Dialog {
 
     @SuppressLint("InflateParams")
     private void onInitialization() {
+        initializeHeader();
+
+        PaymentsLabelDTO paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
+        initializeBody(paymentsLabel);
+
+        initializeFooter();
+    }
+
+    private void initializeHeader() {
         final DemographicsSettingsPersonalDetailsPayloadDTO personalDetails = patientPayments.getDemographics().getPayload().getPersonalDetails();
         ((TextView) findViewById(R.id.patient_full_name)).setText(personalDetails.getFirstName() + " " + personalDetails.getLastName());
 
@@ -111,9 +117,10 @@ public class ResponsibilityDialog extends Dialog {
 
             profilePhoto.setVisibility(View.VISIBLE);
         }
+    }
 
-        PaymentsLabelDTO paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
-        balances = patientPayments.getBalances();
+    private void initializeBody(PaymentsLabelDTO paymentsLabel) {
+        List<PatienceBalanceDTO> balances = patientPayments.getBalances();
         if (balances != null && balances.size() > 0) {
             ScrollView amountDetails = (ScrollView) findViewById(R.id.payment_responsibility_balance_details);//TODO this needs to be in an adapter
 
@@ -147,29 +154,6 @@ public class ResponsibilityDialog extends Dialog {
                     paymentsLabel.getPracticePaymentsDetailDialogBalance() + ": "
                             + StringUtil.getFormattedBalanceAmount(totalAmount));
 
-            Button paymentPlanButton = (Button) findViewById(R.id.payment_plan_button);
-            paymentPlanButton.setText(paymentsLabel.getPracticePaymentsDetailDialogPaymentPlan());
-            SystemUtil.setGothamRoundedMediumTypeface(context, paymentPlanButton);
-            paymentPlanButton.setEnabled(paymentsModel.getPaymentsMetadata().hasPaymentPlan());
-            paymentPlanButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                }
-            });
-
-            Button paymentPay = (Button) findViewById(R.id.payment_pay_button);
-            paymentPay.setText(paymentsLabel.getPracticePaymentsDetailDialogPay());
-            SystemUtil.setGothamRoundedMediumTypeface(context, paymentPay);
-            paymentPay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (HttpConstants.getDeviceInformation().getDeviceType().equals("Clover")) {
-                        setCloverPayment();
-                    }
-                }
-            });
-
             findViewById(R.id.payment_responsibility_close_button).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -183,6 +167,42 @@ public class ResponsibilityDialog extends Dialog {
             ((TextView) findViewById(R.id.patient_provider_name))
                     .setText(getProviderName(balances.get(0).getMetadata().getPatientId()));
         }
+    }
+
+    private void initializeFooter() {
+        Button leftButton = (Button) findViewById(R.id.payment_plan_button);
+
+        if (null == leftLabel) {
+            leftButton.setVisibility(View.GONE);
+        } else {
+            leftButton.setText(leftLabel);
+            SystemUtil.setGothamRoundedMediumTypeface(context, leftButton);
+            leftButton.setEnabled(paymentsModel.getPaymentsMetadata().hasPaymentPlan());
+            leftButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (null != callback) {
+                        callback.onLeftActionTapped();
+                    }
+
+                    dismiss();
+                }
+            });
+        }
+
+        Button rightButton = (Button) findViewById(R.id.payment_pay_button);
+        rightButton.setText(rightLabel);
+        SystemUtil.setGothamRoundedMediumTypeface(context, rightButton);
+        rightButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (null != callback) {
+                    callback.onRightActionTapped();
+                }
+
+                dismiss();
+            }
+        });
     }
 
     private String getProviderName(String patientId) {
@@ -203,47 +223,10 @@ public class ResponsibilityDialog extends Dialog {
         return StringUtil.getLabelForView("");
     }
 
-    private void setCloverPayment()
-    {
-        Gson gson = new Gson();
-        String patientPaymentMetaDataString = gson.toJson(balances.get(0).getMetadata());
-        String paymentTransitionString = gson.toJson(paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment());
-        Intent intent = new Intent();
-        intent.setAction(CarePayConstants.CLOVER_PAYMENT_INTENT);
-        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_METADATA, patientPaymentMetaDataString);
-        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, balances.get(0).getPayload().get(0).getAmount());
-        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_TRANSITION, paymentTransitionString);
-        List<PaymentLineItem> paymentLineItems = new ArrayList<>();
-
-        for(PatienceBalanceDTO balance : balances) {
-
-            PaymentLineItem paymentLineItem = new PaymentLineItem();
-            paymentLineItem.setAmount(balance.getPayload().get(0).getAmount());
-            paymentLineItem.setDescription(balance.getPayload().get(0).getType());
-
-            PaymentLineItemMetadata metadata = new PaymentLineItemMetadata();
-            metadata.setPatientID(balance.getMetadata().getPatientId());
-            metadata.setPracticeID(balance.getMetadata().getPracticeId());
-//                metadata.setProviderID(balance.getMetadata().getProviderID()); //TODO this is missing in the DTO
-//                metadata.setLocationID(balance.getMetadata().getLocationID()); //TODO this is missing in the DTO
-
-            paymentLineItems.add(paymentLineItem);
-
-        }
-
-        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS, gson.toJson(paymentLineItems));
-
-        ((Activity)context).startActivityForResult(intent, CarePayConstants.CLOVER_PAYMENT_INTENT_REQUEST_CODE, new Bundle());
-//        getContext().startActivity(intent, new Bundle());
-        dismiss();
-    }
-
-
     public interface PayResponsibilityCallback{
 
-        void payFullResponsibility(PatienceBalanceDTO balance);
+        void onLeftActionTapped();
 
-        void payPartialResponsibility(PatienceBalanceDTO balance, double amount);
+        void onRightActionTapped();
     }
-
 }
