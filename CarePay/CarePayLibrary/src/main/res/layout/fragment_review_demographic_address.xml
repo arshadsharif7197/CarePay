@@ -92,7 +92,6 @@
                 android:id="@+id/cityTextInputLayout"
                 style="@style/SigninSignupTextInputStyle"
                 android:layout_weight="1"
-                android:layout_marginTop="@dimen/dimen_4dp"
                 app:hintTextAppearance="@style/FloatingLabelStyle">
 
                 <EditText
@@ -113,13 +112,12 @@
                     style="@style/FloatingLabelStyle"
                     android:paddingLeft="@dimen/dimen_15dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
+                    android:includeFontPadding="false"
+                    android:layout_height="@dimen/dimen_9dp"/>
 
                 <TextView
                     android:id="@+id/reviewDemographicsStateAutoCompleteTextView"
                     style="@style/SigninSignupEditStyle"
-                    android:layout_width="match_parent"
                     android:clickable="true"/>
 
             </LinearLayout>
