@@ -3,11 +3,13 @@ package com.carecloud.carepay.practice.clover.payments;
 import android.accounts.Account;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.carecloud.carepay.practice.clover.BuildConfig;
 import com.carecloud.carepay.practice.clover.R;
 import com.carecloud.carepay.practice.clover.models.CloverCardTransactionInfo;
 import com.carecloud.carepay.practice.clover.models.CloverPaymentDTO;
@@ -309,19 +311,19 @@ public class CloverPaymentActivity extends BaseActivity {
             if (resultCode == RESULT_OK) {
 
                 Payment payment = data.getParcelableExtra(Intents.EXTRA_PAYMENT);
-                Toast.makeText(getApplicationContext(), getString(R.string.payment_successful, payment.getOrder().getId()), Toast.LENGTH_SHORT).show();
-
                 if (payment != null) {
                     isPaymentComplete = true;
                     processPayment(payment);
-//
-//     postPaymentConfirmation(payment);
                 }
             } else if(resultCode == RESULT_CANCELED) {
-//                fakePaymentResponse();
-                Toast.makeText(getApplicationContext(), getString(R.string.payment_cancelled), Toast.LENGTH_SHORT).show();
-                setResult(resultCode);
-                finish();
+                String manufacturer = Build.MANUFACTURER;
+                if(BuildConfig.DEBUG && manufacturer.equals("unknown")) {
+                    fakePaymentResponse();
+                }else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.payment_cancelled), Toast.LENGTH_SHORT).show();
+                    setResult(resultCode);
+                    finish();
+                }
             } else {
                 Toast.makeText(getApplicationContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
                 setResult(resultCode);

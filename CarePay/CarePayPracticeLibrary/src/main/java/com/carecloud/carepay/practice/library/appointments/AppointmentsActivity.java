@@ -245,7 +245,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
                 if(jsonPayload!=null) {
                     Gson gson = new Gson();
                     PaymentUpdateBalanceDTO updateBalanceDTO = gson.fromJson(jsonPayload, PaymentUpdateBalanceDTO.class);
-                    updateAppointments(updateBalanceDTO.getUpdateAppointments().get(0));
+                    updateAppointments(updateBalanceDTO.getUpdateAppointments());
                 }
                 break;
             }
@@ -255,14 +255,8 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         }
     }
 
-    private void updateAppointments(AppointmentDTO updateAppointmentDTO){
-        for(AppointmentDTO appointmentDTO:appointmentsItems){
-            if(isObject(appointmentDTO, updateAppointmentDTO)){
-                appointmentDTO.setMetadata(updateAppointmentDTO.getMetadata());
-                appointmentDTO.setPayload(updateAppointmentDTO.getPayload());
-                break;
-            }
-        }
+    private void updateAppointments(List<AppointmentDTO> updateAppointments){
+        appointmentsItems = updateAppointments;
 
         AppointmentsListAdapter adapter = (AppointmentsListAdapter) appointmentsRecyclerView.getAdapter();
         adapter.setList(appointmentsItems);
@@ -270,9 +264,5 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
 
     }
 
-    private boolean isObject(AppointmentDTO appointmentDTO, AppointmentDTO updateAppointmentDTO){
-        return appointmentDTO.getPayload().getId().equals(updateAppointmentDTO.getPayload().getId()) &&
-                appointmentDTO.getPayload().getPatient().getId().equals(updateAppointmentDTO.getPayload().getPatient().getId());
-    }
 
 }
