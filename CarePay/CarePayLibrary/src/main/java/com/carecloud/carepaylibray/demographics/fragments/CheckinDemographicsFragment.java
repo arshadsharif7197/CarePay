@@ -211,6 +211,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         }
 
         formatEditText();
+        checkIfEnableButton();
         ((ScrollView)view.findViewById(R.id.adddemoScrollview)).smoothScrollTo(0,0);
         return view;
     }
