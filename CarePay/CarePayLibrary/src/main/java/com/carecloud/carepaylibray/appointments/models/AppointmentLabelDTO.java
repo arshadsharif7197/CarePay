@@ -242,6 +242,10 @@ public class AppointmentLabelDTO implements Serializable {
     @Expose
     private String datepickerCancelOption;
 
+    @SerializedName("appointments_pre_register")
+    @Expose
+    private String appointmentsPreRegister;
+
     public String getAppointmentSelectRangeButton() {
         return appointmentSelectRangeButton;
     }
@@ -1258,5 +1262,9 @@ public class AppointmentLabelDTO implements Serializable {
 
     public String getDatepickerCancelOption() {
         return datepickerCancelOption;
+    }
+
+    public String getAppointmentsPreRegister() {
+        return appointmentsPreRegister;
     }
 }

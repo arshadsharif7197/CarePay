@@ -18,18 +18,18 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
 
     private Context context;
-    private LinearLayout mainLayout;
     private AppointmentDTO appointmentDTO;
-    private AppointmentLabelDTO appointmentLabels;
+    private AppointmentLabelDTO labelsDto;
     private AppointmentsResultModel appointmentInfo;
     private AppointmentType appointmentType;
     private boolean isCancelSuccess;
 
-    public interface RefreshAppointmentListCallback {
+    public interface CancelAppointmentDialogListener {
         void onRefreshAppointmentList(AppointmentDTO appointmentDTO);
+        void onPreRegisterTapped(AppointmentDTO appointmentDTO, AppointmentsResultModel appointmentInfo);
     }
 
-    private RefreshAppointmentListCallback listCallback;
+    private CancelAppointmentDialogListener callback;
 
     /**
      * Contractor for   dialog.
@@ -39,80 +39,69 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
     public CancelAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
                                    AppointmentsResultModel appointmentInfo,
                                    AppointmentType appointmentType,
-                                   RefreshAppointmentListCallback listCallback) {
+                                   CancelAppointmentDialogListener callback) {
 
         super(context, appointmentDTO,false);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
         this.appointmentInfo = appointmentInfo;
         this.appointmentType = appointmentType;
-        this.listCallback = listCallback;
+        this.callback = callback;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainLayout = (LinearLayout) getAddActionChildView();
-        appointmentLabels = appointmentInfo.getMetadata().getLabel();
+        labelsDto = appointmentInfo.getMetadata().getLabel();
 
-        if (appointmentType == AppointmentType.CANCELLED_APPOINTMENT
-                || appointmentType == AppointmentType.MISSED_APPOINTMENT
-                || appointmentType == AppointmentType.REQUESTED_APPOINTMENT) {
-            setActionButtonCanceled();
-        }
-
-        if (appointmentType == AppointmentType.CANCEL_APPOINTMENT) {
-            setActionButton();
-        }
+        initializeViews((LinearLayout) getAddActionChildView());
     }
 
     @SuppressLint("InflateParams")
-    private void setActionButton() {
+    private void initializeViews(LinearLayout mainLayout) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View childActionView = inflater.inflate(R.layout.dialog_canceled_appointment, null);
+        View view = inflater.inflate(R.layout.dialog_canceled_appointment, null);
 
-        Button cancelAppointmentButton = (Button)childActionView.findViewById(R.id.cancelAppointmentButton);
+        switch (appointmentType) {
+            case MISSED_APPOINTMENT:
+                initializeOff(view, labelsDto.getAppointmentsMissedHeading(), R.color.lightningyellow, R.drawable.appointment_dialog_dark_gray_bg);
+                break;
+            case CANCELLED_APPOINTMENT:
+                initializeOff(view, labelsDto.getAppointmentsCanceledHeading(), R.color.harvard_crimson, R.drawable.appointment_dialog_dark_gray_bg);
+                break;
+            case REQUESTED_APPOINTMENT:
+                initializeOff(view, labelsDto.getAppointmentsRequestPendingHeading(), R.color.colorPrimary, R.drawable.appointment_dialog_yellow_bg);
+                break;
+            default:
+                initializeOn(view);
+        }
+
+        mainLayout.addView(view);
+    }
+
+    private void initializeOn(View view) {
+        Button cancelAppointmentButton = (Button)view.findViewById(R.id.cancelAppointmentButton);
         cancelAppointmentButton.setVisibility(View.VISIBLE);
-        cancelAppointmentButton.setText(appointmentLabels.getAppointmentsCancelHeading());
+        cancelAppointmentButton.setText(labelsDto.getAppointmentsCancelHeading());
         cancelAppointmentButton.setOnClickListener(this);
 
-        mainLayout.addView(childActionView);
+        Button preRegisterButton = (Button) view.findViewById(R.id.preRegisterButton);
+        preRegisterButton.setVisibility(View.VISIBLE);
+        preRegisterButton.setText(labelsDto.getAppointmentsPreRegister());
+        preRegisterButton.setOnClickListener(getPreRegisterButtonClickListener());
     }
 
     @SuppressWarnings("deprecation")
-    @SuppressLint("InflateParams")
-    private void setActionButtonCanceled() {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View childActionView = inflater.inflate(R.layout.dialog_canceled_appointment, null);
+    private void initializeOff(View view, String status, int statusColor, int headerColor) {
+        CarePayTextView appointmentStatusLabel = (CarePayTextView) view.findViewById(R.id.appointmentStatusLabel);
+        appointmentStatusLabel.setVisibility(View.VISIBLE);
+        appointmentStatusLabel.setText(status);
+        appointmentStatusLabel.setTextColor(ContextCompat.getColor(context, statusColor));
 
-        CarePayTextView appointmentStatusLabel = (CarePayTextView)
-                childActionView.findViewById(R.id.appointmentStatusLabel);
-
-        if (appointmentType == AppointmentType.MISSED_APPOINTMENT) {
-            appointmentStatusLabel.setVisibility(View.VISIBLE);
-            appointmentStatusLabel.setText(appointmentLabels.getAppointmentsMissedHeading());
-            appointmentStatusLabel.setTextColor(ContextCompat.getColor(context, R.color.lightningyellow));
-        } else if (appointmentType == AppointmentType.CANCELLED_APPOINTMENT) {
-            appointmentStatusLabel.setVisibility(View.VISIBLE);
-            appointmentStatusLabel.setText(appointmentLabels.getAppointmentsCanceledHeading());
-            appointmentStatusLabel.setTextColor(ContextCompat.getColor(context, R.color.harvard_crimson));
-        } else if (appointmentType == AppointmentType.REQUESTED_APPOINTMENT) {
-            appointmentStatusLabel.setVisibility(View.VISIBLE);
-            appointmentStatusLabel.setText(appointmentLabels.getAppointmentsRequestPendingHeading());
-            appointmentStatusLabel.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
-        }
-
-        if (appointmentType == AppointmentType.REQUESTED_APPOINTMENT) {
-            findViewById(R.id.dialogHeaderlayout).setBackground(context.getResources()
-                    .getDrawable(R.drawable.appointment_dialog_yellow_bg));
-        } else {
-            findViewById(R.id.dialogHeaderlayout).setBackground(context.getResources()
-                    .getDrawable(R.drawable.appointment_dialog_dark_gray_bg));
-        }
+        findViewById(R.id.dialogHeaderlayout).setBackground(context.getResources().getDrawable(headerColor));
 
         ((CarePayTextView) findViewById(R.id.appointDateTextView)).setTextColor(ContextCompat.getColor(context, R.color.white));
         ((CarePayTextView) findViewById(R.id.appointTimeTextView)).setTextColor(ContextCompat.getColor(context, R.color.white));
-        mainLayout.addView(childActionView);
     }
 
     void setCancelledSuccess(boolean cancelSuccess) {
@@ -124,11 +113,23 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
         super.onClick(view);
         int viewId = view.getId();
         if (viewId == R.id.cancelAppointmentButton) {
-            new CancelReasonAppointmentDialog(context, appointmentDTO, appointmentInfo, listCallback).show();
+            new CancelReasonAppointmentDialog(context, appointmentDTO, appointmentInfo, callback).show();
             cancel();
         } else if (viewId == R.id.dialogAppointHeaderTextView
-                && isCancelSuccess && listCallback != null) {
-            listCallback.onRefreshAppointmentList(appointmentDTO);
+                && isCancelSuccess && callback != null) {
+            callback.onRefreshAppointmentList(appointmentDTO);
         }
+    }
+
+    private View.OnClickListener getPreRegisterButtonClickListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (null != callback) {
+                    callback.onPreRegisterTapped(appointmentDTO, appointmentInfo);
+                }
+                dismiss();
+            }
+        };
     }
 }
