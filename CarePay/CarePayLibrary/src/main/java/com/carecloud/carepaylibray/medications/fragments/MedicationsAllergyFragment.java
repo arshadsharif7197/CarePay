@@ -41,6 +41,8 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
     public interface MedicationAllergyCallback {
         void showMedicationSearch();
         void showAllergiesSearch();
+        void medicationSubmitSuccess(WorkflowDTO workflowDTO);
+        void medicationSubmitFail(String message);
     }
 
     private View placeholderAllergies;
@@ -248,6 +250,7 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
             queryMap.put(medicationsAllergiesQueryStrings.getPatientId().getName(), medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPatientId());
             queryMap.put(medicationsAllergiesQueryStrings.getPracticeId().getName(), medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPracticeId());
             queryMap.put(medicationsAllergiesQueryStrings.getPracticeMgmt().getName(), medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getPracticeMgmt());
+            queryMap.put(medicationsAllergiesQueryStrings.getAppointment_id().getName(), medicationsAllergiesDTO.getPayload().getMedications().getMetadata().getAppointmentId());
 
             Map<String, String> headers = ((ISession) getContext()).getWorkflowServiceHelper().getPreferredLanguageHeader();
             headers.put("transition", "true");
@@ -275,11 +278,14 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ((ISession) getContext()).hideProgressDialog();
+            callback.medicationSubmitSuccess(workflowDTO);
+
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
             ((ISession) getContext()).hideProgressDialog();
+            callback.medicationSubmitFail(exceptionMessage);
         }
     };
 

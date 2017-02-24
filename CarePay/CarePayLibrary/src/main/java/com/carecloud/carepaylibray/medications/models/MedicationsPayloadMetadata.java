@@ -21,6 +21,10 @@ public class MedicationsPayloadMetadata {
     @Expose
     private String patientId;
 
+    @SerializedName("appointment_id")
+    @Expose
+    private String appointmentId;
+
     public String getPracticeMgmt() {
         return practiceMgmt;
     }
@@ -43,5 +47,13 @@ public class MedicationsPayloadMetadata {
 
     public void setPatientId(String patientId) {
         this.patientId = patientId;
+    }
+
+    public String getAppointmentId() {
+        return appointmentId;
+    }
+
+    public void setAppointmentId(String appointmentId) {
+        this.appointmentId = appointmentId;
     }
 }

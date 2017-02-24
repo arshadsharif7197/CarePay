@@ -104,6 +104,7 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
             checkInAtOfficeButton.setEnabled(true);
             cancel();
         } else if (viewId == R.id.checkInNowButton) {
+/*
             //FIXME
             TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCancel();
             transitionDTO.setMethod("GET");
@@ -116,20 +117,19 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
             queries.put(queryStrings.getPracticeMgmt().getName(), appointmentDTO.getMetadata().getPracticeMgmt());
             queries.put(queryStrings.getPracticeId().getName(), appointmentDTO.getMetadata().getPracticeId());
             queries.put("patient_id", appointmentDTO.getMetadata().getPatientId());
-
+            queries.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
 
             Map<String, String> header = ((ISession) context).getWorkflowServiceHelper().getPreferredLanguageHeader();
 //            header.put("transition", "true");
 
             ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, testMedicationsCallback, queries, header);
 
+*/
 
-/*
             checkInNowButton.setEnabled(false);
             TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCheckingIn();
             doTransition(transitionDTO, demographicsVerifyCallback);
             cancel();
-*/
         }
     }
 

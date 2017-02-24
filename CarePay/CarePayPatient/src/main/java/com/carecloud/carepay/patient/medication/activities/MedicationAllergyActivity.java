@@ -4,14 +4,18 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearchFragment;
 import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 /**
@@ -78,6 +82,17 @@ public class MedicationAllergyActivity extends BasePatientActivity implements Me
     @Override
     public void showAllergiesSearch() {
 
+    }
+
+    @Override
+    public void medicationSubmitSuccess(WorkflowDTO workflowDTO) {
+        PatientNavigationHelper.getInstance(getContext()).navigateToWorkflow(workflowDTO);
+    }
+
+    @Override
+    public void medicationSubmitFail(String message) {
+        SystemUtil.showDefaultFailureDialog(getContext());
+        Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), message);
     }
 
     @Override

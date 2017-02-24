@@ -22,6 +22,10 @@ public class MedicationsAllergiesQueryStrings {
     @Expose
     private QueryString patientId = new QueryString();
 
+    @SerializedName("appointment_id")
+    @Expose
+    private QueryString appointment_id = new QueryString();
+
     @SerializedName("search")
     @Expose
     private QueryString search = new QueryString();
@@ -56,5 +60,13 @@ public class MedicationsAllergiesQueryStrings {
 
     public void setSearch(QueryString search) {
         this.search = search;
+    }
+
+    public QueryString getAppointment_id() {
+        return appointment_id;
+    }
+
+    public void setAppointment_id(QueryString appointment_id) {
+        this.appointment_id = appointment_id;
     }
 }
