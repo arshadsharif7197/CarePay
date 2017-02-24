@@ -306,8 +306,8 @@ public class DemographicsActivity extends BasePatientActivity
         if (currentPageIndex == 0) {
             SystemUtil.hideSoftKeyboard(this);
             // sign-out from Cognito
-            CognitoAppHelper.getPool().getUser().signOut();
-            CognitoAppHelper.setUser(null);
+            getCognitoAppHelper().getPool().getUser().signOut();
+            getCognitoAppHelper().setUser(null);
 
             // finish the app
             DemographicsActivity.this.finishAffinity();

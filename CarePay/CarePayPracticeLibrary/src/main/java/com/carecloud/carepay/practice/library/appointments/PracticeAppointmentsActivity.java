@@ -93,7 +93,7 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
                     checkInLabelDTO.getTomorrow(),
                     checkInLabelDTO.getThisMonthLabel(),
                     checkInLabelDTO.getNextDaysLabel()
-            );
+            ).toUpperCase(Locale.getDefault());
             setViewTextById(R.id.practice_patient_count_label, practiceCountLabel);
         }
     }
@@ -250,7 +250,6 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
             @Override
             public void onClick(View view) {
 
-
                 String tag = DateRangePickerDialog.class.getSimpleName();
 
                 // DialogFragment.show() will take care of adding the fragment
@@ -263,7 +262,17 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
                 }
                 ft.addToBackStack(null);
 
-                DateRangePickerDialog dialog = DateRangePickerDialog.newInstance(checkInLabelDTO.getDateRangePickerDialogTitle(), checkInLabelDTO.getDateRangePickerDialogClose(), checkInLabelDTO.getTodayLabel(), startDate, endDate);
+                DateRangePickerDialog dialog = DateRangePickerDialog.newInstance(
+                        checkInLabelDTO.getDateRangePickerDialogTitle(),
+                        checkInLabelDTO.getDateRangePickerDialogClose(),
+                        checkInLabelDTO.getTodayLabel(),
+                        true,
+                        startDate,
+                        endDate,
+                        DateRangePickerDialog.getPreviousSixMonthCalendar(),
+                        DateRangePickerDialog.getNextSixMonthCalendar(),
+                        PracticeAppointmentsActivity.this
+                );
                 dialog.show(ft, tag);
             }
         });
@@ -281,6 +290,11 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
         queryMap.put("end_date", DateUtil.getInstance().setDate(endDate).toStringWithFormatYyyyDashMmDashDd());
 
         getWorkflowServiceHelper().execute(transitionDTO, workflowServiceCallback, queryMap);
+    }
+
+    @Override
+    public void onDateRangeCancelled() {
+
     }
 
     WorkflowServiceCallback workflowServiceCallback = new WorkflowServiceCallback() {

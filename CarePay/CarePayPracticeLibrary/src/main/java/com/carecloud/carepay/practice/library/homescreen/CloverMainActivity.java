@@ -41,7 +41,6 @@ import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.services.DemographicService;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -112,7 +111,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         changeScreenMode(homeScreenMode);
 
         registerReceiver(newCheckedInReceiver, new IntentFilter("NEW_CHECKEDIN_NOTIFICATION"));
-
     }
 
     private void initUIFields() {
@@ -182,7 +180,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
     private void setPracticeUser(PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO) {
         if (practiceHomeScreenPayloadDTO.getUserPractices() != null && practiceHomeScreenPayloadDTO.getUserPractices().size() > 0) {
-            ApplicationMode.getInstance().setUserPracticeDTO(practiceHomeScreenPayloadDTO.getUserPractices().get(0));
+            getApplicationMode().setUserPracticeDTO(getCognitoAppHelper(), practiceHomeScreenPayloadDTO.getUserPractices().get(0));
         } else {
             showUnAuthorizedDialog();
             //SystemUtil.showSuccessDialogMessage(CloverMainActivity.this,getString(R.string.unauthorized),getString(R.string.unauthorized_practice_user));
@@ -395,22 +393,20 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private void navigateToCheckIn() {
         JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
         Gson gson = new Gson();
+        TransitionDTO transitionDTO = null;
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
             PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
-            TransitionDTO transitionDTO = transitionsDTO.getPracticeCheckin();
-            Map<String, String> queryMap = new HashMap<>();
-            queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
-            queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
-            getWorkflowServiceHelper().execute(transitionDTO, checkInCallback, queryMap);
+            transitionDTO = transitionsDTO.getPracticeCheckin();
         } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
             getApplicationPreferences().setNavigateToAppointments(false);
             PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
-            TransitionDTO transitionDTO = transitionsDTO.getPatientCheckin();
-            Map<String, String> queryMap = new HashMap<>();
-            queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
-            queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
-            getWorkflowServiceHelper().execute(transitionDTO, checkInCallback, queryMap);
+            transitionDTO = transitionsDTO.getPatientCheckin();
         }
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
+        queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
+        getWorkflowServiceHelper().execute(transitionDTO, checkInCallback, queryMap);
+
     }
 
     private void navigateToPatientHome() {
@@ -429,8 +425,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             @Override
             public void onPatientModeSelected() {
                 Map<String, String> query = new HashMap<>();
-                query.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
-                query.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+                query.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+                query.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
                 getWorkflowServiceHelper().execute(transitionsDTO.getPatientMode(), commonTransitionCallback, query);
             }
         }, new ChangeModeDialog.LogoutClickListener() {
@@ -450,7 +446,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         Map<String, String> query = new HashMap<>();
         Map<String, String> headers = new HashMap<>();
         headers.put("x-api-key", HttpConstants.getApiStartKey());
-        headers.put("Authorization", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
+        headers.put("Authorization", getCognitoAppHelper().getCurrSession().getIdToken().getJWTToken());
         query.put("transition", "true");
         getWorkflowServiceHelper().execute(transitionsDTO, logOutCall, query, headers);
 
@@ -488,8 +484,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             // log out previous user from Cognito
-            CognitoAppHelper.getPool().getUser().signOut();
-            CognitoAppHelper.setUser(null);
+            getCognitoAppHelper().getPool().getUser().signOut();
+            getCognitoAppHelper().setUser(null);
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
             CloverMainActivity.this.finish();
         }
@@ -569,7 +565,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
      */
     private void getDemographicInformation() {
         // TODO: 11/17/2016 remove method
-        DemographicService apptService = (new BaseServiceGenerator(this).createService(DemographicService.class)); //, String token, String searchString
+        DemographicService apptService = (new BaseServiceGenerator().createService(getCognitoAppHelper(), DemographicService.class)); //, String token, String searchString
         Call<DemographicDTO> call = apptService.fetchDemographicInformation();
         call.enqueue(new Callback<DemographicDTO>() {
             @Override
@@ -609,9 +605,9 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         // log out previous user from Cognito
         Log.v(this.getClass().getSimpleName(), "sign out Cognito");
-        CognitoAppHelper.getPool().getUser().signOut();
-        CognitoAppHelper.setUser(null);
-        ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
+        getCognitoAppHelper().getPool().getUser().signOut();
+        getCognitoAppHelper().setUser(null);
+        getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
 
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
             Gson gson = new Gson();

@@ -39,12 +39,17 @@ public class DateRangePickerDialog extends BaseDialogFragment {
 
     private Date startDate;
     private Date endDate;
+    private Date minDate;
+    private Date maxDate;
 
     private String dialogTitle;
     private String todayLabel;
+    private boolean isCancelable;
 
     public interface DateRangePickerDialogListener {
         void onRangeSelected(Date start, Date end);
+
+        void onDateRangeCancelled();
     }
 
     @Override
@@ -54,7 +59,9 @@ public class DateRangePickerDialog extends BaseDialogFragment {
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            callback = (DateRangePickerDialogListener) context;
+            if (null == callback) {
+                callback = (DateRangePickerDialogListener) context;
+            }
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement DateRangePickerDialogListener");
@@ -67,20 +74,28 @@ public class DateRangePickerDialog extends BaseDialogFragment {
      * @param todayLabel today in current language
      * @param startDate current start date
      * @param endDate current end date
+     * @param minDate minimum date to be picked
+     * @param maxDate maximum date to be picked
      * @return new instance of DateRangePickerDialog 
      */
-    public static DateRangePickerDialog newInstance(String dialogTitle, String closeText, String todayLabel, Date startDate, Date endDate) {
+    public static DateRangePickerDialog newInstance(String dialogTitle, String closeText, String todayLabel,
+                                                    boolean isCancelable, Date startDate, Date endDate, Date minDate, Date maxDate,
+                                                    DateRangePickerDialogListener callback) {
         // Supply num input as an argument
         Bundle args = new Bundle();
-        args.putString("cancelString", closeText);
         args.putBoolean("isFooterVisible", false);
+        args.putBoolean("isCancelable", isCancelable);
+        args.putString("cancelString", closeText);
         args.putString("dialogTitle", dialogTitle);
         args.putString("todayLabel", todayLabel);
         args.putSerializable("startDate", startDate);
         args.putSerializable("endDate", endDate);
+        args.putSerializable("minDate", minDate);
+        args.putSerializable("maxDate", maxDate);
 
         DateRangePickerDialog dialog = new DateRangePickerDialog();
         dialog.setArguments(args);
+        dialog.setCallback(callback);
 
         return dialog;
     }
@@ -94,6 +109,9 @@ public class DateRangePickerDialog extends BaseDialogFragment {
         this.todayLabel = arguments.getString("todayLabel");
         this.startDate = (Date) arguments.getSerializable("startDate");
         this.endDate = (Date) arguments.getSerializable("endDate");
+        this.minDate = (Date) arguments.getSerializable("minDate");
+        this.maxDate = (Date) arguments.getSerializable("maxDate");
+        this.isCancelable = arguments.getBoolean("isCancelable");
 
         checkDates();
     }
@@ -178,7 +196,8 @@ public class DateRangePickerDialog extends BaseDialogFragment {
     private void inflateUIComponents(View view) {
         removeHeader();
         initializeApplyDateRangeButton(view);
-        setCancelImage(R.drawable.icn_close);
+        setCancelImage(isCancelable ? R.drawable.icn_close : R.drawable.icn_arrow_up);
+        setCancelable(isCancelable);
     }
 
     private void initializeApplyDateRangeButton(View view) {
@@ -212,7 +231,7 @@ public class DateRangePickerDialog extends BaseDialogFragment {
         selectedDates.add(endDate);
 
         calendarPickerView = (CalendarPickerView) view.findViewById(com.carecloud.carepaylibrary.R.id.calendarView);
-        calendarPickerView.init(getPreviousSixMonthCalendar(), getNextSixMonthCalendar())
+        calendarPickerView.init(minDate, maxDate)
                 .inMode(CalendarPickerView.SelectionMode.RANGE)
                 .withSelectedDates(selectedDates);
 
@@ -255,7 +274,7 @@ public class DateRangePickerDialog extends BaseDialogFragment {
     /**
      * Method to return Calendar instance for previous six months
      */
-    private Date getPreviousSixMonthCalendar() {
+    public static Date getPreviousSixMonthCalendar() {
         final Calendar previousSixMonths = Calendar.getInstance();
         previousSixMonths.add(Calendar.MONTH, -5);
         return previousSixMonths.getTime();
@@ -264,7 +283,7 @@ public class DateRangePickerDialog extends BaseDialogFragment {
     /**
      * Method to return Calendar instance for next six months
      */
-    private Date getNextSixMonthCalendar() {
+    public static Date getNextSixMonthCalendar() {
         final Calendar nextSixMonths = Calendar.getInstance();
         nextSixMonths.add(Calendar.MONTH, 5);
         return nextSixMonths.getTime();
@@ -277,6 +296,14 @@ public class DateRangePickerDialog extends BaseDialogFragment {
 
     @Override
     protected void onDialogCancel() {
+        if (null != callback) {
+            callback.onDateRangeCancelled();
+        }
+
         dismiss();
+    }
+
+    public void setCallback(DateRangePickerDialogListener callback) {
+        this.callback = callback;
     }
 }

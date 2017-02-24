@@ -77,6 +77,7 @@ public class CarePayConstants {
     public static final String ADD_APPOINTMENT_PATIENT_ID = "add_appointment_patient_id";
     public static final String PAYMENT_CREDIT_CARD_INFO = "payment_credit_card_info";
     public static final String TAB_SECTION_NUMBER = "section_number";
+    public static final int    MAX_INSURANCE_DOC = 3;
 
     public static final String RAW_DATE_FORMAT_FOR_TESTS               = "yyyy-MM-dd'T'HH:mm:ssX";
     public static final String RAW_DATE_FORMAT_FOR_CALENDAR_DATE_RANGE = "EEE, MMM d, ''yy";
@@ -120,4 +121,5 @@ public class CarePayConstants {
     public static final String CLOVER_PAYMENT_METADATA = "clover_payment_metadata";
     public static final String CLOVER_PAYMENT_TRANSITION = "clover_payment_transition";
     public static final String CLOVER_PAYMENT_LINE_ITEMS = "clover_payment_line_items";
+    public static final String CLOVER_PAYMENT_SUCCESS_INTENT_DATA = "clover_payment_success_intent_data";
 }

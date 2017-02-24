@@ -65,12 +65,14 @@
                     android:paddingStart="@dimen/dimen_24dp"
                     android:paddingTop="@dimen/dimen_17dp" />
 
-                <android.support.v7.widget.RecyclerView
+               <com.carecloud.carepaylibray.customcomponents.RecyclerViewWithDivider
                     android:id="@+id/patient_searched_list"
                     android:layout_width="match_parent"
                     android:layout_height="182dp"
                     android:layout_marginTop="@dimen/dimen_18dp"
                     android:background="@drawable/layout_white_background"
+                    android:paddingLeft="@dimen/dimen_11dp"
+                    android:paddingRight="@dimen/dimen_11dp"
                     android:visibility="gone" />
             </LinearLayout>
         </LinearLayout>

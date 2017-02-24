@@ -46,6 +46,7 @@ public class PatientSearchResultAdapter extends RecyclerView.Adapter<PatientSear
     public void onBindViewHolder(PatientSearchResultAdapter.ViewHolder holder, int position) {
         PatientDTO patient = patients.get(position);
         holder.name.setText(patient.getFirstName() + " " + patient.getLastName());
+        holder.patientDOBTextView.setText(patient.getDateOfBirth());
     }
 
     @Override
@@ -56,6 +57,7 @@ public class PatientSearchResultAdapter extends RecyclerView.Adapter<PatientSear
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private CarePayTextView name;
+        private CarePayTextView patientDOBTextView;
 
         /**
          * Constructor
@@ -65,6 +67,7 @@ public class PatientSearchResultAdapter extends RecyclerView.Adapter<PatientSear
             super(itemView);
 
             name = (CarePayTextView) itemView.findViewById(R.id.search_result_item_text);
+            patientDOBTextView = (CarePayTextView) itemView.findViewById(R.id.patientDOBTextView);
             itemView.setOnClickListener(this);
         }
 

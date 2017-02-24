@@ -15,7 +15,6 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -25,18 +24,17 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.DateUtil;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.picasso.Picasso;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by harshal_patil on 10/19/2016.
@@ -70,8 +68,8 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
 
     @Override
     public void onBindViewHolder(final AppointmentsListViewHolder holder, int position) {
-        final Object object = appointmentsArrayList.get(position);
-        final AppointmentsPayloadDTO item = ((AppointmentDTO) object).getPayload();
+        final AppointmentDTO appointmentDTO = appointmentsArrayList.get(position);
+        final AppointmentsPayloadDTO item = appointmentDTO.getPayload();
         AppointmentLabelDTO appointmentLabels = appointmentsResultModel.getMetadata().getLabel();
 
         holder.doctorName.setText(item.getProvider().getName());
@@ -87,12 +85,10 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         String startDay = StringUtils.substringBefore(DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal(), ",");
         String endDay = DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal()
                 .substring(DateUtil.getInstance().getDateAsDayMonthDayOrdinal().indexOf(","));
-        boolean isToday;
-        if (DateUtil.getInstance().isToday()) {
-            isToday = true;
+        boolean isToday = DateUtil.getInstance().isToday();
+        if (isToday) {
             strToday = startDay.replace(startDay, appointmentLabels.getAppointmentsTodayHeadingSmall()) + endDay;
         } else {
-            isToday = false;
             strToday = startDay + endDay;
         }
         holder.appointmentDate.setText(strToday);
@@ -100,24 +96,21 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         holder.appointmentTime.setText(DateUtil.getInstance().getTime12Hour());
         holder.startCheckIn.setText(appointmentLabels.getAppointmentsPracticeCheckin());
 
-        Date appointmentTime = DateUtil.getInstance().setDateRaw(item.getStartTime()).getDate();
+        Date appointmentTime = DateUtil.getInstance().setDateRaw(item.getEndTime()).getDate();
         // Get current date/time in required format
         Date currentDate = DateUtil.getInstance().setToCurrent().getDate();
         boolean isMissed = false;
-        if (appointmentTime != null && currentDate != null) {
-            long differenceInMilli = appointmentTime.getTime() - currentDate.getTime();
-            long differenceInMinutes = TimeUnit.MILLISECONDS.toMinutes(differenceInMilli);
-            if (differenceInMinutes < 0) {
-                isMissed = true;
-            }
+        long differenceInMilli = appointmentTime.getTime() - currentDate.getTime();
+        long differenceInMinutes = TimeUnit.MILLISECONDS.toMinutes(differenceInMilli);
+        if (differenceInMinutes < 0) {
+            isMissed = true;
         }
+
         boolean allowEarlyCheckin = appointmentsResultModel.getPayload().getAppointmentsSettings().get(0).getCheckin().getAllowEarlyCheckin();
         String allowEarlyCheckinPeriodStr = appointmentsResultModel.getPayload().getAppointmentsSettings().get(0).getCheckin().getEarlyCheckinPeriod();
         long allowEarlyCheckinPeriod = Long.parseLong(allowEarlyCheckinPeriodStr);
         // Get current date/time in required format
         boolean isPending = item.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.PENDING);
-        long differenceInMilli = appointmentTime.getTime() - currentDate.getTime();
-        long differenceInMinutes = TimeUnit.MILLISECONDS.toMinutes(differenceInMilli);
 
         if (isPending && isToday && !isMissed) {
             holder.startCheckIn.setClickable(true);
@@ -151,9 +144,9 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
             public void onClick(View view) {
 
                 Map<String, String> queries = new HashMap<>();
-                queries.put("practice_mgmt", ((AppointmentDTO) object).getMetadata().getPracticeMgmt());
-                queries.put("practice_id", ((AppointmentDTO) object).getMetadata().getPracticeId());
-                queries.put("appointment_id", ((AppointmentDTO) object).getMetadata().getAppointmentId());
+                queries.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
+                queries.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
+                queries.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
 
                 Map<String, String> header = new HashMap<>();
                 header.put("transition", "true");
@@ -162,6 +155,10 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
                 ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, transitionToDemographicsVerifyCallback, queries, header);
             }
         });
+    }
+
+    public void setList(List<AppointmentDTO> appointmentsArrayList){
+        this.appointmentsArrayList = appointmentsArrayList;
     }
 
     private WorkflowServiceCallback transitionToDemographicsVerifyCallback = new WorkflowServiceCallback() {
@@ -173,7 +170,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ((ISession) context).hideProgressDialog();
-            PracticeNavigationHelper.navigateToWorkflow(context, workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(context, workflowDTO, true, CarePayConstants.CLOVER_PAYMENT_INTENT_REQUEST_CODE);
         }
 
         @Override

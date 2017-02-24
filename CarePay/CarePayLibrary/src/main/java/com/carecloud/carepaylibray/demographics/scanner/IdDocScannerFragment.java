@@ -155,7 +155,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         idStateClickable = (TextView) view.findViewById(R.id.demogrDocsStateClickable);
         label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsChooseLabel();
         idStateClickable.setText(label);
-        final String titleSelectState = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsTitleSelectState();
+        final String titleSelectState = label;
         idStateClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

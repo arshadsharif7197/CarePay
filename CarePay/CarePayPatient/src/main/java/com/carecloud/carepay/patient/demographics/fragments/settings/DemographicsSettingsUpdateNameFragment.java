@@ -239,7 +239,7 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
     }
 
     private void getPersonalDetails() {
-        String userId = CognitoAppHelper.getCurrUser();
+        String userId = getCognitoAppHelper().getCurrUser();
 
         if (demographicsSettingsDTO != null) {
             DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();

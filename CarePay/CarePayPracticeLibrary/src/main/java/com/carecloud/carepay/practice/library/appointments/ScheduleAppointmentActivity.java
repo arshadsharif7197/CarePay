@@ -1,5 +1,7 @@
 package com.carecloud.carepay.practice.library.appointments;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,22 +14,26 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.adapters.ProvidersListAdapter;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAvailableHoursDialog;
+import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeRequestAppointmentDialog;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeDialog;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -39,15 +45,20 @@ import java.util.Map;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class ScheduleAppointmentActivity extends BasePracticeActivity implements View.OnClickListener,
-        ProvidersListAdapter.OnProviderListItemClickListener, VisitTypeDialog.OnDialogListItemClickListener  {
+        ProvidersListAdapter.OnProviderListItemClickListener,
+        VisitTypeDialog.OnDialogListItemClickListener,
+        PracticeAvailableHoursDialog.PracticeAvailableHoursDialogListener,
+        DateRangePickerDialog.DateRangePickerDialogListener, PracticeRequestAppointmentDialog.PracticeRequestAppointmentDialogListener {
 
     private RecyclerView appointmentsRecyclerView;
     private AppointmentsResultModel scheduleResourcesModel;
 
-    private ProgressBar appointmentProgressBar;
     private LinearLayout noAppointmentView;
 
     private AppointmentResourcesDTO selectedResource;
+    private AppointmentAvailabilityDTO availabilityDTO;
+    private AppointmentsSlotsDTO appointmentsSlotsDTO;
+    private AppointmentLabelDTO labels;
     private VisitTypeDTO selectedVisitTypeDTO;
     private Date startDate;
     private Date endDate;
@@ -63,7 +74,7 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
         appointmentsRecyclerView = (RecyclerView) findViewById(R.id.provider_recycler_view);
         appointmentsRecyclerView.setHasFixedSize(true);
 
-        appointmentProgressBar = (ProgressBar) findViewById(R.id.appointmentProgressBar);
+        ProgressBar appointmentProgressBar = (ProgressBar) findViewById(R.id.appointmentProgressBar);
         appointmentProgressBar.setVisibility(View.GONE);
 
         noAppointmentView = (LinearLayout) findViewById(R.id.no_providers_layout);
@@ -161,7 +172,7 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
     };
 
     private void populateWithLabels() {
-        AppointmentLabelDTO labels = scheduleResourcesModel.getMetadata().getLabel();
+        labels = scheduleResourcesModel.getMetadata().getLabel();
         if (labels != null) {
             ((TextView) findViewById(R.id.provider_logout)).setText(labels.getAppointmentsBtnLogout());
             ((TextView) findViewById(R.id.provider_screen_header)).setText(labels.getProviderListHeader());
@@ -176,11 +187,11 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
      */
     private void getResourcesList() {
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
-        queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+        queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+        queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
 
         AppointmentsResultModel appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
-        setPatientId(ApplicationMode.getInstance().getPatientId()==null?"":ApplicationMode.getInstance().getPatientId());
+        setPatientId(getApplicationMode().getPatientId()==null?"":getApplicationMode().getPatientId());
         TransitionDTO resourcesToSchedule = appointmentsResultModel.getMetadata().getLinks().getResourcesToSchedule();
         getWorkflowServiceHelper().execute(resourcesToSchedule, scheduleResourcesCallback, queryMap);
     }
@@ -243,7 +254,6 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
 
     @Override
     public void onProviderListItemClickListener(int position) {
-//        List<AppointmentResourcesDTO> resources = scheduleResourcesModel.getPayload().getResourcesToSchedule().get(0).getResources();
         selectedResource = resources.get(position);
         VisitTypeDialog visitTypeDialog = new VisitTypeDialog(this, selectedResource, this, scheduleResourcesModel);
         visitTypeDialog.show();
@@ -251,28 +261,66 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
 
     /**
      * what to do with the selected visit type and provider
-     * @param selectedVisitType selected visit type from dialog
+     * @param visitTypeDTO selected visit type from dialog
      */
-    public void onDialogListItemClickListener(VisitTypeDTO selectedVisitType) {
+    public void onDialogListItemClickListener(VisitTypeDTO visitTypeDTO) {
+        this.selectedVisitTypeDTO = visitTypeDTO;
 
-        this.selectedVisitTypeDTO = selectedVisitType;
-        new PracticeAvailableHoursDialog(ScheduleAppointmentActivity.this,scheduleResourcesModel.getMetadata().getLabel().getAvailableHoursBack()).show();
+        String cancelString = labels.getAvailableHoursBack();
+        new PracticeAvailableHoursDialog(getContext(), cancelString, visitTypeDTO, this).show();
     }
 
-    public Date getStartDate(){
-        return startDate;
+    @Override
+    public void onAppointmentTimeSelected(AppointmentAvailabilityDTO availabilityDTO, AppointmentsSlotsDTO appointmentsSlotsDTO) {
+        this.availabilityDTO = availabilityDTO;
+        this.appointmentsSlotsDTO = appointmentsSlotsDTO;
+        // Call Request appointment Summary dialog from here
+        String cancelString = labels.getAvailableHoursBack();
+        new PracticeRequestAppointmentDialog(this, cancelString, labels, appointmentsSlotsDTO, availabilityDTO, selectedVisitTypeDTO, this).show();
     }
 
-    public void setStartDate(Date date){
-        this.startDate = date;
+    @Override
+    public void onDateRangeTapped() {
+        String tag = DateRangePickerDialog.class.getSimpleName();
+
+        // DialogFragment.show() will take care of adding the fragment
+        // in a transaction.  We also want to remove any currently showing
+        // dialog, so make our own transaction and take care of that here.
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag(tag);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        DateUtil dateUtil = DateUtil.getInstance().setToCurrent();
+        DateRangePickerDialog dialog = DateRangePickerDialog.newInstance(
+                labels.getPickDateHeading(),
+                labels.getDatepickerCancelOption(),
+                labels.getTodayDateOption(),
+                false,
+                startDate,
+                endDate,
+                dateUtil.getDate(),
+                dateUtil.addDays(9).getDate(),
+                this
+        );
+
+        dialog.show(ft, tag);
     }
 
-    public Date getEndDate(){
-        return endDate;
+    @Override
+    public void onRangeSelected(Date start, Date end) {
+        this.startDate = start;
+        this.endDate = end;
+
+        onDateRangeCancelled();
     }
 
-    public void setEndDate(Date date){
-        this.endDate = date;
+    @Override
+    public void onDateRangeCancelled() {
+        String cancelString = labels.getAvailableHoursBack();
+        new PracticeAvailableHoursDialog(getContext(), cancelString, selectedVisitTypeDTO, this, startDate, endDate).show();
     }
 
     public AppointmentsResultModel getResourcesToSchedule(){
@@ -283,10 +331,6 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
         return selectedResource;
     }
 
-    public VisitTypeDTO getSelectedVisitTypeDTO(){
-        return selectedVisitTypeDTO;
-    }
-
     public String getPatientId() {
         return patientId;
     }
@@ -295,4 +339,60 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
         this.patientId = patientId;
     }
 
+    @Override
+    public void onAppointmentRequested(String comments) {
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("language", getApplicationPreferences().getUserLanguage());
+        queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+        queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
+
+        JsonObject appointmentJSONObj = new JsonObject();
+        JsonObject patientJSONObj = new JsonObject();
+
+        patientJSONObj.addProperty("id", getPatientId());
+        appointmentJSONObj.addProperty("start_time", appointmentsSlotsDTO.getStartTime());
+        appointmentJSONObj.addProperty("end_time", appointmentsSlotsDTO.getEndTime());
+        appointmentJSONObj.addProperty("appointment_status_id", "5");
+        appointmentJSONObj.addProperty("location_id", availabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getLocation().getId());
+        appointmentJSONObj.addProperty("provider_id", selectedResource.getResource().getProvider().getId());
+        appointmentJSONObj.addProperty("visit_reason_id", selectedVisitTypeDTO.getId());
+        appointmentJSONObj.addProperty("resource_id", selectedResource.getResource().getId());
+        appointmentJSONObj.addProperty("chief_complaint", selectedVisitTypeDTO.getName());
+        appointmentJSONObj.addProperty("comments", comments);
+        appointmentJSONObj.add("patient", patientJSONObj);
+
+        JsonObject makeAppointmentJSONObj = new JsonObject();
+        makeAppointmentJSONObj.add("appointment", appointmentJSONObj);
+
+        TransitionDTO transitionDTO = scheduleResourcesModel.getMetadata().getTransitions().getMakeAppointment();
+
+        getWorkflowServiceHelper().execute(transitionDTO, getMakeAppointmentCallback,makeAppointmentJSONObj
+                .toString(), queryMap);
+    }
+
+    @Override
+    public void onAppointmentCancelled() {
+        onDateRangeCancelled();
+    }
+
+    private WorkflowServiceCallback getMakeAppointmentCallback = new WorkflowServiceCallback() {
+
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            showAppointmentConfirmation();
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            SystemUtil.showDefaultFailureDialog(getContext());
+            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
 }

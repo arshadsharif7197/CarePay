@@ -234,6 +234,14 @@ public class AppointmentLabelDTO implements Serializable {
     @Expose
     private String appointmentEditDateRangeButton;
 
+    @SerializedName("today_date_option")
+    @Expose
+    private String todayDateOption;
+
+    @SerializedName("datepicker_cancel_option")
+    @Expose
+    private String datepickerCancelOption;
+
     public String getAppointmentSelectRangeButton() {
         return appointmentSelectRangeButton;
     }
@@ -1242,5 +1250,13 @@ public class AppointmentLabelDTO implements Serializable {
 
     public void setAppointmentEditDateRangeButton(String appointmentEditDateRangeButton) {
         this.appointmentEditDateRangeButton = appointmentEditDateRangeButton;
+    }
+
+    public String getTodayDateOption() {
+        return todayDateOption;
+    }
+
+    public String getDatepickerCancelOption() {
+        return datepickerCancelOption;
     }
 }

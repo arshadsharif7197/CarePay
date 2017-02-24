@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibray.adapters.PaymentItemsListAdapter;
+import com.carecloud.carepaylibray.base.IApplicationSession;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -82,7 +83,7 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
                 ImageView dialogCloseHeader;
                 TextView closeLabel;
 
-                if (ApplicationMode.getInstance().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)) {
+                if (((IApplicationSession) context).getApplicationMode().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)) {
 
                     dialogCloseHeader = (ImageView) findViewById(R.id.payment_close_button);
                     dialogCloseHeader.setOnClickListener(new View.OnClickListener() {
