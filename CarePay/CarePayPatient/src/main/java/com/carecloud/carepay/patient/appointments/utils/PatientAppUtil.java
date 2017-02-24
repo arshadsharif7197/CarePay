@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepaylibray.base.BaseActivity;
+import com.carecloud.carepaylibray.customcomponents.SuccessMessageToast;
 import com.carecloud.carepaylibray.utils.CustomPopupNotification;
 
 /**
@@ -29,5 +30,17 @@ public class PatientAppUtil {
                 .showPopWindow();
 
     }
+
+    public static void showSuccessToast(Context context, String successMessage) {
+
+        if (null == context) {
+            return;
+        }
+
+        new SuccessMessageToast(context, successMessage)
+                .show();
+
+    }
+
 
 }

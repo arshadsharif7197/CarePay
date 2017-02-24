@@ -497,7 +497,7 @@ public class AppointmentsListFragment extends BaseFragment {
                     .getAppointmentRequestSuccessMessage();
         }
 
-        PatientAppUtil.showSuccessNotification(getActivity(), getActivity().getWindow().getCurrentFocus(), appointmentRequestSuccessMessage);
+        PatientAppUtil.showSuccessToast(getContext(), appointmentRequestSuccessMessage );
 
     }
 
