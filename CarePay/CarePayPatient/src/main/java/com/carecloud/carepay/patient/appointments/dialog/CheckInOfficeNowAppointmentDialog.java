@@ -2,7 +2,6 @@ package com.carecloud.carepay.patient.appointments.dialog;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,48 +11,70 @@ import android.widget.LinearLayout;
 
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsCheckinDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog;
 import com.carecloud.carepaylibray.customdialogs.QrCodeViewDialog;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
 
+    private final boolean canCheckIn;
+    private final CheckInOfficeNowAppointmentDialogListener callback;
     private Context context;
     private LinearLayout mainLayout;
     private AppointmentDTO appointmentDTO;
     private AppointmentsResultModel appointmentInfo;
-    private Boolean enableCheckin;
     private Button checkInNowButton;
     private Button checkInAtOfficeButton;
+
+    public interface CheckInOfficeNowAppointmentDialogListener {
+        void onPreRegisterTapped(AppointmentDTO appointmentDTO, AppointmentsResultModel appointmentInfo);
+    }
 
     /**
      * @param context           context
      * @param appointmentDTO    appointment dto
      * @param appointmentInfo   transition dto
      */
-    public CheckInOfficeNowAppointmentDialog(Context context, Boolean enableCheckin, AppointmentDTO appointmentDTO,
-                                             AppointmentsResultModel appointmentInfo) {
+    public CheckInOfficeNowAppointmentDialog(Context context,
+                                             AppointmentDTO appointmentDTO,
+                                             AppointmentsResultModel appointmentInfo,
+                                             CheckInOfficeNowAppointmentDialogListener callback) {
         super(context, appointmentDTO, false);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
         this.appointmentInfo = appointmentInfo;
-        this.enableCheckin = enableCheckin;
+        this.callback = callback;
+        this.canCheckIn = canCheckIn();
+    }
+
+    private boolean canCheckIn() {
+        AppointmentsCheckinDTO checkin = appointmentInfo.getPayload().getAppointmentsSettings().get(0).getCheckin();
+        boolean allowEarlyCheckin = checkin.getAllowEarlyCheckin();
+        long allowEarlyCheckinPeriod = Long.parseLong(checkin.getEarlyCheckinPeriod());
+        String appointmentTimeStr = appointmentDTO.getPayload().getStartTime();
+        Date appointmentDate = DateUtil.getInstance().setDateRaw(appointmentTimeStr).getDate();
+        Date currentDate = DateUtil.getInstance().setToCurrent().getDate();
+
+        long differenceInMinutes = DateUtil.getMinutesElapsed(appointmentDate, currentDate);
+
+        return (differenceInMinutes < allowEarlyCheckinPeriod) && allowEarlyCheckin;
     }
 
     @Override
@@ -76,22 +97,16 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         checkInAtOfficeButton.setOnClickListener(this);
 
         checkInNowButton = (Button) childActionView.findViewById(R.id.checkInNowButton);
-        checkInNowButton.setText(StringUtil.getLabelForView(appointmentLabels.getAppointmentsCheckInNow()));
         checkInNowButton.setOnClickListener(this);
-        if(enableCheckin == true){
-            checkInAtOfficeButton.setEnabled(false);
-            checkInAtOfficeButton.setClickable(false);
-            checkInNowButton.setEnabled(false);
-            checkInNowButton.setClickable(false);
-            checkInAtOfficeButton.setTextColor(Color.WHITE);
-            checkInAtOfficeButton.setBackgroundColor(getContext().getResources().getColor(R.color.light_gray));
-            checkInNowButton.setBackgroundColor(getContext().getResources().getColor(R.color.light_gray));
-        }else{
-            checkInAtOfficeButton.setEnabled(true);
-            checkInAtOfficeButton.setClickable(true);
-            checkInNowButton.setEnabled(true);
-            checkInNowButton.setClickable(true);
+
+        String labelForCheckInNowButton;
+        if (canCheckIn) {
+            labelForCheckInNowButton = appointmentLabels.getAppointmentsCheckInNow();
+        } else {
+            labelForCheckInNowButton = appointmentLabels.getAppointmentsPreRegister();
         }
+
+        checkInNowButton.setText(labelForCheckInNowButton);
 
         mainLayout.addView(childActionView);
     }
@@ -107,8 +122,14 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
             cancel();
         } else if (viewId == R.id.checkInNowButton) {
             checkInNowButton.setEnabled(false);
-            TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCheckingIn();
-            doTransition(transitionDTO, demographicsVerifyCallback);
+
+            if (canCheckIn) {
+                TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCheckingIn();
+                doTransition(transitionDTO, demographicsVerifyCallback);
+            } else if (null != callback) {
+                callback.onPreRegisterTapped(appointmentDTO, appointmentInfo);
+            }
+
             cancel();
         }
     }

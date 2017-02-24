@@ -23,7 +23,6 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.appointment.DataDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -36,7 +35,6 @@ import com.carecloud.carepaylibray.appointments.models.CancellationReasonDTO;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -58,7 +56,7 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
 
     private int selectedReasonId = -1;
     private List<CancellationReasonDTO> cancellationReasons;
-    private CancelAppointmentDialog.RefreshAppointmentListCallback listCallback;
+    private CancelAppointmentDialog.CancelAppointmentDialogListener listCallback;
 
     /**
      * Contractor for dialog.
@@ -68,7 +66,7 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
      */
     CancelReasonAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
                                   AppointmentsResultModel appointmentInfo,
-                                  CancelAppointmentDialog.RefreshAppointmentListCallback listCallback) {
+                                  CancelAppointmentDialog.CancelAppointmentDialogListener listCallback) {
         super(context);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
