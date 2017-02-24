@@ -100,6 +100,9 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
 
     private void inflateToolbarViews(View view){
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.medications_toolbar);
+        if(toolbar == null) {
+            return;
+        }
         toolbar.setTitle("");
         if(getDialog()==null) {
             toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.icn_patient_mode_nav_back));

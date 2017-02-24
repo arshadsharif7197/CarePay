@@ -5,16 +5,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/search_toolbar"
     android:padding="0dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     style="@style/SearchToolbarStyle"
     app:contentInsetLeft="0dp"
     app:contentInsetStart="0dp"
     app:contentInsetStartWithNavigation="0dp">
 
-    <android.support.v7.widget.SearchView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/search_entry_view"
-        app:iconifiedByDefault="false"
-        android:theme="@style/SearchViewStyle"/>
+        android:layout_height="wrap_content"
+        android:id="@+id/search_edit_frame">
 
+        <android.support.v7.widget.SearchView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/search_entry_view"
+            app:iconifiedByDefault="false"
+            android:theme="@style/SearchViewStyle"/>
+
+    </FrameLayout>
 </android.support.v7.widget.Toolbar>

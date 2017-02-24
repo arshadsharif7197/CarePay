@@ -113,7 +113,7 @@ public class PracticeNavigationHelper {
             }
             case PracticeNavigationStateConstants.MEDICATION_ALLERGIES:{
                 if (context instanceof PatientModeCheckinActivity) {
-//                    ((PatientModeCheckinActivity) context).loadMedicationsAllergy(workflowDTO.toString());
+                    ((PatientModeCheckinActivity) context).loadMedicationsAllergy(workflowDTO.toString());
                     return;
                 }
                 break;

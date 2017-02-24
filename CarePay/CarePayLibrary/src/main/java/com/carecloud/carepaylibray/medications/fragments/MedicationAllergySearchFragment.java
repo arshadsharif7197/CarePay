@@ -112,6 +112,17 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
         searchRecycler = (RecyclerView) view.findViewById(R.id.search_recycler);
         searchRecycler.setLayoutManager(layoutManager);
 
+        if(getDialog()!=null){
+            View closeButton = view.findViewById(R.id.closeViewLayout);
+            if(closeButton!= null){
+                closeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dismiss();
+                    }
+                });
+            }
+        }
     }
 
     private void setAdapters(){
@@ -141,6 +152,9 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
     public void searchItemSelected(MedicationsAllergiesObject item) {
         if(item instanceof MedicationsObject){
             callback.addMedicationAllergyItem(item);
+            if(getDialog()!=null){
+                dismiss();
+            }
         }
     }
 

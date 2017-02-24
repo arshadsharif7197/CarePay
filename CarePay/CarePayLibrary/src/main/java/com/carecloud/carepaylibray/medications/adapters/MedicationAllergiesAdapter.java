@@ -27,10 +27,17 @@ public class MedicationAllergiesAdapter extends RecyclerView.Adapter<MedicationA
     private String deleteLabel;
     private MedicationAllergiesAdapterCallback callback;
 
-    public MedicationAllergiesAdapter(Context context, List<? extends MedicationsAllergiesObject> items, MedicationAllergiesAdapterCallback callback, String deletLabel){
+    /**
+     * Initialization
+     * @param context context for Adapter
+     * @param items list of MedicationAlergyObject
+     * @param callback calback for removing an item
+     * @param deleteLabel label to show for removing items
+     */
+    public MedicationAllergiesAdapter(Context context, List<? extends MedicationsAllergiesObject> items, MedicationAllergiesAdapterCallback callback, String deleteLabel){
         this.context = context;
         this.items = items;
-        this.deleteLabel = deletLabel;
+        this.deleteLabel = deleteLabel;
         this.callback = callback;
     }
 

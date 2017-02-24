@@ -1,10 +1,11 @@
 package com.carecloud.carepaylibray.base;
 
 import android.app.Dialog;
-import android.os.Bundle;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
-import android.view.Window;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -16,21 +17,36 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 public abstract class BaseDialogFragment extends DialogFragment {
     private Dialog dialog;
 
-    @Override
-    public void onCreate(Bundle icicle){
-        super.onCreate(icicle);
-        dialog = getDialog();
-        if(dialog!=null){
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        }
+
+    private void initDialog(Dialog dialog){
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+
+        params.height = (int) (getResources().getDisplayMetrics().heightPixels * 0.88);
+        params.width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().setAttributes(params);
     }
 
+    @Override
+    public void setupDialog(Dialog dialog, int style) {
+        super.setupDialog(dialog, STYLE_NO_TITLE);
+        this.dialog = getDialog();
+        initDialog(getDialog());
+    }
+    /**
+     * Set a listener when the dialog is dimissed. Will be ignored if fragment is not shown as a dialog
+     * @param dismissListener listener
+     */
     public void setOnDismissListener(Dialog.OnDismissListener dismissListener){
         if(dialog!=null) {
             dialog.setOnDismissListener(dismissListener);
         }
     }
 
+    /**
+     * Set a listener when the dialog is canceled. Will be ignored if fragment is not shown as a dialog
+     * @param cancelListener listener
+     */
     public void setOnCancelListener(Dialog.OnCancelListener cancelListener){
         if(dialog!=null) {
             dialog.setOnCancelListener(cancelListener);

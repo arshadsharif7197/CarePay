@@ -47,6 +47,10 @@ import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHolder;
 import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
+import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearchFragment;
+import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
+import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
+import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.practice.FlowStateInfo;
@@ -67,7 +71,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
                                                                                 CheckinDemographicsFragment.CheckinDemographicsFragmentListener,
                                                                                 DemographicsCheckInDocumentsFragment.DemographicsCheckInDocumentsFragmentListener,
                                                                                 HealthInsuranceFragment.InsuranceDocumentScannerListener,
-                                                                                CheckinDemographicsInterface {
+                                                                                MedicationsAllergyFragment.MedicationAllergyCallback,
+                                                                                CheckinDemographicsInterface, MedicationAllergySearchFragment.MedicationAllergySearchCallback {
 
     public final static  int SUBFLOW_DEMOGRAPHICS_INS = 0;
     public final static  int SUBFLOW_CONSENT          = 1;
@@ -102,6 +107,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     private int consentFormIndex;
     private int intakeFormIndex = 1;
 
+    private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
 
     // Intake Form
     private IntakeResponseModel intakeResponseModel;
@@ -416,6 +422,45 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         return appointmentsPayloadDTO;
     }
 
+    @Override
+    public void showMedicationSearch() {
+        MedicationAllergySearchFragment medicationAllergySearchFragment = new MedicationAllergySearchFragment();
+        if(medicationsAllergiesDTO!=null){
+            Gson gson = new Gson();
+            String jsonExtra = gson.toJson(medicationsAllergiesDTO);
+            Bundle bundle = new Bundle();
+            bundle.putString(CarePayConstants.MEDICATION_ALLERGIES_DTO_EXTRA, jsonExtra);
+
+            bundle.putString(CarePayConstants.MEDICATION_ALLERGIES_SEARCH_MODE_EXTRA, MedicationAllergySearchFragment.SearchMode.MEDICATION.name());
+            medicationAllergySearchFragment.setArguments(bundle);
+
+        }
+
+        medicationAllergySearchFragment.show(getSupportFragmentManager(), medicationAllergySearchFragment.getClass().getSimpleName());
+    }
+
+    @Override
+    public void showAllergiesSearch() {
+
+    }
+
+    @Override
+    public void medicationSubmitSuccess(WorkflowDTO workflowDTO) {
+        PracticeNavigationHelper.navigateToWorkflow(this, workflowDTO);
+    }
+
+    @Override
+    public void medicationSubmitFail(String message) {
+        SystemUtil.showDefaultFailureDialog(getContext());
+        Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), message);
+    }
+
+    @Override
+    public void addMedicationAllergyItem(MedicationsAllergiesObject item) {
+        MedicationsAllergyFragment medicationsAllergyFragment = (MedicationsAllergyFragment) getSupportFragmentManager().findFragmentById(R.id.checkInContentHolderId);
+        medicationsAllergyFragment.addItem(item);
+    }
+
     /**
      * Enum to identify the forms
      */
@@ -567,7 +612,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
 
     @Override
     public void onBackPressed() {
-        BaseCheckinFragment fragment = (BaseCheckinFragment) getSupportFragmentManager().findFragmentById(R.id.checkInContentHolderId);
+        BaseCheckinFragment fragment = (BaseCheckinFragment) getSupportFragmentManager().findFragmentById(R.id.checkInContentHolderId);//TODO what if fragment is not basececkin frag
         currentFlowStateInfo = fragment.getFlowStateInfo();
 
         if (currentFlowStateInfo != null) {
@@ -769,6 +814,16 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
             setResult(RESULT_OK, intent);
         }
         finish();
+    }
+
+    public void loadMedicationsAllergy(String workflowDTO){
+        MedicationsAllergyFragment medicationsAllergyFragment = new MedicationsAllergyFragment();
+        medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class, workflowDTO);
+        Bundle args = new Bundle();
+        args.putString(CarePayConstants.MEDICATION_ALLERGIES_DTO_EXTRA, workflowDTO);
+
+        medicationsAllergyFragment.setArguments(args);
+        navigateToFragment(medicationsAllergyFragment, true);
     }
 
 }
