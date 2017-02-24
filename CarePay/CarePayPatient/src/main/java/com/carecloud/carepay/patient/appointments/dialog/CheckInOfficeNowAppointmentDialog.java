@@ -121,27 +121,6 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
             checkInAtOfficeButton.setEnabled(true);
             cancel();
         } else if (viewId == R.id.checkInNowButton) {
-/*
-            //FIXME
-            TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCancel();
-            transitionDTO.setMethod("GET");
-            transitionDTO.setUrl("https://aze9ynjfhl.execute-api.us-east-1.amazonaws.com/dev/workflow/shamrock/patient_app/medications_allergies/medications");
-
-            Gson gson = new Gson();
-            JsonObject queryStringObject = appointmentInfo.getMetadata().getTransitions().getCheckinAtOffice().getQueryString();
-            QueryStrings queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
-            Map<String, String> queries = new HashMap<>();
-            queries.put(queryStrings.getPracticeMgmt().getName(), appointmentDTO.getMetadata().getPracticeMgmt());
-            queries.put(queryStrings.getPracticeId().getName(), appointmentDTO.getMetadata().getPracticeId());
-            queries.put("patient_id", appointmentDTO.getMetadata().getPatientId());
-            queries.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
-
-            Map<String, String> header = ((ISession) context).getWorkflowServiceHelper().getPreferredLanguageHeader();
-//            header.put("transition", "true");
-
-            ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, testMedicationsCallback, queries, header);
-
-*/
 
             checkInNowButton.setEnabled(false);
 
