@@ -32,7 +32,6 @@ public class SuccessMessageToast extends Toast {
         if(!StringUtil.isNullOrEmpty(successMessage))
         {
             TextView successTextView = (TextView) layout.findViewById(R.id.success_message_toast_textview);
-
             successTextView.setText(successMessage);
         }
         setView(layout);

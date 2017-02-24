@@ -31,6 +31,12 @@ public class PatientAppUtil {
 
     }
 
+    /**
+     * Show success toast.
+     *
+     * @param context        the context
+     * @param successMessage the success message
+     */
     public static void showSuccessToast(Context context, String successMessage) {
 
         if (null == context) {
