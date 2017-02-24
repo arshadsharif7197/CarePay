@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -283,16 +282,16 @@ public class DemographicsSettingsFragment extends BaseFragment {
         creditCardsTextview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            try {
-                if(demographicsSettingsDTO.getPayload().getPatientCreditCards()!=null &&
-                        !demographicsSettingsDTO.getPayload().getPatientCreditCards().isEmpty()){
-                    activityCallback.initializeCreditCardListFragment();
-                } else {
-                    ((DemographicsSettingsActivity)getActivity()).initializeAddNewCreditCardFragment();
+                try {
+//                    if (demographicsSettingsDTO.getPayload().getPatientCreditCards() != null &&
+//                            !demographicsSettingsDTO.getPayload().getPatientCreditCards().isEmpty()) {
+                        activityCallback.initializeCreditCardListFragment();
+//                    } else {
+//                        ((DemographicsSettingsActivity) getActivity()).initializeAddNewCreditCardFragment();
+//                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
             }
         });
     }

@@ -3,7 +3,6 @@ package com.carecloud.carepaylibray.demographics.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,7 +77,7 @@ public class DemographicsCheckInDocumentsFragment extends BaseFragment {
         getOptions();
 
         // set the fragment
-        activityCallback.initializeIdDocScannerFragment();
+//        activityCallback.initializeIdDocScannerFragment();
 
         // set primary views on parent fragment (ie, all views except sub-fragments)
         String label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsIdentityText().toUpperCase();

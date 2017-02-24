@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -409,7 +408,9 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
             }
 
             intent.putExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS, gson.toJson(paymentLineItems));
-            getContext().startActivity(intent, new Bundle());
+//            getContext().startActivity(intent, new Bundle());
+            ((Activity)getContext()).startActivityForResult(intent, CarePayConstants.CLOVER_PAYMENT_INTENT_REQUEST_CODE, new Bundle());
+
         }
         catch (Exception e)
         {

@@ -542,12 +542,11 @@
         <item name="android:layout_marginBottom">@dimen/date_textview_top_bottom</item>
     </style>
 
-    <style name="ConsentForm_GenderStyle" parent="android:Widget.TextView.SpinnerItem">
+
+    <style name="GenderStyle" parent="android:Widget.TextView.SpinnerItem">
         <item name="android:text">@string/choose_gender</item>
         <item name="android:layout_marginTop">@dimen/consent_view_margin_top_bottom</item>
         <item name="android:layout_marginLeft">@dimen/consent_spinner_left_margin</item>
-        <item name="android:layout_alignBaseline">@id/minor_gender</item>
-        <item name="android:layout_toRightOf">@id/minor_gender</item>
         <item name="android:drawSelectorOnTop">true</item>
         <item name="android:gravity">right</item>
         <item name="android:textSize">@dimen/consent_minor_textsize</item>
@@ -833,7 +832,7 @@
 
     <style name="PaymentMethodButtonStyle" parent="android:Widget.TextView">
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">@dimen/respons_button_text_size</item>
+        <item name="android:textSize">@dimen/text_size_22</item>
         <item name="android:textStyle">normal</item>
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:gravity">center</item>

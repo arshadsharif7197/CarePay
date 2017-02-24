@@ -68,8 +68,8 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
 
     @Override
     public void onBindViewHolder(final AppointmentsListViewHolder holder, int position) {
-        final Object object = appointmentsArrayList.get(position);
-        final AppointmentsPayloadDTO item = ((AppointmentDTO) object).getPayload();
+        final AppointmentDTO appointmentDTO = appointmentsArrayList.get(position);
+        final AppointmentsPayloadDTO item = appointmentDTO.getPayload();
         AppointmentLabelDTO appointmentLabels = appointmentsResultModel.getMetadata().getLabel();
 
         holder.doctorName.setText(item.getProvider().getName());
@@ -144,9 +144,9 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
             public void onClick(View view) {
 
                 Map<String, String> queries = new HashMap<>();
-                queries.put("practice_mgmt", ((AppointmentDTO) object).getMetadata().getPracticeMgmt());
-                queries.put("practice_id", ((AppointmentDTO) object).getMetadata().getPracticeId());
-                queries.put("appointment_id", ((AppointmentDTO) object).getMetadata().getAppointmentId());
+                queries.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
+                queries.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
+                queries.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
 
                 Map<String, String> header = new HashMap<>();
                 header.put("transition", "true");
@@ -155,6 +155,10 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
                 ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, transitionToDemographicsVerifyCallback, queries, header);
             }
         });
+    }
+
+    public void setList(List<AppointmentDTO> appointmentsArrayList){
+        this.appointmentsArrayList = appointmentsArrayList;
     }
 
     private WorkflowServiceCallback transitionToDemographicsVerifyCallback = new WorkflowServiceCallback() {
@@ -166,7 +170,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ((ISession) context).hideProgressDialog();
-            PracticeNavigationHelper.navigateToWorkflow(context, workflowDTO);
+            PracticeNavigationHelper.navigateToWorkflow(context, workflowDTO, true, CarePayConstants.CLOVER_PAYMENT_INTENT_REQUEST_CODE);
         }
 
         @Override
