@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by kkannan on 9/13/16.
@@ -762,5 +763,16 @@ public class DateUtil {
 
         //Just return this date in readable format
         return getInstance().setDate(date).getDateAsMonthLiteralDayOrdinal();
+    }
+
+    /**
+     * @param date1 date 1
+     * @param date2 date 2
+     * @return minutes ellapsed
+     */
+    public static long getMinutesElapsed(Date date1, Date date2) {
+        long differenceInMilli = Math.abs(date1.getTime() - date2.getTime());
+
+        return TimeUnit.MILLISECONDS.toMinutes(differenceInMilli);
     }
 }

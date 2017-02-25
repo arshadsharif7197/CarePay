@@ -41,13 +41,18 @@ import java.util.concurrent.TimeUnit;
  * Created by harshal_patil on 9/8/2016.
  */
 public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapter.AppointmentViewHolder>
-        implements CancelAppointmentDialog.RefreshAppointmentListCallback {
+        implements CancelAppointmentDialog.CancelAppointmentDialogListener {
 
     private Context context;
     private List<Object> appointmentItems;
     private AppointmentLabelDTO appointmentLabels;
+    private final AppointmentsAdapterListener callback;
     private AppointmentsResultModel appointmentInfo;
     private AppointmentsListFragment appointmentsListFragment;
+
+    public interface AppointmentsAdapterListener {
+        void onPreRegisterTapped(AppointmentDTO appointmentDTO, AppointmentsResultModel appointmentInfo);
+    }
 
     /**
      * Constructor.
@@ -58,13 +63,15 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
      */
     public AppointmentsAdapter(Context context, List<Object> appointmentItems,
                                AppointmentsListFragment appointmentsListFragment,
-                               AppointmentsResultModel appointmentInfo) {
+                               AppointmentsResultModel appointmentInfo,
+                               AppointmentsAdapterListener callback) {
 
         this.context = context;
         this.appointmentItems = appointmentItems;
         this.appointmentsListFragment = appointmentsListFragment;
         this.appointmentInfo = appointmentInfo;
         this.appointmentLabels = appointmentInfo.getMetadata().getLabel();
+        this.callback = callback;
     }
 
     @Override
@@ -276,8 +283,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         String cancellationNoticePeriodStr = appointmentInfo.getPayload().getAppointmentsSettings().get(0).getCheckin().getCancellationNoticePeriod();
 
         if (appointmentTime != null && currentDate != null) {
-            long differenceInMilli = appointmentTime.getTime() - currentDate.getTime();
-            long differenceInMinutes = TimeUnit.MILLISECONDS.toMinutes(differenceInMilli);
+            long differenceInMinutes = DateUtil.getMinutesElapsed(appointmentTime, currentDate);
             long cancellationNoticePeriod = Long.parseLong(cancellationNoticePeriodStr);
 
             if (differenceInMinutes > cancellationNoticePeriod) {
@@ -354,17 +360,10 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             AppointmentsActivity.model = item;
 
             String sectionHeaderTitle = getSectionHeaderTitle(payloadDTO.getStartTime(), payloadDTO.getEndTime());
-            boolean isPending = payloadDTO.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.PENDING);
-            boolean isCheckedIn = payloadDTO.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.CHECKED_IN);
-            boolean isCanceled = payloadDTO.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.CANCELLED);
-            boolean isRequested = payloadDTO.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.REQUESTED);
-            boolean allowEarlyCheckin = appointmentInfo.getPayload().getAppointmentsSettings().get(0).getCheckin().getAllowEarlyCheckin();
-            String allowEarlyCheckinPeriodStr = appointmentInfo.getPayload().getAppointmentsSettings().get(0).getCheckin().getEarlyCheckinPeriod();
-            long allowEarlyCheckinPeriod = Long.parseLong(allowEarlyCheckinPeriodStr);
-            String appointmentTimeStr = item.getPayload().getStartTime();
-            Date appointmentTime = DateUtil.getInstance().setDateRaw(appointmentTimeStr).getDate();
-            // Get current date/time in required format
-            Date currentDate = DateUtil.getInstance().setToCurrent().getDate();
+            String statusCode = payloadDTO.getAppointmentStatusModel().getCode();
+            boolean isCheckedIn = statusCode.equalsIgnoreCase(CarePayConstants.CHECKED_IN);
+            boolean isCanceled = statusCode.equalsIgnoreCase(CarePayConstants.CANCELLED);
+            boolean isRequested = statusCode.equalsIgnoreCase(CarePayConstants.REQUESTED);
 
             // Missed Appointment
             if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER) && !isCheckedIn) {
@@ -391,35 +390,21 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 new CancelAppointmentDialog(context, item, appointmentInfo,
                         BaseDoctorInfoDialog.AppointmentType.REQUESTED_APPOINTMENT, null).show();
 
-            } else if (isPending) {
-                if (sectionHeaderTitle.equals(appointmentLabels.getTodayAppointmentsHeading() )) {
-
-                    // Pending Appointment && Appointments for the current business day
-                    new CheckInOfficeNowAppointmentDialog(context, false, item, appointmentInfo).show();
-
-                }else if (sectionHeaderTitle.equals(appointmentLabels.getUpcomingAppointmentsHeading() ) && appointmentTime != null && currentDate != null) {
-                    long differenceInMilli = appointmentTime.getTime() - currentDate.getTime();
-                    long differenceInMinutes = TimeUnit.MILLISECONDS.toMinutes(differenceInMilli);
-
-                    if ((differenceInMinutes < allowEarlyCheckinPeriod) && allowEarlyCheckin) {
-                        new CheckInOfficeNowAppointmentDialog(context, false, item, appointmentInfo).show();
-                    }
-                }else if (isAppointmentCancellable(item)) {
-                    // Appointment as long as it's 24 hours or more in the future
-                    new CancelAppointmentDialog(context, item, appointmentInfo,
-                            BaseDoctorInfoDialog.AppointmentType.CANCEL_APPOINTMENT,
-                            AppointmentsAdapter.this).show();
-
-                } else {
-                    // Pending Appointment && Appointment in the future that is not today
-                    new CancelAppointmentDialog(context, item, appointmentInfo,
-                            BaseDoctorInfoDialog.AppointmentType.UPCOMING_APPOINTMENT, null).show();
-                }
             } else {
-                // Other
-                new CheckInOfficeNowAppointmentDialog(context, false, item, appointmentInfo).show();
+                new CheckInOfficeNowAppointmentDialog(context, item, appointmentInfo, getCheckInOfficeNowAppointmentDialogListener()).show();
             }
         }
+    }
+
+    private CheckInOfficeNowAppointmentDialog.CheckInOfficeNowAppointmentDialogListener getCheckInOfficeNowAppointmentDialogListener() {
+        return new CheckInOfficeNowAppointmentDialog.CheckInOfficeNowAppointmentDialogListener() {
+            @Override
+            public void onPreRegisterTapped(AppointmentDTO appointmentDTO, AppointmentsResultModel appointmentInfo) {
+                if (null != callback) {
+                    callback.onPreRegisterTapped(appointmentDTO, appointmentInfo);
+                }
+            }
+        };
     }
 
     @Override
@@ -433,6 +418,13 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         appointmentDTO.getPayload().getAppointmentStatusModel().setCode(CarePayConstants.CANCELLED);
         appointmentItems.set(index, appointmentDTO);
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void onPreRegisterTapped(AppointmentDTO appointmentDTO, AppointmentsResultModel appointmentInfo) {
+        if (null != callback) {
+            callback.onPreRegisterTapped(appointmentDTO, appointmentInfo);
+        }
     }
 
     class AppointmentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

@@ -72,7 +72,6 @@ public class WorkflowServiceHelper {
         return userAuthHeaders;
     }
 
-
     /**
      * add custom headers sened from user
      *

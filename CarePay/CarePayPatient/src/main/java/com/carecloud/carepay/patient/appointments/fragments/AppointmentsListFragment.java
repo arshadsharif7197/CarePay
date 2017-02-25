@@ -1,11 +1,9 @@
 package com.carecloud.carepay.patient.appointments.fragments;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,9 +19,9 @@ import com.carecloud.carepay.patient.appointments.activities.AddAppointmentActiv
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.appointments.adapters.AppointmentsAdapter;
 import com.carecloud.carepay.patient.appointments.utils.PatientAppUtil;
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
@@ -31,23 +29,25 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.QueryStrings;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.utils.DateUtil;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AppointmentsListFragment extends BaseFragment {
-
-//    private static final String LOG_TAG = AppointmentsListFragment.class.getSimpleName();
 
     private AppointmentsResultModel appointmentInfo;
     private ProgressBar appointmentProgressBar;
@@ -63,66 +63,6 @@ public class AppointmentsListFragment extends BaseFragment {
     private AppointmentsListFragment appointmentsListFragment;
     private Bundle bundle;
 
-//    private CustomPopupNotification popup;
-//    private View.OnClickListener negativeActionListener = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View view) {
-//            popup.dismiss();
-//            popup = null;
-//
-//            getApplicationPreferences().writeStringToSharedPref(
-//                    CarePayConstants.PREF_LAST_REMINDER_POPUP_APPT_ID,
-//                    appointmentsItems.get(0).getPayload().getId());
-//        }
-//    };
-
-//    private View.OnClickListener positiveActionListener = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View view) {
-//            popup.dismiss();
-//            popup = null;
-//
-//            getApplicationPreferences().writeStringToSharedPref(
-//                    CarePayConstants.PREF_LAST_REMINDER_POPUP_APPT_ID,
-//                    appointmentsItems.get(0).getPayload().getId());
-//
-//            onCheckInNow(appointmentsItems.get(0));
-//        }
-//    };
-
-    /**
-     * call check-in Now api.
-     */
-//    private void onCheckInNow(AppointmentDTO appointmentDTO) {
-//        Map<String, String> queries = new HashMap<>();
-//        queries.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
-//        queries.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
-//        queries.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
-//
-//        Map<String, String> header = new HashMap<>();
-//        header.put("transition", "true");
-//
-//        TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCheckingIn();
-//        getWorkflowServiceHelper().execute(transitionDTO, transitionToDemographicsVerifyCallback, queries, header);
-//    }
-
-//    private WorkflowServiceCallback transitionToDemographicsVerifyCallback = new WorkflowServiceCallback() {
-//        @Override
-//        public void onPreExecute() {
-//        }
-//
-//        @Override
-//        public void onPostExecute(WorkflowDTO workflowDTO) {
-//            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
-//        }
-//
-//        @Override
-//        public void onFailure(String exceptionMessage) {
-//            SystemUtil.showDefaultFailureDialog(getActivity());
-//            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-//        }
-//    };
-
     @Override
     public void onStart() {
         super.onStart();
@@ -137,83 +77,6 @@ public class AppointmentsListFragment extends BaseFragment {
             RequestAppointmentDialog.isAppointmentAdded = false;
         }
     }
-
-    /**
-     * This function will check today's appointment
-     * and notify if its within 2 hours.
-     */
-    @SuppressLint({"StringFormatMatches", "StringFormatInvalid"})
-//    private void checkUpcomingAppointmentForReminder() {
-//
-//        AppointmentDTO appointmentDataDTO = null;
-//        long differenceInMinutes = 0;
-//        String appointmentTimeStr = "";
-//        if(appointmentsItems!=null) {
-//            try {
-//                for (AppointmentDTO appointmentDTO : appointmentsItems) {//null
-//                    if (!appointmentDTO.getPayload().getAppointmentStatusModel().getCode()
-//                            .equalsIgnoreCase(CarePayConstants.CHECKED_IN)) {
-//
-//                        // Get appointment date/time in required format
-//                        appointmentTimeStr = appointmentDTO.getPayload().getStartTime();
-//                        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
-//                        Date appointmentTime = DateUtil.getInstance().setDateRaw(appointmentTimeStr).getDate();
-//
-//                        // Get current date/time in required format
-//                        String currentTime = DateUtil.getDateRaw(DateUtil.getInstance().setToCurrent().getDate());
-//                        Date currentDate = DateUtil.getInstance().setDateRaw(currentTime).getDate();
-//
-//                        if (appointmentTime != null && currentDate != null) {
-//                            long differenceInMilli = appointmentTime.getTime() - currentDate.getTime();
-//                            differenceInMinutes = TimeUnit.MILLISECONDS.toMinutes(differenceInMilli);
-//
-//                            if (differenceInMinutes > 0) {
-//                                if (differenceInMinutes <= CarePayConstants.APPOINTMENT_REMINDER_TIME_IN_MINUTES
-//                                        && appointmentInfo != null) {
-//                                    appointmentDataDTO = appointmentDTO;
-//                                    break;
-//                                } else {
-//                                    break;
-//                                }
-//                            }
-//                        }
-//
-//                    }
-//                }
-//                if (appointmentDataDTO != null) {
-//                    AppointmentLabelDTO labels = appointmentInfo.getMetadata().getLabel();
-//                    String doctorName = appointmentDataDTO.getPayload().getProvider().getName();
-//                    String aptTime = DateUtil.getInstance().setDateRaw(appointmentTimeStr).getTime12Hour();
-//                    String popupNotificationMsg;
-//                    if (differenceInMinutes == CarePayConstants.APPOINTMENT_REMINDER_TIME_IN_MINUTES) {
-//                        popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt(),
-//                                aptTime, doctorName, "2" + " " + labels.getAppointmentPopupNotificationHours());
-//                    } else if (differenceInMinutes == 60) {
-//                        popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt(),
-//                                aptTime, doctorName, "1" + " " + labels.getAppointmentPopupNotificationHour());
-//                    } else if (differenceInMinutes > 60) {
-//                        popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt(),
-//                                aptTime, doctorName, "1" + " " + labels.getAppointmentPopupNotificationHour()
-//                                        + " " + labels.getAppointmentPopupNotificationAnd() + " " + (differenceInMinutes - 60)
-//                                        + " " + labels.getAppointmentPopupNotificationMinutes());
-//                    } else {
-//                        popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt(),
-//                                aptTime, doctorName, differenceInMinutes + " "
-//                                        + labels.getAppointmentPopupNotificationMinutes());
-//                    }
-//
-//                    popup = new CustomPopupNotification(getActivity(), getActivity().getWindow().getCurrentFocus(),
-//                            labels.getAppointmentsCheckInEarly(), labels.getDismissMessage(),
-//                            popupNotificationMsg,
-//                            positiveActionListener, negativeActionListener);
-//                    popup.showPopWindow();
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                Log.e(LOG_TAG, e.getMessage());
-//            }
-//        }
-//    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -245,13 +108,11 @@ public class AppointmentsListFragment extends BaseFragment {
     }
 
     private void init() {
-//        String noAptPlaceholder = "";
         String noAptMessageTitle = "";
         String noAptMessageText = "";
 
         if (appointmentInfo != null) {
             AppointmentLabelDTO labels = appointmentInfo.getMetadata().getLabel();
-//            noAptPlaceholder = labels.getNoAppointmentsPlaceholderLabel();
             noAptMessageTitle = labels.getNoAppointmentsMessageTitle();
             noAptMessageText = labels.getNoAppointmentsMessageText();
         }
@@ -265,7 +126,6 @@ public class AppointmentsListFragment extends BaseFragment {
 
         appointmentView = (LinearLayout) appointmentsListView.findViewById(R.id.appointment_section_linear_layout);
         noAppointmentView = (LinearLayout) appointmentsListView.findViewById(R.id.no_appointment_layout);
-//        ((CarePayTextView) appointmentsListView.findViewById(R.id.no_apt_placeholder_icon)).setText(noAptPlaceholder);
         ((CarePayTextView) appointmentsListView.findViewById(R.id.no_apt_message_title)).setText(noAptMessageTitle);
         ((CarePayTextView) appointmentsListView.findViewById(R.id.no_apt_message_desc)).setText(noAptMessageText);
 
@@ -315,7 +175,7 @@ public class AppointmentsListFragment extends BaseFragment {
                 }
 
                 appointmentsAdapter = new AppointmentsAdapter(getActivity(),
-                        appointmentListWithHeader, appointmentsListFragment, appointmentInfo);
+                        appointmentListWithHeader, appointmentsListFragment, appointmentInfo, getAppointmentsAdapterListener());
                 appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 appointmentRecyclerView.setAdapter(appointmentsAdapter);
             } else {
@@ -325,8 +185,27 @@ public class AppointmentsListFragment extends BaseFragment {
             // Show no appointment screen
             showNoAppointmentScreen();
         }
+    }
 
-        //checkUpcomingAppointmentForReminder();
+    private AppointmentsAdapter.AppointmentsAdapterListener getAppointmentsAdapterListener() {
+        return new AppointmentsAdapter.AppointmentsAdapterListener() {
+            @Override
+            public void onPreRegisterTapped(AppointmentDTO appointmentDTO, AppointmentsResultModel appointmentInfo) {
+                JsonObject queryStringObject = appointmentInfo.getMetadata().getTransitions().getCheckinAtOffice().getQueryString();
+                QueryStrings queryStrings = DtoHelper.getConvertedDTO(QueryStrings.class, queryStringObject);
+
+                Map<String, String> queries = new HashMap<>();
+                queries.put(queryStrings.getPracticeMgmt().getName(), appointmentDTO.getMetadata().getPracticeMgmt());
+                queries.put(queryStrings.getPracticeId().getName(), appointmentDTO.getMetadata().getPracticeId());
+                queries.put(queryStrings.getAppointmentId().getName(), appointmentDTO.getMetadata().getAppointmentId());
+
+                Map<String, String> header = getWorkflowServiceHelper().getPreferredLanguageHeader();
+                header.put("transition", "true");
+
+                TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCheckingIn();
+                getWorkflowServiceHelper().execute(transitionDTO, preRegisterCallback, queries, header);
+            }
+        };
     }
 
     private void showNoAppointmentScreen() {
@@ -344,10 +223,6 @@ public class AppointmentsListFragment extends BaseFragment {
     }
 
     private void refreshAppointmentList() {
-//        if (popup != null) {
-//            popup.dismiss();
-//        }
-
         if (appointmentsItems != null) {
             appointmentsItems.clear();
         }
@@ -497,25 +372,27 @@ public class AppointmentsListFragment extends BaseFragment {
                     .getAppointmentRequestSuccessMessage();
         }
 
-        PatientAppUtil.showSuccessNotification(getActivity(), getActivity().getWindow().getCurrentFocus(), appointmentRequestSuccessMessage);
+        PatientAppUtil.showSuccessToast(getContext(), appointmentRequestSuccessMessage );
 
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-//        checkUpcomingAppointments();
-    }
+    private WorkflowServiceCallback preRegisterCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
 
-    /**
-     * Checks for upcoming appointments
-     * */
-//    private void checkUpcomingAppointments() {
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                checkUpcomingAppointmentForReminder();
-//            }
-//        }, 1000);
-//    }
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            PatientNavigationHelper.getInstance(getContext()).navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            SystemUtil.showDefaultFailureDialog(getContext());
+            Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
 }

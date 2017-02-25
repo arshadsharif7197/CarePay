@@ -61,6 +61,7 @@ import com.squareup.picasso.Picasso;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
@@ -315,7 +316,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         reviewSubtitileTextView.setText(globalLabelsMetaDTO.getDemographicsReviewScreenSubtitle());
         peronalInfoSectionTextview.setText(globalLabelsMetaDTO.getDemographicsReviewPeronsonalinfoSection().toUpperCase());
         demographicSectionTextView.setText(globalLabelsMetaDTO.getDemographicSectionTitle().toUpperCase());
-        addressSectionTextView.setHint(globalLabelsMetaDTO.getDemographicsAddressSection().toUpperCase());
+        addressSectionTextView.setText(globalLabelsMetaDTO.getDemographicsAddressSection().toUpperCase());
         optinalLabelTextView.setText(globalLabelsMetaDTO.getDemographicsDetailsOptionalHint());
 
 
@@ -1190,7 +1191,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             setProximaNovaRegularTypefaceLayout(getActivity(), cityLabel);
         }
 
-        setProximaNovaSemiboldTypeface(getActivity(), stateLabel);
+        setProximaNovaExtraboldTypeface(getActivity(), stateLabel);
 
         setProximaNovaSemiboldTypeface(getActivity(), peronalInfoSectionTextview);
         setProximaNovaSemiboldTypeface(getActivity(), demographicSectionTextView);
