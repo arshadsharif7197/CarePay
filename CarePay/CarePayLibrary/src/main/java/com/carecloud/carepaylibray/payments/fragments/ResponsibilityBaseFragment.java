@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -60,7 +61,14 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment imp
             Gson gson = new Gson();
             paymentInfo = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
             String paymentsDTOString = arguments.getString(CarePayConstants.INTAKE_BUNDLE);
-            paymentDTO = gson.fromJson(paymentsDTOString, PaymentsModel.class);
+            try
+            {
+                paymentDTO = gson.fromJson(paymentsDTOString, PaymentsModel.class);
+            }
+            catch (Exception e)
+            {
+                Log.e("PAYMENT_ERROR", e.getMessage());
+            }
         }
     }
 
