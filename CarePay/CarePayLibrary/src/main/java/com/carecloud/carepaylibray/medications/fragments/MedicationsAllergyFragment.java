@@ -20,7 +20,6 @@ import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.medications.adapters.MedicationAllergiesAdapter;
 import com.carecloud.carepaylibray.medications.models.MedicationAllergiesAction;
 import com.carecloud.carepaylibray.medications.models.MedicationAllergiesLabelsDTO;
-import com.carecloud.carepaylibray.medications.models.MedicationAllergiesPostModel;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesQueryStrings;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
@@ -252,8 +251,6 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
         public void onClick(View view) {
             Gson gson = new Gson();
             TransitionDTO transitionDTO = medicationsAllergiesDTO.getMetadata().getTransitions().getMedications();
-            MedicationAllergiesPostModel postModel = new MedicationAllergiesPostModel();
-            postModel.setItems(getAllModifiedItems());
 
             MedicationsAllergiesQueryStrings medicationsAllergiesQueryStrings = gson.fromJson(transitionDTO.getQueryString().toString(), MedicationsAllergiesQueryStrings.class);
             Map<String, String> queryMap = new HashMap<>();

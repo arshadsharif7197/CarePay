@@ -4,8 +4,6 @@ import android.app.Dialog;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.LinearLayout;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -17,21 +15,16 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 public abstract class BaseDialogFragment extends DialogFragment {
     private Dialog dialog;
 
-
-    private void initDialog(Dialog dialog){
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-
-        params.height = (int) (getResources().getDisplayMetrics().heightPixels * 0.88);
-        params.width = LinearLayout.LayoutParams.WRAP_CONTENT;
-        dialog.getWindow().setAttributes(params);
-    }
-
     @Override
     public void setupDialog(Dialog dialog, int style) {
         super.setupDialog(dialog, STYLE_NO_TITLE);
         this.dialog = getDialog();
-        initDialog(getDialog());
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+    }
+
+    @Override
+    public int getTheme(){
+        return android.R.style.Theme_DeviceDefault_Dialog_NoActionBar_MinWidth;
     }
 
     /**

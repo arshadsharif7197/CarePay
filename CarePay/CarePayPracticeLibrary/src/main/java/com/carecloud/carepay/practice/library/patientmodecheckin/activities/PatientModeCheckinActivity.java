@@ -67,12 +67,12 @@ import java.util.Locale;
  * Main activity for patient check in flow
  */
 public class PatientModeCheckinActivity extends BasePracticeActivity implements IFragmentCallback,
-                                                                                DemographicsReviewLabelsHolder, DemographicsLabelsHolder,
-                                                                                CheckinDemographicsFragment.CheckinDemographicsFragmentListener,
-                                                                                DemographicsCheckInDocumentsFragment.DemographicsCheckInDocumentsFragmentListener,
-                                                                                HealthInsuranceFragment.InsuranceDocumentScannerListener,
-                                                                                MedicationsAllergyFragment.MedicationAllergyCallback,
-                                                                                CheckinDemographicsInterface, MedicationAllergySearchFragment.MedicationAllergySearchCallback {
+        DemographicsReviewLabelsHolder, DemographicsLabelsHolder,
+        CheckinDemographicsFragment.CheckinDemographicsFragmentListener,
+        DemographicsCheckInDocumentsFragment.DemographicsCheckInDocumentsFragmentListener,
+        HealthInsuranceFragment.InsuranceDocumentScannerListener,
+        MedicationsAllergyFragment.MedicationAllergyCallback,
+        CheckinDemographicsInterface, MedicationAllergySearchFragment.MedicationAllergySearchCallback {
 
     public final static  int SUBFLOW_DEMOGRAPHICS_INS = 0;
     public final static  int SUBFLOW_CONSENT          = 1;
@@ -205,7 +205,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
             }
         });
     }
-    
+
     /**
      * Helper method to replace fragments
      *
@@ -612,37 +612,35 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
 
     @Override
     public void onBackPressed() {
-        BaseCheckinFragment fragment = (BaseCheckinFragment) getSupportFragmentManager().findFragmentById(R.id.checkInContentHolderId);//TODO what if fragment is not basececkin frag
-        currentFlowStateInfo = fragment.getFlowStateInfo();
+        try {
+            BaseCheckinFragment fragment = (BaseCheckinFragment) getSupportFragmentManager().findFragmentById(R.id.checkInContentHolderId);
+            currentFlowStateInfo = fragment.getFlowStateInfo();
 
-        if (currentFlowStateInfo != null) {
-            if (currentFlowStateInfo.getSubflow() == SUBFLOW_CONSENT) {
-                Log.v("back", "consent: " + currentFlowStateInfo.fragmentIndex);
-                consentFormIndex = currentFlowStateInfo.fragmentIndex;
+            if (currentFlowStateInfo != null) {
+                if (currentFlowStateInfo.getSubflow() == SUBFLOW_CONSENT) {
+                    Log.v("back", "consent: " + currentFlowStateInfo.fragmentIndex);
+                    consentFormIndex = currentFlowStateInfo.fragmentIndex;
 
-                if (consentFormIndex == 1) {
-                    showingForm = FormId.FORM1;
-                } else {
-                    showingForm = showingForm.prev();
+                    if (consentFormIndex == 1) {
+                        showingForm = FormId.FORM1;
+                    } else {
+                        showingForm = showingForm.prev();
+                    }
+                } else if (currentFlowStateInfo.getSubflow() == SUBFLOW_INTAKE) {
+                    Log.v("back", "intake: " + currentFlowStateInfo.fragmentIndex);
+                    currentFlowStateInfo.fragmentIndex = --intakeFormIndex;
+                    updateSection(currentFlowStateInfo);
+
+                    if (intakeFormIndex == 0) {
+                        intakeFormIndex = 1;
+                    }
                 }
-                super.onBackPressed();
-            } else if (currentFlowStateInfo.getSubflow() == SUBFLOW_INTAKE) {
-                Log.v("back", "intake: " + currentFlowStateInfo.fragmentIndex);
-                currentFlowStateInfo.fragmentIndex = --intakeFormIndex;
-                updateSection(currentFlowStateInfo);
-
-                if (intakeFormIndex == 0) {
-                    intakeFormIndex = 1;
-                    super.onBackPressed();
-                } else {
-                    getFragmentManager().popBackStack();
-                }
-            } else {
-                super.onBackPressed();
             }
-        } else {
-            super.onBackPressed();
+        }catch (ClassCastException cce){
+            cce.printStackTrace();
         }
+        super.onBackPressed();
+
     }
 
 
