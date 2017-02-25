@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.appointments.utils.PatientAppUtil;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -119,6 +120,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
+            PatientAppUtil.showSuccessToast(getContext(), paymentsLabelDTO.getAddCreditCardSuccessMessage());
             nextButton.setEnabled(true);
             Log.d("addNewCreditCard", "=========================>\nworkflowDTO=" + workflowDTO.toString());
             makePaymentCall();
@@ -142,6 +144,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
+            PatientAppUtil.showSuccessToast(getContext(), paymentsLabelDTO.getPaymentPostedSuccessMessage());
             nextButton.setEnabled(true);
             Log.d("makePaymentCallback", "=========================>\nworkflowDTO=" + workflowDTO.toString());
             Gson gson = new Gson();

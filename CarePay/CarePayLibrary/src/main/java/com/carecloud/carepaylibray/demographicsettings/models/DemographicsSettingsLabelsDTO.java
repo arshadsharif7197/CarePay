@@ -240,9 +240,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     @SerializedName("no_credit_card_info")
     @Expose
     private String noCreditCardInfo;
-    @SerializedName("add_credit_card_success_message")
-    @Expose
-    private String addCreditCardSuccessMessage;
     @SerializedName("remove_credit_card_success_message")
     @Expose
     private String removeCreditCardSuccessMessage;
@@ -264,14 +261,6 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
 
     public void setDefaultCreditCardSuccessMessage(String defaultCreditCardSuccessMessage) {
         this.defaultCreditCardSuccessMessage = defaultCreditCardSuccessMessage;
-    }
-
-    public String getAddCreditCardSuccessMessage() {
-        return StringUtil.getLabelForView(addCreditCardSuccessMessage);
-    }
-
-    public void setAddCreditCardSuccessMessage(String addCreditCardSuccessMessage) {
-        this.addCreditCardSuccessMessage = addCreditCardSuccessMessage;
     }
 
     public String getSettingsSavedSuccessMessage() {
