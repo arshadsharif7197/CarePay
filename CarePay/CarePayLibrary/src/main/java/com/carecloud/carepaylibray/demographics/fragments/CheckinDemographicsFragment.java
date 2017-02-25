@@ -724,7 +724,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
         } else if (view == stateEditText) {
             selectedDataArray = 4;
-            final String title = globalLabelsMetaDTO.getDemographicsState();
+            final String title = globalLabelsMetaDTO.getDemographicsTitleSelectState();
             showAlertDialogWithListview(AddressUtil.states, title, cancelLabel);
 
         }
