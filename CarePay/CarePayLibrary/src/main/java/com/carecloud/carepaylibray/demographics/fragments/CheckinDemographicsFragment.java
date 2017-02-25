@@ -20,8 +20,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -596,6 +594,8 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             }
             phoneNumberLabel.setError(null);
             phoneNumberLabel.setErrorEnabled(false);
+        } else {
+            return false;
         }
         return true;
     }
