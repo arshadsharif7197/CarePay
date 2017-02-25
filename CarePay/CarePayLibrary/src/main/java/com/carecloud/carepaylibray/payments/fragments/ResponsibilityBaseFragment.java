@@ -65,8 +65,7 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment imp
             {
                 paymentDTO = gson.fromJson(paymentsDTOString, PaymentsModel.class);
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 Log.e("PAYMENT_ERROR", e.getMessage());
             }
         }

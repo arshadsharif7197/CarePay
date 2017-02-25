@@ -116,8 +116,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
                 try {
                     intakeResponseModel = getConvertedDTO(IntakeResponseModel.class, intent.getStringExtra("INTAKE_WORKFLOW"));
                 }
-                catch (Exception e)
-                {
+                catch (Exception e) {
 
                     Log.e("INTAKE_JSON_CONVERSION", e.getMessage());
                 }
