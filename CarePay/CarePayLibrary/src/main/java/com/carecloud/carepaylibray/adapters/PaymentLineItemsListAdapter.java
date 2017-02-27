@@ -72,7 +72,7 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
 
         PatienceBalanceDTO patienceBalanceDTO = detailsList.get(position);
 
-        if (patienceBalanceDTO.getPayload().size() > 0) {
+        if (!patienceBalanceDTO.getPayload().isEmpty()) {
             final PatiencePayloadDTO paymentLineItem = patienceBalanceDTO.getPayload().get(0);
             holder.paymentDetailLabel.setText(paymentLineItem.getType());
             holder.paymentDetailAmount.setText(StringUtil.getFormattedBalanceAmount(paymentLineItem.getAmount()));
