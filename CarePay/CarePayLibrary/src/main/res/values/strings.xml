@@ -170,6 +170,7 @@
     <string name="demographics_title">Demographic</string>
     <string name="next_Button">Next</string>
     <string name="invalid_date_of_birth_format">Invalid date</string>
+    <string name="additional_info">Additional Information</string>
 
     <!--Signin Screen-->
     <string name="signin_signup_email_hint">Email</string>

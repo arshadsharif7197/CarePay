@@ -10,6 +10,7 @@ import com.carecloud.carepay.patient.demographics.activities.DemographicsActivit
 import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.patient.demographics.activities.NewReviewDemographicsActivity;
 import com.carecloud.carepay.patient.intakeforms.activities.InTakeWebViewActivity;
+import com.carecloud.carepay.patient.medication.activities.MedicationAllergyActivity;
 import com.carecloud.carepay.patient.notifications.activities.NotificationActivity;
 import com.carecloud.carepay.patient.payment.PaymentActivity;
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
@@ -124,6 +125,11 @@ public class PatientNavigationHelper {
             }
             case PatientNavigationStateConstants.NOTIFICATION: {
                 intent = new Intent(context, NotificationActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                break;
+            }
+            case PatientNavigationStateConstants.MEDICATION_ALLERGIES:{
+                intent = new Intent(context, MedicationAllergyActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }

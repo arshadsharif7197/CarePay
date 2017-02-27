@@ -111,6 +111,9 @@ public class CarePayConstants {
     public static final int NAVIGATION_ITEM_INDEX_NOTIFICATION= 3;
 
 
+    public static final String MEDICATION_ALLERGIES_DTO_EXTRA = "medication_allergies_payload_extra";
+    public static final String MEDICATION_ALLERGIES_SEARCH_MODE_EXTRA = "medication_allergies_search_mode_extra";
+
     //Clover Constants
     public static final String CLOVER_PAYMENT_INTENT = "com.carecloud.carepay.practice.clover.payments.CloverPaymentActivity";
     public static final int CLOVER_PAYMENT_INTENT_REQUEST_CODE = 0x37;
