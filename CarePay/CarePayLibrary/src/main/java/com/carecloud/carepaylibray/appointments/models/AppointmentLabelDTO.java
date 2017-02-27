@@ -246,6 +246,18 @@ public class AppointmentLabelDTO implements Serializable {
     @Expose
     private String appointmentsPreRegister;
 
+    @SerializedName("appointment_cancellation_success_message")
+    @Expose
+    private String appointmentCancellationSuccessMessage;
+
+    public String getAppointmentCancellationSuccessMessage() {
+        return appointmentCancellationSuccessMessage;
+    }
+
+    public void setAppointmentCancellationSuccessMessage(String appointmentCancellationSuccessMessage) {
+        this.appointmentCancellationSuccessMessage = appointmentCancellationSuccessMessage;
+    }
+
     public String getAppointmentSelectRangeButton() {
         return appointmentSelectRangeButton;
     }
@@ -1225,7 +1237,7 @@ public class AppointmentLabelDTO implements Serializable {
     }
 
     public String getAppointmentRequestSuccessMessage() {
-        return appointmentRequestSuccessMessage;
+        return StringUtil.getLabelForView(appointmentRequestSuccessMessage);
     }
 
     public void setAppointmentRequestSuccessMessage(String appointmentRequestSuccessMessage) {
