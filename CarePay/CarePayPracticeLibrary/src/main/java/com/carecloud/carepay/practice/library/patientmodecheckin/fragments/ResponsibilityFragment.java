@@ -18,6 +18,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentM
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
+import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.practice.FlowStateInfo;
 import com.google.gson.Gson;
@@ -63,11 +64,11 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
             try {
                 ((TextView) view.findViewById(R.id.respons_title)).setText(paymentsTitleString);
 
-                List<PatiencePayloadDTO> paymentList = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
+                List<PatienceBalanceDTO> paymentList = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances();
 
                 total = 0;
                 if (paymentList != null && paymentList.size() > 0) {
-                    for (PatiencePayloadDTO payment : paymentList) {
+                    for (PatiencePayloadDTO payment : paymentList.get(0).getPayload()) {
                         total += payment.getAmount();
                     }
 

@@ -6,16 +6,18 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
@@ -122,31 +124,16 @@ public class ResponsibilityDialog extends Dialog {
     private void initializeBody(PaymentsLabelDTO paymentsLabel) {
         List<PatienceBalanceDTO> balances = patientPayments.getBalances();
         if (balances != null && balances.size() > 0) {
-            ScrollView amountDetails = (ScrollView) findViewById(R.id.payment_responsibility_balance_details);//TODO this needs to be in an adapter
+            RecyclerView amountDetails = (RecyclerView) findViewById(R.id.payment_responsibility_balance_details);
+            amountDetails.setLayoutManager(new LinearLayoutManager(this.getContext()));
+
+            PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(), paymentsModel, balances, null);
+            amountDetails.setAdapter(adapter);
 
             double totalAmount = 0;
-            List<PatiencePayloadDTO> payload = balances.get(0).getPayload();
-            for (int i = 0; i < payload.size(); i++) {
-                PatiencePayloadDTO patiencePayload = payload.get(i);
-                LinearLayout chargeRow = (LinearLayout) getLayoutInflater().inflate(R.layout.payment_charges_row, null);
-                ((TextView) chargeRow.findViewById(R.id.payment_charges_label)).setText(patiencePayload.getType());
-
-                TextView detailsView = (TextView) chargeRow.findViewById(R.id.payment_charges_details);
-                detailsView.setText(paymentsLabel.getPracticePaymentsDetailDialogLabel());
-                detailsView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                    }
-                });
-
-                totalAmount += patiencePayload.getAmount();
-                ((TextView) chargeRow.findViewById(R.id.payment_charges_amount)).setText(
-                        StringUtil.getFormattedBalanceAmount(totalAmount));
-                amountDetails.addView(chargeRow);
-
-                if (i == 0 && payload.size() > 1) {
-                    detailsView.setVisibility(View.VISIBLE);
+            for (PatienceBalanceDTO patiencePayload : balances) {
+                if (!patiencePayload.getPayload().isEmpty()) {
+                    totalAmount += patiencePayload.getPayload().get(0).getAmount();
                 }
             }
 
