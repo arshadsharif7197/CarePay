@@ -31,6 +31,12 @@ public class PatientAppUtil {
 
     }
 
+
+    public static void showSuccessToast(Context context) {
+
+        showSuccessToast(context, null);
+    }
+
     /**
      * Show success toast.
      *

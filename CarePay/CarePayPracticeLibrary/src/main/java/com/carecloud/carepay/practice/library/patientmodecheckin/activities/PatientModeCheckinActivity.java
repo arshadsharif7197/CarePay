@@ -119,7 +119,12 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.hasExtra("INTAKE_WORKFLOW")) {
-                intakeResponseModel = getConvertedDTO(IntakeResponseModel.class, intent.getStringExtra("INTAKE_WORKFLOW"));
+                try {
+                    intakeResponseModel = getConvertedDTO(IntakeResponseModel.class, intent.getStringExtra("INTAKE_WORKFLOW"));
+                } catch (Exception e) {
+
+                    Log.e("INTAKE_JSON_CONVERSION", e.getMessage());
+                }
             }
 
             CheckinIntakeForm1Fragment checkinIntakeForm1Fragment = new CheckinIntakeForm1Fragment();
