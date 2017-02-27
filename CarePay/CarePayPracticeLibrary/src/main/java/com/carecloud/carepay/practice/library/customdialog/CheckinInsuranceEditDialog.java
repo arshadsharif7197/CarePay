@@ -117,7 +117,7 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
             insuranceDTO.getInsurancePhotos().add(new DemographicInsurancePhotoDTO());
             insuranceDTO.getInsurancePhotos().add(new DemographicInsurancePhotoDTO());
         }
-        this.globalLabelsDTO =demographicDTO.getMetadata().getLabels();
+        this.globalLabelsDTO = demographicDTO.getMetadata().getLabels();
         DemographicMetadataEntityInsurancesDTO demographicMetadataEntityInsurancesDTO  = demographicDTO.getMetadata().getDataModels().demographic.insurances;
         insuranceMetadataDTO
                 = (demographicMetadataEntityInsurancesDTO == null ? null : demographicMetadataEntityInsurancesDTO.properties.items.insurance);
@@ -129,6 +129,9 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         onAddContentView(inflater);
+        if(globalLabelsDTO == null){
+            globalLabelsDTO = new DemographicLabelsDTO();
+        }
         initializeUIFields();
     }
 
@@ -156,10 +159,17 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
             }
         });
 
-        saveChangesButton.setText(this.globalLabelsDTO.getDemographicsInsuranceUpdateButton());
+        saveChangesButton.setText(this.globalLabelsDTO.getDemographicsSaveChangesButton());
         removeButton.setText(this.globalLabelsDTO.getDocumentsRemove());
+        if(index<0){
+            removeButton.setClickable(false);
+            removeButton.setEnabled(false);
+        } else {
+            removeButton.setClickable(true);
+            removeButton.setEnabled(true);
+        }
         insurancePlanLabel = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.demogr_insurance_plan_label);
-        insurancePlanLabel.setText(this.globalLabelsDTO.getDemographicsDocumentsChoosePlanLabel() );
+        insurancePlanLabel.setText(this.globalLabelsDTO.getDemographicsTitleSelectPlan() );
 
         insuranceProviderLabel = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.demogr_insurance_provider_label);
         insuranceProviderLabel.setText(this.globalLabelsDTO.getDemographicsTitleSelectProvider() );
@@ -198,13 +208,13 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
             }
         });
 
-        final String cancelLabel = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsCancelLabel();
+        final String cancelLabel = globalLabelsDTO.getDemographicsCancelLabel();
         String label;
-        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsChooseLabel();
+        label = globalLabelsDTO.getDemographicsChooseLabel();
 
         providerTextView = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.demogr_docs_provider);
         providerTextView.setText(label);
-        final String selectProviderTitle = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsTitleSelectProvider();
+        final String selectProviderTitle = globalLabelsDTO.getDemographicsTitleSelectProvider();
         providerTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -214,7 +224,7 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
 
         cardTypeTextView = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.demogr_insurance_card_type_textview);
         cardTypeTextView.setText(label);
-        final String selectTypeTitle = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsTitleCardType();
+        final String selectTypeTitle = globalLabelsDTO.getDemographicsTitleCardType();
         cardTypeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -223,9 +233,9 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
         });
 
         planTextView = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.demogr_docs_plan);
-        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsChoosePlanLabel();
+        label = globalLabelsDTO.getDemographicsChooseLabel();
         planTextView.setText(label);
-        final String selectPlanTitle = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsTitleSelectPlan();
+        final String selectPlanTitle = globalLabelsDTO.getDemographicsTitleSelectPlan();
         planTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -236,7 +246,11 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
         setEditTexts(view);
         setTypefaces(view);
         populateViewsFromModel();
-        setDialogTitle(globalLabelsDTO.getDemographicsUpdateInsuranceToolbarTitle().toUpperCase());
+        if (index>=0 && !StringUtil.isNullOrEmpty(insuranceDTO.getInsuranceProvider())) {
+            setDialogTitle(insuranceDTO.getInsuranceProvider());
+        } else {
+            setDialogTitle(globalLabelsDTO.getDemographicsUpdateInsuranceToolbarTitle().toUpperCase());
+        }
     }
 
     private void setEditTexts(final View view) {
@@ -284,7 +298,7 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
 
         TextInputLayout insuranceGroupNumberTextInput = (TextInputLayout) view.findViewById(R.id.insuranceGroupNumberLabel);
         final EditText insuranceGroupNumEditText = (EditText) view.findViewById(R.id.reviewinsurnceGroupnum);
-        hint = insuranceMetadataDTO == null ? CarePayConstants.NOT_DEFINED : insuranceMetadataDTO.properties.insuranceGroupId.getLabel();
+        hint = globalLabelsDTO.getDemographicsInsuranceGroupNumber();
         insuranceGroupNumberTextInput.setTag(hint);
         insuranceGroupNumEditText.setTag(insuranceGroupNumberTextInput);
         insuranceGroupNumEditText.setHint(hint);
@@ -501,7 +515,7 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
                         Picasso.with(context).load(photoFrontURL)
                                 .resize(insuranceFrontScanHelper.getImgWidth(), insuranceFrontScanHelper.getImgHeight())
                                 .into(frontInsuranceImageView);
-                        String label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanFrontLabel();
+                        String label = globalLabelsDTO.getDemographicsDocumentsRescanFrontLabel();
                         btnScanFrontInsurance.setText(label);
                     } catch (MalformedURLException e) {
                         Log.d(LOG_TAG, "invalid url: " + photoFrontURL);
@@ -519,7 +533,7 @@ public class CheckinInsuranceEditDialog extends BasePracticeDialog {
                         Picasso.with(context).load(photoBackURL)
                                 .resize(insuranceBackScanHelper.getImgWidth(), insuranceBackScanHelper.getImgHeight())
                                 .into(backInsuranceImageView);
-                        String label1 = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanBackLabel();
+                        String label1 = globalLabelsDTO.getDemographicsDocumentsRescanBackLabel();
                         btnScanBackInsurance.setText(label1);
                     } catch (MalformedURLException e) {
                         Log.d(LOG_TAG, "invalid url: " + photoBackURL);
