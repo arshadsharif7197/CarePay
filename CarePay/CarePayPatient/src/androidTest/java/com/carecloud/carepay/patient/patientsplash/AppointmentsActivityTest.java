@@ -46,6 +46,9 @@ public class AppointmentsActivityTest extends BaseActivityTest {
 
     private String TAG = AppointmentsActivityTest.class.getSimpleName();
 
+    /**
+     * login user
+     */
     @Before
     public void loginUser() throws Throwable {
         user = "sun@sun.com";
@@ -56,7 +59,7 @@ public class AppointmentsActivityTest extends BaseActivityTest {
 
 
     @Rule
-    public ActivityTestRule<AppointmentsActivity> mActivityTestRule = new ActivityTestRule<AppointmentsActivity>(AppointmentsActivity.class, true, false) {
+    public ActivityTestRule<AppointmentsActivity> activityTestRule = new ActivityTestRule<AppointmentsActivity>(AppointmentsActivity.class, true, false) {
 
 
         @Override
@@ -169,7 +172,7 @@ public class AppointmentsActivityTest extends BaseActivityTest {
         Intent intent = new Intent();
         bundle.putString(PatientNavigationHelper.class.getSimpleName(), workFlowDtoStringAppointments);
         intent.putExtra(PatientNavigationHelper.class.getSimpleName(), bundle);
-        mActivityTestRule.launchActivity(intent);
+        activityTestRule.launchActivity(intent);
     }
 
     public class RecyclerViewItemCountAssertion implements ViewAssertion {

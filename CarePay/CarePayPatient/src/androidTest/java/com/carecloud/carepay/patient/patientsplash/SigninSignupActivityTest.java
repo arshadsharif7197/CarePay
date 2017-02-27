@@ -37,6 +37,9 @@ import static org.hamcrest.Matchers.allOf;
 public class SigninSignupActivityTest extends BaseActivityTest {
 
 
+    /**
+     * login user
+     */
     @Before
     public void loginUser() throws Throwable {
         user="sun@sun.com";
@@ -47,7 +50,7 @@ public class SigninSignupActivityTest extends BaseActivityTest {
     }
 
     @Rule
-    public ActivityTestRule<SigninSignupActivity> mActivityTestRule = new ActivityTestRule<SigninSignupActivity>(SigninSignupActivity.class, true, false) {
+    public ActivityTestRule<SigninSignupActivity> activityTestRule = new ActivityTestRule<SigninSignupActivity>(SigninSignupActivity.class, true, false) {
 
         @Override
         protected void beforeActivityLaunched() {
@@ -122,7 +125,7 @@ public class SigninSignupActivityTest extends BaseActivityTest {
         Intent intent = new Intent();
         bundle.putString(PatientNavigationHelper.class.getSimpleName(), workFlowDtoString);
         intent.putExtra(PatientNavigationHelper.class.getSimpleName(), bundle);
-        mActivityTestRule.launchActivity(intent);
+        activityTestRule.launchActivity(intent);
     }
 
 
