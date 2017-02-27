@@ -17,6 +17,10 @@ public abstract class MedicationsAllergiesObject implements Comparable<Medicatio
     @Expose
     private String displayName;
 
+    @SerializedName("uuid")
+    @Expose
+    private String uuid;
+
     public MedicationAllergiesAction getAction() {
         return action;
     }
@@ -44,5 +48,13 @@ public abstract class MedicationsAllergiesObject implements Comparable<Medicatio
             return this.displayName.equals(((MedicationsAllergiesObject)object).getDisplayName());
         }
         return super.equals(object);
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }
