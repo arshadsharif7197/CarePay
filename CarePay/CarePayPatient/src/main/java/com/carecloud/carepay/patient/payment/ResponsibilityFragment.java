@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,11 +24,11 @@ import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.google.gson.Gson;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 public class ResponsibilityFragment extends ResponsibilityBaseFragment implements PaymentDetailsDialog.PayNowClickListener {
 
@@ -49,7 +48,13 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
         setGothamRoundedMediumTypeface(appCompatActivity, title);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
+//        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setTitle("");
 
         TextView responseTotal = (TextView) view.findViewById(R.id.respons_total);
@@ -125,6 +130,8 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
                 payTotalAmountButton.setText(payTotalAmountString);
                 makePartialPaymentButton.setText(payPartialAmountString);
                 payLaterButton.setText(payLaterString);
+
+                title.setText(paymentsTitleString);
             }
         } catch (Exception e) {
             e.printStackTrace();

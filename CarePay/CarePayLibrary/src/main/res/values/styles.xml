@@ -192,6 +192,19 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="SearchToolbarStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <item name="android:editTextColor">@color/white</item>
+        <item name="android:textColorHint">@color/white</item>
+        <item name="android:textColor">@color/white</item>
+
+    </style>
+
     <!-- Responsibility styles -->
 
     <style name="ResponsTotalLabelStyle" parent="android:Widget.TextView">

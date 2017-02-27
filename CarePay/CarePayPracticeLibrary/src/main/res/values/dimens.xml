@@ -233,4 +233,6 @@
     <dimen name="dialog_row_padding">24.5dp</dimen>
     <dimen name="responsibility_list_margin">144dp</dimen>
 
+    <dimen name="search_results_min_height">600dp</dimen>
+
 </resources>

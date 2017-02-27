@@ -93,8 +93,8 @@ public class ScanDocDialog extends BasePracticeDialog implements  CarePayCameraC
     private void onSetViewLabel(){
         setDialogTitle(this.demographicLabelsDTO.getDemographicsInsuranceScanInsuranceCard());
         contentViewTitleLabel.setText(demographicLabelsDTO.getDemographicsInsuranceScanMsg());
-        scanImageButton.setText(demographicLabelsDTO.getDemographicsInsuranceScan());
-        scanClearImageButton.setText(demographicLabelsDTO.getDemographicsInsuranceClear());
+        scanImageButton.setText(demographicLabelsDTO.getDemographicsScanButtonLabel());
+        scanClearImageButton.setText(demographicLabelsDTO.getDemographicsClearButtonLabel());
     }
 
 
@@ -151,7 +151,7 @@ public class ScanDocDialog extends BasePracticeDialog implements  CarePayCameraC
         } catch (Exception excetion) {
             Log.e("CameraRND", "Error setting camera start: " + excetion.getMessage());
         }
-        scanImageButton.setText(demographicLabelsDTO.getDemographicsInsuranceScan());
+        scanImageButton.setText(demographicLabelsDTO.getDemographicsScanButtonLabel());
         cameraImageBitmap = null;
         isCapturing = true;
         scanClearImageButton.setEnabled(false);
@@ -169,7 +169,7 @@ public class ScanDocDialog extends BasePracticeDialog implements  CarePayCameraC
         }
         carePayCameraPreview.setVisibility(View.INVISIBLE);
         cameraCaptureImage.setVisibility(View.VISIBLE);
-        scanImageButton.setText(demographicLabelsDTO.getDemographicsInsuranceSave());
+        scanImageButton.setText(demographicLabelsDTO.getDemographicsSaveButtonLabel());
         isCapturing = false;
         scanClearImageButton.setEnabled(true);
         onClearButtonTextColor();

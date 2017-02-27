@@ -1,6 +1,5 @@
 package com.carecloud.carepaylibray.demographics.dtos.metadata.labels;
 
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -276,11 +275,11 @@ public class DemographicLabelsDTO {
     @Expose
     private String demographicsCaptureOptionsTitle;
 
-    @SerializedName("demographics_insurance_scan_insurance_card")
+    @SerializedName("practice_checkin_demogr_scan_ins_card_label")
     @Expose
     private String demographicsInsuranceScanInsuranceCard;
 
-    @SerializedName("demographics_insurance_scan_msg")
+    @SerializedName("practice_checkin_demogr_scan_ins_card_instructions")
     @Expose
     private String demographicsInsuranceScanMsg;
 
@@ -342,6 +341,26 @@ public class DemographicLabelsDTO {
     @SerializedName("demographics_state")
     @Expose
     private String demographicsState;
+
+    @SerializedName("demographics_save_changes_button")
+    @Expose
+    private String demographicsSaveChangesButton;
+
+    @SerializedName("demographics_insurance_group_number")
+    @Expose
+    private String demographicsInsuranceGroupNumber;
+
+    @SerializedName("practice_checkin_demogr_scan_ins_card_scan_button_label")
+    @Expose
+    private String demographicsScanButtonLabel;
+
+    @SerializedName("practice_checkin_demogr_scan_ins_card_clear_button_label")
+    @Expose
+    private String demographicsClearButtonLabel;
+
+    @SerializedName("practice_checkin_demogr_scan_ins_card_save_button_label")
+    @Expose
+    private String demographicsSaveButtonLabel;
 
     /**
      * @return The demographicsUpdateButton
@@ -1028,180 +1047,490 @@ public class DemographicLabelsDTO {
         this.demographicsCaptureOptionsTitle = demographicsCaptureOptionsTitle;
     }
 
+    /**
+     * Gets demographics insurance scan insurance card.
+     *
+     * @return the demographics insurance scan insurance card
+     */
     public String getDemographicsInsuranceScanInsuranceCard() {
         return StringUtil.getLabelForView(demographicsInsuranceScanInsuranceCard);
     }
 
+    /**
+     * Sets demographics insurance scan insurance card.
+     *
+     * @param demographicsInsuranceScanInsuranceCard the demographics insurance scan insurance card
+     */
     public void setDemographicsInsuranceScanInsuranceCard(String demographicsInsuranceScanInsuranceCard) {
         this.demographicsInsuranceScanInsuranceCard = demographicsInsuranceScanInsuranceCard;
     }
 
+    /**
+     * Gets demographics insurance scan msg.
+     *
+     * @return the demographics insurance scan msg
+     */
     public String getDemographicsInsuranceScanMsg() {
         return StringUtil.getLabelForView(demographicsInsuranceScanMsg);
     }
 
+    /**
+     * Sets demographics insurance scan msg.
+     *
+     * @param demographicsInsuranceScanMsg the demographics insurance scan msg
+     */
     public void setDemographicsInsuranceScanMsg(String demographicsInsuranceScanMsg) {
         this.demographicsInsuranceScanMsg = demographicsInsuranceScanMsg;
     }
 
+    /**
+     * Gets demographics insurance scan.
+     *
+     * @return the demographics insurance scan
+     */
     public String getDemographicsInsuranceScan() {
         return StringUtil.getLabelForView(demographicsInsuranceScan);
     }
 
+    /**
+     * Sets demographics insurance scan.
+     *
+     * @param demographicsInsuranceScan the demographics insurance scan
+     */
     public void setDemographicsInsuranceScan(String demographicsInsuranceScan) {
         this.demographicsInsuranceScan = demographicsInsuranceScan;
     }
 
+    /**
+     * Gets demographics insurance save.
+     *
+     * @return the demographics insurance save
+     */
     public String getDemographicsInsuranceSave() {
         return StringUtil.getLabelForView(demographicsInsuranceSave);
     }
 
+    /**
+     * Sets demographics insurance save.
+     *
+     * @param demographicsInsuranceSave the demographics insurance save
+     */
     public void setDemographicsInsuranceSave(String demographicsInsuranceSave) {
         this.demographicsInsuranceSave = demographicsInsuranceSave;
     }
 
+    /**
+     * Gets demographics insurance clear.
+     *
+     * @return the demographics insurance clear
+     */
     public String getDemographicsInsuranceClear() {
         return StringUtil.getLabelForView(demographicsInsuranceClear);
     }
 
+    /**
+     * Sets demographics insurance clear.
+     *
+     * @param demographicsInsuranceClear the demographics insurance clear
+     */
     public void setDemographicsInsuranceClear(String demographicsInsuranceClear) {
         this.demographicsInsuranceClear = demographicsInsuranceClear;
     }
 
+    /**
+     * Gets demographics identity text.
+     *
+     * @return the demographics identity text
+     */
     public String getDemographicsIdentityText() {
         return StringUtil.getLabelForView(demographicsIdentityText);
     }
 
+    /**
+     * Sets demographics identity text.
+     *
+     * @param demographicsIdentityText the demographics identity text
+     */
     public void setDemographicsIdentityText(String demographicsIdentityText) {
         this.demographicsIdentityText = demographicsIdentityText;
     }
 
+    /**
+     * Gets demographics missing information.
+     *
+     * @return the demographics missing information
+     */
     public String getDemographicsMissingInformation() {
         return StringUtil.getLabelForView(demographicsMissingInformation);
     }
 
+    /**
+     * Sets demographics missing information.
+     *
+     * @param demographicsMissingInformation the demographics missing information
+     */
     public void setDemographicsMissingInformation(String demographicsMissingInformation) {
         this.demographicsMissingInformation = demographicsMissingInformation;
     }
 
+    /**
+     * Gets demographics health insurance.
+     *
+     * @return the demographics health insurance
+     */
     public String getDemographicsHealthInsurance() {
         return StringUtil.getLabelForView(demographicsHealthInsurance);
     }
 
+    /**
+     * Sets demographics health insurance.
+     *
+     * @param demographicsHealthInsurance the demographics health insurance
+     */
     public void setDemographicsHealthInsurance(String demographicsHealthInsurance) {
         this.demographicsHealthInsurance = demographicsHealthInsurance;
     }
 
+    /**
+     * Gets demographics drivers license number.
+     *
+     * @return the demographics drivers license number
+     */
     public String getDemographicsDriversLicenseNumber() {
         return StringUtil.getLabelForView(demographicsDriversLicenseNumber);
     }
 
+    /**
+     * Sets demographics drivers license number.
+     *
+     * @param demographicsDriversLicenseNumber the demographics drivers license number
+     */
     public void setDemographicsDriversLicenseNumber(String demographicsDriversLicenseNumber) {
         this.demographicsDriversLicenseNumber = demographicsDriversLicenseNumber;
     }
 
+    /**
+     * Gets demographics drivers license add state label.
+     *
+     * @return the demographics drivers license add state label
+     */
     public String getDemographicsDriversLicenseAddStateLabel() {
         return StringUtil.getLabelForView(demographicsDriversLicenseAddStateLabel);
     }
 
+    /**
+     * Sets demographics drivers license add state label.
+     *
+     * @param demographicsDriversLicenseAddStateLabel the demographics drivers license add state label
+     */
     public void setDemographicsDriversLicenseAddStateLabel(String demographicsDriversLicenseAddStateLabel) {
         this.demographicsDriversLicenseAddStateLabel = demographicsDriversLicenseAddStateLabel;
     }
 
+    /**
+     * Gets demographics insurance setup health insurance.
+     *
+     * @return the demographics insurance setup health insurance
+     */
     public String getDemographicsInsuranceSetupHealthInsurance() {
         return StringUtil.getLabelForView(demographicsInsuranceSetupHealthInsurance);
     }
 
+    /**
+     * Sets demographics insurance setup health insurance.
+     *
+     * @param demographicsInsuranceSetupHealthInsurance the demographics insurance setup health insurance
+     */
     public void setDemographicsInsuranceSetupHealthInsurance(String demographicsInsuranceSetupHealthInsurance) {
         this.demographicsInsuranceSetupHealthInsurance = demographicsInsuranceSetupHealthInsurance;
     }
 
+    /**
+     * Gets demographics insurance setup.
+     *
+     * @return the demographics insurance setup
+     */
     public String getDemographicsInsuranceSetup() {
         return StringUtil.getLabelForView(demographicsInsuranceSetup);
     }
 
+    /**
+     * Sets demographics insurance setup.
+     *
+     * @param demographicsInsuranceSetup the demographics insurance setup
+     */
     public void setDemographicsInsuranceSetup(String demographicsInsuranceSetup) {
         this.demographicsInsuranceSetup = demographicsInsuranceSetup;
     }
 
+    /**
+     * Gets practice checkin edit clickable label.
+     *
+     * @return the practice checkin edit clickable label
+     */
     public String getPracticeCheckinEditClickableLabel() {
         return StringUtil.getLabelForView(practiceCheckinEditClickableLabel);
     }
 
+    /**
+     * Sets practice checkin edit clickable label.
+     *
+     * @param practiceCheckinEditClickableLabel the practice checkin edit clickable label
+     */
     public void setPracticeCheckinEditClickableLabel(String practiceCheckinEditClickableLabel) {
         this.practiceCheckinEditClickableLabel = practiceCheckinEditClickableLabel;
     }
 
+    /**
+     * Gets practice checkin demogr ins add another.
+     *
+     * @return the practice checkin demogr ins add another
+     */
     public String getPracticeCheckinDemogrInsAddAnother() {
         return StringUtil.getLabelForView(practiceCheckinDemogrInsAddAnother);
     }
 
+    /**
+     * Sets practice checkin demogr ins add another.
+     *
+     * @param practiceCheckinDemogrInsAddAnother the practice checkin demogr ins add another
+     */
     public void setPracticeCheckinDemogrInsAddAnother(String practiceCheckinDemogrInsAddAnother) {
         this.practiceCheckinDemogrInsAddAnother = practiceCheckinDemogrInsAddAnother;
     }
 
+    /**
+     * Gets demographics dont have health insurance label.
+     *
+     * @return the demographics dont have health insurance label
+     */
     public String getDemographicsDontHaveHealthInsuranceLabel() {
         return StringUtil.getLabelForView(demographicsDontHaveHealthInsuranceLabel);
     }
 
+    /**
+     * Gets demographics setup insurance title.
+     *
+     * @return the demographics setup insurance title
+     */
     public String getDemographicsSetupInsuranceTitle() {
         return StringUtil.getLabelForView(demographicsSetupInsuranceTitle);
     }
 
+    /**
+     * Sets demographics setup insurance title.
+     *
+     * @param demographicsSetupInsuranceTitle the demographics setup insurance title
+     */
     public void setDemographicsSetupInsuranceTitle(String demographicsSetupInsuranceTitle) {
         this.demographicsSetupInsuranceTitle = demographicsSetupInsuranceTitle;
     }
 
+    /**
+     * Gets demographics setup insurance label.
+     *
+     * @return the demographics setup insurance label
+     */
     public String getDemographicsSetupInsuranceLabel() {
         return StringUtil.getLabelForView(demographicsSetupInsuranceLabel);
     }
 
+    /**
+     * Sets demographics setup insurance label.
+     *
+     * @param demographicsSetupInsuranceLabel the demographics setup insurance label
+     */
     public void setDemographicsSetupInsuranceLabel(String demographicsSetupInsuranceLabel) {
         this.demographicsSetupInsuranceLabel = demographicsSetupInsuranceLabel;
     }
 
+    /**
+     * Gets demographics insurance title.
+     *
+     * @return the demographics insurance title
+     */
     public String getDemographicsInsuranceTitle() {
         return StringUtil.getLabelForView(demographicsInsuranceTitle);
     }
 
+    /**
+     * Sets demographics insurance title.
+     *
+     * @param demographicsInsuranceTitle the demographics insurance title
+     */
     public void setDemographicsInsuranceTitle(String demographicsInsuranceTitle) {
         this.demographicsInsuranceTitle = demographicsInsuranceTitle;
     }
 
 
+    /**
+     * Sets demographics dont have health insurance label.
+     *
+     * @param demographicsDontHaveHealthInsuranceLabel the demographics dont have health insurance label
+     */
     public void setDemographicsDontHaveHealthInsuranceLabel(String demographicsDontHaveHealthInsuranceLabel) {
         this.demographicsDontHaveHealthInsuranceLabel = demographicsDontHaveHealthInsuranceLabel;
     }
 
+    /**
+     * Gets demographics have health insurance label.
+     *
+     * @return the demographics have health insurance label
+     */
     public String getDemographicsHaveHealthInsuranceLabel() {
         return StringUtil.getLabelForView(demographicsHaveHealthInsuranceLabel);
     }
 
+    /**
+     * Sets demographics have health insurance label.
+     *
+     * @param demographicsHaveHealthInsuranceLabel the demographics have health insurance label
+     */
     public void setDemographicsHaveHealthInsuranceLabel(String demographicsHaveHealthInsuranceLabel) {
         this.demographicsHaveHealthInsuranceLabel = demographicsHaveHealthInsuranceLabel;
     }
 
+    /**
+     * Gets demographics add health insurance button title.
+     *
+     * @return the demographics add health insurance button title
+     */
     public String getDemographicsAddHealthInsuranceButtonTitle() {
         return StringUtil.getLabelForView(demographicsAddHealthInsuranceButtonTitle);
     }
 
+    /**
+     * Sets demographics add health insurance button title.
+     *
+     * @param demographicsAddHealthInsuranceButtonTitle the demographics add health insurance button title
+     */
     public void setDemographicsAddHealthInsuranceButtonTitle(String demographicsAddHealthInsuranceButtonTitle) {
         this.demographicsAddHealthInsuranceButtonTitle = demographicsAddHealthInsuranceButtonTitle;
     }
 
+    /**
+     * Gets demographics insurance type label.
+     *
+     * @return the demographics insurance type label
+     */
     public String getDemographicsInsuranceTypeLabel() {
         return StringUtil.getLabelForView(demographicsInsuranceTypeLabel);
     }
 
+    /**
+     * Sets demographics insurance type label.
+     *
+     * @param demographicsInsuranceTypeLabel the demographics insurance type label
+     */
     public void setDemographicsInsuranceTypeLabel(String demographicsInsuranceTypeLabel) {
         this.demographicsInsuranceTypeLabel = demographicsInsuranceTypeLabel;
     }
 
+    /**
+     * Gets demographics state.
+     *
+     * @return the demographics state
+     */
     public String getDemographicsState() {
         return StringUtil.getLabelForView(demographicsState);
     }
 
+    /**
+     * Sets demographics state.
+     *
+     * @param demographicsState the demographics state
+     */
     public void setDemographicsState(String demographicsState) {
         this.demographicsState = demographicsState;
+    }
+
+    /**
+     * Gets demographics save changes button.
+     *
+     * @return the demographics save changes button
+     */
+    public String getDemographicsSaveChangesButton() {
+        return StringUtil.getLabelForView(demographicsSaveChangesButton);
+    }
+
+    /**
+     * Sets demographics save changes button.
+     *
+     * @param demographicsSaveChangesButton the demographics save changes button
+     */
+    public void setDemographicsSaveChangesButton(String demographicsSaveChangesButton) {
+        this.demographicsSaveChangesButton = demographicsSaveChangesButton;
+    }
+
+    /**
+     * Gets demographics insurance group number.
+     *
+     * @return the demographics insurance group number
+     */
+    public String getDemographicsInsuranceGroupNumber() {
+        return StringUtil.getLabelForView(demographicsInsuranceGroupNumber);
+    }
+
+    /**
+     * Sets demographics insurance group number.
+     *
+     * @param demographicsInsuranceGroupNumber the demographics insurance group number
+     */
+    public void setDemographicsInsuranceGroupNumber(String demographicsInsuranceGroupNumber) {
+        this.demographicsInsuranceGroupNumber = demographicsInsuranceGroupNumber;
+    }
+
+    /**
+     * Gets demographics scan button label.
+     *
+     * @return the demographics scan button label
+     */
+    public String getDemographicsScanButtonLabel() {
+        return StringUtil.getLabelForView(demographicsScanButtonLabel);
+    }
+
+    /**
+     * Sets demographics scan button label.
+     *
+     * @param demographicsScanButtonLabel the demographics scan button label
+     */
+    public void setDemographicsScanButtonLabel(String demographicsScanButtonLabel) {
+        this.demographicsScanButtonLabel = demographicsScanButtonLabel;
+    }
+
+    /**
+     * Gets demographics clear button label.
+     *
+     * @return the demographics clear button label
+     */
+    public String getDemographicsClearButtonLabel() {
+        return StringUtil.getLabelForView(demographicsClearButtonLabel);
+    }
+
+    /**
+     * Sets demographics clear button label.
+     *
+     * @param demographicsClearButtonLabel the demographics clear button label
+     */
+    public void setDemographicsClearButtonLabel(String demographicsClearButtonLabel) {
+        this.demographicsClearButtonLabel = demographicsClearButtonLabel;
+    }
+
+    /**
+     * Gets demographics save button label.
+     *
+     * @return the demographics save button label
+     */
+    public String getDemographicsSaveButtonLabel() {
+        return StringUtil.getLabelForView(demographicsSaveButtonLabel);
+    }
+
+    /**
+     * Sets demographics save button label.
+     *
+     * @param demographicsSaveButtonLabel the demographics save button label
+     */
+    public void setDemographicsSaveButtonLabel(String demographicsSaveButtonLabel) {
+        this.demographicsSaveButtonLabel = demographicsSaveButtonLabel;
     }
 }

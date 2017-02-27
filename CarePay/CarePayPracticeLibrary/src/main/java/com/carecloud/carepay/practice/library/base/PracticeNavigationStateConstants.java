@@ -16,4 +16,6 @@ public class PracticeNavigationStateConstants {
     static final String CONSENT_FORMS = "consent_forms";
     static final String INTAKE_FORMS = "intake_forms";
     static final String PAYMENTS = "payments";
+    public static final String MEDICATION_ALLERGIES = "medications_allergies";
+
 }

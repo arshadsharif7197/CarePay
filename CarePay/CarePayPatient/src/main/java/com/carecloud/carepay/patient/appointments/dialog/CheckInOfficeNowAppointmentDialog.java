@@ -121,6 +121,7 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
             checkInAtOfficeButton.setEnabled(true);
             cancel();
         } else if (viewId == R.id.checkInNowButton) {
+
             checkInNowButton.setEnabled(false);
 
             if (canCheckIn) {
@@ -133,6 +134,24 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
             cancel();
         }
     }
+
+    private WorkflowServiceCallback testMedicationsCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            ((ISession) context).showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            ((ISession) context).hideProgressDialog();
+            PatientNavigationHelper.getInstance(getContext()).navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            ((ISession) context).hideProgressDialog();
+        }
+    };
 
     /**
      * call to do transition.
