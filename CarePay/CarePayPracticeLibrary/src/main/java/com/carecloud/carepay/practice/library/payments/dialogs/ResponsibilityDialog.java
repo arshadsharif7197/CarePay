@@ -132,34 +132,10 @@ public class ResponsibilityDialog extends Dialog {
 
             double totalAmount = 0;
             for (PatienceBalanceDTO patiencePayload : balances) {
-                if (patiencePayload.getPayload().size() > 0) {
+                if (!patiencePayload.getPayload().isEmpty()) {
                     totalAmount += patiencePayload.getPayload().get(0).getAmount();
                 }
             }
-//            List<PatiencePayloadDTO> payload = balances.get(0).getPayload();
-//            for (int i = 0; i < payload.size(); i++) {
-//                PatiencePayloadDTO patiencePayload = payload.get(i);
-//                LinearLayout chargeRow = (LinearLayout) getLayoutInflater().inflate(R.layout.payment_charges_row, null);
-//                ((TextView) chargeRow.findViewById(R.id.payment_charges_label)).setText(patiencePayload.getType());
-//
-//                TextView detailsView = (TextView) chargeRow.findViewById(R.id.payment_charges_details);
-//                detailsView.setText(paymentsLabel.getPracticePaymentsDetailDialogLabel());
-//                detailsView.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//
-//                    }
-//                });
-//
-//                totalAmount += patiencePayload.getAmount();
-//                ((TextView) chargeRow.findViewById(R.id.payment_charges_amount)).setText(
-//                        StringUtil.getFormattedBalanceAmount(totalAmount));
-//                amountDetails.addView(chargeRow);
-//
-//                if (i == 0 && payload.size() > 1) {
-//                    detailsView.setVisibility(View.VISIBLE);
-//                }
-//            }
 
             ((TextView) findViewById(R.id.payment_responsibility_balance)).setText(
                     paymentsLabel.getPracticePaymentsDetailDialogBalance() + ": "
