@@ -407,14 +407,14 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                 checkIfEnableButton();
             }
         });
-        final View view = getView();
+
         dobEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int inputType, KeyEvent keyEvent) {
                 if (inputType == EditorInfo.IME_ACTION_NEXT || inputType == EditorInfo.IME_ACTION_DONE) {
                     SystemUtil.hideSoftKeyboard(getActivity());
                     dobEditText.clearFocus();
-                    view.requestFocus();
+                    phoneNumberEditText.requestFocus();
                     return true;
                 }
                 return false;
