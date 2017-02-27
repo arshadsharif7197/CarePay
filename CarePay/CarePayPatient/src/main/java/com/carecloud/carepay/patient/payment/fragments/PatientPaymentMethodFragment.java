@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
@@ -33,7 +32,6 @@ import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistor
 import com.carecloud.carepay.patient.payment.androidpay.EnvData;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
@@ -44,7 +42,6 @@ import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.BooleanResult;
@@ -72,10 +69,10 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PaymentMethodFragment extends BaseFragment implements RadioGroup.OnCheckedChangeListener,
+public class PatientPaymentMethodFragment extends BaseFragment implements RadioGroup.OnCheckedChangeListener,
         GoogleApiClient.OnConnectionFailedListener {
 
-    private static final String TAG = "PaymentMethodFragment";
+    private static final String TAG = PatientPaymentMethodFragment.class.getSimpleName();
     private RadioGroup paymentMethodRadioGroup;
     private Button paymentChoiceButton;
     private Activity activity;
@@ -92,7 +89,7 @@ public class PaymentMethodFragment extends BaseFragment implements RadioGroup.On
     private String paymentChangeMethodString;
     private String paymentFailedErrorString;
 
-    private ProgressBar _paymentMethodFragmentProgressBar;
+    private ProgressBar paymentMethodFragmentProgressBar;
     private GoogleApiClient _GoogleApiClient;
     private Boolean _isProgressBarVisible = false;
     private SupportWalletFragment _walletFragment;
@@ -118,12 +115,20 @@ public class PaymentMethodFragment extends BaseFragment implements RadioGroup.On
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
-        //title.setText(titlePaymentMethodString);
-        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
+        toolbar.setTitle("");
+
+        SystemUtil.setGothamRoundedMediumTypeface(activity, title);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(),
                 R.drawable.icn_patient_mode_nav_back));
-        _paymentMethodFragmentProgressBar = (ProgressBar) view.findViewById(R.id.paymentMethodFragmentProgressBar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        paymentMethodFragmentProgressBar = (ProgressBar) view.findViewById(R.id.paymentMethodFragmentProgressBar);
+//        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.onBackPressed();
+            }
+        });
+
         radioGroupLayoutParam = new RadioGroup.LayoutParams(
                 RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.MATCH_PARENT);
         int margin = getResources().getDimensionPixelSize(R.dimen.payment_method_layout_checkbox_margin);
@@ -244,7 +249,7 @@ public class PaymentMethodFragment extends BaseFragment implements RadioGroup.On
                             }
                         } else {
                             // Error making isReadyToPay call
-                            Log.e(TAG, "isReadyToPay:" + booleanResult.getStatus());
+                            Log.e(TAG, "isReadyToPay:" + booleanResult.getStatus().getStatusMessage());
                             showOrHideProgressDialog();
                         }
                     }
@@ -299,10 +304,10 @@ public class PaymentMethodFragment extends BaseFragment implements RadioGroup.On
     private void showOrHideProgressDialog() {
 
         if (_isProgressBarVisible) {
-            _paymentMethodFragmentProgressBar.setVisibility(View.GONE);
+            paymentMethodFragmentProgressBar.setVisibility(View.GONE);
             _isProgressBarVisible = false;
         } else {
-            _paymentMethodFragmentProgressBar.setVisibility(View.VISIBLE);
+            paymentMethodFragmentProgressBar.setVisibility(View.VISIBLE);
             _isProgressBarVisible = true;
         }
 

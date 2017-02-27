@@ -99,4 +99,12 @@ public class PaymentsPatientBalancessDTO implements Serializable {
     public void setDemographics(DemographicsSettingsDemographicsDTO demographics) {
         this.demographics = demographics;
     }
+
+    /**
+     * Validate metadata
+     * @return true if valid
+     */
+    public boolean hasValidMetadata(){
+        return metadata.isValid();
+    }
 }

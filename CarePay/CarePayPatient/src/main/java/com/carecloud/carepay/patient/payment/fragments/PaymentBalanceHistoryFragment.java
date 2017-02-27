@@ -78,8 +78,8 @@ public class PaymentBalanceHistoryFragment  extends BaseFragment {
             ViewPaymentBalanceHistoryActivity.setIsPaymentDone(false);
         }
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getChildFragmentManager());
-        PaymentHistoryFragment pendingPaymentsFragment = PaymentHistoryFragment.newInstance(1, paymentDTO);
-        PaymentHistoryFragment paymentHistoryFragment = PaymentHistoryFragment.newInstance(2, paymentDTO);
+        PaymentHistoryFragment pendingPaymentsFragment = PaymentHistoryFragment.newInstance(PaymentHistoryFragment.SECTION_PENDING, paymentDTO);
+        PaymentHistoryFragment paymentHistoryFragment = PaymentHistoryFragment.newInstance(PaymentHistoryFragment.SECTION_HISTORY, paymentDTO);
 
         pendingPaymentsFragment.setEmptyPaymentListCallback(emptyPaymentListCallback);
         paymentHistoryFragment.setEmptyPaymentListCallback(emptyPaymentListCallback);

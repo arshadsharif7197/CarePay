@@ -14,20 +14,18 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.practice.library.payments.dialogs.PartialPaymentDialog;
-import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
 import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.practice.FlowStateInfo;
-import com.google.gson.Gson;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 public class ResponsibilityFragment extends ResponsibilityBaseFragment implements PaymentDetailsDialog.PayNowClickListener {
 
@@ -122,16 +120,17 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
     }
 
     protected void doPayment() {
-        Bundle bundle = new Bundle();
-        Gson gson = new Gson();
-        String paymentsDTOString = gson.toJson(paymentDTO);
-        bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
-        bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
-        bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, total);
-
-        PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
-        fragment.setArguments(bundle);
-        ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
+        actionCallback.makePayment(total);
+//        Bundle bundle = new Bundle();
+//        Gson gson = new Gson();
+//        String paymentsDTOString = gson.toJson(paymentDTO);
+//        bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
+//        bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+//        bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, total);
+//
+//        PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
+//        fragment.setArguments(bundle);
+//        ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
     }
 
     @Override

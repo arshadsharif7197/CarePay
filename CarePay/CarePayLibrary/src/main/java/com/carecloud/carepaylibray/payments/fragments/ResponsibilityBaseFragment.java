@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.payments.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +15,6 @@ import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -24,6 +24,12 @@ import com.google.gson.Gson;
 import java.util.List;
 
 public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment implements PaymentDetailsDialog.PayNowClickListener {
+
+    public interface ResponsibilityActionCallback{
+        void makePayment(double amount);
+        void startPartialPayment();
+    }
+
 
     protected static final String LOG_TAG = ResponsibilityBaseFragment.class.getSimpleName();
     protected AppCompatActivity appCompatActivity;
@@ -41,6 +47,18 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment imp
     protected String payLaterString;
     protected double total;
     protected String paymentInfo;
+
+    protected ResponsibilityActionCallback actionCallback;
+
+    @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+        try {
+            actionCallback = (ResponsibilityActionCallback) context;
+        }catch (ClassCastException cce){
+            throw new ClassCastException("Attached Context must implement ResponsibilityActionCallback");
+        }
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,11 +113,12 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment imp
     }
 
     @Override
-    public void onPayNowButtonClicked() {
-        doPayment();
+    public void onPayNowButtonClicked(double amount) {
+        actionCallback.makePayment(amount);
+//        doPayment();
     }
 
-    protected abstract void doPayment();
+//    protected abstract void doPayment();
 
     /**
      * For tests

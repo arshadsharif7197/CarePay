@@ -12,11 +12,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.PaymentItemsListAdapter;
 import com.carecloud.carepaylibray.base.IApplicationSession;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
@@ -119,12 +118,12 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
         if (viewId == R.id.dialog_close_header) {
             cancel();
         } else if (viewId == R.id.payment_details_pay_now_button) {
-            listener.onPayNowButtonClicked();
+            listener.onPayNowButtonClicked(paymentPayload.getAmount());
             dismiss();
         }
     }
 
     public interface PayNowClickListener {
-        void onPayNowButtonClicked();
+        void onPayNowButtonClicked(double amount);
     }
 }

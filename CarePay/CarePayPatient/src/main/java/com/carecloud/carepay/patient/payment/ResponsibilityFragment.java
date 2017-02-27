@@ -3,8 +3,6 @@ package com.carecloud.carepay.patient.payment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -15,14 +13,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.payment.dialogs.PartialPaymentDialog;
-import com.carecloud.carepay.patient.payment.fragments.PaymentMethodFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
 import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
-import com.google.gson.Gson;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
@@ -162,29 +158,30 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
     }
 
     protected void doPayment() {
-        try {
-            FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
-            PaymentMethodFragment fragment = (PaymentMethodFragment)
-                    fragmentmanager.findFragmentByTag(PaymentMethodFragment.class.getSimpleName());
-
-            if (fragment == null) {
-                fragment = new PaymentMethodFragment();
-            }
-
-            Bundle bundle = new Bundle();
-            Gson gson = new Gson();
-            String paymentsDTOString = gson.toJson(paymentDTO);
-            bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, total);
-            bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
-            fragment.setArguments(bundle);
-
-            FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
-            fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
-            fragmentTransaction.addToBackStack(PaymentMethodFragment.class.getSimpleName());
-            fragmentTransaction.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        actionCallback.makePayment(total);
+//        try {
+//            FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
+//            PatientPaymentMethodFragment fragment = (PatientPaymentMethodFragment)
+//                    fragmentmanager.findFragmentByTag(PatientPaymentMethodFragment.class.getSimpleName());
+//
+//            if (fragment == null) {
+//                fragment = new PatientPaymentMethodFragment();
+//            }
+//
+//            Bundle bundle = new Bundle();
+//            Gson gson = new Gson();
+//            String paymentsDTOString = gson.toJson(paymentDTO);
+//            bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, total);
+//            bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+//            fragment.setArguments(bundle);
+//
+//            FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
+//            fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
+//            fragmentTransaction.addToBackStack(PatientPaymentMethodFragment.class.getSimpleName());
+//            fragmentTransaction.commit();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override

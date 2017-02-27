@@ -17,7 +17,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepay.patient.payment.PaymentActivity;
-import com.carecloud.carepay.patient.payment.fragments.PaymentMethodFragment;
+import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
@@ -222,9 +222,9 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         if (context instanceof PaymentActivity) {
 
             FragmentManager fragmentmanager = ((PaymentActivity) context).getSupportFragmentManager();
-            PaymentMethodFragment fragment = (PaymentMethodFragment) fragmentmanager.findFragmentByTag(PaymentMethodFragment.class.getSimpleName());
+            PatientPaymentMethodFragment fragment = (PatientPaymentMethodFragment) fragmentmanager.findFragmentByTag(PatientPaymentMethodFragment.class.getSimpleName());
             if (fragment == null) {
-                fragment = new PaymentMethodFragment();
+                fragment = new PatientPaymentMethodFragment();
             }
 
             Bundle arguments = ((PaymentActivity) context).getIntent().getBundleExtra(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
@@ -241,7 +241,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
 
             FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
             fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
-            fragmentTransaction.addToBackStack(PaymentMethodFragment.class.getSimpleName());
+            fragmentTransaction.addToBackStack(PatientPaymentMethodFragment.class.getSimpleName());
             fragmentTransaction.commit();
             this.dismiss();
         }

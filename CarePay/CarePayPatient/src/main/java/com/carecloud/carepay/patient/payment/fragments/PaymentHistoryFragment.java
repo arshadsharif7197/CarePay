@@ -1,9 +1,7 @@
 package com.carecloud.carepay.patient.payment.fragments;
 
-import android.support.v4.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,7 +16,6 @@ import com.carecloud.carepay.patient.payment.adapter.PaymentBalancesAdapter;
 import com.carecloud.carepay.patient.payment.adapter.PaymentHistoryAdapter;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
@@ -26,7 +23,6 @@ import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLinksDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -37,7 +33,11 @@ import java.util.Map;
  * Created by jorge on 02/01/17.
  */
 
-public class PaymentHistoryFragment extends BaseFragment implements PaymentBalancesAdapter.OnBalanceListItemClickListener, PaymentDetailsDialog.PayNowClickListener{
+public class PaymentHistoryFragment extends BaseFragment implements PaymentBalancesAdapter.OnBalanceListItemClickListener{
+
+    public static final int SECTION_PENDING = 1;
+    public static final int SECTION_HISTORY = 2;
+
 
     private static final String LOG = PaymentHistoryFragment.class.getSimpleName();
     private PaymentsModel paymentDTO;
@@ -50,6 +50,9 @@ public class PaymentHistoryFragment extends BaseFragment implements PaymentBalan
     private TextView noPaymentTitle;
     private TextView noPaymentDesc;
 
+    private PaymentDetailsDialog.PayNowClickListener payNowClickListener;
+
+
     public static PaymentHistoryFragment newInstance(int sectionNumber, PaymentsModel paymentDTO) {
         PaymentHistoryFragment fragment = new PaymentHistoryFragment();
         Gson gson = new Gson();
@@ -59,6 +62,16 @@ public class PaymentHistoryFragment extends BaseFragment implements PaymentBalan
         args.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+        try{
+            payNowClickListener = (PaymentDetailsDialog.PayNowClickListener) context;
+        }catch (ClassCastException cce){
+            throw new ClassCastException("Attached context must implement PayNowClickListener");
+        }
     }
 
     @Override
@@ -86,29 +99,43 @@ public class PaymentHistoryFragment extends BaseFragment implements PaymentBalan
         Map<String, String> queryString = new HashMap<>();
         PaymentsLinksDTO paymentsLinks = paymentDTO.getPaymentsMetadata().getPaymentsLinks();
 
-        if(paymentDTO.getPaymentPayload().getPatientHistory() != null && paymentDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges() != null)
-        {
-            PaymentPayloadMetaDataDTO metadata = paymentDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges().getMetadata();
+        switch (sectionNumber){
+            case SECTION_PENDING:{
+                //check if we have valid data
+                if(!paymentDTO.getPaymentPayload().getPatientBalances().isEmpty() &&
+                        paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).hasValidMetadata()){
+                    PaymentPayloadMetaDataDTO metadata = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
 
-            switch (sectionNumber) {
-                case 1:
                     queryString.put("practice_id",  metadata.getPracticeId() );
                     queryString.put("practice_mgmt", metadata.getPracticeMgmt());
                     queryString.put("patient_id", metadata.getPatientId());
-                    getWorkflowServiceHelper().execute(
-                            paymentsLinks.getPaymentsPatientBalances(), balancesCallback, queryString);
-                    break;
+                    getWorkflowServiceHelper().execute(paymentsLinks.getPaymentsPatientBalances(), balancesCallback, queryString);
 
-                case 2:
+                }else{
+                    showNoPaymentsLayout();
+                    emptyPaymentListCallback.listIsEmpty(sectionNumber);
+                }
+
+                break;
+            }
+            case SECTION_HISTORY:{
+                //check if we have valid data
+                if(paymentDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges().hasValidMetadata()){
+                    PaymentPayloadMetaDataDTO metadata = paymentDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges().getMetadata();
+
                     queryString.put("practice_id",  metadata.getPracticeId() );
                     queryString.put("practice_mgmt", metadata.getPracticeMgmt());
                     queryString.put("patient_id", metadata.getPatientId());
                     queryString.put("start_date", "2015-01-01");
                     queryString.put("end_date", "2030-01-01");
-                    getWorkflowServiceHelper().execute(
-                            paymentsLinks.getPaymentsHistory(), historyCallback, queryString);
-                    break;
+                    getWorkflowServiceHelper().execute(paymentsLinks.getPaymentsHistory(), historyCallback, queryString);
 
+                }else{
+                    showNoPaymentsLayout();
+                    emptyPaymentListCallback.listIsEmpty(sectionNumber);
+                }
+
+                break;
             }
         }
     }
@@ -207,7 +234,7 @@ public class PaymentHistoryFragment extends BaseFragment implements PaymentBalan
     };
 
     private void loadPaymentAmountScreen(PatiencePayloadDTO model) {
-        PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(getContext() , paymentDTO, model, this);
+        PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(getContext() , paymentDTO, model, payNowClickListener);
         detailsDialog.show();
     }
 
@@ -218,31 +245,6 @@ public class PaymentHistoryFragment extends BaseFragment implements PaymentBalan
         loadPaymentAmountScreen(model);
     }
 
-    @Override
-    public void onPayNowButtonClicked() {
-        try{
-            FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
-            PaymentMethodFragment fragment = (PaymentMethodFragment)
-                    fragmentmanager.findFragmentByTag(PaymentMethodFragment.class.getSimpleName());
-
-            if (fragment == null) {
-                fragment = new PaymentMethodFragment();
-            }
-            Bundle bundle = new Bundle();
-            Gson gson = new Gson();
-            String paymentsDTOString = gson.toJson(paymentDTO);
-            bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, total);
-            bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
-            fragment.setArguments(bundle);
-
-            FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
-            fragmentTransaction.replace(com.carecloud.carepaylibrary.R.id.add_balance_history_frag_holder, fragment);
-            fragmentTransaction.addToBackStack(PaymentMethodFragment.class.getSimpleName());
-            fragmentTransaction.commit();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
 
     public void setEmptyPaymentListCallback(EmptyPaymentListCallback emptyPaymentListCallback) {
         this.emptyPaymentListCallback = emptyPaymentListCallback;

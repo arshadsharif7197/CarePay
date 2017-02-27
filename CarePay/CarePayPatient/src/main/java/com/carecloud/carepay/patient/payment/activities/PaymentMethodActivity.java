@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.payment.fragments.PaymentMethodFragment;
+import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -66,11 +66,11 @@ public class PaymentMethodActivity extends BasePatientActivity {
 
     private void doPayment(double total) {
         FragmentManager fragmentmanager = PaymentMethodActivity.this.getSupportFragmentManager();
-        PaymentMethodFragment fragment = (PaymentMethodFragment)
-                fragmentmanager.findFragmentByTag(PaymentMethodFragment.class.getSimpleName());
+        PatientPaymentMethodFragment fragment = (PatientPaymentMethodFragment)
+                fragmentmanager.findFragmentByTag(PatientPaymentMethodFragment.class.getSimpleName());
 
         if (fragment == null) {
-            fragment = new PaymentMethodFragment();
+            fragment = new PatientPaymentMethodFragment();
         }
 
         Bundle bundle = new Bundle();
@@ -82,7 +82,7 @@ public class PaymentMethodActivity extends BasePatientActivity {
 
         FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
         fragmentTransaction.replace(com.carecloud.carepaylibrary.R.id.payment_frag_holder, fragment);
-        fragmentTransaction.addToBackStack(PaymentMethodFragment.class.getSimpleName());
+        fragmentTransaction.addToBackStack(PatientPaymentMethodFragment.class.getSimpleName());
         fragmentTransaction.commit();
     }
 }

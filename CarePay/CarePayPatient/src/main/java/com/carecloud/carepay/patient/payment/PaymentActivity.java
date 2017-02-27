@@ -11,15 +11,17 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.payment.androidpay.ConfirmationActivity;
+import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.gms.wallet.MaskedWallet;
 import com.google.android.gms.wallet.WalletConstants;
 import com.google.gson.Gson;
 
-public class PaymentActivity extends BasePatientActivity {
+public class PaymentActivity extends BasePatientActivity implements ResponsibilityBaseFragment.ResponsibilityActionCallback {
     PaymentsModel paymentsDTO;
     private String paymentsDTOString;
     public Bundle bundle;
@@ -163,5 +165,27 @@ public class PaymentActivity extends BasePatientActivity {
             transaction.addToBackStack(fragment.getClass().getName());
         }
         transaction.commitAllowingStateLoss();
+    }
+
+    @Override
+    public void makePayment(double amount) {
+        PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
+
+
+        Bundle bundle = new Bundle();
+        bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+        bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+        fragment.setArguments(bundle);
+
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
+        fragmentTransaction.addToBackStack(PatientPaymentMethodFragment.class.getSimpleName());
+        fragmentTransaction.commit();
+
+    }
+
+    @Override
+    public void startPartialPayment() {
+
     }
 }

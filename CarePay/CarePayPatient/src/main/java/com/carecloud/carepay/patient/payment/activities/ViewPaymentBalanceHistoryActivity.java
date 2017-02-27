@@ -17,8 +17,10 @@ import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.ResponsibilityFragment;
 import com.carecloud.carepay.patient.payment.androidpay.ConfirmationActivity;
+import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.android.gms.wallet.MaskedWallet;
@@ -29,7 +31,7 @@ import com.google.gson.Gson;
  * Created by jorge on 29/12/16.
  */
 
-public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity {
+public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity implements PaymentDetailsDialog.PayNowClickListener {
 
     private static boolean isPaymentDone;
     private PaymentsModel paymentsDTO;
@@ -192,5 +194,20 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity {
                 Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
                 break;
         }
+    }
+
+    @Override
+    public void onPayNowButtonClicked(double amount) {
+        PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
+
+        Bundle bundle = new Bundle();
+        Gson gson = new Gson();
+        String paymentsDTOString = gson.toJson(paymentsDTO);
+        bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+        bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+        fragment.setArguments(bundle);
+
+        navigateToFragment(fragment, true);
+
     }
 }
