@@ -21,6 +21,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
+import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.google.gson.Gson;
 
@@ -76,13 +77,13 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
             getPaymentInformation();
             if (paymentDTO != null) {
                 getPaymentLabels();
-                List<PatiencePayloadDTO> paymentList = paymentDTO.getPaymentPayload()
-                        .getPatientBalances().get(0).getBalances().get(0).getPayload();
+                List<PatienceBalanceDTO> paymentList = paymentDTO.getPaymentPayload()
+                        .getPatientBalances().get(0).getBalances();
 
                 total = 0;
                 if (paymentList != null && paymentList.size() > 0) {
                     fillDetailAdapter(view, paymentList);
-                    for (PatiencePayloadDTO payment : paymentList) {
+                    for (PatiencePayloadDTO payment : paymentList.get(0).getPayload()) {
                         total += payment.getAmount();
                     }
                     try {
