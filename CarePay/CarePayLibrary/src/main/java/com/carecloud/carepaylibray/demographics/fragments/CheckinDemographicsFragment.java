@@ -453,6 +453,10 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                 if (!isPhoneEmpty) {
                     phoneNumberLabel.setError(null);
                     phoneNumberLabel.setErrorEnabled(false);
+                } else {
+                    final String phoneNumberError = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.phone.validations.get(0).getErrorMessage();
+                    phoneNumberLabel.setError(phoneNumberError);
+                    phoneNumberLabel.setErrorEnabled(true);
                 }
                 // auto-format as typing
                 StringUtil.autoFormatPhone(phonenumber, len);
@@ -531,6 +535,10 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                 if (!isZipEmpty) {
                     zipcodeLabel.setError(null);
                     zipcodeLabel.setErrorEnabled(false);
+                } else {
+                    final String zipcodeError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.zipcode.validations.get(0).getErrorMessage();
+                    zipcodeLabel.setError(zipcodeError);
+                    zipcodeLabel.setErrorEnabled(true);
                 }
 
                 StringUtil.autoFormatZipcode(editable, prevLen);
