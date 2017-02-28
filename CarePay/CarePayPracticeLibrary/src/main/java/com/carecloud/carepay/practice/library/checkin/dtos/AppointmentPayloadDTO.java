@@ -684,6 +684,9 @@ public class AppointmentPayloadDTO {
         return getId().hashCode();
     }
 
+    /**
+     * @return true if appointment time is over
+     */
     public boolean isAppointmentOver() {
         if (null == endTime) {
             return false;
