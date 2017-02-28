@@ -76,11 +76,11 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
             if (paymentsLabel != null) {
 
-                setViewTextById(R.id.practice_payment_title, paymentsLabel.getPracticePaymentsHeader());
-                setViewTextById(R.id.practice_payment_go_back, paymentsLabel.getPracticePaymentsBackLabel());
-                setViewTextById(R.id.practice_payment_find_patient, paymentsLabel.getPracticePaymentsFindPatientLabel());
-                setViewTextById(R.id.practice_payment_filter_label, paymentsLabel.getPracticePaymentsFilter());
-                setViewTextById(R.id.practice_payment_in_office_label, paymentsLabel.getPracticePaymentsInOffice());
+                setTextViewById(R.id.practice_payment_title, paymentsLabel.getPracticePaymentsHeader());
+                setTextViewById(R.id.practice_payment_go_back, paymentsLabel.getPracticePaymentsBackLabel());
+                setTextViewById(R.id.practice_payment_find_patient, paymentsLabel.getPracticePaymentsFindPatientLabel());
+                setTextViewById(R.id.practice_payment_filter_label, paymentsLabel.getPracticePaymentsFilter());
+                setTextViewById(R.id.practice_payment_in_office_label, paymentsLabel.getPracticePaymentsInOffice());
 
                 practiceCheckinFilterDoctorsLabel = paymentsLabel.getPracticePaymentsFilterDoctors();
                 practiceCheckinFilterLocationsLabel = paymentsLabel.getPracticePaymentsFilterLocations();
@@ -103,7 +103,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
             initializePatientListView();
 
-            setViewTextById(R.id.practice_payment_in_office_count,
+            setTextViewById(R.id.practice_payment_in_office_count,
                     String.format(Locale.getDefault(), "%1s", patientBalancesList.size()));
         }
 

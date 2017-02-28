@@ -61,6 +61,16 @@ public class DtoHelper {
     }
 
     /**
+     * Converts to the desire DTO object from JsonObject DTO
+     *
+     * @param dtoClass class to convert
+     * @param workflowDTO  generic workflow to be converted
+     * @return Dynamic converted class object
+     */
+    public static <S> S getConvertedDTO(Class<S> dtoClass, WorkflowDTO workflowDTO) {
+        return getConvertedDTO(dtoClass, getStringDTO(workflowDTO));
+    }
+    /**
      * Converts DTO object to String
      *
      * @param dto object to be converted to String
@@ -77,7 +87,7 @@ public class DtoHelper {
     }
 
     public static void putExtra(Intent intent, Object dto) {
-        intent.putExtra(dto.getClass().getSimpleName(), getStringDTO(dto));
+        intent.putExtra(WorkflowDTO.class.getSimpleName(), getStringDTO(dto));
     }
 
     /**
@@ -92,6 +102,4 @@ public class DtoHelper {
             args.putString(dtoClass.getSimpleName(), bundle.getString(WorkflowDTO.class.getSimpleName()));
         }
     }
-
-
 }

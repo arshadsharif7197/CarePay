@@ -51,4 +51,9 @@ public class AppointmentDTO {
     public void setPayload(AppointmentPayloadDTO payload) {
         this.payload = payload;
     }
+
+    public void update(AppointmentDTO dto) {
+        this.metadata = dto.metadata;
+        this.payload = dto.payload;
+    }
 }

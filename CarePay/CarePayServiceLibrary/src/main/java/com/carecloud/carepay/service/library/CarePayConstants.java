@@ -5,24 +5,6 @@ package com.carecloud.carepay.service.library;
  */
 public class CarePayConstants {
 
-    // All Shared Preferences key Constants
-    public static final String PREFERENCE_CAREPAY = "Preference_CarePay";
-
-    public static final String PREFERENCE_USER_SELECTED_LANGUAGE = "user_selected_language";
-
-    public static final String PREFERENCE_PRACTICE_SELECTED_LANGUAGE = "practice_user_selected_language";
-
-    public static final String PREFERENCE_PATIENT_ID = "patient_id";
-
-    public static final String PREFERENCE_PRACTICE_ID = "practice_id";
-
-    public static final String PREFERENCE_PRACTICE_MANAGEMENT = "practice_management";
-
-    public static final String PREFERENCE_PREFIX = "prefix";
-
-    public static final String PREFERENCE_USER_ID = "user_id";
-
-
     // Default data
 
     public static final String DEFAULT_LANGUAGE = "English";

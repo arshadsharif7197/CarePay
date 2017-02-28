@@ -43,7 +43,7 @@ public class AppointmentPayloadDTO {
     private Object arrivedAt;
     @SerializedName("business_entity_id")
     @Expose
-    private Integer businessEntityId;
+    private String businessEntityId;
     @SerializedName("comments")
     @Expose
     private Object comments;
@@ -290,7 +290,7 @@ public class AppointmentPayloadDTO {
      * @return
      * The businessEntityId
      */
-    public Integer getBusinessEntityId() {
+    public String getBusinessEntityId() {
         return businessEntityId;
     }
 
@@ -299,7 +299,7 @@ public class AppointmentPayloadDTO {
      * @param businessEntityId
      * The business_entity_id
      */
-    public void setBusinessEntityId(Integer businessEntityId) {
+    public void setBusinessEntityId(String businessEntityId) {
         this.businessEntityId = businessEntityId;
     }
 
