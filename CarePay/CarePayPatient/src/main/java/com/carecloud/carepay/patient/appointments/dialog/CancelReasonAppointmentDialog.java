@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.customdialogs;
+package com.carecloud.carepay.patient.appointments.dialog;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -35,6 +35,7 @@ import com.carecloud.carepaylibray.appointments.models.CancellationReasonDTO;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;

@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
@@ -236,6 +237,10 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         imageCaptureHelper = new ImageCaptureHelper(getActivity(), profileImageview, globalLabelsMetaDTO);
         updateProfileImageButton = (Button) view.findViewById(R.id.updateProfileImageButton);
 
+
+        if (HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE)){
+            updateProfileImageButton.setVisibility(View.GONE);
+        }
         reviewTitleTextView = (TextView) view.findViewById(R.id.reviewtitle);
         reviewSubtitileTextView = (TextView) view.findViewById(R.id.reviewSubtitle);
         peronalInfoSectionTextview = (TextView) view.findViewById(R.id.reviewdemogrPersonalInfoLabel);
@@ -407,14 +412,14 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                 checkIfEnableButton();
             }
         });
-        final View view = getView();
+
         dobEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int inputType, KeyEvent keyEvent) {
                 if (inputType == EditorInfo.IME_ACTION_NEXT || inputType == EditorInfo.IME_ACTION_DONE) {
                     SystemUtil.hideSoftKeyboard(getActivity());
                     dobEditText.clearFocus();
-                    view.requestFocus();
+                    phoneNumberEditText.requestFocus();
                     return true;
                 }
                 return false;
