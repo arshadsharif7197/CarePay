@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -18,6 +17,7 @@ import com.carecloud.carepay.patient.payment.PaymentResponsibilityModel;
 import com.carecloud.carepay.patient.payment.androidpay.EnvData;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.payments.adapter.PaymentMethodAdapter;
 import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
@@ -51,7 +51,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     private ProgressBar paymentMethodFragmentProgressBar;
     private GoogleApiClient googleApiClient;
     private Boolean isProgressBarVisible = false;
-    private SupportWalletFragment _walletFragment;
+    private SupportWalletFragment walletFragment;
 
     private ScrollView scrollviewChoices;
 
@@ -165,7 +165,14 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
             androidPayPaymentMethod.setLabel(PaymentConstants.ANDROID_PAY);
             androidPayPaymentMethod.setType(CarePayConstants.TYPE_ANDROID_PAY);
             paymentMethodsList.add(androidPayPaymentMethod);
-            addPaymentMethodOptionView(paymentMethodsList.size() - 1);
+//            addPaymentMethodOptionView(paymentMethodsList.size() - 1);
+
+            if(getListView()!=null){//listview already init
+                PaymentMethodAdapter adapter = (PaymentMethodAdapter) getListView().getAdapter();
+                adapter.setPaymentMethodsList(paymentMethodsList);
+                adapter.notifyDataSetChanged();
+
+            }
         }
 
     }
@@ -267,12 +274,12 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
      * If user chooses Android Pay as the option then hide
      * the paymentChoiceButton and show Android Pay button.
      **/
-    @Override
+/*    @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         super.onCheckedChanged(group, checkedId);
 
         //TODO need to handle Android Pay Stuff here
-/*
+
         paymentChoiceButton.setEnabled(true);
         onSetRadioButtonRegularTypeFace();
         RadioButton selectedRadioButton = (RadioButton) group.findViewById(checkedId);
@@ -294,7 +301,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
                         paymentChoiceButton.setVisibility(View.VISIBLE);
                     }
 
-                    if (_walletFragment != null) {
+                    if (walletFragment != null) {
                         removeWalletFragment();
                     }
                     selectedPaymentMethod = selectedRadioButton.getText().toString();
@@ -327,7 +334,20 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
             }
 
         }
+
+    }
 */
+
+
+    @Override
+    protected void handlePaymentButton(String type, double amount){
+        if(type == CarePayConstants.TYPE_ANDROID_PAY){
+            setLineItems(paymentsModel.getPaymentPayload().getPatientBalances().get(0).getPayload());
+//            createAndAddWalletFragment(paymentsModel.getPaymentPayload().getPatientBalances().get(0).getPendingRepsonsibility());// getPayload().get(0).getTotal());
+            createAndAddWalletFragment(String.valueOf(amount));
+        }else{
+            super.handlePaymentButton(type, amount);
+        }
     }
 
 
@@ -350,7 +370,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
                 .setTheme(WalletConstants.THEME_DARK)
                 .setMode(WalletFragmentMode.BUY_BUTTON)
                 .build();
-        _walletFragment = SupportWalletFragment.newInstance(walletFragmentOptions);
+        walletFragment = SupportWalletFragment.newInstance(walletFragmentOptions);
 
         // Now initialize the Wallet Fragment
         MaskedWalletRequest maskedWalletRequest = createMaskedWalletRequest(totalPrice);
@@ -361,11 +381,11 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
                 .setMaskedWalletRequest(maskedWalletRequest)
                 .setMaskedWalletRequestCode(PaymentConstants.REQUEST_CODE_MASKED_WALLET)
                 .setAccountName(accountName);
-        _walletFragment.initialize(startParamsBuilder.build());
+        walletFragment.initialize(startParamsBuilder.build());
 
         // add Wallet fragment to the UI
         getFragmentManager().beginTransaction()
-                .replace(com.carecloud.carepay.patient.R.id.dynamic_wallet_button_fragment, _walletFragment)
+                .replace(com.carecloud.carepay.patient.R.id.dynamic_wallet_button_fragment, walletFragment)
                 .commit();
 
         new Handler().postDelayed(new Runnable() {
@@ -444,9 +464,9 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
 
     private void removeWalletFragment() {
         getFragmentManager().beginTransaction()
-                .remove(_walletFragment)
+                .remove(walletFragment)
                 .commit();
 
-        _walletFragment = null;
+        walletFragment = null;
     }
 }

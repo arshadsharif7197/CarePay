@@ -5,24 +5,18 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
-import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
-import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.payments.adapter.PaymentMethodAdapter;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
@@ -30,7 +24,6 @@ import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -40,7 +33,7 @@ import java.util.List;
  * Created by lmenendez on 2/27/17.
  */
 
-public abstract class PaymentMethodFragment extends BaseFragment implements RadioGroup.OnCheckedChangeListener {
+public abstract class PaymentMethodFragment extends BaseFragment /*implements RadioGroup.OnCheckedChangeListener*/ {
 
     public interface PaymentMethodActionCallback{
         void onPaymentMethodAction(String selectedPaymentMethod, double amount);
@@ -54,6 +47,7 @@ public abstract class PaymentMethodFragment extends BaseFragment implements Radi
     private Button paymentChoiceButton;
     private RadioGroup paymentMethodRadioGroup;
     private RadioGroup.LayoutParams radioGroupLayoutParam;
+    private ListView listView;
 
     protected PaymentsModel paymentsModel;
     protected List<PaymentsMethodsDTO> paymentMethodsList;
@@ -131,14 +125,16 @@ public abstract class PaymentMethodFragment extends BaseFragment implements Radi
     }
 
     private void initializeViews(View view) {
+/*
         radioGroupLayoutParam = new RadioGroup.LayoutParams(
                 RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.MATCH_PARENT);
         int margin = getResources().getDimensionPixelSize(R.dimen.payment_method_layout_checkbox_margin);
         radioGroupLayoutParam.setMargins(margin, margin, margin, margin);
 
+
         paymentMethodRadioGroup = (RadioGroup) view.findViewById(R.id.paymentMethodsRadioGroup);
         paymentMethodRadioGroup.setOnCheckedChangeListener(this);
-
+*/
         Button createPaymentPlanButton = (Button) view.findViewById(R.id.createPaymentPlanButton);
         createPaymentPlanButton.setOnClickListener(createPaymentPlanButtonListener);
         createPaymentPlanButton.setText(paymentCreatePlanString);
@@ -149,57 +145,35 @@ public abstract class PaymentMethodFragment extends BaseFragment implements Radi
         paymentChoiceButton.setText(paymentChooseMethodString);
 
 
+/*
         for (int i = 0; i < paymentMethodsList.size(); i++) {
             addPaymentMethodOptionView(i);
         }
 
+*/
 
-        ListView listView = (ListView) view.findViewById(R.id.list_payment_types);
-        PaymentMethodAdapter paymentMethodAdapter = new PaymentMethodAdapter(getContext(), paymentMethodsList, paymentTypeMap);
+        listView = (ListView) view.findViewById(R.id.list_payment_types);
+        final PaymentMethodAdapter paymentMethodAdapter = new PaymentMethodAdapter(getContext(), paymentMethodsList, paymentTypeMap);
 
         listView.setAdapter(paymentMethodAdapter);
-        listView.setOnItemClickListener(listItemClickListener);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                PaymentsMethodsDTO paymentMethod = paymentMethodsList.get(position);
+                selectedPaymentMethod = paymentMethod.getLabel();
+                paymentMethodAdapter.setSelectedItem(position);
+                paymentMethodAdapter.notifyDataSetChanged();
 
-    }
+                paymentChoiceButton.setText(paymentMethod.getButtonLabel());
+                paymentChoiceButton.setTag(paymentMethod.getType());
+                paymentChoiceButton.setEnabled(true);
 
-    private View selectedView;
-
-    private AdapterView.OnItemClickListener listItemClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectedPaymentMethod = paymentMethodsList.get(position).getLabel();
-            if(selectedView!=null && selectedView!=view){
-                unHighlightView(selectedView);
             }
+        });
 
-            selectedView = view;
-            highlightView(selectedView);
-        }
-    };
-
-    private void highlightView(View view){
-        CarePayTextView textView = (CarePayTextView) view.findViewById(R.id.payment_method_text);
-        textView.setFontAttribute(CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD);
-        toggleViewSelected(view, true);
     }
 
-    private void unHighlightView(View view){
-        CarePayTextView textView = (CarePayTextView) view.findViewById(R.id.payment_method_text);
-        textView.setFontAttribute(CustomAssetStyleable.PROXIMA_NOVA_REGULAR);
-        toggleViewSelected(view, false);
-    }
-
-    private void toggleViewSelected(View view, boolean isSelected){
-        view.setSelected(isSelected);
-        if(view instanceof ViewGroup){
-            ViewGroup viewGroup = (ViewGroup) view;
-            for(int i=0; i<viewGroup.getChildCount(); i++){
-                toggleViewSelected(viewGroup.getChildAt(i), isSelected);
-            }
-        }
-    }
-
-    protected void addPaymentMethodOptionView(int i) {//TODO this needs to be wrapped up in an adpter. This WILL cause memory leak
+/*    protected void addPaymentMethodOptionView(int i) {//TODO this needs to be wrapped up in an adpter. This WILL cause memory leak
         paymentMethodRadioGroup.addView(getPaymentMethodRadioButton(paymentMethodsList.get(i).getType(), paymentMethodsList.get(i).getLabel(), i),
                 radioGroupLayoutParam);
 
@@ -212,10 +186,11 @@ public abstract class PaymentMethodFragment extends BaseFragment implements Radi
         onSetRadioButtonRegularTypeFace();
     }
 
+
     private RadioButton getPaymentMethodRadioButton(String cardType, String cardInfo, int index) {
         RadioButton radioButtonView = new RadioButton(activity);
         radioButtonView.setId(index);
-        radioButtonView.setButtonDrawable(null);
+        radioButtonView.setButtonDrawable(android.R.color.transparent);
         radioButtonView.setBackground(null);
         radioButtonView.setText(cardInfo);
 
@@ -283,6 +258,7 @@ public abstract class PaymentMethodFragment extends BaseFragment implements Radi
         }
 
     }
+*/
 
         private void getLabels() {
         if (paymentsModel != null) {
@@ -314,6 +290,7 @@ public abstract class PaymentMethodFragment extends BaseFragment implements Radi
         paymentTypeMap.put(CarePayConstants.TYPE_FSA, R.drawable.payment_credit_card_button_selector);
     }
 
+/*
     private void onSetRadioButtonRegularTypeFace() {//TODO needs to be a better way than itterating the views just to set style each time
         for (int i = 0; i < paymentMethodRadioGroup.getChildCount(); i++) {
             if (i % 2 == 0) {
@@ -333,6 +310,27 @@ public abstract class PaymentMethodFragment extends BaseFragment implements Radi
         radioButton.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimary));
     }
 
+*/
+
+    protected void handlePaymentButton(String type, double amount){
+        switch (type) {
+            case CarePayConstants.TYPE_CASH:
+                new LargeAlertDialog(getActivity(), dialogTitle, dialogText, R.color.lightningyellow, R.drawable.icn_notification_basic, new LargeAlertDialog.LargeAlertInterface() {
+                    @Override
+                    public void onActionButton() {
+                    }
+                }).show();
+                break;
+
+            case CarePayConstants.TYPE_CREDIT_CARD:
+                callback.onPaymentMethodAction(selectedPaymentMethod, amount);
+                break;
+
+            default:
+                break;
+        }
+
+    }
 
     private View.OnClickListener createPaymentPlanButtonListener = new View.OnClickListener() {
         @Override
@@ -362,25 +360,16 @@ public abstract class PaymentMethodFragment extends BaseFragment implements Radi
         @Override
         public void onClick(View view) {
             String type = (String) view.getTag();
-            switch (type) {
-                case CarePayConstants.TYPE_CASH:
-                    new LargeAlertDialog(getActivity(), dialogTitle, dialogText, R.color.lightningyellow, R.drawable.icn_notification_basic, new LargeAlertDialog.LargeAlertInterface() {
-                        @Override
-                        public void onActionButton() {
-                        }
-                    }).show();
-                    break;
+            Bundle args = getArguments();
+            double amount = args.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
 
-                case CarePayConstants.TYPE_CREDIT_CARD:
-                    Bundle args = getArguments();
-                    double amount = args.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
-                    callback.onPaymentMethodAction(selectedPaymentMethod, amount);
-                    break;
-
-                default:
-                    break;
-            }
+            handlePaymentButton(type, amount);
         }
     };
+
+    public ListView getListView() {
+        return listView;
+    }
+
 
 }

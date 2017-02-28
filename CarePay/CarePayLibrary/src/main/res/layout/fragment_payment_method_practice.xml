@@ -103,7 +103,7 @@
         android:elevation="17dp"
         android:padding="@dimen/payment_method_parent_layout_padding"
         android:id="@+id/list_payment_types"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
 
 
@@ -114,14 +114,15 @@
         android:layout_marginBottom="@dimen/dimen_36dp"
         android:layout_weight="3"
         android:fillViewport="true"
-        android:scrollbars="vertical">
+        android:scrollbars="vertical"
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/consenrform1_mainContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/demographics_docs_thumbnail_width"
-            android:layout_marginRight="@dimen/demographics_docs_thumbnail_width"
+            android:layout_marginLeft="@dimen/dimen_60dp"
+            android:layout_marginRight="@dimen/dimen_60dp"
             android:elevation="17dp"
             android:orientation="vertical"
             android:weightSum="1">

@@ -84,7 +84,7 @@
         android:padding="@dimen/payment_method_parent_layout_padding"
         android:id="@+id/list_payment_types"
         android:choiceMode="singleChoice"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
 
 
@@ -94,7 +94,8 @@
         android:layout_height="0dp"
         android:layout_weight="3"
         android:fillViewport="true"
-        android:scrollbars="vertical">
+        android:scrollbars="vertical"
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/consenrform1_mainContainer"

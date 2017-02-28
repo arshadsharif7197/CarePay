@@ -6,10 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 
 import java.util.HashMap;
@@ -25,10 +26,16 @@ public class PaymentMethodAdapter extends BaseAdapter {
     private List<PaymentsMethodsDTO> paymentMethodsList;
     private HashMap<String, Integer> paymentTypeMap;
 
+    private int selectedItem = -1;
+
     public PaymentMethodAdapter(Context context, List<PaymentsMethodsDTO> paymentMethodsList, HashMap<String, Integer> paymentTypeMap){
         this.context = context;
         this.paymentMethodsList = paymentMethodsList;
         this.paymentTypeMap = paymentTypeMap;
+    }
+
+    public void setSelectedItem(int position){
+        this.selectedItem = position;
     }
 
     @Override
@@ -53,9 +60,8 @@ public class PaymentMethodAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.item_payment_method, parent, false);
         }
 
-        TextView paymentMethodText = (TextView) convertView.findViewById(R.id.payment_method_text);
+        CarePayTextView paymentMethodText = (CarePayTextView) convertView.findViewById(R.id.payment_method_text);
         paymentMethodText.setText(paymentMethodsList.get(position).getLabel());
-
 
         ImageView paymentMethodImage = (ImageView) convertView.findViewById(R.id.payment_method_image);
         Integer drawable = paymentTypeMap.get(paymentMethodsList.get(position).getType());
@@ -64,6 +70,29 @@ public class PaymentMethodAdapter extends BaseAdapter {
         }
         paymentMethodImage.setImageResource(drawable);
 
+        ImageView paymentMethodCheck = (ImageView) convertView.findViewById(R.id.payment_method_check);
+
+        if(selectedItem == position){
+            paymentMethodText.setSelected(true);
+            paymentMethodImage.setSelected(true);
+            paymentMethodCheck.setSelected(true);
+
+            paymentMethodText.setFontAttribute(CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD);
+        }else{
+            paymentMethodText.setSelected(false);
+            paymentMethodImage.setSelected(false);
+            paymentMethodCheck.setSelected(false);
+
+            paymentMethodText.setFontAttribute(CustomAssetStyleable.PROXIMA_NOVA_REGULAR);
+        }
+
+
         return convertView;
     }
+
+    public void setPaymentMethodsList(List<PaymentsMethodsDTO> paymentMethodsList) {
+        this.paymentMethodsList = paymentMethodsList;
+    }
+
+
 }

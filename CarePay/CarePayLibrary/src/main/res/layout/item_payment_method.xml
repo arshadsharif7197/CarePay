@@ -30,6 +30,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/payment_method_check"
         android:src="@drawable/check_box_intake"
         android:padding="@dimen/payment_method_layout_checkbox_margin"/>
 

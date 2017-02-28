@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -87,11 +86,6 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
         }
     };
 
-
-    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-        super.onCheckedChanged(group, checkedId);
-    }
 
 
     /**
