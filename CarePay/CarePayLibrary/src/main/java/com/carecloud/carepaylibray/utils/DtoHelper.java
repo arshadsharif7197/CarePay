@@ -70,6 +70,7 @@ public class DtoHelper {
     public static <S> S getConvertedDTO(Class<S> dtoClass, WorkflowDTO workflowDTO) {
         return getConvertedDTO(dtoClass, getStringDTO(workflowDTO));
     }
+
     /**
      * Converts DTO object to String
      *

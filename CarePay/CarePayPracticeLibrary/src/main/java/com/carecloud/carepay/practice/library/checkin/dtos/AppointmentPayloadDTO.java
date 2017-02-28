@@ -2,8 +2,13 @@ package com.carecloud.carepay.practice.library.checkin.dtos;
 
 import com.carecloud.carepaylibray.payments.models.LocationDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderDTO;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import org.joda.time.DateTime;
+
+import java.util.Date;
 
 /**
  * Created by Jahirul Bhuiyan on 10/27/2016.
@@ -677,5 +682,14 @@ public class AppointmentPayloadDTO {
     @Override
     public int hashCode() {
         return getId().hashCode();
+    }
+
+    public boolean isAppointmentOver() {
+        if (null == endTime) {
+            return false;
+        }
+
+        DateTime dateTime = new DateTime(DateUtil.getInstance().setDateRaw(endTime).getDate());
+        return dateTime.isBeforeNow();
     }
 }

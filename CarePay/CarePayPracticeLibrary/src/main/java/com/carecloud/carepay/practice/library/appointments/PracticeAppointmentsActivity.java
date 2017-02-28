@@ -409,19 +409,18 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
     }
 
     private void showPracticeAppointmentDialog(AppointmentDTO appointmentDTO) {
-        int headerColor;
+        int headerColor = R.color.colorPrimary;
         String leftAction = null;
         String rightAction = null;
-        switch (appointmentDTO.getPayload().getAppointmentStatus().getCode()) {
-            case CarePayConstants.PENDING:
-                headerColor = R.color.lightningyellow;
-                leftAction = checkInLabelDTO.getRejectLabel();
-                rightAction = checkInLabelDTO.getAcceptLabel();
-                break;
-            default:
-                leftAction = checkInLabelDTO.getRejectLabel();
-                headerColor = R.color.colorPrimary;
-                break;
+        if (appointmentDTO.getPayload().isAppointmentOver()) {
+            // Doing nothing for now
+        } else if (appointmentDTO.getPayload().getAppointmentStatus().getCode().equals(CarePayConstants.PENDING)) {
+            headerColor = R.color.lightningyellow;
+            leftAction = checkInLabelDTO.getRejectLabel();
+            rightAction = checkInLabelDTO.getAcceptLabel();
+
+        } else {
+            leftAction = checkInLabelDTO.getRejectLabel();
         }
 
         String tag = PracticeAppointmentDialog.class.getSimpleName();
@@ -451,24 +450,13 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
 
     @Override
     public void onLeftActionTapped(AppointmentDTO appointmentDTO) {
-        switch (appointmentDTO.getPayload().getAppointmentStatus().getCode()) {
-            case CarePayConstants.PENDING:
-                cancelAppointment(appointmentDTO);
-                break;
-            default:
-                cancelAppointment(appointmentDTO);
-                break;
-        }
+        cancelAppointment(appointmentDTO);
     }
 
     @Override
     public void onRightActionTapped(AppointmentDTO appointmentDTO) {
-        switch (appointmentDTO.getPayload().getAppointmentStatus().getCode()) {
-            case CarePayConstants.PENDING:
-                confirmAppointment(appointmentDTO);
-                break;
-            default:
-                break;
+        if (appointmentDTO.getPayload().getAppointmentStatus().getCode().equals(CarePayConstants.PENDING)) {
+            confirmAppointment(appointmentDTO);
         }
     }
 

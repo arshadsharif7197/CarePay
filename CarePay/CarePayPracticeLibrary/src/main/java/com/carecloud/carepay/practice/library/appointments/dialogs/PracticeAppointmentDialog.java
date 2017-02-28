@@ -41,6 +41,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
 
         void onRightActionTapped(AppointmentDTO appointmentDTO);
     }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -57,6 +58,17 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         }
     }
 
+    /**
+     * @param headerColor color of header
+     * @param closeText label below the close icon
+     * @param todayLabel today in current language
+     * @param visitTypeLabel visit type label
+     * @param leftAction label for left button. If empty, then no left button
+     * @param rightAction label for right button. If empty, then no right button
+     * @param appointmentDTO appointment information
+     * @param callback listener
+     * @return new instance of PracticeAppointmentDialog 
+     */
     public static PracticeAppointmentDialog newInstance(int headerColor,
                                                         String closeText,
                                                         String todayLabel,
@@ -141,7 +153,9 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         String shortName = StringUtil.onShortDrName(longName);
         setTextViewById(R.id.appointment_short_name, shortName);
 
-        setTextViewById(R.id.appointment_visit_type, "Follow-up");
+        // TODO: This is not in DTO
+        String visitType = appointmentPayloadDTO.getVisitReasonId().toString();
+        setTextViewById(R.id.appointment_visit_type, visitType);
         setTextViewById(R.id.appointment_visit_type_label, visitTypeLabel);
 
         initializeButtons();
@@ -159,7 +173,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
     private void initializeButtons() {
         initializeButton(R.id.button_left_action, leftAction, new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 if (null != callback) {
                     callback.onLeftActionTapped(appointmentDTO);
                 }
@@ -170,7 +184,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
 
         initializeButton(R.id.button_right_action, rightAction, new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 if (null != callback) {
                     callback.onRightActionTapped(appointmentDTO);
                 }
