@@ -7,26 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 
 public abstract class BaseDialogFragment extends DialogFragment implements View.OnClickListener {
 
-    protected View view;
-
-    private boolean isFooterVisible;
-    private String cancelString;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        Bundle arguments = getArguments();
-        this.cancelString = arguments.getString("cancelString");
-        this.isFooterVisible = arguments.getBoolean("isFooterVisible");;
-    }
+    private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,42 +26,26 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
-        onInitialization();
-        setDialogCancelText();
+        setCancelable(getCancelable());
+
+        view.findViewById(R.id.closeViewLayout).setOnClickListener(this);
+        ((CarePayTextView) view.findViewById(R.id.closeTextView)).setText(getCancelString());
+        ((ImageView) view.findViewById(R.id.cancel_img)).setImageResource(getCancelImageResource());
+
+        // Set content
+        View contentView = inflater.inflate(getContentLayout(), null);
+        ((FrameLayout) view.findViewById(R.id.base_dialog_content_layout)).addView(contentView);
 
         return view;
-    }
-
-    private void onInitialization() {
-        view.findViewById(R.id.closeViewLayout).setOnClickListener(this);
-        view.findViewById(R.id.footer_layout).setVisibility(isFooterVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override
     public void onClick(View view) {
         int viewId = view.getId();
 
-        if(viewId == R.id.closeViewLayout){
+        if(R.id.closeViewLayout == viewId){
             onDialogCancel();
         }
-    }
-
-    protected void setDialogTitle(String title){
-        ((CarePayTextView) view.findViewById(R.id.content_view_header_title)).setText(title);
-    }
-
-    protected void removeHeader(){
-        CarePayTextView carePayTextView = (CarePayTextView) view.findViewById(R.id.content_view_header_title);
-        ((ViewGroup) carePayTextView.getParent()).removeView(carePayTextView);
-    }
-
-
-    protected void setCancelImage(int resourceId){
-        ((ImageView) view.findViewById(R.id.cancel_img)).setImageResource(resourceId);
-    }
-
-    private void setDialogCancelText(){
-        ((CarePayTextView) view.findViewById(R.id.closeTextView)).setText(cancelString);
     }
 
     // if caller want to change on cancel then override this method in extended class
@@ -79,11 +53,46 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
         dismiss();
     }
 
-    protected abstract void onAddContentView(LayoutInflater inflater);
+    protected abstract String getCancelString();
 
-    /**
-     * inflate the footer view by default visibility gone if have footer then override this method in extended class
-     * @param inflater inflater
-     */
-    protected abstract void onAddFooterView(LayoutInflater inflater);
+    protected abstract int getCancelImageResource();
+
+    protected abstract int getContentLayout();
+
+    protected abstract boolean getCancelable();
+
+    public boolean disappearViewById(int id) {
+        return setVisibilityById(id, View.GONE);
+    }
+
+    public boolean hideViewById(int id) {
+        return setVisibilityById(id, View.INVISIBLE);
+    }
+
+    private boolean setVisibilityById(int id, int visibility) {
+        View view = findViewById(id);
+        if (null == view) {
+            return false;
+        }
+
+        view.setVisibility(visibility);
+
+        return true;
+    }
+
+    protected TextView setTextViewById(int id, String text) {
+        View view = findViewById(id);
+        if (null == view || !(view instanceof TextView)) {
+            return null;
+        }
+
+        TextView textView = (TextView) view;
+        textView.setText(text);
+
+        return textView;
+    }
+
+    private View findViewById(int id) {
+        return view.findViewById(id);
+    }
 }
