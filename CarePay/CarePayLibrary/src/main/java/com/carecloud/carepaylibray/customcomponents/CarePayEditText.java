@@ -84,7 +84,7 @@ public class CarePayEditText extends EditText {
     /**
      * get applied font
      *
-     * @return
+     * @return current font attribute
      */
     public int getFontAttribute() {
         return fontAttribute;
@@ -97,6 +97,7 @@ public class CarePayEditText extends EditText {
      */
     public void setFontAttribute(int fontAttribute) {
         this.fontAttribute = fontAttribute;
+        setFont();
         invalidate();
         requestLayout();
     }
@@ -114,11 +115,13 @@ public class CarePayEditText extends EditText {
                     0, 0);
             fontAttribute = typedArray.getInteger(R.styleable.CarePayCustomAttrs_customAssetFont, 0);
             typedArray.recycle();
-        } catch (Exception exception){
+        } catch (Exception exception) {
             fontAttribute = PROXIMA_NOVA_REGULAR;
-        }finally {
-
         }
+        setFont();
+    }
+
+    private void setFont(){
         String assetFontName = "";
         switch (fontAttribute) {
             case GOTHAM_ROUNDED_BOLD: {
