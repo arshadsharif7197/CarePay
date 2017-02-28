@@ -1,15 +1,19 @@
 package com.carecloud.carepay.patient.payment.activities;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.payment.fragments.AddNewCreditCardFragment;
+import com.carecloud.carepay.patient.payment.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
+import com.carecloud.carepay.patient.payment.fragments.PaymentPlanFragment;
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.services.PaymentsService;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -23,7 +27,7 @@ import retrofit2.Response;
  * Created by jorge on 10/01/17.
  */
 
-public class PaymentMethodActivity extends BasePatientActivity {
+public class PaymentMethodActivity extends BasePatientActivity implements PaymentMethodFragment.PaymentMethodActionCallback {
     private PaymentsModel paymentsDTO;
     private String paymentsDTOString;
     private Bundle bundle ;
@@ -65,24 +69,63 @@ public class PaymentMethodActivity extends BasePatientActivity {
     }
 
     private void doPayment(double total) {
-        FragmentManager fragmentmanager = PaymentMethodActivity.this.getSupportFragmentManager();
-        PatientPaymentMethodFragment fragment = (PatientPaymentMethodFragment)
-                fragmentmanager.findFragmentByTag(PatientPaymentMethodFragment.class.getSimpleName());
-
-        if (fragment == null) {
-            fragment = new PatientPaymentMethodFragment();
-        }
+        PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
 
         Bundle bundle = new Bundle();
         Gson gson = new Gson();
         String paymentsDTOString = gson.toJson(paymentsDTO);
         bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, total);
-        bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+        bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
         fragment.setArguments(bundle);
 
-        FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(com.carecloud.carepaylibrary.R.id.payment_frag_holder, fragment);
-        fragmentTransaction.addToBackStack(PatientPaymentMethodFragment.class.getSimpleName());
+        fragmentTransaction.addToBackStack(fragment.getClass().getSimpleName());
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onPaymentMethodAction(String selectedPaymentMethod, double amount) {
+        Gson gson = new Gson();
+        Bundle args = new Bundle();
+        Fragment fragment;
+        String paymentsDTOString = gson.toJson(paymentsDTO);
+        if(paymentsDTO.getPaymentPayload().getPatientCreditCards()!=null && !paymentsDTO.getPaymentPayload().getPatientCreditCards().isEmpty()){
+            args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
+            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);//TODO remove DUPlicate dto
+            args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
+            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+            fragment = new ChooseCreditCardFragment();
+        } else {
+            args.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+            args.putString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE, gson.toJson(paymentsDTO.getPaymentPayload().getPapiAccounts()));//TODO this is already included in main DTO, just extract it
+            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
+            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE,  amount);
+            fragment = new AddNewCreditCardFragment();
+        }
+
+        fragment.setArguments(args);
+
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(com.carecloud.carepaylibrary.R.id.payment_frag_holder, fragment);
+        fragmentTransaction.addToBackStack(fragment.getClass().getSimpleName());
+        fragmentTransaction.commit();
+
+    }
+
+    @Override
+    public void onPaymentPlanAction() {
+        PaymentPlanFragment fragment = new PaymentPlanFragment();
+
+        Bundle args = new Bundle();
+        Gson gson = new Gson();
+        String paymentsDTOString = gson.toJson(paymentsDTO);
+        args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
+        fragment.setArguments(args);
+
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(com.carecloud.carepaylibrary.R.id.payment_frag_holder, fragment);
+        fragmentTransaction.addToBackStack(fragment.getClass().getSimpleName());
         fragmentTransaction.commit();
     }
 }

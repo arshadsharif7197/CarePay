@@ -128,7 +128,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
 //        bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
 //        bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, total);
 //
-//        PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
+//        PracticePaymentMethodFragment fragment = new PracticePaymentMethodFragment();
 //        fragment.setArguments(bundle);
 //        ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
     }

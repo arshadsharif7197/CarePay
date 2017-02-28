@@ -17,10 +17,14 @@ import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.ResponsibilityFragment;
 import com.carecloud.carepay.patient.payment.androidpay.ConfirmationActivity;
+import com.carecloud.carepay.patient.payment.fragments.AddNewCreditCardFragment;
+import com.carecloud.carepay.patient.payment.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment;
+import com.carecloud.carepay.patient.payment.fragments.PaymentPlanFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
+import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.android.gms.wallet.MaskedWallet;
@@ -31,11 +35,12 @@ import com.google.gson.Gson;
  * Created by jorge on 29/12/16.
  */
 
-public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity implements PaymentDetailsDialog.PayNowClickListener {
+public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity implements PaymentDetailsDialog.PayNowClickListener, PaymentMethodFragment.PaymentMethodActionCallback {
 
     private static boolean isPaymentDone;
     private PaymentsModel paymentsDTO;
     public Bundle bundle;
+    private boolean toolbarVisibility = false;
 
     public static boolean isPaymentDone() {
         return isPaymentDone;
@@ -90,6 +95,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
      * @param visibility the visibility
      */
     public void displayToolbar(boolean visibility){
+        toolbarVisibility = visibility;
         toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.balance_history_toolbar);
         TextView toolbarText = (TextView) findViewById(R.id.balance_history_toolbar_title);
         String toolBarTitle = paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPatientBalanceToolbar();
@@ -204,10 +210,57 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         Gson gson = new Gson();
         String paymentsDTOString = gson.toJson(paymentsDTO);
         bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-        bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+        bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
         fragment.setArguments(bundle);
 
         navigateToFragment(fragment, true);
 
+        displayToolbar(false);
+    }
+
+    @Override
+    public void onBackPressed(){
+        if(!toolbarVisibility && getSupportFragmentManager().getBackStackEntryCount()<2){
+            displayToolbar(true);
+        }
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onPaymentMethodAction(String selectedPaymentMethod, double amount) {
+        Gson gson = new Gson();
+        Bundle args = new Bundle();
+        Fragment fragment;
+        String paymentsDTOString = gson.toJson(paymentsDTO);
+        if(paymentsDTO.getPaymentPayload().getPatientCreditCards()!=null && !paymentsDTO.getPaymentPayload().getPatientCreditCards().isEmpty()){
+            args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
+            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);//TODO remove DUPlicate dto
+            args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
+            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+            fragment = new ChooseCreditCardFragment();
+        } else {
+            args.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+            args.putString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE, gson.toJson(paymentsDTO.getPaymentPayload().getPapiAccounts()));//TODO this is already included in main DTO, just extract it
+            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
+            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE,  amount);
+            fragment = new AddNewCreditCardFragment();
+        }
+
+        fragment.setArguments(args);
+        navigateToFragment(fragment, true);
+
+    }
+
+    @Override
+    public void onPaymentPlanAction() {
+        PaymentPlanFragment fragment = new PaymentPlanFragment();
+
+        Bundle args = new Bundle();
+        Gson gson = new Gson();
+        String paymentsDTOString = gson.toJson(paymentsDTO);
+        args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
+        fragment.setArguments(args);
+
+        navigateToFragment(fragment, true);
     }
 }

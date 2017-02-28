@@ -75,6 +75,19 @@
     </LinearLayout>
 
 
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:layout_marginBottom="@dimen/dimen_20dp"
+        android:elevation="17dp"
+        android:padding="@dimen/payment_method_parent_layout_padding"
+        android:id="@+id/list_payment_types"
+        android:choiceMode="singleChoice"
+        android:visibility="gone"/>
+
+
+
     <ScrollView
         android:id="@+id/scrollview_choices"
         android:layout_width="fill_parent"

@@ -16,7 +16,7 @@ import android.widget.EditText;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
-import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentMethodFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
@@ -211,9 +211,9 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         if (context instanceof PatientModeCheckinActivity) {
 
             FragmentManager fragmentmanager = ((PatientModeCheckinActivity) context).getSupportFragmentManager();
-            PatientPaymentMethodFragment fragment = (PatientPaymentMethodFragment) fragmentmanager.findFragmentByTag(PatientPaymentMethodFragment.class.getSimpleName());
+            PracticePaymentMethodFragment fragment = (PracticePaymentMethodFragment) fragmentmanager.findFragmentByTag(PracticePaymentMethodFragment.class.getSimpleName());
             if (fragment == null) {
-                fragment = new PatientPaymentMethodFragment();
+                fragment = new PracticePaymentMethodFragment();
             }
 
             Bundle bundle = new Bundle();
@@ -228,7 +228,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
 
             FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
             fragmentTransaction.replace(R.id.checkInContentHolderId, fragment);
-            fragmentTransaction.addToBackStack(PatientPaymentMethodFragment.class.getSimpleName());
+            fragmentTransaction.addToBackStack(PracticePaymentMethodFragment.class.getSimpleName());
             fragmentTransaction.commit();
             this.dismiss();
         }

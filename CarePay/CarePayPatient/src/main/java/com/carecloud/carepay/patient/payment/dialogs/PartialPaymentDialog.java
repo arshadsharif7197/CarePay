@@ -231,7 +231,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
             Bundle bundle = new Bundle();
             Gson gson = new Gson();
             String paymentsDTOString = gson.toJson(paymentsDTO);
-            bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+            bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
 //            bundle.putSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
 //                    arguments.getSerializable(CarePayConstants.PAYMENT_CREDIT_CARD_INFO));
            // bundle.putSerializable(CarePayConstants.INTAKE_BUNDLE,

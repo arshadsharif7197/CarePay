@@ -25,7 +25,10 @@ import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.Check
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.IFragmentCallback;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.PracticeIdDocScannerFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentMethodFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PatientAddNewCreditCardFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PatientChooseCreditCardFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentPlanFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
@@ -52,6 +55,7 @@ import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearch
 import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
+import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
@@ -72,7 +76,8 @@ import java.util.Locale;
 public class PatientModeCheckinActivity extends BasePracticeActivity implements IFragmentCallback, DemographicsReviewLabelsHolder, DemographicsLabelsHolder,
         CheckinDemographicsFragment.CheckinDemographicsFragmentListener, DemographicsCheckInDocumentsFragment.DemographicsCheckInDocumentsFragmentListener,
         HealthInsuranceFragment.InsuranceDocumentScannerListener, MedicationsAllergyFragment.MedicationAllergyCallback,
-        CheckinDemographicsInterface, MedicationAllergySearchFragment.MedicationAllergySearchCallback, ResponsibilityBaseFragment.ResponsibilityActionCallback {
+        CheckinDemographicsInterface, MedicationAllergySearchFragment.MedicationAllergySearchCallback,
+        ResponsibilityBaseFragment.ResponsibilityActionCallback, PaymentMethodFragment.PaymentMethodActionCallback {
 
     BroadcastReceiver intakeFormReceiver = new BroadcastReceiver() {
         @Override
@@ -486,7 +491,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
         bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
 
-        PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
+        PracticePaymentMethodFragment fragment = new PracticePaymentMethodFragment();
         fragment.setArguments(bundle);
         navigateToFragment(fragment, true);
     }
@@ -494,6 +499,43 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     @Override
     public void startPartialPayment() {
 
+    }
+
+    @Override
+    public void onPaymentMethodAction(String selectedPaymentMethod, double amount) {
+        Gson gson = new Gson();
+        Bundle args = new Bundle();
+        Fragment fragment;
+        String paymentsDTOString = gson.toJson(paymentDTO);
+        if(paymentDTO.getPaymentPayload().getPatientCreditCards()!=null && !paymentDTO.getPaymentPayload().getPatientCreditCards().isEmpty()){
+            args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
+            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);//TODO remove DUPlicate dto
+            args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
+            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+            fragment = new PatientChooseCreditCardFragment();
+        } else {
+            args.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+            args.putString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE, gson.toJson(paymentDTO.getPaymentPayload().getPapiAccounts()));//TODO this is already included in main DTO, just extract it
+            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
+            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE,  amount);
+            fragment = new PatientAddNewCreditCardFragment();
+        }
+
+        fragment.setArguments(args);
+        navigateToFragment(fragment, true);
+    }
+
+    @Override
+    public void onPaymentPlanAction() {
+        PatientPaymentPlanFragment fragment = new PatientPaymentPlanFragment();
+
+        Bundle args = new Bundle();
+        Gson gson = new Gson();
+        String paymentsDTOString = gson.toJson(paymentDTO);
+        args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
+        fragment.setArguments(args);
+
+        navigateToFragment(fragment, true);
     }
 
 

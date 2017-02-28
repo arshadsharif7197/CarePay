@@ -1,48 +1,26 @@
 package com.carecloud.carepay.patient.payment.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
-import com.carecloud.carepay.patient.payment.PaymentActivity;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.PaymentResponsibilityModel;
-import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.patient.payment.androidpay.EnvData;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.base.BaseFragment;
-import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
+import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.BooleanResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -60,38 +38,19 @@ import com.google.android.gms.wallet.fragment.WalletFragmentInitParams;
 import com.google.android.gms.wallet.fragment.WalletFragmentMode;
 import com.google.android.gms.wallet.fragment.WalletFragmentOptions;
 import com.google.android.gms.wallet.fragment.WalletFragmentStyle;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PatientPaymentMethodFragment extends BaseFragment implements RadioGroup.OnCheckedChangeListener,
-        GoogleApiClient.OnConnectionFailedListener {
+public class PatientPaymentMethodFragment extends PaymentMethodFragment implements GoogleApiClient.OnConnectionFailedListener {
 
-    private static final String TAG = PatientPaymentMethodFragment.class.getSimpleName();
-    private RadioGroup paymentMethodRadioGroup;
-    private Button paymentChoiceButton;
-    private Activity activity;
-    private RadioGroup.LayoutParams radioGroupLayoutParam;
-    private String selectedPaymentMethod;
-    //private int[] paymentMethodsDrawableArray;
-    private PaymentsModel paymentsDTO;
-    private String dialogTitle;
-    private String dialogText;
-    private List<PaymentsMethodsDTO> paymentMethodsList = null;
-    private String titlePaymentMethodString;
-    private String paymentChooseMethodString;
-    private String paymentCreatePlanString;
-    private String paymentChangeMethodString;
-    private String paymentFailedErrorString;
-
+    //Patient Specific Stuff
     private ProgressBar paymentMethodFragmentProgressBar;
-    private GoogleApiClient _GoogleApiClient;
-    private Boolean _isProgressBarVisible = false;
+    private GoogleApiClient googleApiClient;
+    private Boolean isProgressBarVisible = false;
     private SupportWalletFragment _walletFragment;
 
     private ScrollView scrollviewChoices;
@@ -100,63 +59,35 @@ public class PatientPaymentMethodFragment extends BaseFragment implements RadioG
     private boolean isAndroidPayReady;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getActivity() instanceof ViewPaymentBalanceHistoryActivity) {
-            ((ViewPaymentBalanceHistoryActivity)this.getActivity()).displayToolbar(false);
-        }
+    public void onCreate(Bundle icicle){
+        super.onCreate(icicle);
+        paymentTypeMap.put(CarePayConstants.TYPE_ANDROID_PAY, R.drawable.payment_android_button_selector);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_payment_method, container, false);
-        activity = getActivity();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_payment_method, container, false);
+    }
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
-        TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
-        toolbar.setTitle("");
-
-        SystemUtil.setGothamRoundedMediumTypeface(activity, title);
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(),
-                R.drawable.icn_patient_mode_nav_back));
+    @Override
+    public void onViewCreated(View view, Bundle icicle){
+        super.onViewCreated(view, icicle);
         paymentMethodFragmentProgressBar = (ProgressBar) view.findViewById(R.id.paymentMethodFragmentProgressBar);
-//        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activity.onBackPressed();
-            }
-        });
+         scrollviewChoices = (ScrollView) view.findViewById(R.id.scrollview_choices);
 
-        radioGroupLayoutParam = new RadioGroup.LayoutParams(
-                RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.MATCH_PARENT);
-        int margin = getResources().getDimensionPixelSize(R.dimen.payment_method_layout_checkbox_margin);
-        radioGroupLayoutParam.setMargins(margin, margin, margin, margin);
-        scrollviewChoices = (ScrollView) view.findViewById(R.id.scrollview_choices);
-
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            Gson gson = new Gson();
-            String pametsDtoString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
-            paymentsDTO = gson.fromJson(pametsDtoString, PaymentsModel.class);
-        }
-        paymentMethodsList = paymentsDTO.getPaymentPayload().getPaymentSettings().getPayload().getRegularPayments().getPaymentMethods();
-
-        getLabels();
-        initializeViews(view);
-        if (_GoogleApiClient == null) {
+        if (googleApiClient == null) {
             setGoogleApiClient();
         }
         isAndroidPayReadyToUse();
-        title.setText(titlePaymentMethodString);
-//        toolbar.setTitle(titlePaymentMethodString);
-        return view;
+
     }
+
+
+
 
     private void setGoogleApiClient() {
         // [START basic_google_api_client]
-        _GoogleApiClient = new GoogleApiClient.Builder(getActivity())
+        googleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addApi(Wallet.API, new Wallet.WalletOptions.Builder()
                         .setEnvironment(PaymentConstants.WALLET_ENVIRONMENT)
                         .build())
@@ -180,8 +111,8 @@ public class PatientPaymentMethodFragment extends BaseFragment implements RadioG
 
     private void disconnectGoogleAPI() {
 
-        _GoogleApiClient.stopAutoManage(getActivity());
-        _GoogleApiClient.disconnect();
+        googleApiClient.stopAutoManage(getActivity());
+        googleApiClient.disconnect();
 
     }
 
@@ -191,37 +122,6 @@ public class PatientPaymentMethodFragment extends BaseFragment implements RadioG
         Toast.makeText(getActivity(), "Google Play Services error", Toast.LENGTH_SHORT).show();
     }
 
-    private RadioButton getPaymentMethodRadioButton(String cardType, String cardInfo, int index) {
-        RadioButton radioButtonView = new RadioButton(activity);
-        radioButtonView.setId(index);
-        radioButtonView.setButtonDrawable(null);
-        radioButtonView.setBackground(null);
-        radioButtonView.setText(cardInfo);
-        // Initialize HashMap.
-        HashMap<String, Integer> cardTypeMap = new HashMap<>();
-        cardTypeMap.put(CarePayConstants.TYPE_CASH, R.drawable.payment_cash_button_selector);
-        cardTypeMap.put(CarePayConstants.TYPE_CREDIT_CARD, R.drawable.payment_credit_card_button_selector);
-        cardTypeMap.put(CarePayConstants.TYPE_CHECK, R.drawable.payment_check_button_selector);
-        cardTypeMap.put(CarePayConstants.TYPE_GIFT_CARD, R.drawable.payment_credit_card_button_selector);
-        cardTypeMap.put(CarePayConstants.TYPE_PAYPAL, R.drawable.payment_paypal_button_selector);
-        cardTypeMap.put(CarePayConstants.TYPE_HSA, R.drawable.payment_credit_card_button_selector);
-        cardTypeMap.put(CarePayConstants.TYPE_FSA, R.drawable.payment_credit_card_button_selector);
-        cardTypeMap.put(CarePayConstants.TYPE_ANDROID_PAY, R.drawable.payment_android_button_selector);
-
-        if (cardTypeMap.get(cardType) != null) {
-            radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
-                    cardTypeMap.get(cardType), 0, R.drawable.check_box_intake, 0);
-        } else {
-            radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
-                    cardTypeMap.get(CarePayConstants.TYPE_CREDIT_CARD), 0, R.drawable.check_box_intake, 0);
-        }
-        radioButtonView.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
-        radioButtonView.setTextColor(ContextCompat.getColor(activity, R.color.radio_button_selector));
-        radioButtonView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.payment_method_layout_label_text_size));
-        radioButtonView.setCompoundDrawablePadding(getResources().getDimensionPixelSize(R.dimen.payment_method_layout_checkbox_margin));
-
-        return radioButtonView;
-    }
 
 
     private void isAndroidPayReadyToUse() {
@@ -233,7 +133,7 @@ public class PatientPaymentMethodFragment extends BaseFragment implements RadioG
                 .addAllowedCardNetwork(WalletConstants.CardNetwork.DISCOVER)
                 .build();
 
-        Wallet.Payments.isReadyToPay(_GoogleApiClient, req).setResultCallback(
+        Wallet.Payments.isReadyToPay(googleApiClient, req).setResultCallback(
                 new ResultCallback<BooleanResult>() {
                     @Override
                     public void onResult(@NonNull BooleanResult booleanResult) {
@@ -258,23 +158,6 @@ public class PatientPaymentMethodFragment extends BaseFragment implements RadioG
         addAndroidPayPaymentMethod();
     }
 
-    private void initializeViews(View view) {
-        paymentMethodRadioGroup = (RadioGroup) view.findViewById(R.id.paymentMethodsRadioGroup);
-        paymentChoiceButton = (Button) view.findViewById(R.id.paymentChoiceButton);
-        Button createPaymentPlanButton = (Button) view.findViewById(R.id.createPaymentPlanButton);
-        paymentMethodRadioGroup.setOnCheckedChangeListener(this);
-        paymentChoiceButton.setOnClickListener(paymentChoiceButtonListener);
-        createPaymentPlanButton.setOnClickListener(createPaymentPlanButtonListener);
-        paymentChoiceButton.setEnabled(false);
-        paymentChoiceButton.setText(paymentChooseMethodString);
-        createPaymentPlanButton.setText(paymentCreatePlanString);
-
-
-        for (int i = 0; i < paymentMethodsList.size(); i++) {
-            addPaymentMethodOptionView(i);
-        }
-    }
-
 
     private void addAndroidPayPaymentMethod() {
         if (isAndroidPayReady) {
@@ -288,112 +171,37 @@ public class PatientPaymentMethodFragment extends BaseFragment implements RadioG
     }
 
 
-    private void addPaymentMethodOptionView(int i) {
-        paymentMethodRadioGroup.addView(getPaymentMethodRadioButton(paymentMethodsList.get(i).getType(), paymentMethodsList.get(i).getLabel(), i),
-                radioGroupLayoutParam);
-
-        View dividerLineView = new View(activity);
-        dividerLineView.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, 1
-        ));
-        dividerLineView.setBackgroundColor(ContextCompat.getColor(activity, R.color.cadet_gray));
-        paymentMethodRadioGroup.addView(dividerLineView);
-        onSetRadioButtonRegularTypeFace();
-    }
-
     private void showOrHideProgressDialog() {
 
-        if (_isProgressBarVisible) {
+        if (isProgressBarVisible) {
             paymentMethodFragmentProgressBar.setVisibility(View.GONE);
-            _isProgressBarVisible = false;
+            isProgressBarVisible = false;
         } else {
             paymentMethodFragmentProgressBar.setVisibility(View.VISIBLE);
-            _isProgressBarVisible = true;
+            isProgressBarVisible = true;
         }
 
     }
 
-    private void onSetRadioButtonRegularTypeFace() {
-        for (int i = 0; i < paymentMethodRadioGroup.getChildCount(); i++) {
-            if (i % 2 == 0) {
-                SystemUtil.setProximaNovaRegularTypeface(this.activity,
-                        (RadioButton) paymentMethodRadioGroup.getChildAt(i));
-                ((RadioButton) paymentMethodRadioGroup.getChildAt(i))
-                        .setTextColor(ContextCompat.getColor(activity, R.color.slateGray));
-            }
-        }
-    }
 
-    private void onSetRadioButtonSemiBoldTypeFace(RadioButton radioButton) {
-        SystemUtil.setProximaNovaSemiboldTypeface(this.activity, radioButton);
-        radioButton.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimary));
-    }
-
-    private View.OnClickListener createPaymentPlanButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (paymentsDTO != null) {
-                double previousBalance = 0;
-                double coPay = 0;
-                List<PaymentPatientBalancesPayloadDTO> paymentMethodsList
-                        = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPayload();
-
-                for (PaymentPatientBalancesPayloadDTO payment : paymentMethodsList) {
-                    if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PREVIOUS_BALANCE)) {
-                        previousBalance = Double.parseDouble(payment.getTotal());
-                    } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
-                        coPay = Double.parseDouble(payment.getTotal());
-                    }
-                }
-
-                if ((previousBalance + coPay) > 0) {
-                    FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
-                    PaymentPlanFragment fragment = (PaymentPlanFragment) fragmentmanager
-                            .findFragmentByTag(PaymentPlanFragment.class.getSimpleName());
-                    if (fragment == null) {
-                        fragment = new PaymentPlanFragment();
-                    }
-
-                    Bundle args = new Bundle();
-                    Gson gson = new Gson();
-                    String paymentsDTOString = gson.toJson(paymentsDTO);
-                    args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO,
-                            paymentsDTOString);
-                    fragment.setArguments(args);
-                    PaymentResponsibilityModel paymentModel = PaymentResponsibilityModel.getInstance();
-                    paymentModel.setArguments(args);
-
-                    if (getActivity() instanceof PaymentActivity) {
-                        ((PaymentActivity) getActivity()).navigateToFragment(fragment, true);
-                    } else if (getActivity() instanceof DemographicsSettingsActivity) {
-                        ((DemographicsSettingsActivity) getActivity()).navigateToFragment(fragment, true);
-                    } else if (getActivity() instanceof ViewPaymentBalanceHistoryActivity) {
-                        ((ViewPaymentBalanceHistoryActivity) getActivity()).navigateToFragment(fragment, true);
-                    }
-
-                }
-            }
-        }
-    };
-
+/*
+    @Deprecated
     private View.OnClickListener paymentChoiceButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            getLabels();
             String type = (String) view.getTag();
             switch (type) {
                 case CarePayConstants.TYPE_CASH:
-                    new LargeAlertDialog(getActivity(), dialogTitle, dialogText, R.color.lightningyellow, R.drawable.icn_notification_basic, new LargeAlertDialog.LargeAlertInterface() {
-                        @Override
-                        public void onActionButton() {
-                        }
-                    }).show();
+//                    new LargeAlertDialog(getActivity(), dialogTitle, dialogText, R.color.lightningyellow, R.drawable.icn_notification_basic, new LargeAlertDialog.LargeAlertInterface() {
+//                        @Override
+//                        public void onActionButton() {
+//                        }
+//                    }).show();
                     break;
 
-                case CarePayConstants.TYPE_CREDIT_CARD:
-                    paymentChoiceButton.setEnabled(false);
-                    TransitionDTO transitionDTO = paymentsDTO.getPaymentsMetadata()
-                            .getPaymentsLinks().getPaymentsCreditCards();
+                case CarePayConstants.TYPE_CREDIT_CARD://TODO move this logic to callback
+//                    paymentChoiceButton.setEnabled(false);//keep to prevent double click maybe
+                    TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getPaymentsCreditCards();
                     getWorkflowServiceHelper().execute(transitionDTO, getCreditCardsCallback);
                     break;
 
@@ -402,8 +210,9 @@ public class PatientPaymentMethodFragment extends BaseFragment implements RadioG
             }
         }
     };
+*/
 
-    WorkflowServiceCallback getCreditCardsCallback = new WorkflowServiceCallback() {
+/*    WorkflowServiceCallback getCreditCardsCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             showProgressDialog();
@@ -412,34 +221,25 @@ public class PatientPaymentMethodFragment extends BaseFragment implements RadioG
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            paymentChoiceButton.setEnabled(true);
+//            paymentChoiceButton.setEnabled(true);//keep to prevent double click maybe
             Gson gson = new Gson();
             PaymentsModel paymentsModel = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
 
-            FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
             Fragment fragment;
+            if(paymentsModel!=null && paymentsModel.getPaymentPayload().getPatientCreditCards()!=null && paymentsModel.getPaymentPayload().getPatientCreditCards().size()>0){
+                fragment = new ChooseCreditCardFragment();
 
-            if(paymentsModel!=null && paymentsModel.getPaymentPayload().getPatientCreditCards()!=null
-                    && paymentsModel.getPaymentPayload().getPatientCreditCards().size()>0){
-                fragment = (ChooseCreditCardFragment) fragmentmanager
-                        .findFragmentByTag(ChooseCreditCardFragment.class.getSimpleName());
-                if (fragment == null) {
-                    fragment = new ChooseCreditCardFragment();
-                }
             } else {
-                fragment = (AddNewCreditCardFragment) fragmentmanager
-                        .findFragmentByTag(AddNewCreditCardFragment.class.getSimpleName());
-                if (fragment == null) {
-                    fragment = new AddNewCreditCardFragment();
-                }
+                fragment = new AddNewCreditCardFragment();
+
             }
 
             Bundle args = new Bundle();
-            args.putString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE, gson.toJson(paymentsDTO.getPaymentPayload().getPapiAccounts()));
+            args.putString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE, gson.toJson(PatientPaymentMethodFragment.this.paymentsModel.getPaymentPayload().getPapiAccounts()));
             args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
             args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, getArguments()
                     .getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE));
-            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(paymentsDTO));
+            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(PatientPaymentMethodFragment.this.paymentsModel));
             args.putString(CarePayConstants.INTAKE_BUNDLE, workflowDTO.toString());
             fragment.setArguments(args);
 
@@ -455,32 +255,11 @@ public class PatientPaymentMethodFragment extends BaseFragment implements RadioG
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            paymentChoiceButton.setEnabled(true);
+//            paymentChoiceButton.setEnabled(true);//keep to prevent double click maybe
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
-    };
-
-    /**
-     * partial payment labels
-     */
-    public void getLabels() {
-        if (paymentsDTO != null) {
-            PaymentsMetadataModel paymentsMetadataModel = paymentsDTO.getPaymentsMetadata();
-            if (paymentsMetadataModel != null) {
-                PaymentsLabelDTO paymentsLabelsDTO = paymentsMetadataModel.getPaymentsLabel();
-                if (paymentsLabelsDTO != null) {
-                    dialogTitle = paymentsLabelsDTO.getPaymentSeeFrontDeskButton();
-                    dialogText = paymentsLabelsDTO.getPaymentBackButton();
-                    titlePaymentMethodString = paymentsLabelsDTO.getPaymentMethodTitle();
-                    paymentChooseMethodString = paymentsLabelsDTO.getPaymentChooseMethodButton();
-                    paymentCreatePlanString = paymentsLabelsDTO.getPaymentCreatePlanButton();
-                    paymentChangeMethodString = paymentsLabelsDTO.getPaymentChangeMethodButton();
-                    paymentFailedErrorString = paymentsLabelsDTO.getPaymentFailedErrorMessage();
-                }
-            }
-        }
-    }
+    };*/
 
     //    Android Pay
 
@@ -490,17 +269,23 @@ public class PatientPaymentMethodFragment extends BaseFragment implements RadioG
      **/
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
+        super.onCheckedChanged(group, checkedId);
+
+        //TODO need to handle Android Pay Stuff here
+/*
         paymentChoiceButton.setEnabled(true);
         onSetRadioButtonRegularTypeFace();
         RadioButton selectedRadioButton = (RadioButton) group.findViewById(checkedId);
         onSetRadioButtonSemiBoldTypeFace(selectedRadioButton);
 
+
+
         for (int i = 0; i < paymentMethodsList.size(); i++) {
             if (selectedRadioButton.getText().toString().equalsIgnoreCase(paymentMethodsList.get(i).getLabel())) {
                 if (selectedRadioButton.getText().toString().equalsIgnoreCase(PaymentConstants.ANDROID_PAY)) {
                     paymentChoiceButton.setVisibility(View.GONE);
-                    setLineItems(paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPayload());
-                    createAndAddWalletFragment(paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPendingRepsonsibility());// getPayload().get(0).getTotal());
+                    setLineItems(paymentsModel.getPaymentPayload().getPatientBalances().get(0).getPayload());
+                    createAndAddWalletFragment(paymentsModel.getPaymentPayload().getPatientBalances().get(0).getPendingRepsonsibility());// getPayload().get(0).getTotal());
                     //scrollviewChoices.fullScroll(View.FOCUS_DOWN);
 
                 } else {
@@ -520,7 +305,7 @@ public class PatientPaymentMethodFragment extends BaseFragment implements RadioG
                     }
                     if (paymentMethodsList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CREDIT_CARD)) {
                         paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
-                        paymentChoiceButton.setText(paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentChooseCreditCardButton());
+                        paymentChoiceButton.setText(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentChooseCreditCardButton());
                     }
                     if (paymentMethodsList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CHECK)) {
                         paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
@@ -542,6 +327,7 @@ public class PatientPaymentMethodFragment extends BaseFragment implements RadioG
             }
 
         }
+*/
     }
 
 
