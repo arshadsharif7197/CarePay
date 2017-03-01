@@ -66,8 +66,11 @@ public class CreditCardsAdapter extends BaseAdapter {
         ImageView paymentMethodCheck = (ImageView) convertView.findViewById(R.id.credit_card_check);
 
         CarePayTextView defaultCardText = (CarePayTextView) convertView.findViewById(R.id.credit_card_default);
-        defaultCardText.setVisibility(View.GONE);//todo where is the default card
-
+        if(creditCardInfo.isDefault()){
+            defaultCardText.setVisibility(View.VISIBLE);
+        }else {
+            defaultCardText.setVisibility(View.GONE);
+        }
 
         if(selectedItem == position){
             creditCardText.setSelected(true);
