@@ -17,14 +17,25 @@ public class AddAppointmentActivity extends BaseActivity {
 
         //launch first fragment
         FragmentManager fm = getSupportFragmentManager();
+        String tag = ChooseProviderFragment.class.getSimpleName();
         ChooseProviderFragment chooseProviderFragment = (ChooseProviderFragment)
-                fm.findFragmentByTag(ChooseProviderFragment.class.getSimpleName());
+                fm.findFragmentByTag(tag);
 
         if (chooseProviderFragment == null) {
             chooseProviderFragment = new ChooseProviderFragment();
         }
 
         fm.beginTransaction().replace(R.id.add_appointments_frag_holder, chooseProviderFragment,
-                ChooseProviderFragment.class.getSimpleName()).commit();
+                tag).addToBackStack(tag).commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+            return;
+        }
+        super.onBackPressed();
+
     }
 }

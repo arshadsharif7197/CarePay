@@ -267,6 +267,8 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
         }
     };
 
+
+
     /**
      *Click listener for edit range and edit date range button
      */
@@ -274,8 +276,9 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
         @Override
         public void onClick(View view) {
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            String tag = AppointmentDateRangeFragment.class.getSimpleName();
             AppointmentDateRangeFragment appointmentDateRangeFragment = (AppointmentDateRangeFragment)
-                    fragmentManager.findFragmentByTag(AppointmentDateRangeFragment.class.getSimpleName());
+                    fragmentManager.findFragmentByTag(tag);
 
             if (appointmentDateRangeFragment == null) {
                 appointmentDateRangeFragment = new AppointmentDateRangeFragment();
@@ -292,8 +295,7 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
             appointmentDateRangeFragment.setArguments(bundle);
 
             fragmentManager.beginTransaction().replace(R.id.add_appointments_frag_holder,
-                    appointmentDateRangeFragment,
-                    AvailableHoursFragment.class.getSimpleName()).commit();
+                    appointmentDateRangeFragment, tag).addToBackStack(tag).commit();
         }
     };
 
