@@ -1,11 +1,12 @@
 package com.carecloud.carepay.patient.signinsignuppatient.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -21,11 +22,8 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
-import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -33,7 +31,6 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -51,28 +48,7 @@ public class SigninFragment extends BaseFragment {
 
     public static final String LOG_TAG = SigninFragment.class.getSimpleName();
 
-    SignInSignUpDTO signInSignUpDTO;
-    WorkflowServiceCallback loginCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            signinButton.setEnabled(true);
-            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            signinButton.setEnabled(true);
-            SystemUtil.showDefaultFailureDialog(getActivity());
-            Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
+    private SignInSignUpDTO signInSignUpDTO;
     private TextInputLayout emailTextInput;
     private TextInputLayout passwordTexInput;
     private EditText emailEditText;
@@ -82,36 +58,15 @@ public class SigninFragment extends BaseFragment {
     private Button signinButton;
     private Button signupButton;
     private ProgressBar progressBar;
-    CognitoActionCallback cognitoActionCallback = new CognitoActionCallback() {
-        @Override
-        public void onLoginSuccess() {
-            Map<String, String> query = new HashMap<>();
-            Map<String, String> header = new HashMap<>();
-            header.put("Accept-Language",langaueid);
-            getWorkflowServiceHelper().execute(signInSignUpDTO.getMetadata().getTransitions().getAuthenticate(), loginCallback,query,header);
-            progressBar.setVisibility(View.INVISIBLE);
-        }
+    private View showPasswordButton;
 
-        @Override
-        public void onBeforeLogin() {
-            SystemUtil.hideSoftKeyboard(getActivity());
-            progressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public void onLoginFailure(String exceptionMessage) {
-            signinButton.setEnabled(true);
-            SystemUtil.showFailureDialogMessage(getContext(),
-                    "Sign-in failed",
-                    "Invalid user id or password");
-
-        }
-    };
     private LinearLayout parentLayout;
     private boolean isEmptyEmail;
     private boolean isEmptyPassword;
     private SignInLablesDTO signInLablesDTO;
-    String langaueid;
+    private String langaueid;
+
+    private Handler handler = new Handler();
 
     @Nullable
     @Override
@@ -127,7 +82,7 @@ public class SigninFragment extends BaseFragment {
         initview(view);
         setEditTexts(view);
 
-        setClickbles(view);
+        setClickables(view);
 
         setTypefaces();
 
@@ -143,6 +98,7 @@ public class SigninFragment extends BaseFragment {
         signupButton = (Button) view.findViewById(R.id.signup_button);
         changeLanguageTextView = (TextView) view.findViewById(R.id.changeLanguageText);
         forgotPasswordTextView = (TextView) view.findViewById(R.id.forgotPasswordTextView);
+        showPasswordButton = view.findViewById(R.id.show_password_button);
         if (signInLablesDTO != null) {
             String signinLabel = signInLablesDTO.getSigninButton();
             signinButton.setText(signinLabel);
@@ -155,7 +111,7 @@ public class SigninFragment extends BaseFragment {
         }
     }
 
-    private void setClickbles(View view) {
+    private void setClickables(View view) {
 
         signinButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -198,6 +154,32 @@ public class SigninFragment extends BaseFragment {
                 getWorkflowServiceHelper().execute(transitionDTO, loginCallback, queryMap, header);
             }
         });
+
+        showPasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(passwordEditText.getInputType()!=InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
+                    setInputType(passwordEditText, InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            setInputType(passwordEditText, InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        }
+                    }, 3 * 1000);
+                }else{
+                    setInputType(passwordEditText, InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                }
+            }
+        });
+
+    }
+
+    private void setInputType(EditText editText, int inputType){
+        int selection = editText.getSelectionEnd();
+        if(editText.getInputType()!=inputType){
+            editText.setInputType(inputType);
+            editText.setSelection(selection);
+        }
     }
 
     private void setTypefaces() {
@@ -397,6 +379,54 @@ public class SigninFragment extends BaseFragment {
         getCognitoAppHelper().signIn(userName, password, cognitoActionCallback);
 
     }
+
+    private WorkflowServiceCallback loginCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            signinButton.setEnabled(true);
+            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            signinButton.setEnabled(true);
+            SystemUtil.showDefaultFailureDialog(getActivity());
+            Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+    private CognitoActionCallback cognitoActionCallback = new CognitoActionCallback() {
+        @Override
+        public void onLoginSuccess() {
+            Map<String, String> query = new HashMap<>();
+            Map<String, String> header = new HashMap<>();
+            header.put("Accept-Language",langaueid);
+            getWorkflowServiceHelper().execute(signInSignUpDTO.getMetadata().getTransitions().getAuthenticate(), loginCallback,query,header);
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        public void onBeforeLogin() {
+            SystemUtil.hideSoftKeyboard(getActivity());
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onLoginFailure(String exceptionMessage) {
+            signinButton.setEnabled(true);
+            SystemUtil.showFailureDialogMessage(getContext(),
+                    "Sign-in failed",
+                    "Invalid user id or password");
+
+        }
+    };
 
     /*private void getDemographicInformation() {
         progressBar.setVisibility(View.VISIBLE);

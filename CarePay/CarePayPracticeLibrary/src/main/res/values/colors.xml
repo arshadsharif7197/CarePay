@@ -9,6 +9,7 @@
     <color name="black">#000000</color>
     <color name="transparent_apt">#00000000</color>
     <color name="transparent_20">#33ffffff</color>
+    <color name="transparent_70">#80ffffff</color>
 
     <color name="colorAccent">#acacac</color>
     <color name="slateGray">#607d8b</color>

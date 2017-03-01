@@ -1,6 +1,5 @@
 package com.carecloud.carepay.practice.library.base;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -101,7 +100,7 @@ public abstract class BasePracticeActivity extends BaseActivity
         decorView.setSystemUiVisibility(uiOptions);
     }
 
-    protected boolean setViewTextById(int id, String text) {
+    protected boolean setTextViewById(int id, String text) {
         View view = findViewById(id);
         if (null == view || !(view instanceof TextView)) {
             return false;

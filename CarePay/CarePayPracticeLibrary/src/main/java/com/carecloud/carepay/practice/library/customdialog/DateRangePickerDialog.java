@@ -1,6 +1,5 @@
 package com.carecloud.carepay.practice.library.customdialog;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -8,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -23,12 +21,9 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.joda.time.DateTime;
-
-/**
- * Created by cocampo on 2/14/17.
- */
 
 public class DateRangePickerDialog extends BaseDialogFragment {
 
@@ -44,6 +39,7 @@ public class DateRangePickerDialog extends BaseDialogFragment {
 
     private String dialogTitle;
     private String todayLabel;
+    private String cancelString;
     private boolean isCancelable;
 
     public interface DateRangePickerDialogListener {
@@ -81,13 +77,12 @@ public class DateRangePickerDialog extends BaseDialogFragment {
     public static DateRangePickerDialog newInstance(String dialogTitle, String closeText, String todayLabel,
                                                     boolean isCancelable, Date startDate, Date endDate, Date minDate, Date maxDate,
                                                     DateRangePickerDialogListener callback) {
-        // Supply num input as an argument
+        // Supply inputs as an argument
         Bundle args = new Bundle();
-        args.putBoolean("isFooterVisible", false);
         args.putBoolean("isCancelable", isCancelable);
         args.putString("cancelString", closeText);
         args.putString("dialogTitle", dialogTitle);
-        args.putString("todayLabel", todayLabel);
+        args.putString("todayLabel", todayLabel.toUpperCase(Locale.getDefault()));
         args.putSerializable("startDate", startDate);
         args.putSerializable("endDate", endDate);
         args.putSerializable("minDate", minDate);
@@ -105,6 +100,7 @@ public class DateRangePickerDialog extends BaseDialogFragment {
         super.onCreate(savedInstanceState);
 
         Bundle arguments = getArguments();
+        this.cancelString = arguments.getString("cancelString");
         this.dialogTitle = arguments.getString("dialogTitle");
         this.todayLabel = arguments.getString("todayLabel");
         this.startDate = (Date) arguments.getSerializable("startDate");
@@ -120,7 +116,7 @@ public class DateRangePickerDialog extends BaseDialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        onAddContentView(inflater);
+        initializeApplyDateRangeButton(view);
         initCalendarView(view);
         inflateToolbar(view);
 
@@ -182,23 +178,6 @@ public class DateRangePickerDialog extends BaseDialogFragment {
             startDate = today;
         }
     };
-
-    @SuppressLint("InflateParams")
-    @Override
-    protected void onAddContentView(LayoutInflater inflater) {
-        View view = inflater.inflate(R.layout.dialog_date_range_picker, null);
-
-        ((FrameLayout) this.view.findViewById(R.id.base_dialog_content_layout)).addView(view);
-
-        inflateUIComponents(view);
-    }
-
-    private void inflateUIComponents(View view) {
-        removeHeader();
-        initializeApplyDateRangeButton(view);
-        setCancelImage(isCancelable ? R.drawable.icn_close : R.drawable.icn_arrow_up);
-        setCancelable(isCancelable);
-    }
 
     private void initializeApplyDateRangeButton(View view) {
         applyDateRangeButton = (CustomGothamRoundedMediumButton)
@@ -290,11 +269,6 @@ public class DateRangePickerDialog extends BaseDialogFragment {
     }
 
     @Override
-    protected void onAddFooterView(LayoutInflater inflater) {
-
-    }
-
-    @Override
     protected void onDialogCancel() {
         if (null != callback) {
             callback.onDateRangeCancelled();
@@ -305,5 +279,25 @@ public class DateRangePickerDialog extends BaseDialogFragment {
 
     public void setCallback(DateRangePickerDialogListener callback) {
         this.callback = callback;
+    }
+
+    @Override
+    protected boolean getCancelable() {
+        return isCancelable;
+    }
+
+    @Override
+    protected String getCancelString() {
+        return cancelString;
+    }
+
+    @Override
+    protected int getCancelImageResource() {
+        return isCancelable ? R.drawable.icn_close : R.drawable.icn_arrow_up;
+    }
+
+    @Override
+    protected int getContentLayout() {
+        return R.layout.dialog_date_range_picker;
     }
 }

@@ -119,7 +119,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         final Patient patient = filteredPatients.get(position);
 
         if (null == patient.raw) {
-            bindHeaderViewHolder((HeaderViewHolder) holder, patient.appointmentTime);
+            bindHeaderViewHolder((HeaderViewHolder) holder, patient.appointmentStartTime);
         } else {
             bindCardViewHolder((CardViewHolder) holder, patient);
         }
@@ -135,7 +135,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         holder.provider.setText(patient.providerName);
         holder.initials.setText(patient.initials);
         holder.bind(patient, tapListener);
-        holder.setTimeView(patient.appointmentTime, patient.isPending);
+        holder.setTimeView(patient);
 
         if (!TextUtils.isEmpty(patient.photoUrl)) {
             Picasso.Builder builder = new Picasso.Builder(context);
@@ -208,8 +208,8 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 continue;
             }
 
-            if (null != patient.appointmentTime && !DateUtil.isSameDay(dateTime, patient.appointmentTime)) {
-                dateTime = patient.appointmentTime;
+            if (null != patient.appointmentStartTime && !DateUtil.isSameDay(dateTime, patient.appointmentStartTime)) {
+                dateTime = patient.appointmentStartTime;
 
                 if (countByDay % 2 == 1) {
                     filteredPatients.add(new Patient());
@@ -260,7 +260,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             @Override
             public int compare(Patient lhs, Patient rhs) {
                 if (lhs != null && rhs != null) {
-                    return lhs.appointmentTime.compareTo(rhs.appointmentTime);
+                    return lhs.appointmentStartTime.compareTo(rhs.appointmentStartTime);
                 }
                 return -1;
             }
@@ -356,17 +356,17 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
         }
 
-        void setTimeView(Date appointmentTime, boolean isAppointmentPending) {
-            if (null == appointmentTime) {
+        void setTimeView(Patient patient) {
+            if (null == patient.appointmentStartTime) {
                 return;
             }
 
-            final DateTime appointmentDateTime = new DateTime(appointmentTime);
-            timeTextView.setText(appointmentDateTime.toString("hh:mm a"));
-            if (isAppointmentPending) {
-                timeTextView.setBackgroundResource(R.drawable.bg_orange_overlay);
-            } else if (appointmentDateTime.isBeforeNow()) {
+            final DateTime startDateTime = new DateTime(patient.appointmentStartTime);
+            timeTextView.setText(startDateTime.toString("hh:mm a"));
+            if (patient.isAppointmentOver) {
                 timeTextView.setBackgroundResource(R.drawable.bg_red_overlay);
+            } else if (patient.isPending) {
+                timeTextView.setBackgroundResource(R.drawable.bg_orange_overlay);
             } else {
                 timeTextView.setBackgroundResource(R.drawable.bg_green_overlay);
             }
@@ -403,7 +403,8 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         private String photoUrl;
         private String providerId;
         private String locationId;
-        private Date appointmentTime;
+        private Date appointmentStartTime;
+        private Boolean isAppointmentOver;
         private Boolean isPending;
 
         public Patient(Object raw, String id, ProviderIndexDTO provider, double balance, DemographicsSettingsPersonalDetailsPayloadDTO dto) {
@@ -426,13 +427,14 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             this.initials = StringUtil.onShortDrName(patientModel.getFirstName() + " " + patientModel.getLastName());
             this.providerId = dto.getProvider().getId().toString();
             this.providerName = dto.getProvider().getName();
-            this.appointmentTime = DateUtil.getInstance().setDateRaw(dto.getStartTime()).getDate();
+            this.appointmentStartTime = DateUtil.getInstance().setDateRaw(dto.getStartTime()).getDate();
+            this.isAppointmentOver = dto.isAppointmentOver();
             this.locationId = dto.getLocation().getId().toString();
             this.isPending = dto.getAppointmentStatus().getCode().equalsIgnoreCase(CarePayConstants.PENDING);
         }
 
         public Patient(Date appointmentTime) {
-            this.appointmentTime = appointmentTime;
+            this.appointmentStartTime = appointmentTime;
         }
 
         public Patient() {

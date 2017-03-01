@@ -143,6 +143,18 @@ public class CheckInLabelDTO {
     @Expose
     private String createAppointmentLabel;
 
+    @SerializedName("accept_label")
+    @Expose
+    private String acceptLabel;
+
+    @SerializedName("reject_label")
+    @Expose
+    private String rejectLabel;
+
+    @SerializedName("visit_type_heading")
+    @Expose
+    private String visitTypeHeading;
+
     /**
      * @return The practiceCheckinDetailDialogCheckingIn
      */
@@ -481,5 +493,17 @@ public class CheckInLabelDTO {
 
     public String getCreateAppointmentLabel() {
         return StringUtil.getLabelForView(createAppointmentLabel);
+    }
+
+    public String getAcceptLabel() {
+        return StringUtil.getLabelForView(acceptLabel);
+    }
+
+    public String getRejectLabel() {
+        return StringUtil.getLabelForView(rejectLabel);
+    }
+
+    public String getVisitTypeHeading() {
+        return StringUtil.getLabelForView(visitTypeHeading);
     }
 }

@@ -40,7 +40,11 @@ public class PatientDTO {
     private String patientStatus;
     @SerializedName("primary_phone_number")
     @Expose
-    private Object primaryPhoneNumber;
+    private String primaryPhoneNumber;
+
+    @SerializedName("profile_photo")
+    @Expose
+    private String profilePhoto;
 
     private boolean isFilterChecked;
 
@@ -211,7 +215,7 @@ public class PatientDTO {
      * @return
      * The primaryPhoneNumber
      */
-    public Object getPrimaryPhoneNumber() {
+    public String getPrimaryPhoneNumber() {
         return primaryPhoneNumber;
     }
 
@@ -220,8 +224,12 @@ public class PatientDTO {
      * @param primaryPhoneNumber
      * The primary_phone_number
      */
-    public void setPrimaryPhoneNumber(Object primaryPhoneNumber) {
+    public void setPrimaryPhoneNumber(String primaryPhoneNumber) {
         this.primaryPhoneNumber = primaryPhoneNumber;
+    }
+
+    public String getProfilePhoto() {
+        return profilePhoto;
     }
 
     public boolean isFilterChecked() {

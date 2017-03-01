@@ -302,7 +302,7 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
                 startDate,
                 endDate,
                 dateUtil.getDate(),
-                dateUtil.addDays(9).getDate(),
+                dateUtil.addDays(92).getDate(),
                 this
         );
 
