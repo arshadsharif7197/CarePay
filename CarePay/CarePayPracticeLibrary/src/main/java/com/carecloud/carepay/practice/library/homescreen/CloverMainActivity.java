@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +22,13 @@ import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.customdialog.ChangeModeDialog;
 import com.carecloud.carepay.practice.library.customdialog.ConfirmationPinDialog;
+import com.carecloud.carepay.practice.library.homescreen.adapters.OfficeNewsListAdapter;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenAppointmentCountsDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenLabelDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenMetadataDTO;
+import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenOfficeNewsDTO;
+import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenOfficeNewsPayloadDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PatientHomeScreenTransitionsDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenPayloadDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenTransitionsDTO;
@@ -32,7 +37,6 @@ import com.carecloud.carepay.practice.library.patientmodecheckin.activities.Pati
 import com.carecloud.carepay.service.library.BaseServiceGenerator;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -106,11 +110,13 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         findViewById(R.id.homePaymentsClickable).setOnClickListener(this);
         findViewById(R.id.homeCheckoutClickable).setOnClickListener(this);
         findViewById(R.id.homeShopClickable).setOnClickListener(this);
-        findViewById(R.id.homeNewsClickable).setOnClickListener(this);
+//        findViewById(R.id.homeNewsClickable).setOnClickListener(this);
 
         changeScreenMode(homeScreenMode);
 
         registerReceiver(newCheckedInReceiver, new IntentFilter("NEW_CHECKEDIN_NOTIFICATION"));
+
+        getNews();
     }
 
     private void initUIFields() {
@@ -142,6 +148,9 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         homeAppointmentsLabel.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getAppointmentsButton()));
         homeCheckoutLabel.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getCheckoutButton()));
         homeShopLabel.setText(labels == null ? CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getShopButton()));
+
+        ((TextView) findViewById(R.id.office_news_header)).setText(labels == null ?
+                CarePayConstants.NOT_DEFINED : StringUtil.getLabelForView(labels.getOfficenewsButton()));
 
         // load mode switch options
         modeSwitchOptions.clear();
@@ -257,7 +266,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             navigateToShop();
         } else if (viewId == R.id.homeNewsClickable) {
 //            findViewById(R.id.homeNewsClickable).setEnabled(false);
-            getNews();
+//            getNews();
         } else if (viewId == R.id.homeLockIcon) {
             unlockPracticeMode();
         }
@@ -306,22 +315,12 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     }
 
     private void getNews() {
-        // TODO: 11/17/2016  uncomment after testing ready
-//        JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
-//        Gson gson = new Gson();
-//        TransitionDTO transitionDTO;
-//        if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-//            PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
-//            transitionDTO = transitionsDTO.getOfficeNews();
-//        } else { // patient mode
-//            PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
-//            transitionDTO = transitionsDTO.getOfficeNews();
-//        }
-//        getWorkflowServiceHelper().execute(transitionDTO, commonTransitionCallback);
-
-        // TODO: 11/17/2016  (for build/test); remove after testing ready
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-            getDemographicInformation();
+            TransitionDTO transitionDTO = homeScreenDTO.getMetadata().getOfficeNews();
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+            queryMap.put("publish_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
+            getWorkflowServiceHelper().execute(transitionDTO, getNewsCallback, queryMap);
         }
     }
 
@@ -497,6 +496,47 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+    WorkflowServiceCallback getNewsCallback = new WorkflowServiceCallback() {
+
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            Gson gson = new Gson();
+            HomeScreenDTO homeScreenDTO = gson.fromJson(workflowDTO.toString(), HomeScreenDTO.class);
+            JsonObject payloadAsJsonObject = homeScreenDTO.getPayload();
+            PracticeHomeScreenPayloadDTO practiceHomePayloadDTO = gson.fromJson(payloadAsJsonObject,
+                    PracticeHomeScreenPayloadDTO.class);
+            List<HomeScreenOfficeNewsDTO> officeNews = practiceHomePayloadDTO.getOfficeNews();
+
+            RecyclerView newsList = (RecyclerView) findViewById(R.id.office_news_list);
+            newsList.setLayoutManager(new LinearLayoutManager(CloverMainActivity.this));
+
+            OfficeNewsListAdapter adapter = new OfficeNewsListAdapter(CloverMainActivity.this,
+                    officeNews, officeNewsClickedListener);
+            newsList.setAdapter(adapter);
+
+            hideProgressDialog();
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+        }
+    };
+
+        OfficeNewsListAdapter.OnOfficeNewsClickedListener officeNewsClickedListener
+                = new OfficeNewsListAdapter.OnOfficeNewsClickedListener() {
+            @Override
+            public void onOfficeNewsSelected(HomeScreenOfficeNewsPayloadDTO newsPayload) {
+//                Endpoint call for office_news_post with practice_mgmt & post_uuid data
+            }
+        };
+
 
     WorkflowServiceCallback commonTransitionCallback = new WorkflowServiceCallback() {
         @Override
