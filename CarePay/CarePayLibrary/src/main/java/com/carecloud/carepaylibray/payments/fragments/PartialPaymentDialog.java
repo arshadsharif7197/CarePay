@@ -18,7 +18,7 @@ import android.widget.Toast;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
+import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
@@ -56,7 +56,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     private String balanceBeforeTextChange;
 
 
-    private PaymentDetailsDialog.PayNowClickListener payNowClickListener;
+    private PaymentNavigationCallback payNowClickListener;
 
     public PartialPaymentDialog(Context context, PaymentsModel paymentsDTO) {
         super(context);
@@ -64,7 +64,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         this.paymentsDTO = paymentsDTO;
 
         try {
-            payNowClickListener = (PaymentDetailsDialog.PayNowClickListener) context;
+            payNowClickListener = (PaymentNavigationCallback) context;
         } catch (ClassCastException cce) {
             throw new ClassCastException("Dialog Context must implement PayNowClickListener for callback");
         }
@@ -236,7 +236,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
 
     private void onPaymentClick() {
         try {
-            payNowClickListener.onPayNowButtonClicked(Double.parseDouble(enterPartialAmountEditText.getText().toString()));
+            payNowClickListener.onPayButtonClicked(Double.parseDouble(enterPartialAmountEditText.getText().toString()));
         }catch (NumberFormatException nfe){
             nfe.printStackTrace();
             Toast.makeText(context, "Please enter valid amount!", Toast.LENGTH_LONG).show();

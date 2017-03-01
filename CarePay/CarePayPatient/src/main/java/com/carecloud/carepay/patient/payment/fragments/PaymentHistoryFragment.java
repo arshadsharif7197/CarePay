@@ -19,6 +19,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
+import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLinksDTO;
@@ -50,7 +51,7 @@ public class PaymentHistoryFragment extends BaseFragment implements PaymentBalan
     private TextView noPaymentTitle;
     private TextView noPaymentDesc;
 
-    private PaymentDetailsDialog.PayNowClickListener payNowClickListener;
+    private PaymentNavigationCallback payNowClickListener;
 
 
     public static PaymentHistoryFragment newInstance(int sectionNumber, PaymentsModel paymentDTO) {
@@ -68,7 +69,7 @@ public class PaymentHistoryFragment extends BaseFragment implements PaymentBalan
     public void onAttach(Context context){
         super.onAttach(context);
         try{
-            payNowClickListener = (PaymentDetailsDialog.PayNowClickListener) context;
+            payNowClickListener = (PaymentNavigationCallback) context;
         }catch (ClassCastException cce){
             throw new ClassCastException("Attached context must implement PayNowClickListener");
         }

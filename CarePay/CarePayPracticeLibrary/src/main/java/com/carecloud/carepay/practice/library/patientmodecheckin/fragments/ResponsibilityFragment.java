@@ -15,7 +15,6 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.practice.library.payments.dialogs.PracticePartialPaymentDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
 import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
@@ -27,7 +26,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
 
-public class ResponsibilityFragment extends ResponsibilityBaseFragment implements PaymentDetailsDialog.PayNowClickListener {
+public class ResponsibilityFragment extends ResponsibilityBaseFragment {
 
 
     @Override
@@ -120,17 +119,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
     }
 
     protected void doPayment() {
-        actionCallback.makePayment(total);
-//        Bundle bundle = new Bundle();
-//        Gson gson = new Gson();
-//        String paymentsDTOString = gson.toJson(paymentDTO);
-//        bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
-//        bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
-//        bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, total);
-//
-//        PracticePaymentMethodFragment fragment = new PracticePaymentMethodFragment();
-//        fragment.setArguments(bundle);
-//        ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
+        actionCallback.onPayButtonClicked(total);
     }
 
     @Override

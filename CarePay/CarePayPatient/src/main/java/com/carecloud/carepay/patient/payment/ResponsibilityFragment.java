@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.payment.dialogs.PatientPartialPaymentDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
 import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
@@ -26,7 +25,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
 
-public class ResponsibilityFragment extends ResponsibilityBaseFragment implements PaymentDetailsDialog.PayNowClickListener {
+public class ResponsibilityFragment extends ResponsibilityBaseFragment {
 
 
     @Override
@@ -158,30 +157,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
     }
 
     protected void doPayment() {
-        actionCallback.makePayment(total);
-//        try {
-//            FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
-//            PatientPaymentMethodFragment fragment = (PatientPaymentMethodFragment)
-//                    fragmentmanager.findFragmentByTag(PatientPaymentMethodFragment.class.getSimpleName());
-//
-//            if (fragment == null) {
-//                fragment = new PatientPaymentMethodFragment();
-//            }
-//
-//            Bundle bundle = new Bundle();
-//            Gson gson = new Gson();
-//            String paymentsDTOString = gson.toJson(paymentDTO);
-//            bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, total);
-//            bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
-//            fragment.setArguments(bundle);
-//
-//            FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
-//            fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
-//            fragmentTransaction.addToBackStack(PatientPaymentMethodFragment.class.getSimpleName());
-//            fragmentTransaction.commit();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        actionCallback.onPayButtonClicked(total);
     }
 
     @Override

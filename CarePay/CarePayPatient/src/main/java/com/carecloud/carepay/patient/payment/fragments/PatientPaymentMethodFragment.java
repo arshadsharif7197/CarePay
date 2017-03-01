@@ -12,11 +12,11 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.PaymentResponsibilityModel;
 import com.carecloud.carepay.patient.payment.androidpay.EnvData;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.adapter.PaymentMethodAdapter;
 import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
@@ -167,8 +167,8 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
             paymentMethodsList.add(androidPayPaymentMethod);
 //            addPaymentMethodOptionView(paymentMethodsList.size() - 1);
 
-            if(getListView()!=null){//listview already init
-                PaymentMethodAdapter adapter = (PaymentMethodAdapter) getListView().getAdapter();
+            if(getPaymentMethodList()!=null){//listview already init
+                PaymentMethodAdapter adapter = (PaymentMethodAdapter) getPaymentMethodList().getAdapter();
                 adapter.setPaymentMethodsList(paymentMethodsList);
                 adapter.notifyDataSetChanged();
 
@@ -189,154 +189,6 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         }
 
     }
-
-
-/*
-    @Deprecated
-    private View.OnClickListener paymentChoiceButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            String type = (String) view.getTag();
-            switch (type) {
-                case CarePayConstants.TYPE_CASH:
-//                    new LargeAlertDialog(getActivity(), dialogTitle, dialogText, R.color.lightningyellow, R.drawable.icn_notification_basic, new LargeAlertDialog.LargeAlertInterface() {
-//                        @Override
-//                        public void onActionButton() {
-//                        }
-//                    }).show();
-                    break;
-
-                case CarePayConstants.TYPE_CREDIT_CARD://TODO move this logic to callback
-//                    paymentChoiceButton.setEnabled(false);//keep to prevent double click maybe
-                    TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getPaymentsCreditCards();
-                    getWorkflowServiceHelper().execute(transitionDTO, getCreditCardsCallback);
-                    break;
-
-                default:
-                    break;
-            }
-        }
-    };
-*/
-
-/*    WorkflowServiceCallback getCreditCardsCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-//            paymentChoiceButton.setEnabled(true);//keep to prevent double click maybe
-            Gson gson = new Gson();
-            PaymentsModel paymentsModel = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
-
-            Fragment fragment;
-            if(paymentsModel!=null && paymentsModel.getPaymentPayload().getPatientCreditCards()!=null && paymentsModel.getPaymentPayload().getPatientCreditCards().size()>0){
-                fragment = new ChooseCreditCardFragment();
-
-            } else {
-                fragment = new AddNewCreditCardFragment();
-
-            }
-
-            Bundle args = new Bundle();
-            args.putString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE, gson.toJson(PatientPaymentMethodFragment.this.paymentsModel.getPaymentPayload().getPapiAccounts()));
-            args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
-            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, getArguments()
-                    .getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE));
-            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(PatientPaymentMethodFragment.this.paymentsModel));
-            args.putString(CarePayConstants.INTAKE_BUNDLE, workflowDTO.toString());
-            fragment.setArguments(args);
-
-            if (getActivity() instanceof PaymentActivity) {
-                ((PaymentActivity) getActivity()).navigateToFragment(fragment, true);
-            } else if (getActivity() instanceof DemographicsSettingsActivity) {
-                ((DemographicsSettingsActivity) getActivity()).navigateToFragment(fragment, true);
-            } else if (getActivity() instanceof ViewPaymentBalanceHistoryActivity) {
-                ((ViewPaymentBalanceHistoryActivity) getActivity()).navigateToFragment(fragment, true);
-            }
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-//            paymentChoiceButton.setEnabled(true);//keep to prevent double click maybe
-            SystemUtil.showDefaultFailureDialog(getActivity());
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };*/
-
-    //    Android Pay
-
-    /**
-     * If user chooses Android Pay as the option then hide
-     * the paymentChoiceButton and show Android Pay button.
-     **/
-/*    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-        super.onCheckedChanged(group, checkedId);
-
-        //TODO need to handle Android Pay Stuff here
-
-        paymentChoiceButton.setEnabled(true);
-        onSetRadioButtonRegularTypeFace();
-        RadioButton selectedRadioButton = (RadioButton) group.findViewById(checkedId);
-        onSetRadioButtonSemiBoldTypeFace(selectedRadioButton);
-
-
-
-        for (int i = 0; i < paymentMethodsList.size(); i++) {
-            if (selectedRadioButton.getText().toString().equalsIgnoreCase(paymentMethodsList.get(i).getLabel())) {
-                if (selectedRadioButton.getText().toString().equalsIgnoreCase(PaymentConstants.ANDROID_PAY)) {
-                    paymentChoiceButton.setVisibility(View.GONE);
-                    setLineItems(paymentsModel.getPaymentPayload().getPatientBalances().get(0).getPayload());
-                    createAndAddWalletFragment(paymentsModel.getPaymentPayload().getPatientBalances().get(0).getPendingRepsonsibility());// getPayload().get(0).getTotal());
-                    //scrollviewChoices.fullScroll(View.FOCUS_DOWN);
-
-                } else {
-
-                    if (paymentChoiceButton.getVisibility() == View.GONE) {
-                        paymentChoiceButton.setVisibility(View.VISIBLE);
-                    }
-
-                    if (walletFragment != null) {
-                        removeWalletFragment();
-                    }
-                    selectedPaymentMethod = selectedRadioButton.getText().toString();
-                    paymentChoiceButton.setText(paymentMethodsList.get(i).getButtonLabel());
-                    paymentChoiceButton.setTag(paymentMethodsList.get(i).getType());
-                    if (paymentMethodsList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CASH)) {
-                        paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.overlay_green));
-                    }
-                    if (paymentMethodsList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CREDIT_CARD)) {
-                        paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
-                        paymentChoiceButton.setText(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentChooseCreditCardButton());
-                    }
-                    if (paymentMethodsList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CHECK)) {
-                        paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
-                    }
-                    if (paymentMethodsList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_GIFT_CARD)) {
-                        paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
-                    }
-                    if (paymentMethodsList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_PAYPAL)) {
-                        paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.overlay_green));
-                    }
-                    if (paymentMethodsList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_HSA)) {
-                        paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
-                    }
-                    if (paymentMethodsList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_FSA)) {
-                        paymentChoiceButton.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
-                    }
-                }
-
-            }
-
-        }
-
-    }
-*/
 
 
     @Override

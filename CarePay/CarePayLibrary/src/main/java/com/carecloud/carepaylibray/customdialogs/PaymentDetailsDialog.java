@@ -18,6 +18,7 @@ import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.PaymentItemsListAdapter;
 import com.carecloud.carepaylibray.base.IApplicationSession;
+import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -28,7 +29,7 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
     private Context context;
     private PaymentsModel paymentReceiptModel;
     private PatiencePayloadDTO paymentPayload;
-    private PayNowClickListener listener;
+    private PaymentNavigationCallback callback;
     private double size;
 
     /**
@@ -36,15 +37,15 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
      *
      * @param context        context
      * @param paymentPayload model
-     * @param listener       listener
+     * @param callback       callback
      */
     public PaymentDetailsDialog(Context context, PaymentsModel paymentReceiptModel,
-                                PatiencePayloadDTO paymentPayload, PayNowClickListener listener) {
+                                PatiencePayloadDTO paymentPayload, PaymentNavigationCallback callback) {
         super(context);
         this.context = context;
         this.paymentReceiptModel = paymentReceiptModel;
         this.paymentPayload = paymentPayload;
-        this.listener = listener;
+        this.callback = callback;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -118,12 +119,9 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
         if (viewId == R.id.dialog_close_header) {
             cancel();
         } else if (viewId == R.id.payment_details_pay_now_button) {
-            listener.onPayNowButtonClicked(paymentPayload.getAmount());
+            callback.onPayButtonClicked(paymentPayload.getAmount());
             dismiss();
         }
     }
 
-    public interface PayNowClickListener {
-        void onPayNowButtonClicked(double amount);
-    }
 }

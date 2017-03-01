@@ -18,6 +18,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
+import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.adapter.PaymentMethodAdapter;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
@@ -26,6 +27,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -35,22 +37,16 @@ import java.util.List;
 
 public abstract class PaymentMethodFragment extends BaseFragment /*implements RadioGroup.OnCheckedChangeListener*/ {
 
-    public interface PaymentMethodActionCallback{
-        void onPaymentMethodAction(String selectedPaymentMethod, double amount);
-
-        void onPaymentPlanAction();
-    }
-
     public static final String TAG = PaymentMethodFragment.class.getSimpleName();
 
     private Activity activity;
     private Button paymentChoiceButton;
     private RadioGroup paymentMethodRadioGroup;
     private RadioGroup.LayoutParams radioGroupLayoutParam;
-    private ListView listView;
+    private ListView paymentMethodList;
 
     protected PaymentsModel paymentsModel;
-    protected List<PaymentsMethodsDTO> paymentMethodsList;
+    protected List<PaymentsMethodsDTO> paymentMethodsList = new ArrayList<>();
     protected String selectedPaymentMethod;
     protected HashMap<String, Integer> paymentTypeMap;
 
@@ -62,7 +58,7 @@ public abstract class PaymentMethodFragment extends BaseFragment /*implements Ra
     private String paymentChangeMethodString;
     private String paymentFailedErrorString;
 
-    private PaymentMethodActionCallback callback;
+    private PaymentNavigationCallback callback;
 
     public abstract View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle);//make sure all implementations create a proper view
 
@@ -71,7 +67,7 @@ public abstract class PaymentMethodFragment extends BaseFragment /*implements Ra
     public void onAttach(Context context){
         super.onAttach(context);
         try{
-            callback = (PaymentMethodActionCallback) context;
+            callback = (PaymentNavigationCallback) context;
         }catch (ClassCastException cce){
             throw new ClassCastException("Attached Context must implement PaymentMethocActionCallback");
         }
@@ -138,6 +134,7 @@ public abstract class PaymentMethodFragment extends BaseFragment /*implements Ra
         Button createPaymentPlanButton = (Button) view.findViewById(R.id.createPaymentPlanButton);
         createPaymentPlanButton.setOnClickListener(createPaymentPlanButtonListener);
         createPaymentPlanButton.setText(paymentCreatePlanString);
+        createPaymentPlanButton.setEnabled(false);//TODO enable this when ready to support payment plans
 
         paymentChoiceButton = (Button) view.findViewById(R.id.paymentChoiceButton);
         paymentChoiceButton.setOnClickListener(paymentChoiceButtonListener);
@@ -152,11 +149,11 @@ public abstract class PaymentMethodFragment extends BaseFragment /*implements Ra
 
 */
 
-        listView = (ListView) view.findViewById(R.id.list_payment_types);
+        paymentMethodList = (ListView) view.findViewById(R.id.list_payment_types);
         final PaymentMethodAdapter paymentMethodAdapter = new PaymentMethodAdapter(getContext(), paymentMethodsList, paymentTypeMap);
 
-        listView.setAdapter(paymentMethodAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        paymentMethodList.setAdapter(paymentMethodAdapter);
+        paymentMethodList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 PaymentsMethodsDTO paymentMethod = paymentMethodsList.get(position);
@@ -173,94 +170,7 @@ public abstract class PaymentMethodFragment extends BaseFragment /*implements Ra
 
     }
 
-/*    protected void addPaymentMethodOptionView(int i) {//TODO this needs to be wrapped up in an adpter. This WILL cause memory leak
-        paymentMethodRadioGroup.addView(getPaymentMethodRadioButton(paymentMethodsList.get(i).getType(), paymentMethodsList.get(i).getLabel(), i),
-                radioGroupLayoutParam);
-
-        View dividerLineView = new View(activity);
-        dividerLineView.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, 1
-        ));
-        dividerLineView.setBackgroundColor(ContextCompat.getColor(activity, R.color.cadet_gray));
-        paymentMethodRadioGroup.addView(dividerLineView);
-        onSetRadioButtonRegularTypeFace();
-    }
-
-
-    private RadioButton getPaymentMethodRadioButton(String cardType, String cardInfo, int index) {
-        RadioButton radioButtonView = new RadioButton(activity);
-        radioButtonView.setId(index);
-        radioButtonView.setButtonDrawable(android.R.color.transparent);
-        radioButtonView.setBackground(null);
-        radioButtonView.setText(cardInfo);
-
-
-        if (paymentTypeMap.get(cardType) != null) {
-            radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
-                    paymentTypeMap.get(cardType), 0, R.drawable.check_box_intake, 0);
-        } else {
-            radioButtonView.setCompoundDrawablesWithIntrinsicBounds(
-                    paymentTypeMap.get(CarePayConstants.TYPE_CREDIT_CARD), 0, R.drawable.check_box_intake, 0);
-        }
-
-        radioButtonView.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
-        radioButtonView.setTextColor(ContextCompat.getColor(activity, R.color.radio_button_selector));
-        radioButtonView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.payment_method_layout_label_text_size));
-        radioButtonView.setCompoundDrawablePadding(getResources().getDimensionPixelSize(R.dimen.payment_method_layout_checkbox_margin));
-
-        return radioButtonView;
-    }
-
-    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {//TODO patient app must implement for Android
-        paymentChoiceButton.setEnabled(true);
-        onSetRadioButtonRegularTypeFace();
-        RadioButton selectedRadioButton = (RadioButton) group.findViewById(checkedId);
-        onSetRadioButtonSemiBoldTypeFace(selectedRadioButton);
-//        GradientDrawable shape = new GradientDrawable();//TODO this wans't actually being set anywhere, probably not necessary if we move to adapter with selected state drawables
-//        shape.setCornerRadius(50.0f);
-
-        for (int i = 0; i < paymentMethodsList.size(); i++) {//TODO clean this up.... set all unselected first then just set the one that is selected
-            if (selectedRadioButton.getText().toString().equalsIgnoreCase(paymentMethodsList.get(i).getLabel())) {
-
-                selectedPaymentMethod = selectedRadioButton.getText().toString();
-                paymentChoiceButton.setText(paymentMethodsList.get(i).getButtonLabel());
-                paymentChoiceButton.setTag(paymentMethodsList.get(i).getType());
-                if(paymentMethodsList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CASH)){
-//                    shape.setColor(getActivity().getResources().getColor(R.color.overlay_green));
-                    paymentChoiceButton.setText(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentPayLabel());
-                }
-                if(paymentMethodsList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CREDIT_CARD)){
-//                    shape.setColor(getActivity().getResources().getColor(R.color.colorPrimary));
-                    paymentChoiceButton.setText(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentChooseCreditCardButton());
-                }
-                if(paymentMethodsList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CHECK)){
-//                    shape.setColor(getActivity().getResources().getColor(R.color.colorPrimary));
-                    paymentChoiceButton.setText(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentPayLabel());
-                }
-                if(paymentMethodsList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_GIFT_CARD)){
-//                    shape.setColor(getActivity().getResources().getColor(R.color.colorPrimary));
-                    paymentChoiceButton.setText(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentPayLabel());
-                }
-                if(paymentMethodsList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_PAYPAL)){
-//                    shape.setColor(getActivity().getResources().getColor(R.color.overlay_green));
-                    paymentChoiceButton.setText(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentPayPalLabel());
-                }
-                if(paymentMethodsList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_HSA)){
-//                    shape.setColor(getActivity().getResources().getColor(R.color.colorPrimary));
-                    paymentChoiceButton.setText(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentPayLabel());
-                }
-                if(paymentMethodsList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_FSA)){
-//                    shape.setColor(getActivity().getResources().getColor(R.color.colorPrimary));
-                    paymentChoiceButton.setText(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentPayLabel());
-                }
-            }
-        }
-
-    }
-*/
-
-        private void getLabels() {
+    private void getLabels() {
         if (paymentsModel != null) {
             PaymentsMetadataModel paymentsMetadataModel = paymentsModel.getPaymentsMetadata();
             if (paymentsMetadataModel != null) {
@@ -290,27 +200,6 @@ public abstract class PaymentMethodFragment extends BaseFragment /*implements Ra
         paymentTypeMap.put(CarePayConstants.TYPE_FSA, R.drawable.payment_credit_card_button_selector);
     }
 
-/*
-    private void onSetRadioButtonRegularTypeFace() {//TODO needs to be a better way than itterating the views just to set style each time
-        for (int i = 0; i < paymentMethodRadioGroup.getChildCount(); i++) {
-            if (i % 2 == 0) {
-                SystemUtil.setProximaNovaRegularTypeface(this.activity,
-                        (RadioButton) paymentMethodRadioGroup.getChildAt(i));
-                ((RadioButton) paymentMethodRadioGroup.getChildAt(i))
-                        .setTextColor(ContextCompat.getColor(activity, R.color.slateGray));
-                ((RadioButton) paymentMethodRadioGroup.getChildAt(i))
-                        .setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.payment_method_layout_label_text_size));
-
-            }
-        }
-    }
-
-    private void onSetRadioButtonSemiBoldTypeFace(RadioButton radioButton) {
-        SystemUtil.setProximaNovaSemiboldTypeface(this.activity, radioButton);
-        radioButton.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimary));
-    }
-
-*/
 
     protected void handlePaymentButton(String type, double amount){
         switch (type) {
@@ -367,8 +256,8 @@ public abstract class PaymentMethodFragment extends BaseFragment /*implements Ra
         }
     };
 
-    public ListView getListView() {
-        return listView;
+    public ListView getPaymentMethodList() {
+        return paymentMethodList;
     }
 
 

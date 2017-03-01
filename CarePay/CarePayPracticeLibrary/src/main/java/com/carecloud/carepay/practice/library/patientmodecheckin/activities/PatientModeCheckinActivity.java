@@ -25,8 +25,7 @@ import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.Check
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.IFragmentCallback;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.PracticeIdDocScannerFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PatientAddNewCreditCardFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PatientChooseCreditCardFragment;
+import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentPlanFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -55,8 +54,9 @@ import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearch
 import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
-import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
-import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
+import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
+import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
@@ -77,7 +77,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         CheckinDemographicsFragment.CheckinDemographicsFragmentListener, DemographicsCheckInDocumentsFragment.DemographicsCheckInDocumentsFragmentListener,
         HealthInsuranceFragment.InsuranceDocumentScannerListener, MedicationsAllergyFragment.MedicationAllergyCallback,
         CheckinDemographicsInterface, MedicationAllergySearchFragment.MedicationAllergySearchCallback,
-        ResponsibilityBaseFragment.ResponsibilityActionCallback, PaymentMethodFragment.PaymentMethodActionCallback {
+        PaymentNavigationCallback {
 
     BroadcastReceiver intakeFormReceiver = new BroadcastReceiver() {
         @Override
@@ -482,8 +482,14 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         medicationsAllergyFragment.addItem(item);
     }
 
+
     @Override
-    public void makePayment(double amount) {
+    public void startPartialPayment() {
+
+    }
+
+    @Override
+    public void onPayButtonClicked(double amount) {
         Bundle bundle = new Bundle();
         Gson gson = new Gson();
         String paymentsDTOString = gson.toJson(paymentDTO);
@@ -497,29 +503,33 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     }
 
     @Override
-    public void startPartialPayment() {
-
+    public void onPaymentMethodAction(String selectedPaymentMethod, double amount) {
+        if(paymentDTO.getPaymentPayload().getPatientCreditCards()!=null && !paymentDTO.getPaymentPayload().getPatientCreditCards().isEmpty()){
+            Gson gson = new Gson();
+            Bundle args = new Bundle();
+            Fragment fragment;
+            String paymentsDTOString = gson.toJson(paymentDTO);
+            args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
+            args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
+            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+            fragment = new ChooseCreditCardFragment();
+            fragment.setArguments(args);
+            navigateToFragment(fragment, true);
+        } else {
+            showAddCard(amount);
+        }
     }
 
     @Override
-    public void onPaymentMethodAction(String selectedPaymentMethod, double amount) {
+    public void showAddCard(double amount) {
         Gson gson = new Gson();
         Bundle args = new Bundle();
         Fragment fragment;
         String paymentsDTOString = gson.toJson(paymentDTO);
-        if(paymentDTO.getPaymentPayload().getPatientCreditCards()!=null && !paymentDTO.getPaymentPayload().getPatientCreditCards().isEmpty()){
-            args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
-            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);//TODO remove DUPlicate dto
-            args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
-            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-            fragment = new PatientChooseCreditCardFragment();
-        } else {
-            args.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
-            args.putString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE, gson.toJson(paymentDTO.getPaymentPayload().getPapiAccounts()));//TODO this is already included in main DTO, just extract it
-            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
-            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE,  amount);
-            fragment = new PatientAddNewCreditCardFragment();
-        }
+        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
+        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE,  amount);
+        fragment = new AddNewCreditCardFragment();
+
 
         fragment.setArguments(args);
         navigateToFragment(fragment, true);
@@ -536,6 +546,12 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         fragment.setArguments(args);
 
         navigateToFragment(fragment, true);
+    }
+
+    @Override
+    public void showReceipt(PaymentsModel paymentsModel) {
+        PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(this, paymentsModel, paymentsModel);
+        receiptDialog.show();
     }
 
 

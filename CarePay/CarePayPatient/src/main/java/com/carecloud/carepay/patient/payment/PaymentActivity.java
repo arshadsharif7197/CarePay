@@ -11,21 +11,21 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.payment.androidpay.ConfirmationActivity;
-import com.carecloud.carepay.patient.payment.fragments.AddNewCreditCardFragment;
-import com.carecloud.carepay.patient.payment.fragments.ChooseCreditCardFragment;
+import com.carecloud.carepay.patient.payment.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
-import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
+import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
+import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.gms.wallet.MaskedWallet;
 import com.google.android.gms.wallet.WalletConstants;
 import com.google.gson.Gson;
 
-public class PaymentActivity extends BasePatientActivity implements ResponsibilityBaseFragment.ResponsibilityActionCallback, PaymentMethodFragment.PaymentMethodActionCallback {
+public class PaymentActivity extends BasePatientActivity implements PaymentNavigationCallback {
     PaymentsModel paymentsDTO;
     private String paymentsDTOString;
     public Bundle bundle;
@@ -172,7 +172,12 @@ public class PaymentActivity extends BasePatientActivity implements Responsibili
     }
 
     @Override
-    public void makePayment(double amount) {
+    public void startPartialPayment() {
+
+    }
+
+    @Override
+    public void onPayButtonClicked(double amount) {
         PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
 
         Bundle bundle = new Bundle();
@@ -184,33 +189,36 @@ public class PaymentActivity extends BasePatientActivity implements Responsibili
     }
 
     @Override
-    public void startPartialPayment() {
+    public void onPaymentMethodAction(String selectedPaymentMethod, double amount) {
+        if(paymentsDTO.getPaymentPayload().getPatientCreditCards()!=null && !paymentsDTO.getPaymentPayload().getPatientCreditCards().isEmpty()){
+            Gson gson = new Gson();
+            Bundle args = new Bundle();
+            Fragment fragment;
+            String paymentsDTOString = gson.toJson(paymentsDTO);
+            args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
+            args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
+            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+            fragment = new ChooseCreditCardFragment();
+            fragment.setArguments(args);
 
+            navigateToFragment(fragment, true);
+        } else {
+            showAddCard(amount);
+        }
     }
 
     @Override
-    public void onPaymentMethodAction(String selectedPaymentMethod, double amount) {
+    public void showAddCard(double amount) {
         Gson gson = new Gson();
         Bundle args = new Bundle();
         Fragment fragment;
         String paymentsDTOString = gson.toJson(paymentsDTO);
-        if(paymentsDTO.getPaymentPayload().getPatientCreditCards()!=null && !paymentsDTO.getPaymentPayload().getPatientCreditCards().isEmpty()){
-            args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
-            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);//TODO remove DUPlicate dto
-            args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
-            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-            fragment = new ChooseCreditCardFragment();
-        } else {
-            args.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
-            args.putString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE, gson.toJson(paymentsDTO.getPaymentPayload().getPapiAccounts()));//TODO this is already included in main DTO, just extract it
-            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
-            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE,  amount);
-            fragment = new AddNewCreditCardFragment();
-        }
+        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
+        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE,  amount);
+        fragment = new AddNewCreditCardFragment();
 
-        fragment.setArguments(args);
+
         navigateToFragment(fragment, true);
-
     }
 
     @Override
@@ -224,5 +232,12 @@ public class PaymentActivity extends BasePatientActivity implements Responsibili
         fragment.setArguments(args);
 
         navigateToFragment(fragment, true);
+    }
+
+    @Override
+    public void showReceipt(PaymentsModel paymentsModel) {
+        PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(this, paymentsModel);
+        receiptDialog.show();
+
     }
 }
