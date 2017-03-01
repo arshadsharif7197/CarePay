@@ -61,7 +61,7 @@ public class OfficeNewsListAdapter extends RecyclerView.Adapter<OfficeNewsListAd
         }
 
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
             listener.onOfficeNewsSelected(officeNewsList.get(getAdapterPosition()).getPayload());
         }
     }
