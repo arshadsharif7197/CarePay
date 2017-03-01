@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/screen_background"
-    android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/screen_background"
+              android:descendantFocusability="beforeDescendants"
+              android:focusableInTouchMode="true"
+              android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -105,19 +105,32 @@
                 android:inputType="textEmailAddress" />
         </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/passwordTextInputLayout"
-            style="@style/TextInputLayoutStyle"
-            app:hintTextAppearance="@style/FloatingLabelStyle"
-            app:passwordToggleEnabled="false">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/passwordTextInputLayout"
+                style="@style/TextInputLayoutStyle"
+                app:hintTextAppearance="@style/FloatingLabelStyle"
+                app:passwordToggleEnabled="false">
 
-            <EditText
-                android:id="@+id/passwordpracticeEditText"
-                style="@style/EditTextStyle"
-                android:imeOptions="actionDone"
-                android:inputType="textPassword" />
+                <EditText
+                    android:id="@+id/passwordpracticeEditText"
+                    style="@style/EditTextStyle"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"
+                    android:paddingEnd="@dimen/dimen_30dp"/>
 
-        </android.support.design.widget.TextInputLayout>
+            </android.support.design.widget.TextInputLayout>
+
+            <ImageView
+                android:layout_width="@dimen/dimen_30dp"
+                android:layout_height="match_parent"
+                android:id="@+id/show_password_button"
+                android:layout_gravity="end|center_vertical"
+                android:src="@drawable/icn_show_password"/>
+
+        </FrameLayout>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/signinButton"

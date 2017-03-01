@@ -216,8 +216,9 @@ public class AppointmentDateRangeFragment extends BaseFragment {
         public void onClick(View view) {
         //Launch previous fragment
         FragmentManager fm = getFragmentManager();
+        String tag = AppointmentDateRangeFragment.class.getSimpleName();
         AvailableHoursFragment availableHoursFragment = (AvailableHoursFragment)
-                fm.findFragmentByTag(AppointmentDateRangeFragment.class.getSimpleName());
+                fm.findFragmentByTag(tag);
 
         if (availableHoursFragment == null) {
             availableHoursFragment = new AvailableHoursFragment();
@@ -235,7 +236,7 @@ public class AppointmentDateRangeFragment extends BaseFragment {
         availableHoursFragment.setArguments(bundle);
 
         fm.beginTransaction().replace(R.id.add_appointments_frag_holder, availableHoursFragment,
-                AvailableHoursFragment.class.getSimpleName()).commit();
+                tag).addToBackStack(tag).commit();
         }
     };
 
