@@ -362,6 +362,26 @@ public class DemographicLabelsDTO {
     @Expose
     private String demographicsSaveButtonLabel;
 
+    @SerializedName("demographics_insurance_payer_label")
+    @Expose
+    private String demographicsInsurancePayerLabel;
+
+    @SerializedName("demographics_insurance_card_number_label")
+    @Expose
+    private String demographicsInsuranceCardNumberLabel;
+
+    @SerializedName("demographics_insurance_group_number_label")
+    @Expose
+    private String demographicsInsuranceGroupNumberLabel;
+
+    @SerializedName("demographics_insurance_photo_of_card_front")
+    @Expose
+    private String demographicsInsurancePhotoOfCardFront;
+
+    @SerializedName("demographics_insurance_photo_of_card_back")
+    @Expose
+    private String demographicsInsurancePhotoOfCardBack;
+
     /**
      * @return The demographicsUpdateButton
      */
@@ -1532,5 +1552,95 @@ public class DemographicLabelsDTO {
      */
     public void setDemographicsSaveButtonLabel(String demographicsSaveButtonLabel) {
         this.demographicsSaveButtonLabel = demographicsSaveButtonLabel;
+    }
+
+    /**
+     * Gets demographics insurance payer label.
+     *
+     * @return the demographics insurance payer label
+     */
+    public String getDemographicsInsurancePayerLabel() {
+        return StringUtil.getLabelForView(demographicsInsurancePayerLabel);
+    }
+
+    /**
+     * Sets demographics insurance payer label.
+     *
+     * @param demographicsInsurancePayerLabel the demographics insurance payer label
+     */
+    public void setDemographicsInsurancePayerLabel(String demographicsInsurancePayerLabel) {
+        this.demographicsInsurancePayerLabel = demographicsInsurancePayerLabel;
+    }
+
+    /**
+     * Gets demographics insurance card number label.
+     *
+     * @return the demographics insurance card number label
+     */
+    public String getDemographicsInsuranceCardNumberLabel() {
+        return StringUtil.getLabelForView(demographicsInsuranceCardNumberLabel);
+    }
+
+    /**
+     * Sets demographics insurance card number label.
+     *
+     * @param demographicsInsuranceCardNumberLabel the demographics insurance card number label
+     */
+    public void setDemographicsInsuranceCardNumberLabel(String demographicsInsuranceCardNumberLabel) {
+        this.demographicsInsuranceCardNumberLabel = demographicsInsuranceCardNumberLabel;
+    }
+
+    /**
+     * Gets demographics insurance group number label.
+     *
+     * @return the demographics insurance group number label
+     */
+    public String getDemographicsInsuranceGroupNumberLabel() {
+        return StringUtil.getLabelForView(demographicsInsuranceGroupNumberLabel);
+    }
+
+    /**
+     * Sets demographics insurance group number label.
+     *
+     * @param demographicsInsuranceGroupNumberLabel the demographics insurance group number label
+     */
+    public void setDemographicsInsuranceGroupNumberLabel(String demographicsInsuranceGroupNumberLabel) {
+        this.demographicsInsuranceGroupNumberLabel = demographicsInsuranceGroupNumberLabel;
+    }
+
+    /**
+     * Gets demographics insurance photo of card front.
+     *
+     * @return the demographics insurance photo of card front
+     */
+    public String getDemographicsInsurancePhotoOfCardFront() {
+        return StringUtil.getLabelForView(demographicsInsurancePhotoOfCardFront);
+    }
+
+    /**
+     * Sets demographics insurance photo of card front.
+     *
+     * @param demographicsInsurancePhotoOfCardFront the demographics insurance photo of card front
+     */
+    public void setDemographicsInsurancePhotoOfCardFront(String demographicsInsurancePhotoOfCardFront) {
+        this.demographicsInsurancePhotoOfCardFront = demographicsInsurancePhotoOfCardFront;
+    }
+
+    /**
+     * Gets demographics insurance photo of card back.
+     *
+     * @return the demographics insurance photo of card back
+     */
+    public String getDemographicsInsurancePhotoOfCardBack() {
+        return StringUtil.getLabelForView(demographicsInsurancePhotoOfCardBack);
+    }
+
+    /**
+     * Sets demographics insurance photo of card back.
+     *
+     * @param demographicsInsurancePhotoOfCardBack the demographics insurance photo of card back
+     */
+    public void setDemographicsInsurancePhotoOfCardBack(String demographicsInsurancePhotoOfCardBack) {
+        this.demographicsInsurancePhotoOfCardBack = demographicsInsurancePhotoOfCardBack;
     }
 }
