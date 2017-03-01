@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 
 /**
  * Created by sudhir_pingale on 9/22/2016.
@@ -24,9 +25,20 @@ public class CustomPopupNotification extends PopupWindow {
     public static final int TYPE_TIMED_NOTIFICATION = 1;
     public static final int TYPE_ALERT_NOTIFICATION = 2;
     public static final int TYPE_ERROR_NOTIFICATION = 3;
+    public static final String GESTURE_DIRECTION_LEFT = "Left";
+    public static final String GESTURE_DIRECTION_RIGHT = "Left";
+    public static final String GESTURE_DIRECTION_TOP = "Left";
+    public static final String GESTURE_DIRECTION_BOTTOM = "Left";
+
+
     private static final int AUTO_DISSMISS_SUCCESS_NOTIFICATION = 4;
     private View parentView;
-    private CustomPopupNotification customPopupNotificationInstance;
+    public Context context ;
+    private CustomPopupNotificationListener callback;
+
+    public interface CustomPopupNotificationListener {
+        void onSwipe(String swipeDirection);
+    }
 
     /**
      * @param context the context to inflate custom popup layout
@@ -44,7 +56,6 @@ public class CustomPopupNotification extends PopupWindow {
         super(((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                         .inflate(R.layout.custom_popup_with_action, null),
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        customPopupNotificationInstance = this;
         this.parentView = parentView;
 
         View popupWindowLayout = this.getContentView();
@@ -69,15 +80,16 @@ public class CustomPopupNotification extends PopupWindow {
      * @param popupMessageText Sets the string value of the TextView popup message
      * @param notificationType The notification type to be displayed from CustomPopupNotification class
      */
-    public CustomPopupNotification(Context context, View parentView, String popupMessageText, int notificationType) {
+    public CustomPopupNotification(Context context, View parentView, String popupMessageText, int notificationType, CustomPopupNotificationListener callback) {
 
         super(((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                         .inflate(R.layout.custom_popup, null),
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        customPopupNotificationInstance = this;
         this.parentView = parentView;
+        this.callback = callback;
 
         setOutsideTouchable(true);
+        setSwipeListener();
         View popupWindowLayout = this.getContentView();
         ImageView popupIcon = (ImageView) popupWindowLayout.findViewById(R.id.popup_icon);
         TextView popupMessageLabel = (TextView) popupWindowLayout.findViewById(R.id.popup_message_tv);
@@ -109,21 +121,47 @@ public class CustomPopupNotification extends PopupWindow {
         popupMessageLabel.setText(popupMessageText);
 
         SystemUtil.setTypefaceFromAssets(context, "fonts/proximanova_regular.otf", popupMessageLabel);
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                if (customPopupNotificationInstance.isShowing()) {
-                    customPopupNotificationInstance.dismiss();
-                }
-            }
-
-        }, CarePayConstants.CUSTOM_POPUP_AUTO_DISMISS_DURATION);
     }
 
+    /**
+     * Show pop window.
+     */
     public void showPopWindow() {
         showAtLocation(parentView, Gravity.TOP, 0, 0);
+
+        if(callback == null) {
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    if (isShowing()) {
+                        dismiss();
+                    }
+                }
+
+            }, CarePayConstants.CUSTOM_POPUP_AUTO_DISMISS_DURATION);
+        }
+
+    }
+
+    private void setSwipeListener()
+    {
+
+        getContentView().setOnTouchListener(new SwipeGuestureListener(context) {
+        public void onSwipeTop() {
+          callback.onSwipe(GESTURE_DIRECTION_TOP);
+        }
+        public void onSwipeRight() {
+            callback.onSwipe(GESTURE_DIRECTION_RIGHT);
+        }
+        public void onSwipeLeft() {
+            callback.onSwipe(GESTURE_DIRECTION_LEFT);
+        }
+        public void onSwipeBottom() {
+            callback.onSwipe(GESTURE_DIRECTION_BOTTOM);
+        }
+
+    });
     }
 }
