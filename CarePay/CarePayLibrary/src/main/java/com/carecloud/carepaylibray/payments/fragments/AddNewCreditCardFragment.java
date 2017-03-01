@@ -57,7 +57,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         Bundle arguments = getArguments();
         if (arguments != null) {
             Gson gson = new Gson();
-            String paymentsDTOString = arguments.getString(CarePayConstants.INTAKE_BUNDLE);
+            String paymentsDTOString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
             paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
             paymentsLabelDTO = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
         }

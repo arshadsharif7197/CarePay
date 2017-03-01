@@ -39,9 +39,8 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_responsibility, container, false);
 
-        final Toolbar toolbar = (Toolbar) view.findViewById(R.id.respons_toolbar);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
-        setGothamRoundedMediumTypeface(appCompatActivity, title);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,7 +48,6 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
                 getActivity().onBackPressed();
             }
         });
-//        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setTitle("");
 
         TextView responseTotal = (TextView) view.findViewById(R.id.respons_total);

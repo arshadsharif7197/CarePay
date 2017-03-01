@@ -84,6 +84,8 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         getWindow().setAttributes(params);
         getPartialPaymentLabels();
 
+        initViews();
+
     }
 
 
@@ -134,6 +136,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
             cancel();
         } else if (viewId == R.id.payPartialButton) {
             onPaymentClick();
+
         }
     }
 
@@ -237,6 +240,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     private void onPaymentClick() {
         try {
             payNowClickListener.onPayButtonClicked(Double.parseDouble(enterPartialAmountEditText.getText().toString()));
+            cancel();
         }catch (NumberFormatException nfe){
             nfe.printStackTrace();
             Toast.makeText(context, "Please enter valid amount!", Toast.LENGTH_LONG).show();

@@ -26,6 +26,7 @@ import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.IFrag
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.PracticeIdDocScannerFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountReceiptDialog;
+import com.carecloud.carepay.practice.library.payments.dialogs.PracticePartialPaymentDialog;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentPlanFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -485,7 +486,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
 
     @Override
     public void startPartialPayment() {
-
+        new PracticePartialPaymentDialog(this, paymentDTO).show();
     }
 
     @Override

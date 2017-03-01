@@ -121,16 +121,6 @@ public abstract class PaymentMethodFragment extends BaseFragment /*implements Ra
     }
 
     private void initializeViews(View view) {
-/*
-        radioGroupLayoutParam = new RadioGroup.LayoutParams(
-                RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.MATCH_PARENT);
-        int margin = getResources().getDimensionPixelSize(R.dimen.payment_method_layout_checkbox_margin);
-        radioGroupLayoutParam.setMargins(margin, margin, margin, margin);
-
-
-        paymentMethodRadioGroup = (RadioGroup) view.findViewById(R.id.paymentMethodsRadioGroup);
-        paymentMethodRadioGroup.setOnCheckedChangeListener(this);
-*/
         Button createPaymentPlanButton = (Button) view.findViewById(R.id.createPaymentPlanButton);
         createPaymentPlanButton.setOnClickListener(createPaymentPlanButtonListener);
         createPaymentPlanButton.setText(paymentCreatePlanString);
@@ -142,12 +132,6 @@ public abstract class PaymentMethodFragment extends BaseFragment /*implements Ra
         paymentChoiceButton.setText(paymentChooseMethodString);
 
 
-/*
-        for (int i = 0; i < paymentMethodsList.size(); i++) {
-            addPaymentMethodOptionView(i);
-        }
-
-*/
 
         paymentMethodList = (ListView) view.findViewById(R.id.list_payment_types);
         final PaymentMethodAdapter paymentMethodAdapter = new PaymentMethodAdapter(getContext(), paymentMethodsList, paymentTypeMap);
