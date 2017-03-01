@@ -26,9 +26,9 @@ public class CustomPopupNotification extends PopupWindow {
     public static final int TYPE_ALERT_NOTIFICATION = 2;
     public static final int TYPE_ERROR_NOTIFICATION = 3;
     public static final String GESTURE_DIRECTION_LEFT = "Left";
-    public static final String GESTURE_DIRECTION_RIGHT = "Left";
-    public static final String GESTURE_DIRECTION_TOP = "Left";
-    public static final String GESTURE_DIRECTION_BOTTOM = "Left";
+    public static final String GESTURE_DIRECTION_RIGHT = "Right";
+    public static final String GESTURE_DIRECTION_TOP = "Top";
+    public static final String GESTURE_DIRECTION_BOTTOM = "Bottom";
 
 
     private static final int AUTO_DISSMISS_SUCCESS_NOTIFICATION = 4;
