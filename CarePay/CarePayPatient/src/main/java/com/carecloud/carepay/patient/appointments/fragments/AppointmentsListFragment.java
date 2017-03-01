@@ -270,6 +270,11 @@ public class AppointmentsListFragment extends BaseFragment {
         };
     }
 
+    /**
+     * Gets cancel appointment dialog listener.
+     *
+     * @return the cancel appointment dialog listener
+     */
     public CancelAppointmentDialog.CancelAppointmentDialogListener getCancelAppointmentDialogListener() {
         return new CancelAppointmentDialog.CancelAppointmentDialogListener() {
             @Override
@@ -313,7 +318,11 @@ public class AppointmentsListFragment extends BaseFragment {
         appointmentsAdapter.notifyDataSetChanged();
     }
 
-
+    /**
+     * Gets cancel reason appointment dialog listener.
+     *
+     * @return the cancel reason appointment dialog listener
+     */
     public CancelReasonAppointmentDialog.CancelReasonAppointmentDialogListener getCancelReasonAppointmentDialogListener() {
         return new CancelReasonAppointmentDialog.CancelReasonAppointmentDialogListener() {
             @Override
@@ -405,6 +414,7 @@ public class AppointmentsListFragment extends BaseFragment {
         }
         return false;
     }
+
     private void showNoAppointmentScreen() {
         noAppointmentView.setVisibility(View.VISIBLE);
         appointmentView.setVisibility(View.GONE);

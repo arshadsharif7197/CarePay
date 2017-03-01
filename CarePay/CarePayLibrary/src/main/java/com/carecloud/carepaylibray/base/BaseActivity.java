@@ -104,6 +104,11 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         }
     }
 
+    /**
+     * Gets cancel reason appointment dialog listener.
+     *
+     * @return the cancel reason appointment dialog listener
+     */
     public CustomPopupNotification.CustomPopupNotificationListener getCancelReasonAppointmentDialogListener() {
         return new CustomPopupNotification.CustomPopupNotificationListener() {
             @Override

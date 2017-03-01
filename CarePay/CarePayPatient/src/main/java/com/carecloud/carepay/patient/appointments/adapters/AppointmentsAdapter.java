@@ -281,6 +281,13 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         });
     }
 
+    /**
+     * Gets section header title.
+     *
+     * @param appointmentStartTime the appointment start time
+     * @param appointmentEndTime   the appointment end time
+     * @return the section header title
+     */
     public String getSectionHeaderTitle(String appointmentStartTime, String appointmentEndTime) {
         // Current date
         String currentDate = DateUtil.getInstance().setToCurrent().toStringWithFormatMmDashDdDashYyyy();

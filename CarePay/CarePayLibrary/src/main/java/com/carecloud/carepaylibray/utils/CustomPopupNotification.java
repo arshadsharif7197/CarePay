@@ -149,15 +149,19 @@ public class CustomPopupNotification extends PopupWindow {
     {
 
         getContentView().setOnTouchListener(new SwipeGuestureListener(context) {
+
         public void onSwipeTop() {
           callback.onSwipe(GESTURE_DIRECTION_TOP);
         }
+
         public void onSwipeRight() {
             callback.onSwipe(GESTURE_DIRECTION_RIGHT);
         }
+
         public void onSwipeLeft() {
             callback.onSwipe(GESTURE_DIRECTION_LEFT);
         }
+
         public void onSwipeBottom() {
             callback.onSwipe(GESTURE_DIRECTION_BOTTOM);
         }

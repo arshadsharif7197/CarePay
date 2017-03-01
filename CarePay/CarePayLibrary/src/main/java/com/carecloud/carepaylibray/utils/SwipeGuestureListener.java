@@ -17,12 +17,12 @@ public class SwipeGuestureListener implements View.OnTouchListener {
      *
      * @param context the context
      */
-    public SwipeGuestureListener (Context context){
+    public SwipeGuestureListener (Context context) {
         gestureDetector = new GestureDetector(context, new GestureListener());
     }
 
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
+    public boolean onTouch(View view, MotionEvent event) {
         return gestureDetector.onTouchEvent(event);
     }
 
@@ -32,7 +32,7 @@ public class SwipeGuestureListener implements View.OnTouchListener {
         private static final int SWIPE_VELOCITY_THRESHOLD = 100;
 
         @Override
-        public boolean onDown(MotionEvent e) {
+        public boolean onDown(MotionEvent motionEvent) {
             return true;
         }
 
@@ -51,8 +51,7 @@ public class SwipeGuestureListener implements View.OnTouchListener {
                         }
                         result = true;
                     }
-                }
-                else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+                } else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
                     if (diffY > 0) {
                         onSwipeBottom();
                     } else {
