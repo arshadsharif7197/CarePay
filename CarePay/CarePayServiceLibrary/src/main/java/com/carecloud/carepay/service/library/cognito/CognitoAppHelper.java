@@ -279,18 +279,19 @@ public class CognitoAppHelper {
      * @param successAction The action to be executed on user found
      * @return Whether the current user has is signed in
      */
-    public boolean findCurrentUser(final CognitoActionCallback successAction) {
+    public boolean refreshToken(final CognitoActionCallback successAction) {
         AuthenticationHandler authenticationHandler = executeUserAuthentication("", successAction);
         CognitoUser user = getPool().getCurrentUser();
         String userName = user.getUserId();
-        if (userName != null) {
-            setUser(userName);
-            user.getSessionInBackground(authenticationHandler);
-            return true;
+        if (null == userName) {
+            return false;
         }
-        return false;
-    }
 
+        setUser(userName);
+        user.getSessionInBackground(authenticationHandler);
+
+        return true;
+    }
 
     private AuthenticationHandler executeUserAuthentication(final String password, final CognitoActionCallback successCallback) {
         if (successCallback != null) {
