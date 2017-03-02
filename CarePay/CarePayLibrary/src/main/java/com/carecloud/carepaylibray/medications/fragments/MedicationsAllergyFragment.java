@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.medications.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -95,6 +96,10 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
         initViews(view);
 
         setAdapters();
+
+        NestedScrollView scrollView = (NestedScrollView) view.findViewById(R.id.scroll_medications_allergy);
+        scrollView.scrollTo(0,0);
+
     }
 
     private void inflateToolbarViews(View view){

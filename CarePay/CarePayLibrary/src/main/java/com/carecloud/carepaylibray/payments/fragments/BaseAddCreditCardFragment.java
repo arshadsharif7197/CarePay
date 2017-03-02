@@ -392,7 +392,15 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
         useProfileAddressCheckBox.setChecked(true);
         setAddressFiledsEnabled(false);
         setDefaultBillingAddressTexts();
+
+        View scrollView = view.findViewById(R.id.scroll_card_info);
+        if(getDialog()!=null){
+            ViewGroup.LayoutParams layoutParams = scrollView.getLayoutParams();
+            layoutParams.width = (int) (getResources().getDisplayMetrics().widthPixels * .5);
+            scrollView.setLayoutParams(layoutParams);
+        }
     }
+
 
     /**
      * SHMRK-1843

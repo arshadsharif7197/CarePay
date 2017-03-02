@@ -53,7 +53,7 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/search_results_min_height"
+            android:layout_height="@dimen/list_dialog_min_height"
             android:background="@drawable/patient_mode_dialog_body_bg">
 
             <android.support.v7.widget.RecyclerView

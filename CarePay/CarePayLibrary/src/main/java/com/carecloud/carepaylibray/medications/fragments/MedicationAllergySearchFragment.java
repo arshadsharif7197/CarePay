@@ -16,7 +16,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.medications.adapters.MedicationAllergySearchAdapter;
 import com.carecloud.carepaylibray.medications.models.MedicationAllergiesLinkDTO;
@@ -35,7 +35,7 @@ import java.util.Map;
  * Created by lmenendez on 2/15/17.
  */
 
-public class MedicationAllergySearchFragment extends BaseDialogFragment implements MedicationAllergySearchAdapter.SearchItemSelectedCallback {
+public class MedicationAllergySearchFragment extends BaseFragment implements MedicationAllergySearchAdapter.SearchItemSelectedCallback {
 
 
     public interface MedicationAllergySearchCallback {

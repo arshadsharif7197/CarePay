@@ -70,10 +70,14 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onViewCreated(View view, Bundle icicle){
         title.setText(paymentsLabelDTO.getPaymentNewCreditCard());
         initilizeViews();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     private void initilizeViews() {
@@ -111,6 +115,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         stateAutoCompleteTextView.setHint(paymentsLabelDTO.getPaymentState());
 
         nextButton.setText(paymentsLabelDTO.getPaymentPayText());
+
     }
 
     private WorkflowServiceCallback addNewCreditCardCallback = new WorkflowServiceCallback() {

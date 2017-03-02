@@ -71,6 +71,7 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
     {
         Button swipeCreditCarNowButton = (Button) view.findViewById(R.id.swipeCreditCarNowButton);
         TextView swipeCardSeparatorLabel = (TextView) view.findViewById(R.id.swipeCardSeparatorLabel);
+        View swipeCreditCardNowLayout = view.findViewById(R.id.swipeCreditCardNowLayout);
         if(isCloverDevice) {
             swipeCreditCarNowButton.setEnabled(true);
             swipeCreditCarNowButton.setText(swipeCardNowString);
@@ -80,8 +81,7 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
         } else {
             swipeCreditCarNowButton.setEnabled(false);
             swipeCardSeparatorLabel.setText(swipeCardSeparatorString);
-            swipeCreditCarNowButton.setVisibility(View.GONE);
-            swipeCardSeparatorLabel.setVisibility(View.GONE);
+            swipeCreditCardNowLayout.setVisibility(View.GONE);
         }
 
     }
