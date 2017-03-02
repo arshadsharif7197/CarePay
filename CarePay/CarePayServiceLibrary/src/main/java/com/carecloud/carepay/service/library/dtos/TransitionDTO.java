@@ -10,6 +10,10 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class TransitionDTO {
+    private static final String METHOD_GET = "GET";
+    private static final String METHOD_POST = "POST";
+    private static final String METHOD_DELETE = "DELETE";
+
     @SerializedName("method")
     @Expose
     private String method;
@@ -133,5 +137,26 @@ public class TransitionDTO {
      */
     public void setHeader(DemographicsSettingsHeaderDTO header) {
         this.header = header;
+    }
+
+    /**
+     * @return true is method is GET
+     */
+    public boolean isGet() {
+        return METHOD_GET.equalsIgnoreCase(method);
+    }
+
+    /**
+     * @return true is method is POST
+     */
+    public boolean isPost() {
+        return METHOD_POST.equalsIgnoreCase(method);
+    }
+
+    /**
+     * @return true is method is DELETE
+     */
+    public boolean isDelete() {
+        return METHOD_DELETE.equalsIgnoreCase(method);
     }
 }
