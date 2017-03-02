@@ -12,11 +12,9 @@ public class HomeScreenMetadataDTO {
     @SerializedName("labels")
     @Expose
     private HomeScreenLabelDTO labels = new HomeScreenLabelDTO();
-
     @SerializedName("links")
     @Expose
     private JsonObject links;
-
     @SerializedName("transitions")
     @Expose
     private JsonObject transitions;

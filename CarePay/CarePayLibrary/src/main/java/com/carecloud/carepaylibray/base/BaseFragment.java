@@ -99,4 +99,20 @@ public abstract class BaseFragment extends DialogFragment implements ISession {
             session.hideProgressDialog();
         }
     }
+
+    @Override
+    public void showErrorNotification(String errorMessage) {
+        ISession session = (ISession) getActivity();
+        if (null != session) {
+            session.showErrorNotification(errorMessage);
+        }
+    }
+
+    @Override
+    public void hideErrorNotification() {
+        ISession session = (ISession) getActivity();
+        if (null != session) {
+            session.hideErrorNotification();
+        }
+    }
 }

@@ -3,9 +3,9 @@ package com.carecloud.carepaylibray.customdialogs;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepaylibrary.R;
@@ -49,12 +49,14 @@ public class QueueAppointmentDialog extends BaseDoctorInfoDialog {
         CarePayTextView queueLabel = (CarePayTextView)
                 childActionView.findViewById(R.id.appointRequestQueueLabel);
         queueLabel.setText(appointmentLabels.getAppointmentsQueueHeading());
-        queueLabel.setTextColor(ContextCompat.getColor(context, R.color.slateGray));
 
         CarePayTextView queueValue = (CarePayTextView)
                 childActionView.findViewById(R.id.appointRequestQueueTextView);
         queueValue.setText(StringUtil.getLabelForView("You are 3rd")); // Remove once available in endpoint
-        queueValue.setTextColor(ContextCompat.getColor(context, R.color.overlay_green));
+
+        Button checkoutNow = (Button) childActionView.findViewById(R.id.appointmentRequestCheckoutNow);
+        checkoutNow.setText(appointmentLabels.getAppointmentRequestCheckoutNow());
+        checkoutNow.setVisibility(View.VISIBLE);
 
         mainLayout.addView(childActionView);
     }

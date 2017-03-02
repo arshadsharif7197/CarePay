@@ -141,11 +141,11 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
         insurancePlanLabel.setText(label);
 
         TextView insuranceProviderLabel = (TextView) view.findViewById(R.id.demogr_insurance_provider_label);
-        label = insuranceMetadataDTO == null ? CarePayConstants.NOT_DEFINED : insuranceMetadataDTO.properties.insuranceProvider.getLabel();
+        label = globalLabelsDTO.getDemographicsInsurancePayerLabel();
         insuranceProviderLabel.setText(label);
 
         TextView insuranceTypeLabel = (TextView) view.findViewById(R.id.demogr_insurance_card_type_abel);
-        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsTitleCardType();
+        label = globalLabelsDTO.getDemographicsDocumentsInsTypeLabel();
         insuranceTypeLabel.setText(label);
 
         TextView insuranceCardNumEditText = (EditText) view.findViewById(R.id.reviewinsurncecardnum);
@@ -153,14 +153,14 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
         insuranceCardNumEditText.setHint(label);
 
         TextView insuranceGroupNumEditText = (EditText) view.findViewById(R.id.reviewinsurncegroupnum);
-        label = insuranceMetadataDTO == null ? CarePayConstants.NOT_DEFINED : insuranceMetadataDTO.properties.insuranceGroupId.getLabel();
+        label = globalLabelsDTO.getDemographicsInsuranceGroupNumberLabel();
         insuranceGroupNumEditText.setHint(label);
 
         ImageView frontInsuranceImageView = (ImageView) view.findViewById(R.id.demogr_insurance_frontimage);
         insuranceFrontScanHelper = new ImageCaptureHelper(getActivity(), frontInsuranceImageView, globalLabelsDTO);
 
         Button btnScanFrontInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_frontbtn);
-        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsScanFrontLabel();
+        label = globalLabelsDTO.getDemographicsInsurancePhotoOfCardFront();
         btnScanFrontInsurance.setText(label);
         btnScanFrontInsurance.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,7 +172,7 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
         ImageView backInsuranceImageView = (ImageView) view.findViewById(R.id.demogr_insurance_backimage);
         insuranceBackScanHelper = new ImageCaptureHelper(getActivity(), backInsuranceImageView, globalLabelsDTO);
         Button btnScanBackInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_backbtn);
-        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsScanBackLabel();
+        label = globalLabelsDTO.getDemographicsInsurancePhotoOfCardBack();
         btnScanBackInsurance.setText(label);
         btnScanBackInsurance.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -463,7 +463,7 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
 
         TextInputLayout insuranceGroupNumberTextInput = (TextInputLayout) view.findViewById(R.id.insurancegroupNumberLabel);
         final EditText insuranceGroupNumEditText = (EditText) view.findViewById(R.id.reviewinsurncegroupnum);
-        hint = insuranceMetadataDTO == null ? CarePayConstants.NOT_DEFINED : insuranceMetadataDTO.properties.insuranceGroupId.getLabel();
+        hint = globalLabelsDTO.getDemographicsInsuranceGroupNumberLabel();
         insuranceGroupNumberTextInput.setTag(hint);
         insuranceGroupNumEditText.setTag(insuranceGroupNumberTextInput);
         insuranceGroupNumEditText.setHint(hint);

@@ -26,11 +26,10 @@ public class PatientAppUtil {
             return;
         }
 
-        new CustomPopupNotification(context, parentView, successMessage, 4)
+        new CustomPopupNotification(context, parentView, successMessage, 4, null)
                 .showPopWindow();
 
     }
-
 
     public static void showSuccessToast(Context context) {
 

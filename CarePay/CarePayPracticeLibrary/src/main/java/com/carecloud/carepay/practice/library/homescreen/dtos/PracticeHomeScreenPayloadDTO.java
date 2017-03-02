@@ -21,7 +21,44 @@ public class PracticeHomeScreenPayloadDTO {
     @SerializedName("user_practices")
     @Expose
     private List<UserPracticeDTO> userPractices = new ArrayList<>();
+    @SerializedName("office_news")
+    @Expose
+    private List<HomeScreenOfficeNewsDTO> officeNews = null;
+    @SerializedName("office_news_post")
+    @Expose
+    private HomeScreenOfficeNewsDTO officeNewsPost;
 
+    /**
+     * The officeNewsPost
+     * @return officeNewsPost
+     */
+    public HomeScreenOfficeNewsDTO getOfficeNewsPost() {
+        return officeNewsPost;
+    }
+
+    /**
+     * The officeNewsPost
+     * @param officeNewsPost officeNewsPost
+     */
+    public void setOfficeNewsPost(HomeScreenOfficeNewsDTO officeNewsPost) {
+        this.officeNewsPost = officeNewsPost;
+    }
+
+    /**
+     * The officeNews
+     * @return officeNews
+     */
+    public List<HomeScreenOfficeNewsDTO> getOfficeNews() {
+        return officeNews;
+    }
+
+    /**
+     * The officeNews
+     * @param officeNews officeNews
+     */
+    public void setOfficeNews(List<HomeScreenOfficeNewsDTO> officeNews) {
+        this.officeNews = officeNews;
+    }
 
     /**
      *
