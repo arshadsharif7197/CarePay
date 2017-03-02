@@ -13,6 +13,15 @@ public class HomeScreenOfficeNewsPayloadDTO {
     @SerializedName("publish_date")
     @Expose
     private String publishDate;
+    @SerializedName("body")
+    @Expose
+    private String body;
+    @SerializedName("status")
+    @Expose
+    private String status;
+    @SerializedName("headline_photo")
+    @Expose
+    private String headlinePhoto;
 
     public String getHeadline() {
         return headline;
@@ -36,5 +45,29 @@ public class HomeScreenOfficeNewsPayloadDTO {
 
     public void setPublishDate(String publishDate) {
         this.publishDate = publishDate;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getHeadlinePhoto() {
+        return headlinePhoto;
+    }
+
+    public void setHeadlinePhoto(String headlinePhoto) {
+        this.headlinePhoto = headlinePhoto;
     }
 }

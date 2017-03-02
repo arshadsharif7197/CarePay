@@ -23,6 +23,7 @@ import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.customdialog.ChangeModeDialog;
 import com.carecloud.carepay.practice.library.customdialog.ConfirmationPinDialog;
 import com.carecloud.carepay.practice.library.homescreen.adapters.OfficeNewsListAdapter;
+import com.carecloud.carepay.practice.library.homescreen.dialogs.OfficeNewsDetailsDialog;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenAppointmentCountsDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenLabelDTO;
@@ -271,11 +272,17 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     }
 
     private void getNews() {
+        JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getLinks();
+        Gson gson = new Gson();
+        TransitionDTO transitionDTO;
+
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-            TransitionDTO transitionDTO = homeScreenDTO.getMetadata().getOfficeNews();
+            PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
+            transitionDTO = transitionsDTO.getOfficeNews();
+
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
-            queryMap.put("publish_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
+            queryMap.put("publish_date", "2017-03-04");
             getWorkflowServiceHelper().execute(transitionDTO, getNewsCallback, queryMap);
         } else {
             // Add for patient mode once available from backend
@@ -483,14 +490,50 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         }
     };
 
-        OfficeNewsListAdapter.OnOfficeNewsClickedListener officeNewsClickedListener
-                = new OfficeNewsListAdapter.OnOfficeNewsClickedListener() {
-            @Override
-            public void onOfficeNewsSelected(HomeScreenOfficeNewsPayloadDTO newsPayload) {
-//                Endpoint call for office_news_post with practice_mgmt & post_uuid data
-            }
-        };
+    OfficeNewsListAdapter.OnOfficeNewsClickedListener officeNewsClickedListener
+            = new OfficeNewsListAdapter.OnOfficeNewsClickedListener() {
+        @Override
+        public void onOfficeNewsSelected(HomeScreenOfficeNewsPayloadDTO newsPayload) {
+            Gson gson = new Gson();
+            JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getLinks();
+            PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
+            TransitionDTO transitionDTO = transitionsDTO.getOfficeNewsPost();
 
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+            queryMap.put("post_uuid", newsPayload.getUuid());
+            getWorkflowServiceHelper().execute(transitionDTO, getNewsPostCallback, queryMap);
+        }
+    };
+
+    WorkflowServiceCallback getNewsPostCallback = new WorkflowServiceCallback() {
+
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            Gson gson = new Gson();
+            HomeScreenDTO homeScreenDTO = gson.fromJson(workflowDTO.toString(), HomeScreenDTO.class);
+            JsonObject payloadAsJsonObject = homeScreenDTO.getPayload();
+            PracticeHomeScreenPayloadDTO practiceHomePayloadDTO = gson.fromJson(payloadAsJsonObject,
+                    PracticeHomeScreenPayloadDTO.class);
+            HomeScreenOfficeNewsDTO officeNewsPost = practiceHomePayloadDTO.getOfficeNewsPost();
+
+            HomeScreenLabelDTO labels = homeScreenDTO.getMetadata().getLabels();
+            OfficeNewsDetailsDialog detailsDialog = new OfficeNewsDetailsDialog(CloverMainActivity.this,
+                    labels.getNewsTitle(), labels.getNewsCancelLabel(), officeNewsPost);
+            detailsDialog.show();
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+        }
+    };
 
     WorkflowServiceCallback commonTransitionCallback = new WorkflowServiceCallback() {
         @Override
