@@ -34,6 +34,9 @@ public class PracticeHomeScreenTransitionsDTO {
     @SerializedName("office_news")
     @Expose
     private TransitionDTO officeNews = new TransitionDTO();
+    @SerializedName("office_news_post")
+    @Expose
+    private TransitionDTO officeNewsPost = new TransitionDTO();
 
     /**
      *
@@ -175,5 +178,21 @@ public class PracticeHomeScreenTransitionsDTO {
      */
     public void setPracticeAppointments(TransitionDTO practiceAppointments) {
         this.practiceAppointments = practiceAppointments;
+    }
+
+    /**
+     * officeNewsPost
+     * @return officeNewsPost
+     */
+    public TransitionDTO getOfficeNewsPost() {
+        return officeNewsPost;
+    }
+
+    /**
+     * officeNewsPost
+     * @param officeNewsPost officeNewsPost
+     */
+    public void setOfficeNewsPost(TransitionDTO officeNewsPost) {
+        this.officeNewsPost = officeNewsPost;
     }
 }
