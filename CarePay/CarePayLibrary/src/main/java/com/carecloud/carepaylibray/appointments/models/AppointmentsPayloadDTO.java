@@ -676,4 +676,15 @@ public class AppointmentsPayloadDTO {
         return dateTime.isBeforeNow();
     }
 
+    /**
+     * @return true if appointment time started
+     */
+    public boolean hasAppointmentStarted() {
+        if (null == startTime) {
+            return false;
+        }
+
+        DateTime dateTime = new DateTime(DateUtil.getInstance().setDateRaw(startTime).getDate());
+        return dateTime.isBeforeNow();
+    }
 }
