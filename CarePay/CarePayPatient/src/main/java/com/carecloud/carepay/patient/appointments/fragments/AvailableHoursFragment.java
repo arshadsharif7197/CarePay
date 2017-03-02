@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,10 +18,8 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepay.patient.appointments.adapters.AvailableHoursAdapter;
 import com.carecloud.carepay.patient.appointments.adapters.AvailableLocationsAdapter;
-import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
@@ -41,7 +38,6 @@ import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.utils.DateUtil;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -154,7 +150,7 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
         titleOther.setOnClickListener(dateRangeClickListener);
 
         Drawable closeIcon = ContextCompat.getDrawable(getActivity(),
-                R.drawable.icn_patient_mode_nav_back);
+                R.drawable.icn_nav_back);
         toolbar.setNavigationIcon(closeIcon);
         ((AddAppointmentActivity) getActivity()).setSupportActionBar(toolbar);
 

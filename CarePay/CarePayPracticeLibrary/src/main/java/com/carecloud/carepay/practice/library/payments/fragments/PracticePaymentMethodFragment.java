@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
 import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
@@ -56,6 +56,15 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
 
     }
 
+    @Override
+    protected void setupTitleViews(View view){
+        super.setupTitleViews(view);
+        TextView title = (TextView) view.findViewById(R.id.paymentMethodTitleLabel);
+        if(title!=null) {
+            title.setText(getTitlePaymentMethodString());
+        }
+
+    }
 
 
     private void setSwipeCardNowVisibility(View view)
@@ -71,6 +80,8 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
         } else {
             swipeCreditCarNowButton.setEnabled(false);
             swipeCardSeparatorLabel.setText(swipeCardSeparatorString);
+            swipeCreditCarNowButton.setVisibility(View.GONE);
+            swipeCardSeparatorLabel.setVisibility(View.GONE);
         }
 
     }

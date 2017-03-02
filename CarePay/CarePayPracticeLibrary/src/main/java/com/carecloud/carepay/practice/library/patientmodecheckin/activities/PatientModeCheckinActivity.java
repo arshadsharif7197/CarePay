@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -512,9 +513,10 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
             args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
             args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
             args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-            Fragment fragment = new ChooseCreditCardFragment();
+            DialogFragment fragment = new ChooseCreditCardFragment();
             fragment.setArguments(args);
-            navigateToFragment(fragment, true);
+//            navigateToFragment(fragment, true);
+            fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
         } else {
             showAddCard(amount);
         }
@@ -527,9 +529,10 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         String paymentsDTOString = gson.toJson(paymentDTO);
         args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE,  amount);
-        Fragment fragment = new AddNewCreditCardFragment();
+        DialogFragment fragment = new AddNewCreditCardFragment();
         fragment.setArguments(args);
-        navigateToFragment(fragment, true);
+//        navigateToFragment(fragment, true);
+        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
     }
 
     @Override

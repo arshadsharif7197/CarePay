@@ -97,7 +97,7 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.search_toolbar);
         toolbar.setTitle("");
         if(getDialog()==null) {
-            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.icn_patient_mode_nav_back));
+            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.icn_nav_back));
             toolbar.setNavigationOnClickListener(navigationClickListener);
 //            ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 

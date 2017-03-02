@@ -137,7 +137,7 @@ public class PracticeAppSignatureActivity extends BaseActivity {
         setTypefaceFromAssets(this, "fonts/gotham_rounded_medium.otf", title);
         toolbar.setTitle(consentFormLabelsDTO.getSignatureActivityTitleText());
         title.setGravity(Gravity.CENTER);
-       // toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.icn_patient_mode_nav_back));
+       // toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.icn_nav_back));
         setSupportActionBar(toolbar);
       //  toolbar.setVisibility(View.GONE);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {

@@ -20,7 +20,7 @@ public class PaymentsPayloadDTO implements Serializable {
     private PaymentsPayloadIntakeFormsDTO intakeForms = new PaymentsPayloadIntakeFormsDTO();
     @SerializedName("payment_settings")
     @Expose
-    private PaymentsPayloadSettingsDTO paymentSettings = new PaymentsPayloadSettingsDTO();
+    private List<PaymentsPayloadSettingsDTO> paymentSettings = new ArrayList<>();
     @SerializedName("patient_payment_plans")
     @Expose
     private PaymentsPatientsPlansDTO patientPaymentPlans = new PaymentsPatientsPlansDTO();
@@ -93,24 +93,6 @@ public class PaymentsPayloadDTO implements Serializable {
      */
     public void setIntakeForms(PaymentsPayloadIntakeFormsDTO intakeForms) {
         this.intakeForms = intakeForms;
-    }
-
-    /**
-     *
-     * @return
-     * The paymentSettings
-     */
-    public PaymentsPayloadSettingsDTO getPaymentSettings() {
-        return paymentSettings;
-    }
-
-    /**
-     *
-     * @param paymentSettings
-     * The payment_settings
-     */
-    public void setPaymentSettings(PaymentsPayloadSettingsDTO paymentSettings) {
-        this.paymentSettings = paymentSettings;
     }
 
     /**
@@ -247,5 +229,13 @@ public class PaymentsPayloadDTO implements Serializable {
      */
     public void setMerchantServices(List<DemographicsSettingsMerchantServicesDTO> merchantServices) {
         this.merchantServices = merchantServices;
+    }
+
+    public List<PaymentsPayloadSettingsDTO> getPaymentSettings() {
+        return paymentSettings;
+    }
+
+    public void setPaymentSettings(List<PaymentsPayloadSettingsDTO> paymentSettings) {
+        this.paymentSettings = paymentSettings;
     }
 }

@@ -6,11 +6,27 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/toolbar_layout"
-        layout="@layout/toolbar_responsibility" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/dimen_26dp"
+        android:paddingTop="@dimen/dimen_26dp">
 
+        <include
+            android:id="@+id/toolbar_layout"
+            layout="@layout/toolbar_responsibility"/>
 
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/paymentMethodTitleLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/colorPrimary"
+            android:textSize="28sp"
+            app:customAssetFont="gotham_rounded_medium" />
+
+    </FrameLayout>
     <ProgressBar
         android:id="@+id/paymentMethodFragmentProgressBar"
         style="?android:attr/progressBarStyleHorizontal"
@@ -20,17 +36,6 @@
         android:indeterminate="true"
         android:visibility="gone" />
 
-    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-        android:id="@+id/paymentMethodTitleLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:paddingBottom="@dimen/dimen_26dp"
-        android:paddingTop="@dimen/dimen_26dp"
-        android:textColor="@color/colorPrimary"
-        android:textSize="28sp"
-        app:customAssetFont="gotham_rounded_medium" />
 
     <View
         android:layout_width="match_parent"
@@ -48,14 +53,16 @@
         android:orientation="vertical"
         android:visibility="visible">
 
-        <Button
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/swipeCreditCarNowButton"
             style="@style/PaymentButtonStyle"
-            android:layout_width="@dimen/dimen_500dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="@dimen/dimen_100dp"
+            android:layout_marginEnd="@dimen/dimen_100dp"
             android:enabled="false"
-            android:background="@drawable/emerald_rounded_button_selector" />
+            android:background="@drawable/emerald_rounded_button_selector"
+            app:customAssetFont="gotham_rounded_medium" />
 
 
         <LinearLayout
@@ -78,10 +85,10 @@
 
             <TextView
                 android:id="@+id/swipeCardSeparatorLabel"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dimen_5dp"
-                android:layout_weight="0.50"
+                android:gravity="center"
                 android:text="@string/swipeCreditCardSeparatorText"
                 android:textSize="@dimen/dimen_18dp"
                 android:textColor="@color/optionl_gray"
@@ -173,7 +180,7 @@
         android:orientation="horizontal"
         android:padding="@dimen/dimen_15dp">
 
-        <Button
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/createPaymentPlanButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -183,9 +190,9 @@
             android:textAllCaps="false"
             android:textColor="@color/primary_color_enabled_selector"
             android:textSize="@dimen/text_size_22"
-            />
+            app:customAssetFont="gotham_rounded_medium" />
 
-        <Button
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/paymentChoiceButton"
             style="@style/PaymentMethodButtonStyle"
             android:layout_width="match_parent"
@@ -193,7 +200,7 @@
             android:layout_margin="@dimen/dimen_5dp"
             android:layout_weight="1"
             android:background="@drawable/bg_yellow_overlay"
-            />
+            app:customAssetFont="gotham_rounded_medium" />
 
     </LinearLayout>
 

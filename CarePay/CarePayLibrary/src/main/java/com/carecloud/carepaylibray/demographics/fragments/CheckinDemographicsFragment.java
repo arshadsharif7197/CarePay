@@ -194,7 +194,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
             title.setText(globalLabelsMetaDTO.getDemographicsReviewToolbarTitle());
             toolbar.setTitle("");
-            toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
+            toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
