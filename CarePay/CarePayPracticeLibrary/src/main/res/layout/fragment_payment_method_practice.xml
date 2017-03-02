@@ -14,7 +14,7 @@
 
         <include
             android:id="@+id/toolbar_layout"
-            layout="@layout/toolbar_responsibility"/>
+            layout="@layout/toolbar_no_title"/>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/paymentMethodTitleLabel"

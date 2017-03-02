@@ -1,9 +1,9 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="horizontal">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/closeViewLayout"
@@ -33,7 +33,7 @@
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:layout_marginStart="@dimen/dimen_26dp"
         android:layout_marginEnd="@dimen/dimen_26dp"
@@ -51,34 +51,29 @@
 
         </FrameLayout>
 
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:minHeight="@dimen/list_dialog_min_height"
+            android:background="@color/white"
+            android:padding="@dimen/payment_method_parent_layout_padding"
+            android:id="@+id/list_credit_cards"
+            android:choiceMode="singleChoice"
+            android:visibility="visible"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_1dp"
+            android:background="@color/light_gray"/>
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <ListView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:elevation="17dp"
-                android:layout_margin="@dimen/payment_method_parent_layout_padding"
-                android:padding="@dimen/payment_method_parent_layout_padding"
-                android:id="@+id/list_credit_cards"
-                android:choiceMode="singleChoice"
-                android:visibility="visible"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_1dp"
-                android:background="@color/light_gray"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="@dimen/dimen_10dp"
-                android:background="@drawable/patient_mode_dialog_body_bg">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/dimen_10dp"
+            android:background="@drawable/patient_mode_dialog_body_bg">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/addNewCardButton"
@@ -101,7 +96,6 @@
                 android:background="@drawable/green_rounded_button_selector"
                 app:customAssetFont="gotham_rounded_medium" />
 
-            </LinearLayout>
 
         </LinearLayout>
 

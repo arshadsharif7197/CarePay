@@ -34,6 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:id="@+id/scroll_medications_allergy"
         android:fillViewport="true">
 
         <LinearLayout
@@ -229,7 +230,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/medication_allergies_continue_button"
         android:layout_margin="@dimen/dimen_20dp"
-        android:padding="@dimen/dimen_20dp"
+        android:padding="@dimen/dimen_15dp"
         android:background="@drawable/green_rounded_button_selector"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_15"

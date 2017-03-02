@@ -161,6 +161,13 @@ public class ChooseCreditCardFragment extends BaseFragment {
             }
         });
 
+        if(getDialog()!=null){
+            //limit width of listview
+            ViewGroup.LayoutParams layoutParams =  creditCardsListView.getLayoutParams();
+            layoutParams.width = (int) (getResources().getDisplayMetrics().widthPixels * .5);
+            creditCardsListView.setLayoutParams(layoutParams);
+        }
+
     }
 
     private View.OnClickListener nextButtonListener = new View.OnClickListener() {
@@ -248,6 +255,9 @@ public class ChooseCreditCardFragment extends BaseFragment {
         @Override
         public void onClick(View view) {
             callback.showAddCard(amountToMakePayment);
+            if(getDialog()!=null){
+                dismiss();
+            }
         }
     };
 
