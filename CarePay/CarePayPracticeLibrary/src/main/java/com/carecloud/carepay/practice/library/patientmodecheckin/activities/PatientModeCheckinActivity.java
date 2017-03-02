@@ -508,12 +508,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         if(paymentDTO.getPaymentPayload().getPatientCreditCards()!=null && !paymentDTO.getPaymentPayload().getPatientCreditCards().isEmpty()){
             Gson gson = new Gson();
             Bundle args = new Bundle();
-            Fragment fragment;
             String paymentsDTOString = gson.toJson(paymentDTO);
             args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
             args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
             args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-            fragment = new ChooseCreditCardFragment();
+            Fragment fragment = new ChooseCreditCardFragment();
             fragment.setArguments(args);
             navigateToFragment(fragment, true);
         } else {
