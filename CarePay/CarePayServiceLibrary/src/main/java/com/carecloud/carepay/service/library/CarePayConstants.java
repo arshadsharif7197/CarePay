@@ -81,7 +81,6 @@ public class CarePayConstants {
     public static final int PAYMENT_PLAN_REQUIRED_BALANCE = 20;
     public static final String APPOINTMENTS_STATUS_COMPLETED = "completed";
 
-    public static final String CLOVER_DEVICE = "Clover";
     public static final String DEMOGRAPHICS_SETTINGS_BUNDLE  = "demographics_settings_bundle";
     public static final String DEMOGRAPHICS_ADDRESS_BUNDLE  = "demographics_address_bundle";
     public static final String PAYEEZY_MERCHANT_SERVICE_BUNDLE  = "payeezy_merchant_service_bundle";
@@ -98,6 +97,7 @@ public class CarePayConstants {
     public static final String MEDICATION_ALLERGIES_SEARCH_MODE_EXTRA = "medication_allergies_search_mode_extra";
 
     //Clover Constants
+    public static final String CLOVER_DEVICE = "Clover";
     public static final String CLOVER_PAYMENT_INTENT = "com.carecloud.carepay.practice.clover.payments.CloverPaymentActivity";
     public static final int CLOVER_PAYMENT_INTENT_REQUEST_CODE = 0x37;
     public static final String CLOVER_PAYMENT_AMOUNT = "clover_payment_amount";

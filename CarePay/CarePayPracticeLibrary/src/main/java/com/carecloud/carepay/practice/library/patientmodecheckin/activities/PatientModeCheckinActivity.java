@@ -25,6 +25,10 @@ import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.Check
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.IFragmentCallback;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.PracticeIdDocScannerFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityFragment;
+import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountReceiptDialog;
+import com.carecloud.carepay.practice.library.payments.dialogs.PracticePartialPaymentDialog;
+import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentPlanFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
@@ -51,6 +55,10 @@ import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearch
 import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
+import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
+import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.practice.FlowStateInfo;
@@ -66,13 +74,34 @@ import java.util.Locale;
  * Created by lsoco_user on 11/16/2016.
  * Main activity for patient check in flow
  */
-public class PatientModeCheckinActivity extends BasePracticeActivity implements IFragmentCallback,
-        DemographicsReviewLabelsHolder, DemographicsLabelsHolder,
-        CheckinDemographicsFragment.CheckinDemographicsFragmentListener,
-        DemographicsCheckInDocumentsFragment.DemographicsCheckInDocumentsFragmentListener,
-        HealthInsuranceFragment.InsuranceDocumentScannerListener,
-        MedicationsAllergyFragment.MedicationAllergyCallback,
-        CheckinDemographicsInterface, MedicationAllergySearchFragment.MedicationAllergySearchCallback {
+public class PatientModeCheckinActivity extends BasePracticeActivity implements IFragmentCallback, DemographicsReviewLabelsHolder, DemographicsLabelsHolder,
+        CheckinDemographicsFragment.CheckinDemographicsFragmentListener, DemographicsCheckInDocumentsFragment.DemographicsCheckInDocumentsFragmentListener,
+        HealthInsuranceFragment.InsuranceDocumentScannerListener, MedicationsAllergyFragment.MedicationAllergyCallback,
+        CheckinDemographicsInterface, MedicationAllergySearchFragment.MedicationAllergySearchCallback,
+        PaymentNavigationCallback {
+
+    BroadcastReceiver intakeFormReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.hasExtra("INTAKE_WORKFLOW")) {
+                try {
+                    intakeResponseModel = getConvertedDTO(IntakeResponseModel.class, intent.getStringExtra("INTAKE_WORKFLOW"));
+                } catch (Exception e) {
+
+                    Log.e("INTAKE_JSON_CONVERSION", e.getMessage());
+                }
+            }
+
+            CheckinIntakeForm1Fragment checkinIntakeForm1Fragment = new CheckinIntakeForm1Fragment();
+            Gson gson = new Gson();
+            String intakeFormDTO = gson.toJson(intakeResponseModel);
+            Bundle bundle = new Bundle();
+            bundle.putString(CarePayConstants.INTAKE_BUNDLE, intakeFormDTO);
+            checkinIntakeForm1Fragment.setArguments(bundle);
+            navigateToFragment(checkinIntakeForm1Fragment, true);
+        }
+    };
+
 
     public final static  int SUBFLOW_DEMOGRAPHICS_INS = 0;
     public final static  int SUBFLOW_CONSENT          = 1;
@@ -108,6 +137,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     private int intakeFormIndex = 1;
 
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
+    private PaymentsModel paymentDTO;
 
     // Intake Form
     private IntakeResponseModel intakeResponseModel;
@@ -115,27 +145,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
      * IntakeForm Navigation
      */
 
-    BroadcastReceiver intakeFormReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.hasExtra("INTAKE_WORKFLOW")) {
-                try {
-                    intakeResponseModel = getConvertedDTO(IntakeResponseModel.class, intent.getStringExtra("INTAKE_WORKFLOW"));
-                } catch (Exception e) {
-
-                    Log.e("INTAKE_JSON_CONVERSION", e.getMessage());
-                }
-            }
-
-            CheckinIntakeForm1Fragment checkinIntakeForm1Fragment = new CheckinIntakeForm1Fragment();
-            Gson gson = new Gson();
-            String intakeFormDTO = gson.toJson(intakeResponseModel);
-            Bundle bundle = new Bundle();
-            bundle.putString(CarePayConstants.INTAKE_BUNDLE, intakeFormDTO);
-            checkinIntakeForm1Fragment.setArguments(bundle);
-            navigateToFragment(checkinIntakeForm1Fragment, true);
-        }
-    };
     private FlowStateInfo currentFlowStateInfo;
 
     @Override
@@ -406,13 +415,21 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
      *
      * @param workflowJson intake DTO
      */
-    public void getPaymentInformation(String workflowJson) {
+    public void getPaymentInformation(final String workflowJson) {
         ResponsibilityFragment responsibilityFragment = new ResponsibilityFragment();
         Bundle bundle = new Bundle();
         bundle.putString(CarePayConstants.INTAKE_BUNDLE, workflowJson);
         bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, workflowJson);
         responsibilityFragment.setArguments(bundle);
         navigateToFragment(responsibilityFragment, true);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                paymentDTO = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowJson);
+
+            }
+        }).start();
     }
 
     public ConsentFormLabelsDTO getConsentFormLabelsDTO() {
@@ -465,6 +482,75 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         MedicationsAllergyFragment medicationsAllergyFragment = (MedicationsAllergyFragment) getSupportFragmentManager().findFragmentById(R.id.checkInContentHolderId);
         medicationsAllergyFragment.addItem(item);
     }
+
+
+    @Override
+    public void startPartialPayment() {
+        new PracticePartialPaymentDialog(this, paymentDTO).show();
+    }
+
+    @Override
+    public void onPayButtonClicked(double amount) {
+        Bundle bundle = new Bundle();
+        Gson gson = new Gson();
+        String paymentsDTOString = gson.toJson(paymentDTO);
+        bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
+        bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+        bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+
+        PracticePaymentMethodFragment fragment = new PracticePaymentMethodFragment();
+        fragment.setArguments(bundle);
+        navigateToFragment(fragment, true);
+    }
+
+    @Override
+    public void onPaymentMethodAction(String selectedPaymentMethod, double amount) {
+        if(paymentDTO.getPaymentPayload().getPatientCreditCards()!=null && !paymentDTO.getPaymentPayload().getPatientCreditCards().isEmpty()){
+            Gson gson = new Gson();
+            Bundle args = new Bundle();
+            String paymentsDTOString = gson.toJson(paymentDTO);
+            args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
+            args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
+            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+            Fragment fragment = new ChooseCreditCardFragment();
+            fragment.setArguments(args);
+            navigateToFragment(fragment, true);
+        } else {
+            showAddCard(amount);
+        }
+    }
+
+    @Override
+    public void showAddCard(double amount) {
+        Gson gson = new Gson();
+        Bundle args = new Bundle();
+        String paymentsDTOString = gson.toJson(paymentDTO);
+        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
+        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE,  amount);
+        Fragment fragment = new AddNewCreditCardFragment();
+        fragment.setArguments(args);
+        navigateToFragment(fragment, true);
+    }
+
+    @Override
+    public void onPaymentPlanAction() {
+        PatientPaymentPlanFragment fragment = new PatientPaymentPlanFragment();
+
+        Bundle args = new Bundle();
+        Gson gson = new Gson();
+        String paymentsDTOString = gson.toJson(paymentDTO);
+        args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
+        fragment.setArguments(args);
+
+        navigateToFragment(fragment, true);
+    }
+
+    @Override
+    public void showReceipt(PaymentsModel paymentsModel) {
+        PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(this, paymentsModel, paymentsModel);
+        receiptDialog.show();
+    }
+
 
     /**
      * Enum to identify the forms

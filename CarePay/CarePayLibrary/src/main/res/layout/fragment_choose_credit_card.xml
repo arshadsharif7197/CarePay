@@ -7,16 +7,30 @@
         android:id="@+id/toolbar_layout"
         layout="@layout/toolbar_responsibility" />
 
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/payment_method_parent_layout_padding">
 
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:elevation="17dp"
+            android:layout_above="@+id/nextButton"
+            android:padding="@dimen/payment_method_parent_layout_padding"
+            android:id="@+id/list_credit_cards"
+            android:choiceMode="singleChoice"
+            android:visibility="visible"/>
+
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/nextButton"
-            android:scrollbars="none">
+            android:scrollbars="none"
+            android:visibility="gone">
 
             <RadioGroup
                 android:id="@+id/chooseCreditCardRadioGroup"
@@ -45,4 +59,5 @@
             android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
             android:background="@drawable/button_selector_green" />
     </RelativeLayout>
+
 </LinearLayout>
