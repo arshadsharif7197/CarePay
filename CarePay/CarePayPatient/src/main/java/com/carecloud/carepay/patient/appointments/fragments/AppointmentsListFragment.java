@@ -18,23 +18,32 @@ import android.widget.ProgressBar;
 import com.carecloud.carepay.patient.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.appointments.adapters.AppointmentsAdapter;
+import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentDialog;
+import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
+import com.carecloud.carepay.patient.appointments.dialog.CheckInOfficeNowAppointmentDialog;
 import com.carecloud.carepay.patient.appointments.utils.PatientAppUtil;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.appointment.DataDTO;
+import com.carecloud.carepay.service.library.dtos.FaultResponseDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog;
+import com.carecloud.carepaylibray.customdialogs.QueueAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -62,6 +71,7 @@ public class AppointmentsListFragment extends BaseFragment {
     private RecyclerView appointmentRecyclerView;
     private AppointmentsListFragment appointmentsListFragment;
     private Bundle bundle;
+    private AppointmentLabelDTO appointmentLabels;
 
     @Override
     public void onStart() {
@@ -94,6 +104,7 @@ public class AppointmentsListFragment extends BaseFragment {
         bundle = getArguments();
         String appointmentInfoString = bundle.getString(CarePayConstants.APPOINTMENT_INFO_BUNDLE);
         appointmentInfo = gson.fromJson(appointmentInfoString, AppointmentsResultModel.class);
+        this.appointmentLabels = appointmentInfo.getMetadata().getLabel();
 
         // Set Title
         ActionBar actionBar = ((AppointmentsActivity) getActivity()).getSupportActionBar();
@@ -189,6 +200,57 @@ public class AppointmentsListFragment extends BaseFragment {
 
     private AppointmentsAdapter.AppointmentsAdapterListener getAppointmentsAdapterListener() {
         return new AppointmentsAdapter.AppointmentsAdapterListener() {
+
+            public void onItemTapped(AppointmentDTO appointmentDTO)
+            {
+                showAppointmentPopup(appointmentDTO) ;
+            }
+        };
+    }
+
+    private void showAppointmentPopup(AppointmentDTO appointmentDTO) {
+
+        AppointmentsPayloadDTO payloadDTO = appointmentDTO.getPayload();
+        AppointmentsActivity.model = appointmentDTO;
+
+        String statusCode = payloadDTO.getAppointmentStatusModel().getCode();
+        boolean isCheckedIn = statusCode.equalsIgnoreCase(CarePayConstants.CHECKED_IN);
+        boolean isCanceled = statusCode.equalsIgnoreCase(CarePayConstants.CANCELLED);
+        boolean isRequested = statusCode.equalsIgnoreCase(CarePayConstants.REQUESTED);
+
+        // Missed Appointment
+        if (payloadDTO.isAppointmentOver() && !isCheckedIn) {
+            new CancelAppointmentDialog(getContext(), appointmentDTO, appointmentInfo,
+                    BaseDoctorInfoDialog.AppointmentType.MISSED_APPOINTMENT, getCancelAppointmentDialogListener()).show();
+
+        } else if (isCheckedIn) {
+            // Checked-In Appointment
+            new QueueAppointmentDialog(getContext(), appointmentDTO, appointmentLabels).show();
+
+        } else if (isCanceled) {
+            // Cancelled Appointment
+            new CancelAppointmentDialog(getContext(), appointmentDTO, appointmentInfo,
+                    BaseDoctorInfoDialog.AppointmentType.CANCELLED_APPOINTMENT, getCancelAppointmentDialogListener()).show();
+
+        } else if (isAppointmentCancellable(appointmentDTO)) {
+            // Appointment as long as it's 24 hours or more in the future
+            new CancelAppointmentDialog(getContext(), appointmentDTO, appointmentInfo,
+                    BaseDoctorInfoDialog.AppointmentType.CANCEL_APPOINTMENT,
+                    getCancelAppointmentDialogListener()).show();
+
+        } else if (isRequested) {
+            // Requested Appointment
+            new CancelAppointmentDialog(getContext(), appointmentDTO, appointmentInfo,
+                    BaseDoctorInfoDialog.AppointmentType.REQUESTED_APPOINTMENT, getCancelAppointmentDialogListener()).show();
+
+        } else {
+            new CheckInOfficeNowAppointmentDialog(getContext(), appointmentDTO, appointmentInfo, getCheckInOfficeNowAppointmentDialogListener()).show();
+        }
+
+    }
+
+    private CheckInOfficeNowAppointmentDialog.CheckInOfficeNowAppointmentDialogListener getCheckInOfficeNowAppointmentDialogListener() {
+        return new CheckInOfficeNowAppointmentDialog.CheckInOfficeNowAppointmentDialogListener() {
             @Override
             public void onPreRegisterTapped(AppointmentDTO appointmentDTO, AppointmentsResultModel appointmentInfo) {
                 JsonObject queryStringObject = appointmentInfo.getMetadata().getTransitions().getCheckinAtOffice().getQueryString();
@@ -206,6 +268,151 @@ public class AppointmentsListFragment extends BaseFragment {
                 getWorkflowServiceHelper().execute(transitionDTO, preRegisterCallback, queries, header);
             }
         };
+    }
+
+    /**
+     * Gets cancel appointment dialog listener.
+     *
+     * @return the cancel appointment dialog listener
+     */
+    public CancelAppointmentDialog.CancelAppointmentDialogListener getCancelAppointmentDialogListener() {
+        return new CancelAppointmentDialog.CancelAppointmentDialogListener() {
+            @Override
+            public void onRefreshAppointmentList(AppointmentDTO appointmentDTO) {
+
+                refreshAppointmentListAfterCancellation(appointmentDTO);
+            }
+
+
+            @Override
+            public void onPreRegisterTapped(AppointmentDTO appointmentDTO, AppointmentsResultModel appointmentInfo) {
+
+                JsonObject queryStringObject = appointmentInfo.getMetadata().getTransitions().getCheckinAtOffice().getQueryString();
+                QueryStrings queryStrings = DtoHelper.getConvertedDTO(QueryStrings.class, queryStringObject);
+
+                Map<String, String> queries = new HashMap<>();
+                queries.put(queryStrings.getPracticeMgmt().getName(), appointmentDTO.getMetadata().getPracticeMgmt());
+                queries.put(queryStrings.getPracticeId().getName(), appointmentDTO.getMetadata().getPracticeId());
+                queries.put(queryStrings.getAppointmentId().getName(), appointmentDTO.getMetadata().getAppointmentId());
+
+                Map<String, String> header = getWorkflowServiceHelper().getPreferredLanguageHeader();
+                header.put("transition", "true");
+
+                TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCheckingIn();
+                getWorkflowServiceHelper().execute(transitionDTO, preRegisterCallback, queries, header);
+            }
+
+            @Override
+            public void onCancelAppointmentButtonClicked(AppointmentDTO appointmentDTO, AppointmentsResultModel appointmentInfo) {
+                new CancelReasonAppointmentDialog(getContext(), appointmentDTO, appointmentInfo, getCancelReasonAppointmentDialogListener()).show();
+            }
+
+        };
+    }
+
+
+    private void refreshAppointmentListAfterCancellation(AppointmentDTO appointmentDTO) {
+        int index = appointmentsAdapter.getAppointmentItems().indexOf(appointmentDTO);
+        appointmentDTO.getPayload().getAppointmentStatusModel().setCode(CarePayConstants.CANCELLED);
+        appointmentsAdapter.getAppointmentItems().set(index, appointmentDTO);
+        appointmentsAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Gets cancel reason appointment dialog listener.
+     *
+     * @return the cancel reason appointment dialog listener
+     */
+    public CancelReasonAppointmentDialog.CancelReasonAppointmentDialogListener getCancelReasonAppointmentDialogListener() {
+        return new CancelReasonAppointmentDialog.CancelReasonAppointmentDialogListener() {
+            @Override
+            public void onCancelReasonAppointmentDialogCancelClicked(AppointmentDTO appointmentDTO, int cancellationReasonID, String cancellationReasonComment) {
+                onCancelAppointment(appointmentDTO, cancellationReasonID, cancellationReasonComment);
+            }
+        };
+    }
+
+    /**
+     * call cancel appointment api.
+     */
+    private void onCancelAppointment(AppointmentDTO appointmentDTO, int cancellationReasonID, String cancellationReasonComment) {
+
+        Gson gson = new Gson();
+        Map<String, String> queries = new HashMap<>();
+        JsonObject queryStringObject = appointmentInfo.getMetadata().getTransitions().getCancel().getQueryString();
+        QueryStrings queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
+
+        queries.put(queryStrings.getPracticeMgmt().getName(), appointmentDTO.getMetadata().getPracticeMgmt());
+        queries.put(queryStrings.getPracticeId().getName(), appointmentDTO.getMetadata().getPracticeId());
+        queries.put(queryStrings.getPatientId().getName(), appointmentDTO.getMetadata().getPatientId());
+        queries.put(queryStrings.getAppointmentId().getName(), appointmentDTO.getMetadata().getAppointmentId());
+
+        DataDTO data = appointmentInfo.getMetadata().getTransitions().getCancel().getData();
+        JsonObject postBodyObj = new JsonObject();
+        if(!StringUtil.isNullOrEmpty(cancellationReasonComment))
+        {
+            postBodyObj.addProperty(data.getCancellationComments().getName(),cancellationReasonComment);
+        }
+        if(cancellationReasonID != -1)
+        {
+            postBodyObj.addProperty(data.getCancellationReasonId().getName(),cancellationReasonID);
+        }
+
+        String body = postBodyObj.toString();
+
+        TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCancel();
+        getWorkflowServiceHelper().execute(transitionDTO, transitionToCancelCallback, body, queries);
+    }
+
+
+    private WorkflowServiceCallback transitionToCancelCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            PatientAppUtil.showSuccessToast(getContext());
+
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            try {
+                FaultResponseDTO fault = DtoHelper.getConvertedDTO(FaultResponseDTO.class, exceptionMessage);
+                if(fault.isUnprocessableEntityError())
+                {
+                    showErrorNotification(fault.getErrorMessageDTO().getServiceErrorDTO().getMessage());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+    private boolean isAppointmentCancellable(AppointmentDTO item) {
+        // Get appointment date/time in required format
+        String appointmentTimeStr = item.getPayload().getStartTime();
+        Date appointmentTime = DateUtil.getInstance().setDateRaw(appointmentTimeStr).getDate();
+
+        // Get current date/time in required format
+        Date currentDate = DateUtil.getInstance().setToCurrent().getDate();
+        String cancellationNoticePeriodStr = appointmentInfo.getPayload().getAppointmentsSettings().get(0).getCheckin().getCancellationNoticePeriod();
+
+        if (appointmentTime != null && currentDate != null) {
+            long differenceInMinutes = DateUtil.getMinutesElapsed(appointmentTime, currentDate);
+            long cancellationNoticePeriod = Long.parseLong(cancellationNoticePeriodStr);
+
+            if (differenceInMinutes > cancellationNoticePeriod) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void showNoAppointmentScreen() {
@@ -275,6 +482,28 @@ public class AppointmentsListFragment extends BaseFragment {
         }
     };
 
+    private String getSectionHeaderTitle(String appointmentRawDate) {
+        // Current date
+        String currentDate = DateUtil.getInstance().setToCurrent().toStringWithFormatMmDashDdDashYyyy();
+        Date currentConvertedDate = DateUtil.getInstance().setDateRaw(currentDate).getDate();
+
+        // Appointment date
+        String appointmentDate = DateUtil.getInstance().setDateRaw(appointmentRawDate).toStringWithFormatMmDashDdDashYyyy();
+        Date convertedAppointmentDate = DateUtil.getInstance().setDateRaw(appointmentDate).getDate();
+
+        String headerText;
+        if (convertedAppointmentDate.after(currentConvertedDate)
+                && !appointmentDate.equalsIgnoreCase(currentDate)) {
+            headerText = appointmentInfo.getMetadata().getLabel().getUpcomingAppointmentsHeading();
+        } else if (convertedAppointmentDate.before(currentConvertedDate)) {
+            headerText = appointmentInfo.getMetadata().getLabel().getTodayAppointmentsHeading();
+        } else {
+            headerText = appointmentInfo.getMetadata().getLabel().getTodayAppointmentsHeading();
+        }
+        return headerText;
+    }
+
+
     // Method to return appointmentListWithHeader
     private List<Object> getAppointmentListWithHeader() {
         if (appointmentsItems != null && appointmentsItems.size() > 0) {
@@ -341,27 +570,6 @@ public class AppointmentsListFragment extends BaseFragment {
             }
         }
         return appointmentListWithHeader;
-    }
-
-    private String getSectionHeaderTitle(String appointmentRawDate) {
-        // Current date
-        String currentDate = DateUtil.getInstance().setToCurrent().toStringWithFormatMmDashDdDashYyyy();
-        Date currentConvertedDate = DateUtil.getInstance().setDateRaw(currentDate).getDate();
-
-        // Appointment date
-        String appointmentDate = DateUtil.getInstance().setDateRaw(appointmentRawDate).toStringWithFormatMmDashDdDashYyyy();
-        Date convertedAppointmentDate = DateUtil.getInstance().setDateRaw(appointmentDate).getDate();
-
-        String headerText;
-        if (convertedAppointmentDate.after(currentConvertedDate)
-                && !appointmentDate.equalsIgnoreCase(currentDate)) {
-            headerText = appointmentInfo.getMetadata().getLabel().getUpcomingAppointmentsHeading();
-        } else if (convertedAppointmentDate.before(currentConvertedDate)) {
-            headerText = appointmentInfo.getMetadata().getLabel().getTodayAppointmentsHeading();
-        } else {
-            headerText = appointmentInfo.getMetadata().getLabel().getTodayAppointmentsHeading();
-        }
-        return headerText;
     }
 
     private void showAppointmentConfirmation() {

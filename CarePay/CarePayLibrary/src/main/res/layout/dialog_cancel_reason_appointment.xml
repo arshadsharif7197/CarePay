@@ -61,22 +61,23 @@
                     android:textColorHint="@color/light_gray_dialog"
                     android:visibility="gone">
 
-                    <EditText
-                        android:id="@+id/reasonEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/cancel_radio_button_height"
-                        android:layout_marginLeft="@dimen/apt_popup_parent_padding"
-                        android:layout_marginRight="@dimen/apt_popup_parent_padding"
-                        android:enabled="false"
-                        android:focusable="false"
-                        android:imeOptions="flagNoExtractUi"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="@dimen/cancel_edittext_size" />
+
 
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
         </ScrollView>
-
+        <EditText
+            android:id="@+id/reasonEditText"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/cancel_radio_button_height"
+            android:layout_marginLeft="@dimen/apt_popup_parent_padding"
+            android:layout_marginRight="@dimen/apt_popup_parent_padding"
+            android:enabled="false"
+            android:focusable="false"
+            android:imeOptions="flagNoExtractUi"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/cancel_edittext_size"
+            android:visibility="gone"/>
         <Button
             android:id="@+id/cancelAppointmentButton"
             android:layout_width="match_parent"

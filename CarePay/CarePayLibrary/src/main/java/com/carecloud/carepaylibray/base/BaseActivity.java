@@ -3,16 +3,19 @@ package com.carecloud.carepaylibray.base;
 import android.app.Dialog;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepaylibray.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 
 public abstract class BaseActivity extends AppCompatActivity implements ISession {
 
     private Dialog progressDialog;
+    private CustomPopupNotification errorNotification;
     private boolean isVisible = false;
 
     @Override
@@ -78,6 +81,48 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         if(null != progressDialog && progressDialog.isShowing()){
             progressDialog.dismiss();
             progressDialog = null;
+        }
+    }
+
+    @Override
+    public void showErrorNotification(String errorMessage) {
+        if (!isVisible()) {
+            return;
+        }
+
+        if(null != errorNotification && errorNotification.isShowing()) {
+            return;
+        }
+        try{
+            if(null == errorNotification) {
+
+                errorNotification = new CustomPopupNotification(getContext(), getCurrentFocus(), errorMessage, CustomPopupNotification.TYPE_ERROR_NOTIFICATION, getCancelReasonAppointmentDialogListener());
+            }
+            errorNotification.showPopWindow();
+        } catch (Exception e) {
+            Log.e("Base Activity", e.getMessage());
+        }
+    }
+
+    /**
+     * Gets cancel reason appointment dialog listener.
+     *
+     * @return the cancel reason appointment dialog listener
+     */
+    public CustomPopupNotification.CustomPopupNotificationListener getCancelReasonAppointmentDialogListener() {
+        return new CustomPopupNotification.CustomPopupNotificationListener() {
+            @Override
+            public void onSwipe(String swipeDirection) {
+                hideErrorNotification();
+            }
+        };
+    }
+
+    @Override
+    public void hideErrorNotification() {
+        if(null != errorNotification && errorNotification.isShowing()){
+            errorNotification.dismiss();
+            errorNotification = null;
         }
     }
 }
