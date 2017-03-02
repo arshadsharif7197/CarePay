@@ -17,7 +17,7 @@ public class SwipeGuestureListener implements View.OnTouchListener {
      *
      * @param context the context
      */
-    public SwipeGuestureListener (Context context) {
+    public SwipeGuestureListener(Context context) {
         gestureDetector = new GestureDetector(context, new GestureListener());
     }
 

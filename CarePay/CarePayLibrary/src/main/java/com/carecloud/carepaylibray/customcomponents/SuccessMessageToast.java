@@ -36,7 +36,7 @@ public class SuccessMessageToast extends Toast {
         }
         setView(layout);
         setGravity(Gravity.FILL_HORIZONTAL|Gravity.TOP, 0, 0);
-        setDuration(Toast.LENGTH_LONG);
+        setDuration(Toast.LENGTH_SHORT);
     }
 
 

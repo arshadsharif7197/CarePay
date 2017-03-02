@@ -129,7 +129,6 @@ public class CustomPopupNotification extends PopupWindow {
     public void showPopWindow() {
         showAtLocation(parentView, Gravity.TOP, 0, 0);
 
-        if(callback == null) {
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
 
@@ -141,8 +140,6 @@ public class CustomPopupNotification extends PopupWindow {
                 }
 
             }, CarePayConstants.CUSTOM_POPUP_AUTO_DISMISS_DURATION);
-        }
-
     }
 
     private void setSwipeListener()
