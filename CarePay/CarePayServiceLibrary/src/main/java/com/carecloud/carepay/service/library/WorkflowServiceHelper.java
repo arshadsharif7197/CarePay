@@ -34,7 +34,6 @@ public class WorkflowServiceHelper {
     private CognitoAppHelper cognitoAppHelper;
     private ApplicationPreferences applicationPreferences;
     private ApplicationMode applicationMode;
-//    private static int retryAttempts = 0;
 
     public WorkflowServiceHelper(ApplicationPreferences applicationPreferences,
                                  ApplicationMode applicationMode) {
@@ -130,7 +129,7 @@ public class WorkflowServiceHelper {
         TransitionDTO transitionDTO = new TransitionDTO();
         transitionDTO.setMethod("GET");
         transitionDTO.setUrl(HttpConstants.getApiStartUrl());
-        executeRequest(transitionDTO, callback, null, null, getApplicationStartHeaders());
+        execute(transitionDTO, callback, null, null, getApplicationStartHeaders());
     }
 
     public void execute(@NonNull TransitionDTO transitionDTO, @NonNull WorkflowServiceCallback callback) {
@@ -154,7 +153,7 @@ public class WorkflowServiceHelper {
     }
 
     public void execute(@NonNull TransitionDTO transitionDTO, @NonNull final WorkflowServiceCallback callback, String jsonBody, Map<String, String> queryMap, Map<String, String> customHeaders) {
-        executeRequest(transitionDTO, callback, jsonBody, queryMap, getHeaders(customHeaders));
+        executeRequest(transitionDTO, callback, jsonBody, queryMap, getHeaders(customHeaders), 0);
     }
 
     private void updateQueryMapWithDefault(Map<String, String> queryMap) {
@@ -167,13 +166,19 @@ public class WorkflowServiceHelper {
         }
     }
 
-    private void executeRequest(@NonNull TransitionDTO transitionDTO, @NonNull final WorkflowServiceCallback callback, String jsonBody, Map<String, String> queryMap, Map<String, String> headers) {
+    private void executeRequest(@NonNull TransitionDTO transitionDTO,
+                                @NonNull final WorkflowServiceCallback callback,
+                                String jsonBody,
+                                Map<String, String> queryMap,
+                                Map<String, String> headers,
+                                int attemptCount) {
+
         callback.onPreExecute();
         updateQueryMapWithDefault(queryMap);
         WorkflowService workflowService = ServiceGenerator.getInstance().createService(WorkflowService.class, headers); //, String token, String searchString
         Call<WorkflowDTO> call = null;
 
-        if (transitionDTO.getMethod().equalsIgnoreCase("GET")) {
+        if (transitionDTO.isGet()) {
             if (jsonBody != null && queryMap == null) {
                 call = workflowService.executeGet(transitionDTO.getUrl(), jsonBody);
             } else if (jsonBody == null && queryMap != null) {
@@ -183,7 +188,7 @@ public class WorkflowServiceHelper {
             } else {
                 call = workflowService.executeGet(transitionDTO.getUrl());
             }
-        } else if (transitionDTO.getMethod().equalsIgnoreCase("POST")){
+        } else if (transitionDTO.isPost()){
             if (jsonBody != null && queryMap == null) {
                 call = workflowService.executePost(transitionDTO.getUrl(), jsonBody);
             } else if (jsonBody == null && queryMap != null) {
@@ -195,7 +200,7 @@ public class WorkflowServiceHelper {
             } else {
                 call = workflowService.executePost(transitionDTO.getUrl());
             }
-        } else if (transitionDTO.getMethod().equalsIgnoreCase("DELETE")) {
+        } else if (transitionDTO.isDelete()) {
             if (jsonBody != null && queryMap == null) {
                 call = workflowService.executeDelete(transitionDTO.getUrl(), jsonBody);
             } else if (jsonBody == null && queryMap != null) {
@@ -219,7 +224,7 @@ public class WorkflowServiceHelper {
             }
         }
 
-        executeCallback(transitionDTO, callback, jsonBody, queryMap, headers, call);
+        executeCallback(transitionDTO, callback, jsonBody, queryMap, headers, attemptCount, call);
     }
 
     private void executeCallback(@NonNull final TransitionDTO transitionDTO,
@@ -227,7 +232,8 @@ public class WorkflowServiceHelper {
                                  final String jsonBody,
                                  final Map<String, String> queryMap,
                                  final Map<String, String> headers,
-                                 Call<WorkflowDTO> call) {
+                                 final int attemptCount,
+                                 final Call<WorkflowDTO> call) {
 
         call.enqueue(new Callback<WorkflowDTO>() {
             @Override
@@ -267,7 +273,11 @@ public class WorkflowServiceHelper {
             }
 
             private void onFailure(Response<WorkflowDTO> response) throws IOException {
-                if (null != response.errorBody()) {
+                // Only re-try GET requests for now
+                if (transitionDTO.isGet() && attemptCount < 2) {
+                    // Re-try failed request with increased attempt count
+                    executeRequest(transitionDTO, callback, jsonBody, queryMap, headers, attemptCount + 1);
+                } else if (null != response.errorBody()) {
                     callback.onFailure(response.errorBody().string());
                 } else {
                     callback.onFailure("");
@@ -275,7 +285,7 @@ public class WorkflowServiceHelper {
             }
 
             @Override
-            public void onFailure(Call<WorkflowDTO> call1, Throwable throwable) {
+            public void onFailure(Call<WorkflowDTO> call, Throwable throwable) {
                 callback.onFailure(throwable.getMessage());
             }
         });
