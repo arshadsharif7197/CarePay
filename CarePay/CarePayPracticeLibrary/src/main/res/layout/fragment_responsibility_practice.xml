@@ -1,19 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/respons_root"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/dimen_16dp">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/respons_root"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white"
+              android:orientation="vertical"
+              android:paddingBottom="@dimen/dimen_16dp">
 
-    <include
-        android:id="@+id/toolbar_layout"
-        layout="@layout/toolbar_responsibility" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary">
+
+        <include
+            android:id="@+id/toolbar_layout"
+            layout="@layout/toolbar_responsibility" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/respons_title"
+            style="@style/ResponsTotalLabelStyle"
+            android:layout_marginTop="@dimen/dimen_26dp"
+            android:textColor="@color/white"
+            app:customAssetFont="gotham_rounded_medium" />
 
 
+    </FrameLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
@@ -26,13 +39,6 @@
             android:background="@color/colorPrimary"
             android:gravity="center"
             android:orientation="vertical">
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/respons_title"
-                style="@style/ResponsTotalLabelStyle"
-                android:layout_marginTop="@dimen/dimen_26dp"
-                android:textColor="@color/white"
-                app:customAssetFont="gotham_rounded_medium" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/respons_total_label"
@@ -64,13 +70,18 @@
                 android:layout_height="match_parent" />
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_1dp"
+            android:background="@color/light_gray"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="@dimen/dimen_15dp">
 
-            <Button
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/make_partial_payment_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -79,9 +90,10 @@
                 android:paddingBottom="@dimen/dimen_14dp"
                 android:paddingTop="@dimen/dimen_14dp"
                 android:textColor="@color/white"
-                tools:ignore="ButtonStyle" />
+                tools:ignore="ButtonStyle"
+                app:customAssetFont="gotham_rounded_medium" />
 
-            <Button
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/pay_total_amount_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -91,7 +103,8 @@
                 android:paddingBottom="@dimen/dimen_14dp"
                 android:paddingTop="@dimen/dimen_14dp"
                 android:textColor="@color/white"
-                tools:ignore="ButtonStyle" />
+                tools:ignore="ButtonStyle"
+                app:customAssetFont="gotham_rounded_medium" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

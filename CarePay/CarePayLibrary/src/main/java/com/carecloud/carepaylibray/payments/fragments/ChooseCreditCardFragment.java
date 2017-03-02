@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,13 +111,26 @@ public class ChooseCreditCardFragment extends BaseFragment {
             title.setText(titleLabel);
             SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
             toolbar.setTitle("");
-            toolbar.setNavigationIcon(ContextCompat.getDrawable(activity, R.drawable.icn_patient_mode_nav_back));
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    activity.onBackPressed();
+            if(getDialog()==null) {
+                toolbar.setNavigationIcon(ContextCompat.getDrawable(activity, R.drawable.icn_nav_back));
+                toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        activity.onBackPressed();
+                    }
+                });
+            }else{
+                View close = view.findViewById(R.id.closeViewLayout);
+                if(close!=null){
+                    close.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dismiss();
+                        }
+                    });
                 }
-            });
+                title.setGravity(Gravity.CENTER_HORIZONTAL);
+            }
         }
     }
 
@@ -218,6 +232,9 @@ public class ChooseCreditCardFragment extends BaseFragment {
             hideProgressDialog();
             Gson gson = new Gson();
             callback.showReceipt(gson.fromJson(workflowDTO.toString(), PaymentsModel.class));
+            if(getDialog()!=null){
+                dismiss();
+            }
         }
 
         @Override

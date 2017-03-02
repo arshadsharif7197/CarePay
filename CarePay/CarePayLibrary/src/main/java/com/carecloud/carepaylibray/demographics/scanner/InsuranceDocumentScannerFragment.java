@@ -121,7 +121,7 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         title.setText(globalLabelsDTO.getDemographicsInsuranceTitle().toUpperCase());
         toolbar.setTitle("");
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

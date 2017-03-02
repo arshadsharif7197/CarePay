@@ -82,7 +82,7 @@ public class SettingsCreditCardListFragment extends BaseFragment implements Sett
         toolbar.setTitle("");
 
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(),
-                R.drawable.icn_patient_mode_nav_back));
+                R.drawable.icn_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         initializeViews(view);

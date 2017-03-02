@@ -15,6 +15,12 @@ public class PaymentsPayloadSettingsDTO {
     @SerializedName("payload")
     @Expose
     private PaymentsSettingsPayloadDTO payload = new PaymentsSettingsPayloadDTO();
+    @SerializedName("practice_mgmt")
+    @Expose
+    private String practiceMgmt;
+    @SerializedName("practice_id")
+    @Expose
+    private String practiceID;
 
     /**
      *
@@ -50,5 +56,21 @@ public class PaymentsPayloadSettingsDTO {
      */
     public void setPayload(PaymentsSettingsPayloadDTO payload) {
         this.payload = payload;
+    }
+
+    public String getPracticeMgmt() {
+        return practiceMgmt;
+    }
+
+    public void setPracticeMgmt(String practiceMgmt) {
+        this.practiceMgmt = practiceMgmt;
+    }
+
+    public String getPracticeID() {
+        return practiceID;
+    }
+
+    public void setPracticeID(String practiceID) {
+        this.practiceID = practiceID;
     }
 }

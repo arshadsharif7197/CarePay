@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -121,8 +122,8 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
             e.printStackTrace();
         }
 
-        initTitleViews(addNewCreditCardView);
-        initilizeViews(addNewCreditCardView);
+        setupTitleViews(addNewCreditCardView);
+        initializeViews(addNewCreditCardView);
         setTypefaces();
         setTextWatchers();
         return addNewCreditCardView;
@@ -264,25 +265,38 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
         return fullCard.substring(fullCard.length() - 4, fullCard.length());
     }
 
-    private void initTitleViews(View view){
+    private void setupTitleViews(View view){
         Toolbar toolbar = (Toolbar) view.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
         if(toolbar!=null) {
             title = (TextView) toolbar.findViewById(com.carecloud.carepaylibrary.R.id.respons_toolbar_title);
             SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
             toolbar.setTitle("");
-            toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), com.carecloud.carepaylibrary.R.drawable.icn_patient_mode_nav_back));
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getActivity().onBackPressed();
+            if(getDialog()==null) {
+                toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), com.carecloud.carepaylibrary.R.drawable.icn_nav_back));
+                toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        getActivity().onBackPressed();
+                    }
+                });
+            }else{
+                View close = view.findViewById(R.id.closeViewLayout);
+                if(close!=null){
+                    close.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dismiss();
+                        }
+                    });
                 }
-            });
+                title.setGravity(Gravity.CENTER_HORIZONTAL);
+            }
 
         }
 
     }
 
-    private void initilizeViews(View view) {
+    private void initializeViews(View view) {
         creditCardNoTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.creditCardNoTextInputLayout);
         creditCardNoEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.creditCardNoEditText);
         creditCardNoEditText.setTag(creditCardNoTextInput);

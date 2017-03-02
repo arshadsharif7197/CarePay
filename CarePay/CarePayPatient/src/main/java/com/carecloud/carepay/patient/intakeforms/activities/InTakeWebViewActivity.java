@@ -22,12 +22,10 @@ import android.widget.Toast;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.intake.models.IntakeFormPayloadModel;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
 import com.carecloud.carepaylibray.intake.models.LabelModel;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.marcok.stepprogressbar.StepProgressBar;
@@ -109,7 +107,7 @@ public class InTakeWebViewActivity extends BasePatientActivity {
         intakeFormsToolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.intakeToolbar);
         intakeFormsToolbar.setTitle("");
         intakeFormsToolbar.setNavigationIcon(ContextCompat.getDrawable(this,
-                com.carecloud.carepaylibrary.R.drawable.icn_patient_mode_nav_back));
+                com.carecloud.carepaylibrary.R.drawable.icn_nav_back));
         setSupportActionBar(intakeFormsToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         headerTitleTextView = (TextView) intakeFormsToolbar.findViewById(com.carecloud.carepaylibrary.R.id.intakeToolbarTitle);

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/medications_toolbar"
+    style="@style/CustomToolbarStyle"
+    android:background="@color/transparent_apt"
+    android:paddingTop="@dimen/dimen_10dp"
+    android:paddingBottom="@dimen/dimen_10dp">
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/medications_toolbar_title"
+        style="@style/ResponsibilityToolbarTextStyle"
+        android:text="@string/additional_info"
+        app:customAssetFont="gotham_rounded_medium"
+        android:visibility="gone"/>
+
+</android.support.v7.widget.Toolbar>

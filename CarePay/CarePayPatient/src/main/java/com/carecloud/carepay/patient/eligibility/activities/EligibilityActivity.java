@@ -20,7 +20,7 @@ public class EligibilityActivity extends AppCompatActivity {
         eligibilityFormsToolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.intakeToolbar);
         eligibilityFormsToolbar.setTitle("");
         eligibilityFormsToolbar.setNavigationIcon(ContextCompat.getDrawable(this,
-                com.carecloud.carepaylibrary.R.drawable.icn_patient_mode_nav_back));
+                com.carecloud.carepaylibrary.R.drawable.icn_nav_back));
         setSupportActionBar(eligibilityFormsToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         headerTitleTextView = (TextView) eligibilityFormsToolbar.findViewById(com.carecloud.carepaylibrary.R.id.eligibilityToolbarTitle);

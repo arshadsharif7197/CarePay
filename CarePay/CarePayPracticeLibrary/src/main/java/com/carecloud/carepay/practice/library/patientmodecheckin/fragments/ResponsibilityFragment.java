@@ -2,6 +2,7 @@ package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
 
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -20,8 +21,6 @@ import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment
 import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.practice.FlowStateInfo;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -43,7 +42,10 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         View view = inflater.inflate(R.layout.fragment_responsibility_practice, container, false);
 
         Toolbar toolbar = (Toolbar) view.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
+            toolbar.setElevation(0);
+        }
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back_white));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,12 +60,10 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         Button payTotalButton = (Button) view.findViewById(R.id.pay_total_amount_button);
         payTotalButton.setClickable(false);
         payTotalButton.setEnabled(false);
-        setGothamRoundedMediumTypeface(appCompatActivity, payTotalButton);
 
         Button payPartialButton = (Button) view.findViewById(R.id.make_partial_payment_button);
         payPartialButton.setClickable(false);
         payPartialButton.setEnabled(false);
-        setGothamRoundedMediumTypeface(appCompatActivity, payPartialButton);
 
         getPaymentInformation();
 

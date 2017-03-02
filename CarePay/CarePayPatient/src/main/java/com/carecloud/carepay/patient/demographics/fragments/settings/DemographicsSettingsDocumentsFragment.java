@@ -3,7 +3,6 @@ package com.carecloud.carepay.patient.demographics.fragments.settings;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +23,6 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
@@ -48,7 +46,6 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMetadataDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsTransitionsDTO;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -121,7 +118,7 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
         final Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
         setGothamRoundedMediumTypeface(appCompatActivity, title);
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         Bundle bundle = getArguments();

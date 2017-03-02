@@ -52,6 +52,7 @@ public abstract class PaymentMethodFragment extends BaseFragment /*implements Ra
 
     private String dialogTitle;
     private String dialogText;
+
     private String titlePaymentMethodString;
     private String paymentChooseMethodString;
     private String paymentCreatePlanString;
@@ -82,7 +83,7 @@ public abstract class PaymentMethodFragment extends BaseFragment /*implements Ra
             Gson gson = new Gson();
             String paymentInfo = bundle.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
             paymentsModel = gson.fromJson(paymentInfo, PaymentsModel.class);
-            paymentMethodsList = paymentsModel.getPaymentPayload().getPaymentSettings().getPayload().getRegularPayments().getPaymentMethods();
+            paymentMethodsList = paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getRegularPayments().getPaymentMethods();//todo need to lookup appropriate settings for prctice id on selected balance
             getLabels();
         }
 
@@ -99,24 +100,19 @@ public abstract class PaymentMethodFragment extends BaseFragment /*implements Ra
 
     }
 
-    private void setupTitleViews(View view){
+    protected void setupTitleViews(View view){
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         if(toolbar!=null) {
             TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
             title.setText(titlePaymentMethodString);
             toolbar.setTitle("");
-            toolbar.setNavigationIcon(ContextCompat.getDrawable(activity, R.drawable.icn_patient_mode_nav_back));
+            toolbar.setNavigationIcon(ContextCompat.getDrawable(activity, R.drawable.icn_nav_back));
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     activity.onBackPressed();
                 }
             });
-        }else {
-            TextView title = (TextView) view.findViewById(R.id.paymentMethodTitleLabel);
-            if(title!=null) {
-                title.setText(titlePaymentMethodString);
-            }
         }
     }
 
@@ -182,6 +178,7 @@ public abstract class PaymentMethodFragment extends BaseFragment /*implements Ra
         paymentTypeMap.put(CarePayConstants.TYPE_PAYPAL, R.drawable.payment_paypal_button_selector);
         paymentTypeMap.put(CarePayConstants.TYPE_HSA, R.drawable.payment_credit_card_button_selector);
         paymentTypeMap.put(CarePayConstants.TYPE_FSA, R.drawable.payment_credit_card_button_selector);
+        paymentTypeMap.put(CarePayConstants.TYPE_PAYMENT_PLAN, R.drawable.payment_credit_card_button_selector);
     }
 
 
@@ -242,6 +239,10 @@ public abstract class PaymentMethodFragment extends BaseFragment /*implements Ra
 
     public ListView getPaymentMethodList() {
         return paymentMethodList;
+    }
+
+    public String getTitlePaymentMethodString() {
+        return titlePaymentMethodString;
     }
 
 

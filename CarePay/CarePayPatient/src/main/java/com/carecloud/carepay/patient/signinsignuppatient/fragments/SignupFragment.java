@@ -3,7 +3,6 @@ package com.carecloud.carepay.patient.signinsignuppatient.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -30,9 +29,7 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHan
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
@@ -40,7 +37,6 @@ import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.cognito.SignUpConfirmActivity;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -153,7 +149,7 @@ public class SignupFragment extends BaseFragment {
         TextView title = (TextView) toolbar.findViewById(R.id.signup_toolbar_title);
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setTitle("");
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         // set the buttons
