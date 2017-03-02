@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@color/transparent_apt"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dimen_26dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/office_news_details_close_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/round_semi_transparent_bg"
+            android:src="@drawable/icn_close"
+            tools:ignore="ContentDescription" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/office_news_details_cancel_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_6dp"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_12sp"
+            android:textStyle="bold"
+            app:customAssetFont="gotham_rounded_bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="@dimen/dimen_612dp"
+        android:layout_height="@dimen/dimen_684dp"
+        android:background="@drawable/bg_cardview"
+        android:orientation="vertical">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/office_news_details_header"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_60dp"
+            android:background="@drawable/top_left_right_rounded_background"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_23sp"
+            app:customAssetFont="gotham_rounded_medium" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/dimen_10dp"
+                android:paddingEnd="@dimen/dimen_42dp"
+                android:paddingStart="@dimen/dimen_42dp">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/office_news_published_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_57dp"
+                    android:background="@drawable/news_published_date_bg"
+                    android:paddingBottom="@dimen/dimen_3dp"
+                    android:paddingEnd="@dimen/dimen_10dp"
+                    android:paddingStart="@dimen/dimen_10dp"
+                    android:paddingTop="@dimen/dimen_3dp"
+                    android:textColor="@color/optional_gray"
+                    android:textSize="@dimen/text_size_11"
+                    app:customAssetFont="proxima_nova_semi_bold" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/office_news_headline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_14dp"
+                    android:textColor="@color/Feldgrau"
+                    android:textSize="@dimen/text_size_36sp"
+                    app:customAssetFont="gotham_rounded_bold" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/office_news_body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_28dp"
+                    android:lineSpacingExtra="@dimen/dimen_17dp"
+                    android:textColor="@color/Feldgrau"
+                    android:textSize="@dimen/text_size_20sp"
+                    app:customAssetFont="proxima_nova_regular" />
+
+                <ImageView
+                    android:id="@+id/office_news_headline_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_222dp"
+                    android:layout_marginTop="@dimen/dimen_28dp"
+                    tools:ignore="ContentDescription" />
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</LinearLayout>

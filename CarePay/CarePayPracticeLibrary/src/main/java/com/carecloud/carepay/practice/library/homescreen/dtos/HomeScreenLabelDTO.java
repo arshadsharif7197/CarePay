@@ -40,6 +40,11 @@ public class HomeScreenLabelDTO extends PatientModeSwitchPinDTO {
     @SerializedName("logout_button") @Expose
     private String logoutLabel;
 
+    @SerializedName("news_title") @Expose
+    private String newsTitle;
+
+    @SerializedName("news_cancel_label") @Expose
+    private String newsCancelLabel;
 
     /**
      * @return The checkinButton
@@ -169,6 +174,19 @@ public class HomeScreenLabelDTO extends PatientModeSwitchPinDTO {
         this.logoutLabel = logoutLabel;
     }
 
+    public String getNewsTitle() {
+        return StringUtil.getLabelForView(newsTitle);
+    }
 
+    public void setNewsTitle(String newsTitle) {
+        this.newsTitle = newsTitle;
+    }
 
+    public String getNewsCancelLabel() {
+        return StringUtil.getLabelForView(newsCancelLabel);
+    }
+
+    public void setNewsCancelLabel(String newsCancelLabel) {
+        this.newsCancelLabel = newsCancelLabel;
+    }
 }
