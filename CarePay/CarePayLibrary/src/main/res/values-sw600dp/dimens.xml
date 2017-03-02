@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Responsibility -->
-    <dimen name="respons_total_label_text_size">28sp</dimen>
+    <dimen name="respons_total_label_text_size">18sp</dimen>
     <dimen name="respons_total_text_size">100dp</dimen>
     <dimen name="respons_detail_label_text_size">20sp</dimen>
     <dimen name="respons_detail_text_size">19sp</dimen>

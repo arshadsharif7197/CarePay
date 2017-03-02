@@ -458,7 +458,7 @@ public class PatientPaymentPlanFragment extends BaseCheckinFragment {
         paymentPlanMonthlyInput.setErrorEnabled(true);
 
         PaymentsSettingsPayloadPlansDTO paymentPlans = paymentsModel.getPaymentPayload()
-                .getPaymentSettings().getPayload().getPaymentPlans();
+                .getPaymentSettings().get(0).getPayload().getPaymentPlans();//todo need to lookup appropriate settings for prctice id on selected balance
 
         if (paymentPlans != null) {
             String minimumPayment = paymentPlans.getMinimumPayment();

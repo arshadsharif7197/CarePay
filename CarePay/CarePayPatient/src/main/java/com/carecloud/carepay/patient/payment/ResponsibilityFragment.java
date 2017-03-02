@@ -41,7 +41,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

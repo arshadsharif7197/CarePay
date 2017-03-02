@@ -1,7 +1,5 @@
 package com.carecloud.carepay.patient.demographics.fragments.settings;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,8 +21,6 @@ import com.carecloud.carepay.patient.appointments.utils.PatientAppUtil;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
@@ -40,7 +36,6 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsTransitionsDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -82,7 +77,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
 
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
         setGothamRoundedMediumTypeface(appCompatActivity, title);
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(appCompatActivity, R.drawable.icn_patient_mode_nav_back));
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(appCompatActivity, R.drawable.icn_nav_back));
         appCompatActivity.setSupportActionBar(toolbar);
         Bundle bundle = getArguments();
         if (bundle != null) {

@@ -231,7 +231,7 @@
     <dimen name="dialog_header_height">205dp</dimen>
     <dimen name="dialog_profile_pic_size">88dp</dimen>
     <dimen name="dialog_row_padding">24.5dp</dimen>
-    <dimen name="responsibility_list_margin">144dp</dimen>
+    <dimen name="responsibility_list_margin">80dp</dimen>
 
     <dimen name="search_results_min_height">600dp</dimen>
 

@@ -52,10 +52,8 @@ public class CarePayButton extends Button {
     public CarePayButton(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
-        if (!isInEditMode())
-        {
-            init(attrs);
-        }
+        init(attrs);
+
 
     }
 
@@ -72,9 +70,8 @@ public class CarePayButton extends Button {
     public CarePayButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
-        if (!isInEditMode()){
-            init(attrs);
-        }
+        init(attrs);
+
 
     }
 

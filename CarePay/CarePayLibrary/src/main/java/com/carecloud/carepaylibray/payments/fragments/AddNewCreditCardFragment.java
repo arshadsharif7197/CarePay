@@ -149,6 +149,9 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             Log.d("makePaymentCallback", "=========================>\nworkflowDTO=" + workflowDTO.toString());
             Gson gson = new Gson();
             callback.showReceipt(gson.fromJson(workflowDTO.toString(), PaymentsModel.class));
+            if(getDialog()!=null){
+                dismiss();
+            }
         }
 
         @Override

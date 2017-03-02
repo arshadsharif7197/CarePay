@@ -25,9 +25,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
-import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.marcok.stepprogressbar.StepProgressBar;
@@ -109,7 +107,7 @@ public class ConsentActivity extends BasePatientActivity {
         toolbar.setTitle("");
         title = (TextView) toolbar.findViewById(R.id.consentform_toolbar_title);
         title.setText(String.format(consentFormDTO.getMetadata().getLabel().getConsentFormHeading(), stepProgressBar.getCurrentProgressDot() + 1, stepProgressBar.getNumDots()));
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.icn_patient_mode_nav_back));
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.icn_nav_back));
         setSupportActionBar(toolbar);
         initWebView();
        // numberofforms = SignatureActivity.numOfLaunches;

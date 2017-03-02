@@ -25,7 +25,6 @@ import com.carecloud.carepay.patient.demographics.fragments.viewpager.Demographi
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsAllSetFragment;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsDetailsFragment;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsDocumentsFragmentWthWrapper;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CustomViewPager;
@@ -213,7 +212,7 @@ public class DemographicsActivity extends BasePatientActivity
     public void setCurrentItem(int item, boolean smoothScroll) {
         viewPager.setCurrentItem(item, smoothScroll);
         if (item > 0) {
-            toolbar.setNavigationIcon(ContextCompat.getDrawable(DemographicsActivity.this, R.drawable.icn_patient_mode_nav_back));
+            toolbar.setNavigationIcon(ContextCompat.getDrawable(DemographicsActivity.this, R.drawable.icn_nav_back));
         } else {
             toolbar.setNavigationIcon(null);
         }

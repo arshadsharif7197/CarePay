@@ -135,7 +135,7 @@ public class PaymentPlanFragment extends BaseFragment {
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(),
-                R.drawable.icn_patient_mode_nav_back));
+                R.drawable.icn_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         Spinner monthDays = (Spinner) view.findViewById(R.id.payment_plan_month_day);
@@ -464,7 +464,7 @@ public class PaymentPlanFragment extends BaseFragment {
         paymentPlanMonthlyInput.setErrorEnabled(true);
 
         PaymentsSettingsPayloadPlansDTO paymentPlans = paymentsModel.getPaymentPayload()
-                .getPaymentSettings().getPayload().getPaymentPlans();
+                .getPaymentSettings().get(0).getPayload().getPaymentPlans();//todo need to lookup appropriate settings for prctice id on selected balance
 
         if (paymentPlans != null) {
             String minimumPayment = paymentPlans.getMinimumPayment();
