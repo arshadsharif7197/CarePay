@@ -33,6 +33,10 @@ public class CarePayTextInputLayout extends TextInputLayout {
     private Context context;
     private int fontAttribute;
 
+    /**
+     * Constructor
+     * @param context context
+     */
     public CarePayTextInputLayout(Context context) {
         super(context);
         this.context = context;
@@ -40,6 +44,11 @@ public class CarePayTextInputLayout extends TextInputLayout {
 
     }
 
+    /**
+     * Constructor
+     * @param context context
+     * @param attrs attributes
+     */
     public CarePayTextInputLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
@@ -47,6 +56,12 @@ public class CarePayTextInputLayout extends TextInputLayout {
 
     }
 
+    /**
+     * Constructor
+     * @param context context
+     * @param attrs attibutes
+     * @param defStyleAttr style
+     */
     public CarePayTextInputLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
@@ -57,7 +72,7 @@ public class CarePayTextInputLayout extends TextInputLayout {
     /**
      * get applied font
      *
-     * @return
+     * @return font attribute id
      */
     public int getFontAttribute() {
         return fontAttribute;
@@ -70,6 +85,7 @@ public class CarePayTextInputLayout extends TextInputLayout {
      */
     public void setFontAttribute(int fontAttribute) {
         this.fontAttribute = fontAttribute;
+        setFont();
         invalidate();
         requestLayout();
     }
@@ -83,11 +99,13 @@ public class CarePayTextInputLayout extends TextInputLayout {
                     0, 0);
             fontAttribute = typedArray.getInteger(R.styleable.CarePayCustomAttrs_customAssetFont, 0);
             typedArray.recycle();
-        } catch (Exception exception){
+        } catch (Exception exception) {
             fontAttribute = PROXIMA_NOVA_REGULAR;
-        }finally {
-
         }
+        setFont();
+    }
+
+    private void setFont(){
         String assetFontName = "";
         switch (fontAttribute) {
             case GOTHAM_ROUNDED_BOLD: {
