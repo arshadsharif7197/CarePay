@@ -8,8 +8,6 @@ import com.google.gson.annotations.SerializedName;
 
 import org.joda.time.DateTime;
 
-import java.util.Date;
-
 /**
  * Created by Jahirul Bhuiyan on 10/27/2016.
  */

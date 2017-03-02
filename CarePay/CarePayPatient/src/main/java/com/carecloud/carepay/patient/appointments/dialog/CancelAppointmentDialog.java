@@ -29,6 +29,9 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
         void onRefreshAppointmentList(AppointmentDTO appointmentDTO);
 
         void onPreRegisterTapped(AppointmentDTO appointmentDTO, AppointmentsResultModel appointmentInfo);
+
+        void onCancelAppointmentButtonClicked(AppointmentDTO appointmentDTO, AppointmentsResultModel appointmentInfo);
+
     }
 
     private CancelAppointmentDialogListener callback;
@@ -115,7 +118,7 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
         super.onClick(view);
         int viewId = view.getId();
         if (viewId == R.id.cancelAppointmentButton) {
-            new CancelReasonAppointmentDialog(context, appointmentDTO, appointmentInfo, callback).show();
+            callback.onCancelAppointmentButtonClicked(appointmentDTO, appointmentInfo) ;
             cancel();
         } else if (viewId == R.id.dialogAppointHeaderTextView
                 && isCancelSuccess && callback != null) {

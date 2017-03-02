@@ -716,9 +716,11 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                 // hide the keyboard
                 SystemUtil.hideSoftKeyboard(getActivity());
             } else {
-                CustomPopupNotification popup = new CustomPopupNotification(getActivity(), getActivity().getWindow().getCurrentFocus(),
-                        globalLabelsMetaDTO.getDemographicsMissingInformation(), CustomPopupNotification.TYPE_ERROR_NOTIFICATION);
-                    popup.showPopWindow();
+
+                showErrorNotification("Validation Error");
+//                CustomPopupNotification popup = new CustomPopupNotification(getActivity(), getActivity().getWindow().getCurrentFocus(),
+//                        globalLabelsMetaDTO.getDemographicsMissingInformation(), CustomPopupNotification.TYPE_ERROR_NOTIFICATION);
+//                    popup.showPopWindow();
             }
         } else if (view == selectGender) {
             selectedDataArray = 1;
