@@ -84,7 +84,7 @@ public class SigninFragment extends BaseFragment {
 
         setClickables(view);
 
-        setTypefaces();
+//        setTypefaces();
 
         isEmptyEmail = true;
         isEmptyPassword = true;
@@ -183,17 +183,17 @@ public class SigninFragment extends BaseFragment {
     }
 
     private void setTypefaces() {
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), emailEditText);
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), passwordEditText);
+//        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), emailEditText);
+//        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), passwordEditText);
 
-        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), emailTextInput);
-        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), passwordTexInput);
+//        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), emailTextInput);
+//        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), passwordTexInput);
 
-        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), signinButton);
-        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), signupButton);
+//        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), signinButton);
+//        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), signupButton);
 
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), changeLanguageTextView);
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), forgotPasswordTextView);
+//        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), changeLanguageTextView);
+//        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), forgotPasswordTextView);
     }
 
     private void setEditTexts(View view) {

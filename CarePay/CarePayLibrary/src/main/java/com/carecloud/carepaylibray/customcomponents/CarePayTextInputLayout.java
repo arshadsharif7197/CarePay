@@ -3,8 +3,8 @@ package com.carecloud.carepaylibray.customcomponents;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.support.design.widget.TextInputLayout;
 import android.util.AttributeSet;
-import android.widget.EditText;
 
 import com.carecloud.carepaylibrary.R;
 
@@ -25,51 +25,44 @@ import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.PROXIMA
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.PROXIMA_NOVA_REGULAR;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD;
 
-
 /**
- * Created by Jahirul Bhuiyan on 10/13/2016.
- * This is a custom textview component that allow t set custom font from assets
+ * Created by lmenendez on 3/2/17.
  */
 
-public class CarePayEditText extends EditText {
-    Context context;
-    int fontAttribute;
+public class CarePayTextInputLayout extends TextInputLayout {
+    private Context context;
+    private int fontAttribute;
 
     /**
-     * Public constructor with context
-     *
-     * @param context sender context
+     * Constructor
+     * @param context context
      */
-    public CarePayEditText(Context context) {
+    public CarePayTextInputLayout(Context context) {
         super(context);
         this.context = context;
         init(null);
+
     }
 
     /**
-     * Public constructor with context and Attribute.
-     * All the custom styleable declare are apply here also.
-     *
-     * @param context sender context
-     * @param attrs   styleable attributes
+     * Constructor
+     * @param context context
+     * @param attrs attributes
      */
-    public CarePayEditText(Context context, AttributeSet attrs) {
+    public CarePayTextInputLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
         init(attrs);
+
     }
 
     /**
-     * Public constructor with context, Attributes and default attributes.
-     * All the custom styleable declare are apply here also.
-     * Default attributes also apply here
-     *
-     * @param context      sender context
-     * @param attrs        styleable attributes
-     * @param defStyleAttr styleable default attributes
+     * Constructor
+     * @param context context
+     * @param attrs attibutes
+     * @param defStyleAttr style
      */
-
-    public CarePayEditText(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CarePayTextInputLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
         init(attrs);
@@ -79,7 +72,7 @@ public class CarePayEditText extends EditText {
     /**
      * get applied font
      *
-     * @return current font attribute
+     * @return font attribute id
      */
     public int getFontAttribute() {
         return fontAttribute;
@@ -97,11 +90,7 @@ public class CarePayEditText extends EditText {
         requestLayout();
     }
 
-    /**
-     * initialize
-     *
-     * @param attrs styleable attributes
-     */
+
     private void init(AttributeSet attrs) {
         try {
             TypedArray typedArray = context.getTheme().obtainStyledAttributes(
@@ -155,12 +144,5 @@ public class CarePayEditText extends EditText {
         this.setTypeface(tf);
     }
 
-    @Override
-    public void setInputType(int inputType){
-        super.setInputType(inputType);
-        setFont();
-        invalidate();
-        requestLayout();
-    }
 
 }

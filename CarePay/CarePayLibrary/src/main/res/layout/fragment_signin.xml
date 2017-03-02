@@ -47,37 +47,41 @@
             android:padding="@dimen/signin_layout_padding"
             android:orientation="vertical">
 
-            <android.support.design.widget.TextInputLayout
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                 android:id="@+id/signInEmailTextInputLayout"
                 style="@style/TextInputLayoutStyle"
-                app:hintTextAppearance="@style/FloatingLabelStyle">
+                app:hintTextAppearance="@style/FloatingLabelStyle"
+                app:customAssetFont="proxima_nova_semi_bold">
 
-                <EditText
+                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                     android:id="@+id/signinEmailEditText"
                     style="@style/EditTextStyle"
                     android:hint="@string/signin_signup_email_hint"
-                    android:inputType="textEmailAddress"/>
+                    android:inputType="textEmailAddress"
+                    app:customAssetFont="proxima_nova_semi_bold"/>
 
-            </android.support.design.widget.TextInputLayout>
+            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <android.support.design.widget.TextInputLayout
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                     android:id="@+id/passwordTextInputLayout"
                     style="@style/TextInputLayoutStyle"
                     app:hintTextAppearance="@style/FloatingLabelStyle"
-                    app:passwordToggleEnabled="false">
+                    app:passwordToggleEnabled="false"
+                    app:customAssetFont="proxima_nova_semi_bold">
 
-                    <EditText
+                    <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                         android:id="@+id/passwordEditText"
                         style="@style/EditTextStyle"
                         android:hint="@string/password_text"
                         android:imeOptions="actionDone"
                         android:inputType="textPassword"
-                        android:paddingRight="@dimen/dimen_30dp"/>
+                        android:paddingRight="@dimen/dimen_30dp"
+                        app:customAssetFont="proxima_nova_semi_bold"/>
 
-                </android.support.design.widget.TextInputLayout>
+                </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
                 <ImageView
                     android:layout_width="@dimen/dimen_30dp"
@@ -92,15 +96,17 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"/>
 
-            <Button
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/signin_button"
                 style="@style/SigninSignupButtonStyle"
-                android:text="@string/submit_button"/>
+                android:text="@string/submit_button"
+                app:customAssetFont="gotham_rounded_medium"/>
 
-            <Button
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/signup_button"
                 style="@style/SigninNewAccountButtonStyle"
-                android:text="@string/signup_button"/>
+                android:text="@string/signup_button"
+                app:customAssetFont="gotham_rounded_medium"/>
 
             <LinearLayout
                 android:id="@+id/bottomContainerLayout"
@@ -109,22 +115,24 @@
                 android:layout_gravity="center"
                 android:orientation="horizontal">
 
-                <TextView
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/changeLanguageText"
                     style="@style/SigninSignupClickableTextView"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:text="@string/language_textview"/>
+                    android:text="@string/language_textview"
+                    app:customAssetFont="proxima_nova_semi_bold"/>
 
-                <TextView
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/forgotPasswordTextView"
                     style="@style/SigninSignupClickableTextView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="end"
-                    android:text="@string/forgot_password_textview"/>
+                    android:text="@string/forgot_password_textview"
+                    app:customAssetFont="proxima_nova_semi_bold"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
