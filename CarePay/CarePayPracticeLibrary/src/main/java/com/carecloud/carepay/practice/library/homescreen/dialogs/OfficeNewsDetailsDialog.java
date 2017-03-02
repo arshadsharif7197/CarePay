@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenOfficeNewsDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenOfficeNewsPayloadDTO;
-import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.RoundedImageTransfer;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -57,8 +56,8 @@ public class OfficeNewsDetailsDialog extends Dialog {
 
     @SuppressWarnings("AccessStaticViaInstance")
     private void handleException() {
-        Thread t = Thread.currentThread();
-        t.setDefaultUncaughtExceptionHandler(new SystemUtil());
+        Thread thread = Thread.currentThread();
+        thread.setDefaultUncaughtExceptionHandler(new SystemUtil());
     }
 
     private void initializeView() {
