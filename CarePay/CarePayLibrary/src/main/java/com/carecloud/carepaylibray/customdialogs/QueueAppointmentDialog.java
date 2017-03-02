@@ -13,7 +13,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class QueueAppointmentDialog extends BaseDoctorInfoDialog {
 
@@ -57,7 +56,6 @@ public class QueueAppointmentDialog extends BaseDoctorInfoDialog {
 
         Button checkoutNow = (Button) childActionView.findViewById(R.id.appointmentRequestCheckoutNow);
         checkoutNow.setText(appointmentLabels.getAppointmentRequestCheckoutNow());
-        SystemUtil.setGothamRoundedMediumTypeface(context, checkoutNow);
         checkoutNow.setVisibility(View.VISIBLE);
 
         mainLayout.addView(childActionView);

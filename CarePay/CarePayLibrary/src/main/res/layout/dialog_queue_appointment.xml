@@ -24,7 +24,7 @@
         android:textSize="@dimen/apt_dl_text_big"
         app:customAssetFont="proxima_nova_extra_bold" />
 
-    <Button
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
         android:id="@+id/appointmentRequestCheckoutNow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,5 +34,6 @@
         android:paddingTop="@dimen/dimen_17dp"
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/text_size_13"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:customAssetFont="gotham_rounded_medium" />
 </LinearLayout>
