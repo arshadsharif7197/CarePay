@@ -22,6 +22,17 @@ public class PracticeHomeScreenPayloadDTO {
     @Expose
     private List<UserPracticeDTO> userPractices = new ArrayList<>();
 
+    @SerializedName("office_news")
+    @Expose
+    private List<HomeScreenOfficeNewsDTO> officeNews = null;
+
+    public List<HomeScreenOfficeNewsDTO> getOfficeNews() {
+        return officeNews;
+    }
+
+    public void setOfficeNews(List<HomeScreenOfficeNewsDTO> officeNews) {
+        this.officeNews = officeNews;
+    }
 
     /**
      *

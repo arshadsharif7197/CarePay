@@ -94,6 +94,7 @@ public class CarePayButton extends Button {
      */
     public void setFontAttribute(int fontAttribute) {
         this.fontAttribute = fontAttribute;
+        setFont();
         invalidate();
         requestLayout();
     }
@@ -115,6 +116,9 @@ public class CarePayButton extends Button {
             fontAttribute = PROXIMA_NOVA_REGULAR;
         }
 
+    }
+
+    private void setFont(){
         String assetFontName = "";
         switch (fontAttribute) {
             case GOTHAM_ROUNDED_BOLD: {

@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -17,23 +18,21 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
-import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.ChooseCreditCardDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
+import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPayloadPlansDTO;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
+import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -73,6 +72,18 @@ public class PatientPaymentPlanFragment extends BaseCheckinFragment {
     private boolean isEmptyCreditCard = true;
     private boolean isMNEdited;
     private boolean isMPEdited;
+
+    private PaymentNavigationCallback callback;
+
+    @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+        try{
+            callback = (PaymentNavigationCallback) context;
+        }catch(ClassCastException cce){
+            throw new ClassCastException("Attached context must implement PaymentNavigationCallback");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -513,16 +524,18 @@ public class PatientPaymentPlanFragment extends BaseCheckinFragment {
     }
 
     private void addNewCreditCard() {
-        PatientAddNewCreditCardFragment fragment = new PatientAddNewCreditCardFragment();
-        Bundle args = new Bundle();
-        Gson gson = new Gson();
-        String paymentsDTOString = gson.toJson(paymentsModel);
-        args.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
-        args.putString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE, gson.toJson(paymentsModel.getPaymentPayload()
-                .getPapiAccounts()));
-        fragment.setArguments(args);
 
-        ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
+        callback.showAddCard(0);
+//        PracticeAddNewCreditCardFragment fragment = new PracticeAddNewCreditCardFragment();
+//        Bundle args = new Bundle();
+//        Gson gson = new Gson();
+//        String paymentsDTOString = gson.toJson(paymentsModel);
+//        args.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+//        args.putString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE, gson.toJson(paymentsModel.getPaymentPayload()
+//                .getPapiAccounts()));
+//        fragment.setArguments(args);
+//
+//        ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
     }
 
     private void createPaymentPlan() {

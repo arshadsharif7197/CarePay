@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.payments.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -11,10 +12,9 @@ import android.view.View;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
-import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
+import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -23,7 +23,7 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
-public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment implements PaymentDetailsDialog.PayNowClickListener {
+public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment {
 
     protected static final String LOG_TAG = ResponsibilityBaseFragment.class.getSimpleName();
     protected AppCompatActivity appCompatActivity;
@@ -42,6 +42,18 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment imp
     protected double total;
     protected String paymentInfo;
 
+    protected PaymentNavigationCallback actionCallback;
+
+    @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+        try {
+            actionCallback = (PaymentNavigationCallback) context;
+        }catch (ClassCastException cce){
+            throw new ClassCastException("Attached Context must implement ResponsibilityActionCallback");
+        }
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +64,7 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment imp
         RecyclerView paymentDetailsListRecyclerView = ((RecyclerView) view.findViewById(R.id.responsibility_line_item_recycle_view));
         paymentDetailsListRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-        PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(), paymentDTO, paymentList, this);
+        PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(), paymentDTO, paymentList, actionCallback);
         paymentDetailsListRecyclerView.setAdapter(adapter);
     }
 
@@ -94,12 +106,6 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment imp
         }
     }
 
-    @Override
-    public void onPayNowButtonClicked() {
-        doPayment();
-    }
-
-    protected abstract void doPayment();
 
     /**
      * For tests

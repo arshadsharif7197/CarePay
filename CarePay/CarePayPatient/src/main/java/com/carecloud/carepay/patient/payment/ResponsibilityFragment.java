@@ -3,8 +3,6 @@ package com.carecloud.carepay.patient.payment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -14,15 +12,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.payment.dialogs.PartialPaymentDialog;
-import com.carecloud.carepay.patient.payment.fragments.PaymentMethodFragment;
+import com.carecloud.carepay.patient.payment.dialogs.PatientPartialPaymentDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
 import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
-import com.google.gson.Gson;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
@@ -30,7 +25,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
 
-public class ResponsibilityFragment extends ResponsibilityBaseFragment implements PaymentDetailsDialog.PayNowClickListener {
+public class ResponsibilityFragment extends ResponsibilityBaseFragment {
 
 
     @Override
@@ -44,9 +39,8 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_responsibility, container, false);
 
-        final Toolbar toolbar = (Toolbar) view.findViewById(R.id.respons_toolbar);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
-        setGothamRoundedMediumTypeface(appCompatActivity, title);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,7 +48,6 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
                 getActivity().onBackPressed();
             }
         });
-//        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setTitle("");
 
         TextView responseTotal = (TextView) view.findViewById(R.id.respons_total);
@@ -147,7 +140,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
         makePartialPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new PartialPaymentDialog(getActivity(), paymentDTO).show();
+                new PatientPartialPaymentDialog(getActivity(), paymentDTO).show();
             }
         });
 
@@ -162,29 +155,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment implement
     }
 
     protected void doPayment() {
-        try {
-            FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
-            PaymentMethodFragment fragment = (PaymentMethodFragment)
-                    fragmentmanager.findFragmentByTag(PaymentMethodFragment.class.getSimpleName());
-
-            if (fragment == null) {
-                fragment = new PaymentMethodFragment();
-            }
-
-            Bundle bundle = new Bundle();
-            Gson gson = new Gson();
-            String paymentsDTOString = gson.toJson(paymentDTO);
-            bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, total);
-            bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
-            fragment.setArguments(bundle);
-
-            FragmentTransaction fragmentTransaction = fragmentmanager.beginTransaction();
-            fragmentTransaction.replace(R.id.payment_frag_holder, fragment);
-            fragmentTransaction.addToBackStack(PaymentMethodFragment.class.getSimpleName());
-            fragmentTransaction.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        actionCallback.onPayButtonClicked(total);
     }
 
     @Override

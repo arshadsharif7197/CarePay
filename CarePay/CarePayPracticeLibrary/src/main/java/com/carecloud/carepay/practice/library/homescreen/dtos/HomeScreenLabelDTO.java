@@ -45,7 +45,7 @@ public class HomeScreenLabelDTO extends PatientModeSwitchPinDTO {
      * @return The checkinButton
      */
     public String getCheckinButton() {
-        return checkinButton;
+        return StringUtil.getLabelForView(checkinButton);
     }
 
     /**
@@ -59,7 +59,7 @@ public class HomeScreenLabelDTO extends PatientModeSwitchPinDTO {
      * @return The paymentsButton
      */
     public String getPaymentsButton() {
-        return paymentsButton;
+        return StringUtil.getLabelForView(paymentsButton);
     }
 
     /**
@@ -73,7 +73,7 @@ public class HomeScreenLabelDTO extends PatientModeSwitchPinDTO {
      * @return The appointmentsButton
      */
     public String getAppointmentsButton() {
-        return appointmentsButton;
+        return StringUtil.getLabelForView(appointmentsButton);
     }
 
     /**
@@ -87,7 +87,7 @@ public class HomeScreenLabelDTO extends PatientModeSwitchPinDTO {
      * @return The checkoutButton
      */
     public String getCheckoutButton() {
-        return checkoutButton;
+        return StringUtil.getLabelForView(checkoutButton);
     }
 
     /**
@@ -101,7 +101,7 @@ public class HomeScreenLabelDTO extends PatientModeSwitchPinDTO {
      * @return The shopButton
      */
     public String getShopButton() {
-        return shopButton;
+        return StringUtil.getLabelForView(shopButton);
     }
 
     /**
@@ -115,7 +115,7 @@ public class HomeScreenLabelDTO extends PatientModeSwitchPinDTO {
      * @return The officenewsButton
      */
     public String getOfficenewsButton() {
-        return officenewsButton;
+        return StringUtil.getLabelForView(officenewsButton);
     }
 
     /**
@@ -129,7 +129,7 @@ public class HomeScreenLabelDTO extends PatientModeSwitchPinDTO {
      * @return The checkinginNotifications
      */
     public String getCheckinginNotifications() {
-        return checkinginNotifications;
+        return StringUtil.getLabelForView(checkinginNotifications);
     }
 
     /**
@@ -143,7 +143,7 @@ public class HomeScreenLabelDTO extends PatientModeSwitchPinDTO {
      * @return The alerts
      */
     public String getAlerts() {
-        return alerts;
+        return StringUtil.getLabelForView(alerts);
     }
 
     /**
@@ -154,7 +154,7 @@ public class HomeScreenLabelDTO extends PatientModeSwitchPinDTO {
     }
 
     public String getPatientModeLabel() {
-        return patientModeLabel;
+        return StringUtil.getLabelForView(patientModeLabel);
     }
 
     public void setPatientModeLabel(String patientModeLabel) {
@@ -162,7 +162,7 @@ public class HomeScreenLabelDTO extends PatientModeSwitchPinDTO {
     }
 
     public String getLogoutLabel() {
-        return logoutLabel;
+        return StringUtil.getLabelForView(logoutLabel);
     }
 
     public void setLogoutLabel(String logoutLabel) {

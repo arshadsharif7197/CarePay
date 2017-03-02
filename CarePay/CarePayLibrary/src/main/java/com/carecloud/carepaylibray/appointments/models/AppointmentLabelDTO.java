@@ -250,6 +250,18 @@ public class AppointmentLabelDTO implements Serializable {
     @Expose
     private String appointmentCancellationSuccessMessage;
 
+    @SerializedName("appointment_request_checkout_now")
+    @Expose
+    private String appointmentRequestCheckoutNow;
+
+    public String getAppointmentRequestCheckoutNow() {
+        return StringUtil.getLabelForView(appointmentRequestCheckoutNow);
+    }
+
+    public void setAppointmentRequestCheckoutNow(String appointmentRequestCheckoutNow) {
+        this.appointmentRequestCheckoutNow = appointmentRequestCheckoutNow;
+    }
+
     public String getAppointmentCancellationSuccessMessage() {
         return appointmentCancellationSuccessMessage;
     }

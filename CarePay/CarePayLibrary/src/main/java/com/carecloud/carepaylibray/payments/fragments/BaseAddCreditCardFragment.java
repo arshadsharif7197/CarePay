@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,7 +22,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
@@ -89,7 +87,7 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
     private static final char SPACE_CHAR = ' ';
     private String stateAbbr = null;
     private City smartyStreetsResponse;
-    protected double amountToMakePayment = 1;
+    protected double amountToMakePayment;
     private DemographicAddressPayloadDTO addressPayloadDTO;
     private List<DemographicsSettingsPapiAccountsDTO> papiAccountsDTO;
     protected PaymentCreditCardsPayloadDTO creditCardsPayloadDTO;
@@ -123,15 +121,7 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
             e.printStackTrace();
         }
 
-        Toolbar toolbar = (Toolbar) addNewCreditCardView.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
-        title = (TextView) toolbar.findViewById(com.carecloud.carepaylibrary.R.id.respons_toolbar_title);
-        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
-        toolbar.setTitle("");
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(),
-                com.carecloud.carepaylibrary.R.drawable.icn_patient_mode_nav_back));
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
-
+        initTitleViews(addNewCreditCardView);
         initilizeViews(addNewCreditCardView);
         setTypefaces();
         setTextWatchers();
@@ -272,6 +262,24 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
     protected String getLastFour() {
         String fullCard = creditCardNoEditText.getText().toString().replace(" ", "").trim();
         return fullCard.substring(fullCard.length() - 4, fullCard.length());
+    }
+
+    private void initTitleViews(View view){
+        Toolbar toolbar = (Toolbar) view.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
+        if(toolbar!=null) {
+            title = (TextView) toolbar.findViewById(com.carecloud.carepaylibrary.R.id.respons_toolbar_title);
+            SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
+            toolbar.setTitle("");
+            toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), com.carecloud.carepaylibrary.R.drawable.icn_patient_mode_nav_back));
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getActivity().onBackPressed();
+                }
+            });
+
+        }
+
     }
 
     private void initilizeViews(View view) {
@@ -415,7 +423,8 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
     }
 
     private void authorizeCreditCard() {
-        String amount = String.valueOf((int) amountToMakePayment);
+//        String amount = String.valueOf((int) amountToMakePayment>0?amountToMakePayment:1);//this is to create an authorization
+        String amount = String.valueOf(1);//this is to create an authorization
         String currency = "USD";
         String paymentMethod = "credit_card";
         String cvv = creditCardsPayloadDTO.getCvv();
