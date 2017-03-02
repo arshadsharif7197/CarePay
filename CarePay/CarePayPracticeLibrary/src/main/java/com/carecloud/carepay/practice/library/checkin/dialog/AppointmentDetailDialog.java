@@ -444,10 +444,7 @@ public class AppointmentDetailDialog extends Dialog {
     }
 
     private double getPatientBalance() {
-        if (pendingBalanceDTO != null) {
-            if (pendingBalanceDTO.getPayload().isEmpty()) {
-                return 0;
-            }
+        if (pendingBalanceDTO != null && !pendingBalanceDTO.getPayload().isEmpty()) {
             return pendingBalanceDTO.getPayload().get(0).getAmount();
         }
 
