@@ -21,7 +21,7 @@
             <item>
                 <shape android:shape="rectangle">
                     <corners android:bottomRightRadius="10dp"/>
-                    <solid android:color="@color/home_news_background"/>
+                    <solid android:color="@color/light_gray_dialog"/>
                 </shape>
             </item>
         </layer-list>
