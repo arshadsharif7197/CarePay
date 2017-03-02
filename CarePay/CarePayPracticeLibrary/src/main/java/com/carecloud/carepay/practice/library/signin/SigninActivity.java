@@ -110,7 +110,7 @@ public class SigninActivity extends BasePracticeActivity {
         initViews(signinScreenMode);
         setEditTexts();
         setClickables();
-        setTypeFace();
+//        setTypeFace();
 
         changeScreenMode(signinScreenMode);
         isEmptyEmail = true;

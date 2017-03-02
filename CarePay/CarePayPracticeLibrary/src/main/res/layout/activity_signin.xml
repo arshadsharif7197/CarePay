@@ -93,35 +93,40 @@
         android:paddingEnd="20dp"
         android:paddingStart="20dp">
 
-        <android.support.design.widget.TextInputLayout
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/signInEmailTextInputLayout"
             style="@style/TextInputLayoutStyle"
-            app:hintTextAppearance="@style/FloatingLabelStyle">
+            app:hintTextAppearance="@style/FloatingLabelStyle"
+            app:customAssetFont="proxima_nova_semi_bold">
 
-            <EditText
+            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/signinEmailpracticeEditText"
                 style="@style/EditTextStyle"
                 android:imeOptions="actionNext"
-                android:inputType="textEmailAddress" />
-        </android.support.design.widget.TextInputLayout>
+                android:inputType="textEmailAddress"
+                app:customAssetFont="proxima_nova_semi_bold"/>
+
+        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <android.support.design.widget.TextInputLayout
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                 android:id="@+id/passwordTextInputLayout"
                 style="@style/TextInputLayoutStyle"
                 app:hintTextAppearance="@style/FloatingLabelStyle"
-                app:passwordToggleEnabled="false">
+                app:passwordToggleEnabled="false"
+                app:customAssetFont="proxima_nova_semi_bold">
 
-                <EditText
+                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                     android:id="@+id/passwordpracticeEditText"
                     style="@style/EditTextStyle"
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"
-                    android:paddingEnd="@dimen/dimen_30dp"/>
+                    android:paddingEnd="@dimen/dimen_30dp"
+                    app:customAssetFont="proxima_nova_semi_bold"/>
 
-            </android.support.design.widget.TextInputLayout>
+            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
             <ImageView
                 android:layout_width="@dimen/dimen_30dp"
