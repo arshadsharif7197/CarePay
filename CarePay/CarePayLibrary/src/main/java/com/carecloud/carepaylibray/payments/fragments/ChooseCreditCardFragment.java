@@ -124,7 +124,7 @@ public class ChooseCreditCardFragment extends BaseFragment {
                 if(close!=null){
                     close.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(View v) {
+                        public void onClick(View view) {
                             dismiss();
                         }
                     });

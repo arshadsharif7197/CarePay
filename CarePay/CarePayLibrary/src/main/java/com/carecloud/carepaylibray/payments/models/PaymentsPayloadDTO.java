@@ -94,6 +94,7 @@ public class PaymentsPayloadDTO implements Serializable {
     public void setIntakeForms(PaymentsPayloadIntakeFormsDTO intakeForms) {
         this.intakeForms = intakeForms;
     }
+
     /**
      *
      * @return

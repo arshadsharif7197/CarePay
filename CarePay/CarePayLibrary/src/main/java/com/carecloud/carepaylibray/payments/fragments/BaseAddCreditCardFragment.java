@@ -284,7 +284,7 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
                 if(close!=null){
                     close.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(View v) {
+                        public void onClick(View view) {
                             dismiss();
                         }
                     });
