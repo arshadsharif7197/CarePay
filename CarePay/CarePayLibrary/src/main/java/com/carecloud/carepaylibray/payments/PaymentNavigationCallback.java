@@ -14,14 +14,14 @@ public interface PaymentNavigationCallback {
 
     /**
      * Callback to launch the payment method selector
-     * @param amount
+     * @param amount amount to pay
      */
     void onPayButtonClicked(double amount);
 
     /**
      * Callback to proceed to select card view once payment method is selected
-     * @param selectedPaymentMethod
-     * @param amount
+     * @param selectedPaymentMethod payment method type
+     * @param amount amount to pay
      */
     void onPaymentMethodAction(String selectedPaymentMethod, double amount);
 
@@ -32,13 +32,13 @@ public interface PaymentNavigationCallback {
 
     /**
      * Callback to display receipt
-     * @param paymentsModel
+     * @param paymentsModel receipt model
      */
     void showReceipt(PaymentsModel paymentsModel);
 
     /**
      * Callback to add new card
-     * @param amount
+     * @param amount amount to pay
      */
     void showAddCard(double amount);
 }

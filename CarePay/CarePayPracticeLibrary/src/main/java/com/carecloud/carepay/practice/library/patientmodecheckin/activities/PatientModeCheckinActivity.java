@@ -429,7 +429,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
                 paymentDTO = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowJson);
 
             }
-        }).run();
+        }).start();
     }
 
     public ConsentFormLabelsDTO getConsentFormLabelsDTO() {
@@ -525,13 +525,10 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     public void showAddCard(double amount) {
         Gson gson = new Gson();
         Bundle args = new Bundle();
-        Fragment fragment;
         String paymentsDTOString = gson.toJson(paymentDTO);
         args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE,  amount);
-        fragment = new AddNewCreditCardFragment();
-
-
+        Fragment fragment = new AddNewCreditCardFragment();
         fragment.setArguments(args);
         navigateToFragment(fragment, true);
     }

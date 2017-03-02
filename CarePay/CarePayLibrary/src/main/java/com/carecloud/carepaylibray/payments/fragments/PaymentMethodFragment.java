@@ -103,15 +103,15 @@ public abstract class PaymentMethodFragment extends BaseFragment /*implements Ra
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         if(toolbar!=null) {
             TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
+            title.setText(titlePaymentMethodString);
             toolbar.setTitle("");
             toolbar.setNavigationIcon(ContextCompat.getDrawable(activity, R.drawable.icn_patient_mode_nav_back));
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View view) {
                     activity.onBackPressed();
                 }
             });
-            title.setText(titlePaymentMethodString);
         }else {
             TextView title = (TextView) view.findViewById(R.id.paymentMethodTitleLabel);
             if(title!=null) {

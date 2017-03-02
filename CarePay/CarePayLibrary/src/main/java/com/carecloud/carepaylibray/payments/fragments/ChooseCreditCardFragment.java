@@ -113,7 +113,7 @@ public class ChooseCreditCardFragment extends BaseFragment {
             toolbar.setNavigationIcon(ContextCompat.getDrawable(activity, R.drawable.icn_patient_mode_nav_back));
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View view) {
                     activity.onBackPressed();
                 }
             });

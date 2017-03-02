@@ -274,11 +274,11 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
                         .build());
 
         //  Set tokenization type and First Data issued public key
-        PaymentMethodTokenizationParameters mPaymentMethodParameters = PaymentMethodTokenizationParameters.newBuilder()
+        PaymentMethodTokenizationParameters tokenizationParameters = PaymentMethodTokenizationParameters.newBuilder()
                 .setPaymentMethodTokenizationType(PaymentMethodTokenizationType.NETWORK_TOKEN)
                 .addParameter("publicKey", EnvData.getProperties("CERT").getPublicKey())
                 .build();
-        builder.setPaymentMethodTokenizationParameters(mPaymentMethodParameters);
+        builder.setPaymentMethodTokenizationParameters(tokenizationParameters);
         return builder.build();
     }
 
@@ -291,7 +291,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         return lineItems;
     }
 
-    public void setLineItems(List<PaymentPatientBalancesPayloadDTO> balances) {
+    private void setLineItems(List<PaymentPatientBalancesPayloadDTO> balances) {
         List<LineItem> list = new ArrayList<LineItem>();
 
         PaymentResponsibilityModel paymentModel = PaymentResponsibilityModel.getInstance();

@@ -62,19 +62,15 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
     {
         Button swipeCreditCarNowButton = (Button) view.findViewById(R.id.swipeCreditCarNowButton);
         TextView swipeCardSeparatorLabel = (TextView) view.findViewById(R.id.swipeCardSeparatorLabel);
-        if(isCloverDevice)
-        {
+        if(isCloverDevice) {
             swipeCreditCarNowButton.setEnabled(true);
             swipeCreditCarNowButton.setText(swipeCardNowString);
             swipeCreditCarNowButton.setOnClickListener(swipeCreditCarNowButtonClickListener);
 
             swipeCardSeparatorLabel.setText(swipeCardAlternateSeparatorString);
-        }
-        else
-        {
+        } else {
             swipeCreditCarNowButton.setEnabled(false);
             swipeCardSeparatorLabel.setText(swipeCardSeparatorString);
-
         }
 
     }
@@ -146,9 +142,7 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
             intent.putExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS, gson.toJson(paymentLineItems));
             getActivity().startActivityForResult(intent, CarePayConstants.CLOVER_PAYMENT_INTENT_REQUEST_CODE, new Bundle());
 
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

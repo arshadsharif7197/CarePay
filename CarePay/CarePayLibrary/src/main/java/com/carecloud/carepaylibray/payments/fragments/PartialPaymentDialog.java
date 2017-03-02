@@ -58,6 +58,11 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
 
     private PaymentNavigationCallback payNowClickListener;
 
+    /**
+     * Contructor
+     * @param context context must implement PayNowClickListener
+     * @param paymentsDTO payment model
+     */
     public PartialPaymentDialog(Context context, PaymentsModel paymentsDTO) {
         super(context);
         this.context = context;
@@ -130,8 +135,8 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     }
 
     @Override
-    public void onClick(View v) {
-        int viewId = v.getId();
+    public void onClick(View view) {
+        int viewId = view.getId();
         if (viewId == R.id.dialogCloseImageView) {
             cancel();
         } else if (viewId == R.id.payPartialButton) {

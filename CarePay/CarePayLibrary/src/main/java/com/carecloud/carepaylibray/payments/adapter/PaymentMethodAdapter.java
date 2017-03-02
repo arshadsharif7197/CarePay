@@ -28,6 +28,12 @@ public class PaymentMethodAdapter extends BaseAdapter {
 
     private int selectedItem = -1;
 
+    /**
+     * Constructor
+     * @param context context for adapter
+     * @param paymentMethodsList list of payment methods
+     * @param paymentTypeMap map of payment types for icons
+     */
     public PaymentMethodAdapter(Context context, List<PaymentsMethodsDTO> paymentMethodsList, HashMap<String, Integer> paymentTypeMap){
         this.context = context;
         this.paymentMethodsList = paymentMethodsList;

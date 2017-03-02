@@ -211,13 +211,11 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
     public void showAddCard(double amount) {
         Gson gson = new Gson();
         Bundle args = new Bundle();
-        Fragment fragment;
         String paymentsDTOString = gson.toJson(paymentsDTO);
         args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE,  amount);
-        fragment = new AddNewCreditCardFragment();
-
-
+        Fragment fragment = new AddNewCreditCardFragment();
+        fragment.setArguments(args);
         navigateToFragment(fragment, true);
     }
 

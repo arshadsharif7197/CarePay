@@ -236,12 +236,11 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         if(paymentsDTO.getPaymentPayload().getPatientCreditCards()!=null && !paymentsDTO.getPaymentPayload().getPatientCreditCards().isEmpty()){
             Gson gson = new Gson();
             Bundle args = new Bundle();
-            Fragment fragment;
             String paymentsDTOString = gson.toJson(paymentsDTO);
             args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
             args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
             args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-            fragment = new ChooseCreditCardFragment();
+            Fragment fragment = new ChooseCreditCardFragment();
             fragment.setArguments(args);
             navigateToFragment(fragment, true);
         } else {
