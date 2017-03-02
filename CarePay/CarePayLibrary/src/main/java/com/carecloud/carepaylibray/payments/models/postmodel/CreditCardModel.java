@@ -30,6 +30,9 @@ public class CreditCardModel {
     @SerializedName("cvv")
     private String cvv;
 
+    @SerializedName("is_default")
+    private boolean isDefault;
+
     @SerializedName("billing_information")
     private PaymentsCreditCardBillingInformationDTO billingInformation;
 
@@ -111,4 +114,11 @@ public class CreditCardModel {
                 billingInformation != null;
     }
 
+    public boolean isDefault() {
+        return isDefault;
+    }
+
+    public void setDefault(boolean isDefault) {
+        this.isDefault = isDefault;
+    }
 }

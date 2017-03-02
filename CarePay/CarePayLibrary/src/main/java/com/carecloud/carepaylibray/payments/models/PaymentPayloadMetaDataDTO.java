@@ -130,4 +130,16 @@ public class PaymentPayloadMetaDataDTO implements Serializable {
         this.updatedDt = updatedDt;
     }
 
+    /**
+     * validate this metadata
+     * @return true if required fields are not null
+     */
+    public boolean isValid(){
+        return userId != null &&
+                username != null &&
+                practiceMgmt != null &&
+                practiceId != null &&
+                patientId != null;
+    }
+
 }

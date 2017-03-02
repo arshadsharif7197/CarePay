@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
+import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -21,7 +22,7 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
     private Context context;
     private List<PatienceBalanceDTO> detailsList;
     private PaymentsModel paymentReceiptModel;
-    private PaymentDetailsDialog.PayNowClickListener payListener;
+    private PaymentNavigationCallback payListener;
 
     /**
      * Constructor
@@ -32,7 +33,7 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
      */
     public PaymentLineItemsListAdapter(Context context, PaymentsModel paymentReceiptModel,
                                        List<PatienceBalanceDTO> detailsList,
-                                       PaymentDetailsDialog.PayNowClickListener payListener) {
+                                       PaymentNavigationCallback payListener) {
 
         this.context = context;
         this.detailsList = detailsList;

@@ -34,4 +34,12 @@ public class PaymentsPatientChargesDTO {
     public void setMetadata(PaymentPayloadMetaDataDTO metadata) {
         this.metadata = metadata;
     }
+
+    /**
+     * Validate Metadata
+     * @return true if metadata is valid
+     */
+    public boolean hasValidMetadata(){
+        return metadata.isValid();
+    }
 }

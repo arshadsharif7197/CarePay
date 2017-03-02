@@ -11,15 +11,21 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.payment.androidpay.ConfirmationActivity;
+import com.carecloud.carepay.patient.payment.dialogs.PaymentAmountReceiptDialog;
+import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
+import com.carecloud.carepay.patient.payment.fragments.PaymentPlanFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
+import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.gms.wallet.MaskedWallet;
 import com.google.android.gms.wallet.WalletConstants;
 import com.google.gson.Gson;
 
-public class PaymentActivity extends BasePatientActivity {
+public class PaymentActivity extends BasePatientActivity implements PaymentNavigationCallback {
     PaymentsModel paymentsDTO;
     private String paymentsDTOString;
     public Bundle bundle;
@@ -163,5 +169,72 @@ public class PaymentActivity extends BasePatientActivity {
             transaction.addToBackStack(fragment.getClass().getName());
         }
         transaction.commitAllowingStateLoss();
+    }
+
+    @Override
+    public void startPartialPayment() {
+
+    }
+
+    @Override
+    public void onPayButtonClicked(double amount) {
+        PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+        bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
+        fragment.setArguments(bundle);
+
+        navigateToFragment(fragment, true);
+    }
+
+    @Override
+    public void onPaymentMethodAction(String selectedPaymentMethod, double amount) {
+        if(paymentsDTO.getPaymentPayload().getPatientCreditCards()!=null && !paymentsDTO.getPaymentPayload().getPatientCreditCards().isEmpty()){
+            Gson gson = new Gson();
+            Bundle args = new Bundle();
+            String paymentsDTOString = gson.toJson(paymentsDTO);
+            args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
+            args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
+            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+            Fragment fragment = new ChooseCreditCardFragment();
+            fragment.setArguments(args);
+
+            navigateToFragment(fragment, true);
+        } else {
+            showAddCard(amount);
+        }
+    }
+
+    @Override
+    public void showAddCard(double amount) {
+        Gson gson = new Gson();
+        Bundle args = new Bundle();
+        String paymentsDTOString = gson.toJson(paymentsDTO);
+        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
+        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE,  amount);
+        Fragment fragment = new AddNewCreditCardFragment();
+        fragment.setArguments(args);
+        navigateToFragment(fragment, true);
+    }
+
+    @Override
+    public void onPaymentPlanAction() {
+        PaymentPlanFragment fragment = new PaymentPlanFragment();
+
+        Bundle args = new Bundle();
+        Gson gson = new Gson();
+        String paymentsDTOString = gson.toJson(paymentsDTO);
+        args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
+        fragment.setArguments(args);
+
+        navigateToFragment(fragment, true);
+    }
+
+    @Override
+    public void showReceipt(PaymentsModel paymentsModel) {
+        PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(this, paymentsModel);
+        receiptDialog.show();
+
     }
 }

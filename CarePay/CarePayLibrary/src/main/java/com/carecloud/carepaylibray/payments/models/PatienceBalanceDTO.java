@@ -33,5 +33,11 @@ public class PatienceBalanceDTO {
         this.payload = payload;
     }
 
-
+    /**
+     * Validate Metadata
+     * @return true if metadata us valid
+     */
+    public boolean hasValidMetadata(){
+        return metadata.isValid();
+    }
 }

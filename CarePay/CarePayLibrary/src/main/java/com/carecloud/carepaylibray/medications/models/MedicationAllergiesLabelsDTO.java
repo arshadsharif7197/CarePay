@@ -45,7 +45,7 @@ public class MedicationAllergiesLabelsDTO {
     @SerializedName("medication_allergies_continue_button")
     @Expose
     private String medicationAllergiesContinueButton;
-    @SerializedName("medicstion_allergies_delete_button")
+    @SerializedName("medication_allergies_delete_button")
     @Expose
     private String medicationAllergiesDeleteButton;
 

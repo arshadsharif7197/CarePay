@@ -431,4 +431,6 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="action_remove">Remove</string>
     <string name="swipeCreditCardSeparatorText">OR</string>
 
+    <string name="payment_failed">Payment Not Successful</string>
+
 </resources>

@@ -30,6 +30,9 @@ public class PaymentCreditCardsPayloadDTO {
     @SerializedName("token")
     @Expose
     private String token;
+    @SerializedName("is_default")
+    @Expose
+    private boolean isDefault;
     @SerializedName("billing_information")
     @Expose
     private PaymentsCreditCardBillingInformationDTO billingInformation = new PaymentsCreditCardBillingInformationDTO();
@@ -144,5 +147,13 @@ public class PaymentCreditCardsPayloadDTO {
      */
     public void setCreditCardsId(String creditCardsId) {
         this.creditCardsId = creditCardsId;
+    }
+
+    public boolean isDefault() {
+        return isDefault;
+    }
+
+    public void setDefault(boolean isDefault) {
+        this.isDefault = isDefault;
     }
 }
