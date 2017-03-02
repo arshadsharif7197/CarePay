@@ -232,7 +232,7 @@ public class AppointmentsListFragment extends BaseFragment {
             new CancelAppointmentDialog(getContext(), appointmentDTO, appointmentInfo,
                     BaseDoctorInfoDialog.AppointmentType.CANCELLED_APPOINTMENT, getCancelAppointmentDialogListener()).show();
 
-        } else if (isAppointmentCancellable(appointmentDTO)) {
+        } else if (!payloadDTO.hasAppointmentStarted() && isAppointmentCancellable(appointmentDTO)) {
             // Appointment as long as it's 24 hours or more in the future
             new CancelAppointmentDialog(getContext(), appointmentDTO, appointmentInfo,
                     BaseDoctorInfoDialog.AppointmentType.CANCEL_APPOINTMENT,
