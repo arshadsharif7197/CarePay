@@ -318,6 +318,9 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_posted_success_message")
     @Expose
     private String paymentPostedSuccessMessage;
+    @SerializedName("payment_pay_using_payment_plan_label")
+    @Expose
+    private String paymentPayUsingPaymentPlan;
 
     public String getPaymentPostedSuccessMessage() {
         return StringUtil.getLabelForView(paymentPostedSuccessMessage);
@@ -1904,5 +1907,21 @@ public class PaymentsLabelDTO {
      */
     public void setPaymentCloverAlternatePayButton(String paymentCloverAlternatePayButton) {
         this.paymentCloverAlternatePayButton = paymentCloverAlternatePayButton;
+    }
+
+    /**
+     *
+     * @return paymentPayUsingPaymentPlan
+     */
+    public String getPaymentPayUsingPaymentPlan() {
+        return StringUtil.getLabelForView(paymentPayUsingPaymentPlan);
+    }
+
+    /**
+     *
+     * @param paymentPayUsingPaymentPlan paymentPayUsingPaymentPlan
+     */
+    public void setPaymentPayUsingPaymentPlan(String paymentPayUsingPaymentPlan) {
+        this.paymentPayUsingPaymentPlan = paymentPayUsingPaymentPlan;
     }
 }

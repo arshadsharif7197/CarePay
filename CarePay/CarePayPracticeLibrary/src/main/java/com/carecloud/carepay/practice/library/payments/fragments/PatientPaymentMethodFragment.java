@@ -68,6 +68,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
     private String swipeCardNowString;
     private String swipeCardSeparatorString;
     private String swipeCardAlternateSeparatorString;
+    private String payUsingPaymentPlanString;
 
 
     @Override
@@ -190,7 +191,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
         {
             swipeCreditCarNowButton.setEnabled(false);
             swipeCardSeparatorLabel.setText(swipeCardSeparatorString);
-
+            swipeCreditCarNowButton.setText(swipeCardNowString);
         }
 
     }
@@ -220,22 +221,32 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                 if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CASH)){
                     shape.setColor(getActivity().getResources().getColor(R.color.overlay_green));
                     paymentChoiceButton.setText(paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPayLabel());
-                }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CREDIT_CARD)){
+                }
+                if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CREDIT_CARD)){
                     shape.setColor(getActivity().getResources().getColor(R.color.colorPrimary));
                     paymentChoiceButton.setText(paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentChooseCreditCardButton());
-                }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CHECK)){
+                }
+                if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_CHECK)){
                     shape.setColor(getActivity().getResources().getColor(R.color.colorPrimary));
                     paymentChoiceButton.setText(paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPayLabel());
-                }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_GIFT_CARD)){
+                }
+                if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_GIFT_CARD)){
                     shape.setColor(getActivity().getResources().getColor(R.color.colorPrimary));
                     paymentChoiceButton.setText(paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPayLabel());
-                }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_PAYPAL)){
+                }
+                if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_PAYPAL)){
                     shape.setColor(getActivity().getResources().getColor(R.color.overlay_green));
                     paymentChoiceButton.setText(paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPayPalLabel());
-                }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_HSA)){
+                }
+                if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_HSA)){
                     shape.setColor(getActivity().getResources().getColor(R.color.colorPrimary));
                     paymentChoiceButton.setText(paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPayLabel());
-                }if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_FSA)){
+                }
+                if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_FSA)){
+                    shape.setColor(getActivity().getResources().getColor(R.color.colorPrimary));
+                    paymentChoiceButton.setText(paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPayLabel());
+                }
+                if(paymentList.get(i).getType().equalsIgnoreCase(CarePayConstants.TYPE_PAYMENT_PLAN)){
                     shape.setColor(getActivity().getResources().getColor(R.color.colorPrimary));
                     paymentChoiceButton.setText(paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPayLabel());
                 }
@@ -364,6 +375,7 @@ public class PatientPaymentMethodFragment extends BaseCheckinFragment
                     swipeCardNowString = paymentsLabelsDTO.getPaymentCloverSwipeNowButtonLabel();
                     swipeCardSeparatorString = paymentsLabelsDTO.getPaymentCloverSwipeNowSeparatorText();
                     swipeCardAlternateSeparatorString = paymentsLabelsDTO.getPaymentCloverAlternatePayButton();
+                    payUsingPaymentPlanString = paymentsLabelsDTO.getPaymentPayUsingPaymentPlan();
 
                 }
             }
