@@ -165,16 +165,9 @@ public class DateRangePickerDialog extends BaseDialogFragment {
     private View.OnClickListener todayButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            clearSelectedDate();
-            applyDateRangeButton.setEnabled(false);
             Date today = new Date();
-            Calendar nextSixMonths = Calendar.getInstance();
-            nextSixMonths.add(Calendar.MONTH, 5);
-
-            calendarPickerView.init(today, nextSixMonths.getTime())
-                    .withSelectedDate(today)
-                    .inMode(CalendarPickerView.SelectionMode.RANGE);
-
+            calendarPickerView.selectDate(today);
+            applyDateRangeButton.setEnabled(false);
             startDate = today;
         }
     };
