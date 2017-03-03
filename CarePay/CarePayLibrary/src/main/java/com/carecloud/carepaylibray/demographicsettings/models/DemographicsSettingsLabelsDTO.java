@@ -246,6 +246,17 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     @SerializedName("default_credit_card_success_message")
     @Expose
     private String defaultCreditCardSuccessMessage;
+    @SerializedName("demographics_missing_information")
+    @Expose
+    private String demographicsMissingInformation;
+
+    public String getDemographicsMissingInformation() {
+        return demographicsMissingInformation;
+    }
+
+    public void setDemographicsMissingInformation(String demographicsMissingInformation) {
+        this.demographicsMissingInformation = demographicsMissingInformation;
+    }
 
     public String getRemoveCreditCardSuccessMessage() {
         return StringUtil.getLabelForView(removeCreditCardSuccessMessage);

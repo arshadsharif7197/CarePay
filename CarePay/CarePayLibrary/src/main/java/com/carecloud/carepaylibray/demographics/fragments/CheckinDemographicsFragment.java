@@ -717,7 +717,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                 SystemUtil.hideSoftKeyboard(getActivity());
             } else {
 
-                showErrorNotification("Validation Error");
+                showErrorNotification(globalLabelsMetaDTO.getDemographicsMissingInformation());
 //                CustomPopupNotification popup = new CustomPopupNotification(getActivity(), getActivity().getWindow().getCurrentFocus(),
 //                        globalLabelsMetaDTO.getDemographicsMissingInformation(), CustomPopupNotification.TYPE_ERROR_NOTIFICATION);
 //                    popup.showPopWindow();

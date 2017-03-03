@@ -96,7 +96,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         try{
             if(null == errorNotification) {
 
-                errorNotification = new CustomPopupNotification(getContext(), getCurrentFocus(), errorMessage, CustomPopupNotification.TYPE_ERROR_NOTIFICATION, getCancelReasonAppointmentDialogListener());
+                errorNotification = new CustomPopupNotification(getContext(), getCurrentFocus(), getWindow(), errorMessage, CustomPopupNotification.TYPE_ERROR_NOTIFICATION, getCancelReasonAppointmentDialogListener());
             }
             errorNotification.showPopWindow();
         } catch (Exception e) {
