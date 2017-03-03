@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.text.Html;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,8 +74,7 @@ public class CustomPopupNotification extends PopupWindow {
         if (Build.VERSION.SDK_INT >= 24)
         {
             popupMessageLabel.setText(Html.fromHtml(popupMessageText, Html.FROM_HTML_MODE_LEGACY));
-        }
-        else
+        } else
         {
             popupMessageLabel.setText(Html.fromHtml(popupMessageText));
 
@@ -137,7 +137,14 @@ public class CustomPopupNotification extends PopupWindow {
             default:
         }
 
-        popupMessageLabel.setText(popupMessageText);
+        //popupMessageLabel.setText(popupMessageText);
+        if (Build.VERSION.SDK_INT >= 24)
+        {
+            popupMessageLabel.setText(Html.fromHtml(popupMessageText, Html.FROM_HTML_MODE_LEGACY));
+        } else
+        {
+            popupMessageLabel.setText(Html.fromHtml(popupMessageText));
+        }
 
         SystemUtil.setTypefaceFromAssets(context, "fonts/proximanova_regular.otf", popupMessageLabel);
     }

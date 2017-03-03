@@ -704,7 +704,7 @@
         <item name="android:textColor">@color/glitter</item>
         <item name="android:textSize">@dimen/apt_popup_message_text</item>
         <item name="android:lineSpacingExtra">@dimen/apt_popup_message_text_line_spacing</item>
-        <item name="android:textStyle">normal</item>
+        <!--<item name="android:textStyle">normal</item>-->
         <item name="android:fontFamily">ProximaNova-Regular</item>
     </style>
 

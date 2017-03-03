@@ -421,8 +421,7 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
                                 }
                             }
                         }
-                    }
-                    else
+                    } else
                     {
                         showErrorNotification(demographicsSettingsLabelsDTO.getDemographicsMissingInformation());
                     }
