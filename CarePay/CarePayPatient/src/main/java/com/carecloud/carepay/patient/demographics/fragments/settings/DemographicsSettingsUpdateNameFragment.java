@@ -388,40 +388,43 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 try{
-                if (isAllFieldsValid()) {
-                    updateProfileButton.setEnabled(false);
-                    if (demographicsSettingsDTO != null) {
-                        DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
-                        if (demographicsSettingsMetadataDTO != null) {
-                            DemographicsSettingsTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
-                            TransitionDTO demographicsSettingsUpdateDemographicsDTO = demographicsSettingsTransitionsDTO.getUpdateDemographics();
-                            JSONObject payload = new JSONObject();
-                            Map<String, String> queries = null;
-                            Map<String, String> header = null;
-                            try {
-                                if (demographicsSettingsDTO != null) {
-                                    DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
-                                    if (demographicsSettingsPayloadDTO != null) {
-                                        DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-                                        DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
-                                        DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
-                                        demographicsPersonalDetails.setFirstName(firstNameEditText.getText().toString());
-                                        demographicsPersonalDetails.setLastName(lastNameEditText.getText().toString());
-                                        demographicsPersonalDetails.setMiddleName(middleNameEditText.getText().toString());
+                    if (isAllFieldsValid()) {
+                        updateProfileButton.setEnabled(false);
+                        if (demographicsSettingsDTO != null) {
+                            DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
+                            if (demographicsSettingsMetadataDTO != null) {
+                                DemographicsSettingsTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
+                                TransitionDTO demographicsSettingsUpdateDemographicsDTO = demographicsSettingsTransitionsDTO.getUpdateDemographics();
+                                JSONObject payload = new JSONObject();
+                                Map<String, String> queries = null;
+                                Map<String, String> header = null;
+                                try {
+                                    if (demographicsSettingsDTO != null) {
+                                        DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
+                                        if (demographicsSettingsPayloadDTO != null) {
+                                            DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
+                                            DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
+                                            DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+                                            demographicsPersonalDetails.setFirstName(firstNameEditText.getText().toString());
+                                            demographicsPersonalDetails.setLastName(lastNameEditText.getText().toString());
+                                            demographicsPersonalDetails.setMiddleName(middleNameEditText.getText().toString());
 
-                                        Gson gson = new Gson();
-                                        String jsonInString = gson.toJson(demographicPayload);
-                                        getWorkflowServiceHelper().execute(demographicsSettingsUpdateDemographicsDTO, updateProfileCallback, jsonInString, header);
+                                            Gson gson = new Gson();
+                                            String jsonInString = gson.toJson(demographicPayload);
+                                            getWorkflowServiceHelper().execute(demographicsSettingsUpdateDemographicsDTO, updateProfileCallback, jsonInString, header);
+                                        }
                                     }
+                                    header = new HashMap<>();
+                                    header.put("transition", "true");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
-                                header = new HashMap<>();
-                                header.put("transition", "true");
-                            } catch (Exception e) {
-                                e.printStackTrace();
                             }
                         }
+                    } else
+                    {
+                        showErrorNotification(demographicsSettingsLabelsDTO.getDemographicsMissingInformation());
                     }
-                }
                 }catch(Exception e){
                     e.printStackTrace();
                 }

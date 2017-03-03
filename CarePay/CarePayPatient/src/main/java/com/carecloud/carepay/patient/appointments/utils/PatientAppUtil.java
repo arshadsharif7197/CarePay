@@ -2,6 +2,7 @@ package com.carecloud.carepay.patient.appointments.utils;
 
 import android.content.Context;
 import android.view.View;
+import android.view.Window;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepaylibray.base.BaseActivity;
@@ -26,7 +27,7 @@ public class PatientAppUtil {
             return;
         }
 
-        new CustomPopupNotification(context, parentView, successMessage, 4, null)
+        new CustomPopupNotification(context, parentView, null, successMessage, 4, null)
                 .showPopWindow();
 
     }

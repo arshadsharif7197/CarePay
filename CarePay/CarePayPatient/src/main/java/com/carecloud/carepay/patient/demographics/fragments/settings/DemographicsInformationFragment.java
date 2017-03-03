@@ -1026,6 +1026,14 @@ public class DemographicsInformationFragment extends BaseFragment {
                                 e.printStackTrace();
                             }
                         }
+                    } else{
+
+                        try{
+                            showErrorNotification(demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getLabels().getDemographicsMissingInformation());
+                        } catch (Exception e)
+                        {
+                            Log.e(LOG_TAG, e.getMessage());
+                        }
                     }
                 }
             }
