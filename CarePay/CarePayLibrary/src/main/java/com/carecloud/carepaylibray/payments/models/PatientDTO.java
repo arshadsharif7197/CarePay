@@ -52,7 +52,7 @@ public class PatientDTO {
     }
 
     public String getDateOfBirth() {
-        return DateUtil.getInstance().setDateRaw(dateOfBirth).toStringWithFormatMmSlashDdSlashYyyy();
+        return !StringUtil.isNullOrEmpty(dateOfBirth) ? DateUtil.getInstance().setDateRaw(dateOfBirth).toStringWithFormatMmSlashDdSlashYyyy() : "";
     }
 
     public void setDateOfBirth(String dateOfBirth) {
