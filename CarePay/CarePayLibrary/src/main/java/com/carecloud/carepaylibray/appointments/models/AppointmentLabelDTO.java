@@ -254,6 +254,10 @@ public class AppointmentLabelDTO implements Serializable {
     @Expose
     private String appointmentRequestCheckoutNow;
 
+    @SerializedName("appointment_reschedule_button")
+    @Expose
+    private String appointmentRescheduleButton;
+
     public String getAppointmentRequestCheckoutNow() {
         return StringUtil.getLabelForView(appointmentRequestCheckoutNow);
     }
@@ -1290,5 +1294,13 @@ public class AppointmentLabelDTO implements Serializable {
 
     public String getAppointmentsPreRegister() {
         return appointmentsPreRegister;
+    }
+
+    public String getAppointmentRescheduleButton() {
+        return appointmentRescheduleButton;
+    }
+
+    public void setAppointmentRescheduleButton(String appointmentRescheduleButton) {
+        this.appointmentRescheduleButton = appointmentRescheduleButton;
     }
 }

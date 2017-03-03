@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -15,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepay.patient.appointments.adapters.AvailableHoursAdapter;
 import com.carecloud.carepay.patient.appointments.adapters.AvailableLocationsAdapter;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -30,7 +30,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLocationsDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentPatientDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentProviderDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
@@ -60,8 +60,9 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
     private Date endDate;
     private AppointmentAvailabilityDTO availabilityDTO;
     private VisitTypeDTO selectedVisitTypeDTO;
-    private AppointmentResourcesDTO selectedResourcesDTO;
+//    private AppointmentResourcesDTO selectedResourcesDTO;
     private AppointmentsResultModel resourcesToScheduleDTO;
+    private AppointmentResourcesItemDTO selectedResource;
 
     private RecyclerView availableHoursRecycleView;
     private RecyclerView availableLocationsRecycleView;
@@ -96,7 +97,15 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
             selectedVisitTypeDTO = gson.fromJson(appointmentInfoString, VisitTypeDTO.class);
 
             appointmentInfoString = bundle.getString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE);
-            selectedResourcesDTO = gson.fromJson(appointmentInfoString, AppointmentResourcesDTO.class);
+            if(appointmentInfoString!=null){
+                selectedResource = gson.fromJson(appointmentInfoString, AppointmentResourcesItemDTO.class);
+            }
+
+//            appointmentInfoString = bundle.getString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE);
+//            if(appointmentInfoString != null) {
+//                selectedResourcesDTO = gson.fromJson(appointmentInfoString, AppointmentResourcesDTO.class);
+//                selectedResource = selectedResourcesDTO.getResource();
+//            }
 
             appointmentInfoString = bundle.getString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE);
             resourcesToScheduleDTO = gson.fromJson(appointmentInfoString, AppointmentsResultModel.class);
@@ -152,7 +161,7 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
         Drawable closeIcon = ContextCompat.getDrawable(getActivity(),
                 R.drawable.icn_nav_back);
         toolbar.setNavigationIcon(closeIcon);
-        ((AddAppointmentActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         toolbar.setNavigationOnClickListener(navigationOnClickListener);
 
@@ -284,7 +293,7 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
             Gson gson = new Gson();
             bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, startDate);
             bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, endDate);
-            bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(selectedResourcesDTO));
+            bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(selectedResource));
             bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(selectedVisitTypeDTO));
             bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(resourcesToScheduleDTO));
             bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID,addAppointmentPatientId);
@@ -416,7 +425,7 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
         queryMap.put("practice_mgmt",resourcesToScheduleDTO.getPayload().getResourcesToSchedule().get(0).getPractice().getPracticeMgmt());
         queryMap.put("practice_id", resourcesToScheduleDTO.getPayload().getResourcesToSchedule().get(0).getPractice().getPracticeId());
         queryMap.put("visit_reason_id", selectedVisitTypeDTO.getId()+"");
-        queryMap.put("resource_ids", selectedResourcesDTO.getResource().getId()+"");
+        queryMap.put("resource_ids", selectedResource.getId()+"");
         if(startDate!=null){
             DateUtil.getInstance().setDate(startDate);
             queryMap.put("start_date", DateUtil.getInstance().toStringWithFormatYyyyDashMmDashDd());
@@ -462,9 +471,9 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
         AppointmentsPayloadDTO payloadDTO = new AppointmentsPayloadDTO();
         payloadDTO.setStartTime(appointmentsSlotsDTO.getStartTime());
         payloadDTO.setEndTime(appointmentsSlotsDTO.getEndTime());
-        payloadDTO.setProviderId(selectedResourcesDTO.getResource().getProvider().getId().toString());
+        payloadDTO.setProviderId(selectedResource.getProvider().getId().toString());
         payloadDTO.setVisitReasonId(selectedVisitTypeDTO.getId());
-        payloadDTO.setResourceId(selectedResourcesDTO.getResource().getId());
+        payloadDTO.setResourceId(selectedResource.getId());
         payloadDTO.setChiefComplaint(selectedVisitTypeDTO.getName());
 
         AppointmentPatientDTO patientDTO = new AppointmentPatientDTO();
@@ -472,7 +481,7 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
         payloadDTO.setPatient(patientDTO);
 
         AppointmentProviderDTO providersDTO;
-        providersDTO = selectedResourcesDTO.getResource().getProvider();
+        providersDTO = selectedResource.getProvider();
 
         AppointmentLocationsDTO locationDTO = availabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getLocation();
         if(locationDTO == null){

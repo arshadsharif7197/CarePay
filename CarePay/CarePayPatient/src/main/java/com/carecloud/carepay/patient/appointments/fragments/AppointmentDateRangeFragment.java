@@ -4,9 +4,9 @@ import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +14,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.carecloud.carepay.patient.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
@@ -49,7 +48,7 @@ public class AppointmentDateRangeFragment extends BaseFragment {
     private Date newStartDate;
     private Date newEndDate;
     private VisitTypeDTO selectedVisitTypeDTO;
-    private AppointmentResourcesDTO selectedResourcesDTO;
+    private AppointmentResourcesItemDTO selectedResourcesDTO;
     private AppointmentsResultModel resourcesToScheduleDTO;
     private String addAppointmentPatientId;
 
@@ -75,7 +74,7 @@ public class AppointmentDateRangeFragment extends BaseFragment {
             selectedVisitTypeDTO = gson.fromJson(appointmentInfoString, VisitTypeDTO.class);
 
             appointmentInfoString = bundle.getString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE);
-            selectedResourcesDTO = gson.fromJson(appointmentInfoString, AppointmentResourcesDTO.class);
+            selectedResourcesDTO = gson.fromJson(appointmentInfoString, AppointmentResourcesItemDTO.class);
 
             appointmentInfoString = bundle.getString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE);
             resourcesToScheduleDTO = gson.fromJson(appointmentInfoString, AppointmentsResultModel.class);
@@ -115,7 +114,7 @@ public class AppointmentDateRangeFragment extends BaseFragment {
         Drawable closeIcon = ContextCompat.getDrawable(getActivity(),
                 R.drawable.icn_patient_mode_nav_close);
         toolbar.setNavigationIcon(closeIcon);
-        ((AddAppointmentActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         CustomGothamRoundedMediumButton todayButton = (CustomGothamRoundedMediumButton)
                 toolbar.findViewById(R.id.today_button);

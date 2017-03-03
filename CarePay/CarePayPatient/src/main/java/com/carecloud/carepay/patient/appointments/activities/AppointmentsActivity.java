@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -12,25 +13,30 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
+import com.carecloud.carepay.patient.appointments.fragments.AvailableHoursFragment;
+import com.carecloud.carepay.patient.appointments.fragments.ChooseProviderFragment;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.demographics.activities.NewReviewDemographicsActivity;
-import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.IdsDTO;
+import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
+import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
-public class AppointmentsActivity extends MenuPatientActivity {
+public class AppointmentsActivity extends MenuPatientActivity implements AppointmentNavigationCallback {
 
     private static final String LOG_TAG = AppointmentsActivity.class.getSimpleName();
 
@@ -73,8 +79,8 @@ public class AppointmentsActivity extends MenuPatientActivity {
         appointmentsDTO = getConvertedDTO(AppointmentsResultModel.class);
 
         if (appointmentsDTO.getPayload() != null ){
-           try{
-               IdsDTO idsDTO = appointmentsDTO.getPayload().getPractice_patient_ids().get(0);
+            try{
+                IdsDTO idsDTO = appointmentsDTO.getPayload().getPractice_patient_ids().get(0);
                 practiceId = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPracticeId();
                 practiceMgmt = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPracticeManagement();
                 patientId = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPatientId();
@@ -85,10 +91,10 @@ public class AppointmentsActivity extends MenuPatientActivity {
                 getApplicationPreferences().setPracticeId(practiceId);
                 getApplicationPreferences().setUserId(userId);
                 getApplicationPreferences().setPrefix(prefix);
-           }catch(Exception e){
-               e.printStackTrace();
-               System.out.println(e.getMessage());
-           }
+            }catch(Exception e){
+                e.printStackTrace();
+                System.out.println(e.getMessage());
+            }
 
         }
 
@@ -133,8 +139,9 @@ public class AppointmentsActivity extends MenuPatientActivity {
             appointmentsListFragment.setArguments(bundle);
         }
 
-        fm.beginTransaction().replace(R.id.container_main, appointmentsListFragment,
-                AppointmentsListFragment.class.getSimpleName()).commit();
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.replace(R.id.container_main, appointmentsListFragment, appointmentsListFragment.getClass().getSimpleName());
+        transaction.commit();
     }
 
     @Override
@@ -205,5 +212,71 @@ public class AppointmentsActivity extends MenuPatientActivity {
     public AppointmentDTO getModel() {
         return AppointmentsActivity.model;
     }
+
+    @Override
+    public void newAppointment() {
+        ChooseProviderFragment chooseProviderFragment = new ChooseProviderFragment();
+
+        Bundle args = new Bundle();
+        DtoHelper.bundleBaseDTO(args, getIntent(), CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, PatientNavigationHelper.class.getSimpleName());
+        chooseProviderFragment.setArguments(args);
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container_main, chooseProviderFragment, chooseProviderFragment.getClass().getSimpleName());
+        transaction.addToBackStack(chooseProviderFragment.getClass().getSimpleName());
+        transaction.commit();
+
+    }
+
+    @Override
+    public void rescheduleAppointment(AppointmentDTO appointmentDTO) {
+        AvailableHoursFragment availableHoursFragment  = new AvailableHoursFragment();
+
+        Bundle bundle = new Bundle();
+        String patientID = appointmentDTO.getPayload().getPatient().getId();
+        VisitTypeDTO visitTypeDTO = new VisitTypeDTO();
+        visitTypeDTO.setId(appointmentDTO.getPayload().getVisitReasonId());
+        AppointmentResourcesItemDTO resourcesItemDTO = new AppointmentResourcesItemDTO();
+        resourcesItemDTO.setId(appointmentDTO.getPayload().getResourceId());
+        ResourcesToScheduleDTO resourcesToSchedule = new ResourcesToScheduleDTO();
+        resourcesToSchedule.getPractice().setPracticeId(appointmentDTO.getMetadata().getPracticeId());
+        resourcesToSchedule.getPractice().setPracticeMgmt(appointmentDTO.getMetadata().getPracticeMgmt());
+        appointmentsDTO.getPayload().getResourcesToSchedule().add(resourcesToSchedule);
+
+        Gson gson = new Gson();
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(resourcesItemDTO));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(visitTypeDTO));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(appointmentsDTO));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID, patientID);
+        availableHoursFragment.setArguments(bundle);
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container_main, availableHoursFragment, availableHoursFragment.getClass().getSimpleName());
+        transaction.addToBackStack(availableHoursFragment.getClass().getSimpleName());
+        transaction.commit();
+
+    }
+
+    @Override
+    public void availableTimes(VisitTypeDTO visitTypeDTO, AppointmentResourcesDTO appointmentResourcesDTO) {
+        AvailableHoursFragment availableHoursFragment = new AvailableHoursFragment();
+
+        Bundle bundle = new Bundle();
+        Gson gson = new Gson();
+        String patientID = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPatientId(); //TODO this should be updated for multi practice support
+
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(appointmentResourcesDTO.getResource()));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(visitTypeDTO));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(appointmentsDTO));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID, patientID);
+        availableHoursFragment.setArguments(bundle);
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container_main, availableHoursFragment, availableHoursFragment.getClass().getSimpleName());
+        transaction.addToBackStack(availableHoursFragment.getClass().getSimpleName());
+        transaction.commit();
+
+    }
+
 
 }

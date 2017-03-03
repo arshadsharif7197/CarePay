@@ -1,6 +1,6 @@
 package com.carecloud.carepay.patient.appointments.fragments;
 
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.carecloud.carepay.patient.appointments.activities.AddAppointmentActivity;
+import com.carecloud.carepay.patient.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.appointments.adapters.AppointmentsAdapter;
 import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentDialog;
@@ -73,9 +73,17 @@ public class AppointmentsListFragment extends BaseFragment {
     private Bundle bundle;
     private AppointmentLabelDTO appointmentLabels;
 
+    private AppointmentNavigationCallback callback;
+
+
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onAttach(Context context){
+        super.onAttach(context);
+        try{
+            callback = (AppointmentNavigationCallback) context;
+        }catch (ClassCastException cce){
+            throw new ClassCastException("Attached context must implement AppointmentNavigationCallback");
+        }
     }
 
     @Override
@@ -144,12 +152,7 @@ public class AppointmentsListFragment extends BaseFragment {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent appointmentIntent = new Intent(getActivity(), AddAppointmentActivity.class);
-                Bundle bundleArg = new Bundle();
-                String appointmentInfoString = bundle.getString(CarePayConstants.APPOINTMENT_INFO_BUNDLE);
-                bundleArg.putSerializable(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, appointmentInfoString);
-                appointmentIntent.putExtras(bundleArg);
-                startActivity(appointmentIntent);
+                callback.newAppointment();
             }
         });
     }
@@ -305,6 +308,11 @@ public class AppointmentsListFragment extends BaseFragment {
             @Override
             public void onCancelAppointmentButtonClicked(AppointmentDTO appointmentDTO, AppointmentsResultModel appointmentInfo) {
                 new CancelReasonAppointmentDialog(getContext(), appointmentDTO, appointmentInfo, getCancelReasonAppointmentDialogListener()).show();
+            }
+
+            @Override
+            public void onRescheduleAppointmentClicked(AppointmentDTO appointmentDTO) {
+                callback.rescheduleAppointment(appointmentDTO);
             }
 
         };
@@ -583,6 +591,7 @@ public class AppointmentsListFragment extends BaseFragment {
         PatientAppUtil.showSuccessToast(getContext(), appointmentRequestSuccessMessage );
 
     }
+
 
     private WorkflowServiceCallback preRegisterCallback = new WorkflowServiceCallback() {
         @Override
