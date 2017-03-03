@@ -783,13 +783,23 @@ public class DateUtil {
      * @param date date
      * @return true if valid else false
      */
+    @SuppressWarnings("deprecation")
     public static boolean isDateValid(String date) {
         if (StringUtil.isNullOrEmpty(date)) {
             return false;
         } else {
-            String pattern = "^(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\\d{2}$";
-            Matcher patternMatcher = Pattern.compile(pattern).matcher(date);
-            return patternMatcher.matches();
+            try {
+                String currentDate = DateUtil.getInstance().setToCurrent().toStringWithFormatMmSlashDdSlashYyyy();
+                if (new Date(date).after(new Date(currentDate))) {
+                    return false;
+                } else {
+                    String pattern = "^(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\\d{2}$";
+                    Matcher patternMatcher = Pattern.compile(pattern).matcher(date);
+                    return patternMatcher.matches();
+                }
+            } catch (Exception e) {
+                return false;
+            }
         }
     }
 }
