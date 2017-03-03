@@ -8,8 +8,8 @@ android {
         applicationId "com.carecloud.carepay.patient"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 1
-        versionName "0.1.0"
+        versionCode 33
+        versionName "0.1.33"
         multiDexEnabled true
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
@@ -72,7 +72,7 @@ dependencies {
 
     // for testing
     testCompile 'junit:junit:4.12'
-    androidTestCompile 'com.android.support:support-annotations:25.1.0'
+    androidTestCompile 'com.android.support:support-annotations:25.2.0'
     androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2.1') {
         exclude module: 'support-annotations'
         exclude group: 'com.android.support', module: 'appcompat'
