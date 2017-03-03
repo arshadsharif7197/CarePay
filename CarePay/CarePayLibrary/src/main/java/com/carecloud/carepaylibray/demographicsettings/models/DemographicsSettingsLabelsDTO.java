@@ -251,7 +251,7 @@ public class DemographicsSettingsLabelsDTO implements Serializable {
     private String demographicsMissingInformation;
 
     public String getDemographicsMissingInformation() {
-        return demographicsMissingInformation;
+        return StringUtil.getLabelForView(demographicsMissingInformation);
     }
 
     public void setDemographicsMissingInformation(String demographicsMissingInformation) {
