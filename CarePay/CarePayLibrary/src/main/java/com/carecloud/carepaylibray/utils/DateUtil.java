@@ -9,6 +9,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by kkannan on 9/13/16.
@@ -774,5 +776,20 @@ public class DateUtil {
         long differenceInMilli = Math.abs(date1.getTime() - date2.getTime());
 
         return TimeUnit.MILLISECONDS.toMinutes(differenceInMilli);
+    }
+
+    /**
+     * Validate date
+     * @param date date
+     * @return true if valid else false
+     */
+    public static boolean isDateValid(String date) {
+        if (StringUtil.isNullOrEmpty(date)) {
+            return false;
+        } else {
+            String pattern = "^(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\\d{2}$";
+            Matcher patternMatcher = Pattern.compile(pattern).matcher(date);
+            return patternMatcher.matches();
+        }
     }
 }
