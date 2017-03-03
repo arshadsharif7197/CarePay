@@ -98,7 +98,7 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
 
         DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentsSlotsDTO.getStartTime());
 
-        setDialogTitle(dateUtil.getDateAsDayMonthDayOrdinalYear());
+        setDialogTitle(dateUtil.getDateAsDayMonthDayOrdinalYear(labelDTO.getAppointmentsTodayHeadingSmall()));
 
         CarePayTextView appointmentTimeTextView = (CarePayTextView)view.findViewById(R.id.appointment_time);
         appointmentTimeTextView.setText(dateUtil.getTime12Hour());

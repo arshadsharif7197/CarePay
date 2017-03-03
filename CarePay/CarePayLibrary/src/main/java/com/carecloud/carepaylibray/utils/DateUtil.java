@@ -130,9 +130,9 @@ public class DateUtil {
      *
      * @return A string containing the formatted date
      */
-    public String getDateAsDayMonthDayOrdinalYear() {
+    public String getDateAsDayMonthDayOrdinalYear(String today) {
         return String.format(Locale.getDefault(), "%s, %s %d%s",
-                dayLiteral, monthLiteralAbbr, day, getOrdinalSuffix(day));
+                this.isToday() ? today : dayLiteral, monthLiteralAbbr, day, getOrdinalSuffix(day));
     }
 
     /**
