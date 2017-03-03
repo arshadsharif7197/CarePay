@@ -260,7 +260,7 @@ public class DemographicsInformationFragment extends BaseFragment {
         demographicSectionTextView.setText(demographicsHeaderString);
         addressSectionTextView.setText(addressHeaderString);
 
-        String dateOfBirthString = DateUtil.getInstance().setDateRaw(dobValString).toStringWithFormatMmSlashDdSlashYyyy();
+        String dateOfBirthString = !StringUtil.isNullOrEmpty(dobValString) ? DateUtil.getInstance().setDateRaw(dobValString).toStringWithFormatMmSlashDdSlashYyyy() : "";
         if (SystemUtil.isNotEmptyString(dateOfBirthString)) {
             dobEditText.setText(dateOfBirthString);
             dobEditText.requestFocus();
@@ -1025,14 +1025,6 @@ public class DemographicsInformationFragment extends BaseFragment {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                        }
-                    } else{
-
-                        try{
-                            showErrorNotification(demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getLabels().getDemographicsMissingInformation());
-                        } catch (Exception e)
-                        {
-                            Log.e(LOG_TAG, e.getMessage());
                         }
                     }
                 }
