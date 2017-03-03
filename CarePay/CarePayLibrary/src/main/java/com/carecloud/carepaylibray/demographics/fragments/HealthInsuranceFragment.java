@@ -59,7 +59,7 @@ public class HealthInsuranceFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_health_insurance_main, container, false);
-        isPractice = ApplicationMode.getInstance().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
+        isPractice = getApplicationMode().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
         initDTOs();
         initTitle(view);
         initSwitch(view);
@@ -116,6 +116,9 @@ public class HealthInsuranceFragment extends BaseFragment {
         Button addButton = (Button)view.findViewById(R.id.addInsuranceButton);
         addButton.setText(globalLabelsMetaDTO.getPracticeCheckinDemogrInsAddAnother());
         addButton.setOnClickListener(addNewElementListener);
+        if(insurancePayloadDTOs.size() >= CarePayConstants.MAX_INSURANCE_DOC){
+            addButton.setEnabled(false);
+        }
     }
 
     private void initAddOtherButton(View view){

@@ -170,6 +170,7 @@
     <string name="demographics_title">Demographic</string>
     <string name="next_Button">Next</string>
     <string name="invalid_date_of_birth_format">Invalid date</string>
+    <string name="additional_info">Additional Information</string>
 
     <!--Signin Screen-->
     <string name="signin_signup_email_hint">Email</string>
@@ -429,5 +430,7 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
 
     <string name="action_remove">Remove</string>
     <string name="swipeCreditCardSeparatorText">OR</string>
+
+    <string name="payment_failed">Payment Not Successful</string>
 
 </resources>

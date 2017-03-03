@@ -234,6 +234,42 @@ public class AppointmentLabelDTO implements Serializable {
     @Expose
     private String appointmentEditDateRangeButton;
 
+    @SerializedName("today_date_option")
+    @Expose
+    private String todayDateOption;
+
+    @SerializedName("datepicker_cancel_option")
+    @Expose
+    private String datepickerCancelOption;
+
+    @SerializedName("appointments_pre_register")
+    @Expose
+    private String appointmentsPreRegister;
+
+    @SerializedName("appointment_cancellation_success_message")
+    @Expose
+    private String appointmentCancellationSuccessMessage;
+
+    @SerializedName("appointment_request_checkout_now")
+    @Expose
+    private String appointmentRequestCheckoutNow;
+
+    public String getAppointmentRequestCheckoutNow() {
+        return StringUtil.getLabelForView(appointmentRequestCheckoutNow);
+    }
+
+    public void setAppointmentRequestCheckoutNow(String appointmentRequestCheckoutNow) {
+        this.appointmentRequestCheckoutNow = appointmentRequestCheckoutNow;
+    }
+
+    public String getAppointmentCancellationSuccessMessage() {
+        return appointmentCancellationSuccessMessage;
+    }
+
+    public void setAppointmentCancellationSuccessMessage(String appointmentCancellationSuccessMessage) {
+        this.appointmentCancellationSuccessMessage = appointmentCancellationSuccessMessage;
+    }
+
     public String getAppointmentSelectRangeButton() {
         return appointmentSelectRangeButton;
     }
@@ -1213,7 +1249,7 @@ public class AppointmentLabelDTO implements Serializable {
     }
 
     public String getAppointmentRequestSuccessMessage() {
-        return appointmentRequestSuccessMessage;
+        return StringUtil.getLabelForView(appointmentRequestSuccessMessage);
     }
 
     public void setAppointmentRequestSuccessMessage(String appointmentRequestSuccessMessage) {
@@ -1242,5 +1278,17 @@ public class AppointmentLabelDTO implements Serializable {
 
     public void setAppointmentEditDateRangeButton(String appointmentEditDateRangeButton) {
         this.appointmentEditDateRangeButton = appointmentEditDateRangeButton;
+    }
+
+    public String getTodayDateOption() {
+        return todayDateOption;
+    }
+
+    public String getDatepickerCancelOption() {
+        return datepickerCancelOption;
+    }
+
+    public String getAppointmentsPreRegister() {
+        return appointmentsPreRegister;
     }
 }

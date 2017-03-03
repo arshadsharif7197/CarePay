@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/screen_background"
-    android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/screen_background"
+              android:descendantFocusability="beforeDescendants"
+              android:focusableInTouchMode="true"
+              android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -93,31 +93,49 @@
         android:paddingEnd="20dp"
         android:paddingStart="20dp">
 
-        <android.support.design.widget.TextInputLayout
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/signInEmailTextInputLayout"
             style="@style/TextInputLayoutStyle"
-            app:hintTextAppearance="@style/FloatingLabelStyle">
+            app:hintTextAppearance="@style/FloatingLabelStyle"
+            app:customAssetFont="proxima_nova_semi_bold">
 
-            <EditText
+            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/signinEmailpracticeEditText"
                 style="@style/EditTextStyle"
                 android:imeOptions="actionNext"
-                android:inputType="textEmailAddress" />
-        </android.support.design.widget.TextInputLayout>
+                android:inputType="textEmailAddress"
+                app:customAssetFont="proxima_nova_semi_bold"/>
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/passwordTextInputLayout"
-            style="@style/TextInputLayoutStyle"
-            app:hintTextAppearance="@style/FloatingLabelStyle"
-            app:passwordToggleEnabled="false">
+        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
-            <EditText
-                android:id="@+id/passwordpracticeEditText"
-                style="@style/EditTextStyle"
-                android:imeOptions="actionDone"
-                android:inputType="textPassword" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                android:id="@+id/passwordTextInputLayout"
+                style="@style/TextInputLayoutStyle"
+                app:hintTextAppearance="@style/FloatingLabelStyle"
+                app:passwordToggleEnabled="false"
+                app:customAssetFont="proxima_nova_semi_bold">
 
-        </android.support.design.widget.TextInputLayout>
+                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                    android:id="@+id/passwordpracticeEditText"
+                    style="@style/EditTextStyle"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"
+                    android:paddingEnd="@dimen/dimen_30dp"
+                    app:customAssetFont="proxima_nova_semi_bold"/>
+
+            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+            <ImageView
+                android:layout_width="@dimen/dimen_30dp"
+                android:layout_height="match_parent"
+                android:id="@+id/show_password_button"
+                android:layout_gravity="end|center_vertical"
+                android:src="@drawable/icn_show_password"/>
+
+        </FrameLayout>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/signinButton"

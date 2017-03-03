@@ -29,7 +29,6 @@ import com.carecloud.carepay.practice.library.checkin.dtos.QueueDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.QueueStatusPayloadDTO;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.ISession;
@@ -37,7 +36,6 @@ import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -45,12 +43,12 @@ import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
+import org.joda.time.DateTime;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-
-import org.joda.time.DateTime;
 
 /**
  * Created by sudhir_pingale on 10/26/2016.
@@ -74,7 +72,7 @@ public class AppointmentDetailDialog extends Dialog {
     private CheckBox responsibilityCheckbox;
     private CarePayButton paymentButton;
     private CarePayButton assistButton;
-    private CarePayButton pageButton;
+    //private CarePayButton pageButton;
     private ImageView profilePhoto;
     private ImageView bgImage;
     private TextView shortName;
@@ -140,11 +138,11 @@ public class AppointmentDetailDialog extends Dialog {
 
         paymentButton = (CarePayButton) findViewById(R.id.paymentButton);
         assistButton = (CarePayButton) findViewById(R.id.assistButton);
-        pageButton = (CarePayButton) findViewById(R.id.pageButton);
+       // pageButton = (CarePayButton) findViewById(R.id.pageButton);
 
         paymentButton.setOnClickListener(paymentActionListener);
         assistButton.setOnClickListener(assistActionListener);
-        pageButton.setOnClickListener(pageActionListener);
+        //pageButton.setOnClickListener(pageActionListener);
 
         profilePhoto = (ImageView) findViewById(R.id.patient_profile_photo);
         bgImage = (ImageView) findViewById(R.id.profile_bg_image);
@@ -176,14 +174,14 @@ public class AppointmentDetailDialog extends Dialog {
             bgShapeAssistButton.setColor(ContextCompat.getColor(context, R.color.light_gray));
         }
 
-        GradientDrawable bgShapePageButton = (GradientDrawable) pageButton.getBackground();
-        if(checkInDTO.getMetadata().hasPageEnabled())
-        {
-            bgShapePageButton.setColor(ContextCompat.getColor(context, R.color.rose_madder));
-        }else
-        {
-            bgShapePageButton.setColor(ContextCompat.getColor(context, R.color.light_gray));
-        }
+//        GradientDrawable bgShapePageButton = (GradientDrawable) pageButton.getBackground();
+//        if(checkInDTO.getMetadata().hasPageEnabled())
+//        {
+//            bgShapePageButton.setColor(ContextCompat.getColor(context, R.color.rose_madder));
+//        }else
+//        {
+//            bgShapePageButton.setColor(ContextCompat.getColor(context, R.color.light_gray));
+//        }
     }
 
     /**
@@ -207,7 +205,7 @@ public class AppointmentDetailDialog extends Dialog {
                 checkInLabelDTO.getPracticeCheckinDetailDialogWaitingRoom() : checkInLabelDTO.getPracticeCheckinDetailDialogCheckingIn()));
         balanceTextLabel.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogBalance()));
         assistButton.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogAssist()));
-        pageButton.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogPage()));
+        //pageButton.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogPage()));
         paymentButton.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogPayment()));
 
         balanceValueLabel.setText(StringUtil.getFormattedBalanceAmount(getPatientBalance()));
@@ -253,7 +251,7 @@ public class AppointmentDetailDialog extends Dialog {
     {
         paymentButton.setEnabled(checkInDTO.getMetadata().hasPaymentEnabled());
         assistButton.setEnabled(checkInDTO.getMetadata().hasAssistEnabled());
-        pageButton.setEnabled(checkInDTO.getMetadata().hasPageEnabled());
+       // pageButton.setEnabled(checkInDTO.getMetadata().hasPageEnabled());
     }
 
     private View.OnClickListener paymentActionListener = new View.OnClickListener() {
@@ -446,7 +444,7 @@ public class AppointmentDetailDialog extends Dialog {
     }
 
     private double getPatientBalance() {
-        if (pendingBalanceDTO != null) {
+        if (pendingBalanceDTO != null && !pendingBalanceDTO.getPayload().isEmpty()) {
             return pendingBalanceDTO.getPayload().get(0).getAmount();
         }
 

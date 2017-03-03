@@ -3,6 +3,7 @@
 
     <!-- Default dimens which will be use for any default styling  -->
     <dimen name="dimen_1dp">1dp</dimen>
+    <dimen name="dimen_4dp">4dp</dimen>
     <dimen name="dimen_5dp">5dp</dimen>
     <dimen name="dimen_8dp">8dp</dimen>
     <dimen name="dimen_9dp">9dp</dimen>
@@ -36,6 +37,7 @@
     <dimen name="dimen_60dp">60dp</dimen>
     <dimen name="dimen_370dp">370dp</dimen>
     <dimen name="dimen_390dp">390dp</dimen>
+    <dimen name="dimen_100dp">100dp</dimen>
     <dimen name="dimen_130dp">130dp</dimen>
     <dimen name="dimen_114dp">114dp</dimen>
     <dimen name="dimen_150dp">150dp</dimen>
@@ -47,6 +49,7 @@
     <dimen name="text_size_17">17sp</dimen>
     <dimen name="text_size_20">20sp</dimen>
     <dimen name="text_size_38">38sp</dimen>
+    <dimen name="text_size_22">22sp</dimen>
 
     <dimen name="textview_default_textsize">17sp</dimen>
     <dimen name="button_textsize_medium">15sp</dimen>
@@ -256,7 +259,7 @@
     <dimen name="apt_popup_icon_margin">8dp</dimen>
     <dimen name="apt_popup_message_margin">10dp</dimen>
     <dimen name="apt_popup_message_text">15sp</dimen>
-    <dimen name="apt_popup_message_text_line_spacing">10sp</dimen>
+    <dimen name="apt_popup_message_text_line_spacing">2sp</dimen>
     <dimen name="apt_popup_button_text">13sp</dimen>
     <dimen name="apt_popup_button_margin">6dp</dimen>
     <dimen name="apt_popup_optional">10sp</dimen>

@@ -34,13 +34,8 @@ public class BaseServiceGenerator {
     private static Retrofit.Builder builder;
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
-    public BaseServiceGenerator(Context context) {
+    public BaseServiceGenerator() {
         API_BASE_URL=HttpConstants.getApiBaseUrl();
-        generateBuilder();
-    }
-
-    public BaseServiceGenerator(Context context, String baseUrl) {
-        API_BASE_URL=baseUrl;
         generateBuilder();
     }
 
@@ -49,15 +44,12 @@ public class BaseServiceGenerator {
                 .baseUrl(API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create());
     }
+
     /**
      * Create the retrofil service for the specific service class
      * @param serviceClass Specific service class for converting in to retrofit service model
      * */
-    public  <S> S createService(Class<S> serviceClass) {
-        return createService(serviceClass,null);
-    }
-
-    public  <S> S createService(Class<S> serviceClass, Map<String,String> headers) {
+    public  <S> S createService(final CognitoAppHelper cognitoAppHelper, Class<S> serviceClass) {
         httpClient.readTimeout(HttpConstants.READ_TIMEOUT_MS, TimeUnit.MILLISECONDS);
         httpClient.connectTimeout(HttpConstants.CONNECT_TIMEOUT_MS, TimeUnit.MILLISECONDS);
         httpClient.writeTimeout(HttpConstants.WRITE_TIMEOUT_MS, TimeUnit.MILLISECONDS);
@@ -71,11 +63,11 @@ public class BaseServiceGenerator {
                         .header("Accept", "application/json")
                         .header("Cache-Control", "no-cache, no-store")
                         .method(original.method(), original.body());
-                if( !isNullOrEmpty(CognitoAppHelper.getCurrUser())) {
-                    requestBuilderWithToken.header("username", CognitoAppHelper.getCurrUser());
+                if( !isNullOrEmpty(cognitoAppHelper.getCurrUser())) {
+                    requestBuilderWithToken.header("username", cognitoAppHelper.getCurrUser());
                 }
-                if(CognitoAppHelper.getCurrSession()!=null &&  !isNullOrEmpty(CognitoAppHelper.getCurrSession().getIdToken().getJWTToken())){
-                    requestBuilderWithToken.header("Authorization", CognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
+                if(cognitoAppHelper.getCurrSession()!=null &&  !isNullOrEmpty(cognitoAppHelper.getCurrSession().getIdToken().getJWTToken())){
+                    requestBuilderWithToken.header("Authorization", cognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
                 }
                 Request request = requestBuilderWithToken.build();
                 return chain.proceed(request);
@@ -86,9 +78,6 @@ public class BaseServiceGenerator {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         httpClient.addInterceptor(interceptor);
-        if(headers!=null) {
-            httpClient.addInterceptor(new HeaderInterceptor(headers));
-        }
 
         OkHttpClient client = httpClient.build();
         Retrofit retrofit = builder.client(client).build();

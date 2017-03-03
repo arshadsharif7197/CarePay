@@ -8,7 +8,8 @@
     android:orientation="vertical"
     android:paddingBottom="@dimen/dimen_14dp">
 
-    <include layout="@layout/toolbar_responsibility" />
+    <include layout="@layout/toolbar_responsibility"
+        android:id="@+id/toolbar_layout"/>
 
     <!--ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"

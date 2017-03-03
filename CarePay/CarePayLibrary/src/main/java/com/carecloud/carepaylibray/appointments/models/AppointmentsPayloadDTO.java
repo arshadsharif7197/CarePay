@@ -1,8 +1,11 @@
 
 package com.carecloud.carepaylibray.appointments.models;
 
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import org.joda.time.DateTime;
 
 /**
  * Model for appointment payload.
@@ -661,4 +664,27 @@ public class AppointmentsPayloadDTO {
         this.resource = resource;
     }
 
+    /**
+     * @return true if appointment time is over
+     */
+    public boolean isAppointmentOver() {
+        if (null == endTime) {
+            return false;
+        }
+
+        DateTime dateTime = new DateTime(DateUtil.getInstance().setDateRaw(endTime).getDate());
+        return dateTime.isBeforeNow();
+    }
+
+    /**
+     * @return true if appointment time started
+     */
+    public boolean hasAppointmentStarted() {
+        if (null == startTime) {
+            return false;
+        }
+
+        DateTime dateTime = new DateTime(DateUtil.getInstance().setDateRaw(startTime).getDate());
+        return dateTime.isBeforeNow();
+    }
 }

@@ -3,7 +3,6 @@ package com.carecloud.carepay.patient.payment.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -49,7 +48,7 @@ public class PaymentTermsFragment extends BaseFragment {
         toolbar.setTitle("");
 
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(),
-                R.drawable.icn_patient_mode_nav_back));
+                R.drawable.icn_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         termsContentTextView = (TextView) view.findViewById(R.id.terms_content_textView);
         termsContentTextView.setText(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentAgreeToPayTerms());

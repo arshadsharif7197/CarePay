@@ -75,13 +75,27 @@
     </LinearLayout>
 
 
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:layout_marginBottom="@dimen/dimen_20dp"
+        android:elevation="17dp"
+        android:padding="@dimen/payment_method_parent_layout_padding"
+        android:id="@+id/list_payment_types"
+        android:choiceMode="singleChoice"
+        android:visibility="visible"/>
+
+
+
     <ScrollView
         android:id="@+id/scrollview_choices"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
         android:fillViewport="true"
-        android:scrollbars="vertical">
+        android:scrollbars="vertical"
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/consenrform1_mainContainer"
@@ -136,8 +150,8 @@
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/paymentChoiceButton"
         android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
-        android:background="@drawable/button_blue_border"
-        android:textColor="@color/colorPrimary"
+        android:background="@drawable/button_blue_border_selector"
+        android:textColor="@color/primary_white_enabled_selector"
         android:layout_margin="@dimen/dimen_5dp"/>
 
 </LinearLayout>

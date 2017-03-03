@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.utils;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -60,6 +61,17 @@ public class DtoHelper {
     }
 
     /**
+     * Converts to the desire DTO object from JsonObject DTO
+     *
+     * @param dtoClass class to convert
+     * @param workflowDTO  generic workflow to be converted
+     * @return Dynamic converted class object
+     */
+    public static <S> S getConvertedDTO(Class<S> dtoClass, WorkflowDTO workflowDTO) {
+        return getConvertedDTO(dtoClass, getStringDTO(workflowDTO));
+    }
+
+    /**
      * Converts DTO object to String
      *
      * @param dto object to be converted to String
@@ -76,6 +88,19 @@ public class DtoHelper {
     }
 
     public static void putExtra(Intent intent, Object dto) {
-        intent.putExtra(dto.getClass().getSimpleName(), getStringDTO(dto));
+        intent.putExtra(WorkflowDTO.class.getSimpleName(), getStringDTO(dto));
+    }
+
+    /**
+     * Convenience method to repackage a DTO from activity to Fragment withoug having to serialize it
+     * @param args Output Bundle
+     * @param intent Original Intent
+     * @param dtoClass Type of object for key name
+     */
+    public static void bundleBaseDTO(Bundle args, Intent intent, Class dtoClass){
+        Bundle bundle = intent.getExtras();
+        if (bundle != null) {
+            args.putString(dtoClass.getSimpleName(), bundle.getString(WorkflowDTO.class.getSimpleName()));
+        }
     }
 }

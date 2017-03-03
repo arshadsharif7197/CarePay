@@ -93,7 +93,7 @@ public class InTakeActivity extends KeyboardHolderActivity {
         formsToolbarTitleTv = (TextView) formsToolbar.findViewById(R.id.intakeToolbarTitle);
         SystemUtil.setGothamRoundedMediumTypeface(this, formsToolbarTitleTv);//534 618 story 844 bug for this
         formsToolbar.setTitle("");
-        formsToolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.icn_patient_mode_nav_back));
+        formsToolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.icn_nav_back));
         setSupportActionBar(formsToolbar);
 
         // set the dotted tab
@@ -115,7 +115,7 @@ public class InTakeActivity extends KeyboardHolderActivity {
                 } else {
                     intakeProgressBar.setVisibility(View.VISIBLE);
                     /*InTake API call to fetch payment information*/
-                    InTakeService apptService = (new BaseServiceGenerator(InTakeActivity.this)).createService(InTakeService.class); //, String token, String searchString
+                    InTakeService apptService = (new BaseServiceGenerator()).createService(getCognitoAppHelper(), InTakeService.class); //, String token, String searchString
                     Call<IntakeResponseModel> call = apptService.confirmInTakeInformation();
                     call.enqueue(new Callback<IntakeResponseModel>() {
                         @Override

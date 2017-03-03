@@ -188,7 +188,7 @@ public class SignUpConfirmActivity extends BaseActivity {
             return;
         }
 
-        CognitoAppHelper.getPool().getUser(userName).confirmSignUpInBackground(confirmCode, true, confHandler);
+        getCognitoAppHelper().getPool().getUser(userName).confirmSignUpInBackground(confirmCode, true, confHandler);
     }
 
     private void reqConfCode() {
@@ -200,7 +200,7 @@ public class SignUpConfirmActivity extends BaseActivity {
                                                              R.drawable.text_border_error));
             return;
         }
-        CognitoAppHelper.getPool().getUser(userName).resendConfirmationCodeInBackground(resendConfCodeHandler);
+        getCognitoAppHelper().getPool().getUser(userName).resendConfirmationCodeInBackground(resendConfCodeHandler);
 
     }
 
@@ -223,7 +223,7 @@ public class SignUpConfirmActivity extends BaseActivity {
             confCode.setBackground(ContextCompat.getDrawable(SignUpConfirmActivity.this,
                                                              R.drawable.text_border_error));
 
-            showDialogMessage("Confirmation failed", CognitoAppHelper.formatException(exception), false);
+            showDialogMessage("Confirmation failed", getCognitoAppHelper().formatException(exception), false);
         }
     };
 
@@ -245,7 +245,7 @@ public class SignUpConfirmActivity extends BaseActivity {
             label.setText(signInLablesDTO.getConfirmConfirmationCodeResendFailed());
             username.setBackground(ContextCompat.getDrawable(SignUpConfirmActivity.this,
                                                              R.drawable.text_border_error));
-            showDialogMessage(signInLablesDTO.getConfirmConfirmationCodeRequestHasFailed(), CognitoAppHelper.formatException(exception), false);
+            showDialogMessage(signInLablesDTO.getConfirmConfirmationCodeRequestHasFailed(), getCognitoAppHelper().formatException(exception), false);
         }
     };
 

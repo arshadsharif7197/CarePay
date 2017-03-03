@@ -9,6 +9,7 @@
     <color name="black">#000000</color>
     <color name="transparent_apt">#00000000</color>
     <color name="transparent_20">#33ffffff</color>
+    <color name="transparent_70">#80ffffff</color>
 
     <color name="colorAccent">#acacac</color>
     <color name="slateGray">#607d8b</color>
@@ -54,6 +55,7 @@
     <color name="lightning_yellow">#f5a623</color>
     <color name="divider_color">#c4c4c4</color>
     <color name="checked_in_appointment_bg">#fffdea</color>
+    <color name="news_item_divider">#3378909C</color>
 
     <color name="cadet_gray">#ff90a4ae</color>
     <color name="optional_gray">#90a4ae</color>

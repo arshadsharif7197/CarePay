@@ -3,7 +3,6 @@ package com.carecloud.carepay.patient.signinsignuppatient.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -30,9 +29,7 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHan
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
@@ -40,7 +37,6 @@ import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.cognito.SignUpConfirmActivity;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -77,7 +73,7 @@ public class SignupFragment extends BaseFragment {
             // Check signUpConfirmationState to see if the user is already confirmed
             if (signUpConfirmationState) {
                 // auto-confirmed; sign-in
-                CognitoAppHelper.signIn(userName, passwordText.getText().toString(), cognitoActionCallback);
+                getCognitoAppHelper().signIn(userName, passwordText.getText().toString(), cognitoActionCallback);
             } else {
                 Log.v(LOG_TAG, "signUpConfirmationState == false");
                 // User is not confirmed
@@ -88,7 +84,7 @@ public class SignupFragment extends BaseFragment {
         @Override
         public void onFailure(Exception exception) {
             progressBar.setVisibility(View.INVISIBLE);
-            String errorMsg = CognitoAppHelper.formatException(exception);
+            String errorMsg = getCognitoAppHelper().formatException(exception);
 
             SystemUtil.showFailureDialogMessage(getActivity(),
                                          "Sign up failed!",//TODO this should not be hardcoded string
@@ -153,7 +149,7 @@ public class SignupFragment extends BaseFragment {
         TextView title = (TextView) toolbar.findViewById(R.id.signup_toolbar_title);
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setTitle("");
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_back));
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         // set the buttons
@@ -494,7 +490,7 @@ public class SignupFragment extends BaseFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 10 && resultCode == RESULT_OK) {
             // confirmed; (auto)sign-in
-            CognitoAppHelper.signIn(userName, passwordText.getText().toString(), cognitoActionCallback);
+            getCognitoAppHelper().signIn(userName, passwordText.getText().toString(), cognitoActionCallback);
         }
     }
 
@@ -518,12 +514,12 @@ public class SignupFragment extends BaseFragment {
 
         userName = emailText.getText().toString();
         if (userName.length() > 0) {
-            userAttributes.addAttribute(CognitoAppHelper.getSignUpFieldsC2O().get("Email"), userName);
+            userAttributes.addAttribute(getCognitoAppHelper().getSignUpFieldsC2O().get("Email"), userName);
             // add more attributes here is needed...
         }
         String password = passwordText.getText().toString();
 
-        CognitoAppHelper.getPool().signUpInBackground(userName,
+        getCognitoAppHelper().getPool().signUpInBackground(userName,
                                                       password,
                                                       userAttributes,
                                                       null,

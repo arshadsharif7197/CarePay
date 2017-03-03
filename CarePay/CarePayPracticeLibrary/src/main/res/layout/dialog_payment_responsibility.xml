@@ -117,7 +117,7 @@
             android:textSize="@dimen/text_size_24sp"
             app:customAssetFont="proxima_nova_semi_bold" />
 
-        <ScrollView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/payment_responsibility_balance_details"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

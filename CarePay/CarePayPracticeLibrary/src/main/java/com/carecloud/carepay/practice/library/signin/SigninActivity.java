@@ -1,9 +1,11 @@
 package com.carecloud.carepay.practice.library.signin;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -28,16 +30,12 @@ import com.carecloud.carepay.practice.library.signin.dtos.SigninDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninLabelsDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeLabelsDTO;
-import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -59,48 +57,6 @@ import java.util.Map;
  */
 public class SigninActivity extends BasePracticeActivity {
 
-    WorkflowServiceCallback signinCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
-            signInButton.setClickable(true);
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            signInButton.setClickable(true);
-            SystemUtil.showDefaultFailureDialog(SigninActivity.this);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
-    WorkflowServiceCallback signinPatientModeAppointmentsCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
-            signInButton.setClickable(true);
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            signInButton.setClickable(true);
-            SystemUtil.showDefaultFailureDialog(SigninActivity.this);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
     private TextView signinButton;
     private TextView forgotPasswordButton;
     private TextView signinTitle;
@@ -119,76 +75,10 @@ public class SigninActivity extends BasePracticeActivity {
     private List<String> languages = new ArrayList<>();
     private SigninDTO signinDTO;
     private SigninPatientModeDTO signinPatientModeDTO;
-    WorkflowServiceCallback signinPatientModeCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            Map<String, String> queryMap = new HashMap<>();
-
-            Gson gson = new Gson();
-            SigninPatientModeDTO signinPatientModeDTOLocal = gson.fromJson(workflowDTO.toString(), SigninPatientModeDTO.class);
-            queryMap.put("language", getApplicationPreferences().getUserLanguage());
-            queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
-            queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
-            queryMap.put("patient_id", signinPatientModeDTOLocal.getPayload().getPatientModeLoginData().getPatientModeLoginDataMetadata().getPatientId());
-            ApplicationMode.getInstance().setPatientId(signinPatientModeDTOLocal.getPayload().getPatientModeLoginData().getPatientModeLoginDataMetadata().getPatientId());
-            Map<String, String> headers = new HashMap<>();
-            headers.put("transition", "false");
-            TransitionDTO transitionDTO;
-            transitionDTO = signinPatientModeDTO.getMetadata().getTransitions().getAction();
-            getWorkflowServiceHelper().execute(transitionDTO, signinPatientModeAppointmentsCallback, queryMap, headers);
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            signInButton.setClickable(true);
-            SystemUtil.showDefaultFailureDialog(SigninActivity.this);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
-
-    CognitoActionCallback cognitoActionCallback = new CognitoActionCallback() {
-        @Override
-        public void onLoginSuccess() {
-            //launchHomescreen();
-            Map<String, String> queryMap = new HashMap<>();
-            TransitionDTO transitionDTO;
-            queryMap.put("language", getApplicationPreferences().getUserLanguage());
-            if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
-                transitionDTO = signinDTO.getMetadata().getTransitions().getAuthenticate();
-                getWorkflowServiceHelper().execute(transitionDTO, signinCallback, queryMap);
-            } else if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
-                transitionDTO = signinPatientModeDTO.getMetadata().getLinks().getLogin();
-                queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
-                queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
-                getWorkflowServiceHelper().execute(transitionDTO, signinPatientModeCallback, queryMap);
-            }
-        }
-        //launchHomescreen
-
-
-        @Override
-        public void onBeforeLogin() {
-            SystemUtil.hideSoftKeyboard(SigninActivity.this);
-        }
-
-        @Override
-        public void onLoginFailure(String exceptionMessage) {
-            signInButton.setClickable(true);
-            SystemUtil.showFailureDialogMessage(SigninActivity.this,
-                    "Sign-in failed",
-                    "Invalid user id or password");
-
-        }
-    };
     private Spinner langSpinner;
-    private List<String> modeSwitchOptions = new ArrayList<>();
+    private View showPasswordButton;
+
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,20 +87,20 @@ public class SigninActivity extends BasePracticeActivity {
 
         // init cognito
         SignInScreenMode signinScreenMode = SignInScreenMode.PRACTICE_MODE_SIGNIN;
-        if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
+        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
             signinDTO = getConvertedDTO(SigninDTO.class);
             if (signinDTO != null && signinDTO.getPayload() != null && signinDTO.getPayload().getPracticeModeSignin() != null && signinDTO.getPayload().getPracticeModeSignin().getCognito() != null) {
-                ApplicationMode.getInstance().setCognitoDTO(signinDTO.getPayload().getPracticeModeSignin().getCognito());
-                CognitoAppHelper.init(this);
+                getApplicationMode().setCognitoDTO(signinDTO.getPayload().getPracticeModeSignin().getCognito());
+                getCognitoAppHelper();
                 signinScreenMode = SignInScreenMode.valueOf(signinDTO.getState().toUpperCase());
             }
-        } else if (ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+        } else if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             signinPatientModeDTO = getConvertedDTO(SigninPatientModeDTO.class);
             if (signinPatientModeDTO != null && signinPatientModeDTO.getPayload() != null
                     && signinPatientModeDTO.getPayload().getPatientModeSigninData() != null
                     && signinPatientModeDTO.getPayload().getPatientModeSigninData().getCognito() != null) {
-                ApplicationMode.getInstance().setCognitoDTO(signinPatientModeDTO.getPayload().getPatientModeSigninData().getCognito());
-                CognitoAppHelper.init(getApplicationContext());
+                getApplicationMode().setCognitoDTO(signinPatientModeDTO.getPayload().getPatientModeSigninData().getCognito());
+                getCognitoAppHelper();
                 signinScreenMode = SignInScreenMode.valueOf(signinPatientModeDTO.getState().toUpperCase());
             }
         }
@@ -219,8 +109,8 @@ public class SigninActivity extends BasePracticeActivity {
         setSystemUiVisibility();
         initViews(signinScreenMode);
         setEditTexts();
-        setClicables();
-        setTypeFace();
+        setClickables();
+//        setTypeFace();
 
         changeScreenMode(signinScreenMode);
         isEmptyEmail = true;
@@ -243,6 +133,7 @@ public class SigninActivity extends BasePracticeActivity {
         signInEmailTextInputLayout = (TextInputLayout) findViewById(R.id.signInEmailTextInputLayout);
         passwordTextInputLayout = (TextInputLayout) findViewById(R.id.passwordTextInputLayout);
         signinTitle = (TextView) findViewById(R.id.signinTitleTextview);
+        showPasswordButton = findViewById(R.id.show_password_button);
 
         if (signInScreenMode == SignInScreenMode.PRACTICE_MODE_SIGNIN
                 && signinDTO.getPayload().getLanguages() != null) {
@@ -274,7 +165,7 @@ public class SigninActivity extends BasePracticeActivity {
             }
         }
 
-        initializeLebals(signInScreenMode);
+        initializeLabels(signInScreenMode);
 
         // disable sign-in button
         setEnabledSigninButton(false);
@@ -297,7 +188,7 @@ public class SigninActivity extends BasePracticeActivity {
         });
     }
 
-    private void initializeLebals(SignInScreenMode signInScreenMode) {
+    private void initializeLabels(SignInScreenMode signInScreenMode) {
         if (signInScreenMode == SignInScreenMode.PRACTICE_MODE_SIGNIN && signinDTO != null) {
             SigninLabelsDTO signinLabelsDTO = signinDTO.getMetadata().getLabels();
             if (signinLabelsDTO != null) {
@@ -343,7 +234,7 @@ public class SigninActivity extends BasePracticeActivity {
         signInButton.setEnabled(enabled);
     }
 
-    private void setClicables() {
+    private void setClickables() {
 
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -380,6 +271,31 @@ public class SigninActivity extends BasePracticeActivity {
             }
         });
 
+        showPasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(passwordEditText.getInputType()!=InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
+                    setInputType(passwordEditText, InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            setInputType(passwordEditText, InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        }
+                    }, 3 * 1000);
+                }else{
+                    setInputType(passwordEditText, InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                }
+            }
+        });
+
+    }
+
+    private void setInputType(EditText editText, int inputType){
+        int selection = editText.getSelectionEnd();
+        if(editText.getInputType()!=inputType){
+            editText.setInputType(inputType);
+            editText.setSelection(selection);
+        }
     }
 
 
@@ -525,7 +441,8 @@ public class SigninActivity extends BasePracticeActivity {
         String userName = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
-        CognitoAppHelper.signIn(userName, password, cognitoActionCallback);
+        getCognitoAppHelper().signIn(userName, password, cognitoActionCallback);
+
     }
 
     public void setTypeFace() {
@@ -536,6 +453,120 @@ public class SigninActivity extends BasePracticeActivity {
     public enum SignInScreenMode {
         PRACTICE_MODE_SIGNIN, PATIENT_MODE_SIGNIN
     }
+
+
+    WorkflowServiceCallback signinCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+            signInButton.setClickable(true);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            signInButton.setClickable(true);
+            SystemUtil.showDefaultFailureDialog(SigninActivity.this);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+    WorkflowServiceCallback signinPatientModeAppointmentsCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+            signInButton.setClickable(true);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            signInButton.setClickable(true);
+            SystemUtil.showDefaultFailureDialog(SigninActivity.this);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+    WorkflowServiceCallback signinPatientModeCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            Map<String, String> queryMap = new HashMap<>();
+
+            Gson gson = new Gson();
+            SigninPatientModeDTO signinPatientModeDTOLocal = gson.fromJson(workflowDTO.toString(), SigninPatientModeDTO.class);
+            queryMap.put("language", getApplicationPreferences().getUserLanguage());
+            queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+            queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
+            queryMap.put("patient_id", signinPatientModeDTOLocal.getPayload().getPatientModeLoginData().getPatientModeLoginDataMetadata().getPatientId());
+            getApplicationMode().setPatientId(signinPatientModeDTOLocal.getPayload().getPatientModeLoginData().getPatientModeLoginDataMetadata().getPatientId());
+            Map<String, String> headers = new HashMap<>();
+            headers.put("transition", "false");
+            TransitionDTO transitionDTO;
+            transitionDTO = signinPatientModeDTO.getMetadata().getTransitions().getAction();
+            getWorkflowServiceHelper().execute(transitionDTO, signinPatientModeAppointmentsCallback, queryMap, headers);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            signInButton.setClickable(true);
+            SystemUtil.showDefaultFailureDialog(SigninActivity.this);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+    CognitoActionCallback cognitoActionCallback = new CognitoActionCallback() {
+        @Override
+        public void onLoginSuccess() {
+            //launchHomescreen();
+            Map<String, String> queryMap = new HashMap<>();
+            TransitionDTO transitionDTO;
+            queryMap.put("language", getApplicationPreferences().getUserLanguage());
+            if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
+                transitionDTO = signinDTO.getMetadata().getTransitions().getAuthenticate();
+                getWorkflowServiceHelper().execute(transitionDTO, signinCallback, queryMap);
+            } else if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+                transitionDTO = signinPatientModeDTO.getMetadata().getLinks().getLogin();
+                queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+                queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
+                getWorkflowServiceHelper().execute(transitionDTO, signinPatientModeCallback, queryMap);
+            }
+        }
+        //launchHomescreen
+
+
+        @Override
+        public void onBeforeLogin() {
+            SystemUtil.hideSoftKeyboard(SigninActivity.this);
+        }
+
+        @Override
+        public void onLoginFailure(String exceptionMessage) {
+            signInButton.setClickable(true);
+            SystemUtil.showFailureDialogMessage(SigninActivity.this,
+                    "Sign-in failed",
+                    "Invalid user id or password");
+
+        }
+    };
+
 
     /**
      * Click listener for go back button
@@ -552,10 +583,10 @@ public class SigninActivity extends BasePracticeActivity {
         super.onBackPressed();
         // log out previous user from Cognito
         Log.v(this.getClass().getSimpleName(), "sign out Cognito");
-        CognitoAppHelper.getPool().getUser().signOut();
-        CognitoAppHelper.setUser(null);
-        if (!(ApplicationMode.getInstance().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)){
-            ApplicationMode.getInstance().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
+        getCognitoAppHelper().getPool().getUser().signOut();
+        getCognitoAppHelper().setUser(null);
+        if (!(getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)){
+            getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
         }
 
     }

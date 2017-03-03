@@ -3,7 +3,6 @@ package com.carecloud.carepay.practice.library.appointments.dialogs;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -14,49 +13,55 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.ScheduleAppointmentActivity;
 import com.carecloud.carepay.practice.library.customdialog.BasePracticeDialog;
-import com.carecloud.carepay.service.library.ApplicationPreferences;
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.constants.ApplicationMode;
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLocationsDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
-import com.carecloud.carepaylibray.base.ISession;
+import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.DateUtil;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.google.gson.JsonObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
 
     private Context context;
     private LayoutInflater inflater;
-    private AppointmentsResultModel appointmentsResultModel;
+    private AppointmentLabelDTO labelDTO;
     private AppointmentsSlotsDTO appointmentsSlotsDTO;
     private AppointmentAvailabilityDTO appointmentAvailabilityDTO;
+    private VisitTypeDTO visitTypeDTO;
+    private final PracticeRequestAppointmentDialogListener callback;
     private TextView visitTypeTextView;
+
+    public interface PracticeRequestAppointmentDialogListener {
+        void onAppointmentRequested(String comments);
+
+        void onAppointmentCancelled();
+    }
 
     /**
      * Constructor.
      * @param context activity context
      * @param cancelString String
+     * @param labelDTO labels for dialog
      * @param appointmentsSlotsDTO AppointmentsSlotsDTO
+     * @param callback for dialog actions
      */
-    public PracticeRequestAppointmentDialog(Context context, String cancelString, AppointmentsSlotsDTO appointmentsSlotsDTO
-            , AppointmentAvailabilityDTO appointmentAvailabilityDTO) {
+    public PracticeRequestAppointmentDialog(Context context, String cancelString,
+                                            AppointmentLabelDTO labelDTO,
+                                            AppointmentsSlotsDTO appointmentsSlotsDTO,
+                                            AppointmentAvailabilityDTO appointmentAvailabilityDTO,
+                                            VisitTypeDTO visitTypeDTO,
+                                            PracticeRequestAppointmentDialogListener callback) {
 
         super(context, cancelString, false);
         this.context = context;
+        this.labelDTO = labelDTO;
         this.appointmentsSlotsDTO = appointmentsSlotsDTO;
         this.appointmentAvailabilityDTO = appointmentAvailabilityDTO;
+        this.visitTypeDTO = visitTypeDTO;
+        this.callback = callback;
 
         inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -84,24 +89,19 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
     }
 
     private void inflateUIComponents(View view){
-        appointmentsResultModel = ((ScheduleAppointmentActivity)context).getResourcesToSchedule();
         Button requestAppointmentButton = (Button)
                 view.findViewById(R.id.requestAppointmentButton);
-        requestAppointmentButton.setText(appointmentsResultModel.getMetadata().getLabel().getAppointmentsRequestHeading());
+        requestAppointmentButton.setText(labelDTO.getAppointmentsRequestHeading());
         requestAppointmentButton.setOnClickListener(requestAppointmentClickListener);
         requestAppointmentButton.requestFocus();
         SystemUtil.setGothamRoundedBookTypeface(context,requestAppointmentButton);
 
-        DateUtil.getInstance().setDateRaw(appointmentsSlotsDTO.getStartTime());
-//        CarePayTextView appointmentDateTextView = (CarePayTextView)view.findViewById(R.id.appointment_date);
-//        appointmentDateTextView.setText(DateUtil.getInstance().getDateAsDayMonthDayOrdinalYear());
-//        SystemUtil.setProximaNovaSemiboldTypeface(context,appointmentDateTextView);
+        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentsSlotsDTO.getStartTime());
 
-        setDialogTitle(DateUtil.getInstance().getDateAsDayMonthDayOrdinalYear());
-
+        setDialogTitle(dateUtil.getDateAsDayMonthDayOrdinalYear(labelDTO.getAppointmentsTodayHeadingSmall()));
 
         CarePayTextView appointmentTimeTextView = (CarePayTextView)view.findViewById(R.id.appointment_time);
-        appointmentTimeTextView.setText(DateUtil.getInstance().getTime12Hour());
+        appointmentTimeTextView.setText(dateUtil.getTime12Hour());
         SystemUtil.setGothamRoundedBoldTypeface(context,appointmentTimeTextView);
 
         CarePayTextView providerImageTextView = (CarePayTextView)view.findViewById(R.id.provider_short_name);
@@ -123,31 +123,26 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         CarePayTextView appointmentAddressTextView = (CarePayTextView)view.findViewById(R.id.provider_place_address);
         appointmentAddressTextView.setText(location.getAddress().getPlaceAddressString());
         CarePayTextView visitTypeLabel = (CarePayTextView)view.findViewById(R.id.visitTypeLabel);
-        visitTypeLabel.setText(appointmentsResultModel.getMetadata().getLabel().getVisitTypeHeading());
+        visitTypeLabel.setText(labelDTO.getVisitTypeHeading());
 
+        initializeVisitTypeTextView(view);
+
+        setCancelImage(R.drawable.icn_arrow_up);
+        setCancelable(false);
+    }
+
+    private void initializeVisitTypeTextView(View view) {
         visitTypeTextView = (TextView)view.findViewById(R.id.reasonTextView);
-//        visitTypeTextView.setTag(reasonInputLayout);
 
-        String visitReason = ((ScheduleAppointmentActivity)context).getSelectedVisitTypeDTO().getName();
+        if (null == visitTypeDTO) {
+            dismiss();
+            return;
+        }
+
+        String visitReason = visitTypeDTO.getName();
         if (SystemUtil.isNotEmptyString(visitReason)) {
             visitTypeTextView.setText(visitReason);
         }
-
-//        SystemUtil.handleHintChange(visitTypeTextView, true);
-//        visitTypeTextView.clearFocus();
-
-//        visitTypeTextView.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View view, MotionEvent event) {
-//                view.setFocusable(true);
-//                view.setFocusableInTouchMode(true);
-//                return false;
-//            }
-//        });
-
-        //setDialogTitle("");
-        setCancelImage(R.drawable.icn_arrow_up);
-        setCancelable(false);
     }
 
     /**
@@ -156,72 +151,22 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
     private View.OnClickListener requestAppointmentClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            // Call request appointment endpoint from here
-            onRequestAppointment();
+            if (null != callback) {
+                callback.onAppointmentRequested(visitTypeTextView.getText().toString().trim());
+            }
+
             dismiss();
-        }
-    };
-
-    /**
-     * call make_appointment api.
-     */
-    private void onRequestAppointment() {
-
-        Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("language", ((ISession) context).getApplicationPreferences().getUserLanguage());
-        queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
-        queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
-
-        JsonObject appointmentJSONObj = new JsonObject();
-        JsonObject patientJSONObj = new JsonObject();
-
-        patientJSONObj.addProperty("id", ((ScheduleAppointmentActivity)context).getPatientId());
-        appointmentJSONObj.addProperty("start_time", appointmentsSlotsDTO.getStartTime());
-        appointmentJSONObj.addProperty("end_time", appointmentsSlotsDTO.getEndTime());
-        appointmentJSONObj.addProperty("appointment_status_id", "5");
-        appointmentJSONObj.addProperty("location_id", appointmentAvailabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getLocation().getId());
-        appointmentJSONObj.addProperty("provider_id", ((ScheduleAppointmentActivity)context).getSelectedResource().getResource().getProvider().getId());
-        appointmentJSONObj.addProperty("visit_reason_id", ((ScheduleAppointmentActivity)context).getSelectedVisitTypeDTO().getId());
-        appointmentJSONObj.addProperty("resource_id", ((ScheduleAppointmentActivity)context).getSelectedResource().getResource().getId());
-        appointmentJSONObj.addProperty("chief_complaint", ((ScheduleAppointmentActivity)context).getSelectedVisitTypeDTO().getName());
-        appointmentJSONObj.addProperty("comments", visitTypeTextView.getText().toString().trim());
-        appointmentJSONObj.add("patient", patientJSONObj);
-
-        JsonObject makeAppointmentJSONObj = new JsonObject();
-        makeAppointmentJSONObj.add("appointment", appointmentJSONObj);
-
-        TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getMakeAppointment();
-
-        ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, getMakeAppointmentCallback,makeAppointmentJSONObj
-                .toString(), queryMap);
-    }
-
-    private WorkflowServiceCallback getMakeAppointmentCallback = new WorkflowServiceCallback() {
-
-        @Override
-        public void onPreExecute() {
-            ((ISession) context).showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            ((ISession) context).hideProgressDialog();
-            ((ScheduleAppointmentActivity) context).showAppointmentConfirmation();
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            ((ISession) context).hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(context);
-            Log.e(context.getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
     @Override
     protected void onDialogCancel() {
         super.onDialogCancel();
-        new PracticeAvailableHoursDialog(context,((ScheduleAppointmentActivity)context).getResourcesToSchedule()
-                .getMetadata().getLabel().getAvailableHoursBack()).show();
+
+        if (null != callback) {
+            callback.onAppointmentCancelled();
+        }
+
         dismiss();
     }
 }

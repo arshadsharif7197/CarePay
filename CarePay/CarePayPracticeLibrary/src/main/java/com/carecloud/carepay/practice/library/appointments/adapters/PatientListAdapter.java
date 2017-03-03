@@ -30,6 +30,8 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -53,8 +55,8 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private OnItemTappedListener tapListener;
     private MapFilterModel filterModel;
 
-    int sizeFilteredPatients;
-    int sizeFilteredPendingPatients;
+    private int sizeFilteredPatients;
+    private int sizeFilteredPendingPatients;
 
     public interface OnItemTappedListener {
         void onItemTap(Object dto);
@@ -117,7 +119,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         final Patient patient = filteredPatients.get(position);
 
         if (null == patient.raw) {
-            bindHeaderViewHolder((HeaderViewHolder) holder, patient.appointmentTime);
+            bindHeaderViewHolder((HeaderViewHolder) holder, patient.appointmentStartTime);
         } else {
             bindCardViewHolder((CardViewHolder) holder, patient);
         }
@@ -133,7 +135,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         holder.provider.setText(patient.providerName);
         holder.initials.setText(patient.initials);
         holder.bind(patient, tapListener);
-        holder.setTimeView(patient.appointmentTime, patient.isPending);
+        holder.setTimeView(patient);
 
         if (!TextUtils.isEmpty(patient.photoUrl)) {
             Picasso.Builder builder = new Picasso.Builder(context);
@@ -206,8 +208,8 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 continue;
             }
 
-            if (null != patient.appointmentTime && !DateUtil.isSameDay(dateTime, patient.appointmentTime)) {
-                dateTime = patient.appointmentTime;
+            if (null != patient.appointmentStartTime && !DateUtil.isSameDay(dateTime, patient.appointmentStartTime)) {
+                dateTime = patient.appointmentStartTime;
 
                 if (countByDay % 2 == 1) {
                     filteredPatients.add(new Patient());
@@ -238,6 +240,8 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         for (AppointmentDTO appointmentDTO : appointments) {
             this.allPatients.add(new Patient(appointmentDTO, appointmentDTO.getPayload()));
         }
+
+        sortListByDate(this.allPatients);
     }
 
     private void loadPatients(PaymentsModel paymentsModel) {
@@ -248,6 +252,19 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         for (PaymentsPatientBalancessDTO dto : dtoList) {
             createPatient(providerMap, dto);
         }
+    }
+
+    private void sortListByDate(List<Patient> list) {
+        Collections.sort(list, new Comparator<Patient>() {
+            //@TargetApi(Build.VERSION_CODES.KITKAT)
+            @Override
+            public int compare(Patient lhs, Patient rhs) {
+                if (lhs != null && rhs != null) {
+                    return lhs.appointmentStartTime.compareTo(rhs.appointmentStartTime);
+                }
+                return -1;
+            }
+        });
     }
 
     private void createPatient(Map<String, ProviderIndexDTO> providerMap, PaymentsPatientBalancessDTO dto) {
@@ -339,17 +356,17 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
         }
 
-        void setTimeView(Date appointmentTime, boolean isAppointmentPending) {
-            if (null == appointmentTime) {
+        void setTimeView(Patient patient) {
+            if (null == patient.appointmentStartTime) {
                 return;
             }
 
-            final DateTime appointmentDateTime = new DateTime(appointmentTime);
-            timeTextView.setText(appointmentDateTime.toString("hh:mm a"));
-            if (isAppointmentPending) {
-                timeTextView.setBackgroundResource(R.drawable.bg_orange_overlay);
-            } else if (appointmentDateTime.isBeforeNow()) {
+            final DateTime startDateTime = new DateTime(patient.appointmentStartTime);
+            timeTextView.setText(startDateTime.toString("hh:mm a"));
+            if (patient.isAppointmentOver) {
                 timeTextView.setBackgroundResource(R.drawable.bg_red_overlay);
+            } else if (patient.isPending) {
+                timeTextView.setBackgroundResource(R.drawable.bg_orange_overlay);
             } else {
                 timeTextView.setBackgroundResource(R.drawable.bg_green_overlay);
             }
@@ -386,7 +403,8 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         private String photoUrl;
         private String providerId;
         private String locationId;
-        private Date appointmentTime;
+        private Date appointmentStartTime;
+        private Boolean isAppointmentOver;
         private Boolean isPending;
 
         public Patient(Object raw, String id, ProviderIndexDTO provider, double balance, DemographicsSettingsPersonalDetailsPayloadDTO dto) {
@@ -409,13 +427,14 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             this.initials = StringUtil.onShortDrName(patientModel.getFirstName() + " " + patientModel.getLastName());
             this.providerId = dto.getProvider().getId().toString();
             this.providerName = dto.getProvider().getName();
-            this.appointmentTime = DateUtil.getInstance().setDateRaw(dto.getStartTime()).getDate();
+            this.appointmentStartTime = DateUtil.getInstance().setDateRaw(dto.getStartTime()).getDate();
+            this.isAppointmentOver = dto.isAppointmentOver();
             this.locationId = dto.getLocation().getId().toString();
             this.isPending = dto.getAppointmentStatus().getCode().equalsIgnoreCase(CarePayConstants.PENDING);
         }
 
         public Patient(Date appointmentTime) {
-            this.appointmentTime = appointmentTime;
+            this.appointmentStartTime = appointmentTime;
         }
 
         public Patient() {

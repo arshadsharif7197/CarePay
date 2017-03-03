@@ -11,7 +11,6 @@
 
     <string name="payment_successful">Payment Succeeded for Order: %1$s</string>
 
-    <string name="payment_failed">Payment Not Successful</string>
     <string name="payment_cancelled">Payment Cancelled</string>
 
     <string name="amount_required">Valid amount is required</string>

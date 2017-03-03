@@ -8,6 +8,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by kkannan on 9/13/16.
@@ -127,9 +130,9 @@ public class DateUtil {
      *
      * @return A string containing the formatted date
      */
-    public String getDateAsDayMonthDayOrdinalYear() {
+    public String getDateAsDayMonthDayOrdinalYear(String today) {
         return String.format(Locale.getDefault(), "%s, %s %d%s",
-                dayLiteral, monthLiteralAbbr, day, getOrdinalSuffix(day));
+                this.isToday() ? today : dayLiteral, monthLiteralAbbr, day, getOrdinalSuffix(day));
     }
 
     /**
@@ -294,9 +297,15 @@ public class DateUtil {
         return this;
     }
 
-    public void setDate(Calendar calendar){
+    /**
+     * @param calendar as Date
+     * @return The current DateUtil object
+     */
+    public DateUtil setDate(Calendar calendar){
         this.date = calendar.getTime();
         updateFields(calendar);
+
+        return this;
     }
 
     /**
@@ -350,7 +359,22 @@ public class DateUtil {
         monthLiteral = DateFormatSymbols.getInstance(Locale.getDefault()).getMonths()[month];
         dayLiteralAbbr = DateFormatSymbols.getInstance(Locale.getDefault()).getShortWeekdays()[calendar.get(Calendar.DAY_OF_WEEK)];
         monthLiteralAbbr = DateFormatSymbols.getInstance(Locale.getDefault()).getShortMonths()[month];
+    }
 
+    /**
+     * @param days to add
+     * @return updated DateUtil
+     */
+    public DateUtil addDays(int days) {
+        if (null != date) {
+            Calendar calendar = Calendar.getInstance(Locale.getDefault());
+            calendar.setTime(date);
+            calendar.add(Calendar.DAY_OF_YEAR, days);
+            date = calendar.getTime();
+            updateFields();
+        }
+
+        return this;
     }
 
     /**
@@ -453,6 +477,17 @@ public class DateUtil {
 
     }
 
+    /**
+     * Check whether the provided day corresponds to the last day of the current month
+     * @param calendar Calendar to check
+     * @return true if day is first of the month
+     */
+    public static boolean startsThisMonth(Calendar calendar){
+        Calendar checkCal = Calendar.getInstance();
+        checkCal.set(Calendar.DAY_OF_MONTH, 1);
+
+        return isSameDay(calendar, checkCal);
+    }
 
     /**
      * Check if given date corresponds to last day in month
@@ -483,14 +518,11 @@ public class DateUtil {
      */
     public static boolean endsThisMonth(Calendar calendar){
         Calendar checkCal = Calendar.getInstance();
-        int calMonth = checkCal.get(Calendar.MONTH);
         int calMaxDayMonth = checkCal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        checkCal.set(Calendar.DAY_OF_MONTH, calMaxDayMonth);
 
-        return isSameYear(checkCal, calendar) &&
-                calMonth == calendar.get(Calendar.MONTH) &&
-                calMaxDayMonth == calendar.get(Calendar.DAY_OF_MONTH);
+        return isSameDay(calendar, checkCal);
     }
-
 
     /**
      * Get the number of days elapsed between two dates
@@ -686,42 +718,78 @@ public class DateUtil {
         startCal.setTime(startDate);
         endCal.setTime(endDate);
 
+        String fromText = getFormattedDate(startDate, today, tomorrow);
+
         //check for single Day
-        if(DateUtil.isSameDay(startCal, endCal)){
-            if(DateUtil.isToday(startCal)){           //check for today
-                return today;
-            }else if(DateUtil.isTomorrow(startCal)){  //check for tomorrow
-                return tomorrow;
-            }else{                                    //Just return this date in readable format
-                DateUtil dateUtil = DateUtil.getInstance();
-                dateUtil.setDate(startCal);
-                return dateUtil.getDateAsDayShortMonthDayOrdinal();
-            }
-        }else{
-            //check if the range starts today
-            if(DateUtil.isToday(startCal)){
-                //check if end date is month end
-                if(DateUtil.endsThisMonth(endCal)){
-                    return thisMonth;
-                }else{
-                    String daysElapsedText = nextDays;
-                    int days = DateUtil.getDaysElapsedInclusive(startCal, endCal);
-
-                    return String.format(daysElapsedText, days);
-                }
-            }else{
-                //return from:to format
-                DateUtil dateUtil = DateUtil.getInstance();
-                dateUtil.setDate(startDate);
-                String fromText = dateUtil.getDateAsMonthLiteralDayOrdinal();
-                dateUtil.setDate(endDate);
-                String toText = dateUtil.getDateAsMonthLiteralDayOrdinal();
-
-                String fromToText = "%s - %s";
-                return String.format(fromToText, fromText, toText);
-            }
+        if(isSameDay(startCal, endCal)){
+            return fromText;
         }
 
+        // Check for whole month
+        if(startsThisMonth(startCal) && endsThisMonth(endCal)){
+            return thisMonth;
+        }
+
+        int elapsedDays = getDaysElapsedInclusive(startCal, endCal);
+
+        //check if the range starts today
+        if(isToday(startCal) && elapsedDays < 32){
+            return String.format(nextDays, elapsedDays);
+        }
+
+        String toText = getFormattedDate(endDate, today, tomorrow);
+
+        //return from - to format
+        return String.format("%s - %s", fromText, toText);
     }
 
+    /**
+     * Convinience method for formatting a date range using contextual output
+     * @param today String to represent today output
+     * @param tomorrow String to represent tomorrow output
+     * @return Contextually formatted Date range
+     */
+    public static String getFormattedDate(Date date, String today, String tomorrow) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        //check for today
+        if(isToday(calendar)){
+            return today;
+        }
+
+        //check for tomorrow
+        if(isTomorrow(calendar)){
+            return tomorrow;
+        }
+
+        //Just return this date in readable format
+        return getInstance().setDate(date).getDateAsMonthLiteralDayOrdinal();
+    }
+
+    /**
+     * @param date1 date 1
+     * @param date2 date 2
+     * @return minutes ellapsed
+     */
+    public static long getMinutesElapsed(Date date1, Date date2) {
+        long differenceInMilli = Math.abs(date1.getTime() - date2.getTime());
+
+        return TimeUnit.MILLISECONDS.toMinutes(differenceInMilli);
+    }
+
+    /**
+     * Validate date
+     * @param date date
+     * @return true if valid else false
+     */
+    public static boolean isDateValid(String date) {
+        if (StringUtil.isNullOrEmpty(date)) {
+            return false;
+        } else {
+            String pattern = "^(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\\d{2}$";
+            Matcher patternMatcher = Pattern.compile(pattern).matcher(date);
+            return patternMatcher.matches();
+        }
+    }
 }

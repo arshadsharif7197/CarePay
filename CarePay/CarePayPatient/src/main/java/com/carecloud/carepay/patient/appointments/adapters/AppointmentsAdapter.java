@@ -25,7 +25,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog;
-import com.carecloud.carepaylibray.customdialogs.CancelAppointmentDialog;
+import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.QueueAppointmentDialog;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -40,14 +40,27 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by harshal_patil on 9/8/2016.
  */
-public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapter.AppointmentViewHolder>
-        implements CancelAppointmentDialog.RefreshAppointmentListCallback {
+public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapter.AppointmentViewHolder> {
 
     private Context context;
-    private List<Object> appointmentItems;
+
+    public List<Object> getAppointmentItems() {
+        return appointmentItems;
+    }
+
+    public void setAppointmentItems(List<Object> appointmentItems) {
+        this.appointmentItems = appointmentItems;
+    }
+
+    public List<Object> appointmentItems;
     private AppointmentLabelDTO appointmentLabels;
+    private final AppointmentsAdapterListener callback;
     private AppointmentsResultModel appointmentInfo;
     private AppointmentsListFragment appointmentsListFragment;
+
+    public interface AppointmentsAdapterListener {
+        void onItemTapped(AppointmentDTO appointmentDTO);
+    }
 
     /**
      * Constructor.
@@ -58,13 +71,15 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
      */
     public AppointmentsAdapter(Context context, List<Object> appointmentItems,
                                AppointmentsListFragment appointmentsListFragment,
-                               AppointmentsResultModel appointmentInfo) {
+                               AppointmentsResultModel appointmentInfo,
+                               AppointmentsAdapterListener callback) {
 
         this.context = context;
         this.appointmentItems = appointmentItems;
         this.appointmentsListFragment = appointmentsListFragment;
         this.appointmentInfo = appointmentInfo;
         this.appointmentLabels = appointmentInfo.getMetadata().getLabel();
+        this.callback = callback;
     }
 
     @Override
@@ -266,50 +281,14 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         });
     }
 
-    private boolean isAppointmentCancellable(AppointmentDTO item) {
-        // Get appointment date/time in required format
-        String appointmentTimeStr = item.getPayload().getStartTime();
-        Date appointmentTime = DateUtil.getInstance().setDateRaw(appointmentTimeStr).getDate();
-
-        // Get current date/time in required format
-        Date currentDate = DateUtil.getInstance().setToCurrent().getDate();
-        String cancellationNoticePeriodStr = appointmentInfo.getPayload().getAppointmentsSettings().get(0).getCheckin().getCancellationNoticePeriod();
-
-        if (appointmentTime != null && currentDate != null) {
-            long differenceInMilli = appointmentTime.getTime() - currentDate.getTime();
-            long differenceInMinutes = TimeUnit.MILLISECONDS.toMinutes(differenceInMilli);
-            long cancellationNoticePeriod = Long.parseLong(cancellationNoticePeriodStr);
-
-            if (differenceInMinutes > cancellationNoticePeriod) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private String getSectionHeaderTitleByDay(String day) {
-        if (day.equalsIgnoreCase(CarePayConstants.DAY_OVER) ||
-                day.equalsIgnoreCase(appointmentLabels.getTodayAppointmentsHeading())) {
-            return appointmentLabels.getTodayAppointmentsHeading();
-        } else {
-            return appointmentLabels.getUpcomingAppointmentsHeading();
-        }
-    }
-
     /**
-     * Hide the header when swipe to refresh in progress.
+     * Gets section header title.
+     *
+     * @param appointmentStartTime the appointment start time
+     * @param appointmentEndTime   the appointment end time
+     * @return the section header title
      */
-    public void hideHeaderView() {
-        View view = appointmentsListFragment.getView();
-        CarePayTextView headerTitle;
-        if (view != null) {
-            headerTitle = (CarePayTextView)
-                    view.findViewById(R.id.appointments_sticky_header_title);
-            headerTitle.setVisibility(View.GONE);
-        }
-    }
-
-    private String getSectionHeaderTitle(String appointmentStartTime, String appointmentEndTime) {
+    public String getSectionHeaderTitle(String appointmentStartTime, String appointmentEndTime) {
         // Current date
         String currentDate = DateUtil.getInstance().setToCurrent().toStringWithFormatMmDashDdDashYyyy();
         Date convertedCurrentDate = DateUtil.getInstance().setDateRaw(currentDate).getDate();
@@ -343,97 +322,47 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         }
     }
 
-    private void showAppointmentPopup(int index) {
-        Object selectedItem = appointmentItems.get(index);
 
-        // Restricted the appointment list item click if it is appointment header type.
-        if (selectedItem.getClass() == AppointmentDTO.class) {
-            // appointment clicked item saved so that it can be used on Payment
-            AppointmentDTO item = ((AppointmentDTO) selectedItem);
-            AppointmentsPayloadDTO payloadDTO = item.getPayload();
-            AppointmentsActivity.model = item;
-
-            String sectionHeaderTitle = getSectionHeaderTitle(payloadDTO.getStartTime(), payloadDTO.getEndTime());
-            boolean isPending = payloadDTO.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.PENDING);
-            boolean isCheckedIn = payloadDTO.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.CHECKED_IN);
-            boolean isCanceled = payloadDTO.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.CANCELLED);
-            boolean isRequested = payloadDTO.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.REQUESTED);
-            boolean allowEarlyCheckin = appointmentInfo.getPayload().getAppointmentsSettings().get(0).getCheckin().getAllowEarlyCheckin();
-            String allowEarlyCheckinPeriodStr = appointmentInfo.getPayload().getAppointmentsSettings().get(0).getCheckin().getEarlyCheckinPeriod();
-            long allowEarlyCheckinPeriod = Long.parseLong(allowEarlyCheckinPeriodStr);
-            String appointmentTimeStr = item.getPayload().getStartTime();
-            Date appointmentTime = DateUtil.getInstance().setDateRaw(appointmentTimeStr).getDate();
-            // Get current date/time in required format
-            Date currentDate = DateUtil.getInstance().setToCurrent().getDate();
-
-            // Missed Appointment
-            if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER) && !isCheckedIn) {
-                new CancelAppointmentDialog(context, item, appointmentInfo,
-                        BaseDoctorInfoDialog.AppointmentType.MISSED_APPOINTMENT, null).show();
-
-            } else if (isCheckedIn) {
-                // Checked-In Appointment
-                new QueueAppointmentDialog(context, item, appointmentLabels).show();
-
-            } else if (isCanceled) {
-                // Cancelled Appointment
-                new CancelAppointmentDialog(context, item, appointmentInfo,
-                        BaseDoctorInfoDialog.AppointmentType.CANCELLED_APPOINTMENT, null).show();
-
-            } else if (isAppointmentCancellable(item)) {
-                // Appointment as long as it's 24 hours or more in the future
-                new CancelAppointmentDialog(context, item, appointmentInfo,
-                        BaseDoctorInfoDialog.AppointmentType.CANCEL_APPOINTMENT,
-                        AppointmentsAdapter.this).show();
-
-            } else if (isRequested) {
-                // Requested Appointment
-                new CancelAppointmentDialog(context, item, appointmentInfo,
-                        BaseDoctorInfoDialog.AppointmentType.REQUESTED_APPOINTMENT, null).show();
-
-            } else if (isPending) {
-                if (sectionHeaderTitle.equals(appointmentLabels.getTodayAppointmentsHeading() )) {
-
-                    // Pending Appointment && Appointments for the current business day
-                    new CheckInOfficeNowAppointmentDialog(context, false, item, appointmentInfo).show();
-
-                }else if (sectionHeaderTitle.equals(appointmentLabels.getUpcomingAppointmentsHeading() ) && appointmentTime != null && currentDate != null) {
-                    long differenceInMilli = appointmentTime.getTime() - currentDate.getTime();
-                    long differenceInMinutes = TimeUnit.MILLISECONDS.toMinutes(differenceInMilli);
-
-                    if ((differenceInMinutes < allowEarlyCheckinPeriod) && allowEarlyCheckin) {
-                        new CheckInOfficeNowAppointmentDialog(context, false, item, appointmentInfo).show();
-                    }
-                }else if (isAppointmentCancellable(item)) {
-                    // Appointment as long as it's 24 hours or more in the future
-                    new CancelAppointmentDialog(context, item, appointmentInfo,
-                            BaseDoctorInfoDialog.AppointmentType.CANCEL_APPOINTMENT,
-                            AppointmentsAdapter.this).show();
-
-                } else {
-                    // Pending Appointment && Appointment in the future that is not today
-                    new CancelAppointmentDialog(context, item, appointmentInfo,
-                            BaseDoctorInfoDialog.AppointmentType.UPCOMING_APPOINTMENT, null).show();
-                }
-            } else {
-                // Other
-                new CheckInOfficeNowAppointmentDialog(context, false, item, appointmentInfo).show();
-            }
+    private String getSectionHeaderTitleByDay(String day) {
+        if (day.equalsIgnoreCase(CarePayConstants.DAY_OVER) ||
+                day.equalsIgnoreCase(appointmentLabels.getTodayAppointmentsHeading())) {
+            return appointmentLabels.getTodayAppointmentsHeading();
+        } else {
+            return appointmentLabels.getUpcomingAppointmentsHeading();
         }
     }
 
-    @Override
-    public int getItemCount() {
+    /**
+     * Hide the header when swipe to refresh in progress.
+     */
+    public void hideHeaderView() {
+        View view = appointmentsListFragment.getView();
+        CarePayTextView headerTitle;
+        if (view != null) {
+            headerTitle = (CarePayTextView)
+                    view.findViewById(R.id.appointments_sticky_header_title);
+            headerTitle.setVisibility(View.GONE);
+        }
+    }
+
+        public int getItemCount() {
         return appointmentItems.size();
     }
 
-    @Override
-    public void onRefreshAppointmentList(AppointmentDTO appointmentDTO) {
-        int index = appointmentItems.indexOf(appointmentDTO);
-        appointmentDTO.getPayload().getAppointmentStatusModel().setCode(CarePayConstants.CANCELLED);
-        appointmentItems.set(index, appointmentDTO);
-        notifyDataSetChanged();
-    }
+//    @Override
+//    public void onRefreshAppointmentList(AppointmentDTO appointmentDTO) {
+//        int index = appointmentItems.indexOf(appointmentDTO);
+//        appointmentDTO.getPayload().getAppointmentStatusModel().setCode(CarePayConstants.CANCELLED);
+//        appointmentItems.set(index, appointmentDTO);
+//        notifyDataSetChanged();
+//    }
+
+//    @Override
+//    public void onPreRegisterTapped(AppointmentDTO appointmentDTO, AppointmentsResultModel appointmentInfo) {
+//        if (null != callback) {
+//            callback.onPreRegisterTapped(appointmentDTO, appointmentInfo);
+//        }
+//    }
 
     class AppointmentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private CarePayTextView upcomingDateTextView;
@@ -493,7 +422,14 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
         @Override
         public void onClick(View view) {
-            AppointmentsAdapter.this.showAppointmentPopup(getAdapterPosition());
+            if (null != callback) {
+                Object selectedItem = appointmentItems.get(getAdapterPosition());
+
+                // Restricted the appointment list item click if it is appointment header type.
+                if (selectedItem.getClass() == AppointmentDTO.class) {
+                    callback.onItemTapped((AppointmentDTO) selectedItem);
+                }
+            }
         }
     }
 }

@@ -5,10 +5,10 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +23,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
@@ -89,7 +88,7 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
     private static final char SPACE_CHAR = ' ';
     private String stateAbbr = null;
     private City smartyStreetsResponse;
-    protected double amountToMakePayment = 1;
+    protected double amountToMakePayment;
     private DemographicAddressPayloadDTO addressPayloadDTO;
     private List<DemographicsSettingsPapiAccountsDTO> papiAccountsDTO;
     protected PaymentCreditCardsPayloadDTO creditCardsPayloadDTO;
@@ -123,16 +122,8 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
             e.printStackTrace();
         }
 
-        Toolbar toolbar = (Toolbar) addNewCreditCardView.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
-        title = (TextView) toolbar.findViewById(com.carecloud.carepaylibrary.R.id.respons_toolbar_title);
-        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
-        toolbar.setTitle("");
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(),
-                com.carecloud.carepaylibrary.R.drawable.icn_patient_mode_nav_back));
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
-
-        initilizeViews(addNewCreditCardView);
+        setupTitleViews(addNewCreditCardView);
+        initializeViews(addNewCreditCardView);
         setTypefaces();
         setTextWatchers();
         return addNewCreditCardView;
@@ -274,7 +265,38 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
         return fullCard.substring(fullCard.length() - 4, fullCard.length());
     }
 
-    private void initilizeViews(View view) {
+    private void setupTitleViews(View view){
+        Toolbar toolbar = (Toolbar) view.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
+        if(toolbar!=null) {
+            title = (TextView) toolbar.findViewById(com.carecloud.carepaylibrary.R.id.respons_toolbar_title);
+            SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
+            toolbar.setTitle("");
+            if(getDialog()==null) {
+                toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), com.carecloud.carepaylibrary.R.drawable.icn_nav_back));
+                toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        getActivity().onBackPressed();
+                    }
+                });
+            }else{
+                View close = view.findViewById(R.id.closeViewLayout);
+                if(close!=null){
+                    close.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dismiss();
+                        }
+                    });
+                }
+                title.setGravity(Gravity.CENTER_HORIZONTAL);
+            }
+
+        }
+
+    }
+
+    private void initializeViews(View view) {
         creditCardNoTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.creditCardNoTextInputLayout);
         creditCardNoEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.creditCardNoEditText);
         creditCardNoEditText.setTag(creditCardNoTextInput);
@@ -370,7 +392,15 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
         useProfileAddressCheckBox.setChecked(true);
         setAddressFiledsEnabled(false);
         setDefaultBillingAddressTexts();
+
+        View scrollView = view.findViewById(R.id.scroll_card_info);
+        if(getDialog()!=null){
+            ViewGroup.LayoutParams layoutParams = scrollView.getLayoutParams();
+            layoutParams.width = (int) (getResources().getDisplayMetrics().widthPixels * .5);
+            scrollView.setLayoutParams(layoutParams);
+        }
     }
+
 
     /**
      * SHMRK-1843
@@ -415,7 +445,8 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
     }
 
     private void authorizeCreditCard() {
-        String amount = String.valueOf((int) amountToMakePayment);
+//        String amount = String.valueOf((int) amountToMakePayment>0?amountToMakePayment:1);//this is to create an authorization
+        String amount = String.valueOf(1);//this is to create an authorization
         String currency = "USD";
         String paymentMethod = "credit_card";
         String cvv = creditCardsPayloadDTO.getCvv();

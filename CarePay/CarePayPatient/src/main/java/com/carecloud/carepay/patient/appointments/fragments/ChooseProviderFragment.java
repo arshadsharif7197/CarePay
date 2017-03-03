@@ -220,8 +220,9 @@ public class ChooseProviderFragment extends BaseFragment implements ProviderAdap
      */
     public void onDialogListItemClickListener(VisitTypeDTO selectedVisitType) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        String tag = AvailableHoursFragment.class.getSimpleName();
         AvailableHoursFragment visitTypeFragment = (AvailableHoursFragment)
-                fragmentManager.findFragmentByTag(AvailableHoursFragment.class.getSimpleName());
+                fragmentManager.findFragmentByTag(tag);
 
         if (visitTypeFragment == null) {
             visitTypeFragment = new AvailableHoursFragment();
@@ -238,6 +239,6 @@ public class ChooseProviderFragment extends BaseFragment implements ProviderAdap
         visitTypeFragment.setArguments(bundle);
 
         fragmentManager.beginTransaction().replace(R.id.add_appointments_frag_holder, visitTypeFragment,
-                AvailableHoursFragment.class.getSimpleName()).commit();
+                tag).addToBackStack(tag).commit();
     }
 }

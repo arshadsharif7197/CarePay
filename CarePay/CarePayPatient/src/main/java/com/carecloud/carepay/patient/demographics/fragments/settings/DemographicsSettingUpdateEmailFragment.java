@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.appointments.utils.PatientAppUtil;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -187,7 +188,7 @@ public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
     }
 
     private void getPersonalDetails() {
-        String userId = CognitoAppHelper.getCurrUser();
+        String userId = getCognitoAppHelper().getCurrUser();
 
         if (SystemUtil.isNotEmptyString(userId)) {
             emailEditText.setText(userId);
@@ -322,6 +323,7 @@ public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
             hideProgressDialog();
             updateEmailButton.setEnabled(true);
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+            PatientAppUtil.showSuccessToast(getContext());
         }
 
         @Override

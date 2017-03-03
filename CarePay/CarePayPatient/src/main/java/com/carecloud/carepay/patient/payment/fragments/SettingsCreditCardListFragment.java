@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
@@ -35,6 +35,7 @@ import java.util.List;
 public class SettingsCreditCardListFragment extends BaseFragment implements SettingsCreditCardListAdapter.IOnCreditCardDetailClickListener {
 
     private RecyclerView creditCardsListRecyclerView;
+    private LinearLayout noCreditCardsView;
     private DemographicsSettingsDTO demographicsSettingsDTO = null;
     private DemographicsSettingsLabelsDTO settingsLabelsDTO;
     private ISettingsCreditCardListFragmentListener activityCallback;
@@ -81,7 +82,7 @@ public class SettingsCreditCardListFragment extends BaseFragment implements Sett
         toolbar.setTitle("");
 
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(),
-                R.drawable.icn_patient_mode_nav_back));
+                R.drawable.icn_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         initializeViews(view);
@@ -91,6 +92,10 @@ public class SettingsCreditCardListFragment extends BaseFragment implements Sett
     private void initializeViews(View view) {
         creditCardsListRecyclerView = (RecyclerView) view.findViewById(R.id.creditCardsListRecyclerView);
         creditCardsListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        noCreditCardsView = (LinearLayout) view.findViewById(R.id.no_credit_cards_view);
+        ((TextView) view.findViewById(R.id.no_credit_cards_label)).setText(settingsLabelsDTO.getNoCreditCardLabel());
+        ((TextView) view.findViewById(R.id.no_credit_cards_info)).setText(settingsLabelsDTO.getNoCreditCardInfo());
 
         Button addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
         addNewCardButton.setOnClickListener(addNewCardButtonListener);
@@ -108,8 +113,14 @@ public class SettingsCreditCardListFragment extends BaseFragment implements Sett
         if (demographicsSettingsDTO != null) {
             this.demographicsSettingsDTO = demographicsSettingsDTO;
             List<DemographicsSettingsCreditCardsPayloadDTO> creditCardList = demographicsSettingsDTO.getPayload().getPatientCreditCards();
-            creditCardsListRecyclerView.setAdapter(new SettingsCreditCardListAdapter(getActivity(),
-                    creditCardList, settingsLabelsDTO, this));
+
+            if (creditCardList.isEmpty()) {
+                creditCardsListRecyclerView.setVisibility(View.GONE);
+                noCreditCardsView.setVisibility(View.VISIBLE);
+            } else {
+                creditCardsListRecyclerView.setAdapter(new SettingsCreditCardListAdapter(getActivity(),
+                        creditCardList, settingsLabelsDTO, this));
+            }
         }
     }
 

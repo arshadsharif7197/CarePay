@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
+import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -18,9 +20,9 @@ import java.util.List;
 public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLineItemsListAdapter.PaymentDetailsListViewHolder> {
 
     private Context context;
-    private List<PatiencePayloadDTO> detailsList;
+    private List<PatienceBalanceDTO> detailsList;
     private PaymentsModel paymentReceiptModel;
-    private PaymentDetailsDialog.PayNowClickListener payListener;
+    private PaymentNavigationCallback payListener;
 
     /**
      * Constructor
@@ -30,8 +32,8 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
      * @param payListener listener
      */
     public PaymentLineItemsListAdapter(Context context, PaymentsModel paymentReceiptModel,
-                                       List<PatiencePayloadDTO> detailsList,
-                                       PaymentDetailsDialog.PayNowClickListener payListener) {
+                                       List<PatienceBalanceDTO> detailsList,
+                                       PaymentNavigationCallback payListener) {
 
         this.context = context;
         this.detailsList = detailsList;
@@ -68,30 +70,35 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
 
     @Override
     public void onBindViewHolder(final PaymentDetailsListViewHolder holder, int position) {
-        final PatiencePayloadDTO paymentLineItem = detailsList.get(position);
-        holder.paymentDetailLabel.setText(paymentLineItem.getType());
-        holder.paymentDetailAmount.setText(StringUtil.getFormattedBalanceAmount(paymentLineItem.getAmount()));
 
-        if (paymentLineItem.getDetails() != null && !paymentLineItem.getDetails().isEmpty()) {
-            holder.lineItemNameLabelDetails.setVisibility(View.VISIBLE);
-            holder.lineItemNameLabelDetails.setText(paymentReceiptModel.getPaymentsMetadata()
-                    .getPaymentsLabel().getPaymentResponsibilityDetails());
+        PatienceBalanceDTO patienceBalanceDTO = detailsList.get(position);
 
-            if(paymentLineItem.getDetails().size()>1) {
-                holder.lineItemNameLabelDetails.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        // Call for payment details dialog
-                        PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(context,
-                                paymentReceiptModel, paymentLineItem, payListener);
-                        detailsDialog.show();
-                    }
-                });
-            }else{
-                holder.lineItemNameLabelDetails.setTextColor(context.getResources().getColor(R.color.light_gray));
+        if (!patienceBalanceDTO.getPayload().isEmpty()) {
+            final PatiencePayloadDTO paymentLineItem = patienceBalanceDTO.getPayload().get(0);
+            holder.paymentDetailLabel.setText(paymentLineItem.getType());
+            holder.paymentDetailAmount.setText(StringUtil.getFormattedBalanceAmount(paymentLineItem.getAmount()));
+
+            if (paymentLineItem.getDetails() != null && !paymentLineItem.getDetails().isEmpty()) {
+                holder.lineItemNameLabelDetails.setVisibility(View.VISIBLE);
+                holder.lineItemNameLabelDetails.setText(paymentReceiptModel.getPaymentsMetadata()
+                        .getPaymentsLabel().getPaymentResponsibilityDetails());
+
+                if (paymentLineItem.getDetails().size() > 1) {
+                    holder.lineItemNameLabelDetails.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            // Call for payment details dialog
+                            PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(context,
+                                    paymentReceiptModel, paymentLineItem, payListener);
+                            detailsDialog.show();
+                        }
+                    });
+                } else {
+                    holder.lineItemNameLabelDetails.setTextColor(context.getResources().getColor(R.color.light_gray));
+                }
+            } else if (holder.lineItemNameLabelDetails.getVisibility() == View.VISIBLE) {
+                holder.lineItemNameLabelDetails.setVisibility(View.GONE);
             }
-        } else if (holder.lineItemNameLabelDetails.getVisibility() == View.VISIBLE) {
-            holder.lineItemNameLabelDetails.setVisibility(View.GONE);
         }
     }
 }

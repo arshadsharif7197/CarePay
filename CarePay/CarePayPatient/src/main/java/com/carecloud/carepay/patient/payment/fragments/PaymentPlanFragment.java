@@ -1,9 +1,8 @@
 package com.carecloud.carepay.patient.payment.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,25 +19,21 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
-import com.carecloud.carepay.patient.payment.PaymentActivity;
-import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.patient.payment.dialogs.ChooseCreditCardDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPayloadPlansDTO;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -78,6 +73,17 @@ public class PaymentPlanFragment extends BaseFragment {
     private boolean isEmptyCreditCard = true;
     private boolean isMNEdited;
     private boolean isMPEdited;
+    private PaymentNavigationCallback callback;
+
+    @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+        try{
+            callback = (PaymentNavigationCallback) context;
+        }catch(ClassCastException cce){
+            throw new ClassCastException("Attached context must implement PaymentNavigationCallback");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -129,7 +135,7 @@ public class PaymentPlanFragment extends BaseFragment {
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(),
-                R.drawable.icn_patient_mode_nav_back));
+                R.drawable.icn_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         Spinner monthDays = (Spinner) view.findViewById(R.id.payment_plan_month_day);
@@ -458,7 +464,7 @@ public class PaymentPlanFragment extends BaseFragment {
         paymentPlanMonthlyInput.setErrorEnabled(true);
 
         PaymentsSettingsPayloadPlansDTO paymentPlans = paymentsModel.getPaymentPayload()
-                .getPaymentSettings().getPayload().getPaymentPlans();
+                .getPaymentSettings().get(0).getPayload().getPaymentPlans();//todo need to lookup appropriate settings for prctice id on selected balance
 
         if (paymentPlans != null) {
             String minimumPayment = paymentPlans.getMinimumPayment();
@@ -524,26 +530,27 @@ public class PaymentPlanFragment extends BaseFragment {
     }
 
     private void addNewCreditCard() {
-        FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
-        AddNewCreditCardFragment fragment = (AddNewCreditCardFragment)
-                fragmentmanager.findFragmentByTag(AddNewCreditCardFragment.class.getSimpleName());
-        if (fragment == null) {
-            fragment = new AddNewCreditCardFragment();
-        }
-
-        Bundle args = new Bundle();
-        Gson gson = new Gson();
-        args.putSerializable(CarePayConstants.INTAKE_BUNDLE, paymentsModel);
-        args.putString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE, gson.toJson(paymentsModel.getPaymentPayload().getPapiAccounts()));
-        fragment.setArguments(args);
-
-        if (getActivity() instanceof PaymentActivity) {
-            ((PaymentActivity) getActivity()).navigateToFragment(fragment, true);
-        } else if (getActivity() instanceof DemographicsSettingsActivity) {
-            ((DemographicsSettingsActivity) getActivity()).navigateToFragment(fragment, true);
-        } else if (getActivity() instanceof ViewPaymentBalanceHistoryActivity) {
-            ((ViewPaymentBalanceHistoryActivity) getActivity()).navigateToFragment(fragment, true);
-        }
+        callback.showAddCard(0);
+//        FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
+//        PatientAddNewCreditCardFragment fragment = (PatientAddNewCreditCardFragment)
+//                fragmentmanager.findFragmentByTag(PatientAddNewCreditCardFragment.class.getSimpleName());
+//        if (fragment == null) {
+//            fragment = new PatientAddNewCreditCardFragment();
+//        }
+//
+//        Bundle args = new Bundle();
+//        Gson gson = new Gson();
+//        args.putSerializable(CarePayConstants.INTAKE_BUNDLE, paymentsModel);
+//        args.putString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE, gson.toJson(paymentsModel.getPaymentPayload().getPapiAccounts()));
+//        fragment.setArguments(args);
+//
+//        if (getActivity() instanceof PaymentActivity) {
+//            ((PaymentActivity) getActivity()).navigateToFragment(fragment, true);
+//        } else if (getActivity() instanceof DemographicsSettingsActivity) {
+//            ((DemographicsSettingsActivity) getActivity()).navigateToFragment(fragment, true);
+//        } else if (getActivity() instanceof ViewPaymentBalanceHistoryActivity) {
+//            ((ViewPaymentBalanceHistoryActivity) getActivity()).navigateToFragment(fragment, true);
+//        }
     }
 
     private void createPaymentPlan() {

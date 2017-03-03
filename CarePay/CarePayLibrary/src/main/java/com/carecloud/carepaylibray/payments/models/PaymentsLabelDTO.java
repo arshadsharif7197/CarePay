@@ -312,6 +312,31 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_swipe_now_alternate_payment_label")
     @Expose
     private String paymentCloverAlternatePayButton;
+    @SerializedName("add_credit_card_success_message")
+    @Expose
+    private String addCreditCardSuccessMessage;
+    @SerializedName("payment_posted_success_message")
+    @Expose
+    private String paymentPostedSuccessMessage;
+    @SerializedName("payment_pay_using_payment_plan_label")
+    @Expose
+    private String paymentPayUsingPaymentPlan;
+
+    public String getPaymentPostedSuccessMessage() {
+        return StringUtil.getLabelForView(paymentPostedSuccessMessage);
+    }
+
+    public void setPaymentPostedSuccessMessage(String paymentPostedSuccessMessage) {
+        this.paymentPostedSuccessMessage = paymentPostedSuccessMessage;
+    }
+
+    public String getAddCreditCardSuccessMessage() {
+        return StringUtil.getLabelForView(addCreditCardSuccessMessage);
+    }
+
+    public void setAddCreditCardSuccessMessage(String addCreditCardSuccessMessage) {
+        this.addCreditCardSuccessMessage = addCreditCardSuccessMessage;
+    }
 
 
     public String getNoPendingPaymentDescription() {
@@ -1882,5 +1907,21 @@ public class PaymentsLabelDTO {
      */
     public void setPaymentCloverAlternatePayButton(String paymentCloverAlternatePayButton) {
         this.paymentCloverAlternatePayButton = paymentCloverAlternatePayButton;
+    }
+
+    /**
+     *
+     * @return paymentPayUsingPaymentPlan
+     */
+    public String getPaymentPayUsingPaymentPlan() {
+        return StringUtil.getLabelForView(paymentPayUsingPaymentPlan);
+    }
+
+    /**
+     *
+     * @param paymentPayUsingPaymentPlan paymentPayUsingPaymentPlan
+     */
+    public void setPaymentPayUsingPaymentPlan(String paymentPayUsingPaymentPlan) {
+        this.paymentPayUsingPaymentPlan = paymentPayUsingPaymentPlan;
     }
 }

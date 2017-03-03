@@ -7,6 +7,7 @@
 
     <!-- Default dimens which will be use for any default styling  -->
     <dimen name="dimen_1dp">1dp</dimen>
+    <dimen name="dimen_3dp">3dp</dimen>
     <dimen name="dimen_5dp">5dp</dimen>
     <dimen name="dimen_6dp">6dp</dimen>
     <dimen name="dimen_7dp">7dp</dimen>
@@ -49,6 +50,7 @@
     <dimen name="dimen_81dp">81dp</dimen>
     <dimen name="dimen_138dp">138dp</dimen>
     <dimen name="dimen_178dp">178dp</dimen>
+    <dimen name="dimen_222dp">222dp</dimen>
     <dimen name="dimen_230dp">230dp</dimen>
     <dimen name="dimen_240dp">240dp</dimen>
     <dimen name="dimen_255dp">255dp</dimen>
@@ -57,6 +59,7 @@
     <dimen name="dimen_500dp">500dp</dimen>
     <dimen name="dimen_510dp">510dp</dimen>
     <dimen name="dimen_612dp">612dp</dimen>
+    <dimen name="dimen_684dp">684dp</dimen>
 
     <dimen name="text_size_12sp">12sp</dimen>
     <dimen name="text_size_13sp">13sp</dimen>
@@ -231,6 +234,8 @@
     <dimen name="dialog_header_height">205dp</dimen>
     <dimen name="dialog_profile_pic_size">88dp</dimen>
     <dimen name="dialog_row_padding">24.5dp</dimen>
-    <dimen name="responsibility_list_margin">144dp</dimen>
+    <dimen name="responsibility_list_margin">80dp</dimen>
+
+    <dimen name="list_dialog_min_height">400dp</dimen>
 
 </resources>

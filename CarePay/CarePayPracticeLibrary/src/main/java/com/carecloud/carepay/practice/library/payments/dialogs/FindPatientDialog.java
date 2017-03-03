@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -20,15 +19,13 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.adapter.PatientSearchResultAdapter;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.ISession;
+import com.carecloud.carepaylibray.customcomponents.RecyclerViewWithDivider;
 import com.carecloud.carepaylibray.payments.models.PatientDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.google.gson.JsonArray;
 
 import java.util.HashMap;
@@ -103,8 +100,8 @@ public class FindPatientDialog extends Dialog {
                     manager.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
                     Map<String, String> queryMap = new HashMap<>();
-                    queryMap.put("practice_mgmt", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeMgmt());
-                    queryMap.put("practice_id", ApplicationMode.getInstance().getUserPracticeDTO().getPracticeId());
+                    queryMap.put("practice_mgmt", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+                    queryMap.put("practice_id", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeId());
 
                     JsonArray postModel = new JsonArray();
                     postModel.add(editText.getText().toString());
@@ -166,8 +163,8 @@ public class FindPatientDialog extends Dialog {
     private void showSearchResultList(List<PatientDTO> patients) {
         PatientSearchResultAdapter adapter = new PatientSearchResultAdapter(context, patients);
         setOnItemClickedListener(adapter);
-
-        RecyclerView searchedList = (RecyclerView) findViewById(R.id.patient_searched_list);
+        
+        RecyclerViewWithDivider searchedList = (RecyclerViewWithDivider) findViewById(R.id.patient_searched_list);
         searchedList.setLayoutManager(new LinearLayoutManager(context));
         searchedList.setAdapter(adapter);
         searchedList.setVisibility(View.VISIBLE);

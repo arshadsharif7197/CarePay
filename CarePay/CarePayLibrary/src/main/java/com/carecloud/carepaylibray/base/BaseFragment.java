@@ -1,16 +1,58 @@
 package com.carecloud.carepaylibray.base;
 
-import android.support.v4.app.Fragment;
+import android.app.Dialog;
+import android.graphics.drawable.ColorDrawable;
+import android.support.v4.app.DialogFragment;
 import android.view.View;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepaylibrary.R;
 
 /**
  * Created by cocampo on 2/6/17.
  */
 
-public abstract class BaseFragment extends Fragment implements ISession {
+public abstract class BaseFragment extends DialogFragment implements ISession {
+    private Dialog dialog;
+
+    @Override
+    public void setupDialog(Dialog dialog, int style) {
+        super.setupDialog(dialog, STYLE_NO_TITLE);
+        this.dialog = getDialog();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+    }
+
+    @Override
+    public int getTheme(){
+//        return android.R.style.Theme_DeviceDefault_Dialog_NoActionBar_MinWidth;
+        return R.style.Base_Dialog_MinWidth;
+    }
+
+    /**
+     * Set a listener when the dialog is dimissed. Will be ignored if fragment is not shown as a dialog
+     * @param dismissListener listener
+     */
+    public void setOnDismissListener(Dialog.OnDismissListener dismissListener){
+        if(dialog!=null) {
+            dialog.setOnDismissListener(dismissListener);
+        }
+    }
+
+    /**
+     * Set a listener when the dialog is canceled. Will be ignored if fragment is not shown as a dialog
+     * @param cancelListener listener
+     */
+    public void setOnCancelListener(Dialog.OnCancelListener cancelListener){
+        if(dialog!=null) {
+            dialog.setOnCancelListener(cancelListener);
+        }
+    }
+
+
+
     public boolean enableViewById(int id) {
         return setEnabledViewById(id, true);
     }
@@ -73,12 +115,44 @@ public abstract class BaseFragment extends Fragment implements ISession {
     }
 
     @Override
+    public CognitoAppHelper getCognitoAppHelper() {
+        return ((IApplicationSession) getActivity()).getCognitoAppHelper();
+    }
+
+    @Override
+    public ApplicationMode getApplicationMode() {
+        return ((IApplicationSession) getActivity()).getApplicationMode();
+    }
+
+    @Override
     public void showProgressDialog() {
-        ((ISession) getActivity()).showProgressDialog();
+        ISession session = (ISession) getActivity();
+        if (null != session) {
+            session.showProgressDialog();
+        }
     }
 
     @Override
     public void hideProgressDialog() {
-        ((ISession) getActivity()).hideProgressDialog();
+        ISession session = (ISession) getActivity();
+        if (null != session) {
+            session.hideProgressDialog();
+        }
+    }
+
+    @Override
+    public void showErrorNotification(String errorMessage) {
+        ISession session = (ISession) getActivity();
+        if (null != session) {
+            session.showErrorNotification(errorMessage);
+        }
+    }
+
+    @Override
+    public void hideErrorNotification() {
+        ISession session = (ISession) getActivity();
+        if (null != session) {
+            session.hideErrorNotification();
+        }
     }
 }

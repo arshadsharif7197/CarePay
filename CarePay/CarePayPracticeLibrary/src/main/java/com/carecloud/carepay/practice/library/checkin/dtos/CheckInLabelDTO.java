@@ -131,6 +131,30 @@ public class CheckInLabelDTO {
     @Expose
     private String pendingLabel;
 
+    @SerializedName("practice_checkin_filter_find_patient")
+    @Expose
+    private String practiceCheckinFilterFindPatient;
+
+    @SerializedName("practice_checkin_close_label")
+    @Expose
+    private String practiceCheckinCloseLabel;
+
+    @SerializedName("create_appointment_label")
+    @Expose
+    private String createAppointmentLabel;
+
+    @SerializedName("accept_label")
+    @Expose
+    private String acceptLabel;
+
+    @SerializedName("reject_label")
+    @Expose
+    private String rejectLabel;
+
+    @SerializedName("visit_type_heading")
+    @Expose
+    private String visitTypeHeading;
+
     /**
      * @return The practiceCheckinDetailDialogCheckingIn
      */
@@ -435,7 +459,7 @@ public class CheckInLabelDTO {
         return StringUtil.getLabelForView(changeDateRangeLabel);
     }
 
-    public String getTomorrow() {
+    public String getTomorrowLabel() {
         return StringUtil.getLabelForView(tomorrowLabel);
     }
 
@@ -457,5 +481,29 @@ public class CheckInLabelDTO {
 
     public String getPendingLabel() {
         return StringUtil.getLabelForView(pendingLabel);
+    }
+
+    public String getPracticeCheckinFilterFindPatient() {
+        return StringUtil.getLabelForView(practiceCheckinFilterFindPatient);
+    }
+
+    public String getPracticeCheckinCloseLabel() {
+        return StringUtil.getLabelForView(practiceCheckinCloseLabel);
+    }
+
+    public String getCreateAppointmentLabel() {
+        return StringUtil.getLabelForView(createAppointmentLabel);
+    }
+
+    public String getAcceptLabel() {
+        return StringUtil.getLabelForView(acceptLabel);
+    }
+
+    public String getRejectLabel() {
+        return StringUtil.getLabelForView(rejectLabel);
+    }
+
+    public String getVisitTypeHeading() {
+        return StringUtil.getLabelForView(visitTypeHeading);
     }
 }

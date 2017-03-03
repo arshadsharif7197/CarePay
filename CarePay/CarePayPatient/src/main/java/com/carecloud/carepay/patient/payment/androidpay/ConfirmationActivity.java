@@ -58,7 +58,7 @@ public class ConfirmationActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_confirmation);
         Toolbar toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(this, com.carecloud.carepaylibrary.R.drawable.icn_patient_mode_nav_back));
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(this, com.carecloud.carepaylibrary.R.drawable.icn_nav_back));
         TextView title = (TextView) toolbar.findViewById(com.carecloud.carepaylibrary.R.id.respons_toolbar_title);
 
         if(paymentsDTOString != null){

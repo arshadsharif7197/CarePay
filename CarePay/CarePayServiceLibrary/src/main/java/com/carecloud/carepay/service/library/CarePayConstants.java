@@ -5,24 +5,6 @@ package com.carecloud.carepay.service.library;
  */
 public class CarePayConstants {
 
-    // All Shared Preferences key Constants
-    public static final String PREFERENCE_CAREPAY = "Preference_CarePay";
-
-    public static final String PREFERENCE_USER_SELECTED_LANGUAGE = "user_selected_language";
-
-    public static final String PREFERENCE_PRACTICE_SELECTED_LANGUAGE = "practice_user_selected_language";
-
-    public static final String PREFERENCE_PATIENT_ID = "patient_id";
-
-    public static final String PREFERENCE_PRACTICE_ID = "practice_id";
-
-    public static final String PREFERENCE_PRACTICE_MANAGEMENT = "practice_management";
-
-    public static final String PREFERENCE_PREFIX = "prefix";
-
-    public static final String PREFERENCE_USER_ID = "user_id";
-
-
     // Default data
 
     public static final String DEFAULT_LANGUAGE = "English";
@@ -77,6 +59,7 @@ public class CarePayConstants {
     public static final String ADD_APPOINTMENT_PATIENT_ID = "add_appointment_patient_id";
     public static final String PAYMENT_CREDIT_CARD_INFO = "payment_credit_card_info";
     public static final String TAB_SECTION_NUMBER = "section_number";
+    public static final int    MAX_INSURANCE_DOC = 3;
 
     public static final String RAW_DATE_FORMAT_FOR_TESTS               = "yyyy-MM-dd'T'HH:mm:ssX";
     public static final String RAW_DATE_FORMAT_FOR_CALENDAR_DATE_RANGE = "EEE, MMM d, ''yy";
@@ -93,11 +76,11 @@ public class CarePayConstants {
     public static final String TYPE_HSA  = "hsa";
     public static final String TYPE_FSA  = "fsa";
     public static final String TYPE_ANDROID_PAY  = "android_pay";
+    public static final String TYPE_PAYMENT_PLAN  = "pay_using_payment_plan";
 
     public static final int PAYMENT_PLAN_REQUIRED_BALANCE = 20;
     public static final String APPOINTMENTS_STATUS_COMPLETED = "completed";
 
-    public static final String CLOVER_DEVICE = "Clover";
     public static final String DEMOGRAPHICS_SETTINGS_BUNDLE  = "demographics_settings_bundle";
     public static final String DEMOGRAPHICS_ADDRESS_BUNDLE  = "demographics_address_bundle";
     public static final String PAYEEZY_MERCHANT_SERVICE_BUNDLE  = "payeezy_merchant_service_bundle";
@@ -110,11 +93,16 @@ public class CarePayConstants {
     public static final int NAVIGATION_ITEM_INDEX_NOTIFICATION= 3;
 
 
+    public static final String MEDICATION_ALLERGIES_DTO_EXTRA = "medication_allergies_payload_extra";
+    public static final String MEDICATION_ALLERGIES_SEARCH_MODE_EXTRA = "medication_allergies_search_mode_extra";
+
     //Clover Constants
+    public static final String CLOVER_DEVICE = "Clover";
     public static final String CLOVER_PAYMENT_INTENT = "com.carecloud.carepay.practice.clover.payments.CloverPaymentActivity";
     public static final int CLOVER_PAYMENT_INTENT_REQUEST_CODE = 0x37;
     public static final String CLOVER_PAYMENT_AMOUNT = "clover_payment_amount";
     public static final String CLOVER_PAYMENT_METADATA = "clover_payment_metadata";
     public static final String CLOVER_PAYMENT_TRANSITION = "clover_payment_transition";
     public static final String CLOVER_PAYMENT_LINE_ITEMS = "clover_payment_line_items";
+    public static final String CLOVER_PAYMENT_SUCCESS_INTENT_DATA = "clover_payment_success_intent_data";
 }

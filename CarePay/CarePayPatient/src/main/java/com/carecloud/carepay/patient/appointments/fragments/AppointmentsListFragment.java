@@ -1,11 +1,9 @@
 package com.carecloud.carepay.patient.appointments.fragments;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,34 +18,45 @@ import android.widget.ProgressBar;
 import com.carecloud.carepay.patient.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.appointments.adapters.AppointmentsAdapter;
+import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentDialog;
+import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
+import com.carecloud.carepay.patient.appointments.dialog.CheckInOfficeNowAppointmentDialog;
 import com.carecloud.carepay.patient.appointments.utils.PatientAppUtil;
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.appointment.DataDTO;
+import com.carecloud.carepay.service.library.dtos.FaultResponseDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.QueryStrings;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog;
+import com.carecloud.carepaylibray.customdialogs.QueueAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.utils.DateUtil;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
+import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AppointmentsListFragment extends BaseFragment {
-
-//    private static final String LOG_TAG = AppointmentsListFragment.class.getSimpleName();
 
     private AppointmentsResultModel appointmentInfo;
     private ProgressBar appointmentProgressBar;
@@ -62,66 +71,7 @@ public class AppointmentsListFragment extends BaseFragment {
     private RecyclerView appointmentRecyclerView;
     private AppointmentsListFragment appointmentsListFragment;
     private Bundle bundle;
-
-//    private CustomPopupNotification popup;
-//    private View.OnClickListener negativeActionListener = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View view) {
-//            popup.dismiss();
-//            popup = null;
-//
-//            getApplicationPreferences().writeStringToSharedPref(
-//                    CarePayConstants.PREF_LAST_REMINDER_POPUP_APPT_ID,
-//                    appointmentsItems.get(0).getPayload().getId());
-//        }
-//    };
-
-//    private View.OnClickListener positiveActionListener = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View view) {
-//            popup.dismiss();
-//            popup = null;
-//
-//            getApplicationPreferences().writeStringToSharedPref(
-//                    CarePayConstants.PREF_LAST_REMINDER_POPUP_APPT_ID,
-//                    appointmentsItems.get(0).getPayload().getId());
-//
-//            onCheckInNow(appointmentsItems.get(0));
-//        }
-//    };
-
-    /**
-     * call check-in Now api.
-     */
-//    private void onCheckInNow(AppointmentDTO appointmentDTO) {
-//        Map<String, String> queries = new HashMap<>();
-//        queries.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
-//        queries.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
-//        queries.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
-//
-//        Map<String, String> header = new HashMap<>();
-//        header.put("transition", "true");
-//
-//        TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCheckingIn();
-//        getWorkflowServiceHelper().execute(transitionDTO, transitionToDemographicsVerifyCallback, queries, header);
-//    }
-
-//    private WorkflowServiceCallback transitionToDemographicsVerifyCallback = new WorkflowServiceCallback() {
-//        @Override
-//        public void onPreExecute() {
-//        }
-//
-//        @Override
-//        public void onPostExecute(WorkflowDTO workflowDTO) {
-//            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
-//        }
-//
-//        @Override
-//        public void onFailure(String exceptionMessage) {
-//            SystemUtil.showDefaultFailureDialog(getActivity());
-//            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-//        }
-//    };
+    private AppointmentLabelDTO appointmentLabels;
 
     @Override
     public void onStart() {
@@ -137,83 +87,6 @@ public class AppointmentsListFragment extends BaseFragment {
             RequestAppointmentDialog.isAppointmentAdded = false;
         }
     }
-
-    /**
-     * This function will check today's appointment
-     * and notify if its within 2 hours.
-     */
-    @SuppressLint({"StringFormatMatches", "StringFormatInvalid"})
-//    private void checkUpcomingAppointmentForReminder() {
-//
-//        AppointmentDTO appointmentDataDTO = null;
-//        long differenceInMinutes = 0;
-//        String appointmentTimeStr = "";
-//        if(appointmentsItems!=null) {
-//            try {
-//                for (AppointmentDTO appointmentDTO : appointmentsItems) {//null
-//                    if (!appointmentDTO.getPayload().getAppointmentStatusModel().getCode()
-//                            .equalsIgnoreCase(CarePayConstants.CHECKED_IN)) {
-//
-//                        // Get appointment date/time in required format
-//                        appointmentTimeStr = appointmentDTO.getPayload().getStartTime();
-//                        DateUtil.getInstance().setFormat(CarePayConstants.APPOINTMENT_DATE_TIME_FORMAT);
-//                        Date appointmentTime = DateUtil.getInstance().setDateRaw(appointmentTimeStr).getDate();
-//
-//                        // Get current date/time in required format
-//                        String currentTime = DateUtil.getDateRaw(DateUtil.getInstance().setToCurrent().getDate());
-//                        Date currentDate = DateUtil.getInstance().setDateRaw(currentTime).getDate();
-//
-//                        if (appointmentTime != null && currentDate != null) {
-//                            long differenceInMilli = appointmentTime.getTime() - currentDate.getTime();
-//                            differenceInMinutes = TimeUnit.MILLISECONDS.toMinutes(differenceInMilli);
-//
-//                            if (differenceInMinutes > 0) {
-//                                if (differenceInMinutes <= CarePayConstants.APPOINTMENT_REMINDER_TIME_IN_MINUTES
-//                                        && appointmentInfo != null) {
-//                                    appointmentDataDTO = appointmentDTO;
-//                                    break;
-//                                } else {
-//                                    break;
-//                                }
-//                            }
-//                        }
-//
-//                    }
-//                }
-//                if (appointmentDataDTO != null) {
-//                    AppointmentLabelDTO labels = appointmentInfo.getMetadata().getLabel();
-//                    String doctorName = appointmentDataDTO.getPayload().getProvider().getName();
-//                    String aptTime = DateUtil.getInstance().setDateRaw(appointmentTimeStr).getTime12Hour();
-//                    String popupNotificationMsg;
-//                    if (differenceInMinutes == CarePayConstants.APPOINTMENT_REMINDER_TIME_IN_MINUTES) {
-//                        popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt(),
-//                                aptTime, doctorName, "2" + " " + labels.getAppointmentPopupNotificationHours());
-//                    } else if (differenceInMinutes == 60) {
-//                        popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt(),
-//                                aptTime, doctorName, "1" + " " + labels.getAppointmentPopupNotificationHour());
-//                    } else if (differenceInMinutes > 60) {
-//                        popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt(),
-//                                aptTime, doctorName, "1" + " " + labels.getAppointmentPopupNotificationHour()
-//                                        + " " + labels.getAppointmentPopupNotificationAnd() + " " + (differenceInMinutes - 60)
-//                                        + " " + labels.getAppointmentPopupNotificationMinutes());
-//                    } else {
-//                        popupNotificationMsg = String.format(labels.getAppointmentsCheckInEarlyPrompt(),
-//                                aptTime, doctorName, differenceInMinutes + " "
-//                                        + labels.getAppointmentPopupNotificationMinutes());
-//                    }
-//
-//                    popup = new CustomPopupNotification(getActivity(), getActivity().getWindow().getCurrentFocus(),
-//                            labels.getAppointmentsCheckInEarly(), labels.getDismissMessage(),
-//                            popupNotificationMsg,
-//                            positiveActionListener, negativeActionListener);
-//                    popup.showPopWindow();
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                Log.e(LOG_TAG, e.getMessage());
-//            }
-//        }
-//    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -231,6 +104,7 @@ public class AppointmentsListFragment extends BaseFragment {
         bundle = getArguments();
         String appointmentInfoString = bundle.getString(CarePayConstants.APPOINTMENT_INFO_BUNDLE);
         appointmentInfo = gson.fromJson(appointmentInfoString, AppointmentsResultModel.class);
+        this.appointmentLabels = appointmentInfo.getMetadata().getLabel();
 
         // Set Title
         ActionBar actionBar = ((AppointmentsActivity) getActivity()).getSupportActionBar();
@@ -245,13 +119,11 @@ public class AppointmentsListFragment extends BaseFragment {
     }
 
     private void init() {
-//        String noAptPlaceholder = "";
         String noAptMessageTitle = "";
         String noAptMessageText = "";
 
         if (appointmentInfo != null) {
             AppointmentLabelDTO labels = appointmentInfo.getMetadata().getLabel();
-//            noAptPlaceholder = labels.getNoAppointmentsPlaceholderLabel();
             noAptMessageTitle = labels.getNoAppointmentsMessageTitle();
             noAptMessageText = labels.getNoAppointmentsMessageText();
         }
@@ -265,7 +137,6 @@ public class AppointmentsListFragment extends BaseFragment {
 
         appointmentView = (LinearLayout) appointmentsListView.findViewById(R.id.appointment_section_linear_layout);
         noAppointmentView = (LinearLayout) appointmentsListView.findViewById(R.id.no_appointment_layout);
-//        ((CarePayTextView) appointmentsListView.findViewById(R.id.no_apt_placeholder_icon)).setText(noAptPlaceholder);
         ((CarePayTextView) appointmentsListView.findViewById(R.id.no_apt_message_title)).setText(noAptMessageTitle);
         ((CarePayTextView) appointmentsListView.findViewById(R.id.no_apt_message_desc)).setText(noAptMessageText);
 
@@ -315,7 +186,7 @@ public class AppointmentsListFragment extends BaseFragment {
                 }
 
                 appointmentsAdapter = new AppointmentsAdapter(getActivity(),
-                        appointmentListWithHeader, appointmentsListFragment, appointmentInfo);
+                        appointmentListWithHeader, appointmentsListFragment, appointmentInfo, getAppointmentsAdapterListener());
                 appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 appointmentRecyclerView.setAdapter(appointmentsAdapter);
             } else {
@@ -325,8 +196,223 @@ public class AppointmentsListFragment extends BaseFragment {
             // Show no appointment screen
             showNoAppointmentScreen();
         }
+    }
 
-        //checkUpcomingAppointmentForReminder();
+    private AppointmentsAdapter.AppointmentsAdapterListener getAppointmentsAdapterListener() {
+        return new AppointmentsAdapter.AppointmentsAdapterListener() {
+
+            public void onItemTapped(AppointmentDTO appointmentDTO)
+            {
+                showAppointmentPopup(appointmentDTO) ;
+            }
+        };
+    }
+
+    private void showAppointmentPopup(AppointmentDTO appointmentDTO) {
+
+        AppointmentsPayloadDTO payloadDTO = appointmentDTO.getPayload();
+        AppointmentsActivity.model = appointmentDTO;
+
+        String statusCode = payloadDTO.getAppointmentStatusModel().getCode();
+        boolean isCheckedIn = statusCode.equalsIgnoreCase(CarePayConstants.CHECKED_IN);
+        boolean isCanceled = statusCode.equalsIgnoreCase(CarePayConstants.CANCELLED);
+        boolean isRequested = statusCode.equalsIgnoreCase(CarePayConstants.REQUESTED);
+
+        // Missed Appointment
+        if (payloadDTO.isAppointmentOver() && !isCheckedIn) {
+            new CancelAppointmentDialog(getContext(), appointmentDTO, appointmentInfo,
+                    BaseDoctorInfoDialog.AppointmentType.MISSED_APPOINTMENT, getCancelAppointmentDialogListener()).show();
+
+        } else if (isCheckedIn) {
+            // Checked-In Appointment
+            new QueueAppointmentDialog(getContext(), appointmentDTO, appointmentLabels).show();
+
+        } else if (isCanceled) {
+            // Cancelled Appointment
+            new CancelAppointmentDialog(getContext(), appointmentDTO, appointmentInfo,
+                    BaseDoctorInfoDialog.AppointmentType.CANCELLED_APPOINTMENT, getCancelAppointmentDialogListener()).show();
+
+        } else if (!payloadDTO.hasAppointmentStarted() && isAppointmentCancellable(appointmentDTO)) {
+            // Appointment as long as it's 24 hours or more in the future
+            new CancelAppointmentDialog(getContext(), appointmentDTO, appointmentInfo,
+                    BaseDoctorInfoDialog.AppointmentType.CANCEL_APPOINTMENT,
+                    getCancelAppointmentDialogListener()).show();
+
+        } else if (isRequested) {
+            // Requested Appointment
+            new CancelAppointmentDialog(getContext(), appointmentDTO, appointmentInfo,
+                    BaseDoctorInfoDialog.AppointmentType.REQUESTED_APPOINTMENT, getCancelAppointmentDialogListener()).show();
+
+        } else {
+            new CheckInOfficeNowAppointmentDialog(getContext(), appointmentDTO, appointmentInfo, getCheckInOfficeNowAppointmentDialogListener()).show();
+        }
+
+    }
+
+    private CheckInOfficeNowAppointmentDialog.CheckInOfficeNowAppointmentDialogListener getCheckInOfficeNowAppointmentDialogListener() {
+        return new CheckInOfficeNowAppointmentDialog.CheckInOfficeNowAppointmentDialogListener() {
+            @Override
+            public void onPreRegisterTapped(AppointmentDTO appointmentDTO, AppointmentsResultModel appointmentInfo) {
+                JsonObject queryStringObject = appointmentInfo.getMetadata().getTransitions().getCheckinAtOffice().getQueryString();
+                QueryStrings queryStrings = DtoHelper.getConvertedDTO(QueryStrings.class, queryStringObject);
+
+                Map<String, String> queries = new HashMap<>();
+                queries.put(queryStrings.getPracticeMgmt().getName(), appointmentDTO.getMetadata().getPracticeMgmt());
+                queries.put(queryStrings.getPracticeId().getName(), appointmentDTO.getMetadata().getPracticeId());
+                queries.put(queryStrings.getAppointmentId().getName(), appointmentDTO.getMetadata().getAppointmentId());
+
+                Map<String, String> header = getWorkflowServiceHelper().getPreferredLanguageHeader();
+                header.put("transition", "true");
+
+                TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCheckingIn();
+                getWorkflowServiceHelper().execute(transitionDTO, preRegisterCallback, queries, header);
+            }
+        };
+    }
+
+    /**
+     * Gets cancel appointment dialog listener.
+     *
+     * @return the cancel appointment dialog listener
+     */
+    public CancelAppointmentDialog.CancelAppointmentDialogListener getCancelAppointmentDialogListener() {
+        return new CancelAppointmentDialog.CancelAppointmentDialogListener() {
+            @Override
+            public void onRefreshAppointmentList(AppointmentDTO appointmentDTO) {
+
+                refreshAppointmentListAfterCancellation(appointmentDTO);
+            }
+
+
+            @Override
+            public void onPreRegisterTapped(AppointmentDTO appointmentDTO, AppointmentsResultModel appointmentInfo) {
+
+                JsonObject queryStringObject = appointmentInfo.getMetadata().getTransitions().getCheckinAtOffice().getQueryString();
+                QueryStrings queryStrings = DtoHelper.getConvertedDTO(QueryStrings.class, queryStringObject);
+
+                Map<String, String> queries = new HashMap<>();
+                queries.put(queryStrings.getPracticeMgmt().getName(), appointmentDTO.getMetadata().getPracticeMgmt());
+                queries.put(queryStrings.getPracticeId().getName(), appointmentDTO.getMetadata().getPracticeId());
+                queries.put(queryStrings.getAppointmentId().getName(), appointmentDTO.getMetadata().getAppointmentId());
+
+                Map<String, String> header = getWorkflowServiceHelper().getPreferredLanguageHeader();
+                header.put("transition", "true");
+
+                TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCheckingIn();
+                getWorkflowServiceHelper().execute(transitionDTO, preRegisterCallback, queries, header);
+            }
+
+            @Override
+            public void onCancelAppointmentButtonClicked(AppointmentDTO appointmentDTO, AppointmentsResultModel appointmentInfo) {
+                new CancelReasonAppointmentDialog(getContext(), appointmentDTO, appointmentInfo, getCancelReasonAppointmentDialogListener()).show();
+            }
+
+        };
+    }
+
+
+    private void refreshAppointmentListAfterCancellation(AppointmentDTO appointmentDTO) {
+        int index = appointmentsAdapter.getAppointmentItems().indexOf(appointmentDTO);
+        appointmentDTO.getPayload().getAppointmentStatusModel().setCode(CarePayConstants.CANCELLED);
+        appointmentsAdapter.getAppointmentItems().set(index, appointmentDTO);
+        appointmentsAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Gets cancel reason appointment dialog listener.
+     *
+     * @return the cancel reason appointment dialog listener
+     */
+    public CancelReasonAppointmentDialog.CancelReasonAppointmentDialogListener getCancelReasonAppointmentDialogListener() {
+        return new CancelReasonAppointmentDialog.CancelReasonAppointmentDialogListener() {
+            @Override
+            public void onCancelReasonAppointmentDialogCancelClicked(AppointmentDTO appointmentDTO, int cancellationReasonID, String cancellationReasonComment) {
+                onCancelAppointment(appointmentDTO, cancellationReasonID, cancellationReasonComment);
+            }
+        };
+    }
+
+    /**
+     * call cancel appointment api.
+     */
+    private void onCancelAppointment(AppointmentDTO appointmentDTO, int cancellationReasonID, String cancellationReasonComment) {
+
+        Gson gson = new Gson();
+        Map<String, String> queries = new HashMap<>();
+        JsonObject queryStringObject = appointmentInfo.getMetadata().getTransitions().getCancel().getQueryString();
+        QueryStrings queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
+
+        queries.put(queryStrings.getPracticeMgmt().getName(), appointmentDTO.getMetadata().getPracticeMgmt());
+        queries.put(queryStrings.getPracticeId().getName(), appointmentDTO.getMetadata().getPracticeId());
+        queries.put(queryStrings.getPatientId().getName(), appointmentDTO.getMetadata().getPatientId());
+        queries.put(queryStrings.getAppointmentId().getName(), appointmentDTO.getMetadata().getAppointmentId());
+
+        DataDTO data = appointmentInfo.getMetadata().getTransitions().getCancel().getData();
+        JsonObject postBodyObj = new JsonObject();
+        if(!StringUtil.isNullOrEmpty(cancellationReasonComment))
+        {
+            postBodyObj.addProperty(data.getCancellationComments().getName(),cancellationReasonComment);
+        }
+        if(cancellationReasonID != -1)
+        {
+            postBodyObj.addProperty(data.getCancellationReasonId().getName(),cancellationReasonID);
+        }
+
+        String body = postBodyObj.toString();
+
+        TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCancel();
+        getWorkflowServiceHelper().execute(transitionDTO, transitionToCancelCallback, body, queries);
+    }
+
+
+    private WorkflowServiceCallback transitionToCancelCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            PatientAppUtil.showSuccessToast(getContext());
+
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            try {
+                FaultResponseDTO fault = DtoHelper.getConvertedDTO(FaultResponseDTO.class, exceptionMessage);
+                if(fault.isUnprocessableEntityError())
+                {
+                    showErrorNotification(fault.getErrorMessageDTO().getServiceErrorDTO().getMessage());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+    private boolean isAppointmentCancellable(AppointmentDTO item) {
+        // Get appointment date/time in required format
+        String appointmentTimeStr = item.getPayload().getStartTime();
+        Date appointmentTime = DateUtil.getInstance().setDateRaw(appointmentTimeStr).getDate();
+
+        // Get current date/time in required format
+        Date currentDate = DateUtil.getInstance().setToCurrent().getDate();
+        String cancellationNoticePeriodStr = appointmentInfo.getPayload().getAppointmentsSettings().get(0).getCheckin().getCancellationNoticePeriod();
+
+        if (appointmentTime != null && currentDate != null) {
+            long differenceInMinutes = DateUtil.getMinutesElapsed(appointmentTime, currentDate);
+            long cancellationNoticePeriod = Long.parseLong(cancellationNoticePeriodStr);
+
+            if (differenceInMinutes > cancellationNoticePeriod) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void showNoAppointmentScreen() {
@@ -344,10 +430,6 @@ public class AppointmentsListFragment extends BaseFragment {
     }
 
     private void refreshAppointmentList() {
-//        if (popup != null) {
-//            popup.dismiss();
-//        }
-
         if (appointmentsItems != null) {
             appointmentsItems.clear();
         }
@@ -399,6 +481,28 @@ public class AppointmentsListFragment extends BaseFragment {
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+    private String getSectionHeaderTitle(String appointmentRawDate) {
+        // Current date
+        String currentDate = DateUtil.getInstance().setToCurrent().toStringWithFormatMmDashDdDashYyyy();
+        Date currentConvertedDate = DateUtil.getInstance().setDateRaw(currentDate).getDate();
+
+        // Appointment date
+        String appointmentDate = DateUtil.getInstance().setDateRaw(appointmentRawDate).toStringWithFormatMmDashDdDashYyyy();
+        Date convertedAppointmentDate = DateUtil.getInstance().setDateRaw(appointmentDate).getDate();
+
+        String headerText;
+        if (convertedAppointmentDate.after(currentConvertedDate)
+                && !appointmentDate.equalsIgnoreCase(currentDate)) {
+            headerText = appointmentInfo.getMetadata().getLabel().getUpcomingAppointmentsHeading();
+        } else if (convertedAppointmentDate.before(currentConvertedDate)) {
+            headerText = appointmentInfo.getMetadata().getLabel().getTodayAppointmentsHeading();
+        } else {
+            headerText = appointmentInfo.getMetadata().getLabel().getTodayAppointmentsHeading();
+        }
+        return headerText;
+    }
+
 
     // Method to return appointmentListWithHeader
     private List<Object> getAppointmentListWithHeader() {
@@ -468,27 +572,6 @@ public class AppointmentsListFragment extends BaseFragment {
         return appointmentListWithHeader;
     }
 
-    private String getSectionHeaderTitle(String appointmentRawDate) {
-        // Current date
-        String currentDate = DateUtil.getInstance().setToCurrent().toStringWithFormatMmDashDdDashYyyy();
-        Date currentConvertedDate = DateUtil.getInstance().setDateRaw(currentDate).getDate();
-
-        // Appointment date
-        String appointmentDate = DateUtil.getInstance().setDateRaw(appointmentRawDate).toStringWithFormatMmDashDdDashYyyy();
-        Date convertedAppointmentDate = DateUtil.getInstance().setDateRaw(appointmentDate).getDate();
-
-        String headerText;
-        if (convertedAppointmentDate.after(currentConvertedDate)
-                && !appointmentDate.equalsIgnoreCase(currentDate)) {
-            headerText = appointmentInfo.getMetadata().getLabel().getUpcomingAppointmentsHeading();
-        } else if (convertedAppointmentDate.before(currentConvertedDate)) {
-            headerText = appointmentInfo.getMetadata().getLabel().getTodayAppointmentsHeading();
-        } else {
-            headerText = appointmentInfo.getMetadata().getLabel().getTodayAppointmentsHeading();
-        }
-        return headerText;
-    }
-
     private void showAppointmentConfirmation() {
         String appointmentRequestSuccessMessage = "";
 
@@ -497,25 +580,27 @@ public class AppointmentsListFragment extends BaseFragment {
                     .getAppointmentRequestSuccessMessage();
         }
 
-        PatientAppUtil.showSuccessNotification(getActivity(), getActivity().getWindow().getCurrentFocus(), appointmentRequestSuccessMessage);
+        PatientAppUtil.showSuccessToast(getContext(), appointmentRequestSuccessMessage );
 
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-//        checkUpcomingAppointments();
-    }
+    private WorkflowServiceCallback preRegisterCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
 
-    /**
-     * Checks for upcoming appointments
-     * */
-//    private void checkUpcomingAppointments() {
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                checkUpcomingAppointmentForReminder();
-//            }
-//        }, 1000);
-//    }
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            PatientNavigationHelper.getInstance(getContext()).navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            SystemUtil.showDefaultFailureDialog(getContext());
+            Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
 }
