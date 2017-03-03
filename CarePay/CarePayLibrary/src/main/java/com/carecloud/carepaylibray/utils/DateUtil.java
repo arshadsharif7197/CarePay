@@ -783,7 +783,7 @@ public class DateUtil {
      * @param date date
      * @return true if valid else false
      */
-    public static boolean validate(String date) {
+    public static boolean isDateValid(String date) {
         if (StringUtil.isNullOrEmpty(date)) {
             return false;
         } else {

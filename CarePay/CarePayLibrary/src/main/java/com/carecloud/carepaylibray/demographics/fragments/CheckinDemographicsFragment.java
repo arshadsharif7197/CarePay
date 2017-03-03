@@ -648,7 +648,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
     private boolean isAllFieldsValid() {
 
-        boolean isdobValid = DateUtil.validate(dobEditText.getText().toString());
+        boolean isdobValid = DateUtil.isDateValid(dobEditText.getText().toString());
         boolean isGenderValid = !globalLabelsMetaDTO.getDemographicsChooseLabel().equals(selectGender.getText().toString());
         boolean isEthnicityValid = !globalLabelsMetaDTO.getDemographicsChooseLabel().equals(ethnicityDataTextView.getText().toString());
         boolean isRaceValid = !globalLabelsMetaDTO.getDemographicsChooseLabel().equals(raceDataTextView.getText().toString());
