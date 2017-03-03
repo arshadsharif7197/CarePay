@@ -33,6 +33,7 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiMetadataMerchantServiceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.utils.CardPattern;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.AddressUtil;
@@ -105,14 +106,18 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
             Bundle arguments = getArguments();
             if (arguments != null) {
                 Gson gson = new Gson();
-                String addressPayloadString = getApplicationPreferences().readStringFromSharedPref(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE);
+                String payloadString = getApplicationPreferences().readStringFromSharedPref(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE);
                 addressPayloadDTO = new DemographicAddressPayloadDTO();
-                if (addressPayloadString.length() > 1) {
-                    addressPayloadDTO = gson.fromJson(addressPayloadString, DemographicAddressPayloadDTO.class);
+                if (payloadString.length() > 1) {
+                    addressPayloadDTO = gson.fromJson(payloadString, DemographicAddressPayloadDTO.class);
                 }
                 if (arguments.containsKey(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE)){
-                    addressPayloadString = arguments.getString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE);
-                    papiAccountsDTO = gson.fromJson(addressPayloadString, new TypeToken<List<DemographicsSettingsPapiAccountsDTO>>(){}.getType());
+                    payloadString = arguments.getString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE);
+                    papiAccountsDTO = gson.fromJson(payloadString, new TypeToken<List<DemographicsSettingsPapiAccountsDTO>>(){}.getType());
+                }else if(arguments.containsKey(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE)){
+                    payloadString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
+                    PaymentsModel paymentsModel = gson.fromJson(payloadString, PaymentsModel.class);
+                    papiAccountsDTO = paymentsModel.getPaymentPayload().getPapiAccounts();
                 }
                 if (arguments.containsKey(CarePayConstants.PAYMENT_AMOUNT_BUNDLE)) {
                     amountToMakePayment = arguments.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
