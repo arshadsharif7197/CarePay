@@ -26,7 +26,6 @@ import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.android.gms.wallet.MaskedWallet;
 import com.google.android.gms.wallet.WalletConstants;
 import com.google.gson.Gson;
@@ -40,7 +39,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     private static boolean isPaymentDone;
     private PaymentsModel paymentsDTO;
     public Bundle bundle;
-    private boolean toolbarVisibility = false;
+    private String toolBarTitle;
 
     public static boolean isPaymentDone() {
         return isPaymentDone;
@@ -64,7 +63,10 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         practiceId = paymentsDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPracticeId();
         practiceMgmt = paymentsDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPracticeMgmt();
         patientId = paymentsDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPatientId();
-        displayToolbar(true);
+
+        toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.balance_history_toolbar);
+        toolBarTitle = paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPatientBalanceToolbar();
+        displayToolbar(true, toolBarTitle);
         inflateDrawer();
         FragmentManager fm = getSupportFragmentManager();
         PaymentBalanceHistoryFragment paymentBalanceHistoryFragment = (PaymentBalanceHistoryFragment)
@@ -87,25 +89,6 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                 PaymentBalanceHistoryFragment.class.getSimpleName()).commit();
         navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_PAYMENTS).setChecked(true);
 
-    }
-
-    /**
-     * Display toolbar.
-     *
-     * @param visibility the visibility
-     */
-    public void displayToolbar(boolean visibility){
-        toolbarVisibility = visibility;
-        toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.balance_history_toolbar);
-        TextView toolbarText = (TextView) findViewById(R.id.balance_history_toolbar_title);
-        String toolBarTitle = paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPatientBalanceToolbar();
-        toolbarText.setText(StringUtil.isNullOrEmpty(toolBarTitle) ? CarePayConstants.NOT_DEFINED : toolBarTitle);
-        if(visibility){
-            setSupportActionBar(toolbar);
-            getSupportActionBar().show();
-        } else {
-            getSupportActionBar().hide();
-        }
     }
 
     /**
@@ -220,13 +203,13 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
         navigateToFragment(fragment, true);
 
-        displayToolbar(false);
+        displayToolbar(false, toolBarTitle);
     }
 
     @Override
     public void onBackPressed(){
         if(!toolbarVisibility && getSupportFragmentManager().getBackStackEntryCount()<2){
-            displayToolbar(true);
+            displayToolbar(true, toolBarTitle);
         }
         super.onBackPressed();
     }

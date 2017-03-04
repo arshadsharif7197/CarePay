@@ -1,10 +1,10 @@
 package com.carecloud.carepay.patient.appointments.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepay.patient.appointments.adapters.AvailableHoursAdapter;
 import com.carecloud.carepay.patient.appointments.adapters.AvailableLocationsAdapter;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -60,7 +61,7 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
     private Date endDate;
     private AppointmentAvailabilityDTO availabilityDTO;
     private VisitTypeDTO selectedVisitTypeDTO;
-//    private AppointmentResourcesDTO selectedResourcesDTO;
+    //    private AppointmentResourcesDTO selectedResourcesDTO;
     private AppointmentsResultModel resourcesToScheduleDTO;
     private AppointmentResourcesItemDTO selectedResource;
 
@@ -76,10 +77,16 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
     private List<AppointmentLocationsDTO> selectedLocations = new LinkedList<>();
     private SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
 
+    private AppointmentNavigationCallback callback;
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try{
+            callback = (AppointmentNavigationCallback) context;
+        }catch (ClassCastException cce){
+            throw new ClassCastException("Attached context must implement AppointmentNavigationCallback");
+        }
     }
 
     @Override
@@ -113,7 +120,6 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
             addAppointmentPatientId = bundle.getString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID);
         }
 
-        getAvailableHoursTimeSlots();
     }
 
     @SuppressLint("DefaultLocale")
@@ -124,6 +130,8 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
         View availableHoursListView = inflater.inflate(R.layout.fragment_available_hours_list,
                 container, false);
 
+        hideDefaultActionBar();
+
         /*inflate toolbar*/
         inflateToolbar(availableHoursListView);
         /*inflate other UI components like button etc.*/
@@ -132,6 +140,17 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
         updateDateRange();
 
         return availableHoursListView;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle icicle){
+//        getAvailableHoursTimeSlots();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        getAvailableHoursTimeSlots();
     }
 
     /**
@@ -211,7 +230,10 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
                 availableHoursAdapter.notifyDataSetChanged();
             }
 
-            if (locations.size() > 1) {
+            if(locations.isEmpty()){
+                availableLocationsRecycleView.setVisibility(View.GONE);
+                singleLocation.setVisibility(View.GONE);
+            } else if (locations.size() > 1) {
                 availableLocationsRecycleView.setVisibility(View.VISIBLE);
                 singleLocation.setVisibility(View.GONE);
                 if (availableLocationsRecycleView.getAdapter() == null) {
@@ -257,18 +279,7 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
     View.OnClickListener navigationOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-                /*Launch previous fragment*/
-            FragmentManager fm = getFragmentManager();
-            ChooseProviderFragment chooseProviderFragment = (ChooseProviderFragment)
-                    fm.findFragmentByTag(ChooseProviderFragment.class.getSimpleName());
-
-            if (chooseProviderFragment == null) {
-                chooseProviderFragment = new ChooseProviderFragment();
-            }
-
-            fm.beginTransaction().replace(R.id.add_appointments_frag_holder,
-                    chooseProviderFragment,
-                    ChooseProviderFragment.class.getSimpleName()).commit();
+            getActivity().onBackPressed();
         }
     };
 
@@ -280,27 +291,7 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
     private View.OnClickListener dateRangeClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            String tag = AppointmentDateRangeFragment.class.getSimpleName();
-            AppointmentDateRangeFragment appointmentDateRangeFragment = (AppointmentDateRangeFragment)
-                    fragmentManager.findFragmentByTag(tag);
-
-            if (appointmentDateRangeFragment == null) {
-                appointmentDateRangeFragment = new AppointmentDateRangeFragment();
-            }
-
-            Bundle bundle = new Bundle();
-            Gson gson = new Gson();
-            bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, startDate);
-            bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, endDate);
-            bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(selectedResource));
-            bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(selectedVisitTypeDTO));
-            bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(resourcesToScheduleDTO));
-            bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID,addAppointmentPatientId);
-            appointmentDateRangeFragment.setArguments(bundle);
-
-            fragmentManager.beginTransaction().replace(R.id.add_appointments_frag_holder,
-                    appointmentDateRangeFragment, tag).addToBackStack(tag).commit();
+            callback.selectDate(startDate, endDate, selectedVisitTypeDTO, selectedResource);
         }
     };
 
@@ -422,8 +413,8 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
     private void getAvailableHoursTimeSlots(){
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("language", getApplicationPreferences().getUserLanguage());
-        queryMap.put("practice_mgmt",resourcesToScheduleDTO.getPayload().getResourcesToSchedule().get(0).getPractice().getPracticeMgmt());
-        queryMap.put("practice_id", resourcesToScheduleDTO.getPayload().getResourcesToSchedule().get(0).getPractice().getPracticeId());
+        queryMap.put("practice_mgmt",resourcesToScheduleDTO.getPayload().getPracticePatientIds().get(0).getPracticeManagement());
+        queryMap.put("practice_id", resourcesToScheduleDTO.getPayload().getPracticePatientIds().get(0).getPracticeId());
         queryMap.put("visit_reason_id", selectedVisitTypeDTO.getId()+"");
         queryMap.put("resource_ids", selectedResource.getId()+"");
         if(startDate!=null){
@@ -461,7 +452,7 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(getActivity());
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            Log.e(getString(R.string.alert_title_server_error), exceptionMessage!=null?exceptionMessage:"Exception message is null");
         }
     };
 

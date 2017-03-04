@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -115,7 +116,8 @@ public class AppointmentsListFragment extends BaseFragment {
         this.appointmentLabels = appointmentInfo.getMetadata().getLabel();
 
         // Set Title
-        ActionBar actionBar = ((AppointmentsActivity) getActivity()).getSupportActionBar();
+        showDefaultActionBar();
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(appointmentInfo.getMetadata().getLabel().getAppointmentsHeading());
         }

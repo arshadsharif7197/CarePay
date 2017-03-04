@@ -86,6 +86,8 @@ public class ChooseProviderFragment extends BaseFragment implements ProviderAdap
         }
 
         // set the toolbar
+        hideDefaultActionBar();
+
         Toolbar toolbar = (Toolbar) chooseProviderView.findViewById(R.id.add_appointment_toolbar);
         TextView titleView = (TextView) toolbar.findViewById(R.id.add_appointment_toolbar_title);
         titleView.setText(appointmentsResultModel.getMetadata().getLabel().getChooseProviderHeading());
@@ -111,13 +113,13 @@ public class ChooseProviderFragment extends BaseFragment implements ProviderAdap
             }
         });
 
-        Drawable closeIcon = ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_close);
+        Drawable closeIcon = ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back);
         toolbar.setNavigationIcon(closeIcon);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().finish();
+                getActivity().onBackPressed();
             }
         });
 
@@ -134,8 +136,8 @@ public class ChooseProviderFragment extends BaseFragment implements ProviderAdap
     private void getResourcesInformation() {
         Map<String, String> queryMap = new HashMap<>();
         //TODO this will need to be updated once multiple practice support has been implemented
-        queryMap.put("practice_mgmt", appointmentsResultModel.getPayload().getPractice_patient_ids().get(0).getPracticeManagement());
-        queryMap.put("practice_id", appointmentsResultModel.getPayload().getPractice_patient_ids().get(0).getPracticeId());
+        queryMap.put("practice_mgmt", appointmentsResultModel.getPayload().getPracticePatientIds().get(0).getPracticeManagement());
+        queryMap.put("practice_id", appointmentsResultModel.getPayload().getPracticePatientIds().get(0).getPracticeId());
 
 
         TransitionDTO resourcesToSchedule = appointmentsResultModel.getMetadata().getLinks().getResourcesToSchedule();

@@ -3,6 +3,8 @@ package com.carecloud.carepaylibray.base;
 import android.app.Dialog;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
@@ -155,4 +157,19 @@ public abstract class BaseFragment extends DialogFragment implements ISession {
             session.hideErrorNotification();
         }
     }
+
+    protected void hideDefaultActionBar(){
+        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        if(actionBar!=null){
+            actionBar.hide();
+        }
+    }
+
+    protected void showDefaultActionBar(){
+        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        if(actionBar!=null){
+            actionBar.show();
+        }
+    }
+
 }

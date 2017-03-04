@@ -1,10 +1,10 @@
 package com.carecloud.carepay.patient.appointments.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.carecloud.carepay.patient.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
@@ -50,11 +51,18 @@ public class AppointmentDateRangeFragment extends BaseFragment {
     private VisitTypeDTO selectedVisitTypeDTO;
     private AppointmentResourcesItemDTO selectedResourcesDTO;
     private AppointmentsResultModel resourcesToScheduleDTO;
-    private String addAppointmentPatientId;
+//    private String addAppointmentPatientId;
+
+    private AppointmentNavigationCallback callback;
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try{
+            callback = (AppointmentNavigationCallback) context;
+        }catch (ClassCastException cce){
+            throw new ClassCastException("Atached context must implement AppointmentNavigationCallback");
+        }
     }
 
     @Override
@@ -79,7 +87,7 @@ public class AppointmentDateRangeFragment extends BaseFragment {
             appointmentInfoString = bundle.getString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE);
             resourcesToScheduleDTO = gson.fromJson(appointmentInfoString, AppointmentsResultModel.class);
 
-            addAppointmentPatientId = bundle.getString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID);
+//            addAppointmentPatientId = bundle.getString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID);
         }
     }
 
@@ -91,6 +99,7 @@ public class AppointmentDateRangeFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_appointment_date_range, container, false);
 
         /*inflate toolbar*/
+        hideDefaultActionBar();
         inflateToolbar(view);
         /*inflate other UI components like text view, button etc.*/
         inflateUIComponents(view);
@@ -213,29 +222,7 @@ public class AppointmentDateRangeFragment extends BaseFragment {
     View.OnClickListener navigationOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-        //Launch previous fragment
-        FragmentManager fm = getFragmentManager();
-        String tag = AppointmentDateRangeFragment.class.getSimpleName();
-        AvailableHoursFragment availableHoursFragment = (AvailableHoursFragment)
-                fm.findFragmentByTag(tag);
-
-        if (availableHoursFragment == null) {
-            availableHoursFragment = new AvailableHoursFragment();
-        }
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, previousStartDate);
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, previousEndDate);
-
-        Gson gson = new Gson();
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(selectedResourcesDTO));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(selectedVisitTypeDTO));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(resourcesToScheduleDTO));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID,addAppointmentPatientId);
-        availableHoursFragment.setArguments(bundle);
-
-        fm.beginTransaction().replace(R.id.add_appointments_frag_holder, availableHoursFragment,
-                tag).addToBackStack(tag).commit();
+            getActivity().onBackPressed();
         }
     };
 
@@ -305,29 +292,31 @@ public class AppointmentDateRangeFragment extends BaseFragment {
     View.OnClickListener applyButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-                FragmentManager fm = getFragmentManager();
-                AvailableHoursFragment availableHoursFragment = (AvailableHoursFragment)
-                        fm.findFragmentByTag(AppointmentDateRangeFragment.class.getSimpleName());
 
-                if (availableHoursFragment == null) {
-                    availableHoursFragment = new AvailableHoursFragment();
-                }
-
-                Bundle bundle = new Bundle();
-                Gson gson = new Gson();
-                bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE,
-                        newStartDate);
-                bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE,
-                        newEndDate);
-                bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(selectedResourcesDTO));
-                bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(selectedVisitTypeDTO));
-                bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(resourcesToScheduleDTO));
-                bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID,addAppointmentPatientId);
-                availableHoursFragment.setArguments(bundle);
-
-                fm.beginTransaction().replace(R.id.add_appointments_frag_holder,
-                        availableHoursFragment,
-                        AvailableHoursFragment.class.getSimpleName()).commit();
+            callback.availableTimes(newStartDate, newEndDate, selectedVisitTypeDTO, selectedResourcesDTO);
+//                FragmentManager fm = getFragmentManager();
+//                AvailableHoursFragment availableHoursFragment = (AvailableHoursFragment)
+//                        fm.findFragmentByTag(AppointmentDateRangeFragment.class.getSimpleName());
+//
+//                if (availableHoursFragment == null) {
+//                    availableHoursFragment = new AvailableHoursFragment();
+//                }
+//
+//                Bundle bundle = new Bundle();
+//                Gson gson = new Gson();
+//                bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE,
+//                        newStartDate);
+//                bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE,
+//                        newEndDate);
+//                bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(selectedResourcesDTO));
+//                bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(selectedVisitTypeDTO));
+//                bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(resourcesToScheduleDTO));
+//                bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID,addAppointmentPatientId);
+//                availableHoursFragment.setArguments(bundle);
+//
+//                fm.beginTransaction().replace(R.id.add_appointments_frag_holder,
+//                        availableHoursFragment,
+//                        AvailableHoursFragment.class.getSimpleName()).commit();
         }
     };
 
