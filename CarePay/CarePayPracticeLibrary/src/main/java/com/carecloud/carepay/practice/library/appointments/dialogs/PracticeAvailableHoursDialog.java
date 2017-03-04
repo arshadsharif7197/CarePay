@@ -181,7 +181,10 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
                 availableHoursAdapter.notifyDataSetChanged();
             }
 
-            if (locations.size() > 1) {
+            if(locations.isEmpty()){
+                availableLocationsRecycleView.setVisibility(View.GONE);
+                singleLocation.setVisibility(View.GONE);
+            } else if (locations.size() > 1) {
                 availableLocationsRecycleView.setVisibility(View.VISIBLE);
                 singleLocation.setVisibility(View.GONE);
                 if (availableLocationsRecycleView.getAdapter() == null) {

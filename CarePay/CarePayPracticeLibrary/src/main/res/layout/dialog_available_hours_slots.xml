@@ -5,7 +5,7 @@
               android:layout_height="match_parent"
               android:layout_gravity="center"
               android:orientation="vertical"
-              android:background="@color/white">
+              android:background="@drawable/patient_mode_dialog_body_bg">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -60,14 +60,13 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:foregroundGravity="center"
             android:id="@+id/practice_available_single_location"
             android:visibility="gone">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_gravity="start|center_vertical"
                 android:id="@+id/practice_single_location_text"
                 android:layout_marginRight="@dimen/dimen_8dp"
                 android:text="Location"
