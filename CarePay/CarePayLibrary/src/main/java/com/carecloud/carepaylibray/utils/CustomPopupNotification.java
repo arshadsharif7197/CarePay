@@ -106,6 +106,7 @@ public class CustomPopupNotification extends PopupWindow {
         this.statusBarColor =  ContextCompat.getColor(context, R.color.colorPrimaryDark) ;
         this.errorColor = ContextCompat.getColor(context, R.color.remove_red);
         this.notificationType = notificationType;
+        this.setAnimationStyle(R.style.notificationPopUpTopToBottomAnimation);
 
         setOutsideTouchable(true);
         setSwipeListener();
@@ -179,22 +180,22 @@ public class CustomPopupNotification extends PopupWindow {
         getContentView().setOnTouchListener(new SwipeGuestureListener(context) {
 
             public void onSwipeTop() {
+                setStatusBarColor(statusBarColor);
                 callback.onSwipe(GESTURE_DIRECTION_TOP);
             }
 
             public void onSwipeRight() {
+                setStatusBarColor(statusBarColor);
                 callback.onSwipe(GESTURE_DIRECTION_RIGHT);
-                    setStatusBarColor(statusBarColor);
-
             }
 
             public void onSwipeLeft() {
-                callback.onSwipe(GESTURE_DIRECTION_LEFT);
                     setStatusBarColor(statusBarColor);
-
+                callback.onSwipe(GESTURE_DIRECTION_LEFT);
             }
 
             public void onSwipeBottom() {
+                setStatusBarColor(statusBarColor);
                 callback.onSwipe(GESTURE_DIRECTION_BOTTOM);
             }
 
