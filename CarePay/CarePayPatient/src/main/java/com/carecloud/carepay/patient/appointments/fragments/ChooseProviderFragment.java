@@ -226,6 +226,6 @@ public class ChooseProviderFragment extends BaseFragment implements ProviderAdap
      * @param selectedVisitType selected visit type from dialog
      */
     public void onDialogListItemClickListener(VisitTypeDTO selectedVisitType) {
-        callback.availableTimes(selectedVisitType, selectedResource);
+        callback.availableTimes(selectedVisitType, selectedResource, resourcesToScheduleModel);
     }
 }

@@ -18,7 +18,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.medications.adapters.MedicationAllergiesAdapter;
 import com.carecloud.carepaylibray.medications.models.MedicationAllergiesAction;
@@ -27,6 +27,7 @@ import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesQueryStrings;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
 import com.carecloud.carepaylibray.medications.models.MedicationsObject;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ import java.util.Map;
  * Created by lmenendez on 2/15/17.
  */
 
-public class MedicationsAllergyFragment extends BaseDialogFragment implements MedicationAllergiesAdapter.MedicationAllergiesAdapterCallback{
+public class MedicationsAllergyFragment extends BaseFragment implements MedicationAllergiesAdapter.MedicationAllergiesAdapterCallback{
 
     public interface MedicationAllergyCallback {
         void showMedicationSearch();
@@ -118,51 +119,49 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
             return;
         }
         toolbar.setTitle("");
-        if(getDialog()==null) {
-            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.icn_nav_back));
-            toolbar.setNavigationOnClickListener(navigationClickListener);
-//            ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.icn_nav_back));
+        toolbar.setNavigationOnClickListener(navigationClickListener);
 
-        }
+
         TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        title.setText(getTextForLabel(labels.getMedicationAllergiesTitlebarText()));
+        title.setText(StringUtil.getLabelForView(labels.getMedicationAllergiesTitlebarText()));
     }
 
     private void initViews(View view){
         TextView header = (TextView) view.findViewById(R.id.allergy_medication_header);
-        header.setText(getTextForLabel(labels.getAllergyMedicationHeader()));
+        header.setText(StringUtil.getLabelForView(labels.getAllergyMedicationHeader()));
 
         TextView headerMessage = (TextView) view.findViewById(R.id.allergy_medication_header_message);
-        headerMessage.setText(getTextForLabel(labels.getAllergyMedicationHeaderMessage()));
+        headerMessage.setText(StringUtil.getLabelForView(labels.getAllergyMedicationHeaderMessage()));
 
         TextView allergySection = (TextView) view.findViewById(R.id.allergy_section_header);
-        allergySection.setText(getTextForLabel(labels.getAllergySectionHeader()));
+        allergySection.setText(StringUtil.getLabelForView(labels.getAllergySectionHeader()));
 
         TextView allergyTitle = (TextView) view.findViewById(R.id.allergy_title);
-        allergyTitle.setText(getTextForLabel(labels.getAllergyTitle()));
+        allergyTitle.setText(StringUtil.getLabelForView(labels.getAllergyTitle()));
 
         TextView allergyChooseButton = (TextView) view.findViewById(R.id.allergy_choose_button);
-        allergyChooseButton.setText(getTextForLabel(labels.getAllergyChooseButton()));
+        allergyChooseButton.setText(StringUtil.getLabelForView(labels.getAllergyChooseButton()));
         allergyChooseButton.setOnClickListener(chooseAllergyClickListener);
 
         TextView allergyPlaceholderText = (TextView) view.findViewById(R.id.allergy_none_placeholder_text);
-        allergyPlaceholderText.setText(getTextForLabel(labels.getAllergyNonePlaceholderText()));
+        allergyPlaceholderText.setText(StringUtil.getLabelForView(labels.getAllergyNonePlaceholderText()));
 
         TextView medicationSection = (TextView) view.findViewById(R.id.medications_section_header);
-        medicationSection.setText(getTextForLabel(labels.getMedicationsSectionHeader()));
+        medicationSection.setText(StringUtil.getLabelForView(labels.getMedicationsSectionHeader()));
 
         TextView medicationTitle = (TextView) view.findViewById(R.id.medications_title);
-        medicationTitle.setText(getTextForLabel(labels.getMedicationsTitle()));
+        medicationTitle.setText(StringUtil.getLabelForView(labels.getMedicationsTitle()));
 
         TextView medicationChooseButton = (TextView) view.findViewById(R.id.medication_choose_button);
-        medicationChooseButton.setText(getTextForLabel(labels.getMedicationChooseButton()));
+        medicationChooseButton.setText(StringUtil.getLabelForView(labels.getMedicationChooseButton()));
         medicationChooseButton.setOnClickListener(chooseMedicationClickListener);
 
         TextView medicationPlaceholderText = (TextView) view.findViewById(R.id.medication_none_placeholder_text);
-        medicationPlaceholderText.setText(getTextForLabel(labels.getMedicationNonePlaceholderText()));
+        medicationPlaceholderText.setText(StringUtil.getLabelForView(labels.getMedicationNonePlaceholderText()));
 
         Button continueButton = (Button) view.findViewById(R.id.medication_allergies_continue_button);
-        continueButton.setText(getTextForLabel(labels.getMedicationAllergiesContinueButton()));
+        continueButton.setText(StringUtil.getLabelForView(labels.getMedicationAllergiesContinueButton()));
         continueButton.setOnClickListener(continueClickListener);
 
         placeholderAllergies = view.findViewById(R.id.allergy_none_placeholder);
@@ -180,7 +179,7 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
 
     private void setAdapters(){
         if(medicationRecycler.getAdapter()==null) {
-            MedicationAllergiesAdapter medicationAdapter = new MedicationAllergiesAdapter(getContext(), currentMedications, this, getTextForLabel(labels.getMedicationAllergiesDeleteButton()));
+            MedicationAllergiesAdapter medicationAdapter = new MedicationAllergiesAdapter(getContext(), currentMedications, this, StringUtil.getLabelForView(labels.getMedicationAllergiesDeleteButton()));
             medicationRecycler.setAdapter(medicationAdapter);
         }else{
             MedicationAllergiesAdapter adapter =((MedicationAllergiesAdapter)medicationRecycler.getAdapter());

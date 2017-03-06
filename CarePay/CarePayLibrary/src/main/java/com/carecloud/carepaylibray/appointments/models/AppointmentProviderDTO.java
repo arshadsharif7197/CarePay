@@ -18,7 +18,7 @@ public class AppointmentProviderDTO {
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("specialty")
+    @SerializedName("speciality")
     @Expose
     private AppointmentSpecialtyDTO specialty = new AppointmentSpecialtyDTO();
     @SerializedName("phone_number")

@@ -20,7 +20,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.adapter.CreditCardsAdapter;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
@@ -46,7 +46,7 @@ import java.util.Map;
  * Created by lmenendez on 2/28/17.
  */
 
-public class ChooseCreditCardFragment extends BaseFragment {
+public class ChooseCreditCardFragment extends BaseDialogFragment {
 
     private Button nextButton;
     private Activity activity;

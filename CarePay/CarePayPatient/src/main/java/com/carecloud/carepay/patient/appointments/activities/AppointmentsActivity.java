@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.appointments.activities;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -25,12 +26,13 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemD
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
+import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
 import java.util.Date;
 
-public class AppointmentsActivity extends MenuPatientActivity implements AppointmentNavigationCallback {
+public class AppointmentsActivity extends MenuPatientActivity implements AppointmentNavigationCallback, RequestAppointmentDialog.RequestAppointmentCallback {
 
     public static AppointmentDTO model;
     private AppointmentsResultModel appointmentsDTO;
@@ -97,7 +99,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             drawer.closeDrawer(GravityCompat.START);
         }else if(getSupportFragmentManager().getBackStackEntryCount()>0){
             getSupportFragmentManager().popBackStackImmediate();
-            if(/*!toolbarVisibility && */getSupportFragmentManager().getBackStackEntryCount()<1){
+            if(getSupportFragmentManager().getBackStackEntryCount()<1){
                 displayToolbar(true, null);
             }
         }else {
@@ -142,8 +144,6 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
     @Override
     public void rescheduleAppointment(AppointmentDTO appointmentDTO) {
-        VisitTypeDTO visitTypeDTO = new VisitTypeDTO();
-        visitTypeDTO.setId(appointmentDTO.getPayload().getVisitReasonId());
         AppointmentResourcesItemDTO resourcesItemDTO = new AppointmentResourcesItemDTO();
         resourcesItemDTO.setId(appointmentDTO.getPayload().getResourceId());
         resourcesItemDTO.setProvider(appointmentDTO.getPayload().getProvider());
@@ -157,7 +157,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         Bundle bundle = new Bundle();
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID, patientID);
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(resourcesItemDTO));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(visitTypeDTO));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(appointmentDTO.getPayload().getVisitType()));
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(appointmentsDTO));
 
         AvailableHoursFragment availableHoursFragment  = new AvailableHoursFragment();
@@ -168,13 +168,13 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     }
 
     @Override
-    public void availableTimes(VisitTypeDTO visitTypeDTO, AppointmentResourcesDTO appointmentResourcesDTO) {
+    public void availableTimes(VisitTypeDTO visitTypeDTO, AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel) {
         Bundle bundle = new Bundle();
         Gson gson = new Gson();
         String patientID = appointmentsDTO.getPayload().getPracticePatientIds().get(0).getPatientId(); //TODO this should be updated for multi practice support
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(appointmentResourcesDTO.getResource()));
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(visitTypeDTO));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(appointmentsDTO));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(appointmentsResultModel));
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID, patientID);
 
         AvailableHoursFragment availableHoursFragment = new AvailableHoursFragment();
@@ -185,7 +185,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     }
 
     @Override
-    public void availableTimes(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource) {
+    public void availableTimes(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource, AppointmentsResultModel appointmentsResultModel) {
         Bundle bundle = new Bundle();
         Gson gson = new Gson();
         String patientID = appointmentsDTO.getPayload().getPracticePatientIds().get(0).getPatientId(); //TODO this should be updated for multi practice support
@@ -194,7 +194,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, endDate);
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(appointmentResource));
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(visitTypeDTO));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(appointmentsDTO));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(appointmentsResultModel));
 
         AvailableHoursFragment availableHoursFragment = new AvailableHoursFragment();
         availableHoursFragment.setArguments(bundle);
@@ -204,14 +204,14 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     }
 
     @Override
-    public void selectDate(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource) {
+    public void selectDate(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource, AppointmentsResultModel appointmentsResultModel) {
         Bundle bundle = new Bundle();
         Gson gson = new Gson();
         bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, startDate);
         bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, endDate);
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(appointmentResource));
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(visitTypeDTO));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(appointmentsDTO));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(appointmentsResultModel));
 
         AppointmentDateRangeFragment appointmentDateRangeFragment = new AppointmentDateRangeFragment();
         appointmentDateRangeFragment.setArguments(bundle);
@@ -221,4 +221,15 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     }
 
 
+    @Override
+    public void onAppointmentRequestSuccess() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        int backStackCount = fragmentManager.getBackStackEntryCount();
+        for(int i=0; i<backStackCount; i++){
+            fragmentManager.popBackStackImmediate();
+        }
+//        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        displayToolbar(true, null);
+//        gotoAppointmentFragment();
+    }
 }

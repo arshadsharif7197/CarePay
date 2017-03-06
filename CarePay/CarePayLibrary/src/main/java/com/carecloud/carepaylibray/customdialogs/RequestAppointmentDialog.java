@@ -3,7 +3,6 @@ package com.carecloud.carepaylibray.customdialogs;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +10,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
@@ -21,7 +18,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.JsonObject;
 
@@ -30,11 +26,17 @@ import java.util.Map;
 
 public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
 
+    public interface RequestAppointmentCallback{
+        void onAppointmentRequestSuccess();
+    }
+
     private Context context;
     private LinearLayout mainLayout;
     private AppointmentsResultModel appointmentsResultModel;
     private AppointmentDTO appointmentDTO;
     public static boolean isAppointmentAdded = false;
+
+    private RequestAppointmentCallback callback;
 
     /**
      * Constructor.
@@ -50,6 +52,15 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         this.appointmentDTO = appointmentDTO;
         this.appointmentsResultModel = appointmentsResultModel;
         isAppointmentAdded=false;
+        setupCallback();
+    }
+
+    private void setupCallback(){
+        try{
+            callback = (RequestAppointmentCallback) context;
+        }catch (ClassCastException cce){
+            throw new ClassCastException("Provided Context must implement RequestAppointmentCallback");
+        }
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -95,7 +106,6 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         int viewId = view.getId();
         if (viewId == R.id.requestAppointmentButton) {
             onRequestAppointment();
-            cancel();
         }
     }
 
@@ -142,7 +152,8 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ((ISession) context).hideProgressDialog();
             isAppointmentAdded = true;
-            ((AppCompatActivity) context).finish();
+            dismiss();
+            callback.onAppointmentRequestSuccess();
         }
 
         @Override
