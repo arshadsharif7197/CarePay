@@ -228,8 +228,6 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         for(int i=0; i<backStackCount; i++){
             fragmentManager.popBackStackImmediate();
         }
-//        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         displayToolbar(true, null);
-//        gotoAppointmentFragment();
     }
 }

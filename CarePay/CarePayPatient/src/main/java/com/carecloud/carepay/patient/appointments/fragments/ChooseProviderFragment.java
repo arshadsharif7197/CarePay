@@ -136,8 +136,8 @@ public class ChooseProviderFragment extends BaseFragment implements ProviderAdap
     private void getResourcesInformation() {
         Map<String, String> queryMap = new HashMap<>();
         //TODO this will need to be updated once multiple practice support has been implemented
-        queryMap.put("practice_mgmt", appointmentsResultModel.getPayload().getPracticePatientIds().get(0).getPracticeManagement());
-        queryMap.put("practice_id", appointmentsResultModel.getPayload().getPracticePatientIds().get(0).getPracticeId());
+        queryMap.put("practice_mgmt", appointmentsResultModel.getPayload().getAppointmentsSettings().get(0).getPracticeManagement());
+        queryMap.put("practice_id", appointmentsResultModel.getPayload().getAppointmentsSettings().get(0).getPracticeId());
 
 
         TransitionDTO resourcesToSchedule = appointmentsResultModel.getMetadata().getLinks().getResourcesToSchedule();
