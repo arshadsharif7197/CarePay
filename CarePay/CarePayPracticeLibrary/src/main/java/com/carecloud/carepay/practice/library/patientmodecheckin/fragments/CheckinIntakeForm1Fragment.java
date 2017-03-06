@@ -144,15 +144,13 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
             return;
         }
         toolbar.setTitle("");
-        if(getDialog()==null) {
-            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.icn_nav_back));
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getActivity().onBackPressed();
-                }
-            });
-        }
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.icn_nav_back));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
 
         TextView header = (TextView) view.findViewById(R.id.consent_header);
         header.setText(StringUtil.getLabelForView(inTakeForm.getMetadata().getLabel().getIntakeFormHeading()));
@@ -265,7 +263,7 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
 
         /**
          * Callback for webview to request forms answers to prefill form data
-          * @return Should return answers XML received from backend i.e. payload.findings.payload.findings
+         * @return Should return answers XML received from backend i.e. payload.findings.payload.findings
          */
         @JavascriptInterface
         public String getAnswers() {
