@@ -167,7 +167,7 @@ public class DateRangePickerDialog extends BaseDialogFragment {
         public void onClick(View view) {
             Date today = new Date();
             calendarPickerView.selectDate(today);
-            updateDates();
+            updateSelectedDates();
         }
     };
 
@@ -209,7 +209,7 @@ public class DateRangePickerDialog extends BaseDialogFragment {
         calendarPickerView.setOnDateSelectedListener(new CalendarPickerView.OnDateSelectedListener() {
             @Override
             public void onDateSelected(Date date) {
-                updateDates();
+                updateSelectedDates();
             }
 
             @Override
@@ -219,7 +219,7 @@ public class DateRangePickerDialog extends BaseDialogFragment {
         });
     }
 
-    private void updateDates() {
+    private void updateSelectedDates() {
         List<Date> dateList = calendarPickerView.getSelectedDates();
 
         if (dateList.size() > 1) {
