@@ -204,7 +204,7 @@ public class CloverPaymentActivity extends BaseActivity {
 
             @Override
             protected void onPostExecute(Void param) {
-                if (authResult.authToken != null && authResult.baseUrl != null) {
+                if (authResult != null && authResult.authToken != null && authResult.baseUrl != null) {
                     connect();
                     new OrderAsyncTask().execute();
                 }

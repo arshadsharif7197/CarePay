@@ -93,11 +93,13 @@ public class CognitoAppHelper {
 
         // Create a user pool with default ClientConfiguration
         CognitoDTO cognitoDTO = applicationMode.getCognitoDTO();
-        userPool = new CognitoUserPool(context,
-                cognitoDTO.getUserPoolId(),
-                cognitoDTO.getClientId(),
-                clientSecret,
-                cognitoRegion);
+        if (cognitoDTO != null) {
+            userPool = new CognitoUserPool(context,
+                    cognitoDTO.getUserPoolId(),
+                    cognitoDTO.getClientId(),
+                    clientSecret,
+                    cognitoRegion);
+        }
 
         phoneVerified = false;
         phoneAvailable = false;

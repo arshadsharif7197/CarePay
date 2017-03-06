@@ -239,15 +239,17 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             hideProgressDialog();
 
             PaymentsModel patientDetails = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
+            if (patientDetails != null && patientDetails.getPaymentPayload().getPatientBalances() != null
+                    && !patientDetails.getPaymentPayload().getPatientBalances().isEmpty()) {
 
-            if (patientDetails != null && patientDetails.getPaymentPayload().getPatientBalances() != null && !patientDetails.getPaymentPayload().getPatientBalances().isEmpty()) {
                 PaymentsPatientBalancessDTO paymentsPatientBalancessDTO = patientDetails.getPaymentPayload().getPatientBalances().get(0);
-
-                showResponsibilityDialog(paymentsPatientBalancessDTO);
-            }
-            else
-            {
-                Toast.makeText(getContext(), "Patient has no balance", Toast.LENGTH_LONG).show() ;
+                if (paymentsPatientBalancessDTO.getBalances().get(0).getPayload().isEmpty()) {
+                    Toast.makeText(getContext(), "Patient has no balance", Toast.LENGTH_LONG).show();
+                } else {
+                    showResponsibilityDialog(paymentsPatientBalancessDTO);
+                }
+            } else {
+                Toast.makeText(getContext(), "Patient has no balance", Toast.LENGTH_LONG).show();
             }
         }
 
