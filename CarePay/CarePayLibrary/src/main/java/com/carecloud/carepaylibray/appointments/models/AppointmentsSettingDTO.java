@@ -22,6 +22,9 @@ public class AppointmentsSettingDTO implements Serializable
     @SerializedName("practice_id")
     @Expose
     private String practiceId;
+    @SerializedName("practice_mgmt")
+    @Expose
+    private String practiceManagement;
 
     public AppointmentsCheckinDTO getCheckin() {
         return checkin;
@@ -53,5 +56,13 @@ public class AppointmentsSettingDTO implements Serializable
 
     public void setPracticeId(String practiceId) {
         this.practiceId = practiceId;
+    }
+
+    public String getPracticeManagement() {
+        return practiceManagement;
+    }
+
+    public void setPracticeManagement(String practiceManagement) {
+        this.practiceManagement = practiceManagement;
     }
 }
