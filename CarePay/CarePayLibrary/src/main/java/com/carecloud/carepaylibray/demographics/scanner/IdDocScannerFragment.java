@@ -5,27 +5,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemIdDocDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPhotoDTO;
@@ -43,10 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTextInputLayout;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 /**
  * Created by lsoco_user on 9/13/2016.
@@ -55,18 +42,12 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemibol
 public class IdDocScannerFragment extends DocumentScannerFragment {
 
     private static final String LOG_TAG = IdDocScannerFragment.class.getSimpleName();
-    private static String[] states;
     private View view;
     private ImageCaptureHelper scannerFront;
     private ImageCaptureHelper scannerBack;
     private Button scanFrontButton;
     private Button scanBackButton;
-    private EditText idNumberEdit;
-    private TextInputLayout idNumberInputText;
-    private TextView idStateClickable;
-    private TextView stateLabel;
     private DemographicIdDocPayloadDTO model;
-    private DemographicMetadataEntityItemIdDocDTO idDocsMetaDTO;
     private DemographicLabelsDTO globalLabelsDTO;
 
     @Nullable
@@ -91,32 +72,10 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         return R.layout.fragment_demographics_scan_license;
     }
 
-    private void getOptions() {
-        // init states
-        if (idDocsMetaDTO != null
-                && idDocsMetaDTO.properties != null
-                && idDocsMetaDTO.properties.identityDocumentState != null) {
-            List<MetadataOptionDTO> optionDTOs = idDocsMetaDTO.properties.identityDocumentState.options;
-            List<String> statesStrings = new ArrayList<>();
-            for (MetadataOptionDTO optionDTO : optionDTOs) {
-                statesStrings.add(optionDTO.getLabel());
-            }
-            states = statesStrings.toArray(new String[0]);
-        } else {
-            states = new String[1];
-            states[0] = CarePayConstants.NOT_DEFINED;
-        }
-    }
-
     private void initializeUIFields() {
         model = DtoHelper.getConvertedDTO(DemographicIdDocPayloadDTO.class, getArguments());
-        idDocsMetaDTO = DtoHelper.getConvertedDTO(DemographicMetadataEntityItemIdDocDTO.class, getArguments());
 
         initializePhotos();
-        // fetch the options
-        getOptions();
-
-        setEditText();
 
         ImageView imageFront = (ImageView) view.findViewById(R.id.demogrDocsFrontScanImage);
         scannerFront = new ImageCaptureHelper(getActivity(), imageFront, globalLabelsDTO);
@@ -126,7 +85,6 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
 
         // init views (labels and logic)
         String label;
-        final String labelCancel = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsCancelLabel();
         // add click listener
         scanFrontButton = (Button) view.findViewById(R.id.demogrDocsFrontScanButton);
         label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsScanFrontLabel();
@@ -148,91 +106,13 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
             }
         });
 
-        stateLabel = (TextView) view.findViewById(R.id.demogrDocsLicenseStateLabel);
-        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDriversLicenseAddStateLabel();
-        stateLabel.setText(label);
-
-        idStateClickable = (TextView) view.findViewById(R.id.demogrDocsStateClickable);
-        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsChooseLabel();
-        idStateClickable.setText(label);
-        final String titleSelectState = label;
-        idStateClickable.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showChooseDialog(states, titleSelectState, labelCancel, idStateClickable);
-            }
-        });
-
         setTypefaces(view);
 
         populateViewsFromModel(view);
     }
 
-    private void setEditText() {
-        String label;
-
-        idNumberEdit = (EditText) view.findViewById(R.id.demogrDocsLicenseNumEdit);
-        idNumberInputText = (TextInputLayout) view.findViewById(R.id.demogrDocsNumberInputLayout);
-
-        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDriversLicenseNumber();
-        idNumberInputText.setTag(label);
-        idNumberEdit.setTag(idNumberInputText);
-        idNumberEdit.setHint(label);
-
-        idNumberEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                Log.v(LOG_TAG, "focus changed: " + hasFocus);
-                if (hasFocus) { // show the keyboard
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, hasFocus);
-            }
-        });
-
-        idNumberEdit.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int length, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int length, int after) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                String idNumber = idNumberEdit.getText().toString();
-                if (!StringUtil.isNullOrEmpty(idNumber)) {
-                    model.setIdNumber(idNumber);
-                }
-            }
-        });
-
-        idNumberEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int inputType, KeyEvent keyEvent) {
-                if (inputType == EditorInfo.IME_ACTION_NONE) {
-                    Log.v(LOG_TAG, "ID scanneer IME_ACTION_DONE");
-                    SystemUtil.hideSoftKeyboard(getActivity());
-                    idNumberEdit.clearFocus();
-                    view.requestFocus();
-                    return true;
-                }
-                return false;
-            }
-        });
-        idNumberEdit.clearFocus();
-    }
-
     @Override
     protected void updateModel(TextView selectionDestination) {
-        if (selectionDestination == idStateClickable) { // update 'state' field in the model
-            String state = idStateClickable.getText().toString();
-            if (!StringUtil.isNullOrEmpty(state)) {
-                model.setIdState(state);
-            }
-        }
     }
 
     @Override
@@ -258,17 +138,6 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
     @Override
     public void populateViewsFromModel(View view) {
         if (model != null) {
-            String licenseNum = model.getIdNumber();
-            if (!StringUtil.isNullOrEmpty(licenseNum)) {
-                idNumberEdit.setText(licenseNum);
-                idNumberEdit.requestFocus(); // required for CAPS hint
-                view.requestFocus();
-            }
-            String state = model.getIdState();
-            if (!StringUtil.isNullOrEmpty(state)) {
-                idStateClickable.setText(state);
-            }
-
             // add front image
             String frontPic = model.getIdDocPhothos().get(0).getIdDocPhoto();
             if (!StringUtil.isNullOrEmpty(frontPic)) {
@@ -307,16 +176,6 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         Context context = getActivity();
         setGothamRoundedMediumTypeface(context, scanFrontButton);
         setGothamRoundedMediumTypeface(context, scanBackButton);
-
-        setProximaNovaRegularTypeface(context, stateLabel);
-        setProximaNovaSemiboldTypeface(context, idStateClickable);
-        setProximaNovaSemiboldTypeface(context, idNumberEdit);
-
-        if (!StringUtil.isNullOrEmpty(idNumberEdit.getText().toString())) {
-            setProximaNovaExtraboldTypefaceInput(context, idNumberInputText);
-        } else {
-            setProximaNovaSemiboldTextInputLayout(context, idNumberInputText);
-        }
     }
 
     @Override

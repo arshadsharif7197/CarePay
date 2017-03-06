@@ -49,7 +49,6 @@ import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterfac
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
-import com.carecloud.carepaylibray.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
@@ -604,6 +603,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                     && !ValidationHelper.isValidString(phone.trim(), phoneValidation)) {
                 phoneNumberLabel.setErrorEnabled(true);
                 phoneNumberLabel.setError(phoneError);
+                phoneNumberEditText.requestFocus();
                 return false;
             }
             phoneNumberLabel.setError(null);
@@ -644,18 +644,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             return false;
         }
         return true;
-    }
-
-    private boolean isAllFieldsValid() {
-
-        boolean isdobValid = DateUtil.isDateValid(dobEditText.getText().toString());
-        boolean isGenderValid = !globalLabelsMetaDTO.getDemographicsChooseLabel().equals(selectGender.getText().toString());
-        boolean isEthnicityValid = !globalLabelsMetaDTO.getDemographicsChooseLabel().equals(ethnicityDataTextView.getText().toString());
-        boolean isRaceValid = !globalLabelsMetaDTO.getDemographicsChooseLabel().equals(raceDataTextView.getText().toString());
-        boolean isStateValid = !globalLabelsMetaDTO.getDemographicsChooseLabel().equals(stateEditText.getText().toString());
-
-        return !isPhoneEmpty && !isZipEmpty && isdobValid && isRaceValid && isEthnicityValid && isGenderValid && !isAddressEmpty && !isFirstNameEmpty && !isLastNameEmpty && !isCityEmpty && isStateValid;
-
     }
 
     private void openNextFragment(){
@@ -1143,7 +1131,98 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
         rootview.requestFocus();
         hideSoftKeyboard(getActivity());
+        isAllFieldsValid();
+    }
 
+    private boolean isAllFieldsValid(){
+        boolean allFieldsValid = true;
+        if (!StringUtil.isNullOrEmpty(firstNameText.getText().toString())) {
+            firstNameLabel.setError(null);
+            firstNameLabel.setErrorEnabled(false);
+        } else {
+            final String firstNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.firstName.validations.get(0).getErrorMessage();
+            firstNameLabel.setError(firstNameError);
+            firstNameLabel.setErrorEnabled(true);
+            firstNameText.requestFocus();
+            allFieldsValid = false;
+        }
+
+        if (!StringUtil.isNullOrEmpty(lastNameText.getText().toString())) {
+            lastNameLabel.setError(null);
+            lastNameLabel.setErrorEnabled(false);
+        } else {
+            final String lastNameError = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.lastName.validations.get(0).getErrorMessage();
+            lastNameLabel.setError(lastNameError);
+            lastNameLabel.setErrorEnabled(true);
+            lastNameText.requestFocus();
+            allFieldsValid = false;
+        }
+
+        if(!isDateOfBirthValid()){
+            allFieldsValid = false;
+        }
+
+        if(!isPhoneNumberValid()){
+            allFieldsValid = false;
+        }
+
+        if(globalLabelsMetaDTO.getDemographicsChooseLabel().equals(selectGender.getText().toString())){
+            allFieldsValid = false;
+        }
+
+        if(globalLabelsMetaDTO.getDemographicsChooseLabel().equals(ethnicityDataTextView.getText().toString())){
+            allFieldsValid = false;
+        }
+
+        if(globalLabelsMetaDTO.getDemographicsChooseLabel().equals(raceDataTextView.getText().toString())){
+            allFieldsValid = false;
+        }
+
+        if (!StringUtil.isNullOrEmpty(address1EditText.getText().toString())) {
+            address1Label.setError(null);
+            address1Label.setErrorEnabled(false);
+        } else {
+            final String lastNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.address1.validations.get(0).getErrorMessage();
+            address1Label.setError(lastNameError);
+            address1Label.setErrorEnabled(true);
+            address1EditText.requestFocus();
+            allFieldsValid = false;
+        }
+
+        if (!StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString())) {
+            zipcodeLabel.setError(null);
+            zipcodeLabel.setErrorEnabled(false);
+        } else {
+            final String zipcodeError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.zipcode.validations.get(0).getErrorMessage();
+            zipcodeLabel.setError(zipcodeError);
+            zipcodeLabel.setErrorEnabled(true);
+            zipCodeEditText.requestFocus();
+            allFieldsValid = false;
+        }
+
+        if (!StringUtil.isNullOrEmpty(cityEditText.getText().toString())) {
+            cityLabel.setError(null);
+            cityLabel.setErrorEnabled(false);
+        } else {
+            final String cityError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.city.validations.get(0).getErrorMessage();
+            cityLabel.setError(cityError);
+            cityLabel.setErrorEnabled(true);
+            cityEditText.requestFocus();
+            allFieldsValid = false;
+        }
+
+        if(!globalLabelsMetaDTO.getDemographicsChooseLabel().equals(stateEditText.getText().toString())){
+            cityLabel.setError(null);
+            cityLabel.setErrorEnabled(false);
+        } else {
+            final String stateError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.state.validations.get(0).getErrorMessage();
+            stateEditText.setError(stateError);
+            stateEditText.requestFocus();
+            allFieldsValid = false;
+        }
+        enableButton(allFieldsValid);
+
+        return allFieldsValid;
     }
 
     protected void setTypefaces(View view) {
