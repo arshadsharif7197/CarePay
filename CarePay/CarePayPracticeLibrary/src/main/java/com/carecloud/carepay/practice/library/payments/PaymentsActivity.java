@@ -20,10 +20,9 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.models.LocationDTO;
 import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PatientDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
@@ -159,7 +158,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
         for (PaymentsPatientBalancessDTO patientBalances : balances) {
 
-            DemographicsSettingsPersonalDetailsPayloadDTO personalDetails
+            PatientModel personalDetails
                     = patientBalances.getDemographics().getPayload().getPersonalDetails();
             String fullName = personalDetails.getFirstName() + " " + personalDetails.getLastName();
             String patientId = getPatientId(patientBalances);
@@ -217,7 +216,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     private void setFindPatientOnItemClickedListener(FindPatientDialog findPatientDialog) {
         findPatientDialog.setClickedListener(new FindPatientDialog.OnItemClickedListener() {
             @Override
-            public void onItemClicked(PatientDTO patient) {
+            public void onItemClicked(PatientModel patient) {
                 Map<String, String> queryMap = new HashMap<>();
                 queryMap.put("patient_id", patient.getPatientId());
 

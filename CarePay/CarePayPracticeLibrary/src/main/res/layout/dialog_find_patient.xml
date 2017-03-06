@@ -1,25 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/find_patient_bg"
     android:gravity="center">
 
-    <ImageButton
-        android:id="@+id/find_patient_close_button"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:id="@+id/contain_close"
         android:layout_marginEnd="@dimen/dimen_26dp"
+        android:layout_gravity="center_vertical"
         android:gravity="center"
-        android:background="@drawable/round_semi_transparent_bg"
-        android:src="@drawable/icn_close" />
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/find_patient_close_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/round_semi_transparent_bg"
+            android:src="@drawable/icn_close" />
+
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/find_patient_scroll">
+        android:id="@+id/find_patient_scroll"
+        android:layout_toEndOf="@id/contain_close">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -57,13 +67,23 @@
         </LinearLayout>
     </ScrollView>
 
-    <ImageButton
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
         android:layout_marginStart="@dimen/dimen_26dp"
-        android:layout_gravity="center"
-        android:background="@drawable/round_semi_transparent_bg"
-        android:src="@drawable/icn_close" />
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        android:layout_toEndOf="@+id/find_patient_scroll">
 
-</LinearLayout>
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/round_semi_transparent_bg"
+            android:src="@drawable/icn_close" />
+
+    </LinearLayout>
+
+</RelativeLayout>

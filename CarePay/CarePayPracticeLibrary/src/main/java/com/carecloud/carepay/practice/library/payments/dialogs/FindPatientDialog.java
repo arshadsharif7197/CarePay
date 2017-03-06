@@ -21,8 +21,8 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.ISession;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.RecyclerViewWithDivider;
-import com.carecloud.carepaylibray.payments.models.PatientDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.JsonArray;
@@ -145,7 +145,7 @@ public class FindPatientDialog extends Dialog {
 
             PaymentsModel searchResult = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
             if (searchResult != null) {
-                List<PatientDTO> patients = searchResult.getPaymentPayload().getPatients();
+                List<PatientModel> patients = searchResult.getPaymentPayload().getPatients();
                 showSearchResultList(patients);
             }
         }
@@ -156,7 +156,7 @@ public class FindPatientDialog extends Dialog {
         }
     };
 
-    private void showSearchResultList(List<PatientDTO> patients) {
+    private void showSearchResultList(List<PatientModel> patients) {
         PatientSearchResultAdapter adapter = new PatientSearchResultAdapter(context, patients);
         setOnItemClickedListener(adapter);
         
@@ -169,7 +169,7 @@ public class FindPatientDialog extends Dialog {
     private void setOnItemClickedListener(PatientSearchResultAdapter adapter) {
         adapter.setClickedListener(new PatientSearchResultAdapter.OnItemClickedListener() {
             @Override
-            public void onItemClicked(PatientDTO patient) {
+            public void onItemClicked(PatientModel patient) {
                 dismiss();
                 clickedListener.onItemClicked(patient);
             }
@@ -181,6 +181,6 @@ public class FindPatientDialog extends Dialog {
     }
 
     public interface OnItemClickedListener {
-        void onItemClicked(PatientDTO patient);
+        void onItemClicked(PatientModel patient);
     }
 }

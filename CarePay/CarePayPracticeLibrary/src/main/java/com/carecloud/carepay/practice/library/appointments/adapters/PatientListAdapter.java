@@ -17,8 +17,8 @@ import com.carecloud.carepay.practice.library.checkin.dtos.PatientDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.models.MapFilterModel;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -272,7 +272,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         double balance = getBalance(patientBalances);
         String patientId = patientBalances.get(0).getMetadata().getPatientId();
         ProviderIndexDTO provider = providerMap.get(patientId);
-        DemographicsSettingsPersonalDetailsPayloadDTO personalDetails = dto.getDemographics().getPayload().getPersonalDetails();
+        PatientModel personalDetails = dto.getDemographics().getPayload().getPersonalDetails();
         allPatients.add(new Patient(dto, patientId, provider, balance, personalDetails));
     }
 
@@ -407,7 +407,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         private Boolean isAppointmentOver;
         private Boolean isPending;
 
-        public Patient(Object raw, String id, ProviderIndexDTO provider, double balance, DemographicsSettingsPersonalDetailsPayloadDTO dto) {
+        public Patient(Object raw, String id, ProviderIndexDTO provider, double balance, PatientModel dto) {
             this.raw = raw;
             this.id = id;
             this.name = dto.getFirstName() + " " + dto.getLastName();

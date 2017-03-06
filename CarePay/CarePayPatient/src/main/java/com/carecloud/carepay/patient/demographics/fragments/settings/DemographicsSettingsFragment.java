@@ -20,10 +20,9 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicPayloadDTO;
@@ -31,10 +30,8 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMetadataDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -134,7 +131,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
          DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
          DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
          DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
-         DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+        PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
          String imageUrl = demographicsPersonalDetails.getProfilePhoto();
          if (!StringUtil.isNullOrEmpty(imageUrl)) {
            Picasso.with(getActivity()).load(imageUrl).transform(
@@ -302,7 +299,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
             DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
             DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
             DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
-            DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+            PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
             String firstName = demographicsPersonalDetails.getFirstName();
             String lastName = demographicsPersonalDetails.getLastName();
             String userName = firstName + " " + lastName;

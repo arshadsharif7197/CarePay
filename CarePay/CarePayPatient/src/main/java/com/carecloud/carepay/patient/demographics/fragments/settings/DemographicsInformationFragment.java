@@ -35,6 +35,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsAddressDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsAddressInfoDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCityDTO;
@@ -55,7 +56,6 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadAddressDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPropertiesDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPhoneDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPreferredLanguageDTO;
@@ -961,7 +961,7 @@ public class DemographicsInformationFragment extends BaseFragment {
             if(demographicsSettingsPayloadDTO!=null){
                 DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
                 DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
-                DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+                PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
                 DemographicsSettingsPayloadAddressDTO demographicsAddressDetails = demographicPayload.getAddress();
                 DemographicsSettingsDriversLicenseDTO demographicsLicenseDetails = demographicPayload.getDriversLicense();
 
@@ -1002,7 +1002,7 @@ public class DemographicsInformationFragment extends BaseFragment {
                                     if (demographicsSettingsPayloadDTO != null) {
                                         DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
                                         DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
-                                        DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+                                        PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
                                         DemographicsSettingsPayloadAddressDTO demographicsAddressDetails = demographicPayload.getAddress();
                                         demographicsPersonalDetails.setDateOfBirth(dobEditText.getText().toString());
                                         demographicsAddressDetails.setPhone(phoneNumberEditext.getText().toString());
