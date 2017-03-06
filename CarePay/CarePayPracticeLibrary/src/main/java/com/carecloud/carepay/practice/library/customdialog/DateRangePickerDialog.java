@@ -167,8 +167,7 @@ public class DateRangePickerDialog extends BaseDialogFragment {
         public void onClick(View view) {
             Date today = new Date();
             calendarPickerView.selectDate(today);
-            applyDateRangeButton.setEnabled(false);
-            startDate = today;
+            updateDates();
         }
     };
 
@@ -178,7 +177,7 @@ public class DateRangePickerDialog extends BaseDialogFragment {
         applyDateRangeButton.setEnabled(false);
         applyDateRangeButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view1) {
+            public void onClick(View view) {
                 if (null != callback) {
                     callback.onRangeSelected(startDate, endDate);
                 }
@@ -210,20 +209,7 @@ public class DateRangePickerDialog extends BaseDialogFragment {
         calendarPickerView.setOnDateSelectedListener(new CalendarPickerView.OnDateSelectedListener() {
             @Override
             public void onDateSelected(Date date) {
-                List<Date> dateList = calendarPickerView.getSelectedDates();
-
-                if (dateList.size() > 1) {
-                    startDate = dateList.get(0);
-                    endDate = dateList.get(dateList.size() - 1);
-                } else if (dateList.size() == 1) {
-                    if (startDate != null) {
-                        endDate = dateList.get(0);
-                    } else {
-                        startDate = dateList.get(0);
-                    }
-                }
-
-                applyDateRangeButton.setEnabled(startDate != null && endDate != null);
+                updateDates();
             }
 
             @Override
@@ -233,6 +219,22 @@ public class DateRangePickerDialog extends BaseDialogFragment {
         });
     }
 
+    private void updateDates() {
+        List<Date> dateList = calendarPickerView.getSelectedDates();
+
+        if (dateList.size() > 1) {
+            startDate = dateList.get(0);
+            endDate = dateList.get(dateList.size() - 1);
+        } else if (dateList.size() == 1) {
+            if (startDate != null) {
+                endDate = dateList.get(0);
+            } else {
+                startDate = dateList.get(0);
+            }
+        }
+
+        applyDateRangeButton.setEnabled(startDate != null && endDate != null);
+    }
 
     /**
      * Method to remove selected date
