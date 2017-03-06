@@ -293,7 +293,7 @@ public class AppointmentDateRangeFragment extends BaseFragment {
         @Override
         public void onClick(View view) {
 
-            callback.availableTimes(newStartDate, newEndDate, selectedVisitTypeDTO, selectedResourcesDTO);
+            callback.availableTimes(newStartDate, newEndDate, selectedVisitTypeDTO, selectedResourcesDTO, resourcesToScheduleDTO);
 //                FragmentManager fm = getFragmentManager();
 //                AvailableHoursFragment availableHoursFragment = (AvailableHoursFragment)
 //                        fm.findFragmentByTag(AppointmentDateRangeFragment.class.getSimpleName());

@@ -78,6 +78,9 @@ public class AppointmentsPayloadDTO {
     @SerializedName("visit_reason_id")
     @Expose
     private Integer visitReasonId;
+    @SerializedName("visit_reason")
+    @Expose
+    private VisitTypeDTO visitType;
     @SerializedName("resource_id")
     @Expose
     private Integer resourceId;
@@ -686,5 +689,13 @@ public class AppointmentsPayloadDTO {
 
         DateTime dateTime = new DateTime(DateUtil.getInstance().setDateRaw(startTime).getDate());
         return dateTime.isBeforeNow();
+    }
+
+    public VisitTypeDTO getVisitType() {
+        return visitType;
+    }
+
+    public void setVisitType(VisitTypeDTO visitType) {
+        this.visitType = visitType;
     }
 }

@@ -98,22 +98,32 @@ public class AppointmentsListFragment extends BaseFragment {
     }
 
     @Override
+    public void onPause(){
+        super.onPause();
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Gson gson = new Gson();
+        bundle = getArguments();
+        String appointmentInfoString = bundle.getString(CarePayConstants.APPOINTMENT_INFO_BUNDLE);
+        appointmentInfo = gson.fromJson(appointmentInfoString, AppointmentsResultModel.class);
+        this.appointmentLabels = appointmentInfo.getMetadata().getLabel();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         appointmentsListView = inflater.inflate(R.layout.fragment_appointments_list, container, false);
+        return appointmentsListView;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle icicle){
         appointmentRecyclerView = (RecyclerView) appointmentsListView.findViewById(R.id.appointments_recycler_view);
         appointmentsListFragment = this;
 
-        Gson gson = new Gson();
-        bundle = getArguments();
-        String appointmentInfoString = bundle.getString(CarePayConstants.APPOINTMENT_INFO_BUNDLE);
-        appointmentInfo = gson.fromJson(appointmentInfoString, AppointmentsResultModel.class);
-        this.appointmentLabels = appointmentInfo.getMetadata().getLabel();
 
         // Set Title
         showDefaultActionBar();
@@ -125,7 +135,6 @@ public class AppointmentsListFragment extends BaseFragment {
         //Fetch appointment data
         loadAppointmentList();
 
-        return appointmentsListView;
     }
 
     private void init() {

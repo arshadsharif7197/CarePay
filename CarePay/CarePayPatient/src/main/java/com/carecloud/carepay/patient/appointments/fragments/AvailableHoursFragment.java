@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -291,7 +290,7 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
     private View.OnClickListener dateRangeClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            callback.selectDate(startDate, endDate, selectedVisitTypeDTO, selectedResource);
+            callback.selectDate(startDate, endDate, selectedVisitTypeDTO, selectedResource, resourcesToScheduleDTO);
         }
     };
 
@@ -413,8 +412,8 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
     private void getAvailableHoursTimeSlots(){
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("language", getApplicationPreferences().getUserLanguage());
-        queryMap.put("practice_mgmt",resourcesToScheduleDTO.getPayload().getPracticePatientIds().get(0).getPracticeManagement());
-        queryMap.put("practice_id", resourcesToScheduleDTO.getPayload().getPracticePatientIds().get(0).getPracticeId());
+        queryMap.put("practice_mgmt",resourcesToScheduleDTO.getPayload().getResourcesToSchedule().get(0).getPractice().getPracticeMgmt());
+        queryMap.put("practice_id", resourcesToScheduleDTO.getPayload().getResourcesToSchedule().get(0).getPractice().getPracticeId());
         queryMap.put("visit_reason_id", selectedVisitTypeDTO.getId()+"");
         queryMap.put("resource_ids", selectedResource.getId()+"");
         if(startDate!=null){
@@ -486,7 +485,8 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
         AppointmentDTO appointmentDTO = new AppointmentDTO();
         appointmentDTO.setPayload(payloadDTO);
 
-        new RequestAppointmentDialog(getActivity(),appointmentDTO,resourcesToScheduleDTO).show();
+        final RequestAppointmentDialog requestAppointmentDialog =  new RequestAppointmentDialog(getActivity(),appointmentDTO,resourcesToScheduleDTO);
+        requestAppointmentDialog.show();
     }
 
     @Override
@@ -558,6 +558,5 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
     private boolean isLocationSelected(AppointmentLocationsDTO appointmentLocationsDTO){
         return selectedLocations.isEmpty() || selectedLocations.contains(appointmentLocationsDTO);
     }
-
 
 }
