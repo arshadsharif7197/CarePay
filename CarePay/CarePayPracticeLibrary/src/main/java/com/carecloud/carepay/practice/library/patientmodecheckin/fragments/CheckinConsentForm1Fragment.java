@@ -55,7 +55,7 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
     private Button nextButton;
     private RatingBar progressIndicator;
 
-//    private int formIndex;
+    //    private int formIndex;
     private int totalForms;
     private int displayedFormsIndex;
 
@@ -144,15 +144,14 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
             return;
         }
         toolbar.setTitle("");
-        if(getDialog()==null) {
-            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.icn_nav_back));
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getActivity().onBackPressed();
-                }
-            });
-        }
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.icn_nav_back));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
+
 
         TextView header = (TextView) view.findViewById(R.id.consent_header);
         header.setText(StringUtil.getLabelForView(consentFormDTO.getMetadata().getLabel().getConsentFormHeading()));
