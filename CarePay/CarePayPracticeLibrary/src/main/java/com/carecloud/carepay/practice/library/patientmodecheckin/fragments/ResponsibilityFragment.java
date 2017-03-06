@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
@@ -15,6 +16,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckinFlowCallback;
+import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckinFlowState;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
@@ -27,6 +30,18 @@ import java.text.NumberFormat;
 import java.util.List;
 
 public class ResponsibilityFragment extends ResponsibilityBaseFragment {
+
+    private CheckinFlowCallback flowCallback;
+
+    @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+        try{
+            flowCallback = (CheckinFlowCallback) context;
+        }catch (ClassCastException cce){
+            throw new ClassCastException("Attached context must implement CheckinFlowCallback");
+        }
+    }
 
 
     @Override
@@ -136,6 +151,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
     @Override
     public void onStart() {
         super.onStart();
-        ((PatientModeCheckinActivity) getActivity()).updateSection(flowStateInfo);
+//        ((PatientModeCheckinActivity) getActivity()).updateSection(flowStateInfo);
+        flowCallback.setCheckinFlow(CheckinFlowState.PAYMENT, 0, 0);
     }
 }

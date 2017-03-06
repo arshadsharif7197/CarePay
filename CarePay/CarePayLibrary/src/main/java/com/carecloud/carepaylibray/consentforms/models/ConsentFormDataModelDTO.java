@@ -30,7 +30,6 @@ public class ConsentFormDataModelDTO {
         this.practiceForms = practiceForms;
     }
 
-
     /**
      * @return The post
      */

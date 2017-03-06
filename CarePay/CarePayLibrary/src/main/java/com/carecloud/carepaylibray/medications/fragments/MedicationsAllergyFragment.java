@@ -113,7 +113,7 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
     }
 
     private void inflateToolbarViews(View view){
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.medications_toolbar);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         if(toolbar == null) {
             return;
         }
@@ -124,7 +124,7 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
 //            ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
         }
-        TextView title = (TextView) toolbar.findViewById(R.id.medications_toolbar_title);
+        TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
         title.setText(getTextForLabel(labels.getMedicationAllergiesTitlebarText()));
     }
 
