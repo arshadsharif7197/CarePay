@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -15,6 +16,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckinFlowCallback;
+import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckinFlowState;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -39,14 +42,13 @@ import com.carecloud.carepaylibray.practice.FlowStateInfo;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
 
 import static com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity.SUBFLOW_DEMOGRAPHICS_INS;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
-
-import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.List;
@@ -144,7 +146,17 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
     private DemographicIdDocPayloadDTO              demographicIdDocPayloadDTO;
     private TextView                                getDriverLicenseTextView;
 
-    public CheckinDemographicsRevFragment() {
+
+    private CheckinFlowCallback flowCallback;
+
+    @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+        try{
+            flowCallback = (CheckinFlowCallback) context;
+        }catch (ClassCastException cce){
+            throw new ClassCastException("Attached context must implement CheckinFlowCallback");
+        }
     }
 
     @Override
@@ -594,7 +606,8 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
     public void onStart() {
         super.onStart();
         ((PatientModeCheckinActivity)getActivity()).toggleVisibleBackButton(false);
-        ((PatientModeCheckinActivity)getActivity()).updateSection(flowStateInfo);
+//        ((PatientModeCheckinActivity)getActivity()).updateSection(flowStateInfo);
+        flowCallback.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 0, 0);
     }
 
     @Override

@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <include layout="@layout/toolbar_medications" />
+        <include layout="@layout/toolbar_title_only" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:layout_width="match_parent"
@@ -231,6 +231,7 @@
         android:id="@+id/medication_allergies_continue_button"
         android:layout_margin="@dimen/dimen_20dp"
         android:padding="@dimen/dimen_15dp"
+        android:gravity="center"
         android:background="@drawable/green_rounded_button_selector"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_15"

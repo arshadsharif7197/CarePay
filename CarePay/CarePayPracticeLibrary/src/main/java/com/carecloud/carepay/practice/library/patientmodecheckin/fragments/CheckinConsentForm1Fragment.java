@@ -1,11 +1,11 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,65 +17,90 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
-import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
+import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckinFlowCallback;
+import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckinFlowState;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
+import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
-import com.carecloud.carepaylibray.practice.FlowStateInfo;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-
-import static com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity.SUBFLOW_CONSENT;
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
- * Created by lsoco_user on 11/17/2016.
+ * Edited by lmenendez on 3/5/2017.
  */
 
 public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
 
-
-    private IFragmentCallback fragmentCallback;
-    private ConsentFormDTO consentFormDTO;
-
-    private int formIndex;
-
     private WebView webView;
     private ProgressBar progressBar;
     private Button nextButton;
+    private RatingBar progressIndicator;
+
+//    private int formIndex;
     private int totalForms;
-    private int indexForms;
-    private String[] jsonAnswers;
-    private String[] jsonResponse;
+    private int displayedFormsIndex;
 
+    private ConsentFormDTO consentFormDTO;
+    private List<String> jsonFormSaveResponseArray = new ArrayList<>();
+    private List<PracticeForm> consentFormList;
 
-    @Nullable
+    private CheckinFlowCallback flowCallback;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try{
+            flowCallback = (CheckinFlowCallback) context;
+        }catch (ClassCastException cce){
+            throw new ClassCastException("Attached context must implement CheckinFlowCallback");
+        }
+    }
 
-        View view = inflater.inflate(R.layout.fragment_checkin_consent_form_dynamic, container, false);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         Gson gson = new Gson();
         String jsonString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
         consentFormDTO = gson.fromJson(jsonString, ConsentFormDTO.class);
+        consentFormList = consentFormDTO.getMetadata().getDataModels().getPracticeForms();
+        totalForms = consentFormList.size();
+
+    }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_checkin_consent_form_dynamic, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle icicle){
+        inflateToolbarViews(view);
+
+        flowCallback.setCheckinFlow(CheckinFlowState.CONSENT, totalForms, displayedFormsIndex);
+
         nextButton = (Button) view.findViewById(com.carecloud.carepaylibrary.R.id.consentButtonNext);
-        nextButton.setEnabled(false);
-        nextButton.setText(consentFormDTO.getMetadata().getLabel().getNextFormButtonText());
+        nextButton.setEnabled(consentFormList.isEmpty());
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,63 +108,69 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
             }
         });
 
-        totalForms = consentFormDTO.getMetadata().getDataModels().getPracticeForms() != null ? consentFormDTO.getMetadata().getDataModels().getPracticeForms().size() : 0;
-        jsonAnswers = new String[totalForms];
-        jsonResponse = new String[totalForms];
+        setNextButtonText();
 
-        if (indexForms == (totalForms - 1)) {
-            nextButton.setText(consentFormDTO.getMetadata().getLabel().getFinishFormButtonText());
-        } else {
-            nextButton.setText(consentFormDTO.getMetadata().getLabel().getNextFormButtonText());
+        progressIndicator = (RatingBar) view.findViewById(R.id.progress_indicator);
+        if(totalForms>1) {
+            progressIndicator.setVisibility(View.VISIBLE);
+            progressIndicator.setNumStars(totalForms);
+        }else{
+            progressIndicator.setVisibility(View.GONE);
         }
-
-
-        formIndex = ((PatientModeCheckinActivity) getActivity()).getConsentFormIndex();
-        flowStateInfo = new FlowStateInfo(SUBFLOW_CONSENT,
-                formIndex, totalForms);
-
-        ((PatientModeCheckinActivity) getActivity()).updateSection(flowStateInfo);
-
-
-
-        try {
-            JSONObject consentPayload = new JSONObject(jsonString);
-            JSONArray jsonArray = consentPayload.getJSONObject("metadata").getJSONObject("data_models").getJSONArray("practice_forms");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject payload = ((JSONObject) jsonArray.get(i)).getJSONObject("payload");
-                String payloadString = payload.toString();
-                payloadString = payloadString.replaceAll("\'", Matcher.quoteReplacement("\\\'"));
-                jsonAnswers[i] = payloadString;
-
-            }
-        } catch (Exception ee) {
-            ee.printStackTrace();
-            nextButton.setEnabled(true);
-        }
-
 
         webView = (WebView) view.findViewById(com.carecloud.carepaylibrary.R.id.activity_main_webview_consent);
         progressBar = (ProgressBar) view.findViewById(com.carecloud.carepaylibrary.R.id.progressBarConsent);
         progressBar.setVisibility(View.VISIBLE);
         initWebView();
 
-        return view;
+    }
+
+    private void setNextButtonText(){
+        String text;
+
+        if (displayedFormsIndex < (totalForms - 1)) {
+            text = consentFormDTO.getMetadata().getLabel().getNextFormButtonText();
+        } else {
+            text = consentFormDTO.getMetadata().getLabel().getFinishFormButtonText();
+        }
+
+        nextButton.setText(StringUtil.getLabelForView(text));
+
+    }
+
+    private void inflateToolbarViews(View view){
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        if(toolbar == null) {
+            return;
+        }
+        toolbar.setTitle("");
+        if(getDialog()==null) {
+            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.icn_nav_back));
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getActivity().onBackPressed();
+                }
+            });
+        }
+
+        TextView header = (TextView) view.findViewById(R.id.consent_header);
+        header.setText(StringUtil.getLabelForView(consentFormDTO.getMetadata().getLabel().getConsentFormHeading()));
     }
 
 
     /**
      * Init web view
      */
+    @SuppressLint("SetJavaScriptEnabled")
     public void initWebView() {
-
-
-        webView.getSettings().setJavaScriptEnabled(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true);
         }
         WebSettings settings = webView.getSettings();
         settings.setAllowFileAccessFromFileURLs(true);
         settings.setAllowUniversalAccessFromFileURLs(true);
+        settings.setJavaScriptEnabled(true);
 
         //speed webview loading
         if (Build.VERSION.SDK_INT >= 19) {
@@ -147,15 +178,16 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
         } else {
             webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
-        webView.setWebViewClient(new WebViewClient());
-        webView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
-        //named interface that receive calls from javascript
-        webView.addJavascriptInterface(new WebViewJavaScriptInterface(getActivity()), "FormInterface");
+//        webView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
+
+
         //show progress bar
+        webView.setWebViewClient(new WebViewClient());
         webView.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {
                 if (progress < 100) {
                     progressBar.setVisibility(View.VISIBLE);
+                    nextButton.setEnabled(false);
                 }
                 if (progress == 100) {
                     progressBar.setVisibility(View.INVISIBLE);
@@ -163,35 +195,25 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
                 }
             }
         });
+
+        //named interface that receive calls from javascript
+        webView.addJavascriptInterface(new WebViewJavaScriptInterface(getActivity()), "FormInterface");
         webView.loadUrl("file:///android_asset/carecloud-forms/app/index.html");
     }
 
-    /**
-     * call next form to be displaying with delay
-     */
-    public void callForm() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                nextFormDisplayed();
-            }
-        }, 1000);
-    }
 
     /**
      * call Interface to load next consent forms
      */
-    public void nextFormDisplayed() {
-        if (indexForms < totalForms) {
+    public void displayNextForm() {
+        if (displayedFormsIndex < totalForms) {
 
-            String payload = jsonAnswers[indexForms];
+            String payload = consentFormList.get(displayedFormsIndex).getPayload().toString();//.replaceAll("\'", Matcher.quoteReplacement("\\\'"));
             webView.loadUrl("javascript:angular.element(document.getElementsByClassName('forms')).scope().load_form(JSON.parse('" + payload + "'))");
             nextButton.setEnabled(true);
-            ++indexForms;
-            flowStateInfo.fragmentIndex = indexForms;
-            ((PatientModeCheckinActivity) getActivity()).updateSection(flowStateInfo);
-            ((PatientModeCheckinActivity) getActivity()).setConsentFormIndex(indexForms);
+            progressIndicator.setRating(displayedFormsIndex+1);//adjust for zero index
 
+            flowCallback.setCheckinFlow(CheckinFlowState.CONSENT, totalForms, displayedFormsIndex+1);//adjust for zero index
         }
     }
 
@@ -222,12 +244,10 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
          */
         @JavascriptInterface
         public void webviewReady(String message) {
-
-            String payload = jsonAnswers[indexForms];
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    nextFormDisplayed();
+                    displayNextForm();
                     nextButton.setClickable(true);
                 }
             });
@@ -244,24 +264,17 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    jsonFormSaveResponseArray.add(response);
 
-                    if (indexForms < totalForms) {
+                    if (displayedFormsIndex < totalForms-1) {
+                        ++displayedFormsIndex;
 
-                        jsonResponse[indexForms - 1] = response;
+                        setNextButtonText();
 
-                        if (indexForms == (totalForms - 1)) {
-                            nextButton.setText(consentFormDTO.getMetadata().getLabel().getFinishFormButtonText());
-                        } else {
-                            nextButton.setText(consentFormDTO.getMetadata().getLabel().getNextFormButtonText());
-                        }
-
-                        nextFormDisplayed();
-
+                        displayNextForm();
 
                     } else {
-                        jsonResponse[(indexForms-1)] = response;
-
-                        navigateToNext();
+                        submitAllForms();
                     }
 
 
@@ -283,7 +296,7 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
     }
 
 
-    private void navigateToNext() {
+    private void submitAllForms() {
         Map<String, String> queries = new HashMap<>();
         queries.put("practice_mgmt", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getPracticeMgmt());
         queries.put("practice_id", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getPracticeId());
@@ -296,7 +309,7 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
         header.put("username_patient", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getUsername());
 
         Gson gson = new Gson();
-        String body = gson.toJson(jsonResponse);
+        String body = gson.toJson(jsonFormSaveResponseArray);
         TransitionDTO transitionDTO = consentFormDTO.getMetadata().getTransitions().getUpdateConsent();
         getWorkflowServiceHelper().execute(transitionDTO, updateconsentformCallBack, body, queries, header);
     }
@@ -306,53 +319,34 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
         @Override
         public void onPreExecute() {
             showProgressDialog();
-            nextButton.setClickable(false);
+//            nextButton.setClickable(false);
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             PracticeNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
-            nextButton.setClickable(true);
+//            nextButton.setClickable(true);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(getActivity());
-            nextButton.setClickable(true);
+//            nextButton.setClickable(true);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
-
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        if (context instanceof PatientModeCheckinActivity) {
-            Activity activity = (Activity) context;
-            try {
-                fragmentCallback = (IFragmentCallback) activity;
-            } catch (Exception e) {
-                Log.e("Error", " Exception");
-            }
+    public boolean navigateBack(){
+        if(totalForms>1 && displayedFormsIndex > 0){
+            --displayedFormsIndex;
+            setNextButtonText();
+            displayNextForm();
+            return true;
         }
+        return false;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
 }
