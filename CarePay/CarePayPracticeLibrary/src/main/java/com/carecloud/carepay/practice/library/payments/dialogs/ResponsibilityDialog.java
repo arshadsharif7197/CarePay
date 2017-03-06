@@ -149,9 +149,6 @@ public class ResponsibilityDialog extends Dialog {
                 }
             });
 
-            ((TextView) findViewById(R.id.payment_responsibility_close_label))
-                    .setText(paymentsLabel.getPracticePaymentsDetailDialogCloseButton());
-
             List<AppointmentChargeDTO> details = balances.get(0).getPayload().get(0).getDetails();
             if (details.isEmpty()) {
                 ((TextView) findViewById(R.id.patient_provider_name)).setText(

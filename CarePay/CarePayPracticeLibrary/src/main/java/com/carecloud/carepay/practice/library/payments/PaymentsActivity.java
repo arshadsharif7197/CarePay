@@ -206,7 +206,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getFindPatient();
 
                 FindPatientDialog findPatientDialog = new FindPatientDialog(PaymentsActivity.this,
-                        transitionDTO, paymentsLabel.getPracticePaymentsDetailDialogCloseButton(),
+                        transitionDTO,
                         paymentsLabel.getPracticePaymentsFindPatientLabel());
                 setFindPatientOnItemClickedListener(findPatientDialog);
                 findPatientDialog.show();
