@@ -450,9 +450,7 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
 
         @Override
         public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(getActivity());
-            Log.e(getString(R.string.alert_title_server_error), exceptionMessage!=null?exceptionMessage:"Exception message is null");
+            SystemUtil.doDefaultFailureBehavior(getActivity(), exceptionMessage);
         }
     };
 
