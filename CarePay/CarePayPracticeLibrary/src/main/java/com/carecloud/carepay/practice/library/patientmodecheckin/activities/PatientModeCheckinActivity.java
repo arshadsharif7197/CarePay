@@ -524,6 +524,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
 
 
 
+    @Override
     public void setCheckinFlow(CheckinFlowState flowState, int totalPages, int currentPage){
         View view = null;
         switch (flowState){
@@ -542,6 +543,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
             case PAYMENT:
                 view = checkinPayment;
                 break;
+            default:
+                return;
         }
 
         updateCheckinFlow(view, totalPages, currentPage);

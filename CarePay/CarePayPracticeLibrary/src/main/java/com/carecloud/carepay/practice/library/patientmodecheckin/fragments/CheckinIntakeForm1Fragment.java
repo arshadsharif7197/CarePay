@@ -244,7 +244,11 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
             this.context = context;
         }
 
-        // Should return a collection of intake objects received from backend i.e. payload.intake_forms
+        /**
+         * Callback for webview to request forms
+         * @return Should return a collection of intake objects received from backend i.e. payload.intake_forms
+
+         */
         @JavascriptInterface
         public String getForms() {
             getActivity().runOnUiThread(new Runnable() {
@@ -259,7 +263,10 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
             return new Gson().toJson(myPaylod);
         }
 
-        // Should return answers XML received from backend i.e. payload.findings.payload.findings
+        /**
+         * Callback for webview to request forms answers to prefill form data
+          * @return Should return answers XML received from backend i.e. payload.findings.payload.findings
+         */
         @JavascriptInterface
         public String getAnswers() {
             return inTakeForm.getPayload().getFindings().getPayload().getFindings();
