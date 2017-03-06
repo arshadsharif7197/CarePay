@@ -87,7 +87,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         String label;
         // add click listener
         scanFrontButton = (Button) view.findViewById(R.id.demogrDocsFrontScanButton);
-        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsScanFrontLabel();
+        label = globalLabelsDTO.getDemographicsDocumentsPictureOfFront();
         scanFrontButton.setText(label);
         scanFrontButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,7 +97,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         });
 
         scanBackButton = (Button) view.findViewById(R.id.demogrDocsBackScanButton);
-        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsScanBackLabel();
+        label = globalLabelsDTO.getDemographicsDocumentsPictureOfBack();
         scanBackButton.setText(label);
         scanBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,10 +184,10 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
 
         String label;
         if (imageCaptureHelper == scannerFront) {
-            label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanFrontLabel();
+            label = globalLabelsDTO.getDemographicsDocumentsPictureOfFront();
             scanFrontButton.setText(label);
         } else if (imageCaptureHelper == scannerBack) {
-            label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanBackLabel();
+            label = globalLabelsDTO.getDemographicsDocumentsPictureOfBack();
             scanBackButton.setText(label);
         }
     }

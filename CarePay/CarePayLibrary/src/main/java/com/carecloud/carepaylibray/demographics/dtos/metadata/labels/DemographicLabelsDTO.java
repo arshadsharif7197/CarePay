@@ -382,6 +382,18 @@ public class DemographicLabelsDTO {
     @Expose
     private String demographicsInsurancePhotoOfCardBack;
 
+    @SerializedName("demographics_documents_identification")
+    @Expose
+    private String demographicsDocumentsIdentification;
+
+    @SerializedName("demographics_documents_picture_of_front")
+    @Expose
+    private String demographicsDocumentsPictureOfFront;
+
+    @SerializedName("demographics_documents_picture_of_back")
+    @Expose
+    private String demographicsDocumentsPictureOfBack;
+
     /**
      * @return The demographicsUpdateButton
      */
@@ -1642,5 +1654,59 @@ public class DemographicLabelsDTO {
      */
     public void setDemographicsInsurancePhotoOfCardBack(String demographicsInsurancePhotoOfCardBack) {
         this.demographicsInsurancePhotoOfCardBack = demographicsInsurancePhotoOfCardBack;
+    }
+
+    /**
+     * Gets demographics documents identification.
+     *
+     * @return the demographics documents identification
+     */
+    public String getDemographicsDocumentsIdentification() {
+        return StringUtil.getLabelForView(demographicsDocumentsIdentification);
+    }
+
+    /**
+     * Sets demographics documents identification.
+     *
+     * @param demographicsDocumentsIdentification the demographics documents identification
+     */
+    public void setDemographicsDocumentsIdentification(String demographicsDocumentsIdentification) {
+        this.demographicsDocumentsIdentification = demographicsDocumentsIdentification;
+    }
+
+    /**
+     * Gets demographics documents picture of front.
+     *
+     * @return the demographics documents picture of front
+     */
+    public String getDemographicsDocumentsPictureOfFront() {
+        return StringUtil.getLabelForView(demographicsDocumentsPictureOfFront);
+    }
+
+    /**
+     * Sets demographics documents picture of front.
+     *
+     * @param demographicsDocumentsPictureOfFront the demographics documents picture of front
+     */
+    public void setDemographicsDocumentsPictureOfFront(String demographicsDocumentsPictureOfFront) {
+        this.demographicsDocumentsPictureOfFront = demographicsDocumentsPictureOfFront;
+    }
+
+    /**
+     * Gets demographics documents picture of back.
+     *
+     * @return the demographics documents picture of back
+     */
+    public String getDemographicsDocumentsPictureOfBack() {
+        return StringUtil.getLabelForView(demographicsDocumentsPictureOfBack);
+    }
+
+    /**
+     * Sets demographics documents picture of back.
+     *
+     * @param demographicsDocumentsPictureOfBack the demographics documents picture of back
+     */
+    public void setDemographicsDocumentsPictureOfBack(String demographicsDocumentsPictureOfBack) {
+        this.demographicsDocumentsPictureOfBack = demographicsDocumentsPictureOfBack;
     }
 }
