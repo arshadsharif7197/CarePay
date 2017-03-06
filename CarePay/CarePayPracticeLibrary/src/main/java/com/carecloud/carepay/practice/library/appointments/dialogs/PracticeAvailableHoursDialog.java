@@ -295,9 +295,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ((ISession) context).hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(context);
-            Log.e(context.getString(R.string.alert_title_server_error), exceptionMessage);
+            SystemUtil.doDefaultFailureBehavior(context, exceptionMessage);
         }
     };
 
