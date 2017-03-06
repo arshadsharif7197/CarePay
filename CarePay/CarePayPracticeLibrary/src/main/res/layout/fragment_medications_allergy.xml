@@ -225,7 +225,7 @@
         android:background="@color/light_gray"/>
 
 
-    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/medication_allergies_continue_button"

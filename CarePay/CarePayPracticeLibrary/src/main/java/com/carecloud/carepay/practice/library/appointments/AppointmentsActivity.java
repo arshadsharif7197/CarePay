@@ -13,6 +13,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.adapters.AppointmentsListAdapter;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.practice.library.base.PracticeNavigationStateConstants;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
@@ -160,6 +161,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
             ((TextView) findViewById(R.id.titleSelectappointmentcheckin)).setText(labels.getAppointmentsMainHeading());
             ((TextView) findViewById(R.id.no_apt_message_desc)).setText(labels.getNoAppointmentsMessageText());
             ((TextView) findViewById(R.id.no_apt_message_title)).setText(labels.getNoAppointmentsMessageTitle());
+            ((TextView) findViewById(R.id.schedule_appt_button)).setText(labels.getAppointmentScheduleNewButton());
         }
     }
 
@@ -195,6 +197,21 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
             findViewById(R.id.titleSelectappointmentsubheader).setVisibility(View.INVISIBLE);
             findViewById(R.id.titleSelectappointmentcheckin).setVisibility(View.INVISIBLE);
             findViewById(R.id.no_appointment_layout).setVisibility(View.VISIBLE);
+
+            View scheduleButton = findViewById(R.id.schedule_appt_button);
+            scheduleButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //todo go to Appointment screen
+                    getApplicationPreferences().setNavigateToAppointments(true);
+                    Gson gson = new Gson();
+                    String jsonDTO = gson.toJson(appointmentsResultModel);
+                    WorkflowDTO workflowDTO = gson.fromJson(jsonDTO, WorkflowDTO.class);
+                    workflowDTO.setState(PracticeNavigationStateConstants.PATIENT_APPOINTMENTS);
+                    PracticeNavigationHelper.navigateToWorkflow(AppointmentsActivity.this, workflowDTO);
+
+                }
+            });
         }
     }
 

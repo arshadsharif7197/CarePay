@@ -201,8 +201,8 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
             ((ISession) getContext()).hideProgressDialog();
 
             Gson gson = new Gson();
-            medicationsAllergiesDTO =gson.fromJson(workflowDTO.toString(), MedicationsAllergiesResultsModel.class);
-            resultsList = medicationsAllergiesDTO.getPayload().getSearchMedications().getMedicationsObjects();
+            MedicationsAllergiesResultsModel searchResults = gson.fromJson(workflowDTO.toString(), MedicationsAllergiesResultsModel.class);
+            resultsList = searchResults.getPayload().getSearchMedications().getMedicationsObjects();
 
             MedicationAllergySearchAdapter adapter = (MedicationAllergySearchAdapter) searchRecycler.getAdapter();
             adapter.setItems(resultsList);

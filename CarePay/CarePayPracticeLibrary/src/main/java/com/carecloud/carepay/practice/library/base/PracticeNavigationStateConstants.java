@@ -11,7 +11,7 @@ public class PracticeNavigationStateConstants {
     static final String PATIENT_MODE_SIGNIN = "patient_mode_signin";
     static final String PATIENT_MODE_SPLASH = "patient_mode_start";
     static final String PATIENT_MODE_CHECKIN_SUBFLOW = "demographics_verify";
-    static final String PATIENT_APPOINTMENTS = "appointments";
+    public static final String PATIENT_APPOINTMENTS = "appointments";
 
     static final String CONSENT_FORMS = "consent_forms";
     static final String INTAKE_FORMS = "intake_forms";
