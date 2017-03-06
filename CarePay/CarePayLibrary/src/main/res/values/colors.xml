@@ -19,6 +19,7 @@
     <color name="slateGray">#607d8b</color>
     <color name="gray">#ffb0bec5</color>
     <color name="button_bright_cerulean">#1F9BDE</color>
+    <color name="light_blue_subtitle">#9FE5ED</color>
 
     <color name="textview_default_textcolor">#37474F</color>
     <!--<color name="bright_cerulean">#ff1f9bde</color>-->

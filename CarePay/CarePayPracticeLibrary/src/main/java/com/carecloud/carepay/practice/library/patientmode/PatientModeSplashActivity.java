@@ -18,15 +18,12 @@ import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLabels
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModePayloadDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeSplashDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.LanguageOptionDTO;
-import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -72,8 +69,12 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
 
             if (patientModeLabelsDTO != null) {
                 getStartedButton.setText(patientModeLabelsDTO.getGetStartedHeading());
-                praticewelcomeText.setText(patientModeLabelsDTO.getWelcomeHeading());
             }
+
+            praticewelcomeText.setText(patientModeSplashDTO.getPayload().getPractice().getWelcomeScreen().getMessage());
+
+            String welcomeLogoUrl = patientModeSplashDTO.getPayload().getPractice().getWelcomeScreen().getWelcomePhoto();
+            Picasso.with(this).load(welcomeLogoUrl).into(practicelogo);
 
             if (patientModePayloadDTO != null) {
                 // set the languages spinner

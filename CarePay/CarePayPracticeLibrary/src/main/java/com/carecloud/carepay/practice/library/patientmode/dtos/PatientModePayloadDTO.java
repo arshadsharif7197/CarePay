@@ -19,6 +19,9 @@ public class PatientModePayloadDTO {
     @SerializedName("languages")
     @Expose
     private List<LanguageOptionDTO> languages = new ArrayList<>();
+    @SerializedName("practice")
+    @Expose
+    private PracticeWelcomeDTO practice = new PracticeWelcomeDTO();
 
     /**
      *
@@ -52,4 +55,11 @@ public class PatientModePayloadDTO {
         this.patientModeStart = patientModeStart;
     }
 
+    public PracticeWelcomeDTO getPractice() {
+        return practice;
+    }
+
+    public void setPractice(PracticeWelcomeDTO practice) {
+        this.practice = practice;
+    }
 }
