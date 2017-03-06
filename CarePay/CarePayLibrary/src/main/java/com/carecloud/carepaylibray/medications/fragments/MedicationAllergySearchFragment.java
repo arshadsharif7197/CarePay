@@ -104,7 +104,8 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
         }
         searchView = (SearchView) toolbar.findViewById(R.id.search_entry_view);
         searchView.setOnQueryTextListener(searchQueryListener);
-
+        searchView.requestFocus(View.FOCUS_DOWN);
+        SystemUtil.showSoftKeyboard(getActivity());
     }
 
     private void initViews(View view){

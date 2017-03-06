@@ -210,10 +210,10 @@ public class MedicationsAllergyFragment extends BaseFragment implements Medicati
             currentMedications.remove(item);
             if(addMedications.contains(item)){
                 addMedications.remove(item);
-                return;
+            }else {
+                item.setAction(MedicationAllergiesAction.delete);
+                removeMedications.add((MedicationsObject) item);
             }
-            item.setAction(MedicationAllergiesAction.delete);
-            removeMedications.add((MedicationsObject) item);
         }
         setAdapters();
 
