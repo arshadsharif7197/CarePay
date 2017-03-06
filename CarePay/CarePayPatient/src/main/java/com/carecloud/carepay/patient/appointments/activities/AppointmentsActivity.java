@@ -1,69 +1,48 @@
 package com.carecloud.carepay.patient.appointments.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.appointments.AppointmentNavigationCallback;
+import com.carecloud.carepay.patient.appointments.fragments.AppointmentDateRangeFragment;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
+import com.carecloud.carepay.patient.appointments.fragments.AvailableHoursFragment;
+import com.carecloud.carepay.patient.appointments.fragments.ChooseProviderFragment;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.demographics.activities.NewReviewDemographicsActivity;
-import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.appointments.models.IdsDTO;
-import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
+import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
-public class AppointmentsActivity extends MenuPatientActivity {
+import java.util.Date;
 
-    private static final String LOG_TAG = AppointmentsActivity.class.getSimpleName();
+public class AppointmentsActivity extends MenuPatientActivity implements AppointmentNavigationCallback {
 
     public static AppointmentDTO model;
     private AppointmentsResultModel appointmentsDTO;
-    private AppointmentDTO appointmentDTO;
 
-    private WorkflowServiceCallback transitionToDemographicsVerifyCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
 
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            PatientNavigationHelper.getInstance(AppointmentsActivity.this).navigateToWorkflow(workflowDTO);
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(AppointmentsActivity.this);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
-
-    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(com.carecloud.carepaylibrary.R.layout.activity_navigation);
         toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.toolbar);
+        displayToolbar(true, null);
+
         drawer = (DrawerLayout) findViewById(com.carecloud.carepaylibrary.R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(com.carecloud.carepaylibrary.R.id.nav_view);
         // get handler to navigation drawer's user id text view
@@ -73,33 +52,23 @@ public class AppointmentsActivity extends MenuPatientActivity {
         appointmentsDTO = getConvertedDTO(AppointmentsResultModel.class);
 
         if (appointmentsDTO.getPayload() != null ){
-           try{
-               IdsDTO idsDTO = appointmentsDTO.getPayload().getPractice_patient_ids().get(0);
-                practiceId = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPracticeId();
-                practiceMgmt = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPracticeManagement();
-                patientId = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPatientId();
-                prefix = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getPrefix();
-                userId = appointmentsDTO.getPayload().getPractice_patient_ids().get(0).getUserId();
+            try{
+                practiceId = appointmentsDTO.getPayload().getPracticePatientIds().get(0).getPracticeId();
+                practiceMgmt = appointmentsDTO.getPayload().getPracticePatientIds().get(0).getPracticeManagement();
+                patientId = appointmentsDTO.getPayload().getPracticePatientIds().get(0).getPatientId();
+                prefix = appointmentsDTO.getPayload().getPracticePatientIds().get(0).getPrefix();
+                userId = appointmentsDTO.getPayload().getPracticePatientIds().get(0).getUserId();
                 getApplicationPreferences().setPatientId(patientId);
                 getApplicationPreferences().setPracticeManagement(practiceMgmt);
                 getApplicationPreferences().setPracticeId(practiceId);
                 getApplicationPreferences().setUserId(userId);
                 getApplicationPreferences().setPrefix(prefix);
-           }catch(Exception e){
-               e.printStackTrace();
-               System.out.println(e.getMessage());
-           }
+            }catch(Exception e){
+                e.printStackTrace();
+                System.out.println(e.getMessage());
+            }
 
         }
-
-      /*  if (appointmentsDTO.getPayload() != null && appointmentsDTO.getPayload().getAppointments() != null
-                && appointmentsDTO.getPayload().getAppointments().size() > 0) {
-
-            appointmentDTO = appointmentsDTO.getPayload().getAppointments().get(0);
-            practiceId = appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeId();
-            practiceMgmt = appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeMgmt();
-            patientId = appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPatientId();
-        }*/
 
         setTransitionBalance(appointmentsDTO.getMetadata().getLinks().getPatientBalances());
         setTransitionLogout(appointmentsDTO.getMetadata().getTransitions().getLogout());
@@ -112,29 +81,13 @@ public class AppointmentsActivity extends MenuPatientActivity {
     }
 
     private void gotoAppointmentFragment() {
-        Intent intent = getIntent();
-        appointmentDTO = (AppointmentDTO) intent.getSerializableExtra(
-                CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
+        AppointmentsListFragment appointmentsListFragment = new AppointmentsListFragment();
+        Bundle bundle = new Bundle();
+        Gson gson = new Gson();
+        bundle.putString(CarePayConstants.APPOINTMENT_INFO_BUNDLE, gson.toJson(appointmentsDTO));
+        appointmentsListFragment.setArguments(bundle);
 
-        FragmentManager fm = getSupportFragmentManager();
-        AppointmentsListFragment appointmentsListFragment = (AppointmentsListFragment)
-                fm.findFragmentByTag(AppointmentsListFragment.class.getSimpleName());
-        if (appointmentsListFragment == null) {
-            appointmentsListFragment = new AppointmentsListFragment();
-            Bundle bundle = new Bundle();
-            Gson gson = new Gson();
-            String appointmentsDTOString = gson.toJson(appointmentsDTO);
-//            bundle.putSerializable(CarePayConstants.APPOINTMENT_INFO_BUNDLE, appointmentsDTO);
-            bundle.putString(CarePayConstants.APPOINTMENT_INFO_BUNDLE, appointmentsDTOString);
-
-            String appointmentDTOString = gson.toJson(appointmentDTO);
-            bundle.putString(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE, appointmentDTOString);
-//            bundle.putSerializable(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE, appointmentDTO);
-            appointmentsListFragment.setArguments(bundle);
-        }
-
-        fm.beginTransaction().replace(R.id.container_main, appointmentsListFragment,
-                AppointmentsListFragment.class.getSimpleName()).commit();
+        navigateToFragment(appointmentsListFragment, false);
     }
 
     @Override
@@ -142,14 +95,20 @@ public class AppointmentsActivity extends MenuPatientActivity {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }
+        }else if(getSupportFragmentManager().getBackStackEntryCount()>0){
+            getSupportFragmentManager().popBackStackImmediate();
+            if(/*!toolbarVisibility && */getSupportFragmentManager().getBackStackEntryCount()<1){
+                displayToolbar(true, null);
+            }
+        }else {
 
-        if (getCognitoAppHelper().getPool().getUser() != null) {
-            getCognitoAppHelper().getPool().getUser().signOut();
-            getCognitoAppHelper().setUser(null);
+            if (getCognitoAppHelper().getPool().getUser() != null) {
+                getCognitoAppHelper().getPool().getUser().signOut();
+                getCognitoAppHelper().setUser(null);
+            }
+            // finish the app
+            finishAffinity();
         }
-        // finish the app
-        finishAffinity();
     }
 
     @Override
@@ -159,51 +118,107 @@ public class AppointmentsActivity extends MenuPatientActivity {
         return true;
     }
 
-    private void launchDemographics(DemographicDTO demographicDTO) {
-        // do to Demographics
-//        Intent intent = new Intent(getApplicationContext(), DemographicReviewActivity.class);
-        Intent intent = new Intent(getApplicationContext(), NewReviewDemographicsActivity.class);
-        if (demographicDTO != null) {
-            // pass the object into the gson
-            Gson gson = new Gson();
-            String dtostring = gson.toJson(demographicDTO, DemographicDTO.class);
-            intent.putExtra("demographics_model", dtostring);
-            startActivity(intent);
+
+    private void navigateToFragment(Fragment fragment, boolean addToBackStack){
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container_main, fragment, fragment.getClass().getSimpleName());
+        if(addToBackStack) {
+            transaction.addToBackStack(fragment.getClass().getSimpleName());
         }
+        transaction.commit();
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    public void newAppointment() {
+        Bundle args = new Bundle();
+        DtoHelper.bundleBaseDTO(args, getIntent(), CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, PatientNavigationHelper.class.getSimpleName());
 
-        //noinspection SimplifiableIfStatement
-//        Changed for SHMRK-1715
-//        if (id == R.id.action_settings) {
-//            return true;
-//        } else if (id == R.id.action_launch_demogr_review) {
-//            Map<String, String> queries = new HashMap<>();
-//            queries.put("practice_mgmt", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeMgmt());
-//            queries.put("practice_id", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeId());
-//            queries.put("appointment_id", appointmentsDTO.getPayload().getAppointments().get(0).getMetadata().getAppointmentId());
-//
-//            Map<String, String> header = getWorkflowServiceHelper().getPreferredLanguageHeader();
-//            header.put("transition", "true");
-//            getWorkflowServiceHelper().execute(appointmentsDTO.getMetadata().getTransitions().getCheckingIn(),
-//                    transitionToDemographicsVerifyCallback, queries, header);
-//        }
+        ChooseProviderFragment chooseProviderFragment = new ChooseProviderFragment();
+        chooseProviderFragment.setArguments(args);
 
-        return super.onOptionsItemSelected(item);
+        navigateToFragment(chooseProviderFragment, true);
+        displayToolbar(false, null);
     }
 
-    public void setAppointmentModel(AppointmentDTO model) {
-        AppointmentsActivity.model = model;
+    @Override
+    public void rescheduleAppointment(AppointmentDTO appointmentDTO) {
+        VisitTypeDTO visitTypeDTO = new VisitTypeDTO();
+        visitTypeDTO.setId(appointmentDTO.getPayload().getVisitReasonId());
+        AppointmentResourcesItemDTO resourcesItemDTO = new AppointmentResourcesItemDTO();
+        resourcesItemDTO.setId(appointmentDTO.getPayload().getResourceId());
+        resourcesItemDTO.setProvider(appointmentDTO.getPayload().getProvider());
+        ResourcesToScheduleDTO resourcesToSchedule = new ResourcesToScheduleDTO();
+        resourcesToSchedule.getPractice().setPracticeId(appointmentDTO.getMetadata().getPracticeId());
+        resourcesToSchedule.getPractice().setPracticeMgmt(appointmentDTO.getMetadata().getPracticeMgmt());
+        appointmentsDTO.getPayload().getResourcesToSchedule().add(resourcesToSchedule);
+
+        String patientID = appointmentDTO.getPayload().getPatient().getId();
+        Gson gson = new Gson();
+        Bundle bundle = new Bundle();
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID, patientID);
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(resourcesItemDTO));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(visitTypeDTO));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(appointmentsDTO));
+
+        AvailableHoursFragment availableHoursFragment  = new AvailableHoursFragment();
+        availableHoursFragment.setArguments(bundle);
+
+        navigateToFragment(availableHoursFragment, true);
+        displayToolbar(false, null);
     }
 
-    public AppointmentDTO getModel() {
-        return AppointmentsActivity.model;
+    @Override
+    public void availableTimes(VisitTypeDTO visitTypeDTO, AppointmentResourcesDTO appointmentResourcesDTO) {
+        Bundle bundle = new Bundle();
+        Gson gson = new Gson();
+        String patientID = appointmentsDTO.getPayload().getPracticePatientIds().get(0).getPatientId(); //TODO this should be updated for multi practice support
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(appointmentResourcesDTO.getResource()));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(visitTypeDTO));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(appointmentsDTO));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID, patientID);
+
+        AvailableHoursFragment availableHoursFragment = new AvailableHoursFragment();
+        availableHoursFragment.setArguments(bundle);
+
+        navigateToFragment(availableHoursFragment, true);
+        displayToolbar(false, null);
     }
+
+    @Override
+    public void availableTimes(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource) {
+        Bundle bundle = new Bundle();
+        Gson gson = new Gson();
+        String patientID = appointmentsDTO.getPayload().getPracticePatientIds().get(0).getPatientId(); //TODO this should be updated for multi practice support
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID, patientID);
+        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, startDate);
+        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, endDate);
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(appointmentResource));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(visitTypeDTO));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(appointmentsDTO));
+
+        AvailableHoursFragment availableHoursFragment = new AvailableHoursFragment();
+        availableHoursFragment.setArguments(bundle);
+
+        navigateToFragment(availableHoursFragment, false);
+        displayToolbar(false, null);
+    }
+
+    @Override
+    public void selectDate(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource) {
+        Bundle bundle = new Bundle();
+        Gson gson = new Gson();
+        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, startDate);
+        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, endDate);
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(appointmentResource));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(visitTypeDTO));
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(appointmentsDTO));
+
+        AppointmentDateRangeFragment appointmentDateRangeFragment = new AppointmentDateRangeFragment();
+        appointmentDateRangeFragment.setArguments(bundle);
+
+        navigateToFragment(appointmentDateRangeFragment, true);
+        displayToolbar(false, null);
+    }
+
 
 }

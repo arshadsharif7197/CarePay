@@ -42,6 +42,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class CognitoAppHelper {
+    private static final int MAX_RETRIES = 4;
+    private static int retryCount;
 
     // App settings
 
@@ -273,6 +275,7 @@ public class CognitoAppHelper {
         setUser(username);
         // perform the authentication
         getPool().getUser(username).getSessionInBackground(authenticationHandler);
+        retryCount = 0;
     }
 
     /**
@@ -280,13 +283,16 @@ public class CognitoAppHelper {
      * @return Whether the current user has is signed in
      */
     public boolean refreshToken(final CognitoActionCallback successAction) {
+        if(retryCount > MAX_RETRIES){
+            return false;
+        }
+        retryCount++;
         AuthenticationHandler authenticationHandler = executeUserAuthentication("", successAction);
         CognitoUser user = getPool().getCurrentUser();
         String userName = user.getUserId();
         if (null == userName) {
             return false;
         }
-
         setUser(userName);
         user.getSessionInBackground(authenticationHandler);
 

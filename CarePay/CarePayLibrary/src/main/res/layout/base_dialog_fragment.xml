@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:src="@drawable/icn_close" />
+                android:src="@drawable/icn_nav_back" />
         </RelativeLayout>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -41,7 +41,8 @@
             android:layout_marginTop="5dp"
             android:textColor="@color/gray_white"
             android:textSize="12sp"
-            app:customAssetFont="gotham_rounded_bold" />
+            app:customAssetFont="gotham_rounded_bold"
+            android:visibility="gone"/>
     </LinearLayout>
 
     <FrameLayout
@@ -50,7 +51,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginStart="26dp"
-        android:background="@drawable/patient_mode_dialog_body_bg"
         android:gravity="center"
         android:orientation="vertical">
 

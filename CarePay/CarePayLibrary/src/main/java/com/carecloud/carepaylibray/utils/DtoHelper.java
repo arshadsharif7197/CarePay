@@ -44,12 +44,12 @@ public class DtoHelper {
     }
 
     /**
-      * Converts to the desire DTO object from JsonObject DTO
-      *
-      * @param dtoClass class to convert
-      * @param <S>      Dynamic class to convert
-      * @return Dynamic converted class object
-      */
+     * Converts to the desire DTO object from JsonObject DTO
+     *
+     * @param dtoClass class to convert
+     * @param <S>      Dynamic class to convert
+     * @return Dynamic converted class object
+     */
     public static <S> S getConvertedDTO(Class<S> dtoClass, JsonObject jsonObject) {
 
         if (null != jsonObject) {
@@ -103,4 +103,26 @@ public class DtoHelper {
             args.putString(dtoClass.getSimpleName(), bundle.getString(WorkflowDTO.class.getSimpleName()));
         }
     }
+
+    /**
+     * Convenience method to repackage a DTO from activity to Fragment withoug having to serialize it
+     * @param args Output Bundle
+     * @param intent Original Intent
+     * @param saveKey key to forward the extra
+     * @param getKey key to retrieve the extra
+     */
+    public static void bundleBaseDTO(Bundle args, Intent intent, String saveKey, String getKey){
+        Bundle bundle = intent.getExtras();
+        if (bundle != null && bundle.containsKey(getKey)) {
+            try{
+                bundle = intent.getBundleExtra(getKey);
+                if(bundle.containsKey(getKey)){
+                    args.putString(saveKey, bundle.getString(getKey));
+                }
+            }catch (Exception e){
+                args.putString(saveKey, bundle.getString(getKey));
+            }
+        }
+    }
+
 }
