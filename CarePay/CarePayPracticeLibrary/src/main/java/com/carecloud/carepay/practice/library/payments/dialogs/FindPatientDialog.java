@@ -14,7 +14,6 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.adapter.PatientSearchResultAdapter;
@@ -35,7 +34,6 @@ import java.util.Map;
 public class FindPatientDialog extends Dialog {
 
     private Context context;
-    private String closeLabel;
     private String hintLabel;
     private TransitionDTO transitionDTO;
     private OnItemClickedListener clickedListener;
@@ -46,11 +44,10 @@ public class FindPatientDialog extends Dialog {
      * @param context       context
      * @param transitionDTO transition dto
      */
-    public FindPatientDialog(Context context, TransitionDTO transitionDTO, String closeLabel, String hintLabel) {
+    public FindPatientDialog(Context context, TransitionDTO transitionDTO, String hintLabel) {
         super(context);
         this.context = context;
         this.transitionDTO = transitionDTO;
-        this.closeLabel = closeLabel;
         this.hintLabel = hintLabel;
     }
 
@@ -80,7 +77,6 @@ public class FindPatientDialog extends Dialog {
         setTextListener(findPatientEditBox);
         setKeyListener(findPatientEditBox);
 
-        ((TextView) findViewById(R.id.find_patient_close_label)).setText(closeLabel);
         findViewById(R.id.find_patient_close_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

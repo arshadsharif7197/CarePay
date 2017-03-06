@@ -9,32 +9,14 @@
     android:layout_gravity="center"
     android:orientation="horizontal">
 
-    <LinearLayout
+    <ImageButton
+        android:id="@+id/payment_responsibility_close_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="top"
         android:layout_marginEnd="@dimen/dimen_26dp"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <ImageButton
-            android:id="@+id/payment_responsibility_close_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/round_semi_transparent_bg"
-            android:src="@drawable/icn_close" />
-
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/payment_responsibility_close_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_6dp"
-            android:textAllCaps="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_12sp"
-            android:textStyle="bold"
-            app:customAssetFont="gotham_rounded_medium" />
-    </LinearLayout>
+        android:background="@drawable/round_semi_transparent_bg"
+        android:src="@drawable/icn_close" />
 
     <RelativeLayout
         android:layout_width="@dimen/dialog_width"

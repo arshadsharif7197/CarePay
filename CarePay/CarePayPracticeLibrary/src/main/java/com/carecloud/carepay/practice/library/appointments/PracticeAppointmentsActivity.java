@@ -315,7 +315,7 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
                 TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getFindPatient();
 
                 FindPatientDialog findPatientDialog = new FindPatientDialog(getContext(),
-                        transitionDTO, checkInLabelDTO.getPracticeCheckinCloseLabel(),
+                        transitionDTO,
                         checkInLabelDTO.getPracticeCheckinFilterFindPatient());
                 findPatientDialog.setClickedListener(getFindPatientDialogListener());
                 findPatientDialog.show();
