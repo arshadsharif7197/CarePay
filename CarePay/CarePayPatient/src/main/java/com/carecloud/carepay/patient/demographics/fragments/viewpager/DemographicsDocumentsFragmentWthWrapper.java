@@ -3,7 +3,6 @@ package com.carecloud.carepay.patient.demographics.fragments.viewpager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,22 +11,16 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
-
-import com.carecloud.carepaylibray.base.BaseFragment;
-import com.carecloud.carepaylibray.demographics.fragments.CheckinDemographicsFragment;
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
-
+import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemIdDocDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.fragments.CheckinDemographicsFragment;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -155,18 +148,8 @@ public class DemographicsDocumentsFragmentWthWrapper extends BaseFragment {
     }
 
     private void getOptions() {
-        if (idDocsMetaDTO == null) {
-            docTypes = new String[1];
-            docTypes[0] = CarePayConstants.NOT_DEFINED;
-
-            return;
-        }
-        // init doc types
-        List<String> docTypesStrings = new ArrayList<>();
-        for (MetadataOptionDTO o : idDocsMetaDTO.properties.items.identityDocument.properties.identityDocumentType.options) {
-            docTypesStrings.add(o.getLabel());
-        }
-        docTypes = docTypesStrings.toArray(new String[0]);
+        docTypes = new String[1];
+        docTypes[0] = globalLabelsMetaDTO.getDemographicsDocumentsIdentification();
     }
 
     private void getPayloadDTOs() {
