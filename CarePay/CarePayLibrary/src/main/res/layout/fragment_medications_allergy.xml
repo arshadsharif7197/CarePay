@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/toolbar_medications" />
+    <include layout="@layout/toolbar_title_only" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -50,7 +50,7 @@
                 android:textSize="@dimen/text_size_15"
                 android:gravity="left"
                 android:text="ALLERGIES YOU MAY HAVE"
-                app:customAssetFont="proxima_nova_regular"/>
+                app:customAssetFont="proxima_nova_semi_bold"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -129,7 +129,7 @@
                 android:textSize="@dimen/text_size_15"
                 android:gravity="left"
                 android:text="MEDICATIONS YOU'RE TAKING"
-                app:customAssetFont="proxima_nova_regular"/>
+                app:customAssetFont="proxima_nova_semi_bold"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -201,16 +201,17 @@
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
-    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/medication_allergies_continue_button"
-        android:padding="@dimen/dimen_20dp"
-        android:background="@color/colorPrimary"
+        android:layout_gravity="center"
+        android:background="@drawable/button_selector"
         android:textColor="@color/white"
-        android:textSize="@dimen/text_size_15"
+        android:textSize="@dimen/text_size_13"
         android:text="GO TO INTAKE FORMS"
-        app:customAssetFont="proxima_nova_regular"/>
+        app:customAssetFont="gotham_rounded_light"
+        />
 
 
 </LinearLayout>

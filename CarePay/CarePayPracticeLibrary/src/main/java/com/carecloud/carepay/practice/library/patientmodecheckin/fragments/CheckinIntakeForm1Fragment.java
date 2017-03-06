@@ -1,6 +1,6 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,162 +18,169 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
-import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
+import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckinFlowCallback;
+import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckinFlowState;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.intake.models.IntakeFormPayloadModel;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
 import com.carecloud.carepaylibray.intake.models.LabelModel;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
-import com.carecloud.carepaylibray.practice.FlowStateInfo;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
-import com.marcok.stepprogressbar.StepProgressBar;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity.SUBFLOW_INTAKE;
-
 
 /**
- * Created by lsoco_user on 11/17/2016.
+ * Edited by lmenendez on 3/5/2017.
  */
 
 public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
 
-    private Button continueButton;
-
     private WebView mWebView;
-    private TextView headerTitleTextView;
-    private IntakeResponseModel inTakeForm;
-    private Toolbar intakeFormsToolbar;
-    private LabelModel labelsModel;
+    private ProgressBar progressBar;
     private Button nextButton;
-    private StepProgressBar mStepProgressBar;
-    public String TAG = CheckinIntakeForm1Fragment.class.getSimpleName();
-    private View view;
-    private int formIndex;
-    private int formTotalIntakesForms;
-    private int formCurrentIntakesForm;
-    private ProgressBar     progressBar;
+    private RatingBar progressIndicator;
 
-    @Nullable
+    private int totalForms;
+    private int displayedFormsIndex;
+
+    private IntakeResponseModel inTakeForm;
+    private LabelModel labelsModel;
+    private View view;
+
+
+    private CheckinFlowCallback flowCallback;
+
+    @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+        try{
+            flowCallback = (CheckinFlowCallback) context;
+        }catch (ClassCastException cce){
+            throw new ClassCastException("Attached context must implement CheckinFlowCallback");
+        }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        Gson gson = new Gson();
+        String intakeFormDTOString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
+        inTakeForm = gson.fromJson(intakeFormDTOString, IntakeResponseModel.class);
+        totalForms = inTakeForm.getPayload().getIntakeForms().size();
+
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_checkin_intake_form1, container, false);
-
-        getActivity().getWindow().setFlags(
-                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
-                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
-        progressBar = (ProgressBar)view.findViewById(com.carecloud.carepaylibrary.R.id.signupProgressBarIntake);
-        progressBar.setVisibility(View.VISIBLE);
-        view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        initForm();
-        initWebView();
-        return view;
+        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+        return inflater.inflate(R.layout.fragment_checkin_intake_form1, container, false);
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle icicle){
+        inflateToolbarViews(view);
 
-    /**
-     * Call to intake forms in order to get Findings if any.
-     */
-    public void getIntakeFormDatas() {
-
-
-        Map<String, String> header = new HashMap<>();
-
-        header.put("patient_id", inTakeForm.getPayload().getFindings().getMetadata().getPatientId());
-        header.put("practice_id", inTakeForm.getPayload().getFindings().getMetadata().getPracticeId());
-        header.put("appointment_id", inTakeForm.getPayload().getFindings().getMetadata().getAppointmentId());
-        header.put("practice_mgmt", inTakeForm.getPayload().getFindings().getMetadata().getPracticeMgmt());
-
-        getWorkflowServiceHelper().execute(inTakeForm.getMetadata().getLinks().getIntake(), intakeFormCallback, header);
-    }
-
-    /**
-     * CallBack to load intake forms call intake forms
-     */
-    WorkflowServiceCallback intakeFormCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            inTakeForm = new Gson().fromJson(workflowDTO.toString(), IntakeResponseModel.class);
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(getActivity());
-            Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
-
-    /**
-     * Initialize objects after getting intake form data.
-     */
-    public void initForm() {
-        labelsModel = inTakeForm.getMetadata().getLabel();
+        displayedFormsIndex = 0;
+        flowCallback.setCheckinFlow(CheckinFlowState.INTAKE, totalForms, displayedFormsIndex);
 
         nextButton = (Button) view.findViewById(com.carecloud.carepaylibrary.R.id.intakeBtnNext);
-        nextButton.setEnabled(false);
-
-        formCurrentIntakesForm = 1;
-
-        //call javascript to show next intake form.
+        nextButton.setEnabled(totalForms < 1);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                if (formCurrentIntakesForm >= (formTotalIntakesForms - 1)) {
-                    nextButton.setText(labelsModel.getFinishQuestionsButtonText());
-                } else {
-                    nextButton.setText(labelsModel.getNextQuestionButtonText());
-                }
-
-                nextIntakeFormDisplayed();
+            public void onClick(View view) {
+                displayNextForm();
             }
         });
 
+        setNextButtonText();
 
-        if (formCurrentIntakesForm >= (formTotalIntakesForms - 1)) {
-            nextButton.setText(labelsModel.getFinishQuestionsButtonText());
+        progressIndicator = (RatingBar) view.findViewById(R.id.progress_indicator);
+        if(totalForms>1) {
+            progressIndicator.setVisibility(View.VISIBLE);
+            progressIndicator.setNumStars(totalForms);
         }else{
-            nextButton.setText(labelsModel.getNextQuestionButtonText());
+            progressIndicator.setVisibility(View.GONE);
+        }
+        progressIndicator.setRating(displayedFormsIndex+1);//adjust for zero index
+
+
+        mWebView = (WebView) view.findViewById(com.carecloud.carepaylibrary.R.id.activity_main_webview);
+        progressBar = (ProgressBar)view.findViewById(com.carecloud.carepaylibrary.R.id.signupProgressBarIntake);
+        progressBar.setVisibility(View.VISIBLE);
+        initWebView();
+    }
+
+    private void setNextButtonText(){
+        String text;
+
+        if (displayedFormsIndex < (totalForms - 1)) {
+            text = inTakeForm.getMetadata().getLabel().getNextQuestionButtonText();
+        } else {
+            text = inTakeForm.getMetadata().getLabel().getFinishQuestionsButtonText();
         }
 
+        nextButton.setText(StringUtil.getLabelForView(text));
 
+    }
 
+    private void inflateToolbarViews(View view){
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        if(toolbar == null) {
+            return;
+        }
+        toolbar.setTitle("");
+        if(getDialog()==null) {
+            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.icn_nav_back));
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getActivity().onBackPressed();
+                }
+            });
+        }
+
+        TextView header = (TextView) view.findViewById(R.id.consent_header);
+        header.setText(StringUtil.getLabelForView(inTakeForm.getMetadata().getLabel().getIntakeFormHeading()));
     }
 
     /**
      * Initialize web view
      */
-    public void initWebView(){
-        //init webview
-        mWebView = (WebView) view.findViewById(com.carecloud.carepaylibrary.R.id.activity_main_webview);
+    @SuppressLint("SetJavaScriptEnabled")
+    private void initWebView(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WebView.setWebContentsDebuggingEnabled(true);
+        }
+
+        WebSettings webSettings = mWebView.getSettings();
+        webSettings.setAllowFileAccessFromFileURLs(true);
+        webSettings.setAllowUniversalAccessFromFileURLs(true);
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ONLY);
+
         //speed webview loading
         if (Build.VERSION.SDK_INT >= 19){
             mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         } else {
             mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
-        mWebView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ONLY);
-        WebSettings webSettings = mWebView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
+
+
         //load pages and links inside webview
         mWebView.setWebViewClient(new WebViewClient());
         mWebView.setWebChromeClient(new WebChromeClient() {
@@ -181,6 +188,7 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
 
                 if (progress < 100) {
                     progressBar.setVisibility(View.VISIBLE);
+                    nextButton.setEnabled(false);
                 }
                 if (progress == 100) {
                     progressBar.setVisibility(View.INVISIBLE);
@@ -188,34 +196,41 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
                 }
             }
         });
+
         //Interface that receive calls from javascript
         mWebView.addJavascriptInterface(new WebViewJavaScriptInterface(getActivity()), "IntakeInterface");
         mWebView.loadUrl("file:///android_asset/intake-forms-webview/web-view.html");
 
     }
 
+
     /**
      * Call java script functions to change intake form index
      */
-    public void nextIntakeFormDisplayed() {
-        if (formIndex < ((PatientModeCheckinActivity) getActivity()).getNumIntakeForms()) {
-            ++formIndex;
-            ((PatientModeCheckinActivity) getActivity()).setIntakeFormIndex(formIndex);
-            flowStateInfo.fragmentIndex = formIndex;
-            ((PatientModeCheckinActivity) getActivity()).updateSection(flowStateInfo);
-            ((PatientModeCheckinActivity) getActivity()).setConsentFormIndex(formIndex);
-
+    public void displayNextForm() {
+        if (displayedFormsIndex < totalForms) {
+            updateFormCounter(1);
         }
-        ++formCurrentIntakesForm;
+        setNextButtonText();
         mWebView.loadUrl("javascript:nextIntakeForm()");
+    }
+
+    private void updateFormCounter(int increment){
+        displayedFormsIndex+=increment;
+
+        progressIndicator.setRating(displayedFormsIndex);
+        flowCallback.setCheckinFlow(CheckinFlowState.INTAKE, totalForms, displayedFormsIndex);
+
     }
 
     /**
      * Call java script functions
      */
-    public void previousIntakeForm() {
+    public void displayPreviousForm() {
+//        mWebView.loadUrl("javascript:displayPreviousForm()");
         mWebView.loadUrl("javascript:previousIntakeForm()");
     }
+
 
     /**
      * Received calls from javascript functions.
@@ -229,14 +244,29 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
             this.context = context;
         }
 
-        // Should return a collection of intake objects received from backend i.e. payload.intake_forms
+        /**
+         * Callback for webview to request forms
+         * @return Should return a collection of intake objects received from backend i.e. payload.intake_forms
+
+         */
         @JavascriptInterface
         public String getForms() {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (displayedFormsIndex < totalForms) {
+                        updateFormCounter(1);
+                    }
+                }
+            });
             List<IntakeFormPayloadModel> myPaylod = inTakeForm.getPayload().getIntakeForms();
             return new Gson().toJson(myPaylod);
         }
 
-        // Should return answers XML received from backend i.e. payload.findings.payload.findings
+        /**
+         * Callback for webview to request forms answers to prefill form data
+          * @return Should return answers XML received from backend i.e. payload.findings.payload.findings
+         */
         @JavascriptInterface
         public String getAnswers() {
             return inTakeForm.getPayload().getFindings().getPayload().getFindings();
@@ -283,6 +313,8 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
 
     }
 
+
+
     /**
      * CallBack to update/submit call intake forms
      */
@@ -307,26 +339,14 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
     };
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Bundle bundle = getArguments();
-        String intakeFormDTOString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
-        Gson gson = new Gson();
-        inTakeForm = gson.fromJson(intakeFormDTOString, IntakeResponseModel.class);
-        //getIntakeFormData();
-        formTotalIntakesForms = inTakeForm.getPayload().getIntakeForms().size();
-        ((PatientModeCheckinActivity) getActivity()).setNumIntakeForms(inTakeForm.getPayload().getIntakeForms().size());
-        flowStateInfo = new FlowStateInfo(SUBFLOW_INTAKE,
-                formIndex,
-                ((PatientModeCheckinActivity) getActivity()).getNumIntakeForms());
-
+    public boolean navigateBack(){
+        if(totalForms>1 && displayedFormsIndex>1){
+            updateFormCounter(-1);
+            setNextButtonText();
+            displayPreviousForm();
+            return true;
+        }
+        return false;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        formIndex = ((PatientModeCheckinActivity) getActivity()).getIntakeFormIndex();
-        flowStateInfo.fragmentIndex = formIndex;
-        ((PatientModeCheckinActivity) getActivity()).updateSection(flowStateInfo);
-    }
 }

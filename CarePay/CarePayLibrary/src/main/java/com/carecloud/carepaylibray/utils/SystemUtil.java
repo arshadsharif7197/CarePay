@@ -32,6 +32,7 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.base.BaseActivity;
+import com.carecloud.carepaylibray.base.ISession;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
@@ -387,5 +388,19 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
 //        t.setDefaultUncaughtExceptionHandler(new SystemUtil());
     }
 
+    /**
+     * @param context The context
+     * @param exceptionMessage message to log
+     */
+    public static void doDefaultFailureBehavior(Context context, String exceptionMessage) {
+        ((ISession) context).hideProgressDialog();
 
+        showFailureDialogMessage(context, "Connection issue", "There was a problem with your request. Please try again later.");
+
+        if (null == exceptionMessage || exceptionMessage.isEmpty()) {
+            exceptionMessage = "Exception message is null";
+        }
+
+        Log.e(context.getString(R.string.alert_title_server_error), exceptionMessage);
+    }
 }

@@ -13,14 +13,13 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
+import com.carecloud.carepaylibray.appointments.models.AppointmentChargeDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
@@ -78,6 +77,7 @@ public class ResponsibilityDialog extends Dialog {
         handleException();
     }
 
+    @SuppressWarnings("AccessStaticViaInstance")
     private void handleException() {
         Thread t = Thread.currentThread();
         t.setDefaultUncaughtExceptionHandler(new SystemUtil());
@@ -127,7 +127,8 @@ public class ResponsibilityDialog extends Dialog {
             RecyclerView amountDetails = (RecyclerView) findViewById(R.id.payment_responsibility_balance_details);
             amountDetails.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-            PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(), paymentsModel, balances, null);
+            String detailsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPracticePaymentsDetailDialogLabel();
+            PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(), paymentsModel, balances, null, detailsLabel);
             amountDetails.setAdapter(adapter);
 
             double totalAmount = 0;
@@ -151,8 +152,13 @@ public class ResponsibilityDialog extends Dialog {
             ((TextView) findViewById(R.id.payment_responsibility_close_label))
                     .setText(paymentsLabel.getPracticePaymentsDetailDialogCloseButton());
 
-            ((TextView) findViewById(R.id.patient_provider_name))
-                    .setText(getProviderName(balances.get(0).getMetadata().getPatientId()));
+            List<AppointmentChargeDTO> details = balances.get(0).getPayload().get(0).getDetails();
+            if (details.isEmpty()) {
+                ((TextView) findViewById(R.id.patient_provider_name)).setText(
+                        getProviderName(balances.get(0).getMetadata().getPatientId()));
+            } else {
+                ((TextView) findViewById(R.id.patient_provider_name)).setText(details.get(0).getProvider().getName());
+            }
         }
     }
 

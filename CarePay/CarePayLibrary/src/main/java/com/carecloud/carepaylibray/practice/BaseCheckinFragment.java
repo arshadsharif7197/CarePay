@@ -17,4 +17,8 @@ public class BaseCheckinFragment extends BaseFragment {
     public void setFlowStateInfo(FlowStateInfo flowStateInfo) {
         this.flowStateInfo = flowStateInfo;
     }
+
+    public boolean navigateBack(){
+        return false;
+    }
 }

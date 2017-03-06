@@ -129,7 +129,7 @@ public class PaymentBalanceHistoryFragment  extends BaseFragment {
     public void onResume() {
         super.onResume();
         if (getActivity() instanceof ViewPaymentBalanceHistoryActivity) {
-            ((ViewPaymentBalanceHistoryActivity)this.getActivity()).displayToolbar(true);
+            ((ViewPaymentBalanceHistoryActivity)this.getActivity()).displayToolbar(true, null);
         }
     }
 

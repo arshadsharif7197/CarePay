@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -112,7 +113,7 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
     }
 
     private void inflateToolbarViews(View view){
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.medications_toolbar);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         if(toolbar == null) {
             return;
         }
@@ -123,7 +124,7 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
 //            ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
         }
-        TextView title = (TextView) toolbar.findViewById(R.id.medications_toolbar_title);
+        TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
         title.setText(getTextForLabel(labels.getMedicationAllergiesTitlebarText()));
     }
 
@@ -160,7 +161,7 @@ public class MedicationsAllergyFragment extends BaseDialogFragment implements Me
         TextView medicationPlaceholderText = (TextView) view.findViewById(R.id.medication_none_placeholder_text);
         medicationPlaceholderText.setText(getTextForLabel(labels.getMedicationNonePlaceholderText()));
 
-        TextView continueButton = (TextView) view.findViewById(R.id.medication_allergies_continue_button);
+        Button continueButton = (Button) view.findViewById(R.id.medication_allergies_continue_button);
         continueButton.setText(getTextForLabel(labels.getMedicationAllergiesContinueButton()));
         continueButton.setOnClickListener(continueClickListener);
 

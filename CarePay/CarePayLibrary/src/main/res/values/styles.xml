@@ -858,4 +858,27 @@
     <style name="Base_Dialog_MinWidth" parent="android:Theme.DeviceDefault.Dialog.NoActionBar.MinWidth">
         <item name="android:windowFullscreen">false</item>
     </style>
+
+    <style name="notificationPopUpTopToBottomAnimation">
+        <item name="@android:windowEnterAnimation">@anim/enter_from_top</item>
+        <item name="@android:windowExitAnimation">@anim/exit_to_top</item>
+    </style>
+
+    <style name="notificationPopUpLeftToRightAnimation">
+        <item name="@android:windowEnterAnimation">@anim/enter_from_left</item>
+        <item name="@android:windowExitAnimation">@anim/exit_to_right</item>
+    </style>
+
+    <style name="notificationPopUpRightToLeftAnimation">
+        <item name="@android:windowEnterAnimation">@anim/enter_from_right</item>
+        <item name="@android:windowExitAnimation">@anim/exit_to_left</item>
+    </style>
+
+
+    <style name="RatingBarCircleIndicator" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/rating_circle_selector</item>
+        <item name="android:indeterminateDrawable">@drawable/rating_circle_selector</item>
+        <item name="android:minHeight">10dip</item>
+        <item name="android:maxHeight">20dip</item>
+    </style>
 </resources>

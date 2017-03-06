@@ -15,6 +15,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
 
@@ -31,6 +32,8 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
         void onPreRegisterTapped(AppointmentDTO appointmentDTO, AppointmentsResultModel appointmentInfo);
 
         void onCancelAppointmentButtonClicked(AppointmentDTO appointmentDTO, AppointmentsResultModel appointmentInfo);
+
+        void onRescheduleAppointmentClicked(AppointmentDTO appointmentDTO);
 
     }
 
@@ -107,6 +110,22 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
 
         ((CarePayTextView) findViewById(R.id.appointDateTextView)).setTextColor(ContextCompat.getColor(context, R.color.white));
         ((CarePayTextView) findViewById(R.id.appointTimeTextView)).setTextColor(ContextCompat.getColor(context, R.color.white));
+
+        if(appointmentType == AppointmentType.MISSED_APPOINTMENT){
+            Button rescheduleButton = (Button) view.findViewById(R.id.rescheduleAppointmentButton);
+            rescheduleButton.setVisibility(View.VISIBLE);
+            rescheduleButton.setText(StringUtil.getLabelForView(labelsDto.getAppointmentRescheduleButton()));
+            rescheduleButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(callback!=null) {
+                        callback.onRescheduleAppointmentClicked(appointmentDTO);
+                    }
+                    dismiss();
+                }
+            });
+
+        }
     }
 
     void setCancelledSuccess(boolean cancelSuccess) {
@@ -137,4 +156,5 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
             }
         };
     }
+
 }

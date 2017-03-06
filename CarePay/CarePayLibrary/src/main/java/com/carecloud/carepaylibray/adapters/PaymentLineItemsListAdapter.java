@@ -23,6 +23,7 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
     private List<PatienceBalanceDTO> detailsList;
     private PaymentsModel paymentReceiptModel;
     private PaymentNavigationCallback payListener;
+    private String detailsLabel;
 
     /**
      * Constructor
@@ -33,12 +34,13 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
      */
     public PaymentLineItemsListAdapter(Context context, PaymentsModel paymentReceiptModel,
                                        List<PatienceBalanceDTO> detailsList,
-                                       PaymentNavigationCallback payListener) {
+                                       PaymentNavigationCallback payListener, String detailsLabel) {
 
         this.context = context;
         this.detailsList = detailsList;
         this.payListener = payListener;
         this.paymentReceiptModel = paymentReceiptModel;
+        this.detailsLabel = detailsLabel;
     }
 
     @Override
@@ -80,8 +82,7 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
 
             if (paymentLineItem.getDetails() != null && !paymentLineItem.getDetails().isEmpty()) {
                 holder.lineItemNameLabelDetails.setVisibility(View.VISIBLE);
-                holder.lineItemNameLabelDetails.setText(paymentReceiptModel.getPaymentsMetadata()
-                        .getPaymentsLabel().getPaymentResponsibilityDetails());
+                holder.lineItemNameLabelDetails.setText(detailsLabel);
 
                 if (paymentLineItem.getDetails().size() > 1) {
                     holder.lineItemNameLabelDetails.setOnClickListener(new View.OnClickListener() {

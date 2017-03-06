@@ -92,6 +92,30 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <include layout="@layout/item_checkin_flow"
+                         android:id="@+id/checkin_flow_demographics"/>
+
+                <include layout="@layout/item_checkin_flow"
+                         android:id="@+id/checkin_flow_consent"/>
+
+                <include layout="@layout/item_checkin_flow"
+                         android:id="@+id/checkin_flow_medications"/>
+
+                <include layout="@layout/item_checkin_flow"
+                         android:id="@+id/checkin_flow_intake"/>
+
+                <include layout="@layout/item_checkin_flow"
+                         android:id="@+id/checkin_flow_payment"/>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/checkinSectionDemogrInsTitle"
                     android:layout_width="wrap_content"

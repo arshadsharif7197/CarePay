@@ -204,7 +204,7 @@ public class CloverPaymentActivity extends BaseActivity {
 
             @Override
             protected void onPostExecute(Void param) {
-                if (authResult.authToken != null && authResult.baseUrl != null) {
+                if (authResult != null && authResult.authToken != null && authResult.baseUrl != null) {
                     connect();
                     new OrderAsyncTask().execute();
                 }
@@ -428,7 +428,7 @@ public class CloverPaymentActivity extends BaseActivity {
         header.put("transition", "true");
 
         TransitionDTO transitionDTO = gson.fromJson(paymentTransitionString, TransitionDTO.class);
-//        transitionDTO.setUrl("https://ix1uhlyid1.execute-api.us-east-1.amazonaws.com/qa/workflow/shamrock/practice_mode/practice_payments/make_payment");
+        transitionDTO.setUrl("http://2e8fd472.ngrok.io/workflow_engine/workflow/shamrock/practice_mode/practice_payments/make_payment");
 
         getWorkflowServiceHelper().execute(transitionDTO, makePaymentCallback, paymentModelJson, queries, header);
 
@@ -497,6 +497,7 @@ public class CloverPaymentActivity extends BaseActivity {
             hideProgressDialog();
             setResult(RESULT_CANCELED);
             System.out.print(exceptionMessage);
+            Toast.makeText(getApplicationContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
             finish();
         }
     };
