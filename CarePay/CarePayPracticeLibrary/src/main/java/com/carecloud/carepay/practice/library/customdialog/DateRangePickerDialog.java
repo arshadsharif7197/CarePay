@@ -203,6 +203,7 @@ public class DateRangePickerDialog extends BaseDialogFragment {
         selectedDates.add(endDate);
 
         calendarPickerView = (CalendarPickerView) view.findViewById(com.carecloud.carepaylibrary.R.id.calendarView);
+        calendarPickerView.setOnInvalidDateSelectedListener(null);
         calendarPickerView.init(minDate, maxDate)
                 .inMode(CalendarPickerView.SelectionMode.RANGE)
                 .withSelectedDates(selectedDates);
