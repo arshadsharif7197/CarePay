@@ -59,6 +59,7 @@ public class AppointmentDetailDialog extends Dialog {
     private CheckInDTO checkInDTO;
     private AppointmentPayloadDTO appointmentPayloadDTO;
     private PendingBalanceDTO pendingBalanceDTO;
+    private CheckInLabelDTO checkInLabelDTO;
 
     private CarePayTextView checkingInLabel;
     private CarePayTextView hourLabel;
@@ -190,7 +191,7 @@ public class AppointmentDetailDialog extends Dialog {
      * for setting values to UI Component from DTO .
      */
     private void onSetValuesFromDTO() {
-        CheckInLabelDTO checkInLabelDTO = checkInDTO.getMetadata().getLabel();
+        checkInLabelDTO = checkInDTO.getMetadata().getLabel();
         if (!isWaitingRoom) {
             demographicsCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogDemographics()));
             consentFormsCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogConsentForms()));
@@ -259,7 +260,15 @@ public class AppointmentDetailDialog extends Dialog {
     private View.OnClickListener paymentActionListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-
+//            new ResponsibilityDialog(
+//                    getContext(),
+//                    checkInLabelDTO.getPracticePaymentsDetailDialogPaymentPlan(),
+//                    checkInDTO.getPracticePaymentsDetailDialogPay(),
+//                    paymentsModel,
+//                    balancessDTO,
+//                    getResponsibilityDialogListener(balancessDTO)
+//            ).show();
+//
         }
     };
 
@@ -276,6 +285,12 @@ public class AppointmentDetailDialog extends Dialog {
 
         }
     };
+
+
+    private void getPatientBalances(){
+        TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getPatientBalances();
+
+    }
 
     /**
      * Method to get checkin status API

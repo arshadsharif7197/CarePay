@@ -71,7 +71,7 @@
         </FrameLayout>
 
         <FrameLayout
-            android:layout_width="@dimen/list_dialog_min_width"
+            android:layout_width="@dimen/dialog_width"
             android:layout_height="@dimen/list_dialog_min_height"
             android:background="@drawable/patient_mode_dialog_body_bg">
 
