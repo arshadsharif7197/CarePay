@@ -4,19 +4,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,8 +21,6 @@ import com.carecloud.carepay.patient.appointments.utils.PatientAppUtil;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.dtos.DemographicSettingsCurrentPasswordDTO;
 import com.carecloud.carepay.service.library.dtos.DemographicsSettingsEmailProperties;
 import com.carecloud.carepay.service.library.dtos.DemographicsSettingsHeaderDTO;
@@ -43,7 +37,6 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsTransitionsDTO;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.api.client.util.Base64;
@@ -293,7 +286,7 @@ public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
                                         if (demographicsSettingsPayloadDTO != null) {
                                             //DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
                                             //DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload().;
-                                            //DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+                                            //PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
 
                                             Gson gson = new Gson();
                                             String jsonInString = gson.toJson(demographicsSettingsPayloadDTO);

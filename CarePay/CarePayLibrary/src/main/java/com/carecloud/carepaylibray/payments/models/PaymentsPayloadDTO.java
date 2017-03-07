@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.payments.models;
 
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMerchantServicesDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiAccountsDTO;
 import com.google.gson.annotations.Expose;
@@ -53,7 +54,7 @@ public class PaymentsPayloadDTO implements Serializable {
     private PatientPaymentsDTO patientPayments = new PatientPaymentsDTO();
     @SerializedName("patients")
     @Expose
-    private List<PatientDTO> patients = new ArrayList<>();
+    private List<PatientModel> patients = new ArrayList<>();
     @SerializedName("papi_accounts")
     @Expose
     private List<DemographicsSettingsPapiAccountsDTO> papiAccounts = new ArrayList<>();
@@ -61,11 +62,11 @@ public class PaymentsPayloadDTO implements Serializable {
     @Expose
     private List<DemographicsSettingsMerchantServicesDTO> merchantServices = new ArrayList<>();
 
-    public List<PatientDTO> getPatients() {
+    public List<PatientModel> getPatients() {
         return patients;
     }
 
-    public void setPatients(List<PatientDTO> patients) {
+    public void setPatients(List<PatientModel> patients) {
         this.patients = patients;
     }
 

@@ -17,6 +17,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsCheckinDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
 import com.carecloud.carepaylibray.base.ISession;
@@ -65,16 +66,21 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
     }
 
     private boolean canCheckIn() {
+        AppointmentsPayloadDTO payloadDTO = appointmentDTO.getPayload();
+        if (payloadDTO.hasAppointmentStarted()) {
+            return true;
+        }
+
         AppointmentsCheckinDTO checkin = appointmentInfo.getPayload().getAppointmentsSettings().get(0).getCheckin();
-        boolean allowEarlyCheckin = checkin.getAllowEarlyCheckin();
-        long allowEarlyCheckinPeriod = Long.parseLong(checkin.getEarlyCheckinPeriod());
-        String appointmentTimeStr = appointmentDTO.getPayload().getStartTime();
+        if (!checkin.getAllowEarlyCheckin()) {
+            return false;
+        }
+
+        String appointmentTimeStr = payloadDTO.getStartTime();
         Date appointmentDate = DateUtil.getInstance().setDateRaw(appointmentTimeStr).getDate();
-        Date currentDate = DateUtil.getInstance().setToCurrent().getDate();
+        long differenceInMinutes = DateUtil.getMinutesElapsed(appointmentDate, new Date());
 
-        long differenceInMinutes = DateUtil.getMinutesElapsed(appointmentDate, currentDate);
-
-        return (differenceInMinutes < allowEarlyCheckinPeriod) && allowEarlyCheckin;
+        return differenceInMinutes < Long.parseLong(checkin.getEarlyCheckinPeriod());
     }
 
     @Override

@@ -1,11 +1,9 @@
 package com.carecloud.carepay.patient.demographics.fragments.settings;
 
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -23,40 +20,28 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.dtos.DemographicSettingsCurrentPasswordDTO;
 import com.carecloud.carepay.service.library.dtos.DemographicsSettingsEmailProperties;
 import com.carecloud.carepay.service.library.dtos.DemographicsSettingsHeaderDTO;
-import com.carecloud.carepay.service.library.dtos.DemographicsSettingsLoginEmailDTO;
 import com.carecloud.carepay.service.library.dtos.DemographicsSettingsMaintainanceDTO;
-import com.carecloud.carepay.service.library.dtos.DemographicsSettingsProposedEmailDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
-import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicPayloadDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMetadataDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsTransitionsDTO;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
-import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.api.client.util.Base64;
 import com.google.gson.Gson;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.json.JSONObject;
 
-
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
@@ -346,7 +331,7 @@ public class DemographicsSettingsChangePasswordFragment extends BaseFragment {
                                             if (demographicsSettingsPayloadDTO != null) {
                                                 //DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
                                                 //DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload().;
-                                                //DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+                                                //PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
 
                                                 Gson gson = new Gson();
                                                 String jsonInString = gson.toJson(demographicsSettingsPayloadDTO);

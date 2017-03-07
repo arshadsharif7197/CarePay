@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographicsettings.models;
 
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.google.gson.annotations.Expose;
@@ -23,7 +24,7 @@ public class DemographicsSettingsDemographicPayloadDTO {
     private List<DemographicInsurancePayloadDTO> insurances = new ArrayList<>();
     @SerializedName("personal_details")
     @Expose
-    private DemographicsSettingsPersonalDetailsPayloadDTO personalDetails = new DemographicsSettingsPersonalDetailsPayloadDTO();
+    private PatientModel personalDetails = new PatientModel();
     @SerializedName("address")
     @Expose
     private DemographicsSettingsPayloadAddressDTO address = new DemographicsSettingsPayloadAddressDTO();
@@ -48,11 +49,11 @@ public class DemographicsSettingsDemographicPayloadDTO {
         this.insurances = insurances;
     }
 
-    public DemographicsSettingsPersonalDetailsPayloadDTO getPersonalDetails() {
+    public PatientModel getPersonalDetails() {
         return personalDetails;
     }
 
-    public void setPersonalDetails(DemographicsSettingsPersonalDetailsPayloadDTO personalDetails) {
+    public void setPersonalDetails(PatientModel personalDetails) {
         this.personalDetails = personalDetails;
     }
 
