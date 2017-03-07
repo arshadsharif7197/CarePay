@@ -412,13 +412,13 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
         int headerColor = R.color.colorPrimary;
         String leftAction = null;
         String rightAction = null;
-        if (appointmentDTO.getPayload().isAppointmentOver()) {
-            // Doing nothing for now
-        } else if (appointmentDTO.getPayload().getAppointmentStatus().getCode().equals(CarePayConstants.PENDING)) {
+        if (appointmentDTO.getPayload().getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
             headerColor = R.color.lightningyellow;
             leftAction = checkInLabelDTO.getRejectLabel();
             rightAction = checkInLabelDTO.getAcceptLabel();
 
+        } else if (appointmentDTO.getPayload().isAppointmentOver()) {
+            // Doing nothing for now
         } else {
             leftAction = checkInLabelDTO.getRejectLabel();
         }
@@ -455,7 +455,7 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
 
     @Override
     public void onRightActionTapped(AppointmentDTO appointmentDTO) {
-        if (appointmentDTO.getPayload().getAppointmentStatus().getCode().equals(CarePayConstants.PENDING)) {
+        if (appointmentDTO.getPayload().getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
             confirmAppointment(appointmentDTO);
         }
     }
