@@ -202,7 +202,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             sizeFilteredPatients++;
 
             // Count pending and filter by pending
-            if (patient.isPending) {
+            if (patient.isRequested) {
                 sizeFilteredPendingPatients++;
             } else if (filterModel.isFilteringByPending()) {
                 continue;
@@ -363,10 +363,10 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             final DateTime startDateTime = new DateTime(patient.appointmentStartTime);
             timeTextView.setText(startDateTime.toString("hh:mm a"));
-            if (patient.isAppointmentOver) {
-                timeTextView.setBackgroundResource(R.drawable.bg_red_overlay);
-            } else if (patient.isPending) {
+            if (patient.isRequested) {
                 timeTextView.setBackgroundResource(R.drawable.bg_orange_overlay);
+            } else if (patient.isAppointmentOver) {
+                timeTextView.setBackgroundResource(R.drawable.bg_red_overlay);
             } else {
                 timeTextView.setBackgroundResource(R.drawable.bg_green_overlay);
             }
@@ -405,7 +405,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         private String locationId;
         private Date appointmentStartTime;
         private Boolean isAppointmentOver;
-        private Boolean isPending;
+        private Boolean isRequested;
 
         public Patient(Object raw, String id, ProviderIndexDTO provider, double balance, PatientModel dto) {
             this.raw = raw;
@@ -416,7 +416,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             this.providerName = StringUtil.getLabelForView(provider.getName());
             this.providerId = provider.getId();
             this.balance = String.format(Locale.getDefault(), "$%.2f", balance);
-            this.isPending = false;
+            this.isRequested = false;
         }
 
         public Patient(Object raw, AppointmentPayloadDTO dto) {
@@ -430,7 +430,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             this.appointmentStartTime = DateUtil.getInstance().setDateRaw(dto.getStartTime()).getDate();
             this.isAppointmentOver = dto.isAppointmentOver();
             this.locationId = dto.getLocation().getId().toString();
-            this.isPending = dto.getAppointmentStatus().getCode().equalsIgnoreCase(CarePayConstants.PENDING);
+            this.isRequested = dto.getAppointmentStatus().getCode().equalsIgnoreCase(CarePayConstants.REQUESTED);
         }
 
         public Patient(Date appointmentTime) {
