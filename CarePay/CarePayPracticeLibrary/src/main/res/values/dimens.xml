@@ -237,6 +237,5 @@
     <dimen name="responsibility_list_margin">80dp</dimen>
 
     <dimen name="list_dialog_min_height">400dp</dimen>
-    <dimen name="list_dialog_min_width">400dp</dimen>
 
 </resources>
