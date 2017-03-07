@@ -768,6 +768,14 @@ public class DateUtil {
     }
 
     /**
+     * @param date date
+     * @return minutes ellapsed
+     */
+    public long getMinutesElapsed(Date date) {
+        return getMinutesElapsed(this.date, date);
+    }
+
+    /**
      * @param date1 date 1
      * @param date2 date 2
      * @return minutes ellapsed

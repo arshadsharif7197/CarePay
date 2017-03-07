@@ -14,6 +14,8 @@ import java.util.Date;
  */
 public class AppointmentsPayloadDTO {
 
+    private static final int ANYTIME_PERIOD = 0;
+
     @SerializedName("id")
     @Expose
     private String id;
@@ -714,9 +716,18 @@ public class AppointmentsPayloadDTO {
             return false;
         }
 
-        Date appointmentDate = DateUtil.getInstance().setDateRaw(startTime).getDate();
-        long differenceInMinutes = DateUtil.getMinutesElapsed(appointmentDate, new Date());
+        DateUtil startDate = DateUtil.getInstance().setDateRaw(startTime);
+        if (!startDate.isToday()) {
+            return false;
+        }
 
-        return differenceInMinutes < Long.parseLong(checkin.getEarlyCheckinPeriod());
+        long earlyCheckInPeriod = Long.parseLong(checkin.getEarlyCheckinPeriod());
+        if (ANYTIME_PERIOD == earlyCheckInPeriod) {
+            return true;
+        }
+
+        long differenceInMinutes = startDate.getMinutesElapsed(new Date());
+
+        return differenceInMinutes < earlyCheckInPeriod;
     }
 }
