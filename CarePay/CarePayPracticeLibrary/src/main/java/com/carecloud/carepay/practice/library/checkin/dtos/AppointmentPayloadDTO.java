@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.checkin.dtos;
 
+import com.carecloud.carepaylibray.appointments.models.ProvidersReasonDTO;
 import com.carecloud.carepaylibray.payments.models.LocationDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -107,6 +108,10 @@ public class AppointmentPayloadDTO {
     @SerializedName("resource")
     @Expose
     private ResourceDTO resource = new ResourceDTO();
+
+    @SerializedName("visit_reason")
+    @Expose
+    private ProvidersReasonDTO visitReason = new ProvidersReasonDTO();
 
     /**
      *
@@ -664,6 +669,10 @@ public class AppointmentPayloadDTO {
      */
     public void setResource(ResourceDTO resource) {
         this.resource = resource;
+    }
+
+    public ProvidersReasonDTO getVisitReason() {
+        return visitReason;
     }
 
     @Override
