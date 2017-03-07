@@ -11,81 +11,11 @@ import com.google.gson.annotations.SerializedName;
 public class DemographicPersDetailsPayloadDTO extends PatientModel {
 
 
-    @SerializedName("primary_race") @Expose
-    private String primaryRace;
-
-    @SerializedName("secondary_race") @Expose
-    private String secondaryRace;
-
-    @SerializedName("ethnicity") @Expose
-    private String ethnicity;
-
-//    @SerializedName("preferred_language") @Expose
-//    private Object preferredLanguage;
-
     @SerializedName("add_unlisted_allergies") @Expose
     private String addUnlistedAllergies;
 
     @SerializedName("add_unlisted_medications") @Expose
     private String addUnlistedMedications;
-
-
-
-    /**
-     * @return The primaryRace
-     */
-    public String getPrimaryRace() {
-        return primaryRace;
-    }
-
-    /**
-     * @param primaryRace The primary_race
-     */
-    public void setPrimaryRace(String primaryRace) {
-        this.primaryRace = primaryRace;
-    }
-
-    /**
-     * @return The secondaryRace
-     */
-    public String getSecondaryRace() {
-        return secondaryRace;
-    }
-
-    /**
-     * @param secondaryRace The secondary_race
-     */
-    public void setSecondaryRace(String secondaryRace) {
-        this.secondaryRace = secondaryRace;
-    }
-
-    /**
-     * @return The ethnicity
-     */
-    public String getEthnicity() {
-        return ethnicity;
-    }
-
-    /**
-     * @param ethnicity The ethnicity
-     */
-    public void setEthnicity(String ethnicity) {
-        this.ethnicity = ethnicity;
-    }
-
-    /**
-     * @return The preferredLanguage
-     */
-//    public String getPreferredLanguage() {
-//        return preferredLanguage;
-//    }
-
-    /**
-     * @param preferredLanguage The preferred_language
-     */
-//    public void setPreferredLanguage(String preferredLanguage) {
-//        this.preferredLanguage = preferredLanguage;
-//    }
 
     /**
      * @return The addUnlistedAllergies
