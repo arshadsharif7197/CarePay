@@ -1,15 +1,14 @@
 package com.carecloud.carepaylibray.demographics.dtos.payload;
 
-import com.carecloud.carepaylibray.base.models.BasePersonModel;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.google.gson.internal.ObjectConstructor;
 
 /**
  * Created by Jahirul Bhuiyan on 9/26/2016.
  * MOdel for personal details payload.
  */
-public class DemographicPersDetailsPayloadDTO extends BasePersonModel {
+public class DemographicPersDetailsPayloadDTO extends PatientModel {
 
 
     @SerializedName("primary_race") @Expose

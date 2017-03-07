@@ -24,11 +24,10 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDataModelsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicPayloadDTO;
@@ -41,10 +40,8 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMiddleNameDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPropertiesDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsTransitionsDTO;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -246,7 +243,7 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
             if (demographicsSettingsPayloadDTO != null) {
                 DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
                 DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
-                DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+                PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
                 firstNameValString = demographicsPersonalDetails.getFirstName();
                 lastNameValString = demographicsPersonalDetails.getLastName();
                 middleNameValString = demographicsPersonalDetails.getMiddleName();
@@ -404,7 +401,7 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
                                         if (demographicsSettingsPayloadDTO != null) {
                                             DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
                                             DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
-                                            DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+                                            PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
                                             demographicsPersonalDetails.setFirstName(firstNameEditText.getText().toString());
                                             demographicsPersonalDetails.setLastName(lastNameEditText.getText().toString());
                                             demographicsPersonalDetails.setMiddleName(middleNameEditText.getText().toString());
