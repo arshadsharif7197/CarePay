@@ -71,13 +71,13 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
         View view = inflater.inflate(R.layout.dialog_canceled_appointment, null);
 
         switch (appointmentType) {
-            case MISSED_APPOINTMENT:
+            case MISSED:
                 initializeOff(view, labelsDto.getAppointmentsMissedHeading(), R.color.lightningyellow, R.drawable.appointment_dialog_dark_gray_bg);
                 break;
-            case CANCELLED_APPOINTMENT:
+            case CANCELLED:
                 initializeOff(view, labelsDto.getAppointmentsCanceledHeading(), R.color.harvard_crimson, R.drawable.appointment_dialog_dark_gray_bg);
                 break;
-            case REQUESTED_APPOINTMENT:
+            case REQUESTED:
                 initializeOff(view, labelsDto.getAppointmentsRequestPendingHeading(), R.color.colorPrimary, R.drawable.appointment_dialog_yellow_bg);
                 break;
             default:
@@ -111,7 +111,7 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
         ((CarePayTextView) findViewById(R.id.appointDateTextView)).setTextColor(ContextCompat.getColor(context, R.color.white));
         ((CarePayTextView) findViewById(R.id.appointTimeTextView)).setTextColor(ContextCompat.getColor(context, R.color.white));
 
-        if(appointmentType == AppointmentType.MISSED_APPOINTMENT){
+        if(appointmentType == AppointmentType.MISSED){
             Button rescheduleButton = (Button) view.findViewById(R.id.rescheduleAppointmentButton);
             rescheduleButton.setVisibility(View.VISIBLE);
             rescheduleButton.setText(StringUtil.getLabelForView(labelsDto.getAppointmentRescheduleButton()));

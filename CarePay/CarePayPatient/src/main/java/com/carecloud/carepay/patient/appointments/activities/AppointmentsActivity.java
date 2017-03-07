@@ -34,9 +34,7 @@ import java.util.Date;
 
 public class AppointmentsActivity extends MenuPatientActivity implements AppointmentNavigationCallback, RequestAppointmentDialog.RequestAppointmentCallback {
 
-    public static AppointmentDTO model;
     private AppointmentsResultModel appointmentsDTO;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
