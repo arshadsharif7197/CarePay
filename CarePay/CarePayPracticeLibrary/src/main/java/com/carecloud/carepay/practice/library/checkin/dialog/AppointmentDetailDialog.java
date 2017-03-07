@@ -72,7 +72,7 @@ public class AppointmentDetailDialog extends Dialog {
     private CheckBox responsibilityCheckbox;
     private CarePayButton paymentButton;
     private CarePayButton assistButton;
-    //private CarePayButton pageButton;
+    private CarePayButton pageButton;
     private ImageView profilePhoto;
     private ImageView bgImage;
     private TextView shortName;
@@ -116,8 +116,10 @@ public class AppointmentDetailDialog extends Dialog {
         onSettingStyle();
 
         if (balanceValueLabel.getText().toString().trim().equalsIgnoreCase(CarePayConstants.ZERO_BALANCE)) {
-            paymentButton.setVisibility(View.GONE);
+//            paymentButton.setVisibility(View.GONE);
+            paymentButton.setEnabled(false);
         }
+
     }
 
     /**
@@ -138,11 +140,11 @@ public class AppointmentDetailDialog extends Dialog {
 
         paymentButton = (CarePayButton) findViewById(R.id.paymentButton);
         assistButton = (CarePayButton) findViewById(R.id.assistButton);
-       // pageButton = (CarePayButton) findViewById(R.id.pageButton);
+        pageButton = (CarePayButton) findViewById(R.id.pageButton);
 
         paymentButton.setOnClickListener(paymentActionListener);
         assistButton.setOnClickListener(assistActionListener);
-        //pageButton.setOnClickListener(pageActionListener);
+        pageButton.setOnClickListener(pageActionListener);
 
         profilePhoto = (ImageView) findViewById(R.id.patient_profile_photo);
         bgImage = (ImageView) findViewById(R.id.profile_bg_image);
@@ -174,14 +176,14 @@ public class AppointmentDetailDialog extends Dialog {
             bgShapeAssistButton.setColor(ContextCompat.getColor(context, R.color.light_gray));
         }
 
-//        GradientDrawable bgShapePageButton = (GradientDrawable) pageButton.getBackground();
-//        if(checkInDTO.getMetadata().hasPageEnabled())
-//        {
-//            bgShapePageButton.setColor(ContextCompat.getColor(context, R.color.rose_madder));
-//        }else
-//        {
-//            bgShapePageButton.setColor(ContextCompat.getColor(context, R.color.light_gray));
-//        }
+        GradientDrawable bgShapePageButton = (GradientDrawable) pageButton.getBackground();
+        if(checkInDTO.getMetadata().hasPageEnabled())
+        {
+            bgShapePageButton.setColor(ContextCompat.getColor(context, R.color.rose_madder));
+        }else
+        {
+            bgShapePageButton.setColor(ContextCompat.getColor(context, R.color.light_gray));
+        }
     }
 
     /**
@@ -205,7 +207,7 @@ public class AppointmentDetailDialog extends Dialog {
                 checkInLabelDTO.getPracticeCheckinDetailDialogWaitingRoom() : checkInLabelDTO.getPracticeCheckinDetailDialogCheckingIn()));
         balanceTextLabel.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogBalance()));
         assistButton.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogAssist()));
-        //pageButton.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogPage()));
+        pageButton.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogPage()));
         paymentButton.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogPayment()));
 
         balanceValueLabel.setText(StringUtil.getFormattedBalanceAmount(getPatientBalance()));
@@ -251,7 +253,7 @@ public class AppointmentDetailDialog extends Dialog {
     {
         paymentButton.setEnabled(checkInDTO.getMetadata().hasPaymentEnabled());
         assistButton.setEnabled(checkInDTO.getMetadata().hasAssistEnabled());
-       // pageButton.setEnabled(checkInDTO.getMetadata().hasPageEnabled());
+        pageButton.setEnabled(checkInDTO.getMetadata().hasPageEnabled());
     }
 
     private View.OnClickListener paymentActionListener = new View.OnClickListener() {

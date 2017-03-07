@@ -7,14 +7,13 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Point;
-import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.DragEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
@@ -46,7 +45,7 @@ public class AppointmentStatusCardView extends LinearLayout {
     private CarePayTextView providerNameTextView;
     private CarePayTextView amountTextView;
     private CarePayTextView timeTextView;
-    private RelativeLayout containerLayout;
+    private ViewGroup containerLayout;
     private String appointmentId;
     private String appointmentListType;
     private CarePayTextView shortNameTextView;
@@ -93,7 +92,7 @@ public class AppointmentStatusCardView extends LinearLayout {
         providerNameTextView = (CarePayTextView) findViewById(R.id.providerNameTextView);
         amountTextView = (CarePayTextView) findViewById(R.id.amountTextView);
         timeTextView = (CarePayTextView) findViewById(R.id.timeTextView);
-        containerLayout = (RelativeLayout) findViewById(R.id.containerLayout);
+        containerLayout = (ViewGroup) findViewById(R.id.containerLayout);
         shortNameTextView =(CarePayTextView) findViewById(R.id.appointmentShortName);
         this.setOnLongClickListener(onLongClickListener);
         //this.setOnDragListener(onDragListener);
