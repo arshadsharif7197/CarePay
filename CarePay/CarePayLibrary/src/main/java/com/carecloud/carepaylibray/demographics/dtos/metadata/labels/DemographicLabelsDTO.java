@@ -394,6 +394,10 @@ public class DemographicLabelsDTO {
     @Expose
     private String demographicsDocumentsPictureOfBack;
 
+    @SerializedName("demographics_review_next_button")
+    @Expose
+    private String demographicsReviewNextButton;
+
     /**
      * @return The demographicsUpdateButton
      */
@@ -1708,5 +1712,13 @@ public class DemographicLabelsDTO {
      */
     public void setDemographicsDocumentsPictureOfBack(String demographicsDocumentsPictureOfBack) {
         this.demographicsDocumentsPictureOfBack = demographicsDocumentsPictureOfBack;
+    }
+
+    public String getDemographicsReviewNextButton() {
+        return StringUtil.getLabelForView(demographicsReviewNextButton);
+    }
+
+    public void setDemographicsReviewNextButton(String demographicsReviewNextButton) {
+        this.demographicsReviewNextButton = demographicsReviewNextButton;
     }
 }
