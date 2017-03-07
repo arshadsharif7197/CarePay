@@ -24,6 +24,7 @@ import com.carecloud.carepay.practice.library.customdialog.ChangeModeDialog;
 import com.carecloud.carepay.practice.library.customdialog.ConfirmationPinDialog;
 import com.carecloud.carepay.practice.library.homescreen.adapters.OfficeNewsListAdapter;
 import com.carecloud.carepay.practice.library.homescreen.dialogs.OfficeNewsDetailsDialog;
+import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenAlertsDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenAppointmentCountsDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenLabelDTO;
@@ -146,6 +147,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
                         = gson.fromJson(payloadAsJsonObject, PracticeHomeScreenPayloadDTO.class);
                 setPracticeUser(practiceHomeScreenPayloadDTO);
                 setAppointmentCount(practiceHomeScreenPayloadDTO);
+                setAlertCount(practiceHomeScreenPayloadDTO);
             }
         }
     }
@@ -155,6 +157,18 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         if (homeScreenAppointmentCountsDTO != null) {
             int checkinCounter = homeScreenAppointmentCountsDTO.getCheckingInCount() != null ? homeScreenAppointmentCountsDTO.getCheckingInCount() : 0;
             ((TextView) findViewById(R.id.checkedInCounterTextview)).setText(String.valueOf(checkinCounter));
+        }
+    }
+
+    private void setAlertCount(PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO){
+        HomeScreenAlertsDTO alertsDTO = practiceHomeScreenPayloadDTO.getAlerts();
+        if(alertsDTO != null){
+            TextView alertText = (TextView) findViewById(R.id.alertTextView);
+            int alertCounter = alertsDTO.getCount();
+            alertText.setText(String.valueOf(alertCounter));
+            if(alertCounter == 0){
+                alertText.setBackgroundResource(R.drawable.queue_counter_background);
+            }
         }
     }
 
