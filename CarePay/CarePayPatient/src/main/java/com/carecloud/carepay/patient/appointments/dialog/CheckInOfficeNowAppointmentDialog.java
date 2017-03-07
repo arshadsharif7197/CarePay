@@ -16,20 +16,16 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsCheckinDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog;
 import com.carecloud.carepaylibray.customdialogs.QrCodeViewDialog;
-import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,25 +58,7 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         this.appointmentDTO = appointmentDTO;
         this.appointmentInfo = appointmentInfo;
         this.callback = callback;
-        this.canCheckIn = canCheckIn();
-    }
-
-    private boolean canCheckIn() {
-        AppointmentsPayloadDTO payloadDTO = appointmentDTO.getPayload();
-        if (payloadDTO.hasAppointmentStarted()) {
-            return true;
-        }
-
-        AppointmentsCheckinDTO checkin = appointmentInfo.getPayload().getAppointmentsSettings().get(0).getCheckin();
-        if (!checkin.getAllowEarlyCheckin()) {
-            return false;
-        }
-
-        String appointmentTimeStr = payloadDTO.getStartTime();
-        Date appointmentDate = DateUtil.getInstance().setDateRaw(appointmentTimeStr).getDate();
-        long differenceInMinutes = DateUtil.getMinutesElapsed(appointmentDate, new Date());
-
-        return differenceInMinutes < Long.parseLong(checkin.getEarlyCheckinPeriod());
+        this.canCheckIn = appointmentDTO.getPayload().canCheckInNow(appointmentInfo);
     }
 
     @Override

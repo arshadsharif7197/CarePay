@@ -7,6 +7,8 @@ import com.google.gson.annotations.SerializedName;
 
 import org.joda.time.DateTime;
 
+import java.util.Date;
+
 /**
  * Model for appointment payload.
  */
@@ -697,5 +699,24 @@ public class AppointmentsPayloadDTO {
 
     public void setVisitType(VisitTypeDTO visitType) {
         this.visitType = visitType;
+    }
+
+    /**
+     * @return true if appointment can check in now
+     */
+    public boolean canCheckInNow(AppointmentsResultModel appointmentInfo) {
+        if (hasAppointmentStarted()) {
+            return true;
+        }
+
+        AppointmentsCheckinDTO checkin = appointmentInfo.getPayload().getAppointmentsSettings().get(0).getCheckin();
+        if (!checkin.getAllowEarlyCheckin()) {
+            return false;
+        }
+
+        Date appointmentDate = DateUtil.getInstance().setDateRaw(startTime).getDate();
+        long differenceInMinutes = DateUtil.getMinutesElapsed(appointmentDate, new Date());
+
+        return differenceInMinutes < Long.parseLong(checkin.getEarlyCheckinPeriod());
     }
 }
