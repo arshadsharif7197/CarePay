@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.library.payments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -14,12 +15,18 @@ import com.carecloud.carepay.practice.library.customcomponent.TwoColumnPatientLi
 import com.carecloud.carepay.practice.library.customdialog.FilterDialog;
 import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepay.practice.library.payments.dialogs.FindPatientDialog;
+import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityDialog;
+import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentPlanFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
+import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.models.LocationDTO;
 import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
@@ -42,7 +49,7 @@ import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 
-public class PaymentsActivity extends BasePracticeActivity implements FilterDialog.FilterCallBack {
+public class PaymentsActivity extends BasePracticeActivity implements FilterDialog.FilterCallBack, PaymentNavigationCallback {
 
     private PaymentsLabelDTO paymentsLabel;
     private PaymentsModel paymentsModel;
@@ -335,45 +342,120 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             }
 
             @Override
-            public void onRightActionTapped() {
+            public void onRightActionTapped(double amount) {
                 if (HttpConstants.getDeviceInformation().getDeviceType().equals("Clover")) {
-                    setCloverPayment();
+                    setCloverPayment(patientPayments);
                 }
+//                onPayButtonClicked(amount);
             }
 
-            private void setCloverPayment()
-            {
-                List<PatienceBalanceDTO> balances = patientPayments.getBalances();
-                Gson gson = new Gson();
-                String patientPaymentMetaDataString = gson.toJson(balances.get(0).getMetadata());
-                String paymentTransitionString = gson.toJson(paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment());
-                Intent intent = new Intent();
-                intent.setAction(CarePayConstants.CLOVER_PAYMENT_INTENT);
-                intent.putExtra(CarePayConstants.CLOVER_PAYMENT_METADATA, patientPaymentMetaDataString);
-                intent.putExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, balances.get(0).getPayload().get(0).getAmount());
-                intent.putExtra(CarePayConstants.CLOVER_PAYMENT_TRANSITION, paymentTransitionString);
-                List<PaymentLineItem> paymentLineItems = new ArrayList<>();
+        };
+    }
 
-                for(PatienceBalanceDTO balance : balances) {
+    @Override
+    public void startPartialPayment() {
 
-                    PaymentLineItem paymentLineItem = new PaymentLineItem();
-                    paymentLineItem.setAmount(balance.getPayload().get(0).getAmount());
-                    paymentLineItem.setDescription(balance.getPayload().get(0).getType());
+    }
 
-                    PaymentLineItemMetadata metadata = new PaymentLineItemMetadata();
-                    metadata.setPatientID(balance.getMetadata().getPatientId());
-                    metadata.setPracticeID(balance.getMetadata().getPracticeId());
+    @Override
+    public void onPayButtonClicked(double amount/*, PaymentsPatientBalancessDTO patientPayments*/) {
+        Bundle bundle = new Bundle();
+        Gson gson = new Gson();
+        String paymentsDTOString = gson.toJson(paymentsModel);
+        bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
+//        bundle.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(patientPayments));
+        bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+        bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+
+        PracticePaymentMethodDialogFragment fragment = new PracticePaymentMethodDialogFragment();
+        fragment.setArguments(bundle);
+        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+
+    }
+
+    @Override
+    public void onPaymentMethodAction(String selectedPaymentMethod, double amount) {
+//        if(paymentDTO.getPaymentPayload().getPatientCreditCards()!=null && !paymentDTO.getPaymentPayload().getPatientCreditCards().isEmpty()){
+//            Gson gson = new Gson();
+//            Bundle args = new Bundle();
+//            String paymentsDTOString = gson.toJson(paymentDTO);
+//            args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
+//            args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
+//            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+//            DialogFragment fragment = new ChooseCreditCardFragment();
+//            fragment.setArguments(args);
+////            navigateToFragment(fragment, true);
+//            fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+//        } else {
+//            showAddCard(amount);
+//        }
+//
+    }
+
+    @Override
+    public void onPaymentPlanAction() {
+        PatientPaymentPlanFragment fragment = new PatientPaymentPlanFragment();
+
+        Bundle args = new Bundle();
+        Gson gson = new Gson();
+        String paymentsDTOString = gson.toJson(paymentsModel);
+        args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
+        fragment.setArguments(args);
+
+        //TODO show payment plan frag as dialog I think
+    }
+
+    @Override
+    public void showReceipt(PaymentsModel paymentsModel) {
+        PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(this, paymentsModel, paymentsModel);
+        receiptDialog.show();
+    }
+
+    @Override
+    public void showAddCard(double amount) {
+        Gson gson = new Gson();
+        Bundle args = new Bundle();
+        String paymentsDTOString = gson.toJson(paymentsModel);
+        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
+        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE,  amount);
+        DialogFragment fragment = new AddNewCreditCardFragment();
+        fragment.setArguments(args);
+        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+    }
+
+
+    private void setCloverPayment(PaymentsPatientBalancessDTO patientPayments)
+    {
+        List<PatienceBalanceDTO> balances = patientPayments.getBalances();
+        Gson gson = new Gson();
+        String patientPaymentMetaDataString = gson.toJson(balances.get(0).getMetadata());
+        String paymentTransitionString = gson.toJson(paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment());
+        Intent intent = new Intent();
+        intent.setAction(CarePayConstants.CLOVER_PAYMENT_INTENT);
+        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_METADATA, patientPaymentMetaDataString);
+        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, balances.get(0).getPayload().get(0).getAmount());
+        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_TRANSITION, paymentTransitionString);
+        List<PaymentLineItem> paymentLineItems = new ArrayList<>();
+
+        for(PatienceBalanceDTO balance : balances) {
+
+            PaymentLineItem paymentLineItem = new PaymentLineItem();
+            paymentLineItem.setAmount(balance.getPayload().get(0).getAmount());
+            paymentLineItem.setDescription(balance.getPayload().get(0).getType());
+
+            PaymentLineItemMetadata metadata = new PaymentLineItemMetadata();
+            metadata.setPatientID(balance.getMetadata().getPatientId());
+            metadata.setPracticeID(balance.getMetadata().getPracticeId());
 //                metadata.setProviderID(balance.getMetadata().getProviderID()); //TODO this is missing in the DTO
 //                metadata.setLocationID(balance.getMetadata().getLocationID()); //TODO this is missing in the DTO
 
-                    paymentLineItems.add(paymentLineItem);
+            paymentLineItems.add(paymentLineItem);
 
-                }
+        }
 
-                intent.putExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS, gson.toJson(paymentLineItems));
+        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS, gson.toJson(paymentLineItems));
 
-                startActivityForResult(intent, CarePayConstants.CLOVER_PAYMENT_INTENT_REQUEST_CODE, new Bundle());
-            }
-        };
+        startActivityForResult(intent, CarePayConstants.CLOVER_PAYMENT_INTENT_REQUEST_CODE, new Bundle());
     }
+
 }

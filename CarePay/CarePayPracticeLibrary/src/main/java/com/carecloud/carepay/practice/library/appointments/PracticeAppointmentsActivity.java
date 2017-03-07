@@ -402,7 +402,7 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
             }
 
             @Override
-            public void onRightActionTapped() {
+            public void onRightActionTapped(double amount) {
                 Toast.makeText(getContext(), "THIS FEATURE IS STILL PENDING", Toast.LENGTH_SHORT).show();
             }
         };
