@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -10,72 +10,96 @@
     android:padding="5dp"
     android:minHeight="90dp">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/containerLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_vertical">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/appointmentShortName"
             android:layout_width="62dp"
             android:layout_height="62dp"
-            android:layout_alignParentStart="true"
-            android:layout_centerHorizontal="true"
             android:background="@drawable/round_list_tv"
-            android:gravity="center_vertical|center_horizontal"
+            android:layout_gravity="center"
+            android:maxLines="1"
             android:src="@drawable/icn_placeholder_user_profile_png"
             android:textColor="@color/lightSlateGray"
             android:textSize="@dimen/text_size_24sp"
-            app:customAssetFont="gotham_rounded_medium" />
+            app:customAssetFont="proxima_nova_semi_bold" />
 
-
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/patientNameTextView"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_toRightOf="@+id/appointmentShortName"
-            android:text="Patient Name"
-            android:textColor="@color/charcoal"
-            android:textSize="@dimen/appointment_cart_patient_textsize"
-            card_view:customAssetFont="proxima_nova_semi_bold" />
+            android:orientation="vertical">
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/providerNameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/patientNameTextView"
-            android:layout_marginStart="20dp"
-            android:layout_toRightOf="@+id/appointmentShortName"
-            android:text="Proviver Name"
-            android:textColor="@color/dark_gray"
-            android:textSize="@dimen/appointment_cart_provider_textsize"
-            card_view:customAssetFont="proxima_nova_semi_bold" />
+            <com.carecloud.carepaylibray.customcomponents.AutoResizeTextView
+                android:id="@+id/patientNameTextView"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_marginStart="20dp"
+                android:gravity="start"
+                android:text="Patient Name"
+                android:textColor="@color/charcoal"
+                android:textSize="@dimen/appointment_cart_patient_textsize"
+                card_view:customAssetFont="proxima_nova_semi_bold" />
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/amountTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/providerNameTextView"
-            android:layout_marginStart="20dp"
-            android:layout_toRightOf="@+id/appointmentShortName"
-            android:text="$100.00"
-            android:textColor="@color/dark_gray"
-            android:textSize="@dimen/appointment_cart_amount_textsize"
-            card_view:customAssetFont="proxima_nova_semi_bold" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/timeTextView"
-            android:layout_width="90dp"
-            android:layout_height="30dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="20dp"
-            android:background="@drawable/bg_green_overlay"
-            android:text="12:00 AM"
-            android:textColor="@color/white"
-            android:textSize="@dimen/appointment_cart_time_textsize"
-            card_view:customAssetFont="proxima_nova_semi_bold" />
-    </RelativeLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-</LinearLayout>
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/providerNameTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:gravity="start"
+                        android:text="Proviver Name"
+                        android:textColor="@color/dark_gray"
+                        android:textSize="@dimen/appointment_cart_provider_textsize"
+                        card_view:customAssetFont="proxima_nova_semi_bold" />
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/amountTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="start"
+                        android:layout_marginStart="20dp"
+                        android:text="$100.00"
+                        android:textColor="@color/dark_gray"
+                        android:textSize="@dimen/appointment_cart_amount_textsize"
+                        card_view:customAssetFont="proxima_nova_semi_bold" />
+
+                </LinearLayout>
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/timeTextView"
+                    android:layout_width="90dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_gravity="bottom"
+                    android:gravity="center"
+                    android:background="@drawable/bg_green_overlay"
+                    android:text="12:00 AM"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/appointment_cart_time_textsize"
+                    card_view:customAssetFont="proxima_nova_semi_bold" />
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</FrameLayout>

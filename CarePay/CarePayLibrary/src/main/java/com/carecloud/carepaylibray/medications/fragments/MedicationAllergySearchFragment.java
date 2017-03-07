@@ -7,9 +7,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -102,10 +104,16 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
 //            ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
         }
-        searchView = (SearchView) toolbar.findViewById(R.id.search_entry_view);
+        searchView = (SearchView) view.findViewById(R.id.search_entry_view);
         searchView.setOnQueryTextListener(searchQueryListener);
         searchView.requestFocus(View.FOCUS_DOWN);
         SystemUtil.showSoftKeyboard(getActivity());
+
+        TextView title = (TextView) view.findViewById(R.id.toolbar_title);
+        if(title!=null){
+            title.setText(medicationsAllergiesDTO.getMetadata().getLabels().getMedicationsTitle());
+            title.setGravity(Gravity.CENTER_HORIZONTAL);
+        }
     }
 
     private void initViews(View view){

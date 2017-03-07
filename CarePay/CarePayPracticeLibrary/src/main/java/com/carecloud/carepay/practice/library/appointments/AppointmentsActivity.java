@@ -13,7 +13,6 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.adapters.AppointmentsListAdapter;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
-import com.carecloud.carepay.practice.library.base.PracticeNavigationStateConstants;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
@@ -206,8 +205,8 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
                     getApplicationPreferences().setNavigateToAppointments(true);
                     Gson gson = new Gson();
                     String jsonDTO = gson.toJson(appointmentsResultModel);
-                    WorkflowDTO workflowDTO = gson.fromJson(jsonDTO, WorkflowDTO.class);
-                    workflowDTO.setState(PracticeNavigationStateConstants.PATIENT_APPOINTMENTS);
+                    WorkflowDTO workflowDTO = getConvertedDTO(WorkflowDTO.class);
+//                    workflowDTO.setState(PracticeNavigationStateConstants.PATIENT_APPOINTMENTS);
                     PracticeNavigationHelper.navigateToWorkflow(AppointmentsActivity.this, workflowDTO);
 
                 }

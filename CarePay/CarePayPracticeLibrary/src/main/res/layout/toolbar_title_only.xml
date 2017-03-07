@@ -11,9 +11,9 @@
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/toolbar_title"
+        android:layout_width="match_parent"
         style="@style/ResponsibilityToolbarTextStyle"
-        android:text="@string/additional_info"
         app:customAssetFont="gotham_rounded_medium"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
 </android.support.v7.widget.Toolbar>

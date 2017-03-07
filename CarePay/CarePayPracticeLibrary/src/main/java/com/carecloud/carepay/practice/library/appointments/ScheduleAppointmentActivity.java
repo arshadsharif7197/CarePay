@@ -19,7 +19,6 @@ import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -34,6 +33,7 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -80,6 +80,16 @@ public class ScheduleAppointmentActivity extends BasePracticeActivity implements
         noAppointmentView = (LinearLayout) findViewById(R.id.no_providers_layout);
         findViewById(R.id.provider_logout).setOnClickListener(this);
         findViewById(R.id.btnHome).setOnClickListener(this);
+
+        try {
+            scheduleResourcesModel = getConvertedDTO(AppointmentsResultModel.class);
+            populateWithLabels();
+        } catch (JsonSyntaxException ex) {
+            SystemUtil.showFailureDialogMessage(this, getString(R.string.alert_title_server_error),
+                    getString(R.string.alert_title_server_error));
+            ex.printStackTrace();
+        }
+
 
         getResourcesList();
     }

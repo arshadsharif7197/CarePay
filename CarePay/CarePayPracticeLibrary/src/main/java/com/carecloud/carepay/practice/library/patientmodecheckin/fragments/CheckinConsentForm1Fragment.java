@@ -54,6 +54,7 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
     private ProgressBar progressBar;
     private Button nextButton;
     private RatingBar progressIndicator;
+    private TextView header;
 
     //    private int formIndex;
     private int totalForms;
@@ -153,8 +154,8 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
         });
 
 
-        TextView header = (TextView) view.findViewById(R.id.consent_header);
-        header.setText(StringUtil.getLabelForView(consentFormDTO.getMetadata().getLabel().getConsentFormHeading()));
+        header = (TextView) view.findViewById(R.id.consent_header);
+//        header.setText(StringUtil.getLabelForView(consentFormDTO.getMetadata().getLabel().getConsentFormHeading()));
     }
 
 
@@ -206,10 +207,11 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
      */
     public void displayNextForm() {
         if (displayedFormsIndex < totalForms) {
-
-            String payload = consentFormList.get(displayedFormsIndex).getPayload().toString();//.replaceAll("\'", Matcher.quoteReplacement("\\\'"));
+            PracticeForm practiceForm = consentFormList.get(displayedFormsIndex);
+            String payload = practiceForm.getPayload().toString();//.replaceAll("\'", Matcher.quoteReplacement("\\\'"));
             webView.loadUrl("javascript:angular.element(document.getElementsByClassName('forms')).scope().load_form(JSON.parse('" + payload + "'))");
             nextButton.setEnabled(true);
+            header.setText(practiceForm.getPayload().get("title").getAsString());
             progressIndicator.setRating(displayedFormsIndex+1);//adjust for zero index
 
             flowCallback.setCheckinFlow(CheckinFlowState.CONSENT, totalForms, displayedFormsIndex+1);//adjust for zero index

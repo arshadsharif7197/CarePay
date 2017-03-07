@@ -13,7 +13,7 @@
         android:paddingTop="@dimen/dimen_10dp"
         android:foregroundGravity="center_vertical">
 
-        <include layout="@layout/toolbar_title_only"
+        <include layout="@layout/toolbar_no_title"
                  android:id="@+id/toolbar_layout"/>
 
         <LinearLayout

@@ -18,7 +18,6 @@
         android:layout_marginTop="@dimen/dimen_22dp"
         android:background="@drawable/bg_blue_overlay"
         android:gravity="center"
-        android:includeFontPadding="false"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_22sp"
         app:customAssetFont="gotham_rounded_medium" />
@@ -78,26 +77,32 @@
                 android:indeterminate="true"
                 android:visibility="gone"/>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/appointments_recycler_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/dimen_34dp"
-                android:layout_marginBottom="@dimen/dimen_34dp"
-                android:orientation="horizontal"
-                android:scrollbars="horizontal" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
 
 
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/appointments_recycler_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal"
+                    android:scrollbars="horizontal" />
+
+
+
+
+            </FrameLayout>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/no_appointment_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/titleSelectappointmentsubheader"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/no_apt_message_title"

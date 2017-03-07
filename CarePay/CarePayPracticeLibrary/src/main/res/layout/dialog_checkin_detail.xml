@@ -286,7 +286,7 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/custom_appointment_dialog_button_textsize"
                     app:customAssetFont="gotham_rounded_medium"
-                    android:visibility="gone"/>
+                    android:visibility="visible"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayButton
                     android:id="@+id/pageButton"
@@ -300,7 +300,7 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/custom_appointment_dialog_button_textsize"
                     app:customAssetFont="gotham_rounded_medium"
-                    android:visibility="gone"/>
+                    android:visibility="visible"/>
             </LinearLayout>
         </RelativeLayout>
 
