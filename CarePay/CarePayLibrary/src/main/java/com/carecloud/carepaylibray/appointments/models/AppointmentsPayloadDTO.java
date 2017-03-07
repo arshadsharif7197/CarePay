@@ -726,7 +726,7 @@ public class AppointmentsPayloadDTO {
             return true;
         }
 
-        long differenceInMinutes = startDate.getMinutesElapsed(new Date());
+        long differenceInMinutes = DateUtil.getMinutesElapsed(startDate.getDate(), new Date());
 
         return differenceInMinutes < earlyCheckInPeriod;
     }
