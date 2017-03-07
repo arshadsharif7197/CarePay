@@ -13,6 +13,7 @@ import com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInAct
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
+import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinPreregisterActivity;
 import com.carecloud.carepay.practice.library.payments.PaymentsActivity;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
@@ -107,36 +108,36 @@ public class PracticeNavigationHelper {
             }
 
             case PracticeNavigationStateConstants.PATIENT_MODE_CHECKIN_SUBFLOW: {
-                intent = new Intent(context, PatientModeCheckinActivity.class);
+                intent = new Intent(context, PatientModeCheckinPreregisterActivity.class);
 //                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             }
             case PracticeNavigationStateConstants.MEDICATION_ALLERGIES:{
-                if (context instanceof PatientModeCheckinActivity) {
-                    ((PatientModeCheckinActivity) context).loadMedicationsAllergy(workflowDTO.toString());
+                if (context instanceof PatientModeCheckinPreregisterActivity) {
+                    ((PatientModeCheckinPreregisterActivity) context).loadMedicationsAllergy(workflowDTO.toString());
                     return;
                 }
                 break;
             }
             case PracticeNavigationStateConstants.CONSENT_FORMS: {
-                if (context instanceof PatientModeCheckinActivity) {
-                    ((PatientModeCheckinActivity) context).getConsentFormInformation(workflowDTO.toString());
+                if (context instanceof PatientModeCheckinPreregisterActivity) {
+                    ((PatientModeCheckinPreregisterActivity) context).getConsentFormInformation(workflowDTO.toString());
                     return;
                 }
                 break;
             }
 
             case PracticeNavigationStateConstants.INTAKE_FORMS: {
-                if (context instanceof PatientModeCheckinActivity) {
-                    ((PatientModeCheckinActivity) context).startIntakeForms(workflowDTO.toString());
+                if (context instanceof PatientModeCheckinPreregisterActivity) {
+                    ((PatientModeCheckinPreregisterActivity) context).startIntakeForms(workflowDTO.toString());
                     return;
                 }
                 break;
             }
 
             case PracticeNavigationStateConstants.PAYMENTS: {
-                if (context instanceof PatientModeCheckinActivity) {
-                    ((PatientModeCheckinActivity) context).getPaymentInformation(workflowDTO.toString());
+                if (context instanceof PatientModeCheckinPreregisterActivity) {
+                    ((PatientModeCheckinPreregisterActivity) context).getPaymentInformation(workflowDTO.toString());
                     return;
                 }
                 break;
