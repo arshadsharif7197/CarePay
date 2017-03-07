@@ -187,7 +187,7 @@ public class ResponsibilityDialog extends Dialog {
             @Override
             public void onClick(View view) {
                 if (null != callback) {
-                    callback.onRightActionTapped();
+                    callback.onRightActionTapped(patientPayments.getBalances().get(0).getPayload().get(0).getAmount());
                 }
 
                 dismiss();
@@ -217,6 +217,6 @@ public class ResponsibilityDialog extends Dialog {
 
         void onLeftActionTapped();
 
-        void onRightActionTapped();
+        void onRightActionTapped(double amount);
     }
 }
