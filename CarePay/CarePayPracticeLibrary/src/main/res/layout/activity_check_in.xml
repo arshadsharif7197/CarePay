@@ -83,9 +83,12 @@
         android:baselineAligned="false"
         android:orientation="horizontal"
         android:paddingBottom="10dp"
-        android:paddingLeft="175dp"
-        android:paddingRight="175dp"
         android:paddingTop="15dp">
+
+        <View
+            android:layout_width="@dimen/dimen_10dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".25"/>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -191,5 +194,12 @@
                 </RelativeLayout>
             </RelativeLayout>
         </LinearLayout>
+
+        <View
+            android:layout_width="@dimen/dimen_10dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".25"/>
+
+
     </LinearLayout>
 </LinearLayout>

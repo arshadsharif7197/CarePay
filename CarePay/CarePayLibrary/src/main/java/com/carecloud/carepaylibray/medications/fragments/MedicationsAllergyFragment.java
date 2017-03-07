@@ -124,7 +124,9 @@ public class MedicationsAllergyFragment extends BaseFragment implements Medicati
 
 
         TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        title.setText(StringUtil.getLabelForView(labels.getMedicationAllergiesTitlebarText()));
+        if(title!=null) {
+            title.setText(StringUtil.getLabelForView(labels.getMedicationAllergiesTitlebarText()));
+        }
     }
 
     private void initViews(View view){

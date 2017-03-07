@@ -29,6 +29,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.models.LocationDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
@@ -326,7 +327,7 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
     private FindPatientDialog.OnItemClickedListener getFindPatientDialogListener() {
         return new FindPatientDialog.OnItemClickedListener() {
             @Override
-            public void onItemClicked(com.carecloud.carepaylibray.payments.models.PatientDTO patient) {
+            public void onItemClicked(PatientModel patient) {
                 Map<String, String> queryMap = new HashMap<>();
                 queryMap.put("patient_id", patient.getPatientId());
 
@@ -372,20 +373,19 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
 
             PaymentsModel patientDetails = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
 
+            PaymentsPatientBalancessDTO balancesDTO = null;
             if (patientDetails != null && patientDetails.getPaymentPayload().getPatientBalances() != null && !patientDetails.getPaymentPayload().getPatientBalances().isEmpty()) {
-                PaymentsPatientBalancessDTO balancesDTO = patientDetails.getPaymentPayload().getPatientBalances().get(0);
-
-                new ResponsibilityDialog(
-                        getContext(),
-                        null,
-                        checkInLabelDTO.getCreateAppointmentLabel(),
-                        patientDetails,
-                        balancesDTO,
-                        getResponsibilityDialogListener(balancesDTO)
-                ).show();
-            } else {
-                Toast.makeText(getContext(), "Patient has no balance", Toast.LENGTH_LONG).show() ;
+                balancesDTO = patientDetails.getPaymentPayload().getPatientBalances().get(0);
             }
+
+            new ResponsibilityDialog(
+                    getContext(),
+                    null,
+                    checkInLabelDTO.getCreateAppointmentLabel(),
+                    patientDetails,
+                    balancesDTO,
+                    getResponsibilityDialogListener()
+            ).show();
         }
 
         @Override
@@ -394,7 +394,7 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
         }
     };
 
-    private ResponsibilityDialog.PayResponsibilityCallback getResponsibilityDialogListener(final PaymentsPatientBalancessDTO patientPayments) {
+    private ResponsibilityDialog.PayResponsibilityCallback getResponsibilityDialogListener() {
         return new ResponsibilityDialog.PayResponsibilityCallback() {
             @Override
             public void onLeftActionTapped() {
@@ -403,7 +403,7 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
 
             @Override
             public void onRightActionTapped() {
-                Toast.makeText(getContext(), "Creating Appointment", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "THIS FEATURE IS STILL PENDING", Toast.LENGTH_SHORT).show();
             }
         };
     }
@@ -412,13 +412,13 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
         int headerColor = R.color.colorPrimary;
         String leftAction = null;
         String rightAction = null;
-        if (appointmentDTO.getPayload().isAppointmentOver()) {
-            // Doing nothing for now
-        } else if (appointmentDTO.getPayload().getAppointmentStatus().getCode().equals(CarePayConstants.PENDING)) {
+        if (appointmentDTO.getPayload().getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
             headerColor = R.color.lightningyellow;
             leftAction = checkInLabelDTO.getRejectLabel();
             rightAction = checkInLabelDTO.getAcceptLabel();
 
+        } else if (appointmentDTO.getPayload().isAppointmentOver()) {
+            // Doing nothing for now
         } else {
             leftAction = checkInLabelDTO.getRejectLabel();
         }
@@ -455,7 +455,7 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
 
     @Override
     public void onRightActionTapped(AppointmentDTO appointmentDTO) {
-        if (appointmentDTO.getPayload().getAppointmentStatus().getCode().equals(CarePayConstants.PENDING)) {
+        if (appointmentDTO.getPayload().getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
             confirmAppointment(appointmentDTO);
         }
     }

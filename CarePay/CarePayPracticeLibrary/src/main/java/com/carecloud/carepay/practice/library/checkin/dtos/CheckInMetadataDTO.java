@@ -79,7 +79,7 @@ public class CheckInMetadataDTO {
     }
 
     public Boolean hasPaymentEnabled(){
-        return false ;
+        return true ;
     }
 
     public Boolean hasAssistEnabled(){
