@@ -139,7 +139,7 @@ public class AppointmentDetailDialog extends Dialog {
         callGetCheckinStatusAPI(); //API call for getting check-in status
         onInitialization();
         onSetValuesFromDTO();
-        onSettingStyle();
+//        onSettingStyle();
 
         if (getPatientBalance() == 0) {
 //            paymentButton.setVisibility(View.GONE);
@@ -183,15 +183,6 @@ public class AppointmentDetailDialog extends Dialog {
     private void onSettingStyle() {
         checkingInLabel.setTextColor(ContextCompat.getColor(context, R.color.charcoal_78));
         checkingInLabel.setTextColor(ContextCompat.getColor(context, R.color.white));
-
-        GradientDrawable bgShapePaymentButton = (GradientDrawable) paymentButton.getBackground();
-        if(checkInDTO.getMetadata().hasPaymentEnabled())
-        {
-            bgShapePaymentButton.setColor(ContextCompat.getColor(context, R.color.yellowGreen));
-        }else
-        {
-            bgShapePaymentButton.setColor(ContextCompat.getColor(context, R.color.light_gray));
-        }
 
         GradientDrawable bgShapeAssistButton = (GradientDrawable) assistButton.getBackground();
         if(checkInDTO.getMetadata().hasAssistEnabled())
@@ -551,7 +542,7 @@ public class AppointmentDetailDialog extends Dialog {
 
     private void showResponsibilityDialog(PaymentsPatientBalancessDTO paymentsPatientBalancessDTO, PaymentsModel paymentsModel){
         new ResponsibilityDialog(
-                getContext(),
+                context,
                 paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPracticePaymentsDetailDialogPaymentPlan(),
                 paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPracticePaymentsDetailDialogPay(),
                 paymentsModel,

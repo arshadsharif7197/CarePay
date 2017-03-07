@@ -155,10 +155,10 @@ public class ResponsibilityDialog extends Dialog {
             List<PatienceBalanceDTO> balances = patientPayments.getBalances();
 
             RecyclerView amountDetails = (RecyclerView) findViewById(R.id.payment_responsibility_balance_details);
-            amountDetails.setLayoutManager(new LinearLayoutManager(this.getContext()));
+            amountDetails.setLayoutManager(new LinearLayoutManager(context));
 
             String detailsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPracticePaymentsDetailDialogLabel();
-            PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(), paymentsModel, balances, null, detailsLabel);
+            PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(context, paymentsModel, balances, null, detailsLabel);
             amountDetails.setAdapter(adapter);
 
 
