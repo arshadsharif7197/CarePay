@@ -426,6 +426,10 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     private void setCloverPayment(PaymentsPatientBalancessDTO patientPayments)
     {
         List<PatienceBalanceDTO> balances = patientPayments.getBalances();
+        if (balances.isEmpty()) {
+            return;
+        }
+
         Gson gson = new Gson();
         String patientPaymentMetaDataString = gson.toJson(balances.get(0).getMetadata());
         String paymentTransitionString = gson.toJson(paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment());

@@ -158,7 +158,7 @@ public class ResponsibilityDialog extends Dialog {
             amountDetails.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
             String detailsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPracticePaymentsDetailDialogLabel();
-            PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(), paymentsModel, balances, null, detailsLabel);
+            PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(context, paymentsModel, balances, null, detailsLabel);
             amountDetails.setAdapter(adapter);
 
 

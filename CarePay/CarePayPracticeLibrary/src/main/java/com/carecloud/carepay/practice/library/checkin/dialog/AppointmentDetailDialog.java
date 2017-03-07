@@ -551,7 +551,7 @@ public class AppointmentDetailDialog extends Dialog {
 
     private void showResponsibilityDialog(PaymentsPatientBalancessDTO paymentsPatientBalancessDTO, PaymentsModel paymentsModel){
         new ResponsibilityDialog(
-                getContext(),
+                context,
                 paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPracticePaymentsDetailDialogPaymentPlan(),
                 paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPracticePaymentsDetailDialogPay(),
                 paymentsModel,
