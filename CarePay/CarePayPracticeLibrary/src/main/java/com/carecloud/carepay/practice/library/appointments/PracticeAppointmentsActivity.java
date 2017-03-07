@@ -131,6 +131,7 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
             setTextViewById(R.id.activity_practice_appointments_show_all_appointments_label, checkInLabelDTO.getAllAppointmentsLabel());
             setTextViewById(R.id.practice_patient_count_label, checkInLabelDTO.getTodayLabel());
             setTextViewById(R.id.practice_pending_count_label, checkInLabelDTO.getPendingLabel());
+            setTextViewById(R.id.practice_filter_label, checkInLabelDTO.getPracticeCheckinFilter());
             practicePaymentFindPatientTextView.setText(checkInLabelDTO.getPracticeCheckinFilterFindPatient());
         }
 
