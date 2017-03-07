@@ -29,6 +29,8 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Picasso;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -38,8 +40,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import org.joda.time.DateTime;
 
 /**
  * Created by cocampo on 2/10/17.
