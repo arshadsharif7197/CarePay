@@ -13,12 +13,15 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
+import com.carecloud.carepay.practice.library.checkin.dtos.PatientBalanceDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.PatientDTO;
+import com.carecloud.carepay.practice.library.checkin.dtos.PendingBalanceDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.models.MapFilterModel;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.payments.models.LocationIndexDTO;
 import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
@@ -236,9 +239,14 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private void loadPatients(CheckInDTO checkInDTO) {
         List<AppointmentDTO> appointments = checkInDTO.getPayload().getAppointments();
+        Map<String, String> profilePhotoMap = getProfilePhotoMap(checkInDTO.getPayload().getPatientBalances());
         this.allPatients = new ArrayList<>(appointments.size());
 
         for (AppointmentDTO appointmentDTO : appointments) {
+            // Set profile photo
+            PatientDTO patientDTO = appointmentDTO.getPayload().getPatient();
+            patientDTO.setProfilePhoto(profilePhotoMap.get(patientDTO.getId()));
+
             this.allPatients.add(new Patient(appointmentDTO, appointmentDTO.getPayload()));
         }
 
@@ -258,7 +266,6 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private void sortListByDate(List<Patient> list) {
         Collections.sort(list, new Comparator<Patient>() {
-            //@TargetApi(Build.VERSION_CODES.KITKAT)
             @Override
             public int compare(Patient lhs, Patient rhs) {
                 if (lhs != null && rhs != null) {
@@ -314,6 +321,30 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             for (String patientId : patientIds) {
                 map.put(patientId, indexDTO);
+            }
+        }
+
+        return map;
+    }
+
+    private Map<String, String> getProfilePhotoMap(List<PatientBalanceDTO> patientBalances) {
+        Map<String, String> map = new HashMap<>();
+
+        for (PatientBalanceDTO patientBalanceDTO: patientBalances) {
+            DemographicPayloadInfoDTO demographics = patientBalanceDTO.getDemographics();
+            String photoUrl = demographics.getPayload().getPersonalDetails().getProfilePhoto();
+
+            if (null == photoUrl || photoUrl.isEmpty()) {
+                continue;
+            }
+
+            for (PendingBalanceDTO pendingBalanceDTO: patientBalanceDTO.getPendingBalances()) {
+
+                String patientId = pendingBalanceDTO.getMetadata().getPatientId();
+                if (!map.containsKey(patientId)) {
+                    map.put(patientId, photoUrl);
+                    break;
+                }
             }
         }
 
@@ -443,6 +474,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             this.id = patientModel.getId();
             this.name = patientModel.getFullName();
             this.initials = StringUtil.onShortDrName(this.name);
+            this.photoUrl = patientModel.getProfilePhoto();
             this.providerId = dto.getProvider().getId().toString();
             this.providerName = dto.getProvider().getName();
             this.appointmentStartTime = DateUtil.getInstance().setDateRaw(dto.getStartTime()).getDate();

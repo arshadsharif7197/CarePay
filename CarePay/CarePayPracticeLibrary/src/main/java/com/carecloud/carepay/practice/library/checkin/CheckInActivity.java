@@ -428,7 +428,6 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
 
     private void applyFilterSortByName(ArrayList<FilterDataDTO> filterableList) {
         Collections.sort(filterableList, new Comparator<FilterDataDTO>() {
-            //@TargetApi(Build.VERSION_CODES.KITKAT)
             @Override
             public int compare(FilterDataDTO lhs, FilterDataDTO rhs) {
                 if (lhs != null && rhs != null) {
@@ -474,16 +473,6 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
             isFilterOn = true;
         }
         setAdapter();
-    }
-
-    private PatientBalanceDTO getPatientBalanceDTO(String patientId) {
-        List<PatientBalanceDTO> patientBalanceDTOList = checkInDTO.getPayload().getPatientBalances();
-        for (int i = 0; i < patientBalanceDTOList.size(); i++) {
-            if (patientBalanceDTOList.get(i).getMetadata().getPatientId().equalsIgnoreCase(patientId)) {
-                return patientBalanceDTOList.get(i);
-            }
-        }
-        return null;
     }
 
     private PendingBalanceDTO getPatientBalanceDTOs(String patientId) {

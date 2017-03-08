@@ -232,6 +232,10 @@ public class PatientDTO {
         return profilePhoto;
     }
 
+    public void setProfilePhoto(String profilePhoto) {
+        this.profilePhoto = profilePhoto;
+    }
+
     public boolean isFilterChecked() {
         return isFilterChecked;
     }
