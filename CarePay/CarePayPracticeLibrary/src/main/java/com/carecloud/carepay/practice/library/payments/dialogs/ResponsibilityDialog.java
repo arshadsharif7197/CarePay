@@ -118,25 +118,25 @@ public class ResponsibilityDialog extends Dialog {
     }
 
     private void initializeHeader() {
-        final PatientModel personalDetails = getPatientModel();
-        if (null == personalDetails) {
+        final PatientModel patientModel = getPatientModel();
+        if (null == patientModel) {
             Log.e(TAG, "Patient not found");
             return;
         }
 
-        ((TextView) findViewById(R.id.patient_full_name)).setText(personalDetails.getFirstName() + " " + personalDetails.getLastName());
+        ((TextView) findViewById(R.id.patient_full_name)).setText(patientModel.getFullName());
 
         ImageView profilePhoto = (ImageView) findViewById(R.id.patient_profile_photo);
         final TextView shortName = (TextView) findViewById(R.id.patient_profile_short_name);
-        shortName.setText(StringUtil.onShortDrName(personalDetails.getFirstName() + " " + personalDetails.getLastName()));
+        shortName.setText(StringUtil.onShortDrName(patientModel.getFullName()));
 
-        String photoUrl = personalDetails.getProfilePhoto();
+        String photoUrl = patientModel.getProfilePhoto();
         if (!TextUtils.isEmpty(photoUrl)) {
             Picasso.Builder builder = new Picasso.Builder(context);
             builder.listener(new Picasso.Listener() {
                 @Override
                 public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                    shortName.setText(StringUtil.onShortDrName(personalDetails.getFirstName() + " " + personalDetails.getLastName()));
+                    shortName.setText(StringUtil.onShortDrName(patientModel.getFullName()));
                 }
             });
 

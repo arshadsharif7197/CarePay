@@ -130,8 +130,26 @@ public class PatientModel {
 
         return DateUtil.getInstance().setDateRaw(dateOfBirth).toStringWithFormatMmSlashDdSlashYyyy();
     }
-
+  
     public void setPatientId(String patientId) {
         this.patientId = patientId;
+    }
+  
+    public String getFullName() {
+        String name = "";
+
+        if (null != firstName && !firstName.isEmpty()) {
+            name = firstName.trim();
+        }
+
+        if (null != middleName && !middleName.isEmpty()) {
+            name = (name + " " + middleName).trim();
+        }
+
+        if (null != lastName && !lastName.isEmpty()) {
+            name = (name + " " + lastName).trim();
+        }
+
+        return name;
     }
 }
