@@ -20,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.BuildConfig;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -380,7 +379,7 @@ public class SigninFragment extends BaseFragment {
         String userName = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
-        if(!BuildConfig.useUnifiedAuth) {
+        if(!HttpConstants.isUseUnifiedAuth()) {
             getCognitoAppHelper().signIn(userName, password, cognitoActionCallback);
         }else{
             unifiedSignIn(userName, password);
