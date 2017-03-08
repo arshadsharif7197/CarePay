@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.carecloud.carepay.practice.library">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.carecloud.carepay.practice.library">
 
+    <application>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinPreregisterActivity"
+            android:screenOrientation="sensorLandscape"
+            android:windowSoftInputMode="adjustNothing" />
+    </application>
 </manifest>

@@ -160,6 +160,7 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
         demographicFragMap.put(1, new PersonalInfoFragment());
         demographicFragMap.put(2, AddressFragment.newInstance(null, null));
         demographicFragMap.put(3, DemographicsFragment.newInstance(null, null));
+        demographicFragMap.put(4, new HealthInsuranceFragment());
 
         navigateToDemographicFragment(1);
 

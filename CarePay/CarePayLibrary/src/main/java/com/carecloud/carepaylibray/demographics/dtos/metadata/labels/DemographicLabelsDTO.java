@@ -398,6 +398,62 @@ public class DemographicLabelsDTO {
     @Expose
     private String demographicsReviewNextButton;
 
+    @SerializedName("demographics_insurance_card_number")
+    @Expose
+    private String demographicsInsuranceCardNumber;
+    @SerializedName("demographics_insurance_take_front_photo")
+    @Expose
+    private String demographicsInsuranceTakeFrontPhotoLabel;
+    @SerializedName("demographics_insurance_take_back_photo")
+    @Expose
+    private String demographicsInsuranceTakeBackPhotoLabel;
+    @SerializedName("practice_checkin_demogr_ins_dont_have_one_button_label")
+    @Expose
+    private String practiceCheckinDemogrInsDontHaveOneButtonLabel;
+    @SerializedName("practice_checkin_demogr_ins_add_new_button_label")
+    @Expose
+    private String practiceCheckinDemogrInsAddNewButtonLabel;
+
+    public String getDemographicsInsuranceCardNumber() {
+        return StringUtil.getLabelForView(demographicsInsuranceCardNumber);
+    }
+
+    public void setDemographicsInsuranceCardNumber(String demographicsInsuranceCardNumber) {
+        this.demographicsInsuranceCardNumber = demographicsInsuranceCardNumber;
+    }
+
+    public String getDemographicsInsuranceTakeFrontPhotoLabel() {
+        return StringUtil.getLabelForView(demographicsInsuranceTakeFrontPhotoLabel);
+    }
+
+    public void setDemographicsInsuranceTakeFrontPhotoLabel(String demographicsInsuranceTakeFrontPhotoLabel) {
+        this.demographicsInsuranceTakeFrontPhotoLabel = demographicsInsuranceTakeFrontPhotoLabel;
+    }
+
+    public String getDemographicsInsuranceTakeBackPhotoLabel() {
+        return StringUtil.getLabelForView(demographicsInsuranceTakeBackPhotoLabel);
+    }
+
+    public void setDemographicsInsuranceTakeBackPhotoLabel(String demographicsInsuranceTakeBackPhotoLabel) {
+        this.demographicsInsuranceTakeBackPhotoLabel = demographicsInsuranceTakeBackPhotoLabel;
+    }
+
+    public String getPracticeCheckinDemogrInsDontHaveOneButtonLabel() {
+        return StringUtil.getLabelForView(practiceCheckinDemogrInsDontHaveOneButtonLabel);
+    }
+
+    public void setPracticeCheckinDemogrInsDontHaveOneButtonLabel(String practiceCheckinDemogrInsDontHaveOneButtonLabel) {
+        this.practiceCheckinDemogrInsDontHaveOneButtonLabel = practiceCheckinDemogrInsDontHaveOneButtonLabel;
+    }
+
+    public String getPracticeCheckinDemogrInsAddNewButtonLabel() {
+        return StringUtil.getLabelForView(practiceCheckinDemogrInsAddNewButtonLabel);
+    }
+
+    public void setPracticeCheckinDemogrInsAddNewButtonLabel(String practiceCheckinDemogrInsAddNewButtonLabel) {
+        this.practiceCheckinDemogrInsAddNewButtonLabel = practiceCheckinDemogrInsAddNewButtonLabel;
+    }
+
     /**
      * @return The demographicsUpdateButton
      */
