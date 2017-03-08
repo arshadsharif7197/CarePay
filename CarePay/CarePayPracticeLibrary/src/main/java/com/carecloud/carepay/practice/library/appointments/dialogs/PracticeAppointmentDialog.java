@@ -16,6 +16,7 @@ import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.PatientDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepaylibray.customdialogs.BaseDialogFragment;
+import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -162,7 +163,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         if (!TextUtils.isEmpty(photoUrl)) {
             ImageView profileImage = (ImageView) view.findViewById(R.id.appointment_patient_picture_image_view);
 
-            Picasso.with(getActivity()).load(photoUrl)/*.transform(new CircleImageTransform())*/
+            Picasso.with(getActivity()).load(photoUrl).transform(new CircleImageTransform())
                     .resize(58, 58).into(profileImage);
             profileImage.setVisibility(View.VISIBLE);
         }

@@ -4,7 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <include layout="@layout/toolbar_title_only" />
 
@@ -102,14 +104,18 @@
                 android:paddingTop="@dimen/dimen_5dp"
                 android:paddingBottom="@dimen/dimen_5dp">
 
-                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                    android:layout_width="wrap_content"
+                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/transparent_apt"
                     android:id="@+id/allergy_none_placeholder_text"
                     android:padding="@dimen/padding_large"
                     android:textColor="@color/optionl_gray"
                     android:textSize="@dimen/text_size_17"
-                    android:text="Add unlisted allergies"
+                    android:hint="Add unlisted allergies"
+                    android:imeOptions="actionDone"
+                    android:maxLines="1"
+                    android:singleLine="true"
                     app:customAssetFont="proxima_nova_regular"/>
 
                 <View
@@ -180,14 +186,18 @@
                 android:paddingTop="@dimen/dimen_5dp"
                 android:paddingBottom="@dimen/dimen_5dp">
 
-                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                    android:layout_width="wrap_content"
+                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/transparent_apt"
                     android:id="@+id/medication_none_placeholder_text"
                     android:padding="@dimen/padding_large"
                     android:textColor="@color/optionl_gray"
                     android:textSize="@dimen/text_size_17"
-                    android:text="Add unlisted medication"
+                    android:imeOptions="actionDone"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:hint="Add unlisted medication"
                     app:customAssetFont="proxima_nova_regular"/>
 
                 <View
