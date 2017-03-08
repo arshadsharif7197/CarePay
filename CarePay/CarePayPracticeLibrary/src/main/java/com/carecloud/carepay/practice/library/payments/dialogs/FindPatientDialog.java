@@ -25,8 +25,11 @@ import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.RecyclerViewWithDivider;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.JsonArray;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,9 +37,10 @@ import java.util.Map;
 public class FindPatientDialog extends Dialog {
 
     private Context context;
-    private String hintLabel;
     private TransitionDTO transitionDTO;
     private OnItemClickedListener clickedListener;
+    private String hintLabel;
+    private String query;
 
     /**
      * Constructor
@@ -73,9 +77,8 @@ public class FindPatientDialog extends Dialog {
     private void initializeView() {
         EditText findPatientEditBox = (EditText) findViewById(R.id.find_patient_edit_box);
         findPatientEditBox.setHint(hintLabel);
-
-        setTextListener(findPatientEditBox);
-        setKeyListener(findPatientEditBox);
+        findPatientEditBox.addTextChangedListener(getTextChangedListener());
+        findPatientEditBox.setOnKeyListener(getKeyListener());
 
         findViewById(R.id.find_patient_close_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,8 +88,8 @@ public class FindPatientDialog extends Dialog {
         });
     }
 
-    private void setKeyListener(final EditText editText) {
-        editText.setOnKeyListener(new View.OnKeyListener() {
+    private View.OnKeyListener getKeyListener() {
+        return new View.OnKeyListener() {
 
             @Override
             public boolean onKey(View view, int keyCode, KeyEvent event) {
@@ -99,8 +102,9 @@ public class FindPatientDialog extends Dialog {
                     queryMap.put("practice_mgmt", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
                     queryMap.put("practice_id", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeId());
 
+                    query = ((EditText) view).getText().toString().toUpperCase();
                     JsonArray postModel = new JsonArray();
-                    postModel.add(editText.getText().toString());
+                    postModel.add(query);
                     String postBody = postModel.toString();
 
                     ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, findPatientCallback, postBody, queryMap);
@@ -108,11 +112,11 @@ public class FindPatientDialog extends Dialog {
                 }
                 return false;
             }
-        });
+        };
     }
 
-    private void setTextListener(final EditText editView) {
-        editView.addTextChangedListener(new TextWatcher() {
+    private TextWatcher getTextChangedListener() {
+        return new TextWatcher() {
 
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
@@ -124,12 +128,11 @@ public class FindPatientDialog extends Dialog {
 
             @Override
             public void afterTextChanged(Editable charSequence) {
-                String query = editView.getText().toString();
-                if (query.length() == 0) {
+                if (charSequence.length() == 0) {
                     findViewById(R.id.patient_searched_list).setVisibility(View.GONE);
                 }
             }
-        });
+        };
     }
 
     private WorkflowServiceCallback findPatientCallback = new WorkflowServiceCallback() {
@@ -146,13 +149,35 @@ public class FindPatientDialog extends Dialog {
             PaymentsModel searchResult = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
             if (searchResult != null) {
                 List<PatientModel> patients = searchResult.getPaymentPayload().getPatients();
+                sortPatients(patients);
                 showSearchResultList(patients);
             }
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ((ISession) context).hideProgressDialog();
+            SystemUtil.doDefaultFailureBehavior(context, exceptionMessage);
+        }
+
+        private void sortPatients(List<PatientModel> patients) {
+            Collections.sort(patients, new Comparator<PatientModel>() {
+                @Override
+                public int compare(PatientModel left, PatientModel right) {
+                    String leftName = left.getFullName();
+                    String rightName = right.getFullName();
+
+                    boolean leftStartsWithQuery = leftName.startsWith(query);
+                    if (leftStartsWithQuery == rightName.startsWith(query)) {
+                        return leftName.compareTo(rightName);
+                    }
+
+                    if (leftStartsWithQuery) {
+                        return -1;
+                    }
+
+                    return 1;
+                }
+            });
         }
     };
 
