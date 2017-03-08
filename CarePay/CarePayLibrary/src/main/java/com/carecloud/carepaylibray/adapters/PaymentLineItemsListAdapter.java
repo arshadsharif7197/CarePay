@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
     private PaymentsModel paymentReceiptModel;
     private PaymentNavigationCallback payListener;
     private String detailsLabel;
+    private DialogInterface.OnDismissListener dismissListener;
 
     /**
      * Constructor
@@ -34,13 +36,16 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
      */
     public PaymentLineItemsListAdapter(Context context, PaymentsModel paymentReceiptModel,
                                        List<PatienceBalanceDTO> detailsList,
-                                       PaymentNavigationCallback payListener, String detailsLabel) {
+                                       PaymentNavigationCallback payListener,
+                                       String detailsLabel,
+                                       DialogInterface.OnDismissListener dismissListener) {
 
         this.context = context;
         this.detailsList = detailsList;
         this.payListener = payListener;
         this.paymentReceiptModel = paymentReceiptModel;
         this.detailsLabel = detailsLabel;
+        this.dismissListener = dismissListener;
     }
 
     @Override
@@ -85,17 +90,18 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
                 holder.lineItemNameLabelDetails.setText(detailsLabel);
 
                 if (paymentLineItem.getDetails().size() > 1) {
+                    holder.lineItemNameLabelDetails.setVisibility(View.VISIBLE);
                     holder.lineItemNameLabelDetails.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             // Call for payment details dialog
                             PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(context,
-                                    paymentReceiptModel, paymentLineItem, payListener);
+                                    paymentReceiptModel, paymentLineItem, payListener, dismissListener);
                             detailsDialog.show();
                         }
                     });
                 } else {
-                    holder.lineItemNameLabelDetails.setTextColor(context.getResources().getColor(R.color.light_gray));
+                    holder.lineItemNameLabelDetails.setVisibility(View.INVISIBLE);
                 }
             } else if (holder.lineItemNameLabelDetails.getVisibility() == View.VISIBLE) {
                 holder.lineItemNameLabelDetails.setVisibility(View.GONE);

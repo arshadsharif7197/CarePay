@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +26,10 @@ import com.carecloud.carepay.practice.library.checkin.dtos.PatientDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.PendingBalanceDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.CustomFilterPopupWindow;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
+import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountReceiptDialog;
+import com.carecloud.carepay.practice.library.payments.fragments.NoAddChooseCreditCardFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -34,6 +39,7 @@ import com.carecloud.carepaylibray.payments.models.LocationDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.ProviderDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -526,13 +532,36 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
     }
 
     @Override
-    public void onPayButtonClicked(double amount) {
+    public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
+        Bundle bundle = new Bundle();
+        Gson gson = new Gson();
+        String paymentsDTOString = gson.toJson(paymentsModel);
+        bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
+        bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+        bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
 
+        PracticePaymentMethodDialogFragment fragment = new PracticePaymentMethodDialogFragment();
+        fragment.setArguments(bundle);
+        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
     }
 
     @Override
-    public void onPaymentMethodAction(String selectedPaymentMethod, double amount) {
+    public void onPaymentMethodAction(String selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
+        if(paymentsModel.getPaymentPayload().getPatientCreditCards()!=null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()){
+            Gson gson = new Gson();
+            Bundle args = new Bundle();
+            String paymentsDTOString = gson.toJson(paymentsModel);
+            args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
+            args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
+            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
 
+            DialogFragment fragment = new NoAddChooseCreditCardFragment();
+            fragment.setArguments(args);
+            fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+        } else {
+            //TODO show alert no cards on file
+
+        }
     }
 
     @Override
@@ -542,7 +571,8 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
 
     @Override
     public void showReceipt(PaymentsModel paymentsModel) {
-
+        PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(this, paymentsModel, paymentsModel);
+        receiptDialog.show();
     }
 
     @Override

@@ -17,16 +17,15 @@ import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepay.practice.library.payments.dialogs.FindPatientDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityDialog;
+import com.carecloud.carepay.practice.library.payments.fragments.NoAddChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentPlanFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.models.LocationDTO;
 import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
@@ -39,6 +38,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItemMeta
 import com.carecloud.carepaylibray.payments.models.updatebalance.PaymentUpdateBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -128,7 +128,13 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         patientListView.setCallback(new TwoColumnPatientListView.TwoColumnPatientListViewListener() {
             @Override
             public void onPatientTapped(Object dto) {
-                showResponsibilityDialog((PaymentsPatientBalancessDTO) dto);
+                PaymentsPatientBalancessDTO balancessDTO = (PaymentsPatientBalancessDTO) dto;
+                PatientModel patient = new PatientModel();
+                patient.setPatientId(balancessDTO.getBalances().get(0).getMetadata().getPatientId());
+
+                getPatientBalanceDetails(patient);
+
+//                showResponsibilityDialog((PaymentsPatientBalancessDTO) dto);
             }
         });
     }
@@ -164,11 +170,9 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
         for (PaymentsPatientBalancessDTO patientBalances : balances) {
 
-            PatientModel personalDetails
-                    = patientBalances.getDemographics().getPayload().getPersonalDetails();
-            String fullName = personalDetails.getFirstName() + " " + personalDetails.getLastName();
+            PatientModel patientModel = patientBalances.getDemographics().getPayload().getPersonalDetails();
             String patientId = getPatientId(patientBalances);
-            FilterDataDTO filterDataDTO = new FilterDataDTO(patientId, fullName, FilterDataDTO.FilterDataType.PATIENT);
+            FilterDataDTO filterDataDTO = new FilterDataDTO(patientId, patientModel.getFullName(), FilterDataDTO.FilterDataType.PATIENT);
 
             if (patients.indexOf(filterDataDTO) < 0) {
                 patients.add(filterDataDTO);
@@ -223,13 +227,18 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         findPatientDialog.setClickedListener(new FindPatientDialog.OnItemClickedListener() {
             @Override
             public void onItemClicked(PatientModel patient) {
-                Map<String, String> queryMap = new HashMap<>();
-                queryMap.put("patient_id", patient.getPatientId());
-
-                TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getPaymentsPatientBalances();
-                getWorkflowServiceHelper().execute(transitionDTO, patientBalancesCallback, queryMap);
+                getPatientBalanceDetails(patient);
             }
         });
+    }
+
+    private void getPatientBalanceDetails(PatientModel patient){
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("patient_id", patient.getPatientId());
+
+        TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getPaymentsPatientBalances();
+        getWorkflowServiceHelper().execute(transitionDTO, patientBalancesCallback, queryMap);
+
     }
 
     private WorkflowServiceCallback patientBalancesCallback = new WorkflowServiceCallback() {
@@ -251,7 +260,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 if (paymentsPatientBalancessDTO.getBalances().get(0).getPayload().isEmpty()) {
                     Toast.makeText(getContext(), "Patient has no balance", Toast.LENGTH_LONG).show();
                 } else {
-                    showResponsibilityDialog(paymentsPatientBalancessDTO);
+                    showResponsibilityDialog(patientDetails);
                 }
             } else {
                 Toast.makeText(getContext(), "Patient has no balance", Toast.LENGTH_LONG).show();
@@ -261,6 +270,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
+            SystemUtil.showDefaultFailureDialog(getContext());
         }
     };
 
@@ -322,18 +332,19 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
 
-    private void showResponsibilityDialog(PaymentsPatientBalancessDTO balancessDTO) {
+    private void showResponsibilityDialog(PaymentsModel patientDetails) {
+        PaymentsPatientBalancessDTO balancessDTO = patientDetails.getPaymentPayload().getPatientBalances().get(0);
         new ResponsibilityDialog(
                 getContext(),
                 paymentsLabel.getPracticePaymentsDetailDialogPaymentPlan(),
                 paymentsLabel.getPracticePaymentsDetailDialogPay(),
-                paymentsModel,
+                patientDetails,
                 balancessDTO,
-                getResponsibilityDialogListener(balancessDTO)
+                getResponsibilityDialogListener(patientDetails)
         ).show();
     }
 
-    private ResponsibilityDialog.PayResponsibilityCallback getResponsibilityDialogListener(final PaymentsPatientBalancessDTO patientPayments) {
+    private ResponsibilityDialog.PayResponsibilityCallback getResponsibilityDialogListener(final PaymentsModel patientDetails) {
         return new ResponsibilityDialog.PayResponsibilityCallback() {
             @Override
             public void onLeftActionTapped() {
@@ -342,10 +353,10 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
             @Override
             public void onRightActionTapped(double amount) {
-                if (HttpConstants.getDeviceInformation().getDeviceType().equals("Clover")) {
-                    setCloverPayment(patientPayments);
-                }
-//                onPayButtonClicked(amount);
+//                if (HttpConstants.getDeviceInformation().getDeviceType().equals("Clover")) {
+//                    setCloverPayment(patientPayments);
+//                }
+                onPayButtonClicked(amount, patientDetails);
             }
 
         };
@@ -357,7 +368,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void onPayButtonClicked(double amount/*, PaymentsPatientBalancessDTO patientPayments*/) {
+    public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
         Bundle bundle = new Bundle();
         Gson gson = new Gson();
         String paymentsDTOString = gson.toJson(paymentsModel);
@@ -373,22 +384,22 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void onPaymentMethodAction(String selectedPaymentMethod, double amount) {
-//        if(paymentDTO.getPaymentPayload().getPatientCreditCards()!=null && !paymentDTO.getPaymentPayload().getPatientCreditCards().isEmpty()){
-//            Gson gson = new Gson();
-//            Bundle args = new Bundle();
-//            String paymentsDTOString = gson.toJson(paymentDTO);
-//            args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
-//            args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
-//            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-//            DialogFragment fragment = new ChooseCreditCardFragment();
-//            fragment.setArguments(args);
-////            navigateToFragment(fragment, true);
-//            fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
-//        } else {
-//            showAddCard(amount);
-//        }
-//
+    public void onPaymentMethodAction(String selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
+        if(paymentsModel.getPaymentPayload().getPatientCreditCards()!=null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()){
+            Gson gson = new Gson();
+            Bundle args = new Bundle();
+            String paymentsDTOString = gson.toJson(paymentsModel);
+            args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
+            args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
+            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+
+            DialogFragment fragment = new NoAddChooseCreditCardFragment();
+            fragment.setArguments(args);
+            fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+        } else {
+            //TODO show alert no cards on file
+        }
+
     }
 
     @Override
@@ -412,14 +423,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void showAddCard(double amount) {
-        Gson gson = new Gson();
-        Bundle args = new Bundle();
-        String paymentsDTOString = gson.toJson(paymentsModel);
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
-        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE,  amount);
-        DialogFragment fragment = new AddNewCreditCardFragment();
-        fragment.setArguments(args);
-        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+
     }
 
 
