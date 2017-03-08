@@ -30,6 +30,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.LocationDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
@@ -52,7 +53,8 @@ import java.util.Map;
 public class PracticeAppointmentsActivity extends BasePracticeActivity
         implements FilterDialog.FilterCallBack,
         DateRangePickerDialog.DateRangePickerDialogListener,
-        PracticeAppointmentDialog.PracticeAppointmentDialogListener {
+        PracticeAppointmentDialog.PracticeAppointmentDialogListener,
+        PaymentNavigationCallback {
 
     private FilterModel filter;
 
@@ -113,7 +115,6 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
         patientListView.setCallback(new TwoColumnPatientListView.TwoColumnPatientListViewListener() {
             @Override
             public void onPatientTapped(Object dto) {
-
 
                 showPracticeAppointmentDialog((AppointmentDTO) dto);
             }
@@ -528,4 +529,34 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
             }
         }
     };
+
+    @Override
+    public void startPartialPayment() {
+
+    }
+
+    @Override
+    public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
+
+    }
+
+    @Override
+    public void onPaymentMethodAction(String selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
+
+    }
+
+    @Override
+    public void onPaymentPlanAction() {
+
+    }
+
+    @Override
+    public void showReceipt(PaymentsModel paymentsModel) {
+
+    }
+
+    @Override
+    public void showAddCard(double amount) {
+
+    }
 }
