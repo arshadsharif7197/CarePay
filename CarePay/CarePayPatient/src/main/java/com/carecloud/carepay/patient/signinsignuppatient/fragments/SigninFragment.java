@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.BuildConfig;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -31,8 +32,11 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
+import com.carecloud.carepaylibray.signinsignup.dtos.unifiedauth.UnifiedSignInDTO;
+import com.carecloud.carepaylibray.signinsignup.dtos.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -376,8 +380,27 @@ public class SigninFragment extends BaseFragment {
         String userName = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
-        getCognitoAppHelper().signIn(userName, password, cognitoActionCallback);
+        if(!BuildConfig.useUnifiedAuth) {
+            getCognitoAppHelper().signIn(userName, password, cognitoActionCallback);
+        }else{
+            unifiedSignIn(userName, password);
+        }
 
+    }
+
+    private void unifiedSignIn(String userName, String password){
+        UnifiedSignInUser user = new UnifiedSignInUser();
+        user.setEmail(userName);
+        user.setPassword(password);
+
+        UnifiedSignInDTO signInDTO = new UnifiedSignInDTO();
+        signInDTO.setUser(user);
+
+        TransitionDTO signIn = signInSignUpDTO.getMetadata().getTransitions().getSignIn();
+        if(signInDTO.isValidUser()){
+            Gson gson = new Gson();
+            getWorkflowServiceHelper().execute(signIn, loginCallback, gson.toJson(signInDTO));
+        }
     }
 
     private WorkflowServiceCallback loginCallback = new WorkflowServiceCallback() {
