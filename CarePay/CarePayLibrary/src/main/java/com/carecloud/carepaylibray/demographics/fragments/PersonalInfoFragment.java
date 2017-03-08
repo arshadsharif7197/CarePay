@@ -24,6 +24,7 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.utils.ValidationHelper;
 
 
 /**
@@ -43,6 +44,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         setTypefaces(view);
         formatEditText(view);
         initViewFromModels(view);
+        checkIfEnableButton(view);
         return view;
     }
 
@@ -299,6 +301,57 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         }
     }
 
+    private boolean isPhoneNumberValid(TextInputLayout phoneNumberLabel, EditText phoneNumberEditText) {
+        DemographicMetadataEntityAddressDTO addressMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.address;
+
+        final String phoneError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.phone.validations.get(0).getErrorMessage();
+        final String phoneValidation = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : ((String) addressMetaDTO.properties.phone.validations.get(0).value);
+
+        String phone = phoneNumberEditText.getText().toString();
+            if (!StringUtil.isNullOrEmpty(phone)
+                    && !ValidationHelper.isValidString(phone.trim(), phoneValidation)) {
+                phoneNumberLabel.setErrorEnabled(true);
+                phoneNumberLabel.setError(phoneError);
+                phoneNumberEditText.requestFocus();
+                return false;
+            }
+         phoneNumberLabel.setError(null);
+         phoneNumberLabel.setErrorEnabled(false);
+
+        return true;
+    }
+
+    private boolean isDateOfBirthValid(TextInputLayout doblabel, EditText dobEditText) {
+        DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.personalDetails;
+        final String errorMessage = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.dateOfBirth.validations.get(0).getErrorMessage();
+        String dob = dobEditText.getText().toString();
+        if (!StringUtil.isNullOrEmpty(dob)) {
+            boolean isValid = DateUtil.isValidateStringDateOfBirth(dob);
+            doblabel.setErrorEnabled(!isValid);
+            doblabel.setError(isValid ? null : errorMessage);
+            return isValid;
+        }
+        return true;
+    }
+
+    private boolean checkFormatedFields(View view) {
+        TextInputLayout phoneNumberLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
+        EditText phoneNumberEditText = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
+        boolean isPhoneValid = isPhoneNumberValid(phoneNumberLabel, phoneNumberEditText);
+        if (!isPhoneValid) {
+            phoneNumberEditText.requestFocus();
+            return false;
+        }
+        TextInputLayout doblabel = (TextInputLayout) view.findViewById( R.id.reviewdemogrDOBTextInput);
+        EditText dobEditText = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
+        boolean isdobValid = isDateOfBirthValid(doblabel, dobEditText);
+        if (!isdobValid) {
+            dobEditText.requestFocus();
+            return false;
+        }
+        return true;
+    }
+
     @Override
     protected boolean passConstraints(View view) {
         boolean isPhoneEmpty = checkTextEmptyValue(R.id.reviewgrdemoPhoneNumberEdit, view);
@@ -306,7 +359,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         boolean isLastNameEmpty = checkTextEmptyValue(R.id.reviewdemogrLastNameEdit, view);
         boolean isdobEmpty = checkTextEmptyValue(R.id.revewidemogrDOBEdit, view);
 
-        return !isPhoneEmpty && !isdobEmpty && !isFirstNameEmpty && !isLastNameEmpty;
+        return !isPhoneEmpty && !isdobEmpty && !isFirstNameEmpty && !isLastNameEmpty && checkFormatedFields(view);
     }
 
     @Override
