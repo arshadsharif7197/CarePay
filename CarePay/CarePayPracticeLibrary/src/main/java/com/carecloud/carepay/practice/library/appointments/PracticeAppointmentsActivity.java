@@ -391,7 +391,7 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
 
         @Override
         public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
+            SystemUtil.doDefaultFailureBehavior(getContext(), exceptionMessage);
         }
     };
 

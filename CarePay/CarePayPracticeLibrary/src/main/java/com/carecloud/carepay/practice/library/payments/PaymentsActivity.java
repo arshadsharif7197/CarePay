@@ -164,11 +164,9 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
         for (PaymentsPatientBalancessDTO patientBalances : balances) {
 
-            PatientModel personalDetails
-                    = patientBalances.getDemographics().getPayload().getPersonalDetails();
-            String fullName = personalDetails.getFirstName() + " " + personalDetails.getLastName();
+            PatientModel patientModel = patientBalances.getDemographics().getPayload().getPersonalDetails();
             String patientId = getPatientId(patientBalances);
-            FilterDataDTO filterDataDTO = new FilterDataDTO(patientId, fullName, FilterDataDTO.FilterDataType.PATIENT);
+            FilterDataDTO filterDataDTO = new FilterDataDTO(patientId, patientModel.getFullName(), FilterDataDTO.FilterDataType.PATIENT);
 
             if (patients.indexOf(filterDataDTO) < 0) {
                 patients.add(filterDataDTO);
