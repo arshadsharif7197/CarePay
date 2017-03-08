@@ -413,15 +413,16 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
         int headerColor = R.color.colorPrimary;
         String leftAction = null;
         String rightAction = null;
-        if (appointmentDTO.getPayload().getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
+        AppointmentPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
+        if (appointmentPayloadDTO.getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
             headerColor = R.color.lightningyellow;
             leftAction = checkInLabelDTO.getRejectLabel();
             rightAction = checkInLabelDTO.getAcceptLabel();
 
-        } else if (appointmentDTO.getPayload().isAppointmentOver()) {
+        } else if (appointmentPayloadDTO.isAppointmentOver()) {
             // Doing nothing for now
         } else {
-            leftAction = checkInLabelDTO.getRejectLabel();
+            leftAction = checkInLabelDTO.getCancelAppointmentLabel();
         }
 
         String tag = PracticeAppointmentDialog.class.getSimpleName();
