@@ -2,7 +2,6 @@ package com.carecloud.carepay.practice.library.checkin;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -21,19 +20,19 @@ import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInLabelDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.PendingBalanceDTO;
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibray.payments.models.LocationDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.PatientBalanceDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.PatientDTO;
-import com.carecloud.carepaylibray.payments.models.ProviderDTO;
+import com.carecloud.carepay.practice.library.checkin.dtos.PendingBalanceDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.CustomFilterPopupWindow;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
+import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.models.LocationDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.ProviderDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
@@ -44,7 +43,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-public class CheckInActivity extends BasePracticeActivity implements CustomFilterPopupWindow.FilterCallBack {
+public class CheckInActivity extends BasePracticeActivity implements CustomFilterPopupWindow.FilterCallBack, PaymentNavigationCallback {
 
     private RecyclerView checkinginRecyclerView;
     private RecyclerView waitingRoomRecyclerView;
@@ -521,4 +520,33 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         return this.patientFiltered;
     }
 
+    @Override
+    public void startPartialPayment() {
+
+    }
+
+    @Override
+    public void onPayButtonClicked(double amount) {
+
+    }
+
+    @Override
+    public void onPaymentMethodAction(String selectedPaymentMethod, double amount) {
+
+    }
+
+    @Override
+    public void onPaymentPlanAction() {
+
+    }
+
+    @Override
+    public void showReceipt(PaymentsModel paymentsModel) {
+
+    }
+
+    @Override
+    public void showAddCard(double amount) {
+
+    }
 }

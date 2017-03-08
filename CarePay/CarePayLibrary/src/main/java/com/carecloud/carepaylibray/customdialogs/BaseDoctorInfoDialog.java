@@ -29,11 +29,11 @@ public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener
     private static final String LOG_TAG = BaseDoctorInfoDialog.class.getSimpleName();
 
     public enum AppointmentType {
-        UPCOMING_APPOINTMENT,
-        MISSED_APPOINTMENT,
-        REQUESTED_APPOINTMENT,
-        CANCEL_APPOINTMENT,
-        CANCELLED_APPOINTMENT
+        UPCOMING,
+        MISSED,
+        REQUESTED,
+        CANCEL,
+        CANCELLED
     }
 
     private Context context;

@@ -117,7 +117,7 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
     {
         try
         {
-            PaymentsPatientBalancessDTO patientPayments = paymentsModel.getPaymentPayload().getPatientBalances().get(0);
+            PaymentsPatientBalancessDTO patientPayments = paymentList.get(0);
 
             double paymentAmount = getArguments().getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
             if(paymentAmount==0){
@@ -133,7 +133,7 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
             intent.putExtra(CarePayConstants.CLOVER_PAYMENT_TRANSITION, paymentTransitionString);
 
             List<PaymentLineItem> paymentLineItems = new ArrayList<>();
-            List<PatienceBalanceDTO> balances = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances();
+            List<PatienceBalanceDTO> balances = paymentList.get(0).getBalances();
             for(PatienceBalanceDTO balance : balances) {
 
                 PaymentLineItem paymentLineItem = new PaymentLineItem();

@@ -153,9 +153,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         String shortName = StringUtil.onShortDrName(longName);
         setTextViewById(R.id.appointment_short_name, shortName);
 
-        // TODO: This is not in DTO
-        String visitType = appointmentPayloadDTO.getVisitReasonId().toString();
-        setTextViewById(R.id.appointment_visit_type, visitType);
+        setTextViewById(R.id.appointment_visit_type, appointmentPayloadDTO.getVisitReason().getName());
         setTextViewById(R.id.appointment_visit_type_label, visitTypeLabel);
 
         initializeButtons();

@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.carecloud.carepay.patient.appointments.AppointmentNavigationCallback;
-import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.appointments.adapters.AppointmentsAdapter;
 import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentDialog;
 import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
@@ -39,7 +38,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog;
+import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog.AppointmentType;
 import com.carecloud.carepaylibray.customdialogs.QueueAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -225,42 +224,50 @@ public class AppointmentsListFragment extends BaseFragment {
     private void showAppointmentPopup(AppointmentDTO appointmentDTO) {
 
         AppointmentsPayloadDTO payloadDTO = appointmentDTO.getPayload();
-        AppointmentsActivity.model = appointmentDTO;
 
         String statusCode = payloadDTO.getAppointmentStatusModel().getCode();
-        boolean isCheckedIn = statusCode.equalsIgnoreCase(CarePayConstants.CHECKED_IN);
-        boolean isCanceled = statusCode.equalsIgnoreCase(CarePayConstants.CANCELLED);
-        boolean isRequested = statusCode.equalsIgnoreCase(CarePayConstants.REQUESTED);
 
-        // Missed Appointment
-        if (payloadDTO.isAppointmentOver() && !isCheckedIn) {
-            new CancelAppointmentDialog(getContext(), appointmentDTO, appointmentInfo,
-                    BaseDoctorInfoDialog.AppointmentType.MISSED_APPOINTMENT, getCancelAppointmentDialogListener()).show();
+        switch (statusCode) {
+            case CarePayConstants.CHECKED_IN:
+                new QueueAppointmentDialog(getContext(), appointmentDTO, appointmentLabels).show();
 
-        } else if (isCheckedIn) {
-            // Checked-In Appointment
-            new QueueAppointmentDialog(getContext(), appointmentDTO, appointmentLabels).show();
+                break;
 
-        } else if (isCanceled) {
-            // Cancelled Appointment
-            new CancelAppointmentDialog(getContext(), appointmentDTO, appointmentInfo,
-                    BaseDoctorInfoDialog.AppointmentType.CANCELLED_APPOINTMENT, getCancelAppointmentDialogListener()).show();
+            case CarePayConstants.CANCELLED:
+                new CancelAppointmentDialog(getContext(), appointmentDTO, appointmentInfo,
+                        AppointmentType.CANCELLED, getCancelAppointmentDialogListener()).show();
 
-        } else if (!payloadDTO.hasAppointmentStarted() && isAppointmentCancellable(appointmentDTO)) {
-            // Appointment as long as it's 24 hours or more in the future
-            new CancelAppointmentDialog(getContext(), appointmentDTO, appointmentInfo,
-                    BaseDoctorInfoDialog.AppointmentType.CANCEL_APPOINTMENT,
-                    getCancelAppointmentDialogListener()).show();
+                break;
 
-        } else if (isRequested) {
-            // Requested Appointment
-            new CancelAppointmentDialog(getContext(), appointmentDTO, appointmentInfo,
-                    BaseDoctorInfoDialog.AppointmentType.REQUESTED_APPOINTMENT, getCancelAppointmentDialogListener()).show();
+            case CarePayConstants.REQUESTED:
+                new CancelAppointmentDialog(getContext(), appointmentDTO, appointmentInfo,
+                        AppointmentType.REQUESTED, getCancelAppointmentDialogListener()).show();
 
-        } else {
-            new CheckInOfficeNowAppointmentDialog(getContext(), appointmentDTO, appointmentInfo, getCheckInOfficeNowAppointmentDialogListener()).show();
+                break;
+
+            default:
+
+                // Missed Appointment
+                if (payloadDTO.isAppointmentOver()) {
+
+                    new CancelAppointmentDialog(getContext(), appointmentDTO, appointmentInfo,
+                            AppointmentType.MISSED, getCancelAppointmentDialogListener()).show();
+
+                } else if (payloadDTO.canCheckInNow(appointmentInfo)) {
+
+                    new CheckInOfficeNowAppointmentDialog(getContext(), appointmentDTO, appointmentInfo, getCheckInOfficeNowAppointmentDialogListener()).show();
+
+                } else if (isAppointmentCancellable(appointmentDTO)) {
+
+                    new CancelAppointmentDialog(getContext(), appointmentDTO, appointmentInfo,
+                            AppointmentType.CANCEL,
+                            getCancelAppointmentDialogListener()).show();
+
+                } else {
+
+                    new CheckInOfficeNowAppointmentDialog(getContext(), appointmentDTO, appointmentInfo, getCheckInOfficeNowAppointmentDialogListener()).show();
+                }
         }
-
     }
 
     private CheckInOfficeNowAppointmentDialog.CheckInOfficeNowAppointmentDialogListener getCheckInOfficeNowAppointmentDialogListener() {
@@ -431,6 +438,7 @@ public class AppointmentsListFragment extends BaseFragment {
                 return true;
             }
         }
+
         return false;
     }
 

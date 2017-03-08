@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.adapter.PaymentMethodAdapter;
@@ -25,6 +25,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ import java.util.List;
  * Created by lmenendez on 2/27/17.
  */
 
-public abstract class PaymentMethodFragment extends BaseFragment /*implements RadioGroup.OnCheckedChangeListener*/ {
+public abstract class PaymentMethodFragment extends BaseDialogFragment {
 
     public static final String TAG = PaymentMethodFragment.class.getSimpleName();
 
@@ -46,6 +47,7 @@ public abstract class PaymentMethodFragment extends BaseFragment /*implements Ra
     private ListView paymentMethodList;
 
     protected PaymentsModel paymentsModel;
+    protected List<PaymentsPatientBalancessDTO> paymentList = new ArrayList<>();
     protected List<PaymentsMethodsDTO> paymentMethodsList = new ArrayList<>();
     protected String selectedPaymentMethod;
     protected HashMap<String, Integer> paymentTypeMap;
@@ -83,7 +85,11 @@ public abstract class PaymentMethodFragment extends BaseFragment /*implements Ra
             Gson gson = new Gson();
             String paymentInfo = bundle.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
             paymentsModel = gson.fromJson(paymentInfo, PaymentsModel.class);
-            paymentMethodsList = paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getRegularPayments().getPaymentMethods();//todo need to lookup appropriate settings for prctice id on selected balance
+            if(!paymentsModel.getPaymentPayload().getPaymentSettings().isEmpty()) {
+                paymentMethodsList = paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getRegularPayments().getPaymentMethods();//todo need to lookup appropriate settings for prctice id on selected balance
+            }
+            paymentList = paymentsModel.getPaymentPayload().getPatientBalances();
+
             getLabels();
         }
 
@@ -209,9 +215,8 @@ public abstract class PaymentMethodFragment extends BaseFragment /*implements Ra
 
                 double previousBalance = 0;
                 double coPay = 0;
-                List<PaymentPatientBalancesPayloadDTO> paymentList = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getPayload();
 
-                for (PaymentPatientBalancesPayloadDTO payment : paymentList) {
+                for (PaymentPatientBalancesPayloadDTO payment : paymentList.get(0).getPayload()) {
                     if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PREVIOUS_BALANCE)) {
                         previousBalance = Double.parseDouble(payment.getTotal());
                     } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {

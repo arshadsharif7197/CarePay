@@ -15,6 +15,7 @@ import android.view.Window;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
@@ -27,6 +28,7 @@ import com.carecloud.carepay.practice.library.checkin.dtos.PendingBalanceDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.QueryStrings;
 import com.carecloud.carepay.practice.library.checkin.dtos.QueueDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.QueueStatusPayloadDTO;
+import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -34,8 +36,12 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -81,6 +87,9 @@ public class AppointmentDetailDialog extends Dialog {
     private boolean isWaitingRoom;
     private Vector<CheckBox> checkBoxes = new Vector<>();
 
+    private ISession sessionHandler;
+    private PaymentNavigationCallback paymentNavigationCallback;
+
     /**
      * Constructor.
      *
@@ -94,6 +103,22 @@ public class AppointmentDetailDialog extends Dialog {
         this.pendingBalanceDTO = pendingBalanceDTO;
         this.appointmentPayloadDTO = payloadDTO;
         this.isWaitingRoom = isWaitingRoom;
+
+        setHandlersAndListeners();
+    }
+
+    private void setHandlersAndListeners(){
+        try{
+            sessionHandler = (ISession) context;
+        }catch (ClassCastException cce){
+            throw new ClassCastException("Provided context must be an instance of ISession");
+        }
+
+        try{
+            paymentNavigationCallback = (PaymentNavigationCallback) context;
+        }catch (ClassCastException cce){
+            throw new ClassCastException("Provided context must implement PaymentNavigationCallback");
+        }
     }
 
     /**
@@ -116,7 +141,7 @@ public class AppointmentDetailDialog extends Dialog {
         onSetValuesFromDTO();
         onSettingStyle();
 
-        if (balanceValueLabel.getText().toString().trim().equalsIgnoreCase(CarePayConstants.ZERO_BALANCE)) {
+        if (getPatientBalance() == 0) {
 //            paymentButton.setVisibility(View.GONE);
             paymentButton.setEnabled(false);
         }
@@ -260,15 +285,7 @@ public class AppointmentDetailDialog extends Dialog {
     private View.OnClickListener paymentActionListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-//            new ResponsibilityDialog(
-//                    getContext(),
-//                    checkInLabelDTO.getPracticePaymentsDetailDialogPaymentPlan(),
-//                    checkInDTO.getPracticePaymentsDetailDialogPay(),
-//                    paymentsModel,
-//                    balancessDTO,
-//                    getResponsibilityDialogListener(balancessDTO)
-//            ).show();
-//
+            getPatientBalanceDetails();
         }
     };
 
@@ -486,4 +503,76 @@ public class AppointmentDetailDialog extends Dialog {
                 return number + sufixes[number % 10];
         }
     }
+
+    private void getPatientBalanceDetails(){
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("patient_id", appointmentPayloadDTO.getPatient().getId());
+
+        TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getPatientBalances();
+        sessionHandler.getWorkflowServiceHelper().execute(transitionDTO, patientBalancesCallback, queryMap);
+
+    }
+
+
+    private WorkflowServiceCallback patientBalancesCallback = new WorkflowServiceCallback() {
+
+        @Override
+        public void onPreExecute() {
+            sessionHandler.showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            sessionHandler.hideProgressDialog();
+
+            PaymentsModel patientDetails = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
+            if (patientDetails != null && patientDetails.getPaymentPayload().getPatientBalances() != null
+                    && !patientDetails.getPaymentPayload().getPatientBalances().isEmpty()) {
+
+                PaymentsPatientBalancessDTO paymentsPatientBalancessDTO = patientDetails.getPaymentPayload().getPatientBalances().get(0);
+                if (paymentsPatientBalancessDTO.getBalances().get(0).getPayload().isEmpty()) {
+                    Toast.makeText(getContext(), "Patient has no balance", Toast.LENGTH_LONG).show();
+                } else {
+                    showResponsibilityDialog(paymentsPatientBalancessDTO, patientDetails);
+                    cancel();
+                }
+            } else {
+                Toast.makeText(getContext(), "Patient has no balance", Toast.LENGTH_LONG).show();
+            }
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            sessionHandler.hideProgressDialog();
+            SystemUtil.showDefaultFailureDialog(context);
+        }
+    };
+
+
+    private void showResponsibilityDialog(PaymentsPatientBalancessDTO paymentsPatientBalancessDTO, PaymentsModel paymentsModel){
+        new ResponsibilityDialog(
+                context,
+                paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPracticePaymentsDetailDialogPaymentPlan(),
+                paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPracticePaymentsDetailDialogPay(),
+                paymentsModel,
+                paymentsPatientBalancessDTO,
+                getResponsibilityCallback(paymentsPatientBalancessDTO)
+        ).show();
+
+    }
+
+    private ResponsibilityDialog.PayResponsibilityCallback getResponsibilityCallback(final PaymentsPatientBalancessDTO paymentsPatientBalancessDTO){
+        return new ResponsibilityDialog.PayResponsibilityCallback() {
+            @Override
+            public void onLeftActionTapped() {
+
+            }
+
+            @Override
+            public void onRightActionTapped(double amount) {
+                paymentNavigationCallback.onPayButtonClicked(amount);
+            }
+        };
+    }
+
 }

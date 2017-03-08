@@ -19,6 +19,7 @@ import com.carecloud.carepay.practice.library.models.MapFilterModel;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.payments.models.LocationIndexDTO;
 import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -29,6 +30,8 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Picasso;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -38,8 +41,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import org.joda.time.DateTime;
 
 /**
  * Created by cocampo on 2/10/17.
@@ -247,10 +248,11 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private void loadPatients(PaymentsModel paymentsModel) {
         List<PaymentsPatientBalancessDTO> dtoList = paymentsModel.getPaymentPayload().getPatientBalances();
         Map<String, ProviderIndexDTO> providerMap = getProviderMap(paymentsModel.getPaymentPayload().getProviderIndex());
+        Map<String, LocationIndexDTO> locationMap = getLocationMap(paymentsModel.getPaymentPayload().getLocationIndex());
         this.allPatients = new ArrayList<>(dtoList.size());
 
         for (PaymentsPatientBalancessDTO dto : dtoList) {
-            createPatient(providerMap, dto);
+            createPatient(providerMap, locationMap, dto);
         }
     }
 
@@ -267,13 +269,14 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         });
     }
 
-    private void createPatient(Map<String, ProviderIndexDTO> providerMap, PaymentsPatientBalancessDTO dto) {
+    private void createPatient(Map<String, ProviderIndexDTO> providerMap, Map<String, LocationIndexDTO> locationMap, PaymentsPatientBalancessDTO dto) {
         List<PatienceBalanceDTO> patientBalances = dto.getBalances();
         double balance = getBalance(patientBalances);
         String patientId = patientBalances.get(0).getMetadata().getPatientId();
         ProviderIndexDTO provider = providerMap.get(patientId);
+        LocationIndexDTO location = locationMap.get(patientId);
         PatientModel personalDetails = dto.getDemographics().getPayload().getPersonalDetails();
-        allPatients.add(new Patient(dto, patientId, provider, balance, personalDetails));
+        allPatients.add(new Patient(dto, patientId, provider, location, balance, personalDetails));
     }
 
     private double getBalance(List<PatienceBalanceDTO> balances) {
@@ -292,11 +295,25 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private Map<String, ProviderIndexDTO> getProviderMap(List<ProviderIndexDTO> providerIndex) {
         Map<String, ProviderIndexDTO> map = new HashMap<>();
 
-        for (ProviderIndexDTO providerIndexDTO : providerIndex) {
-            List<String> patientIds = providerIndexDTO.getPatientIds();
+        for (ProviderIndexDTO indexDTO : providerIndex) {
+            List<String> patientIds = indexDTO.getPatientIds();
 
             for (String patientId : patientIds) {
-                map.put(patientId, providerIndexDTO);
+                map.put(patientId, indexDTO);
+            }
+        }
+
+        return map;
+    }
+
+    private Map<String, LocationIndexDTO> getLocationMap(List<LocationIndexDTO> locationIndex) {
+        Map<String, LocationIndexDTO> map = new HashMap<>();
+
+        for (LocationIndexDTO indexDTO: locationIndex) {
+            List<String> patientIds = indexDTO.getPatientIds();
+
+            for (String patientId : patientIds) {
+                map.put(patientId, indexDTO);
             }
         }
 
@@ -407,7 +424,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         private Boolean isAppointmentOver;
         private Boolean isRequested;
 
-        public Patient(Object raw, String id, ProviderIndexDTO provider, double balance, PatientModel dto) {
+        public Patient(Object raw, String id, ProviderIndexDTO provider, LocationIndexDTO location, double balance, PatientModel dto) {
             this.raw = raw;
             this.id = id;
             this.name = dto.getFirstName() + " " + dto.getLastName();
@@ -416,6 +433,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             this.providerName = StringUtil.getLabelForView(provider.getName());
             this.providerId = provider.getId();
             this.balance = String.format(Locale.getDefault(), "$%.2f", balance);
+            this.locationId = location.getId();
             this.isRequested = false;
         }
 
