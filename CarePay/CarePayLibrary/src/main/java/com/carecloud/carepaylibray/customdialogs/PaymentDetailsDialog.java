@@ -31,6 +31,7 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
     private PatiencePayloadDTO paymentPayload;
     private PaymentNavigationCallback callback;
     private double size;
+    private OnDismissListener payDismissListener;
 
     /**
      * Constructor.
@@ -39,13 +40,17 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
      * @param paymentPayload model
      * @param callback       callback
      */
-    public PaymentDetailsDialog(Context context, PaymentsModel paymentReceiptModel,
-                                PatiencePayloadDTO paymentPayload, PaymentNavigationCallback callback) {
+    public PaymentDetailsDialog(Context context,
+                                PaymentsModel paymentReceiptModel,
+                                PatiencePayloadDTO paymentPayload,
+                                PaymentNavigationCallback callback,
+                                OnDismissListener payDismissListener) {
         super(context);
         this.context = context;
         this.paymentReceiptModel = paymentReceiptModel;
         this.paymentPayload = paymentPayload;
         this.callback = callback;
+        this.payDismissListener = payDismissListener;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -57,10 +62,12 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
         onInitialization();
         setCancelable(false);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        WindowManager.LayoutParams params = getWindow().getAttributes();
-        params.height =WindowManager.LayoutParams.WRAP_CONTENT;
-        params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * size);
-        getWindow().setAttributes(params);
+        if(size>0) {
+            WindowManager.LayoutParams params = getWindow().getAttributes();
+            params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * size);
+            getWindow().setAttributes(params);
+        }
     }
 
     private void onInitialization() {
@@ -83,26 +90,33 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
                 ImageView dialogCloseHeader;
                 TextView closeLabel;
 
-                if (((IApplicationSession) context).getApplicationMode().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)) {
+                ApplicationMode.ApplicationType appMode = ((IApplicationSession) context).getApplicationMode().getApplicationType();
+                if (appMode ==  ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE || appMode == ApplicationMode.ApplicationType.PRACTICE) {
 
                     dialogCloseHeader = (ImageView) findViewById(R.id.payment_close_button);
-                    dialogCloseHeader.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            dismiss();
-                        }
-                    });
+                    if(dialogCloseHeader!=null) {
+                        dialogCloseHeader.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                dismiss();
+                            }
+                        });
 
-                    closeLabel = ((TextView) findViewById(R.id.payment_close_label));
-                    closeLabel.setText(paymentsLabel.getPaymentCloseButton());
-                    findViewById(R.id.payment_close_Layout).setVisibility(View.VISIBLE);
-                    size = 0.53;
+                        findViewById(R.id.payment_close_Layout).setVisibility(View.VISIBLE);
+                    }
                 } else {
                     dialogCloseHeader = (ImageView) findViewById(R.id.dialog_close_header);
-                    dialogCloseHeader.setVisibility(View.VISIBLE);
-                    dialogCloseHeader.setOnClickListener(this);
+                    if(dialogCloseHeader!=null) {
+                        dialogCloseHeader.setVisibility(View.VISIBLE);
+                        dialogCloseHeader.setOnClickListener(this);
+                    }
                     size = 0.90;
                 }
+
+
+
+
+
             }
         }
 
@@ -119,8 +133,11 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
         if (viewId == R.id.dialog_close_header) {
             cancel();
         } else if (viewId == R.id.payment_details_pay_now_button) {
-            callback.onPayButtonClicked(paymentPayload.getAmount());
+            callback.onPayButtonClicked(paymentPayload.getAmount(), paymentReceiptModel);
             dismiss();
+            if(payDismissListener!=null){
+                payDismissListener.onDismiss(this);
+            }
         }
     }
 
