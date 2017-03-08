@@ -65,7 +65,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
             showDialog(
                     getOptionsFrom(persDetailsMetaDTO.properties.gender.options) ,
                     globalLabelsMetaDTO.getDemographicsTitleSelectGender(),
-                    "Cancel",
+                    globalLabelsMetaDTO.getDemographicsCancelLabel(),
                     (TextView) findViewById(R.id.chooseGenderTextView));
         }
     };
@@ -74,10 +74,10 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
         public void onClick(View view) {
 
             showDialog(
-                    getOptionsFrom(persDetailsMetaDTO.properties.gender.options) ,
-                    globalLabelsMetaDTO.getDemographicsTitleSelectGender(),
-                    "Cancel",
-                    (TextView) findViewById(R.id.chooseGenderTextView));
+                    getOptionsFrom(persDetailsMetaDTO.properties.primaryRace.options) ,
+                    globalLabelsMetaDTO.getDemographicsTitleSelectRace(),
+                    globalLabelsMetaDTO.getDemographicsCancelLabel(),
+                    (TextView) findViewById(R.id.raceListDataTextView));
         }
     };
     private View.OnClickListener ethnicityListener = new View.OnClickListener(){
@@ -87,7 +87,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
             showDialog(
                     getOptionsFrom(persDetailsMetaDTO.properties.ethnicity.options) ,
                     globalLabelsMetaDTO.getDemographicsTitleSelectEthnicity(),
-                    "Cancel",
+                    globalLabelsMetaDTO.getDemographicsCancelLabel(),
                     (TextView) findViewById(R.id.ethnicityListDataTextView));
         }
     };
@@ -117,6 +117,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
         //formatEditText(view);
 
         initUiFromModels(mainView);
+
+        checkIfEnableButton(mainView);
         /*
 
          initialiseUIFields(view);
@@ -133,7 +135,6 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
 
 
     public void setTypefaces(View view){
-
 
         setProximaNovaRegularTypeface(getActivity(), ((TextView) view.findViewById(R.id.raceDataTextView)));
         setProximaNovaSemiboldTypeface(getActivity(), ((TextView) view.findViewById(R.id.raceListDataTextView)));
@@ -204,8 +205,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
 
         //globalLabelsMetaDTO.getDemographicsAddressHeader()
         setHeaderTitle("Demographics", view);
-
-       // initNextButton(globalLabelsMetaDTO.getDemographicsReviewNextButton(), null, view);
+        initNextButton(globalLabelsMetaDTO.getDemographicsReviewNextButton(), null, view);
 
         ((TextView) view.findViewById(R.id.raceListDataTextView)).setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
         ((TextView) view.findViewById(R.id.raceDataTextView)).setText(persDetailsMetaDTO.properties.primaryRace.getLabel());
