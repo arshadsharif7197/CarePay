@@ -50,6 +50,7 @@
                     android:layout_marginTop="@dimen/dimen_20dp"
                     android:checked="false"
                     android:layout_marginEnd="15dp"
+                    android:textSize="@dimen/dimen_16dp"
                     android:theme="@style/HaveHealthInsurance"
                     />
 

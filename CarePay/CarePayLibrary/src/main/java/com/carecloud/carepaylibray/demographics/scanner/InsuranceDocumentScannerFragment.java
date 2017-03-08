@@ -119,7 +119,7 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.demographics_review_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.demographics_review_toolbar_title);
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
-        title.setText(globalLabelsDTO.getDemographicsInsuranceTitle().toUpperCase());
+        title.setText(globalLabelsDTO.getDemographicsInsuranceTitle());
         toolbar.setTitle("");
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
