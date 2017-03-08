@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -138,12 +139,14 @@ public class HealthInsuranceFragment extends BaseFragment {
     private void initSwitch(View view) {
         final LinearLayout setupInsuranceHolders = (LinearLayout) view.findViewById(R.id.setupInsuranceHolders);
         final SwitchCompat doYouHaveInsuranceSwitch = (SwitchCompat) view.findViewById(R.id.demographicsInsuranceSwitch);
+        final View setupDivider = view.findViewById(R.id.setupDivider);
         getChildFragmentManager().executePendingTransactions();
 
         doYouHaveInsuranceSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
                 setupInsuranceHolders.setVisibility(on ? View.VISIBLE : View.GONE);
+                setupDivider.setVisibility(on ? View.VISIBLE : View.GONE);
                 documentCallback.disableMainButton(on);
             }
         });

@@ -95,7 +95,6 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
 
         // create the view
         view = inflater.inflate(R.layout.fragment_demographics_scan_insurance, container, false);
-        Log.d("OLD","OLD");
 
         initializeUIFields();
 
