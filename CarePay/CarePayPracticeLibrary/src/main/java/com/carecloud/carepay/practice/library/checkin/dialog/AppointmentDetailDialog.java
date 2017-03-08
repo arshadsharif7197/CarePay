@@ -547,12 +547,12 @@ public class AppointmentDetailDialog extends Dialog {
                 paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPracticePaymentsDetailDialogPay(),
                 paymentsModel,
                 paymentsPatientBalancessDTO,
-                getResponsibilityCallback(paymentsPatientBalancessDTO)
+                getResponsibilityCallback(paymentsModel)
         ).show();
 
     }
 
-    private ResponsibilityDialog.PayResponsibilityCallback getResponsibilityCallback(final PaymentsPatientBalancessDTO paymentsPatientBalancessDTO){
+    private ResponsibilityDialog.PayResponsibilityCallback getResponsibilityCallback(final PaymentsModel paymentsModel){
         return new ResponsibilityDialog.PayResponsibilityCallback() {
             @Override
             public void onLeftActionTapped() {
@@ -561,7 +561,7 @@ public class AppointmentDetailDialog extends Dialog {
 
             @Override
             public void onRightActionTapped(double amount) {
-                paymentNavigationCallback.onPayButtonClicked(amount);
+                paymentNavigationCallback.onPayButtonClicked(amount, paymentsModel);
             }
         };
     }

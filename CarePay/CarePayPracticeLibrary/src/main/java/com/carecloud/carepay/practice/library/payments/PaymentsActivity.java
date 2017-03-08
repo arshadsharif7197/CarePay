@@ -357,7 +357,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void onPayButtonClicked(double amount/*, PaymentsPatientBalancessDTO patientPayments*/) {
+    public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
         Bundle bundle = new Bundle();
         Gson gson = new Gson();
         String paymentsDTOString = gson.toJson(paymentsModel);
@@ -373,7 +373,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void onPaymentMethodAction(String selectedPaymentMethod, double amount) {
+    public void onPaymentMethodAction(String selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
 //        if(paymentDTO.getPaymentPayload().getPatientCreditCards()!=null && !paymentDTO.getPaymentPayload().getPatientCreditCards().isEmpty()){
 //            Gson gson = new Gson();
 //            Bundle args = new Bundle();

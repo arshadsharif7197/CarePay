@@ -119,7 +119,7 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
         if (viewId == R.id.dialog_close_header) {
             cancel();
         } else if (viewId == R.id.payment_details_pay_now_button) {
-            callback.onPayButtonClicked(paymentPayload.getAmount());
+            callback.onPayButtonClicked(paymentPayload.getAmount(), paymentReceiptModel);
             dismiss();
         }
     }

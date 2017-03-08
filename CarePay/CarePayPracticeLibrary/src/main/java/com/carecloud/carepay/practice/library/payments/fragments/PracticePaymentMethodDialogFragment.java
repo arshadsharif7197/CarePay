@@ -19,4 +19,10 @@ public class PracticePaymentMethodDialogFragment extends PracticePaymentMethodFr
 
     }
 
+    @Override
+    protected void handlePaymentButton(String type, double amount){
+        super.handlePaymentButton(type, amount);
+        dismiss();
+    }
+
 }
