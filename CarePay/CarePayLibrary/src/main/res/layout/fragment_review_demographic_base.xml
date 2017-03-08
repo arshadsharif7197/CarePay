@@ -7,25 +7,34 @@
     android:background="@android:color/white"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/checkinDemographicsHeaderLayout"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginStart="@dimen/dimen_10dp"
-        android:layout_marginTop="@dimen/dimen_20dp"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:paddingTop="@dimen/dimen_10dp"
+        android:foregroundGravity="center_horizontal">
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/checkinDemographicsHeaderLabel"
+    <include layout="@layout/toolbar_no_title"
+        android:id="@+id/toolbar_layout"/>
+        <LinearLayout
+            android:id="@+id/checkinDemographicsHeaderLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/dimen_10dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
             android:gravity="center"
-            android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/text_size_22"
-            app:customAssetFont="gotham_rounded_medium" />
-    </LinearLayout>
+            android:orientation="vertical">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/checkinDemographicsHeaderLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_30"
+                app:customAssetFont="gotham_rounded_medium" />
+        </LinearLayout>
+   </FrameLayout>
 
     <com.marcok.stepprogressbar.StepProgressBar
         android:id="@+id/stepProgressBarCheckin"

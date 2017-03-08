@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +44,28 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         stepProgressBar.setCumulativeDots(true);
         stepProgressBar.setNumDots(5);
         inflateContent(inflater,view);
+        //initializeToolbar(view);
+        inflateToolbarViews(view);
         return view;
+    }
+
+
+    private void inflateToolbarViews(View view){
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        if(toolbar == null) {
+            return;
+        }
+        toolbar.setTitle("");
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.icn_nav_back));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+                stepProgressBar.setCurrentProgressDot(1);
+            }
+        });
+
+        (view.findViewById(R.id.toolbar_layout)).setVisibility(View.INVISIBLE);
     }
 
     protected boolean checkTextEmptyValue( int textEditableId, View view) {
@@ -60,6 +82,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         TextView textView = (TextView) view.findViewById(R.id.checkinDemographicsHeaderLabel);
         textView.setText(title);
         SystemUtil.setGothamRoundedMediumTypeface(getContext(), textView);
+        (view.findViewById(R.id.toolbar_layout)).setVisibility(checkInNavListener.getCurrentStep()>1 ?View.VISIBLE:View.INVISIBLE);
         stepProgressBar.setCurrentProgressDot(checkInNavListener.getCurrentStep()-1);
     }
 
@@ -72,9 +95,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                 public void onClick(View v) {
                     if(passConstraints(view)) {
                         DemographicDTO demographicDTO = updateDemographicDTO(view);
-
-                        openNextFragment(demographicDTO, (checkInNavListener.getCurrentStep() + 1)>3);
-
+                        openNextFragment(demographicDTO, (checkInNavListener.getCurrentStep() + 1)>4);
                     }
                 }
             };
