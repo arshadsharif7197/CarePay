@@ -427,7 +427,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public Patient(Object raw, String id, ProviderIndexDTO provider, LocationIndexDTO location, double balance, PatientModel dto) {
             this.raw = raw;
             this.id = id;
-            this.name = dto.getFirstName() + " " + dto.getLastName();
+            this.name = dto.getFullName();
             this.initials = StringUtil.onShortDrName(name);
             this.photoUrl = dto.getProfilePhoto();
             this.providerName = StringUtil.getLabelForView(provider.getName());
@@ -441,8 +441,8 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             this.raw = raw;
             PatientDTO patientModel = dto.getPatient();
             this.id = patientModel.getId();
-            this.name = patientModel.getFirstName() + " " + patientModel.getLastName();
-            this.initials = StringUtil.onShortDrName(patientModel.getFirstName() + " " + patientModel.getLastName());
+            this.name = patientModel.getFullName();
+            this.initials = StringUtil.onShortDrName(this.name);
             this.providerId = dto.getProvider().getId().toString();
             this.providerName = dto.getProvider().getName();
             this.appointmentStartTime = DateUtil.getInstance().setDateRaw(dto.getStartTime()).getDate();
