@@ -60,7 +60,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         TextView textView = (TextView) view.findViewById(R.id.checkinDemographicsHeaderLabel);
         textView.setText(title);
         SystemUtil.setGothamRoundedMediumTypeface(getContext(), textView);
-        stepProgressBar.next();
+        stepProgressBar.setCurrentProgressDot(checkInNavListener.getCurrentStep()-1);
     }
 
     protected void initNextButton(String label, View.OnClickListener listener, final View view){
