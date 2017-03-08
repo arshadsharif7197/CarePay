@@ -20,6 +20,18 @@ public class SignInSignUpTransitionsDTO {
     @Expose
     private TransitionDTO language = new TransitionDTO();
 
+    @SerializedName("sign_up")
+    @Expose
+    private TransitionDTO signUp = new TransitionDTO();
+
+    @SerializedName("sign_in")
+    @Expose
+    private TransitionDTO signIn = new TransitionDTO();
+
+    @SerializedName("refresh")
+    @Expose
+    private TransitionDTO refresh = new TransitionDTO();
+
     /**
      *
      * @return
@@ -44,5 +56,29 @@ public class SignInSignUpTransitionsDTO {
 
     public void setLanguage(TransitionDTO language) {
         this.language = language;
+    }
+
+    public TransitionDTO getSignUp() {
+        return signUp;
+    }
+
+    public void setSignUp(TransitionDTO signUp) {
+        this.signUp = signUp;
+    }
+
+    public TransitionDTO getSignIn() {
+        return signIn;
+    }
+
+    public void setSignIn(TransitionDTO signIn) {
+        this.signIn = signIn;
+    }
+
+    public TransitionDTO getRefresh() {
+        return refresh;
+    }
+
+    public void setRefresh(TransitionDTO refresh) {
+        this.refresh = refresh;
     }
 }
