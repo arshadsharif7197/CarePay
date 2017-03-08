@@ -17,16 +17,15 @@ import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepay.practice.library.payments.dialogs.FindPatientDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityDialog;
+import com.carecloud.carepay.practice.library.payments.fragments.NoAddChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentPlanFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.models.LocationDTO;
 import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
@@ -342,10 +341,10 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
             @Override
             public void onRightActionTapped(double amount) {
-                if (HttpConstants.getDeviceInformation().getDeviceType().equals("Clover")) {
-                    setCloverPayment(patientPayments);
-                }
-//                onPayButtonClicked(amount);
+//                if (HttpConstants.getDeviceInformation().getDeviceType().equals("Clover")) {
+//                    setCloverPayment(patientPayments);
+//                }
+                onPayButtonClicked(amount, paymentsModel);
             }
 
         };
@@ -374,21 +373,21 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void onPaymentMethodAction(String selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
-//        if(paymentDTO.getPaymentPayload().getPatientCreditCards()!=null && !paymentDTO.getPaymentPayload().getPatientCreditCards().isEmpty()){
-//            Gson gson = new Gson();
-//            Bundle args = new Bundle();
-//            String paymentsDTOString = gson.toJson(paymentDTO);
-//            args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
-//            args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
-//            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-//            DialogFragment fragment = new ChooseCreditCardFragment();
-//            fragment.setArguments(args);
-////            navigateToFragment(fragment, true);
-//            fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
-//        } else {
-//            showAddCard(amount);
-//        }
-//
+        if(paymentsModel.getPaymentPayload().getPatientCreditCards()!=null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()){
+            Gson gson = new Gson();
+            Bundle args = new Bundle();
+            String paymentsDTOString = gson.toJson(paymentsModel);
+            args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
+            args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
+            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+
+            DialogFragment fragment = new NoAddChooseCreditCardFragment();
+            fragment.setArguments(args);
+            fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+        } else {
+            //TODO show alert no cards on file
+        }
+
     }
 
     @Override
@@ -412,14 +411,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void showAddCard(double amount) {
-        Gson gson = new Gson();
-        Bundle args = new Bundle();
-        String paymentsDTOString = gson.toJson(paymentsModel);
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
-        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE,  amount);
-        DialogFragment fragment = new AddNewCreditCardFragment();
-        fragment.setArguments(args);
-        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+
     }
 
 
