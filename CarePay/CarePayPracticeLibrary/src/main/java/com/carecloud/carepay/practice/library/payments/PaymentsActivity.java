@@ -38,6 +38,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItemMeta
 import com.carecloud.carepaylibray.payments.models.updatebalance.PaymentUpdateBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -127,7 +128,13 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         patientListView.setCallback(new TwoColumnPatientListView.TwoColumnPatientListViewListener() {
             @Override
             public void onPatientTapped(Object dto) {
-                showResponsibilityDialog((PaymentsPatientBalancessDTO) dto);
+                PaymentsPatientBalancessDTO balancessDTO = (PaymentsPatientBalancessDTO) dto;
+                PatientModel patient = new PatientModel();
+                patient.setPatientId(balancessDTO.getBalances().get(0).getMetadata().getPatientId());
+
+                getPatientBalanceDetails(patient);
+
+//                showResponsibilityDialog((PaymentsPatientBalancessDTO) dto);
             }
         });
     }
@@ -222,13 +229,18 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         findPatientDialog.setClickedListener(new FindPatientDialog.OnItemClickedListener() {
             @Override
             public void onItemClicked(PatientModel patient) {
-                Map<String, String> queryMap = new HashMap<>();
-                queryMap.put("patient_id", patient.getPatientId());
-
-                TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getPaymentsPatientBalances();
-                getWorkflowServiceHelper().execute(transitionDTO, patientBalancesCallback, queryMap);
+                getPatientBalanceDetails(patient);
             }
         });
+    }
+
+    private void getPatientBalanceDetails(PatientModel patient){
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("patient_id", patient.getPatientId());
+
+        TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getPaymentsPatientBalances();
+        getWorkflowServiceHelper().execute(transitionDTO, patientBalancesCallback, queryMap);
+
     }
 
     private WorkflowServiceCallback patientBalancesCallback = new WorkflowServiceCallback() {
@@ -250,7 +262,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 if (paymentsPatientBalancessDTO.getBalances().get(0).getPayload().isEmpty()) {
                     Toast.makeText(getContext(), "Patient has no balance", Toast.LENGTH_LONG).show();
                 } else {
-                    showResponsibilityDialog(paymentsPatientBalancessDTO);
+                    showResponsibilityDialog(patientDetails);
                 }
             } else {
                 Toast.makeText(getContext(), "Patient has no balance", Toast.LENGTH_LONG).show();
@@ -260,6 +272,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
+            SystemUtil.showDefaultFailureDialog(getContext());
         }
     };
 
@@ -321,18 +334,19 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
 
-    private void showResponsibilityDialog(PaymentsPatientBalancessDTO balancessDTO) {
+    private void showResponsibilityDialog(PaymentsModel patientDetails) {
+        PaymentsPatientBalancessDTO balancessDTO = patientDetails.getPaymentPayload().getPatientBalances().get(0);
         new ResponsibilityDialog(
                 getContext(),
                 paymentsLabel.getPracticePaymentsDetailDialogPaymentPlan(),
                 paymentsLabel.getPracticePaymentsDetailDialogPay(),
-                paymentsModel,
+                patientDetails,
                 balancessDTO,
-                getResponsibilityDialogListener(balancessDTO)
+                getResponsibilityDialogListener(patientDetails)
         ).show();
     }
 
-    private ResponsibilityDialog.PayResponsibilityCallback getResponsibilityDialogListener(final PaymentsPatientBalancessDTO patientPayments) {
+    private ResponsibilityDialog.PayResponsibilityCallback getResponsibilityDialogListener(final PaymentsModel patientDetails) {
         return new ResponsibilityDialog.PayResponsibilityCallback() {
             @Override
             public void onLeftActionTapped() {
@@ -344,7 +358,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 //                if (HttpConstants.getDeviceInformation().getDeviceType().equals("Clover")) {
 //                    setCloverPayment(patientPayments);
 //                }
-                onPayButtonClicked(amount, paymentsModel);
+                onPayButtonClicked(amount, patientDetails);
             }
 
         };

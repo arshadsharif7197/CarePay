@@ -130,4 +130,8 @@ public class PatientModel {
 
         return DateUtil.getInstance().setDateRaw(dateOfBirth).toStringWithFormatMmSlashDdSlashYyyy();
     }
+
+    public void setPatientId(String patientId) {
+        this.patientId = patientId;
+    }
 }
