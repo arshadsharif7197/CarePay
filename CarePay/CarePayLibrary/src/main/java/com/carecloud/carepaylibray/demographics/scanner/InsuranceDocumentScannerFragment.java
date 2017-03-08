@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.demographics.scanner;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -121,7 +122,9 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         title.setText(globalLabelsDTO.getDemographicsInsuranceTitle());
         toolbar.setTitle("");
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
+        Drawable closeIcon = ContextCompat.getDrawable(getActivity(),
+                R.drawable.icn_patient_mode_nav_close);
+        toolbar.setNavigationIcon(closeIcon);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
