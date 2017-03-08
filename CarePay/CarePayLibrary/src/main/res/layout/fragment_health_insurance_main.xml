@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="0dp"
     android:layout_margin="0dp"
@@ -20,13 +20,16 @@
             android:layout_width="match_parent"
             android:orientation="vertical">
 
-            <TextView
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/insurancesTitleLabel"
-                style="@style/reviewDemographicBlue."
+                style="@style/DemographicsDocsLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="textStart"
-                android:layout_marginTop="@dimen/dimen_36dp" />
+                android:layout_marginTop="@dimen/dimen_36dp"
+                android:textSize="@dimen/dimen_14dp"
+                app:customAssetFont="proxima_nova_regular"
+                />
 
 
 
@@ -44,9 +47,10 @@
                     android:id="@+id/demographicsInsuranceSwitch"
                     style="@style/DemographicsDocsLabelStyle"
                     android:layout_width="match_parent"
-                    android:layout_marginTop="@dimen/demographics_docs_section_margin_top"
+                    android:layout_marginTop="@dimen/dimen_20dp"
                     android:checked="false"
                     android:layout_marginEnd="15dp"
+                    android:textSize="@dimen/dimen_16dp"
                     android:theme="@style/HaveHealthInsurance"
                     />
 
@@ -59,6 +63,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
+                    android:layout_marginTop="@dimen/dimen_15dp"
                     android:padding="0dp"
                     android:layout_marginLeft="0dp"
                     android:layout_marginRight="0dp"
@@ -72,18 +77,26 @@
                         android:textStyle="normal"
                         android:textAlignment="viewStart"
                         android:layout_marginEnd="15dp"
-                        />
+                        app:customAssetFont="proxima_nova_regular"
+                    />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/setupLabel"
                         style="@style/DemographicsDocsLabelStyle"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:textAlignment="viewEnd"
                         android:textStyle="normal"
-                        android:layout_marginEnd="15dp"
                         android:textColor="@color/colorPrimary"
-                        />
+                        android:layout_marginEnd="12dp"
+                        app:customAssetFont="proxima_nova_regular" />
+
                 </LinearLayout>
+
+                <View
+                    android:id="@+id/setupDivider"
+                    style="@style/Review_Screen_View_Style"
+                    android:layout_width="match_parent"
+                    android:visibility="gone"/>
 
                 <View
                     android:id="@+id/healthinsurancereviewBottomView"
