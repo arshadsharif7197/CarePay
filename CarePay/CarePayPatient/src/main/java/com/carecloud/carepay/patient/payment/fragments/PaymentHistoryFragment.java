@@ -235,7 +235,7 @@ public class PaymentHistoryFragment extends BaseFragment implements PaymentBalan
     };
 
     private void loadPaymentAmountScreen(PatiencePayloadDTO model) {
-        PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(getContext() , paymentDTO, model, payNowClickListener);
+        PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(getContext() , paymentDTO, model, payNowClickListener, null);
         detailsDialog.show();
     }
 
