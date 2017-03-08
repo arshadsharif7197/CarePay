@@ -290,12 +290,14 @@ public class MedicationsAllergyFragment extends BaseFragment implements Medicati
     private TextView.OnEditorActionListener addUnlistedMedicationListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
-            SystemUtil.hideSoftKeyboard(getActivity());
-            MedicationsObject medicationsObject = new MedicationsObject();
-            medicationsObject.setDispensableDrugId("");
-            medicationsObject.setDisplayName(textView.getText().toString());
+            if(!StringUtil.isNullOrEmpty(textView.getText().toString())) {
+                MedicationsObject medicationsObject = new MedicationsObject();
+                medicationsObject.setDispensableDrugId("");
+                medicationsObject.setDisplayName(textView.getText().toString());
 
-            addItem(medicationsObject);
+                addItem(medicationsObject);
+            }
+            SystemUtil.hideSoftKeyboard(getActivity());
             textView.clearFocus();
             return true;
         }
