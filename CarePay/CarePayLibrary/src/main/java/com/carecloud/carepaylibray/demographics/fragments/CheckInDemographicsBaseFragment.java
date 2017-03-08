@@ -160,7 +160,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             hideProgressDialog();
             DemographicDTO demographicDTO = new Gson().fromJson(workflowDTO.toString(), DemographicDTO.class);
 
-            if(checkInNavListener.getCurrentStep() ==3 ){
+            if(checkInNavListener.getCurrentStep() ==4){
                 ((CheckinDemographicsInterface)getActivity()).navigateToConsentFlow(workflowDTO);
             }else{
                 checkInNavListener.applyChangesAndNavTo(demographicDTO, checkInNavListener.getCurrentStep() + 1);

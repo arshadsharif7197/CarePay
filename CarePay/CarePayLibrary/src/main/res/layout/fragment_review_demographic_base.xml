@@ -10,7 +10,6 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/dimen_10dp"
         android:foregroundGravity="center_horizontal">
 
     <include layout="@layout/toolbar_no_title"
@@ -21,7 +20,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="@dimen/dimen_10dp"
-            android:layout_marginTop="@dimen/dimen_10dp"
             android:gravity="center"
             android:orientation="vertical">
 
