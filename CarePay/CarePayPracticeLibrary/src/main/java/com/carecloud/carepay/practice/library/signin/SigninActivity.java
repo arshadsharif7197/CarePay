@@ -33,9 +33,12 @@ import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeLabel
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
+import com.carecloud.carepaylibray.signinsignup.dtos.unifiedauth.UnifiedSignInDTO;
+import com.carecloud.carepaylibray.signinsignup.dtos.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -89,9 +92,11 @@ public class SigninActivity extends BasePracticeActivity {
         SignInScreenMode signinScreenMode = SignInScreenMode.PRACTICE_MODE_SIGNIN;
         if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
             signinDTO = getConvertedDTO(SigninDTO.class);
-            if (signinDTO != null && signinDTO.getPayload() != null && signinDTO.getPayload().getPracticeModeSignin() != null && signinDTO.getPayload().getPracticeModeSignin().getCognito() != null) {
-                getApplicationMode().setCognitoDTO(signinDTO.getPayload().getPracticeModeSignin().getCognito());
-                getCognitoAppHelper();
+            if (signinDTO != null) {
+                if(!HttpConstants.isUseUnifiedAuth()) {
+                    getApplicationMode().setCognitoDTO(signinDTO.getPayload().getPracticeModeSignin().getCognito());
+                    getCognitoAppHelper();
+                }
                 signinScreenMode = SignInScreenMode.valueOf(signinDTO.getState().toUpperCase());
             }
         } else if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
@@ -441,9 +446,28 @@ public class SigninActivity extends BasePracticeActivity {
         String userName = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
-        getCognitoAppHelper().signIn(userName, password, cognitoActionCallback);
-
+        if(!HttpConstants.isUseUnifiedAuth()) {
+            getCognitoAppHelper().signIn(userName, password, cognitoActionCallback);
+        }else{
+            unifiedSignIn(userName, password);
+        }
     }
+
+    private void unifiedSignIn(String userName, String password){
+        UnifiedSignInUser user = new UnifiedSignInUser();
+        user.setEmail(userName);
+        user.setPassword(password);
+
+        UnifiedSignInDTO signInDTO = new UnifiedSignInDTO();
+        signInDTO.setUser(user);
+
+        TransitionDTO signIn = signinDTO.getMetadata().getTransitions().getSignIn();
+        if(signInDTO.isValidUser()){
+            Gson gson = new Gson();
+            getWorkflowServiceHelper().execute(signIn, signinCallback, gson.toJson(signInDTO));
+        }
+    }
+
 
     public void setTypeFace() {
         setProximaNovaRegularTypeface(this, emailEditText);
