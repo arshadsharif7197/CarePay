@@ -287,7 +287,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             transitionDTO = transitionsDTO.getOfficeNews();
 
             Map<String, String> queryMap = new HashMap<>();
-            queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
             queryMap.put("publish_date", "2017-03-04");
             getWorkflowServiceHelper().execute(transitionDTO, getNewsCallback, queryMap);
         } else {
