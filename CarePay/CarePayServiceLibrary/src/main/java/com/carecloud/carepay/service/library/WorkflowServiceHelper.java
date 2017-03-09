@@ -55,22 +55,27 @@ public class WorkflowServiceHelper {
 
         if (null != cognitoAppHelper) {
 
-            if ((applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE
-                    || applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)
-                    && applicationMode.getUserPracticeDTO() != null) {
-                userAuthHeaders.put("username", applicationMode.getUserPracticeDTO().getUserName());
-                userAuthHeaders.put("Authorization", cognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
-                if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
-                    userAuthHeaders.put("username_patient", cognitoAppHelper.getCurrUser());
-                }
-            } else if (!isNullOrEmpty(cognitoAppHelper.getCurrUser())) {
-                userAuthHeaders.put("username", cognitoAppHelper.getCurrUser());
-                if (cognitoAppHelper.getCurrSession() != null && !isNullOrEmpty(cognitoAppHelper.getCurrSession().getIdToken().getJWTToken())) {
-                    userAuthHeaders.put("Authorization", cognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
-                }
-            }
-        }
+//            if ((applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE
+//                    || applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)
+//                    && applicationMode.getUserPracticeDTO() != null) {
+//                userAuthHeaders.put("username", applicationMode.getUserPracticeDTO().getUserName());
+//                userAuthHeaders.put("Authorization", cognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
+//                if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+//                    userAuthHeaders.put("username_patient", cognitoAppHelper.getCurrUser());
+//                }
+//            } else if (!isNullOrEmpty(cognitoAppHelper.getCurrUser())) {
+//                userAuthHeaders.put("username", cognitoAppHelper.getCurrUser());
+//                if (cognitoAppHelper.getCurrSession() != null && !isNullOrEmpty(cognitoAppHelper.getCurrSession().getIdToken().getJWTToken())) {
+//                    userAuthHeaders.put("Authorization", cognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
+//                }
+//            }
 
+
+            userAuthHeaders.put("Authorization", cognitoAppHelper.getIdToken());
+            userAuthHeaders.put("username", cognitoAppHelper.getCurrUser());
+
+
+        }
         userAuthHeaders.putAll(getPreferredLanguageHeader());
         return userAuthHeaders;
     }

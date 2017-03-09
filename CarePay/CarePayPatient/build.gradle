@@ -37,7 +37,7 @@ android {
             buildConfigField 'String', 'X_API_KEY', '"PhrvB0D7Bw9EbQ3aEXTCj3FvYtPDzbGr7X71uYJT"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"WSS://STAR-CLUSTER.DEVELOPMENT.CARECLOUD.COM"'
 
-            buildConfigField 'boolean', 'useUnifiedAuth', 'false'
+            buildConfigField 'boolean', 'useUnifiedAuth', 'true'
         }
         qa {
             applicationId "com.carecloud.carepay.patient"
