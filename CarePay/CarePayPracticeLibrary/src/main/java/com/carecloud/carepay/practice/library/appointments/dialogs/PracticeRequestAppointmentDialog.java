@@ -105,7 +105,7 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         SystemUtil.setGothamRoundedBoldTypeface(context,appointmentTimeTextView);
 
         CarePayTextView providerImageTextView = (CarePayTextView)view.findViewById(R.id.provider_short_name);
-        providerImageTextView.setText(StringUtil.onShortDrName(((ScheduleAppointmentActivity)context)
+        providerImageTextView.setText(StringUtil.onShortName(((ScheduleAppointmentActivity)context)
                 .getSelectedResource().getResource().getProvider().getName()));
         CarePayTextView appointmentDoctorNameTextView = (CarePayTextView)view.findViewById(R.id.provider_doctor_name);
         appointmentDoctorNameTextView.setText(((ScheduleAppointmentActivity)context).getSelectedResource()

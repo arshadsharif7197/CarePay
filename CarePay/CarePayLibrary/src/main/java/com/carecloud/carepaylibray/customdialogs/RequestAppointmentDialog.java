@@ -122,7 +122,7 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         JsonObject appointmentJSONObj = new JsonObject();
         JsonObject patientJSONObj = new JsonObject();
 
-        patientJSONObj.addProperty("id", appointmentDTO.getPayload().getPatient().getId());
+        patientJSONObj.addProperty("id", appointmentDTO.getPayload().getPatient().getPatientId());
         appointmentJSONObj.addProperty("start_time", appointmentDTO.getPayload().getStartTime());
         appointmentJSONObj.addProperty("end_time", appointmentDTO.getPayload().getEndTime());
         appointmentJSONObj.addProperty("appointment_status_id", "5");

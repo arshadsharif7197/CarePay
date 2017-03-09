@@ -2,6 +2,7 @@
 package com.carecloud.carepaylibray.intake.models;
 
 
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

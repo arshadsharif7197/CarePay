@@ -143,6 +143,10 @@ public class CheckInLabelDTO {
     @Expose
     private String createAppointmentLabel;
 
+    @SerializedName("cancel_appointment_label")
+    @Expose
+    private String cancelAppointmentLabel;
+
     @SerializedName("accept_label")
     @Expose
     private String acceptLabel;
@@ -493,6 +497,10 @@ public class CheckInLabelDTO {
 
     public String getCreateAppointmentLabel() {
         return StringUtil.getLabelForView(createAppointmentLabel);
+    }
+
+    public String getCancelAppointmentLabel() {
+        return StringUtil.getLabelForView(cancelAppointmentLabel);
     }
 
     public String getAcceptLabel() {

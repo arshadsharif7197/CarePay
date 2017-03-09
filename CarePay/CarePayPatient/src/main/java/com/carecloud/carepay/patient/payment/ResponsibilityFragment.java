@@ -155,7 +155,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
     }
 
     protected void doPayment() {
-        actionCallback.onPayButtonClicked(total);
+        actionCallback.onPayButtonClicked(total, paymentDTO);
     }
 
     @Override
