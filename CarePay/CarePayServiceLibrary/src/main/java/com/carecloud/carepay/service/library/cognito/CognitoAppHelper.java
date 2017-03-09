@@ -358,4 +358,37 @@ public class CognitoAppHelper {
         continuation.setAuthenticationDetails(authenticationDetails);
         continuation.continueTask();
     }
+
+
+
+
+
+    private String AccessToken;
+    private String RefreshToken;
+    private String IdToken;
+
+
+    public String getAccessToken() {
+        return AccessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        AccessToken = accessToken;
+    }
+
+    public String getRefreshToken() {
+        return RefreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        RefreshToken = refreshToken;
+    }
+
+    public String getIdToken() {
+        return IdToken;
+    }
+
+    public void setIdToken(String idToken) {
+        IdToken = idToken;
+    }
 }

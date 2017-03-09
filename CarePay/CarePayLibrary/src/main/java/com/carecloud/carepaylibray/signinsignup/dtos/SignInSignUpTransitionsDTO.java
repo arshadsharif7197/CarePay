@@ -32,6 +32,10 @@ public class SignInSignUpTransitionsDTO {
     @Expose
     private TransitionDTO refresh = new TransitionDTO();
 
+    @SerializedName("sign_out")
+    @Expose
+    private TransitionDTO signOut = new TransitionDTO();
+
     /**
      *
      * @return
@@ -80,5 +84,13 @@ public class SignInSignUpTransitionsDTO {
 
     public void setRefresh(TransitionDTO refresh) {
         this.refresh = refresh;
+    }
+
+    public TransitionDTO getSignOut() {
+        return signOut;
+    }
+
+    public void setSignOut(TransitionDTO signOut) {
+        this.signOut = signOut;
     }
 }
