@@ -13,8 +13,8 @@ import com.carecloud.carepay.service.library.ApplicationPreferences;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.cognito.AppAuthoriztionHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -38,7 +38,7 @@ public class BaseActivityTest  {
     private static SharedPreferences.Editor editor;
     private String TAG = BaseActivityTest.class.getSimpleName();
     protected ApplicationMode applicationMode;
-    protected CognitoAppHelper cognitoAppHelper;
+    protected AppAuthoriztionHelper appAuthoriztionHelper;
     protected WorkflowServiceHelper workflowServiceHelper;
     protected Context context;
 
@@ -55,7 +55,7 @@ public class BaseActivityTest  {
             workFlowDtoString = workflowDTO.toString();
             SignInSignUpDTO signInSignUpDTO = new Gson().fromJson(workFlowDtoString, SignInSignUpDTO.class);
             getApplicationMode().setCognitoDTO(signInSignUpDTO.getPayload().getPatientAppSignin().getCognito());
-            getCognitoAppHelper().signIn(user, passowrd, cognitoActionCallback);
+            getAppAuthoriztionHelper().signIn(user, passowrd, cognitoActionCallback);
             Log.d(TAG, "on post execute signInCallback");
         }
 
@@ -169,12 +169,12 @@ public class BaseActivityTest  {
     /**
      * get cognito helper
      */
-    public CognitoAppHelper getCognitoAppHelper() {
-        if (cognitoAppHelper == null) {
-            cognitoAppHelper = new CognitoAppHelper(getContext(), getApplicationMode());
-            getWorkflowServiceHelper().setCognitoAppHelper(cognitoAppHelper);
+    public AppAuthoriztionHelper getAppAuthoriztionHelper() {
+        if (appAuthoriztionHelper == null) {
+            appAuthoriztionHelper = new AppAuthoriztionHelper(getContext(), getApplicationMode());
+            getWorkflowServiceHelper().setAppAuthoriztionHelper(appAuthoriztionHelper);
         }
-        return cognitoAppHelper;
+        return appAuthoriztionHelper;
     }
 
     /**

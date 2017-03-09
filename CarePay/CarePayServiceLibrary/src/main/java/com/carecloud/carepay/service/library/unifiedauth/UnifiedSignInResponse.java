@@ -1,6 +1,5 @@
-package com.carecloud.carepaylibray.signinsignup.dtos.unifiedauth;
+package com.carecloud.carepay.service.library.unifiedauth;
 
-import com.carecloud.carepaylibray.signinsignup.dtos.SignInMetaDataDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -10,14 +9,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class UnifiedSignInResponse {
 
-    @SerializedName("metadata")
-    @Expose
-    private SignInMetaDataDTO metadata;
-
     @SerializedName("payload")
     @Expose
     private UnifiedSignInPayload payload = new UnifiedSignInPayload();
-
 
     public UnifiedSignInPayload getPayload() {
         return payload;
@@ -27,11 +21,4 @@ public class UnifiedSignInResponse {
         this.payload = payload;
     }
 
-    public SignInMetaDataDTO getMetadata() {
-        return metadata;
-    }
-
-    public void setMetadata(SignInMetaDataDTO metadata) {
-        this.metadata = metadata;
-    }
 }
