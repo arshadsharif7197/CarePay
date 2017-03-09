@@ -386,9 +386,9 @@ public class SigninFragment extends BaseFragment {
         Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
 
         if(signInDTO.isValidUser()){
-            getAppAuthoriztionHelper().setUserAlias(userName);
             Gson gson = new Gson();
             getWorkflowServiceHelper().execute(signIn, unifiedLoginCallback, gson.toJson(signInDTO), queryParams, headers);
+            getAppAuthoriztionHelper().setUserAlias(userName);
         }
     }
 
@@ -421,6 +421,7 @@ public class SigninFragment extends BaseFragment {
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             signinButton.setEnabled(true);
+            getWorkflowServiceHelper().setAppAuthoriztionHelper(null);
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
