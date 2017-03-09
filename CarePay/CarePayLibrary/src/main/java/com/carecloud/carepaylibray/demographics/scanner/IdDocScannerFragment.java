@@ -111,6 +111,10 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         populateViewsFromModel(view);
     }
 
+    public void setGlobalLabelsDTO(DemographicLabelsDTO globalLabelsDTO) {
+        this.globalLabelsDTO = globalLabelsDTO;
+    }
+
     @Override
     protected void updateModel(TextView selectionDestination) {
     }

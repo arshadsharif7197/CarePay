@@ -96,7 +96,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                 public void onClick(View v) {
                     if(passConstraints(view)) {
                         DemographicDTO demographicDTO = updateDemographicDTO(view);
-                        openNextFragment(demographicDTO, (checkInNavListener.getCurrentStep() + 1)>4);
+                        openNextFragment(demographicDTO, (checkInNavListener.getCurrentStep() + 1)>5);
                     }
                 }
             };
@@ -164,7 +164,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             hideProgressDialog();
             DemographicDTO demographicDTO = new Gson().fromJson(workflowDTO.toString(), DemographicDTO.class);
 
-            if(checkInNavListener.getCurrentStep() ==4){
+            if(checkInNavListener.getCurrentStep() ==5){
                 ((CheckinDemographicsInterface)getActivity()).navigateToConsentFlow(workflowDTO);
             }else{
                 checkInNavListener.applyChangesAndNavTo(demographicDTO, checkInNavListener.getCurrentStep() + 1);
