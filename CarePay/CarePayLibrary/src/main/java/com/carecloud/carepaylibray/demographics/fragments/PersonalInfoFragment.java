@@ -105,6 +105,8 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
 
         final TextInputLayout phoneNumberLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
         final EditText phoneNumberEditText = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
+        setTextFocusListener(R.id.reviewgrdemoPhoneNumberEdit,view);
+
         dobEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int inputType, KeyEvent keyEvent) {
@@ -158,7 +160,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
             }
         });
 
-        setTextFocusListener(R.id.reviewgrdemoPhoneNumberEdit,view);
+
         setTextFocusListener(R.id.reviewdemogrMiddleNameEdit,view);
     }
 
@@ -242,6 +244,12 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         label = addressMetaDTO.properties.phone.getLabel();
         initTextLabel(label, R.id.reviewdemogrPhoneNumberTextInput, R.id.reviewgrdemoPhoneNumberEdit, view);
 
+        TextView optinalLabelTextView = (TextView) view.findViewById(R.id.reviewdemogrMiddleNameOptionalLabel);
+        optinalLabelTextView.setText(globalLabelsMetaDTO.getDemographicsDetailsOptionalHint());
+
+        TextView dateformatLabelTextView = (TextView) view.findViewById(R.id.dobformatlabel);
+        dateformatLabelTextView.setText(globalLabelsMetaDTO.getDemographicsDetailsDobHint());
+
         initNextButton(globalLabelsMetaDTO.getDemographicsReviewNextButton(), null, view);
     }
 
@@ -289,6 +297,9 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         if (demographicAddressPayloadDTO != null){
 
             String phonenumber = demographicAddressPayloadDTO.getPhone();
+            if(SystemUtil.isNotEmptyString(phonenumber)) {
+                phonenumber = StringUtil.formatPhoneNumber(phonenumber);
+            }
             initTextInputLayoutValue(phonenumber, R.id.reviewgrdemoPhoneNumberEdit, view);
         }
     }
@@ -313,7 +324,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
                     && !ValidationHelper.isValidString(phone.trim(), phoneValidation)) {
                 phoneNumberLabel.setErrorEnabled(true);
                 phoneNumberLabel.setError(phoneError);
-                phoneNumberEditText.requestFocus();
+                //phoneNumberEditText.requestFocus();
                 return false;
             }
          phoneNumberLabel.setError(null);
@@ -340,14 +351,14 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         EditText phoneNumberEditText = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
         boolean isPhoneValid = isPhoneNumberValid(phoneNumberLabel, phoneNumberEditText);
         if (!isPhoneValid) {
-            phoneNumberEditText.requestFocus();
+            //phoneNumberEditText.requestFocus();
             return false;
         }
         TextInputLayout doblabel = (TextInputLayout) view.findViewById( R.id.reviewdemogrDOBTextInput);
         EditText dobEditText = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
         boolean isdobValid = isDateOfBirthValid(doblabel, dobEditText);
         if (!isdobValid) {
-            dobEditText.requestFocus();
+            //dobEditText.requestFocus();
             return false;
         }
         return true;

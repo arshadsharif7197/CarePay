@@ -18,8 +18,12 @@
 
     <Button
         android:id="@+id/changeCurrentPhotoButton"
-        style="@style/DemographicsAddRemoveInsuranceStyle"
+        style="@style/DemographicsDocsButtonStyle"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_20dp"
+        android:paddingLeft="@dimen/dimen_20dp"
+        android:paddingRight="@dimen/dimen_20dp"
+        android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:text="@string/selectOrTakePhotoButton"/>
 

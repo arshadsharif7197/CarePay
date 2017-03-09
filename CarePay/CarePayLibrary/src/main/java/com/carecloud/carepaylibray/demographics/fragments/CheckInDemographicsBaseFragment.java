@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -105,7 +106,10 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     protected void checkIfEnableButton(View view){
         Button nextButton = (Button) view.findViewById(R.id.checkinDemographicsNextButton);
-        nextButton.setEnabled(passConstraints(view));
+        boolean isEnabled = passConstraints(view);
+        nextButton.setEnabled(isEnabled);
+        nextButton.setClickable(isEnabled);
+        nextButton.setBackground(ContextCompat.getDrawable(getContext(),isEnabled? R.drawable.bg_green_overlay  : R.drawable.bg_silver_overlay));
     }
 
     protected abstract boolean passConstraints(View view);
