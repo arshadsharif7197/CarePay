@@ -2,8 +2,8 @@ package com.carecloud.carepay.service.library;
 
 import android.support.annotation.NonNull;
 
+import com.carecloud.carepay.service.library.cognito.AppAuthoriztionHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -31,7 +31,7 @@ public class WorkflowServiceHelper {
     private static final int STATUS_CODE_OK = 200;
     private static final int STATUS_CODE_UNAUTHORIZED = 401;
 
-    private CognitoAppHelper cognitoAppHelper;
+    private AppAuthoriztionHelper appAuthoriztionHelper;
     private ApplicationPreferences applicationPreferences;
     private ApplicationMode applicationMode;
 
@@ -41,8 +41,8 @@ public class WorkflowServiceHelper {
         this.applicationMode = applicationMode;
     }
 
-    public void setCognitoAppHelper(CognitoAppHelper cognitoAppHelper) {
-        this.cognitoAppHelper = cognitoAppHelper;
+    public void setAppAuthoriztionHelper(AppAuthoriztionHelper appAuthoriztionHelper) {
+        this.appAuthoriztionHelper = appAuthoriztionHelper;
     }
 
     /**
@@ -53,29 +53,42 @@ public class WorkflowServiceHelper {
     private Map<String, String> getUserAuthenticationHeaders() {
         Map<String, String> userAuthHeaders = new HashMap<>();
 
-        if (null != cognitoAppHelper) {
+        if (appAuthoriztionHelper != null) {
 
-//            if ((applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE
-//                    || applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)
-//                    && applicationMode.getUserPracticeDTO() != null) {
-//                userAuthHeaders.put("username", applicationMode.getUserPracticeDTO().getUserName());
-//                userAuthHeaders.put("Authorization", cognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
-//                if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
-//                    userAuthHeaders.put("username_patient", cognitoAppHelper.getCurrUser());
-//                }
-//            } else if (!isNullOrEmpty(cognitoAppHelper.getCurrUser())) {
-//                userAuthHeaders.put("username", cognitoAppHelper.getCurrUser());
-//                if (cognitoAppHelper.getCurrSession() != null && !isNullOrEmpty(cognitoAppHelper.getCurrSession().getIdToken().getJWTToken())) {
-//                    userAuthHeaders.put("Authorization", cognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
-//                }
-//            }
+            if ((applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE ||
+                    applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) &&
+                    applicationMode.getUserPracticeDTO() != null) {
 
+                userAuthHeaders.put("username", applicationMode.getUserPracticeDTO().getUserName());
+                if(HttpConstants.isUseUnifiedAuth()){
+                    userAuthHeaders.put("Authorization", appAuthoriztionHelper.getIdToken());
 
-            userAuthHeaders.put("Authorization", cognitoAppHelper.getIdToken());
-            userAuthHeaders.put("username", cognitoAppHelper.getCurrUser());
+                    if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+                        userAuthHeaders.put("username_patient", appAuthoriztionHelper.getUserAlias());
+                    }
+                }else {
+                    userAuthHeaders.put("Authorization", appAuthoriztionHelper.getCurrSession().getIdToken().getJWTToken());
 
+                    if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+                        userAuthHeaders.put("username_patient", appAuthoriztionHelper.getCurrUser());
+                    }
+                }
+
+            } else {
+                if(HttpConstants.isUseUnifiedAuth()){
+                    userAuthHeaders.put("Authorization", appAuthoriztionHelper.getIdToken());
+                    userAuthHeaders.put("username", appAuthoriztionHelper.getUserAlias());
+
+                }else if (!isNullOrEmpty(appAuthoriztionHelper.getCurrUser())) {//this is the old way
+                    userAuthHeaders.put("username", appAuthoriztionHelper.getCurrUser());
+                    if (appAuthoriztionHelper.getCurrSession() != null && !isNullOrEmpty(appAuthoriztionHelper.getCurrSession().getIdToken().getJWTToken())) {
+                        userAuthHeaders.put("Authorization", appAuthoriztionHelper.getCurrSession().getIdToken().getJWTToken());
+                    }
+                }
+            }
 
         }
+
         userAuthHeaders.putAll(getPreferredLanguageHeader());
         return userAuthHeaders;
     }
@@ -272,7 +285,7 @@ public class WorkflowServiceHelper {
             private void onResponseUnauthorized(Response<WorkflowDTO> response) throws IOException {
                 if (!response.errorBody().string().contains(TOKEN_HAS_EXPIRED)) {
                     onFailure(response);
-                } else if (!cognitoAppHelper.refreshToken(getCognitoActionCallback(transitionDTO, callback, jsonBody, queryMap, headers))) {
+                } else if (!appAuthoriztionHelper.refreshToken(getCognitoActionCallback(transitionDTO, callback, jsonBody, queryMap, headers))) {
                     callback.onFailure("No User found to refresh token");
                 }
             }

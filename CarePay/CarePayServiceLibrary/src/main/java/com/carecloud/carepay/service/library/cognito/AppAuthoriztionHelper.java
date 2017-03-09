@@ -33,6 +33,7 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.Authentic
 import com.amazonaws.regions.Regions;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.CognitoDTO;
+import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,9 +42,68 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class CognitoAppHelper {
+public class AppAuthoriztionHelper {
     private static final int MAX_RETRIES = 4;
     private static int retryCount;
+
+
+
+    //////////////////////////////////////////////////////////////////////////////////
+    //                      New Unified Authorization Handling                      //
+    //////////////////////////////////////////////////////////////////////////////////
+
+    private String AccessToken;
+    private String RefreshToken;
+    private String IdToken;
+    private String userAlias;
+
+    public String getAccessToken() {
+        return AccessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        AccessToken = accessToken;
+    }
+
+    public String getRefreshToken() {
+        return RefreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        RefreshToken = refreshToken;
+    }
+
+    public String getIdToken() {
+        return IdToken;
+    }
+
+    public void setIdToken(String idToken) {
+        IdToken = idToken;
+    }
+
+    public String getUserAlias() {
+        return userAlias;
+    }
+
+    public void setUserAlias(String userAlias) {
+        this.userAlias = userAlias;
+    }
+
+
+    public void setAuthorizationTokens(UnifiedAuthenticationTokens authTokens){
+        setIdToken(authTokens.getIdToken());
+        setAccessToken(authTokens.getAccessToken());
+        setRefreshToken(authTokens.getRefreshToken());
+
+    }
+
+
+
+
+
+    //////////////////////////////////////////////////////////////////////////////////
+    //                      Old Cognito Authorization Handling                      //
+    //////////////////////////////////////////////////////////////////////////////////
 
     // App settings
 
@@ -57,6 +117,8 @@ public class CognitoAppHelper {
     private String           patientUser;
     private CognitoDevice    newDevice;
     private int              itemCount;
+
+
 
     /**
      * App secret associated with your app id - if the App id does not have an associated App secret,
@@ -89,7 +151,7 @@ public class CognitoAppHelper {
      * default value assign for variables
      * @param context the context
      */
-    public CognitoAppHelper(Context context, ApplicationMode applicationMode) {
+    public AppAuthoriztionHelper(Context context, ApplicationMode applicationMode) {
         this.applicationMode = applicationMode;
         setData();
 
@@ -270,8 +332,8 @@ public class CognitoAppHelper {
      * @param successCallback callback to be execruted on completion
      */
     public void signIn(String username,
-                              final String password,
-                              final CognitoActionCallback successCallback) {
+                       final String password,
+                       final CognitoActionCallback successCallback) {
         AuthenticationHandler authenticationHandler = executeUserAuthentication(password, successCallback);
         // set the username
         setUser(username);
@@ -309,7 +371,7 @@ public class CognitoAppHelper {
         return new AuthenticationHandler() {
             @Override
             public void onSuccess(CognitoUserSession cognitoUserSession, CognitoDevice device) {
-                Log.v("CognitoAppHelper", "Auth Success");
+                Log.v("AppAuthoriztionHelper", "Auth Success");
                 setCurrSession(cognitoUserSession);
                 newDevice(device);
                 if (successCallback != null) {
@@ -330,7 +392,7 @@ public class CognitoAppHelper {
 
             @Override
             public void onFailure(Exception exception) {
-                Log.e("CognitoAppHelper", formatException(exception));
+                Log.e("AppAuthoriztionHelper", formatException(exception));
                 if (successCallback != null) {
                     successCallback.onLoginFailure(formatException(exception));
                 }
@@ -360,35 +422,4 @@ public class CognitoAppHelper {
     }
 
 
-
-
-
-    private String AccessToken;
-    private String RefreshToken;
-    private String IdToken;
-
-
-    public String getAccessToken() {
-        return AccessToken;
-    }
-
-    public void setAccessToken(String accessToken) {
-        AccessToken = accessToken;
-    }
-
-    public String getRefreshToken() {
-        return RefreshToken;
-    }
-
-    public void setRefreshToken(String refreshToken) {
-        RefreshToken = refreshToken;
-    }
-
-    public String getIdToken() {
-        return IdToken;
-    }
-
-    public void setIdToken(String idToken) {
-        IdToken = idToken;
-    }
 }
