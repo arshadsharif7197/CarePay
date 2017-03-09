@@ -14,7 +14,6 @@ import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.PatientBalanceDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.PatientDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.PendingBalanceDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.models.MapFilterModel;
@@ -244,8 +243,8 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         for (AppointmentDTO appointmentDTO : appointments) {
             // Set profile photo
-            PatientDTO patientDTO = appointmentDTO.getPayload().getPatient();
-            patientDTO.setProfilePhoto(profilePhotoMap.get(patientDTO.getId()));
+            PatientModel patientDTO = appointmentDTO.getPayload().getPatient();
+            patientDTO.setProfilePhoto(profilePhotoMap.get(patientDTO.getPatientId()));
 
             this.allPatients.add(new Patient(appointmentDTO, appointmentDTO.getPayload()));
         }
@@ -459,7 +458,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             this.raw = raw;
             this.id = id;
             this.name = dto.getFullName();
-            this.initials = StringUtil.onShortDrName(name);
+            this.initials = StringUtil.onShortName(name);
             this.photoUrl = dto.getProfilePhoto();
             this.providerName = StringUtil.getLabelForView(provider.getName());
             this.providerId = provider.getId();
@@ -470,10 +469,10 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         public Patient(Object raw, AppointmentPayloadDTO dto) {
             this.raw = raw;
-            PatientDTO patientModel = dto.getPatient();
-            this.id = patientModel.getId();
+            PatientModel patientModel = dto.getPatient();
+            this.id = patientModel.getPatientId();
             this.name = patientModel.getFullName();
-            this.initials = StringUtil.onShortDrName(this.name);
+            this.initials = StringUtil.onShortName(this.name);
             this.photoUrl = patientModel.getProfilePhoto();
             this.providerId = dto.getProvider().getId().toString();
             this.providerName = dto.getProvider().getName();

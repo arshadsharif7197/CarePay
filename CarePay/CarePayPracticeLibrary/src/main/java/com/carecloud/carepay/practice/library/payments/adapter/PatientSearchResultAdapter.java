@@ -10,8 +10,6 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class PatientSearchResultAdapter extends RecyclerView.Adapter<PatientSearchResultAdapter.ViewHolder> {

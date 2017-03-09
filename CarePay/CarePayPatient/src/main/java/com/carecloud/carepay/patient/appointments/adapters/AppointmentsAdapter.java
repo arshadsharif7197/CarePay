@@ -13,8 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepay.patient.appointments.dialog.CheckInOfficeNowAppointmentDialog;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
@@ -24,9 +22,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderM
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog;
-import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentDialog;
-import com.carecloud.carepaylibray.customdialogs.QueueAppointmentDialog;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -151,13 +146,13 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
             String photoUrl = item.getProvider().getPhoto();
             if (TextUtils.isEmpty(photoUrl)) {
-                holder.shortName.setText(StringUtil.onShortDrName(item.getProvider().getName()));
+                holder.shortName.setText(StringUtil.onShortName(item.getProvider().getName()));
             } else {
                 Picasso.Builder builder = new Picasso.Builder(context);
                 builder.listener(new Picasso.Listener() {
                     @Override
                     public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                        holder.shortName.setText(StringUtil.onShortDrName(item.getProvider().getName()));
+                        holder.shortName.setText(StringUtil.onShortName(item.getProvider().getName()));
                     }
                 });
 

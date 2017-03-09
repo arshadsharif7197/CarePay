@@ -232,7 +232,7 @@ public class StringUtil {
         }
     }
 
-    public static String onShortDrName(String fullName) {
+    public static String onShortName(String fullName) {
         if (fullName != null && fullName.length() > 1) {
             String stringSplitArr[] = fullName.split(" ");
             if (fullName.contains(".")) {

@@ -19,10 +19,7 @@ import android.widget.ProgressBar;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.BaseAmountInfoDialog;
-import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
-
-import org.json.JSONObject;
 
 /**
  * Created by prem_mourya on 10/6/2016.
