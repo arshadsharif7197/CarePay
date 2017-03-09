@@ -212,14 +212,11 @@
     </android.support.v4.widget.NestedScrollView>
 
     <com.carecloud.carepaylibray.customcomponents.CarePayButton
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/medication_allergies_continue_button"
-        android:layout_gravity="center"
-        android:background="@drawable/button_selector"
+        android:enabled="true"
+        style="@style/InTakeNextButtonStyle"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_13"
-        android:text="GO TO INTAKE FORMS"
         app:customAssetFont="gotham_rounded_light"
         />
 

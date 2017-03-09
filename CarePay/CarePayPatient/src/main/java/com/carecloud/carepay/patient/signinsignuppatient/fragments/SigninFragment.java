@@ -24,6 +24,7 @@ import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
+import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -32,7 +33,9 @@ import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
 import com.carecloud.carepaylibray.signinsignup.dtos.unifiedauth.UnifiedSignInDTO;
+import com.carecloud.carepaylibray.signinsignup.dtos.unifiedauth.UnifiedSignInResponse;
 import com.carecloud.carepaylibray.signinsignup.dtos.unifiedauth.UnifiedSignInUser;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -395,12 +398,57 @@ public class SigninFragment extends BaseFragment {
         UnifiedSignInDTO signInDTO = new UnifiedSignInDTO();
         signInDTO.setUser(user);
 
+        getCognitoAppHelper().setUser(userName);
+
         TransitionDTO signIn = signInSignUpDTO.getMetadata().getTransitions().getSignIn();
+        Map<String, String> queryParams = new HashMap<>();
+
+        Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
+        headers.put("transition", "true");
+
         if(signInDTO.isValidUser()){
             Gson gson = new Gson();
-            getWorkflowServiceHelper().execute(signIn, loginCallback, gson.toJson(signInDTO));
+            getWorkflowServiceHelper().execute(signIn, unifiedLoginCallback, gson.toJson(signInDTO), queryParams, headers);
         }
     }
+
+    private WorkflowServiceCallback unifiedLoginCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            //get the Auth Info and persist
+            Gson gson = new Gson();
+            UnifiedSignInResponse signInResponse = DtoHelper.getConvertedDTO(UnifiedSignInResponse.class, gson.toJson(workflowDTO));
+
+            CognitoAppHelper cognitoAppHelper = getCognitoAppHelper();
+            cognitoAppHelper.setAccessToken(signInResponse.getPayload().getAuthModel().getCognito().getAuthenticationTokens().getAccessToken());
+            cognitoAppHelper.setRefreshToken(signInResponse.getPayload().getAuthModel().getCognito().getAuthenticationTokens().getRefreshToken());
+            cognitoAppHelper.setIdToken(signInResponse.getPayload().getAuthModel().getCognito().getAuthenticationTokens().getIdToken());
+
+            getWorkflowServiceHelper().setCognitoAppHelper(cognitoAppHelper);
+
+
+
+            Map<String, String> query = new HashMap<>();
+            Map<String, String> header = new HashMap<>();
+            header.put("Accept-Language",langaueid);
+            getWorkflowServiceHelper().execute(signInSignUpDTO.getMetadata().getTransitions().getAuthenticate(), loginCallback,query,header);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            signinButton.setEnabled(true);
+            SystemUtil.showDefaultFailureDialog(getActivity());
+            Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
 
     private WorkflowServiceCallback loginCallback = new WorkflowServiceCallback() {
         @Override
