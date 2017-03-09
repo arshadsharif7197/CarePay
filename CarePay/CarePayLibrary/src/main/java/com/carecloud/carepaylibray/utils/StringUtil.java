@@ -15,10 +15,9 @@ import java.util.regex.Pattern;
 
 public class StringUtil {
 
-    private static final String PHONE_NUMBER_REGEX = "([\\+(]?(\\d){2,}[)]?[- \\.]?(\\d){2,}[- \\.]?(\\d){2,}[- \\.]?(\\d){2,}[- \\.]?(\\d){2,})|([\\+(]?(\\d){2,}[)]?[- \\.]?(\\d){2,}[- \\.]?(\\d){2,}[- \\.]?(\\d){2,})|([\\+(]?(\\d){2,}[)]?[- \\.]?(\\d){2,}[- \\.]?(\\d){2,})";
     private static final String EMAIL_PATTERN      =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-    static private final String PASWWORD_REGEX_VALIDATION
+    static private final String PASSWORD_REGEX_VALIDATION
                                                    = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@!%*?&_-])[A-Za-z\\d$@!%*?&_-]{8,}";
 
     /**
@@ -51,7 +50,7 @@ public class StringUtil {
      */
     public static boolean isValidPassword(String password) {
         if (password != null) {
-            Pattern pattern = Pattern.compile(PASWWORD_REGEX_VALIDATION);
+            Pattern pattern = Pattern.compile(PASSWORD_REGEX_VALIDATION);
             Matcher matcher = pattern.matcher(password);
             return matcher.matches();
         }
@@ -233,7 +232,7 @@ public class StringUtil {
     }
 
     /**
-     * @param fullName
+     * @param fullName full name
      * @return short two letter name
      */
     public static String onShortName(String fullName) {
