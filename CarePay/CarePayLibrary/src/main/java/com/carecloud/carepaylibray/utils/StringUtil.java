@@ -232,6 +232,10 @@ public class StringUtil {
         }
     }
 
+    /**
+     * @param fullName
+     * @return short two letter name
+     */
     public static String onShortName(String fullName) {
         if (fullName != null && fullName.length() > 1) {
             String stringSplitArr[] = fullName.split(" ");
