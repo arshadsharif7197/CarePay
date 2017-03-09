@@ -105,4 +105,8 @@ public class CarePayConstants {
     public static final String CLOVER_PAYMENT_TRANSITION = "clover_payment_transition";
     public static final String CLOVER_PAYMENT_LINE_ITEMS = "clover_payment_line_items";
     public static final String CLOVER_PAYMENT_SUCCESS_INTENT_DATA = "clover_payment_success_intent_data";
+
+
+    //Shared Preference Keys
+    public static final String KEY_PRACTICE_PATIENT_IDS = "practice_patient_ids";
 }

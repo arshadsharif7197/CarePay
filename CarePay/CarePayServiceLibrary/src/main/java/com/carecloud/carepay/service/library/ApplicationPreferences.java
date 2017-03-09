@@ -220,20 +220,29 @@ public class ApplicationPreferences {
         writeStringToSharedPref(key, new Gson().toJson(object));
     }
 
+    public <S> S getObjectFromSharedPreferences(String key, Class<S> objectClass){
+        Gson gson = new Gson();
+        try{
+            return gson.fromJson(readStringFromSharedPref(key), objectClass);
+        }catch (Exception ex){
+            return null;
+        }
+    }
+
     public String readStringFromSharedPref(String key) {
         return readStringFromSharedPref(key, DEFAULT_STRING_PREFERENCES);
     }
 
-    public String readStringFromSharedPref(String key, String value) {
-        return getSharedPreferences().getString(key, value);
+    public String readStringFromSharedPref(String key, String defaultValue) {
+        return getSharedPreferences().getString(key, defaultValue);
     }
 
     private boolean readBooleanFromSharedPref(String key) {
         return readBooleanFromSharedPref(key, false);
     }
 
-    private boolean readBooleanFromSharedPref(String key, boolean value) {
-        return getSharedPreferences().getBoolean(key, value);
+    private boolean readBooleanFromSharedPref(String key, boolean defaultValue) {
+        return getSharedPreferences().getBoolean(key, defaultValue);
     }
 
     private SharedPreferences getSharedPreferences() {
