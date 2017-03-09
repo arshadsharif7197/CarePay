@@ -2,7 +2,6 @@ package com.carecloud.carepaylibray.qrcodescanner;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
 
 import com.carecloud.carepaylibrary.R;

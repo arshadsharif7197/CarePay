@@ -17,7 +17,6 @@ import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInLabelDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInPayloadDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.PatientDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.customcomponent.TwoColumnPatientListView;
 import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
@@ -229,8 +228,8 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
     }
 
     private void addPatientOnFilterList(ArrayList<FilterDataDTO> patients, AppointmentPayloadDTO appointmentPayloadDTO) {
-        PatientDTO patientDTO = appointmentPayloadDTO.getPatient();
-        FilterDataDTO filterDataDTO = new FilterDataDTO(patientDTO.getId(), patientDTO.getFullName(), FilterDataDTO.FilterDataType.PATIENT);
+        PatientModel patientDTO = appointmentPayloadDTO.getPatient();
+        FilterDataDTO filterDataDTO = new FilterDataDTO(patientDTO.getPatientId(), patientDTO.getFullName(), FilterDataDTO.FilterDataType.PATIENT);
         if (patients.indexOf(filterDataDTO) < 0) {
             filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
             patients.add(filterDataDTO);

@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.checkin.dtos;
 
 import com.carecloud.carepaylibray.appointments.models.ProvidersReasonDTO;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.models.LocationDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -23,7 +24,7 @@ public class AppointmentPayloadDTO {
     private AppointmentStatusDTO appointmentStatus = new AppointmentStatusDTO();
     @SerializedName("patient")
     @Expose
-    private PatientDTO patient = new PatientDTO();
+    private PatientModel patient = new PatientModel();
     @SerializedName("location")
     @Expose
     private LocationDTO location = new LocationDTO();
@@ -154,7 +155,7 @@ public class AppointmentPayloadDTO {
      * @return
      * The patient
      */
-    public PatientDTO getPatient() {
+    public PatientModel getPatient() {
         return patient;
     }
 
@@ -163,7 +164,7 @@ public class AppointmentPayloadDTO {
      * @param patient
      * The patient
      */
-    public void setPatient(PatientDTO patient) {
+    public void setPatient(PatientModel patient) {
         this.patient = patient;
     }
 

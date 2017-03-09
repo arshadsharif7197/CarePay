@@ -151,7 +151,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         resourcesToSchedule.getPractice().setPracticeMgmt(appointmentDTO.getMetadata().getPracticeMgmt());
         appointmentsDTO.getPayload().getResourcesToSchedule().add(resourcesToSchedule);
 
-        String patientID = appointmentDTO.getPayload().getPatient().getId();
+        String patientID = appointmentDTO.getPayload().getPatient().getPatientId();
         Gson gson = new Gson();
         Bundle bundle = new Bundle();
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID, patientID);

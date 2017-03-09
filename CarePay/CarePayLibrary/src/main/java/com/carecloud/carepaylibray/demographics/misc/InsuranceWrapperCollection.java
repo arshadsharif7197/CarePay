@@ -7,7 +7,6 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entitie
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
 
 import java.util.ArrayList;
 import java.util.List;

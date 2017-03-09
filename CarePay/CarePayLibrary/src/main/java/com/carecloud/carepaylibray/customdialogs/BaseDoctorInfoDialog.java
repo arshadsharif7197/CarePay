@@ -15,7 +15,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
@@ -88,7 +87,7 @@ public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener
         }
 
         CarePayTextView shortNameTextView = ((CarePayTextView) findViewById(R.id.appointShortnameTextView));
-        shortNameTextView.setText(StringUtil.onShortDrName(payload.getProvider().getName()));
+        shortNameTextView.setText(StringUtil.onShortName(payload.getProvider().getName()));
 
         CarePayTextView nameTextView = ((CarePayTextView) findViewById(R.id.appointNameTextView));
         nameTextView.setText(payload.getProvider().getName());
