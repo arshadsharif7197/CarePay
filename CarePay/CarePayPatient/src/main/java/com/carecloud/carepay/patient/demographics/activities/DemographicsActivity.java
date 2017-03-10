@@ -308,8 +308,8 @@ public class DemographicsActivity extends BasePatientActivity
 
             if(!HttpConstants.isUseUnifiedAuth()) {
                 // sign-out from Cognito
-                getAppAuthoriztionHelper().getPool().getUser().signOut();
-                getAppAuthoriztionHelper().setUser(null);
+                getAppAuthorizationHelper().getPool().getUser().signOut();
+                getAppAuthorizationHelper().setUser(null);
             }
 
             // finish the app

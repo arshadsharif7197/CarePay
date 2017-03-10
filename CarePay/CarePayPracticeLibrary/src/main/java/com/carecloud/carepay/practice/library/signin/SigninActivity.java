@@ -105,7 +105,7 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
             if (signinDTO != null) {
                 if(!HttpConstants.isUseUnifiedAuth()) {
                     getApplicationMode().setCognitoDTO(signinDTO.getPayload().getPracticeModeSignin().getCognito());
-                    getAppAuthoriztionHelper();
+                    getAppAuthorizationHelper();
                 }
                 signinScreenMode = SignInScreenMode.valueOf(signinDTO.getState().toUpperCase());
             }
@@ -116,7 +116,7 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
                     && signinPatientModeDTO.getPayload().getPatientModeSigninData().getCognito() != null) {
                 if(!HttpConstants.isUseUnifiedAuth()) {
                     getApplicationMode().setCognitoDTO(signinPatientModeDTO.getPayload().getPatientModeSigninData().getCognito());
-                    getAppAuthoriztionHelper();
+                    getAppAuthorizationHelper();
                 }
                 signinScreenMode = SignInScreenMode.valueOf(signinPatientModeDTO.getState().toUpperCase());
             }
@@ -458,7 +458,7 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
         String password = passwordEditText.getText().toString();
 
         if(!HttpConstants.isUseUnifiedAuth()) {
-            getAppAuthoriztionHelper().signIn(userName, password, cognitoActionCallback);
+            getAppAuthorizationHelper().signIn(userName, password, cognitoActionCallback);
         }else{
             unifiedSignIn(userName, password);
         }
@@ -485,7 +485,7 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
         if(signInDTO.isValidUser()){
             Gson gson = new Gson();
             getWorkflowServiceHelper().execute(signIn, unifiedLoginCallback, gson.toJson(signInDTO), queryParams, headers);
-            getAppAuthoriztionHelper().setUserAlias(userName);// This must be set after the signin call is executed
+            getAppAuthorizationHelper().setUserAlias(userName);// This must be set after the signin call is executed
         }
     }
 
@@ -505,11 +505,11 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
             UnifiedSignInResponse signInResponse = gson.fromJson(signInResponseString, UnifiedSignInResponse.class);
             if(signInResponse != null) {
                 UnifiedAuthenticationTokens authTokens = signInResponse.getPayload().getPracticeModeAuth().getCognito().getAuthenticationTokens();
-                getAppAuthoriztionHelper().setAuthorizationTokens(authTokens);
+                getAppAuthorizationHelper().setAuthorizationTokens(authTokens);
                 if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
-                    getAppAuthoriztionHelper().setRefreshTransition(signinDTO.getMetadata().getTransitions().getRefresh());
+                    getAppAuthorizationHelper().setRefreshTransition(signinDTO.getMetadata().getTransitions().getRefresh());
                 }
-                getWorkflowServiceHelper().setAppAuthoriztionHelper(getAppAuthoriztionHelper());
+                getWorkflowServiceHelper().setAppAuthorizationHelper(getAppAuthorizationHelper());
             }
 
             Map<String, String> queryMap = new HashMap<>();
@@ -534,7 +534,7 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
             hideProgressDialog();
             signInButton.setClickable(true);
             if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
-                getWorkflowServiceHelper().setAppAuthoriztionHelper(null);
+                getWorkflowServiceHelper().setAppAuthorizationHelper(null);
             }
             SystemUtil.showDefaultFailureDialog(getContext());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
@@ -576,7 +576,7 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            getWorkflowServiceHelper().setAppAuthoriztionHelper(null);
+            getWorkflowServiceHelper().setAppAuthorizationHelper(null);
             signInButton.setClickable(true);
             SystemUtil.showDefaultFailureDialog(getContext());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
@@ -601,7 +601,7 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             signInButton.setClickable(true);
-            getWorkflowServiceHelper().setAppAuthoriztionHelper(null);
+            getWorkflowServiceHelper().setAppAuthorizationHelper(null);
             SystemUtil.showDefaultFailureDialog(SigninActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -714,8 +714,8 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
         super.onBackPressed();
         // log out previous user from Cognito
         Log.v(this.getClass().getSimpleName(), "sign out Cognito");
-        getAppAuthoriztionHelper().getPool().getUser().signOut();
-        getAppAuthoriztionHelper().setUser(null);
+        getAppAuthorizationHelper().getPool().getUser().signOut();
+        getAppAuthorizationHelper().setUser(null);
         if (!(getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)){
             getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
         }
@@ -744,7 +744,7 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
 
     @Override
     public void onSelectPracticeCanceled() {
-        getWorkflowServiceHelper().setAppAuthoriztionHelper(null);
+        getWorkflowServiceHelper().setAppAuthorizationHelper(null);
         signInButton.setClickable(true);
     }
 

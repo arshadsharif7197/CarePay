@@ -103,9 +103,9 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             }
         }else {
 
-            if (!HttpConstants.isUseUnifiedAuth() && getAppAuthoriztionHelper().getPool().getUser() != null) {
-                getAppAuthoriztionHelper().getPool().getUser().signOut();
-                getAppAuthoriztionHelper().setUser(null);
+            if (!HttpConstants.isUseUnifiedAuth() && getAppAuthorizationHelper().getPool().getUser() != null) {
+                getAppAuthorizationHelper().getPool().getUser().signOut();
+                getAppAuthorizationHelper().setUser(null);
             }
             // finish the app
             finishAffinity();

@@ -366,7 +366,7 @@ public class SigninFragment extends BaseFragment {
         String password = passwordEditText.getText().toString();
 
         if(!HttpConstants.isUseUnifiedAuth()) {
-            getAppAuthoriztionHelper().signIn(userName, password, cognitoActionCallback);
+            getAppAuthorizationHelper().signIn(userName, password, cognitoActionCallback);
         }else{
             unifiedSignIn(userName, password);
         }
@@ -388,7 +388,7 @@ public class SigninFragment extends BaseFragment {
         if(signInDTO.isValidUser()){
             Gson gson = new Gson();
             getWorkflowServiceHelper().execute(signIn, unifiedLoginCallback, gson.toJson(signInDTO), queryParams, headers);
-            getAppAuthoriztionHelper().setUserAlias(userName);
+            getAppAuthorizationHelper().setUserAlias(userName);
         }
     }
 
@@ -407,8 +407,8 @@ public class SigninFragment extends BaseFragment {
             UnifiedSignInResponse signInResponse = gson.fromJson(signInResponseString, UnifiedSignInResponse.class);
             if(signInResponse != null) {
                 UnifiedAuthenticationTokens authTokens = signInResponse.getPayload().getPatientAppAuth().getCognito().getAuthenticationTokens();
-                getAppAuthoriztionHelper().setAuthorizationTokens(authTokens);
-                getWorkflowServiceHelper().setAppAuthoriztionHelper(getAppAuthoriztionHelper());
+                getAppAuthorizationHelper().setAuthorizationTokens(authTokens);
+                getWorkflowServiceHelper().setAppAuthorizationHelper(getAppAuthorizationHelper());
             }
 
             Map<String, String> query = new HashMap<>();
@@ -421,7 +421,7 @@ public class SigninFragment extends BaseFragment {
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             signinButton.setEnabled(true);
-            getWorkflowServiceHelper().setAppAuthoriztionHelper(null);
+            getWorkflowServiceHelper().setAppAuthorizationHelper(null);
             SystemUtil.showDefaultFailureDialog(getActivity());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
