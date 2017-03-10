@@ -39,6 +39,7 @@ public class WorkflowServiceHelper {
     private ApplicationMode applicationMode;
 
     private int refreshCount;
+    private static final int MAX_REFRESH_ATTEMPTS = 2;
 
     public WorkflowServiceHelper(ApplicationPreferences applicationPreferences,
                                  ApplicationMode applicationMode) {
@@ -347,7 +348,7 @@ public class WorkflowServiceHelper {
 
 
     private boolean executeRefreshTokenRequest(@NonNull final WorkflowServiceCallback callback) {
-        if(refreshCount > 2){
+        if(refreshCount > MAX_REFRESH_ATTEMPTS){
             return false;
         }
         refreshCount++;
