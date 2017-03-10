@@ -380,8 +380,8 @@ public class WorkflowServiceHelper {
             }
 
             @Override
-            public void onFailure(Call<WorkflowDTO> call, Throwable t) {
-                callback.onFailure(t.getMessage());
+            public void onFailure(Call<WorkflowDTO> call, Throwable throwable) {
+                callback.onFailure(throwable.getMessage());
             }
         });
 

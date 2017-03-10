@@ -34,6 +34,7 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
 
     public interface SelectPracticeCallback{
         void onSelectPractice(PracticeSelectionResponseModel model, PracticeSelectionUserPractice userPractice);
+
         void onSelectPracticeCanceled();
     }
 
@@ -99,7 +100,7 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
         View closeButton = findViewById(R.id.closeViewLayout);
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 callback.onSelectPracticeCanceled();
                 dismiss();
             }
@@ -154,7 +155,7 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
 
     private View.OnClickListener continueClick = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
             if(selectedPractice!=null){
                 callback.onSelectPractice(practiceSelectionModel, selectedPractice);
             }
