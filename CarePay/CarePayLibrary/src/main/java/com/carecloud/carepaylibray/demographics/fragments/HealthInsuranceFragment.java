@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
@@ -27,6 +28,7 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.properties.DemographicMetadataPropertiesInsuranceDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePhotoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
@@ -63,15 +65,15 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
     private boolean isCardNumberEmpty;
     private boolean isGroupNumberEmpty;
 
-//    private View.OnClickListener addNewElementListener = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View view) {
-//            DemographicInsurancePayloadDTO insurance = new DemographicInsurancePayloadDTO();
-//            insurance.getInsurancePhotos().add(new DemographicInsurancePhotoDTO());
-//            insurance.getInsurancePhotos().add(new DemographicInsurancePhotoDTO());
-//            documentCallback.navigateToInsuranceDocumentFragment(CarePayConstants.NO_INDEX, insurance);
-//        }
-//    };
+    private View.OnClickListener addNewElementListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            DemographicInsurancePayloadDTO insurance = new DemographicInsurancePayloadDTO();
+            insurance.getInsurancePhotos().add(new DemographicInsurancePhotoDTO());
+            insurance.getInsurancePhotos().add(new DemographicInsurancePhotoDTO());
+            documentCallback.navigateToInsuranceDocumentFragment(CarePayConstants.NO_INDEX, insurance);
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -127,7 +129,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
         ((Button) view.findViewById(R.id.take_front_photo_button)).setText(globalLabelsMetaDTO.getDemographicsInsuranceTakeFrontPhotoLabel());
         ((Button) view.findViewById(R.id.take_back_photo_button)).setText(globalLabelsMetaDTO.getDemographicsInsuranceTakeBackPhotoLabel());
         ((Button) view.findViewById(R.id.health_insurance_dont_have_button)).setText(globalLabelsMetaDTO.getPracticeCheckinDemogrInsDontHaveOneButtonLabel());
-        ((Button) view.findViewById(R.id.health_insurance_add_new_button)).setText(globalLabelsMetaDTO.getPracticeCheckinDemogrInsAddNewButtonLabel());
+//        ((Button) view.findViewById(R.id.health_insurance_add_new_button)).setText(globalLabelsMetaDTO.getPracticeCheckinDemogrInsAddNewButtonLabel());
     }
 
     private void showAlertDialogWithListView(final String[] dataArray, String title,
@@ -330,22 +332,16 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
             });
 
 //            Spinner providers = (Spinner) view.findViewById(R.id.health_insurance_providers);
-//
 //            ArrayAdapter<MetadataOptionDTO> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, providerList);
 //            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 //            providers.setAdapter(adapter);
 
-
 //            Spinner plans = (Spinner) view.findViewById(R.id.health_insurance_plans);
-//
 //            adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, planList);
 //            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 //            plans.setAdapter(adapter);
 
-            // Types
-//            List<MetadataOptionDTO> typeList = properties.insuranceType.options;
 //            Spinner types = (Spinner) view.findViewById(R.id.health_insurance_types);
-//
 //            adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, typeList);
 //            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 //            types.setAdapter(adapter);
@@ -358,23 +354,22 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
         cardNumber.clearFocus();
         groupNumber.clearFocus();
 
-//        boolean loadResources = insurancePayloadDTOs.size() > 0;
+        boolean loadResources = insurancePayloadDTOs.size() > 0;
 //        boolean isSetup = !isPractice && !loadResources;
 //        boolean isRatio = isPractice && !loadResources;
 //        view.findViewById(R.id.setupContainer).setVisibility( isSetup ? View.VISIBLE : View.GONE );
 //        view.findViewById(R.id.setupInsurancePracticeContainer).setVisibility( isRatio ? View.VISIBLE : View.GONE );
 //        view.findViewById(R.id.existingContainer).setVisibility(loadResources? View.VISIBLE : View.GONE);
-//        if( loadResources ){
+        if (loadResources) {
 //            fillDetailAdapter(view);
 //            initAddButton(view);
-//        } else if(!isPractice){
+//        } else if (!isPractice) {
 //            ((TextView)view.findViewById(R.id.setupInsuranceLabel)).setText(globalLabelsMetaDTO.getDemographicsSetupInsuranceTitle());
 //            TextView setup = (TextView)view.findViewById(R.id.setupLabel);
 //            setup.setText(globalLabelsMetaDTO.getDemographicsSetupInsuranceLabel());
 //            setup.setOnClickListener(addNewElementListener);
-//
-//        } else {
-//            initAddOtherButton(view);
+        } else {
+            initAddOtherButton(view);
 //            RadioButton dontHaveInsurance = (RadioButton)view.findViewById(R.id.dontHaveInsurance);
 //            dontHaveInsurance.setText(globalLabelsMetaDTO.getDemographicsDontHaveHealthInsuranceLabel());
 //            RadioButton haveInsurance = (RadioButton)view.findViewById(R.id.haveInsurance);
@@ -387,8 +382,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
 //                    documentCallback.disableMainButton(on);
 //                }
 //            });
-//
-//        }
+        }
     }
 
 //    private void initAddButton(View view){
@@ -399,13 +393,13 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
 //            addButton.setEnabled(false);
 //        }
 //    }
-//
-//    private void initAddOtherButton(View view){
-//        Button addButton = (Button)view.findViewById(R.id.addNewButton);
-//        addButton.setText(globalLabelsMetaDTO.getDemographicsAddHealthInsuranceButtonTitle());
-//        addButton.setOnClickListener(addNewElementListener);
-//    }
-//
+
+    private void initAddOtherButton(View view) {
+        Button addButton = (Button) view.findViewById(R.id.health_insurance_add_new_button);
+        addButton.setText(globalLabelsMetaDTO.getPracticeCheckinDemogrInsAddNewButtonLabel());
+        addButton.setOnClickListener(addNewElementListener);
+    }
+
 //    protected void fillDetailAdapter(View view){
 //        RecyclerView detailsListRecyclerView = ((RecyclerView) view.findViewById(R.id.insurance_detail_list));
 //        detailsListRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
