@@ -30,6 +30,12 @@ public class PracticeSearchAdapter extends RecyclerView.Adapter<PracticeSearchAd
 
     private PracticeSelectionUserPractice selectedPractice;
 
+    /**
+     * Constructor
+     * @param context Context
+     * @param practiceList list of practices
+     * @param callback select practice callback
+     */
     public PracticeSearchAdapter(Context context, List<PracticeSelectionUserPractice> practiceList, SelectPracticeCallback callback){
         this.context = context;
         this.practiceList = practiceList;
@@ -54,7 +60,7 @@ public class PracticeSearchAdapter extends RecyclerView.Adapter<PracticeSearchAd
 
         holder.getItem().setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 selectedPractice = practice;
                 if(callback!=null){
                     callback.onSelectPractice(practice);

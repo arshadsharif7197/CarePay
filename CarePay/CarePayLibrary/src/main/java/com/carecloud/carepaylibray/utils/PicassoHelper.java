@@ -22,14 +22,19 @@ public class PicassoHelper {
     private PicassoHelper() {
     }
 
+    /**
+     * Instance Creation
+     * @param context Context
+     * @return Picasso
+     */
     public static Picasso getPicassoInstance(final Context context) {
 
-        Picasso sPicasso;
+        Picasso picasso;
         Picasso.Builder builder = new Picasso.Builder(context);
         builder.downloader(new CustomOkHttpDownloader(context));
-        sPicasso = builder.build();
+        picasso = builder.build();
 
-        return sPicasso;
+        return picasso;
     }
 
     public static void setHeaders(Map<String, String> headers) {
