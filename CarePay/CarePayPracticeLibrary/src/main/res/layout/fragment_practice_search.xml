@@ -39,6 +39,8 @@
         android:orientation="vertical"
         android:layout_marginStart="@dimen/dimen_26dp"
         android:layout_marginEnd="@dimen/dimen_26dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:layout_toRightOf="@+id/closeViewLayout">
 
         <FrameLayout
@@ -72,7 +74,7 @@
         <FrameLayout
             android:layout_width="@dimen/dialog_width"
             android:layout_height="@dimen/list_dialog_min_height"
-            android:background="@drawable/patient_mode_dialog_body_bg">
+            android:background="@color/white">
 
             <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
@@ -81,6 +83,31 @@
                 android:padding="@dimen/padding_xlarge"/>
 
         </FrameLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_1dp"
+            android:background="@color/light_gray"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/dimen_10dp"
+            android:background="@drawable/patient_mode_dialog_body_bg">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/nextButton"
+                style="@style/PaymentButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="@dimen/dimen_10dp"
+                android:background="@drawable/green_rounded_button_selector"
+                app:customAssetFont="gotham_rounded_medium" />
+
+
+        </LinearLayout>
 
     </LinearLayout>
 

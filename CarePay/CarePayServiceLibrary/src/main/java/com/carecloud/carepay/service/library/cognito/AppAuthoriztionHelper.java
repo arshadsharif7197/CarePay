@@ -33,6 +33,7 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.Authentic
 import com.amazonaws.regions.Regions;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.CognitoDTO;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
 
 import java.util.ArrayList;
@@ -56,6 +57,8 @@ public class AppAuthoriztionHelper {
     private String RefreshToken;
     private String IdToken;
     private String userAlias;
+
+    private TransitionDTO refreshTransition;
 
     public String getAccessToken() {
         return AccessToken;
@@ -91,10 +94,15 @@ public class AppAuthoriztionHelper {
 
 
     public void setAuthorizationTokens(UnifiedAuthenticationTokens authTokens){
-        setIdToken(authTokens.getIdToken());
-        setAccessToken(authTokens.getAccessToken());
-        setRefreshToken(authTokens.getRefreshToken());
-
+        if(authTokens.getIdToken()!=null) {
+            setIdToken(authTokens.getIdToken());
+        }
+        if(authTokens.getAccessToken()!=null) {
+            setAccessToken(authTokens.getAccessToken());
+        }
+        if(authTokens.getRefreshToken()!=null) {
+            setRefreshToken(authTokens.getRefreshToken());
+        }
     }
 
 
@@ -422,4 +430,11 @@ public class AppAuthoriztionHelper {
     }
 
 
+    public TransitionDTO getRefreshTransition() {
+        return refreshTransition;
+    }
+
+    public void setRefreshTransition(TransitionDTO refreshTransition) {
+        this.refreshTransition = refreshTransition;
+    }
 }
