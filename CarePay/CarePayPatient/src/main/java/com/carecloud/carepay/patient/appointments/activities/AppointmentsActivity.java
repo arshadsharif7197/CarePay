@@ -32,6 +32,7 @@ import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -58,7 +59,8 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             try{
                 List<IdsDTO> practicePatientIds = appointmentsDTO.getPayload().getPracticePatientIds();
                 if(practicePatientIds.isEmpty()){
-//                    practicePatientIds = getApplicationPreferences().getObjectFromSharedPreferences(CarePayConstants.KEY_PRACTICE_PATIENT_IDS, new TypeToken<ArrayList<IdsDTO>>(){}.getClass());
+                    IdsDTO[] practicePatientIdArray = getApplicationPreferences().getObjectFromSharedPreferences(CarePayConstants.KEY_PRACTICE_PATIENT_IDS, IdsDTO[].class);
+                    practicePatientIds = Arrays.asList(practicePatientIdArray);
                 }else {
                     getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants.KEY_PRACTICE_PATIENT_IDS, appointmentsDTO.getPayload().getPracticePatientIds());
                 }
