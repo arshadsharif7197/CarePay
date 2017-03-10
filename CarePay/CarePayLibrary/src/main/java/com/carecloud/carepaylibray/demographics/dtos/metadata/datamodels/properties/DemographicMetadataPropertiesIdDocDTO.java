@@ -4,6 +4,9 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by lsoco_user on 10/24/2016.
  * Specific metadata DTO for 'identity_document'
@@ -29,4 +32,8 @@ public class DemographicMetadataPropertiesIdDocDTO {
     @SerializedName("identity_document_type")
     @Expose
     public MetadataEntityDTO identityDocumentType = new MetadataEntityDTO();
+
+    @SerializedName("required")
+    @Expose
+    public List<MetadataEntityDTO> required = new ArrayList<>();
 }

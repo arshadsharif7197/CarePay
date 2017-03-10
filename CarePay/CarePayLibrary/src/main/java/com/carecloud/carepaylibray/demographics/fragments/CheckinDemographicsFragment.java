@@ -1178,6 +1178,16 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             allFieldsValid = false;
         }
 
+        if(demographicDTO.getMetadata().getDataModels().demographic.identityDocuments.properties.items.identityDocument.properties.required.size()>0 &&
+                demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(0).getIdDocPhothos().get(0)==null){
+            allFieldsValid = false;
+        }
+
+        if(demographicDTO.getMetadata().getDataModels().demographic.insurances.properties.items.insurance.properties.required.size()>0 &&
+                demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(0).getInsurancePhotos().get(0)==null){
+            allFieldsValid = false;
+        }
+
         if (!StringUtil.isNullOrEmpty(address1EditText.getText().toString())) {
             address1Label.setError(null);
             address1Label.setErrorEnabled(false);
