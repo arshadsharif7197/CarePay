@@ -8,6 +8,6 @@ public class PracticeIdDocScannerFragment extends IdDocScannerFragment {
 
     @Override
     public int getLayoutRes() {
-        return R.layout.fragment_demographics_scan_license_practice;
+        return R.layout.fragment_review_demographic_id_scan_document;
     }
 }
