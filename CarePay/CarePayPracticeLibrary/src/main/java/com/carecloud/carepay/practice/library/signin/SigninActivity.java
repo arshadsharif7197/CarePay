@@ -32,6 +32,8 @@ import com.carecloud.carepay.practice.library.signin.dtos.SigninDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninLabelsDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeLabelsDTO;
+import com.carecloud.carepay.practice.library.signin.fragments.PracticeSearchFragment;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -43,7 +45,6 @@ import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
-import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -63,7 +64,7 @@ import java.util.Map;
  * On success authentication screen will navigate next screen from the transition Json
  * On failed showing the authentication failure dialog with no navigation
  */
-public class SigninActivity extends BasePracticeActivity {
+public class SigninActivity extends BasePracticeActivity implements PracticeSearchFragment.SelectPracticeCallback {
 
     public enum SignInScreenMode {
         PRACTICE_MODE_SIGNIN, PATIENT_MODE_SIGNIN
@@ -468,9 +469,15 @@ public class SigninActivity extends BasePracticeActivity {
         UnifiedSignInDTO signInDTO = new UnifiedSignInDTO();
         signInDTO.setUser(user);
 
-        TransitionDTO signIn = signinDTO.getMetadata().getTransitions().getSignIn();
         Map<String, String> queryParams = new HashMap<>();
         Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
+
+        TransitionDTO signIn = null;
+        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
+            signIn = signinDTO.getMetadata().getTransitions().getSignIn();
+        }else if(getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE){
+            signIn = signinPatientModeDTO.getMetadata().getTransitions().getAction();
+        }
 
         if(signInDTO.isValidUser()){
             Gson gson = new Gson();
@@ -496,6 +503,7 @@ public class SigninActivity extends BasePracticeActivity {
             if(signInResponse != null) {
                 UnifiedAuthenticationTokens authTokens = signInResponse.getPayload().getPracticeModeAuth().getCognito().getAuthenticationTokens();
                 getAppAuthoriztionHelper().setAuthorizationTokens(authTokens);
+                getAppAuthoriztionHelper().setRefreshTransition(signinDTO.getMetadata().getTransitions().getRefresh());
                 getWorkflowServiceHelper().setAppAuthoriztionHelper(getAppAuthoriztionHelper());
             }
 
@@ -517,7 +525,7 @@ public class SigninActivity extends BasePracticeActivity {
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            signInButton.setEnabled(true);
+            signInButton.setClickable(true);
             getWorkflowServiceHelper().setAppAuthoriztionHelper(null);
             SystemUtil.showDefaultFailureDialog(getContext());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
@@ -534,24 +542,33 @@ public class SigninActivity extends BasePracticeActivity {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            PracticeSelectionResponseModel practiceSelectionModel  = DtoHelper.getConvertedDTO(PracticeSelectionResponseModel.class, workflowDTO);
 
-            PracticeSelectionUserPractice userPractice = findUserPractice("CareCloud Clinic", practiceSelectionModel.getPayload().getUserPracticesList());
+            Gson gson = new Gson();
+            Bundle args = new Bundle();
+            args.putString(CarePayConstants.PRACTICE_SELECTION_BUNDLE, gson.toJson(workflowDTO));
 
-            Map<String, String> queryMap = new HashMap<>();
-            queryMap.put("language", getApplicationPreferences().getUserLanguage());
-            queryMap.put("practice_mgmt", userPractice.getPracticeMgmt());
-            queryMap.put("practice_id", userPractice.getPracticeId());
+            PracticeSearchFragment fragment = new PracticeSearchFragment();
+            fragment.setArguments(args);
+            fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
 
-            TransitionDTO transitionDTO = practiceSelectionModel.getMetadata().getTransitions().getAuthenticate();
-            getWorkflowServiceHelper().execute(transitionDTO, signinCallback, queryMap);
+//            PracticeSelectionResponseModel practiceSelectionModel  = DtoHelper.getConvertedDTO(PracticeSelectionResponseModel.class, workflowDTO);
+//
+//            PracticeSelectionUserPractice userPractice = findUserPractice("CareCloud Clinic", practiceSelectionModel.getPayload().getUserPracticesList());
+//
+//            Map<String, String> queryMap = new HashMap<>();
+//            queryMap.put("language", getApplicationPreferences().getUserLanguage());
+//            queryMap.put("practice_mgmt", userPractice.getPracticeMgmt());
+//            queryMap.put("practice_id", userPractice.getPracticeId());
+//
+//            TransitionDTO transitionDTO = practiceSelectionModel.getMetadata().getTransitions().getAuthenticate();
+//            getWorkflowServiceHelper().execute(transitionDTO, signinCallback, queryMap);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             getWorkflowServiceHelper().setAppAuthoriztionHelper(null);
-            signInButton.setEnabled(true);
+            signInButton.setClickable(true);
             SystemUtil.showDefaultFailureDialog(getContext());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -704,5 +721,24 @@ public class SigninActivity extends BasePracticeActivity {
         }
         return null;
     }
+
+    @Override
+    public void onSelectPractice(PracticeSelectionResponseModel model, PracticeSelectionUserPractice userPractice) {
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("language", getApplicationPreferences().getUserLanguage());
+        queryMap.put("practice_mgmt", userPractice.getPracticeMgmt());
+        queryMap.put("practice_id", userPractice.getPracticeId());
+
+        TransitionDTO transitionDTO = model.getMetadata().getTransitions().getAuthenticate();
+        getWorkflowServiceHelper().execute(transitionDTO, signinCallback, queryMap);
+    }
+
+    @Override
+    public void onSelectPracticeCanceled() {
+        getWorkflowServiceHelper().setAppAuthoriztionHelper(null);
+        signInButton.setClickable(true);
+    }
+
+
 
 }

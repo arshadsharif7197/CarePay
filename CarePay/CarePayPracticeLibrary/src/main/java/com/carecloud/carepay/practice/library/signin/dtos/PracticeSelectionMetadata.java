@@ -9,6 +9,10 @@ import com.google.gson.annotations.SerializedName;
 
 public class PracticeSelectionMetadata {
 
+    @SerializedName("labels")
+    @Expose
+    private PracticeSelectionLabels labels = new PracticeSelectionLabels();
+
     @SerializedName("transitions")
     @Expose
     private PracticeSelectionTransitions transitions = new PracticeSelectionTransitions();
@@ -19,5 +23,13 @@ public class PracticeSelectionMetadata {
 
     public void setTransitions(PracticeSelectionTransitions transitions) {
         this.transitions = transitions;
+    }
+
+    public PracticeSelectionLabels getLabels() {
+        return labels;
+    }
+
+    public void setLabels(PracticeSelectionLabels labels) {
+        this.labels = labels;
     }
 }
