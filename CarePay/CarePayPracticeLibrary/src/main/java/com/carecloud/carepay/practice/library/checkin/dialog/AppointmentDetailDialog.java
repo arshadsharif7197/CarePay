@@ -248,7 +248,7 @@ public class AppointmentDetailDialog extends Dialog {
             builder.listener(new Picasso.Listener() {
                 @Override
                 public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                    shortName.setText(StringUtil.onShortDrName(appointmentPayloadDTO.getPatient().getFullName()));
+                    shortName.setText(appointmentPayloadDTO.getPatient().getShortName());
                 }
             });
 
@@ -339,7 +339,7 @@ public class AppointmentDetailDialog extends Dialog {
     private Map<String, String> getQueueQueryParam(QueryStrings queryStrings) {
         Map<String, String> queryMap = new HashMap<>();
         if (appointmentPayloadDTO != null) {
-            queryMap.put(queryStrings.getPatientId().getName(), appointmentPayloadDTO.getPatient().getId());
+            queryMap.put(queryStrings.getPatientId().getName(), appointmentPayloadDTO.getPatient().getPatientId());
         }
 
         return queryMap;
@@ -497,7 +497,7 @@ public class AppointmentDetailDialog extends Dialog {
 
     private void getPatientBalanceDetails(){
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("patient_id", appointmentPayloadDTO.getPatient().getId());
+        queryMap.put("patient_id", appointmentPayloadDTO.getPatient().getPatientId());
 
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getPatientBalances();
         sessionHandler.getWorkflowServiceHelper().execute(transitionDTO, patientBalancesCallback, queryMap);

@@ -1,7 +1,6 @@
 package com.carecloud.carepay.practice.library.checkin.dtos;
 
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
-import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

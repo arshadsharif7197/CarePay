@@ -17,35 +17,58 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class VisitTypeDialog extends Dialog {
 
-    List<VisitTypeDTO> visitTypesModel;
-    
+    private final OnDialogListItemClickListener callback;
+    private List<VisitTypeDTO> visitTypeList;
+
+    public interface OnDialogListItemClickListener {
+        void onDialogListItemClickListener(VisitTypeDTO selectedVisitType);
+    }
+
     /**
      * Constructor.
      * @param context context
      * @param model appointment item
-     * @param listener Onclick listener
+     * @param callback Onclick listener
      */
-    public VisitTypeDialog(Context context, final AppointmentResourcesDTO model, final OnDialogListItemClickListener listener, AppointmentsResultModel appointmentsResultModel) {
+    public VisitTypeDialog(Context context,
+                           AppointmentResourcesDTO model,
+                           OnDialogListItemClickListener callback,
+                           AppointmentsResultModel appointmentsResultModel) {
         super(context);
+        this.callback = callback;
 
         // This is the layout XML file that describes your Dialog layout
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_visit_type);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        visitTypeList = model.getResource().getVisitReasons();
+        sortVisitTypeListByName();
+
+        initializeViews(context, appointmentsResultModel);
+    }
+
+    private void initializeViews(Context context, AppointmentsResultModel appointmentsResultModel) {
         TextView titleView = (TextView) findViewById(R.id.visit_type_header_title);
         titleView.setText(appointmentsResultModel.getMetadata().getLabel().getVisitTypeHeading());
 
-        visitTypesModel = model.getResource().getVisitReasons();
-
         // Load and display list
-        ListView visitTypeList = (ListView) findViewById(R.id.visitTypeList);
-        VisitTypeListAdapter adapter = new VisitTypeListAdapter(context, (ArrayList<VisitTypeDTO>) visitTypesModel);
-        visitTypeList.setAdapter(adapter);
+        ListView visitTypeListView = (ListView) findViewById(R.id.visitTypeList);
+        visitTypeListView.setAdapter(new VisitTypeListAdapter(context, visitTypeList));
+        visitTypeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                VisitTypeDTO selectedVisitType = visitTypeList.get(position);
+                callback.onDialogListItemClickListener(selectedVisitType);
+                dismiss();
+            }
+        });
 
         findViewById(R.id.visitTypeCancelButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,27 +76,26 @@ public class VisitTypeDialog extends Dialog {
                 dismiss();
             }
         });
-
-        visitTypeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                VisitTypeDTO selectedVisitType = visitTypesModel.get(position);
-                listener.onDialogListItemClickListener(selectedVisitType);
-                dismiss();
-            }
-        });
     }
 
-    public interface OnDialogListItemClickListener {
-        void onDialogListItemClickListener(VisitTypeDTO selectedVisitType);
+    private void sortVisitTypeListByName() {
+        Collections.sort(visitTypeList, new Comparator<VisitTypeDTO>() {
+            @Override
+            public int compare(VisitTypeDTO lhs, VisitTypeDTO rhs) {
+                if (lhs != null && rhs != null) {
+                    return lhs.getName().compareTo(rhs.getName());
+                }
+                return -1;
+            }
+        });
     }
 
     private class VisitTypeListAdapter extends BaseAdapter {
 
         private Context context;
-        private ArrayList<VisitTypeDTO> listItems;
+        private List<VisitTypeDTO> listItems;
 
-        VisitTypeListAdapter(Context context, ArrayList<VisitTypeDTO> items) {
+        VisitTypeListAdapter(Context context, List<VisitTypeDTO> items) {
             this.context = context;
             this.listItems = items;
         }
@@ -115,6 +137,4 @@ public class VisitTypeDialog extends Dialog {
             TextView type;
         }
     }
-
-
 }

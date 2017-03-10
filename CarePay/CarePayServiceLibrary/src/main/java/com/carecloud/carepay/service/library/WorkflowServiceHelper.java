@@ -180,7 +180,7 @@ public class WorkflowServiceHelper {
         executeRequest(transitionDTO, callback, jsonBody, queryMap, getHeaders(customHeaders), 0);
     }
 
-    private void updateQueryMapWithDefault(Map<String, String> queryMap) {
+    private Map<String, String> updateQueryMapWithDefault(Map<String, String> queryMap) {
         if (queryMap == null) {
             queryMap = new HashMap<>();
         }
@@ -188,6 +188,8 @@ public class WorkflowServiceHelper {
             queryMap.put("practice_mgmt", applicationMode.getUserPracticeDTO().getPracticeMgmt());
             queryMap.put("practice_id", applicationMode.getUserPracticeDTO().getPracticeId());
         }
+
+        return queryMap;
     }
 
     private void executeRequest(@NonNull TransitionDTO transitionDTO,
@@ -198,7 +200,7 @@ public class WorkflowServiceHelper {
                                 int attemptCount) {
 
         callback.onPreExecute();
-        updateQueryMapWithDefault(queryMap);
+        queryMap = updateQueryMapWithDefault(queryMap);
         WorkflowService workflowService = ServiceGenerator.getInstance().createService(WorkflowService.class, headers); //, String token, String searchString
         Call<WorkflowDTO> call = null;
 

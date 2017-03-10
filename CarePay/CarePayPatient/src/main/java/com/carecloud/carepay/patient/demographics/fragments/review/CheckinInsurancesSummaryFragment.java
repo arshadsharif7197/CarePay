@@ -1,7 +1,6 @@
 package com.carecloud.carepay.patient.demographics.fragments.review;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;

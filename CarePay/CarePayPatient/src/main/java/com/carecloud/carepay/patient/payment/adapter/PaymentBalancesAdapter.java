@@ -9,10 +9,8 @@ import android.view.ViewGroup;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
@@ -49,7 +47,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
     public void onBindViewHolder(final PaymentBalancesAdapter.PaymentHistoryViewHolder holder, int position) {
         final PatiencePayloadDTO charge = paymentsPatientBalances.get(position);
         String locationName= CarePayConstants.NOT_DEFINED;
-        holder.shortName.setText(StringUtil.onShortDrName(locationName));
+        holder.shortName.setText(StringUtil.onShortName(locationName));
         holder.locationName.setText(locationName);
         holder.amount.setText(StringUtil.getFormattedBalanceAmount(charge.getAmount()));
         holder.payNow.setText(paymentDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentDetailsPayNow());

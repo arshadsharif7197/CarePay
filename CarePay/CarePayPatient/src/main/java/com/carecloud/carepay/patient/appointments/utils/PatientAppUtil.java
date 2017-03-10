@@ -2,7 +2,6 @@ package com.carecloud.carepay.patient.appointments.utils;
 
 import android.content.Context;
 import android.view.View;
-import android.view.Window;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepaylibray.base.BaseActivity;

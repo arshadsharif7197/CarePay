@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.consentforms.models.payload;
 
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -10,18 +11,18 @@ import com.google.gson.annotations.SerializedName;
 public class ConsentFormAppoPayloadDTO {
     @SerializedName("patient")
     @Expose
-    private ConsentFormAppoPatientDTO appointmentPatient = new ConsentFormAppoPatientDTO();
+    private PatientModel appointmentPatient = new PatientModel();
 
 
     @SerializedName("provider")
     @Expose
     private AppoPayloadProvider appoPayloadProvider = new AppoPayloadProvider();
 
-    public ConsentFormAppoPatientDTO getAppointmentPatient() {
+    public PatientModel getAppointmentPatient() {
         return appointmentPatient;
     }
 
-    public void setAppointmentPatient(ConsentFormAppoPatientDTO appointmentPatient) {
+    public void setAppointmentPatient(PatientModel appointmentPatient) {
         this.appointmentPatient = appointmentPatient;
     }
 
