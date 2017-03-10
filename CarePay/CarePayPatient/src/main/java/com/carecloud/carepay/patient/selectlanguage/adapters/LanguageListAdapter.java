@@ -12,7 +12,6 @@ import android.widget.RadioButton;
 
 import com.carecloud.carepay.patient.selectlanguage.models.LanguageOptionModel;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 

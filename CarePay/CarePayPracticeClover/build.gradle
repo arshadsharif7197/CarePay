@@ -31,6 +31,8 @@ android {
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.development.carecloud.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
             buildConfigField 'String', 'X_API_KEY', '"PhrvB0D7Bw9EbQ3aEXTCj3FvYtPDzbGr7X71uYJT"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
+
+            buildConfigField 'boolean', 'useUnifiedAuth', 'true'
         }
         qa {
             applicationId "com.carecloud.carepay.practice.clover"
@@ -38,6 +40,8 @@ android {
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.qa.carecloud.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
             buildConfigField 'String', 'X_API_KEY', '"VMGQTfHsuP5PSi3UbyXWh7xGWMflwZtHa55LZyXr"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
+
+            buildConfigField 'boolean', 'useUnifiedAuth', 'false'
         }
         clover_sandbox {
             applicationId "com.carecloud.carepay.practice.clover"
@@ -45,6 +49,8 @@ android {
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.development.carecloud.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
             buildConfigField 'String', 'X_API_KEY', '"PhrvB0D7Bw9EbQ3aEXTCj3FvYtPDzbGr7X71uYJT"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
+
+            buildConfigField 'boolean', 'useUnifiedAuth', 'false'
         }
         production {
             applicationId "com.carecloud.carepay.practice.clover"
@@ -52,6 +58,8 @@ android {
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.development.carecloud.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
             buildConfigField 'String', 'X_API_KEY', '"PhrvB0D7Bw9EbQ3aEXTCj3FvYtPDzbGr7X71uYJT"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
+
+            buildConfigField 'boolean', 'useUnifiedAuth', 'false'
         }
     }
 }

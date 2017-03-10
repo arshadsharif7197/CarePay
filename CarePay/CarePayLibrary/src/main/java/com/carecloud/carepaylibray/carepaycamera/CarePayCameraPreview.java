@@ -25,7 +25,6 @@ import android.view.SurfaceView;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepaylibray.qrcodescanner.DisplayUtils;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.io.IOException;
 import java.util.List;

@@ -152,7 +152,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         setTypefaces(mainView);
 
         initViewFromModels(mainView);
-
+        stepProgressBar.setCurrentProgressDot(1);
         return mainView;
 
     }

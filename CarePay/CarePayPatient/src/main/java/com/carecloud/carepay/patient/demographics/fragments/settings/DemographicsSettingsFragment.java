@@ -20,6 +20,7 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.models.PatientModel;
@@ -126,7 +127,12 @@ public class DemographicsSettingsFragment extends BaseFragment {
         signOutButton.setText(signOutString);
         title.setText(settingsString);
         patientNameTextview.setText(getUserName());
-        patientIdTextview.setText(getCognitoAppHelper().getCurrUser());
+
+        if(!HttpConstants.isUseUnifiedAuth()) {
+            patientIdTextview.setText(getAppAuthoriztionHelper().getCurrUser());
+        }else{
+            patientIdTextview.setText(getAppAuthoriztionHelper().getUserAlias());
+        }
         try {
          DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
          DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
@@ -322,8 +328,10 @@ public class DemographicsSettingsFragment extends BaseFragment {
             hideProgressDialog();
             signOutButton.setEnabled(true);
             // log out previous user from Cognito
-            getCognitoAppHelper().getPool().getUser().signOut();
-            getCognitoAppHelper().setUser(null);
+            if(!HttpConstants.isUseUnifiedAuth()) {
+                getAppAuthoriztionHelper().getPool().getUser().signOut();
+                getAppAuthoriztionHelper().setUser(null);
+            }
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
         }
 

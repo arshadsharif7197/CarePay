@@ -45,7 +45,7 @@ public class PatientSearchResultAdapter extends RecyclerView.Adapter<PatientSear
     @Override
     public void onBindViewHolder(PatientSearchResultAdapter.ViewHolder holder, int position) {
         PatientModel patient = patients.get(position);
-        holder.name.setText(patient.getFirstName() + " " + patient.getLastName());
+        holder.name.setText(patient.getFullName());
         holder.patientDOBTextView.setText(patient.getFormattedDateOfBirth());
     }
 

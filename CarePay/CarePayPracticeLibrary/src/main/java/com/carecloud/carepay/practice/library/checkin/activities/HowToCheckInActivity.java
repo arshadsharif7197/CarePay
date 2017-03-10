@@ -20,16 +20,12 @@ import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeLabelsDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
-import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookButton;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
 import com.carecloud.carepaylibray.qrcodescanner.ScannerQRActivity;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -264,7 +260,12 @@ public class HowToCheckInActivity extends BasePracticeActivity {
                 .equals(getApplicationMode().getUserPracticeDTO().getPracticeMgmt())
                 && scanQRCodeResultDTO.getPracticeId()
                 .equals(getApplicationMode().getUserPracticeDTO().getPracticeId())){
-            getCognitoAppHelper().setUser(scanQRCodeResultDTO.getUserName());
+
+            if(!HttpConstants.isUseUnifiedAuth()) {
+                getAppAuthoriztionHelper().setUser(scanQRCodeResultDTO.getUserName());
+            }else{
+                getAppAuthoriztionHelper().setUserAlias(scanQRCodeResultDTO.getUserName());
+            }
            // getApplicationMode().getUserPracticeDTO().setUserName(scanQRCodeResultDTO.getUserName());
             Map<String, String> queryMap = new HashMap<String, String>();
             queryMap.put("appointment_id", scanQRCodeResultDTO.getAppointmentId());

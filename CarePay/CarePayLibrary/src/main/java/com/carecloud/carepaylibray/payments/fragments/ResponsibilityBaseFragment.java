@@ -65,8 +65,7 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment {
         paymentDetailsListRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
         String detailsLabel = paymentDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentResponsibilityDetails();
-        PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(),
-                paymentDTO, paymentList, actionCallback, detailsLabel);
+        PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(), paymentDTO, paymentList, actionCallback, detailsLabel, null);
         paymentDetailsListRecyclerView.setAdapter(adapter);
     }
 

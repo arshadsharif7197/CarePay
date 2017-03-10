@@ -1,22 +1,16 @@
 package com.carecloud.carepay.practice.library.checkin.dtos;
 
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Jahirul Bhuiyan on 10/27/2016.
- */
-
 public class PatientBalanceDTO {
-    @SerializedName("metadata")
+    @SerializedName("demographics")
     @Expose
-    private PatientBalanceMetadataDTO metadata = new PatientBalanceMetadataDTO();
-    @SerializedName("payload")
-    @Expose
-    private List<PatientBalancePayloadDTO> payload = new ArrayList<>();
+    private DemographicPayloadInfoDTO demographics = new DemographicPayloadInfoDTO();
 
     @SerializedName("pending_balances")
     @Expose
@@ -31,38 +25,9 @@ public class PatientBalanceDTO {
     }
 
     /**
-     *
-     * @return
-     * The metadata
+     * @return demographics
      */
-    public PatientBalanceMetadataDTO getMetadata() {
-        return metadata;
-    }
-
-    /**
-     *
-     * @param metadata
-     * The metadata
-     */
-    public void setMetadata(PatientBalanceMetadataDTO metadata) {
-        this.metadata = metadata;
-    }
-
-    /**
-     *
-     * @return
-     * The payload
-     */
-    public List<PatientBalancePayloadDTO> getPayload() {
-        return payload;
-    }
-
-    /**
-     *
-     * @param payload
-     * The payload
-     */
-    public void setPayload(List<PatientBalancePayloadDTO> payload) {
-        this.payload = payload;
+    public DemographicPayloadInfoDTO getDemographics() {
+        return demographics;
     }
 }

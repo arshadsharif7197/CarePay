@@ -10,11 +10,10 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.checkin.CheckInActivity;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.PatientBalanceDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.PatientDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.PendingBalanceDTO;
 import com.carecloud.carepay.practice.library.customcomponent.AppointmentStatusCardView;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
-import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,8 +70,8 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
     @Override
     public void onBindViewHolder(CheckedInAppointmentAdapter.CartViewHolder holder, final int position) {
         AppointmentPayloadDTO appointmentItem = appointmentArrayList.get(position);
-        PatientDTO patientModel = appointmentItem.getPatient();
-        holder.appointmentStatusCartView.setPatientName(patientModel.getFirstName() + " " + patientModel.getLastName());
+        PatientModel patientModel = appointmentItem.getPatient();
+        holder.appointmentStatusCartView.setPatientName(patientModel.getFullName());
         holder.appointmentStatusCartView.setAppointmentId(appointmentItem.getId());
 
         holder.appointmentStatusCartView.setAmount(getTotalBalance(position));
@@ -81,7 +80,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
         holder.appointmentStatusCartView.setAppointmentTime(DateUtil.getInstance().setDateRaw(appointmentItem.getStartTime()).getDate().getTime());
         holder.appointmentStatusCartView.setTag(appointmentItem);
         holder.appointmentStatusCartView.setWaitingRoom(isWaitingRoom);
-        holder.appointmentStatusCartView.setShortName(StringUtil.onShortDrName(patientModel.getFirstName() + " " + patientModel.getLastName()));
+        holder.appointmentStatusCartView.setShortName(patientModel.getShortName());
         /*Picasso.with(context).load(patientModel.getPhoto()).transform(
                 new CircleImageTransform()).resize(160, 160).into(holder.patientPicImageView);
         holder.paymentTextview.setTag(patientModel);
@@ -90,7 +89,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
 
     private double getTotalBalance(int position) {
         AppointmentPayloadDTO appointmentItem = appointmentArrayList.get(position);
-        String id = appointmentItem.getPatient().getId();
+        String id = appointmentItem.getPatient().getPatientId();
 
         for (PatientBalanceDTO patientBalanceDTO: patientBalances) {
             PendingBalanceDTO pendingBalanceDTO = patientBalanceDTO.getPendingBalances().get(0);

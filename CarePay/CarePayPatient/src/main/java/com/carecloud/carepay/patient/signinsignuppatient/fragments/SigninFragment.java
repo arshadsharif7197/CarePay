@@ -27,12 +27,17 @@ import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
+import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
+import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
+import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,7 +69,7 @@ public class SigninFragment extends BaseFragment {
     private boolean isEmptyEmail;
     private boolean isEmptyPassword;
     private SignInLablesDTO signInLablesDTO;
-    private String langaueid;
+    private String languageid;
 
     private Handler handler = new Handler();
 
@@ -72,7 +77,7 @@ public class SigninFragment extends BaseFragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_signin, container, false);
-        langaueid=getApplicationPreferences().getUserLanguage();
+        languageid =getApplicationPreferences().getUserLanguage();
         signInLablesDTO = ((SigninSignupActivity) getActivity()).getSignInLablesDTO();
         signInSignUpDTO = ((SigninSignupActivity) getActivity()).getSignInSignUpDTO();
         parentLayout = (LinearLayout) view.findViewById(R.id.signin_layout);
@@ -83,8 +88,6 @@ public class SigninFragment extends BaseFragment {
         setEditTexts(view);
 
         setClickables(view);
-
-//        setTypefaces();
 
         isEmptyEmail = true;
         isEmptyPassword = true;
@@ -182,19 +185,6 @@ public class SigninFragment extends BaseFragment {
         }
     }
 
-    private void setTypefaces() {
-//        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), emailEditText);
-//        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), passwordEditText);
-
-//        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), emailTextInput);
-//        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), passwordTexInput);
-
-//        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), signinButton);
-//        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), signupButton);
-
-//        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), changeLanguageTextView);
-//        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), forgotPasswordTextView);
-    }
 
     private void setEditTexts(View view) {
         emailTextInput = (TextInputLayout) view.findViewById(R.id.signInEmailTextInputLayout);
@@ -370,15 +360,73 @@ public class SigninFragment extends BaseFragment {
         passwordTexInput.setError(null);
     }
 
-    // cognito
     private void signInUser() {
         Log.v(LOG_TAG, "sign in user");
         String userName = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
-        getCognitoAppHelper().signIn(userName, password, cognitoActionCallback);
+        if(!HttpConstants.isUseUnifiedAuth()) {
+            getAppAuthoriztionHelper().signIn(userName, password, cognitoActionCallback);
+        }else{
+            unifiedSignIn(userName, password);
+        }
 
     }
+
+    private void unifiedSignIn(String userName, String password){
+        UnifiedSignInUser user = new UnifiedSignInUser();
+        user.setEmail(userName);
+        user.setPassword(password);
+
+        UnifiedSignInDTO signInDTO = new UnifiedSignInDTO();
+        signInDTO.setUser(user);
+
+        TransitionDTO signIn = signInSignUpDTO.getMetadata().getTransitions().getSignIn();
+        Map<String, String> queryParams = new HashMap<>();
+        Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
+
+        if(signInDTO.isValidUser()){
+            Gson gson = new Gson();
+            getWorkflowServiceHelper().execute(signIn, unifiedLoginCallback, gson.toJson(signInDTO), queryParams, headers);
+            getAppAuthoriztionHelper().setUserAlias(userName);
+        }
+    }
+
+    private WorkflowServiceCallback unifiedLoginCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+
+            Gson gson = new Gson();
+            String signInResponseString = gson.toJson(workflowDTO);
+            UnifiedSignInResponse signInResponse = gson.fromJson(signInResponseString, UnifiedSignInResponse.class);
+            if(signInResponse != null) {
+                UnifiedAuthenticationTokens authTokens = signInResponse.getPayload().getPatientAppAuth().getCognito().getAuthenticationTokens();
+                getAppAuthoriztionHelper().setAuthorizationTokens(authTokens);
+                getWorkflowServiceHelper().setAppAuthoriztionHelper(getAppAuthoriztionHelper());
+            }
+
+            Map<String, String> query = new HashMap<>();
+            Map<String, String> header = new HashMap<>();
+            header.put("Accept-Language", languageid);
+            getWorkflowServiceHelper().execute(signInSignUpDTO.getMetadata().getTransitions().getAuthenticate(), loginCallback, query, header);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            signinButton.setEnabled(true);
+            getWorkflowServiceHelper().setAppAuthoriztionHelper(null);
+            SystemUtil.showDefaultFailureDialog(getActivity());
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
 
     private WorkflowServiceCallback loginCallback = new WorkflowServiceCallback() {
         @Override
@@ -407,7 +455,7 @@ public class SigninFragment extends BaseFragment {
         public void onLoginSuccess() {
             Map<String, String> query = new HashMap<>();
             Map<String, String> header = new HashMap<>();
-            header.put("Accept-Language",langaueid);
+            header.put("Accept-Language", languageid);
             getWorkflowServiceHelper().execute(signInSignUpDTO.getMetadata().getTransitions().getAuthenticate(), loginCallback,query,header);
             progressBar.setVisibility(View.INVISIBLE);
         }
@@ -428,35 +476,4 @@ public class SigninFragment extends BaseFragment {
         }
     };
 
-    /*private void getDemographicInformation() {
-        progressBar.setVisibility(View.VISIBLE);
-        DemographicService apptService = (new BaseServiceGenerator(getActivity())).createService(DemographicService.class); //, String token, String searchString
-        Call<DemographicDTO> call = apptService.fetchDemographics();
-        call.enqueue(new Callback<DemographicDTO>() {
-            @Override
-            public void onResponse(Call<DemographicDTO> call, Response<DemographicDTO> response) {
-                DemographicDTO demographicDTO = response.body();
-                progressBar.setVisibility(View.GONE);
-                Log.v(LOG_TAG, "demographic info fetched");
-                launchAppointments(demographicDTO);
-            }
-
-            @Override
-            public void onFailure(Call<DemographicDTO> call, Throwable throwable) {
-                progressBar.setVisibility(View.GONE);
-                Log.e(LOG_TAG, "failed fetching demogr info", throwable);
-            }
-        });
-    }
-
-    private void launchAppointments(DemographicDTO demographicDTO) {
-        // do to Demographics
-        Intent intent = new Intent(getActivity(), AppointmentsActivity.class);
-        // pass the object into the gson
-        Gson gson = new Gson();
-        intent.putExtra("demographics_model", gson.toJson(demographicDTO, DemographicDTO.class));
-
-        startActivity(intent);
-        getActivity().finish();
-    }*/
 }

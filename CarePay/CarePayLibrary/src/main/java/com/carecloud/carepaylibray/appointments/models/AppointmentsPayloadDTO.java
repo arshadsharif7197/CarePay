@@ -1,6 +1,7 @@
 
 package com.carecloud.carepaylibray.appointments.models;
 
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -24,7 +25,7 @@ public class AppointmentsPayloadDTO {
     private AppointmentStatusDTO appointmentStatusModel = new AppointmentStatusDTO();
     @SerializedName("patient")
     @Expose
-    private AppointmentPatientDTO patient = new AppointmentPatientDTO();
+    private PatientModel patient = new PatientModel();
     @SerializedName("location")
     @Expose
     private AppointmentLocationsDTO location = new AppointmentLocationsDTO();
@@ -154,7 +155,7 @@ public class AppointmentsPayloadDTO {
      * @return
      *     The patient
      */
-    public AppointmentPatientDTO getPatient() {
+    public PatientModel getPatient() {
         return patient;
     }
 
@@ -163,7 +164,7 @@ public class AppointmentsPayloadDTO {
      * @param patient
      *     The patient
      */
-    public void setPatient(AppointmentPatientDTO patient) {
+    public void setPatient(PatientModel patient) {
         this.patient = patient;
     }
 

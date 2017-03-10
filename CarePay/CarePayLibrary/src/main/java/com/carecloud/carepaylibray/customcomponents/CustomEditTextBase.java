@@ -1,17 +1,13 @@
 package com.carecloud.carepaylibray.customcomponents;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.content.ContextCompat;
-import android.text.InputType;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import org.apache.commons.lang3.text.WordUtils;

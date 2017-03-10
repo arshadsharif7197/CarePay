@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
@@ -109,6 +108,10 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         setTypefaces(view);
 
         populateViewsFromModel(view);
+    }
+
+    public void setGlobalLabelsDTO(DemographicLabelsDTO globalLabelsDTO) {
+        this.globalLabelsDTO = globalLabelsDTO;
     }
 
     @Override
