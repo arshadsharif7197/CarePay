@@ -216,10 +216,22 @@ public class ApplicationPreferences {
         editor.apply();
     }
 
+    /**
+     * Save object to Shared Preferences. Object will be stored as a JSON String
+     * @param key preference key
+     * @param object object to save
+     */
     public void writeObjectToSharedPreference(String key, Object object){
         writeStringToSharedPref(key, new Gson().toJson(object));
     }
 
+    /**
+     * Retrieve a previously saved JSON object from Shared Prefferences
+     * @param key preference key
+     * @param objectClass S Type Object class for deserializing
+     * @param <S> Type
+     * @return S Type object
+     */
     public <S> S getObjectFromSharedPreferences(String key, Class<S> objectClass){
         Gson gson = new Gson();
         try{
