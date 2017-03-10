@@ -27,6 +27,10 @@ public class ApplicationMode {
         return userPracticeDTO;
     }
 
+    /**
+     * @param appAuthorizationHelper auth helper
+     * @param userPracticeDTO practice user DTO
+     */
     public void setUserPracticeDTO(AppAuthorizationHelper appAuthorizationHelper, UserPracticeDTO userPracticeDTO) {
         this.userPracticeDTO = userPracticeDTO;
         if(HttpConstants.isUseUnifiedAuth()){

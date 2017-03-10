@@ -107,6 +107,7 @@ public class CarePayApplication extends MultiDexApplication
         return workflowServiceHelper;
     }
 
+    @Override
     public AppAuthorizationHelper getAppAuthorizationHelper() {
         if (appAuthorizationHelper == null) {
             appAuthorizationHelper = new AppAuthorizationHelper(this, getApplicationMode());
