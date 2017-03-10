@@ -108,7 +108,10 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         boolean isEnabled = passConstraints(view);
         nextButton.setEnabled(isEnabled);
         nextButton.setClickable(isEnabled);
-        nextButton.setBackground(ContextCompat.getDrawable(getContext(),isEnabled? R.drawable.bg_green_overlay  : R.drawable.bg_silver_overlay));
+        Context context = getActivity();
+        if (context != null) {
+            nextButton.setBackground(ContextCompat.getDrawable(context, isEnabled ? R.drawable.bg_green_overlay : R.drawable.bg_silver_overlay));
+        }
     }
 
     protected abstract boolean passConstraints(View view);

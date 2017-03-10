@@ -49,6 +49,7 @@ import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
 import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterface;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHolder;
+import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
 import com.carecloud.carepaylibray.demographics.scanner.ProfilePictureFragment;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
 import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearchFragment;
@@ -78,7 +79,8 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
         HealthInsuranceFragment.InsuranceDocumentScannerListener,*/ MedicationsAllergyFragment.MedicationAllergyCallback,
         CheckinDemographicsInterface, MedicationAllergySearchFragment.MedicationAllergySearchCallback,
         PaymentNavigationCallback, CheckinFlowCallback,
-        CheckInDemographicsBaseFragment.CheckInNavListener, AddressFragment.AddressFragmentListener, DemographicsFragment.DemographicsListener{
+        CheckInDemographicsBaseFragment.CheckInNavListener, AddressFragment.AddressFragmentListener, DemographicsFragment.DemographicsListener,
+        PersonalInfoFragment.UpdateProfilePictureListener {
 
 
     public final static  int SUBFLOW_DEMOGRAPHICS_INS = 0;
@@ -487,6 +489,7 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
     }
 
 
+
     /**
      * Enum to identify the forms
      */
@@ -808,6 +811,20 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
         fm.beginTransaction()
                 .replace(com.carecloud.carepaylibrary.R.id.revdemographicsAddressPicCapturer, fragment, tag)
                 .commit();
+    }
+
+    @Override
+    public String getProfilePicture() {
+        ProfilePictureFragment fragment = (ProfilePictureFragment)
+                getSupportFragmentManager().findFragmentById(R.id.revdemographicsAddressPicCapturer);
+
+        if (fragment != null) {
+            DemographicPersDetailsPayloadDTO demographicPersDetailsPayloadDTO = fragment.getDemographicPersDetailsPayloadDTO();
+            if(demographicPersDetailsPayloadDTO != null){
+                return demographicPersDetailsPayloadDTO.getProfilePhoto();
+            }
+        }
+        return null;
     }
 
     public void initializeIdentificationFragment(DemographicLabelsDTO globalLabelDTO,

@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographics.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
@@ -34,7 +35,7 @@ import com.carecloud.carepaylibray.utils.ValidationHelper;
 public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
 
     private DemographicDTO demographicDTO;
-
+    private UpdateProfilePictureListener profilePicturelistener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,6 +49,18 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         (view.findViewById(R.id.toolbar_layout)).setVisibility(View.INVISIBLE);
         stepProgressBar.setCurrentProgressDot(0);
         return view;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            profilePicturelistener = (UpdateProfilePictureListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement UpdateProfilePictureListener");
+        }
     }
 
     private void formatEditText(final View view) {
@@ -413,6 +426,11 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
             );
         }
 
+        String profileImage = profilePicturelistener.getProfilePicture();
+        if (!StringUtil.isNullOrEmpty(profileImage)){
+            demographicPersDetailsPayloadDTO.setProfilePhoto(profileImage);
+        }
+
         demographicDTO.getPayload().getDemographics().getPayload().setPersonalDetails(demographicPersDetailsPayloadDTO);
 
         DemographicAddressPayloadDTO demographicAddressPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getAddress();
@@ -429,5 +447,9 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         demographicDTO.getPayload().getDemographics().getPayload().setAddress(demographicAddressPayloadDTO);
 
         return demographicDTO;
+    }
+
+    public interface UpdateProfilePictureListener{
+        public String getProfilePicture();
     }
 }

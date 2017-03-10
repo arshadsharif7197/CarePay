@@ -153,6 +153,10 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
         this.globalLabelsDTO = globalLabelsDTO;
     }
 
+    public DemographicPersDetailsPayloadDTO getDemographicPersDetailsPayloadDTO() {
+        return demographicPersDetailsPayloadDTO;
+    }
+
     @Override
     protected void setChangeFocusListeners() {
 
