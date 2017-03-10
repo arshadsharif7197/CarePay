@@ -413,7 +413,6 @@ public class WorkflowServiceHelper {
 
 
                 // Re-try failed request with new auth headers
-                headers.remove("Authorization");
                 execute(transitionDTO, callback, jsonBody, queryMap, headers);
             }
 
