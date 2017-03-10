@@ -783,6 +783,10 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 */
 
 
+        TextView optinalLabelTextView = (TextView) view.findViewById(R.id.demogrAddressOptionalLabel);
+        optinalLabelTextView.setText(globalLabelsMetaDTO.getDemographicsDetailsOptionalHint());
+
+
 
         ((EditText) view.findViewById(R.id.addressEditTextId)).setHint(addressMetaDTO.properties.address1.getLabel());
         ((EditText) view.findViewById(R.id.addressEditText2Id)).setHint(addressMetaDTO.properties.address2.getLabel());

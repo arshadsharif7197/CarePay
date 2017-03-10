@@ -62,7 +62,11 @@
 
             <TextView
                 android:id="@+id/demogrAddressOptionalLabel"
-                style="@style/SignupRequireHintStyle" />
+                style="@style/SignupRequireHintStyle"
+                android:textColor="@color/cadet_gray"
+                />
+
+
 
         </FrameLayout>
 
@@ -101,33 +105,35 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <LinearLayout
+       <!--     <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
+-->
                 <TextView
                     android:id="@+id/stateTextInputLayout"
                     style="@style/FloatingLabelStyle"
                     android:paddingLeft="@dimen/dimen_15dp"
+                    android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:includeFontPadding="false"
-                    android:layout_height="@dimen/dimen_9dp"/>
+                    android:layout_height="@dimen/dimen_5dp"/>
 
                 <TextView
                     android:id="@+id/reviewDemographicsStateAutoCompleteTextView"
                     style="@style/SigninSignupEditStyle"
                     android:clickable="true"/>
 
-            </LinearLayout>
-
-
-
-
+        <!--    </LinearLayout>
+-->
 
 
         </LinearLayout>
+
+
+
+
 
     </LinearLayout>
 

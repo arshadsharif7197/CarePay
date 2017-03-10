@@ -79,13 +79,13 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         isPractice = getApplicationMode().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
-
+        demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
         initDTOs();
         initLabels(view);
 //        initTitle(view);
 //        initSwitch(view);
         initActiveSection(view);
-
+        checkIfEnableButton(view);
         SystemUtil.hideSoftKeyboard(getActivity());
         return view;
     }
@@ -102,7 +102,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
 
     @Override
     protected DemographicDTO updateDemographicDTO(View view) {
-        return new DemographicDTO();
+        return demographicDTO;
     }
 
 //    private void initTitle(View view){
