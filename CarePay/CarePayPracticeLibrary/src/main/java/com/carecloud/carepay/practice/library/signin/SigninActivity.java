@@ -114,8 +114,10 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
             if (signinPatientModeDTO != null && signinPatientModeDTO.getPayload() != null
                     && signinPatientModeDTO.getPayload().getPatientModeSigninData() != null
                     && signinPatientModeDTO.getPayload().getPatientModeSigninData().getCognito() != null) {
-                getApplicationMode().setCognitoDTO(signinPatientModeDTO.getPayload().getPatientModeSigninData().getCognito());
-                getAppAuthoriztionHelper();
+                if(!HttpConstants.isUseUnifiedAuth()) {
+                    getApplicationMode().setCognitoDTO(signinPatientModeDTO.getPayload().getPatientModeSigninData().getCognito());
+                    getAppAuthoriztionHelper();
+                }
                 signinScreenMode = SignInScreenMode.valueOf(signinPatientModeDTO.getState().toUpperCase());
             }
         }
@@ -477,7 +479,7 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
         if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
             signIn = signinDTO.getMetadata().getTransitions().getSignIn();
         }else if(getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE){
-            signIn = signinPatientModeDTO.getMetadata().getTransitions().getAction();
+            signIn = signinPatientModeDTO.getMetadata().getTransitions().getSignIn();
         }
 
         if(signInDTO.isValidUser()){
@@ -504,7 +506,9 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
             if(signInResponse != null) {
                 UnifiedAuthenticationTokens authTokens = signInResponse.getPayload().getPracticeModeAuth().getCognito().getAuthenticationTokens();
                 getAppAuthoriztionHelper().setAuthorizationTokens(authTokens);
-                getAppAuthoriztionHelper().setRefreshTransition(signinDTO.getMetadata().getTransitions().getRefresh());
+                if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
+                    getAppAuthoriztionHelper().setRefreshTransition(signinDTO.getMetadata().getTransitions().getRefresh());
+                }
                 getWorkflowServiceHelper().setAppAuthoriztionHelper(getAppAuthoriztionHelper());
             }
 
@@ -516,10 +520,12 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
                 transitionDTO = signinDTO.getMetadata().getTransitions().getAuthenticate();
                 getWorkflowServiceHelper().execute(transitionDTO, selectPracticeCallback, queryMap);
             } else if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
-                transitionDTO = signinPatientModeDTO.getMetadata().getLinks().getLogin();
+                transitionDTO = signinPatientModeDTO.getMetadata().getTransitions().getAction();
                 queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
                 queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
-                getWorkflowServiceHelper().execute(transitionDTO, signinPatientModeCallback, queryMap);
+                queryMap.put("patient_id", signInResponse.getPayload().getSignIn().getMetadata().getPatientId());
+                getApplicationMode().setPatientId(signInResponse.getPayload().getSignIn().getMetadata().getPatientId());
+                getWorkflowServiceHelper().execute(transitionDTO, signinPatientModeAppointmentsCallback, queryMap);
             }
         }
 
@@ -527,7 +533,9 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             signInButton.setClickable(true);
-            getWorkflowServiceHelper().setAppAuthoriztionHelper(null);
+            if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
+                getWorkflowServiceHelper().setAppAuthoriztionHelper(null);
+            }
             SystemUtil.showDefaultFailureDialog(getContext());
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

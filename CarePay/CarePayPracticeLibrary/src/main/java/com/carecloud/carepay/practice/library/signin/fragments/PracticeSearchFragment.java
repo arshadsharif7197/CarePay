@@ -153,6 +153,7 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
         public void onClick(View view) {
             if(selectedPractice!=null){
                 callback.onSelectPractice(practiceSelectionModel, selectedPractice);
+                dismiss();
             }
         }
     };
