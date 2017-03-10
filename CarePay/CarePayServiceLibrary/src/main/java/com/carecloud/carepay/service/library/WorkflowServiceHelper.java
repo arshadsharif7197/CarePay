@@ -6,6 +6,7 @@ import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.dtos.RefreshDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
@@ -64,7 +65,7 @@ public class WorkflowServiceHelper {
 
                 userAuthHeaders.put("username", applicationMode.getUserPracticeDTO().getUserName());
                 if(HttpConstants.isUseUnifiedAuth()){
-                    userAuthHeaders.put("Authorization", appAuthorizationHelper.getToken());
+                    userAuthHeaders.put("Authorization", appAuthorizationHelper.getIdToken());
 
                     if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
                         userAuthHeaders.put("username_patient", appAuthorizationHelper.getUserAlias());
@@ -79,7 +80,7 @@ public class WorkflowServiceHelper {
 
             } else {
                 if(HttpConstants.isUseUnifiedAuth()){
-                    userAuthHeaders.put("Authorization", appAuthorizationHelper.getToken());
+                    userAuthHeaders.put("Authorization", appAuthorizationHelper.getIdToken());
                     userAuthHeaders.put("username", appAuthorizationHelper.getUserAlias());
 
                 }else if (!isNullOrEmpty(appAuthorizationHelper.getCurrUser())) {//this is the old way
@@ -104,10 +105,6 @@ public class WorkflowServiceHelper {
      */
     private Map<String, String> getHeaders(Map<String, String> customHeaders) {
         Map<String, String> headers = getUserAuthenticationHeaders();
-
-        if (appAuthorizationHelper == null || appAuthorizationHelper.isTokenExpired()) {
-            headers.putAll(getApplicationStartHeaders());
-        }
 
         // Add auth headers to custom in case custom has old auth headers
         if (customHeaders != null) {
@@ -351,8 +348,10 @@ public class WorkflowServiceHelper {
     }
 
     private void executeRefreshTokenRequest(@NonNull final WorkflowServiceCallback callback) {
-        appAuthorizationHelper.setTokenExpired(true);
-        execute(appAuthorizationHelper.getRefreshTransition(), callback);
+        Gson gson = new Gson();
+        String jsonBody = gson.toJson(new RefreshDTO(appAuthorizationHelper.getRefreshToken()));
+
+        execute(appAuthorizationHelper.getRefreshTransition(), callback, jsonBody, null, getApplicationStartHeaders());
     }
 
     private WorkflowServiceCallback getRefreshTokenCallback(@NonNull final TransitionDTO transitionDTO,
@@ -383,7 +382,6 @@ public class WorkflowServiceHelper {
 
             @Override
             public void onFailure(String exceptionMessage) {
-                appAuthorizationHelper.setTokenExpired(false);
                 callback.onFailure(exceptionMessage);
             }
         };

@@ -59,7 +59,6 @@ public class AppAuthorizationHelper {
     private String userAlias;
 
     private TransitionDTO refreshTransition;
-    private boolean isTokenExpired = true;
 
     public String getAccessToken() {
         return accessToken;
@@ -85,31 +84,6 @@ public class AppAuthorizationHelper {
 
     public String getIdToken() {
         return idToken;
-    }
-
-    /**
-     * @return ID token if not expired, otherwise refresh token
-     */
-    public String getToken() {
-        if (isTokenExpired) {
-            return refreshToken;
-        }
-
-        return idToken;
-    }
-
-    /**
-     * @param tokenExpired true if token has expired
-     */
-    public void setTokenExpired(boolean tokenExpired) {
-        isTokenExpired = tokenExpired;
-    }
-
-    /**
-     * @return true if token has expired
-     */
-    public boolean isTokenExpired() {
-        return isTokenExpired;
     }
 
     /**
@@ -143,8 +117,6 @@ public class AppAuthorizationHelper {
         if(authTokens.getRefreshToken()!=null) {
             setRefreshToken(authTokens.getRefreshToken());
         }
-
-        isTokenExpired = false;
     }
 
 
