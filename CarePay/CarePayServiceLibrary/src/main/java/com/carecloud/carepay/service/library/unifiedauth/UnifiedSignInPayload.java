@@ -17,6 +17,10 @@ public class UnifiedSignInPayload {
     @Expose
     private UnifiedAuthorizationModel practiceModeAuth = new UnifiedAuthorizationModel();
 
+    @SerializedName("sign_in")
+    @Expose
+    private UnifiedPatientModeModel signIn = new UnifiedPatientModeModel();
+
     public UnifiedAuthorizationModel getPatientAppAuth() {
         return patientAppAuth;
     }
@@ -31,5 +35,13 @@ public class UnifiedSignInPayload {
 
     public void setPracticeModeAuth(UnifiedAuthorizationModel practiceModeAuth) {
         this.practiceModeAuth = practiceModeAuth;
+    }
+
+    public UnifiedPatientModeModel getSignIn() {
+        return signIn;
+    }
+
+    public void setSignIn(UnifiedPatientModeModel signIn) {
+        this.signIn = signIn;
     }
 }

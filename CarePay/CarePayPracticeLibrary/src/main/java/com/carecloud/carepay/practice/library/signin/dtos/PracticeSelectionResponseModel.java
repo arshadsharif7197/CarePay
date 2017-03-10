@@ -15,7 +15,7 @@ public class PracticeSelectionResponseModel {
 
     @SerializedName("payload")
     @Expose
-    private PracticeSelectionPayload payload;
+    private PracticeSelectionPayload payload = new PracticeSelectionPayload();
 
     @SerializedName("state")
     String state;
