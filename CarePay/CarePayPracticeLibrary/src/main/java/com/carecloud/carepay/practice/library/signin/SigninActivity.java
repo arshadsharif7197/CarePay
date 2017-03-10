@@ -45,6 +45,7 @@ import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -542,26 +543,26 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
+            PracticeSelectionResponseModel practiceSelectionModel  = DtoHelper.getConvertedDTO(PracticeSelectionResponseModel.class, workflowDTO);
+            List<PracticeSelectionUserPractice> practiceList = practiceSelectionModel.getPayload().getUserPracticesList();
 
-            Gson gson = new Gson();
-            Bundle args = new Bundle();
-            args.putString(CarePayConstants.PRACTICE_SELECTION_BUNDLE, gson.toJson(workflowDTO));
+            if(practiceList.isEmpty()){
+                onFailure("No Practice associated to this user");
+                return;
+            }
 
-            PracticeSearchFragment fragment = new PracticeSearchFragment();
-            fragment.setArguments(args);
-            fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+            if(practiceList.size() == 1){
+                onSelectPractice(practiceSelectionModel, practiceList.get(0));
+            }else {
 
-//            PracticeSelectionResponseModel practiceSelectionModel  = DtoHelper.getConvertedDTO(PracticeSelectionResponseModel.class, workflowDTO);
-//
-//            PracticeSelectionUserPractice userPractice = findUserPractice("CareCloud Clinic", practiceSelectionModel.getPayload().getUserPracticesList());
-//
-//            Map<String, String> queryMap = new HashMap<>();
-//            queryMap.put("language", getApplicationPreferences().getUserLanguage());
-//            queryMap.put("practice_mgmt", userPractice.getPracticeMgmt());
-//            queryMap.put("practice_id", userPractice.getPracticeId());
-//
-//            TransitionDTO transitionDTO = practiceSelectionModel.getMetadata().getTransitions().getAuthenticate();
-//            getWorkflowServiceHelper().execute(transitionDTO, signinCallback, queryMap);
+                Gson gson = new Gson();
+                Bundle args = new Bundle();
+                args.putString(CarePayConstants.PRACTICE_SELECTION_BUNDLE, gson.toJson(workflowDTO));
+
+                PracticeSearchFragment fragment = new PracticeSearchFragment();
+                fragment.setArguments(args);
+                fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+            }
         }
 
         @Override

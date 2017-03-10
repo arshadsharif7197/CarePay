@@ -115,15 +115,6 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
         searchRecycler = (RecyclerView) view.findViewById(R.id.search_recycler);
         searchRecycler.setLayoutManager(layoutManager);
 
-        if(practiceList.isEmpty()){
-            callback.onSelectPracticeCanceled();
-            dismiss();
-        }
-
-        if(practiceList.size() == 1){
-            callback.onSelectPractice(practiceSelectionModel, practiceList.get(0));
-            dismiss();
-        }
         setAdapter(practiceList);
     }
 
