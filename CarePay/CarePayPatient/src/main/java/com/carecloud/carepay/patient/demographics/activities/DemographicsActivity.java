@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepaylibray.demographics.fragments.CheckinDemographicsFragment;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsAddressFragment;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsAllSetFragment;
@@ -304,9 +305,12 @@ public class DemographicsActivity extends BasePatientActivity
     public void onBackPressed() {
         if (currentPageIndex == 0) {
             SystemUtil.hideSoftKeyboard(this);
-            // sign-out from Cognito
-            getCognitoAppHelper().getPool().getUser().signOut();
-            getCognitoAppHelper().setUser(null);
+
+            if(!HttpConstants.isUseUnifiedAuth()) {
+                // sign-out from Cognito
+                getAppAuthorizationHelper().getPool().getUser().signOut();
+                getAppAuthorizationHelper().setUser(null);
+            }
 
             // finish the app
             DemographicsActivity.this.finishAffinity();

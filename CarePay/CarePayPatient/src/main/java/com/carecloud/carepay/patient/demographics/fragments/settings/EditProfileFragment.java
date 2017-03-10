@@ -21,6 +21,7 @@ import com.carecloud.carepay.patient.appointments.utils.PatientAppUtil;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
@@ -41,13 +42,13 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -113,7 +114,13 @@ public class EditProfileFragment extends DocumentScannerFragment {
             Picasso.with(appCompatActivity).load(imageUrl).transform(
                     new CircleImageTransform()).resize(160, 160).into(profileImageview);
         }
-        String userId = getCognitoAppHelper().getCurrUser();
+        String userId;
+
+        if(!HttpConstants.isUseUnifiedAuth()){
+            userId = getAppAuthorizationHelper().getCurrUser();
+        }else{
+            userId = getAppAuthorizationHelper().getUserAlias();
+        }
 
         CarePayTextView patientNameValue = (CarePayTextView) view.findViewById(R.id.patientNameTextView);
         patientNameValue.setText(firstNameValString + " " + middleNameValString+" " + lastNameValString);

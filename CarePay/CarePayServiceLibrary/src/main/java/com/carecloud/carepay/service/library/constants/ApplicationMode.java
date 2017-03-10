@@ -1,6 +1,6 @@
 package com.carecloud.carepay.service.library.constants;
 
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.dtos.CognitoDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 
@@ -27,9 +27,17 @@ public class ApplicationMode {
         return userPracticeDTO;
     }
 
-    public void setUserPracticeDTO(CognitoAppHelper cognitoAppHelper, UserPracticeDTO userPracticeDTO) {
+    /**
+     * @param appAuthorizationHelper auth helper
+     * @param userPracticeDTO practice user DTO
+     */
+    public void setUserPracticeDTO(AppAuthorizationHelper appAuthorizationHelper, UserPracticeDTO userPracticeDTO) {
         this.userPracticeDTO = userPracticeDTO;
-        this.userPracticeDTO.setUserName(cognitoAppHelper.getCurrUser());
+        if(HttpConstants.isUseUnifiedAuth()){
+            this.userPracticeDTO.setUserName(appAuthorizationHelper.getUserAlias());
+        }else {
+            this.userPracticeDTO.setUserName(appAuthorizationHelper.getCurrUser());
+        }
     }
 
     public ApplicationType getApplicationType() {

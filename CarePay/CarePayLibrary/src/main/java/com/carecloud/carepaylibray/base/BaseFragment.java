@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 
 /**
@@ -79,8 +79,8 @@ public abstract class BaseFragment extends Fragment implements ISession {
     }
 
     @Override
-    public CognitoAppHelper getCognitoAppHelper() {
-        return ((IApplicationSession) getActivity()).getCognitoAppHelper();
+    public AppAuthorizationHelper getAppAuthorizationHelper() {
+        return ((IApplicationSession) getActivity()).getAppAuthorizationHelper();
     }
 
     @Override

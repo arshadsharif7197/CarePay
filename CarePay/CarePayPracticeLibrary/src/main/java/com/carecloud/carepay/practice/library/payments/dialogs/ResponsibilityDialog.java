@@ -128,7 +128,7 @@ public class ResponsibilityDialog extends Dialog {
 
         ImageView profilePhoto = (ImageView) findViewById(R.id.patient_profile_photo);
         final TextView shortName = (TextView) findViewById(R.id.patient_profile_short_name);
-        shortName.setText(StringUtil.onShortDrName(patientModel.getFullName()));
+        shortName.setText(patientModel.getShortName());
 
         String photoUrl = patientModel.getProfilePhoto();
         if (!TextUtils.isEmpty(photoUrl)) {
@@ -136,7 +136,7 @@ public class ResponsibilityDialog extends Dialog {
             builder.listener(new Picasso.Listener() {
                 @Override
                 public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                    shortName.setText(StringUtil.onShortDrName(patientModel.getFullName()));
+                    shortName.setText(patientModel.getShortName());
                 }
             });
 

@@ -19,6 +19,7 @@ import com.carecloud.carepay.patient.appointments.fragments.ChooseProviderFragme
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
@@ -110,9 +111,9 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             }
         }else {
 
-            if (getCognitoAppHelper().getPool().getUser() != null) {
-                getCognitoAppHelper().getPool().getUser().signOut();
-                getCognitoAppHelper().setUser(null);
+            if (!HttpConstants.isUseUnifiedAuth() && getAppAuthorizationHelper().getPool().getUser() != null) {
+                getAppAuthorizationHelper().getPool().getUser().signOut();
+                getAppAuthorizationHelper().setUser(null);
             }
             // finish the app
             finishAffinity();
@@ -158,7 +159,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         resourcesToSchedule.getPractice().setPracticeMgmt(appointmentDTO.getMetadata().getPracticeMgmt());
         appointmentsDTO.getPayload().getResourcesToSchedule().add(resourcesToSchedule);
 
-        String patientID = appointmentDTO.getPayload().getPatient().getId();
+        String patientID = appointmentDTO.getPayload().getPatient().getPatientId();
         Gson gson = new Gson();
         Bundle bundle = new Bundle();
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID, patientID);

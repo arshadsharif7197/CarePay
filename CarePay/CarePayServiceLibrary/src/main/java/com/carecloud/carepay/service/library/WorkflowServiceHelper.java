@@ -2,12 +2,15 @@ package com.carecloud.carepay.service.library;
 
 import android.support.annotation.NonNull;
 
+import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
+import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -31,7 +34,7 @@ public class WorkflowServiceHelper {
     private static final int STATUS_CODE_OK = 200;
     private static final int STATUS_CODE_UNAUTHORIZED = 401;
 
-    private CognitoAppHelper cognitoAppHelper;
+    private AppAuthorizationHelper appAuthorizationHelper;
     private ApplicationPreferences applicationPreferences;
     private ApplicationMode applicationMode;
 
@@ -41,8 +44,8 @@ public class WorkflowServiceHelper {
         this.applicationMode = applicationMode;
     }
 
-    public void setCognitoAppHelper(CognitoAppHelper cognitoAppHelper) {
-        this.cognitoAppHelper = cognitoAppHelper;
+    public void setAppAuthorizationHelper(AppAuthorizationHelper appAuthorizationHelper) {
+        this.appAuthorizationHelper = appAuthorizationHelper;
     }
 
     /**
@@ -53,22 +56,40 @@ public class WorkflowServiceHelper {
     private Map<String, String> getUserAuthenticationHeaders() {
         Map<String, String> userAuthHeaders = new HashMap<>();
 
-        if (null != cognitoAppHelper) {
+        if (appAuthorizationHelper != null) {
 
-            if ((applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE
-                    || applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)
-                    && applicationMode.getUserPracticeDTO() != null) {
+            if ((applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE ||
+                    applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) &&
+                    applicationMode.getUserPracticeDTO() != null) {
+
                 userAuthHeaders.put("username", applicationMode.getUserPracticeDTO().getUserName());
-                userAuthHeaders.put("Authorization", cognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
-                if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
-                    userAuthHeaders.put("username_patient", cognitoAppHelper.getCurrUser());
+                if(HttpConstants.isUseUnifiedAuth()){
+                    userAuthHeaders.put("Authorization", appAuthorizationHelper.getToken());
+
+                    if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+                        userAuthHeaders.put("username_patient", appAuthorizationHelper.getUserAlias());
+                    }
+                }else {
+                    userAuthHeaders.put("Authorization", appAuthorizationHelper.getCurrSession().getIdToken().getJWTToken());
+
+                    if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+                        userAuthHeaders.put("username_patient", appAuthorizationHelper.getCurrUser());
+                    }
                 }
-            } else if (!isNullOrEmpty(cognitoAppHelper.getCurrUser())) {
-                userAuthHeaders.put("username", cognitoAppHelper.getCurrUser());
-                if (cognitoAppHelper.getCurrSession() != null && !isNullOrEmpty(cognitoAppHelper.getCurrSession().getIdToken().getJWTToken())) {
-                    userAuthHeaders.put("Authorization", cognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
+
+            } else {
+                if(HttpConstants.isUseUnifiedAuth()){
+                    userAuthHeaders.put("Authorization", appAuthorizationHelper.getToken());
+                    userAuthHeaders.put("username", appAuthorizationHelper.getUserAlias());
+
+                }else if (!isNullOrEmpty(appAuthorizationHelper.getCurrUser())) {//this is the old way
+                    userAuthHeaders.put("username", appAuthorizationHelper.getCurrUser());
+                    if (appAuthorizationHelper.getCurrSession() != null && !isNullOrEmpty(appAuthorizationHelper.getCurrSession().getIdToken().getJWTToken())) {
+                        userAuthHeaders.put("Authorization", appAuthorizationHelper.getCurrSession().getIdToken().getJWTToken());
+                    }
                 }
             }
+
         }
 
         userAuthHeaders.putAll(getPreferredLanguageHeader());
@@ -83,6 +104,11 @@ public class WorkflowServiceHelper {
      */
     private Map<String, String> getHeaders(Map<String, String> customHeaders) {
         Map<String, String> headers = getUserAuthenticationHeaders();
+
+        if (appAuthorizationHelper == null || appAuthorizationHelper.isTokenExpired()) {
+            headers.putAll(getApplicationStartHeaders());
+        }
+
         // Add auth headers to custom in case custom has old auth headers
         if (customHeaders != null) {
             customHeaders.putAll(headers);
@@ -156,7 +182,7 @@ public class WorkflowServiceHelper {
         executeRequest(transitionDTO, callback, jsonBody, queryMap, getHeaders(customHeaders), 0);
     }
 
-    private void updateQueryMapWithDefault(Map<String, String> queryMap) {
+    private Map<String, String> updateQueryMapWithDefault(Map<String, String> queryMap) {
         if (queryMap == null) {
             queryMap = new HashMap<>();
         }
@@ -164,6 +190,8 @@ public class WorkflowServiceHelper {
             queryMap.put("practice_mgmt", applicationMode.getUserPracticeDTO().getPracticeMgmt());
             queryMap.put("practice_id", applicationMode.getUserPracticeDTO().getPracticeId());
         }
+
+        return queryMap;
     }
 
     private void executeRequest(@NonNull TransitionDTO transitionDTO,
@@ -174,7 +202,7 @@ public class WorkflowServiceHelper {
                                 int attemptCount) {
 
         callback.onPreExecute();
-        updateQueryMapWithDefault(queryMap);
+        queryMap = updateQueryMapWithDefault(queryMap);
         WorkflowService workflowService = ServiceGenerator.getInstance().createService(WorkflowService.class, headers); //, String token, String searchString
         Call<WorkflowDTO> call = null;
 
@@ -265,28 +293,35 @@ public class WorkflowServiceHelper {
             }
 
             private void onResponseUnauthorized(Response<WorkflowDTO> response) throws IOException {
-                if (!response.errorBody().string().contains(TOKEN_HAS_EXPIRED)) {
+                if (!response.message().contains(TOKEN_HAS_EXPIRED) && !response.message().toLowerCase().contains("unauthorized")) {
                     onFailure(response);
-                } else if (!cognitoAppHelper.refreshToken(getCognitoActionCallback(transitionDTO, callback, jsonBody, queryMap, headers))) {
+                } else if (!HttpConstants.isUseUnifiedAuth() && !appAuthorizationHelper.refreshToken(getCognitoActionCallback(transitionDTO, callback, jsonBody, queryMap, headers))) {
                     callback.onFailure("No User found to refresh token");
+                } else if (HttpConstants.isUseUnifiedAuth()){
+                    executeRefreshTokenRequest(getRefreshTokenCallback(transitionDTO, callback, jsonBody, queryMap, headers));
                 }
             }
 
             private void onFailure(Response<WorkflowDTO> response) throws IOException {
-                // Only re-try GET requests for now
-                if (transitionDTO.isGet() && attemptCount < 2) {
-                    // Re-try failed request with increased attempt count
-                    executeRequest(transitionDTO, callback, jsonBody, queryMap, headers, attemptCount + 1);
-                } else if (null != response.errorBody()) {
-                    callback.onFailure(response.errorBody().string());
+                if (null != response.errorBody()) {
+                    onFailure(response.errorBody().string());
                 } else {
-                    callback.onFailure("");
+                    onFailure("");
                 }
             }
 
             @Override
             public void onFailure(Call<WorkflowDTO> call, Throwable throwable) {
-                callback.onFailure(throwable.getMessage());
+                onFailure(throwable.getMessage());
+            }
+
+            void onFailure(String errorMessage) {
+                if (attemptCount < 2) {
+                    // Re-try failed request with increased attempt count
+                    executeRequest(transitionDTO, callback, jsonBody, queryMap, headers, attemptCount + 1);
+                } else {
+                    callback.onFailure(errorMessage);
+                }
             }
         });
     }
@@ -310,6 +345,45 @@ public class WorkflowServiceHelper {
 
             @Override
             public void onLoginFailure(String exceptionMessage) {
+                callback.onFailure(exceptionMessage);
+            }
+        };
+    }
+
+    private void executeRefreshTokenRequest(@NonNull final WorkflowServiceCallback callback) {
+        appAuthorizationHelper.setTokenExpired(true);
+        execute(appAuthorizationHelper.getRefreshTransition(), callback);
+    }
+
+    private WorkflowServiceCallback getRefreshTokenCallback(@NonNull final TransitionDTO transitionDTO,
+                                                            @NonNull final WorkflowServiceCallback callback,
+                                                            final String jsonBody,
+                                                            final Map<String, String> queryMap,
+                                                            final Map<String, String> headers) {
+
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                Gson gson = new Gson();
+                String signInResponseString = gson.toJson(workflowDTO);
+                UnifiedSignInResponse signInResponse = gson.fromJson(signInResponseString, UnifiedSignInResponse.class);
+                if(signInResponse != null) {
+                    UnifiedAuthenticationTokens authTokens = signInResponse.getPayload().getPracticeModeAuth().getCognito().getAuthenticationTokens();
+                    appAuthorizationHelper.setAuthorizationTokens(authTokens);
+                }
+
+                // Re-try failed request with new auth headers
+                execute(transitionDTO, callback, jsonBody, queryMap, headers);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                appAuthorizationHelper.setTokenExpired(false);
                 callback.onFailure(exceptionMessage);
             }
         };

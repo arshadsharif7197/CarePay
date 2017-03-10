@@ -4,6 +4,9 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by lsoco_user on 10/24/2016.
  * Specific properties DTO for insurance.
@@ -33,4 +36,8 @@ public class DemographicMetadataPropertiesInsuranceDTO {
     @SerializedName("insurance_type")
     @Expose
     public MetadataEntityDTO insuranceType = new MetadataEntityDTO();
+
+    @SerializedName("required")
+    @Expose
+    public List<MetadataEntityDTO> required = new ArrayList<>();
 }

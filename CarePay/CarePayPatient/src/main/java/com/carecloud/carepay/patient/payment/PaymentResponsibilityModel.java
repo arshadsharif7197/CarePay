@@ -2,8 +2,6 @@ package com.carecloud.carepay.patient.payment;
 
 import android.os.Bundle;
 
-import com.carecloud.carepaylibray.utils.DateUtil;
-
 import java.util.List;
 
 /**

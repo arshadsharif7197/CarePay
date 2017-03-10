@@ -33,6 +33,8 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.Authentic
 import com.amazonaws.regions.Regions;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.CognitoDTO;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,9 +43,114 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class CognitoAppHelper {
+public class AppAuthorizationHelper {
     private static final int MAX_RETRIES = 4;
     private static int retryCount;
+
+
+
+    //////////////////////////////////////////////////////////////////////////////////
+    //                      New Unified Authorization Handling                      //
+    //////////////////////////////////////////////////////////////////////////////////
+
+    private String accessToken;
+    private String refreshToken;
+    private String idToken;
+    private String userAlias;
+
+    private TransitionDTO refreshTransition;
+    private boolean isTokenExpired = true;
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    /**
+     * @return refresh token
+     */
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    /**
+     * @param refreshToken refresh token
+     */
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public String getIdToken() {
+        return idToken;
+    }
+
+    /**
+     * @return ID token if not expired, otherwise refresh token
+     */
+    public String getToken() {
+        if (isTokenExpired) {
+            return refreshToken;
+        }
+
+        return idToken;
+    }
+
+    /**
+     * @param tokenExpired true if token has expired
+     */
+    public void setTokenExpired(boolean tokenExpired) {
+        isTokenExpired = tokenExpired;
+    }
+
+    /**
+     * @return true if token has expired
+     */
+    public boolean isTokenExpired() {
+        return isTokenExpired;
+    }
+
+    /**
+     * @param idToken ID token
+     */
+    public void setIdToken(String idToken) {
+        this.idToken = idToken;
+    }
+
+    /**
+     * @return user alias
+     */
+    public String getUserAlias() {
+        return userAlias;
+    }
+
+    public void setUserAlias(String userAlias) {
+        this.userAlias = userAlias;
+    }
+
+    /**
+     * @param authTokens new auth tokens
+     */
+    public void setAuthorizationTokens(UnifiedAuthenticationTokens authTokens){
+        if(authTokens.getIdToken()!=null) {
+            setIdToken(authTokens.getIdToken());
+        }
+        if(authTokens.getAccessToken()!=null) {
+            setAccessToken(authTokens.getAccessToken());
+        }
+        if(authTokens.getRefreshToken()!=null) {
+            setRefreshToken(authTokens.getRefreshToken());
+        }
+
+        isTokenExpired = false;
+    }
+
+
+    //////////////////////////////////////////////////////////////////////////////////
+    //                      Old Cognito Authorization Handling                      //
+    //////////////////////////////////////////////////////////////////////////////////
 
     // App settings
 
@@ -57,6 +164,8 @@ public class CognitoAppHelper {
     private String           patientUser;
     private CognitoDevice    newDevice;
     private int              itemCount;
+
+
 
     /**
      * App secret associated with your app id - if the App id does not have an associated App secret,
@@ -89,7 +198,7 @@ public class CognitoAppHelper {
      * default value assign for variables
      * @param context the context
      */
-    public CognitoAppHelper(Context context, ApplicationMode applicationMode) {
+    public AppAuthorizationHelper(Context context, ApplicationMode applicationMode) {
         this.applicationMode = applicationMode;
         setData();
 
@@ -172,6 +281,10 @@ public class CognitoAppHelper {
         return emailAvailable;
     }
 
+    /**
+     * @param exception object
+     * @return formatted exception
+     */
     public static String formatException(Exception exception) {
         String formattedString = "Internal Error";
         Log.e("App Error", exception.toString());
@@ -270,8 +383,8 @@ public class CognitoAppHelper {
      * @param successCallback callback to be execruted on completion
      */
     public void signIn(String username,
-                              final String password,
-                              final CognitoActionCallback successCallback) {
+                       final String password,
+                       final CognitoActionCallback successCallback) {
         AuthenticationHandler authenticationHandler = executeUserAuthentication(password, successCallback);
         // set the username
         setUser(username);
@@ -309,7 +422,7 @@ public class CognitoAppHelper {
         return new AuthenticationHandler() {
             @Override
             public void onSuccess(CognitoUserSession cognitoUserSession, CognitoDevice device) {
-                Log.v("CognitoAppHelper", "Auth Success");
+                Log.v("AppAuthorizationHelper", "Auth Success");
                 setCurrSession(cognitoUserSession);
                 newDevice(device);
                 if (successCallback != null) {
@@ -330,7 +443,7 @@ public class CognitoAppHelper {
 
             @Override
             public void onFailure(Exception exception) {
-                Log.e("CognitoAppHelper", formatException(exception));
+                Log.e("AppAuthorizationHelper", formatException(exception));
                 if (successCallback != null) {
                     successCallback.onLoginFailure(formatException(exception));
                 }
@@ -357,5 +470,14 @@ public class CognitoAppHelper {
         AuthenticationDetails authenticationDetails = new AuthenticationDetails(username, password, null);
         continuation.setAuthenticationDetails(authenticationDetails);
         continuation.continueTask();
+    }
+
+
+    public TransitionDTO getRefreshTransition() {
+        return refreshTransition;
+    }
+
+    public void setRefreshTransition(TransitionDTO refreshTransition) {
+        this.refreshTransition = refreshTransition;
     }
 }

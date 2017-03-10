@@ -6,7 +6,7 @@ import android.provider.Settings;
 
 import com.carecloud.carepay.patient.BuildConfig;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
@@ -22,7 +22,7 @@ public class CarePayPatientApplication extends Application implements IApplicati
 
     private ApplicationPreferences applicationPreferences;
     private WorkflowServiceHelper workflowServiceHelper;
-    private CognitoAppHelper cognitoAppHelper;
+    private AppAuthorizationHelper appAuthorizationHelper;
     private ApplicationMode applicationMode;
 
     @Override
@@ -45,6 +45,7 @@ public class CarePayPatientApplication extends Application implements IApplicati
         HttpConstants.setApiStartUrl(BuildConfig.API_START_URL);
         HttpConstants.setApiStartKey(BuildConfig.X_API_KEY);
         HttpConstants.setPushNotificationWebclientUrl(BuildConfig.WEBCLIENT_URL);
+        HttpConstants.setUseUnifiedAuth(BuildConfig.useUnifiedAuth);
     }
 
     @Override
@@ -66,13 +67,13 @@ public class CarePayPatientApplication extends Application implements IApplicati
     }
 
     @Override
-    public CognitoAppHelper getCognitoAppHelper() {
-        if (cognitoAppHelper == null) {
-            cognitoAppHelper = new CognitoAppHelper(this, getApplicationMode());
-            getWorkflowServiceHelper().setCognitoAppHelper(cognitoAppHelper);
+    public AppAuthorizationHelper getAppAuthorizationHelper() {
+        if (appAuthorizationHelper == null) {
+            appAuthorizationHelper = new AppAuthorizationHelper(this, getApplicationMode());
+            getWorkflowServiceHelper().setAppAuthorizationHelper(appAuthorizationHelper);
         }
 
-        return cognitoAppHelper;
+        return appAuthorizationHelper;
     }
 
     @Override

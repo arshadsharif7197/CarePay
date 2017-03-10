@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibray.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
@@ -44,9 +44,8 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         return ((IApplicationSession) getApplication()).getWorkflowServiceHelper();
     }
 
-    @Override
-    public CognitoAppHelper getCognitoAppHelper() {
-        return ((IApplicationSession) getApplication()).getCognitoAppHelper();
+    public AppAuthorizationHelper getAppAuthorizationHelper() {
+        return ((IApplicationSession) getApplication()).getAppAuthorizationHelper();
     }
 
     @Override
