@@ -13,6 +13,14 @@ public class SignInTransitionsDTO {
     @Expose
     private TransitionDTO authenticate = new TransitionDTO();
 
+    @SerializedName("sign_in")
+    @Expose
+    private TransitionDTO signIn = new TransitionDTO();
+
+    @SerializedName("refresh")
+    @Expose
+    private TransitionDTO refresh = new TransitionDTO();
+
     /**
      *
      * @return
@@ -29,5 +37,21 @@ public class SignInTransitionsDTO {
      */
     public void setAuthenticate(TransitionDTO authenticate) {
         this.authenticate = authenticate;
+    }
+
+    public TransitionDTO getSignIn() {
+        return signIn;
+    }
+
+    public void setSignIn(TransitionDTO signIn) {
+        this.signIn = signIn;
+    }
+
+    public TransitionDTO getRefresh() {
+        return refresh;
+    }
+
+    public void setRefresh(TransitionDTO refresh) {
+        this.refresh = refresh;
     }
 }

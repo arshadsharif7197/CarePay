@@ -59,7 +59,13 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        String userId = getCognitoAppHelper().getCurrUser();
+        String userId;
+        if(!HttpConstants.isUseUnifiedAuth()) {
+            userId = getAppAuthoriztionHelper().getCurrUser();
+        }else{
+            userId = getAppAuthoriztionHelper().getUserAlias();
+        }
+
         if (userId != null) {
             appointmentsDrawerUserIdTextView.setText(userId);
         } else {
@@ -109,12 +115,20 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
 
         } else if (id == com.carecloud.carepaylibrary.R.id.nav_logout && transitionLogout != null) {
             // perform log out, of course
-            String userName = getCognitoAppHelper().getCurrUser();
+            String userName;
+            if(!HttpConstants.isUseUnifiedAuth()) {
+                userName = getAppAuthoriztionHelper().getCurrUser();
+            }else{
+                userName = getAppAuthoriztionHelper().getUserAlias();
+            }
             if (userName != null) {
                 Log.v(LOG_TAG, "sign out");
                 Map<String, String> headersMap = new HashMap<>();
                 headersMap.put("x-api-key", HttpConstants.getApiStartKey());
-                headersMap.put("Authorization", getCognitoAppHelper().getCurrSession().getIdToken().getJWTToken());
+                if(!HttpConstants.isUseUnifiedAuth())
+                {
+                    headersMap.put("Authorization", getAppAuthoriztionHelper().getCurrSession().getIdToken().getJWTToken());
+                }
                 headersMap.put("transition", "true");
                 Map<String, String> queryMap = new HashMap<>();
                 getWorkflowServiceHelper().execute(transitionLogout, appointmentsWorkflowCallback, queryMap, headersMap);

@@ -128,7 +128,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
          */
 
 
-
+        stepProgressBar.setCurrentProgressDot(2);
 
         return mainView;
     }

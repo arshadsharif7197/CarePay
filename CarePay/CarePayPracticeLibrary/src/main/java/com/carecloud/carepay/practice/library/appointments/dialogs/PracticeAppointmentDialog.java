@@ -13,12 +13,12 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.PatientDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customdialogs.BaseDialogFragment;
+import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringUtils;
@@ -139,9 +139,8 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
 
         setTextViewById(R.id.appointment_doctor, appointmentPayloadDTO.getProvider().getName());
 
-        PatientDTO patientDTO = appointmentDTO.getPayload().getPatient();
-        String longName = patientDTO.getFirstName() + " " + patientDTO.getLastName();
-        setTextViewById(R.id.appointment_patient_name, longName);
+        PatientModel patientDTO = appointmentDTO.getPayload().getPatient();
+        setTextViewById(R.id.appointment_patient_name, patientDTO.getFullName());
 
         String primaryPhoneNumber = patientDTO.getPrimaryPhoneNumber();
         if (null == primaryPhoneNumber) {
@@ -150,8 +149,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
             setTextViewById(R.id.appointment_patient_phone, PhoneNumberUtils.formatNumber(primaryPhoneNumber));
         }
 
-        String shortName = StringUtil.onShortDrName(longName);
-        setTextViewById(R.id.appointment_short_name, shortName);
+        setTextViewById(R.id.appointment_short_name, patientDTO.getShortName());
 
         setTextViewById(R.id.appointment_visit_type, appointmentPayloadDTO.getVisitReason().getName());
         setTextViewById(R.id.appointment_visit_type_label, visitTypeLabel);
@@ -162,7 +160,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         if (!TextUtils.isEmpty(photoUrl)) {
             ImageView profileImage = (ImageView) view.findViewById(R.id.appointment_patient_picture_image_view);
 
-            Picasso.with(getActivity()).load(photoUrl)/*.transform(new CircleImageTransform())*/
+            Picasso.with(getActivity()).load(photoUrl).transform(new CircleImageTransform())
                     .resize(58, 58).into(profileImage);
             profileImage.setVisibility(View.VISIBLE);
         }

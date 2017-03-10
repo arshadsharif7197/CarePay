@@ -53,7 +53,7 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
         final AppointmentChargeDTO charge = historyList.get(position);
         String locationName = CarePayConstants.NOT_DEFINED;//charge.getLocation().getName();
 
-        holder.shortName.setText(StringUtil.onShortDrName(locationName));
+        holder.shortName.setText(StringUtil.onShortName(locationName));
         holder.locationName.setText(locationName);
         holder.amount.setText(StringUtil.getFormattedBalanceAmount(Double.parseDouble(charge.getAmount())));
         holder.paymentDate.setText(DateUtil.getInstance().setDateRaw(charge.getPostingDate())

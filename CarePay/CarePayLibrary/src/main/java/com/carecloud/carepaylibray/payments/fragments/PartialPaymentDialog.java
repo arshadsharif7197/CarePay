@@ -244,7 +244,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
 
     private void onPaymentClick() {
         try {
-            payNowClickListener.onPayButtonClicked(Double.parseDouble(enterPartialAmountEditText.getText().toString()));
+            payNowClickListener.onPayButtonClicked(Double.parseDouble(enterPartialAmountEditText.getText().toString()), paymentsDTO);
             cancel();
         }catch (NumberFormatException nfe){
             nfe.printStackTrace();

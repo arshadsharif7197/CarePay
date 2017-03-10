@@ -129,6 +129,9 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
                         }
                     });
                 }
+                ViewGroup.LayoutParams layoutParams = title.getLayoutParams();
+                layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                title.setLayoutParams(layoutParams);
                 title.setGravity(Gravity.CENTER_HORIZONTAL);
             }
         }
@@ -247,6 +250,7 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
+            SystemUtil.showDefaultFailureDialog(getContext());
             System.out.print(exceptionMessage);
         }
     };

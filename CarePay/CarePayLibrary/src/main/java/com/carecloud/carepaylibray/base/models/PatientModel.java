@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class PatientModel {
 
-    @SerializedName("patient_id")
+    @SerializedName(value="patient_id", alternate={"id"})
     @Expose
     private String patientId;
 
@@ -46,6 +46,10 @@ public class PatientModel {
     @SerializedName("profile_photo")
     @Expose
     protected String profilePhoto;
+
+    @SerializedName("primary_phone_number")
+    @Expose
+    private String primaryPhoneNumber;
 
     public String getPatientId() {
         return patientId;
@@ -123,11 +127,44 @@ public class PatientModel {
         this.secondaryRace = secondaryRace;
     }
 
+    public String getPrimaryPhoneNumber() {
+        return primaryPhoneNumber;
+    }
+
     public String getFormattedDateOfBirth() {
         if (StringUtil.isNullOrEmpty(dateOfBirth)) {
             return "";
         }
 
         return DateUtil.getInstance().setDateRaw(dateOfBirth).toStringWithFormatMmSlashDdSlashYyyy();
+    }
+
+    public void setPatientId(String patientId) {
+        this.patientId = patientId;
+    }
+
+    /**
+     * @return full name
+     */
+    public String getFullName() {
+        String name = "";
+
+        if (null != firstName && !firstName.isEmpty()) {
+            name = firstName.trim();
+        }
+
+        if (null != middleName && !middleName.isEmpty()) {
+            name = (name + " " + middleName).trim();
+        }
+
+        if (null != lastName && !lastName.isEmpty()) {
+            name = (name + " " + lastName).trim();
+        }
+
+        return name;
+    }
+
+    public String getShortName() {
+        return StringUtil.onShortName(getFullName());
     }
 }

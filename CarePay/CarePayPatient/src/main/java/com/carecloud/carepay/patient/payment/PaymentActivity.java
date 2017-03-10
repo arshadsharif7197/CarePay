@@ -177,7 +177,7 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
     }
 
     @Override
-    public void onPayButtonClicked(double amount) {
+    public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
         PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
 
         Bundle bundle = new Bundle();
@@ -189,7 +189,7 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
     }
 
     @Override
-    public void onPaymentMethodAction(String selectedPaymentMethod, double amount) {
+    public void onPaymentMethodAction(String selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
         if(paymentsDTO.getPaymentPayload().getPatientCreditCards()!=null && !paymentsDTO.getPaymentPayload().getPatientCreditCards().isEmpty()){
             Gson gson = new Gson();
             Bundle args = new Bundle();

@@ -16,14 +16,14 @@ public interface PaymentNavigationCallback {
      * Callback to launch the payment method selector
      * @param amount amount to pay
      */
-    void onPayButtonClicked(double amount);
+    void onPayButtonClicked(double amount, PaymentsModel paymentsModel);
 
     /**
      * Callback to proceed to select card view once payment method is selected
      * @param selectedPaymentMethod payment method type
      * @param amount amount to pay
      */
-    void onPaymentMethodAction(String selectedPaymentMethod, double amount);
+    void onPaymentMethodAction(String selectedPaymentMethod, double amount, PaymentsModel paymentsModel);
 
     /**
      * Callback to start payment plan workflow

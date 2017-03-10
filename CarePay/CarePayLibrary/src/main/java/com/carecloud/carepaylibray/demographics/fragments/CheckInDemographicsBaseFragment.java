@@ -62,7 +62,6 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             @Override
             public void onClick(View view) {
                 getActivity().onBackPressed();
-                stepProgressBar.setCurrentProgressDot(1);
             }
         });
 
@@ -84,7 +83,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         textView.setText(title);
         SystemUtil.setGothamRoundedMediumTypeface(getContext(), textView);
         (view.findViewById(R.id.toolbar_layout)).setVisibility(checkInNavListener.getCurrentStep()>1 ?View.VISIBLE:View.INVISIBLE);
-        stepProgressBar.setCurrentProgressDot(checkInNavListener.getCurrentStep()-1);
+        //stepProgressBar.setCurrentProgressDot(checkInNavListener.getCurrentStep()-1);
     }
 
     protected void initNextButton(String label, View.OnClickListener listener, final View view){

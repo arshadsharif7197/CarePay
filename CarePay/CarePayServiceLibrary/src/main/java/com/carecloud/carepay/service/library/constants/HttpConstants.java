@@ -22,6 +22,8 @@ public class HttpConstants {
 
     private static  String pushNotificationWebclientUrl;
 
+    private static boolean useUnifiedAuth = false;
+
 
     private static DeviceIdentifierDTO deviceInformation;
 
@@ -63,5 +65,14 @@ public class HttpConstants {
 
     public static void setPushNotificationWebclientUrl(String pushNotificationWebclientUrl) {
         HttpConstants.pushNotificationWebclientUrl = pushNotificationWebclientUrl;
+    }
+
+
+    public static boolean isUseUnifiedAuth() {
+        return useUnifiedAuth;
+    }
+
+    public static void setUseUnifiedAuth(boolean useUnifiedAuth) {
+        HttpConstants.useUnifiedAuth = useUnifiedAuth;
     }
 }

@@ -199,7 +199,7 @@ public abstract class PaymentMethodFragment extends BaseDialogFragment {
                 break;
 
             case CarePayConstants.TYPE_CREDIT_CARD:
-                callback.onPaymentMethodAction(selectedPaymentMethod, amount);
+                callback.onPaymentMethodAction(selectedPaymentMethod, amount, paymentsModel);
                 break;
 
             default:

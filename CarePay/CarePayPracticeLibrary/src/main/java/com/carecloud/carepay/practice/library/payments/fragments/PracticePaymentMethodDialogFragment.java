@@ -19,4 +19,22 @@ public class PracticePaymentMethodDialogFragment extends PracticePaymentMethodFr
 
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle icicle){
+        super.onViewCreated(view, icicle);
+        View closeButton = view.findViewById(R.id.closeViewLayout);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
+    }
+
+    @Override
+    protected void handlePaymentButton(String type, double amount){
+        super.handlePaymentButton(type, amount);
+        dismiss();
+    }
+
 }

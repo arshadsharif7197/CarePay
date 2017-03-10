@@ -1,7 +1,5 @@
 package com.carecloud.carepay.service.library.dtos;
 
-import android.provider.Settings;
-
 import com.carecloud.carepay.service.library.constants.CognitoConstants;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
