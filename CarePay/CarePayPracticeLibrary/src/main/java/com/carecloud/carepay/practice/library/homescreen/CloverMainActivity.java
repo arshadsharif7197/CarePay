@@ -415,8 +415,12 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private void logOut(TransitionDTO transitionsDTO){
         Map<String, String> query = new HashMap<>();
         Map<String, String> headers = new HashMap<>();
-        headers.put("x-api-key", HttpConstants.getApiStartKey());
-        headers.put("Authorization", getAppAuthorizationHelper().getCurrSession().getIdToken().getJWTToken());
+        if(!HttpConstants.isUseUnifiedAuth()) {
+            headers.put("x-api-key", HttpConstants.getApiStartKey());
+            headers.put("Authorization", getAppAuthorizationHelper().getCurrSession().getIdToken().getJWTToken());
+        }else{
+            headers.putAll(getWorkflowServiceHelper().getApplicationStartHeaders());
+        }
         query.put("transition", "true");
         getWorkflowServiceHelper().execute(transitionsDTO, logOutCall, query, headers);
     }
