@@ -61,9 +61,9 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
 
         String userId;
         if(!HttpConstants.isUseUnifiedAuth()) {
-            userId = getAppAuthoriztionHelper().getCurrUser();
+            userId = getAppAuthorizationHelper().getCurrUser();
         }else{
-            userId = getAppAuthoriztionHelper().getUserAlias();
+            userId = getAppAuthorizationHelper().getUserAlias();
         }
 
         if (userId != null) {
@@ -117,9 +117,9 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
             // perform log out, of course
             String userName;
             if(!HttpConstants.isUseUnifiedAuth()) {
-                userName = getAppAuthoriztionHelper().getCurrUser();
+                userName = getAppAuthorizationHelper().getCurrUser();
             }else{
-                userName = getAppAuthoriztionHelper().getUserAlias();
+                userName = getAppAuthorizationHelper().getUserAlias();
             }
             if (userName != null) {
                 Log.v(LOG_TAG, "sign out");
@@ -127,7 +127,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
                 headersMap.put("x-api-key", HttpConstants.getApiStartKey());
                 if(!HttpConstants.isUseUnifiedAuth())
                 {
-                    headersMap.put("Authorization", getAppAuthoriztionHelper().getCurrSession().getIdToken().getJWTToken());
+                    headersMap.put("Authorization", getAppAuthorizationHelper().getCurrSession().getIdToken().getJWTToken());
                 }
                 headersMap.put("transition", "true");
                 Map<String, String> queryMap = new HashMap<>();

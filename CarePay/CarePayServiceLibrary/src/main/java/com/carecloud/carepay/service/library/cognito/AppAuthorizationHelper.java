@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class AppAuthoriztionHelper {
+public class AppAuthorizationHelper {
     private static final int MAX_RETRIES = 4;
     private static int retryCount;
 
@@ -53,37 +53,75 @@ public class AppAuthoriztionHelper {
     //                      New Unified Authorization Handling                      //
     //////////////////////////////////////////////////////////////////////////////////
 
-    private String AccessToken;
-    private String RefreshToken;
-    private String IdToken;
+    private String accessToken;
+    private String refreshToken;
+    private String idToken;
     private String userAlias;
 
     private TransitionDTO refreshTransition;
+    private boolean isTokenExpired = true;
 
     public String getAccessToken() {
-        return AccessToken;
+        return accessToken;
     }
 
     public void setAccessToken(String accessToken) {
-        AccessToken = accessToken;
+        this.accessToken = accessToken;
     }
 
+    /**
+     * @return refresh token
+     */
     public String getRefreshToken() {
-        return RefreshToken;
+        return refreshToken;
     }
 
+    /**
+     * @param refreshToken refresh token
+     */
     public void setRefreshToken(String refreshToken) {
-        RefreshToken = refreshToken;
+        this.refreshToken = refreshToken;
     }
 
     public String getIdToken() {
-        return IdToken;
+        return idToken;
     }
 
+    /**
+     * @return ID token if not expired, otherwise refresh token
+     */
+    public String getToken() {
+        if (isTokenExpired) {
+            return refreshToken;
+        }
+
+        return idToken;
+    }
+
+    /**
+     * @param tokenExpired true if token has expired
+     */
+    public void setTokenExpired(boolean tokenExpired) {
+        isTokenExpired = tokenExpired;
+    }
+
+    /**
+     * @return true if token has expired
+     */
+    public boolean isTokenExpired() {
+        return isTokenExpired;
+    }
+
+    /**
+     * @param idToken ID token
+     */
     public void setIdToken(String idToken) {
-        IdToken = idToken;
+        this.idToken = idToken;
     }
 
+    /**
+     * @return user alias
+     */
     public String getUserAlias() {
         return userAlias;
     }
@@ -92,7 +130,9 @@ public class AppAuthoriztionHelper {
         this.userAlias = userAlias;
     }
 
-
+    /**
+     * @param authTokens new auth tokens
+     */
     public void setAuthorizationTokens(UnifiedAuthenticationTokens authTokens){
         if(authTokens.getIdToken()!=null) {
             setIdToken(authTokens.getIdToken());
@@ -103,10 +143,9 @@ public class AppAuthoriztionHelper {
         if(authTokens.getRefreshToken()!=null) {
             setRefreshToken(authTokens.getRefreshToken());
         }
+
+        isTokenExpired = false;
     }
-
-
-
 
 
     //////////////////////////////////////////////////////////////////////////////////
@@ -159,7 +198,7 @@ public class AppAuthoriztionHelper {
      * default value assign for variables
      * @param context the context
      */
-    public AppAuthoriztionHelper(Context context, ApplicationMode applicationMode) {
+    public AppAuthorizationHelper(Context context, ApplicationMode applicationMode) {
         this.applicationMode = applicationMode;
         setData();
 
@@ -242,6 +281,10 @@ public class AppAuthoriztionHelper {
         return emailAvailable;
     }
 
+    /**
+     * @param exception object
+     * @return formatted exception
+     */
     public static String formatException(Exception exception) {
         String formattedString = "Internal Error";
         Log.e("App Error", exception.toString());
@@ -379,7 +422,7 @@ public class AppAuthoriztionHelper {
         return new AuthenticationHandler() {
             @Override
             public void onSuccess(CognitoUserSession cognitoUserSession, CognitoDevice device) {
-                Log.v("AppAuthoriztionHelper", "Auth Success");
+                Log.v("AppAuthorizationHelper", "Auth Success");
                 setCurrSession(cognitoUserSession);
                 newDevice(device);
                 if (successCallback != null) {
@@ -400,7 +443,7 @@ public class AppAuthoriztionHelper {
 
             @Override
             public void onFailure(Exception exception) {
-                Log.e("AppAuthoriztionHelper", formatException(exception));
+                Log.e("AppAuthorizationHelper", formatException(exception));
                 if (successCallback != null) {
                     successCallback.onLoginFailure(formatException(exception));
                 }

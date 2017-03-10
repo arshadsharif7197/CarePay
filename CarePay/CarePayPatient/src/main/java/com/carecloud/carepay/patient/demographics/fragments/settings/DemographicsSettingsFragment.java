@@ -129,9 +129,9 @@ public class DemographicsSettingsFragment extends BaseFragment {
         patientNameTextview.setText(getUserName());
 
         if(!HttpConstants.isUseUnifiedAuth()) {
-            patientIdTextview.setText(getAppAuthoriztionHelper().getCurrUser());
+            patientIdTextview.setText(getAppAuthorizationHelper().getCurrUser());
         }else{
-            patientIdTextview.setText(getAppAuthoriztionHelper().getUserAlias());
+            patientIdTextview.setText(getAppAuthorizationHelper().getUserAlias());
         }
         try {
          DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
@@ -329,8 +329,8 @@ public class DemographicsSettingsFragment extends BaseFragment {
             signOutButton.setEnabled(true);
             // log out previous user from Cognito
             if(!HttpConstants.isUseUnifiedAuth()) {
-                getAppAuthoriztionHelper().getPool().getUser().signOut();
-                getAppAuthoriztionHelper().setUser(null);
+                getAppAuthorizationHelper().getPool().getUser().signOut();
+                getAppAuthorizationHelper().setUser(null);
             }
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
         }

@@ -435,9 +435,9 @@ public class PersonalInformationActivity extends BasePracticeActivity {
                 queryMap.put("patient_id", signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getPatientId());
                 Map<String, String> headers = new HashMap<>();
                 if(!HttpConstants.isUseUnifiedAuth()) {
-                    getAppAuthoriztionHelper().setUser(signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getUsername());
+                    getAppAuthorizationHelper().setUser(signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getUsername());
                 } else{
-                    getAppAuthoriztionHelper().setUserAlias(signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getUsername());
+                    getAppAuthorizationHelper().setUserAlias(signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getUsername());
                 }
                 transitionDTO = signinPatientModeDTO.getMetadata().getTransitions().getAction();
                 getWorkflowServiceHelper().execute(transitionDTO, patientModeAppointmentsCallback, queryMap, headers);

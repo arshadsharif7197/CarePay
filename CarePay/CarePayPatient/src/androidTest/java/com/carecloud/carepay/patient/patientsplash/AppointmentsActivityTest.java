@@ -67,7 +67,7 @@ public class AppointmentsActivityTest extends BaseActivityTest {
         /*
             BaseActivity baseActivity = (BaseActivity)getActivity();
             workflowServiceHelper = baseActivity.getWorkflowServiceHelper();
-            appAuthoriztionHelper = baseActivity.getAppAuthoriztionHelper();
+            appAuthorizationHelper = baseActivity.getAppAuthorizationHelper();
             applicationMode = baseActivity.getApplicationMode();
             try {
                 AppointmentsActivityTest.this.loginUser();

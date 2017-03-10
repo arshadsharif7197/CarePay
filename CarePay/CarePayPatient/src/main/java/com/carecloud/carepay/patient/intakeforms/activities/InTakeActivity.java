@@ -115,7 +115,7 @@ public class InTakeActivity extends KeyboardHolderActivity {
                 } else {
                     intakeProgressBar.setVisibility(View.VISIBLE);
                     /*InTake API call to fetch payment information*/
-                    InTakeService apptService = (new BaseServiceGenerator()).createService(getAppAuthoriztionHelper(), InTakeService.class); //, String token, String searchString
+                    InTakeService apptService = (new BaseServiceGenerator()).createService(getAppAuthorizationHelper(), InTakeService.class); //, String token, String searchString
                     Call<IntakeResponseModel> call = apptService.confirmInTakeInformation();
                     call.enqueue(new Callback<IntakeResponseModel>() {
                         @Override
