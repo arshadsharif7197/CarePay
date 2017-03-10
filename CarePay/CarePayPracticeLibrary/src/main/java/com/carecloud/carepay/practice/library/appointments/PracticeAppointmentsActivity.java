@@ -17,7 +17,6 @@ import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInLabelDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInPayloadDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.PatientDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.customcomponent.TwoColumnPatientListView;
 import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
@@ -30,6 +29,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.LocationDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
@@ -52,7 +52,8 @@ import java.util.Map;
 public class PracticeAppointmentsActivity extends BasePracticeActivity
         implements FilterDialog.FilterCallBack,
         DateRangePickerDialog.DateRangePickerDialogListener,
-        PracticeAppointmentDialog.PracticeAppointmentDialogListener {
+        PracticeAppointmentDialog.PracticeAppointmentDialogListener,
+        PaymentNavigationCallback {
 
     private FilterModel filter;
 
@@ -113,7 +114,6 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
         patientListView.setCallback(new TwoColumnPatientListView.TwoColumnPatientListViewListener() {
             @Override
             public void onPatientTapped(Object dto) {
-
 
                 showPracticeAppointmentDialog((AppointmentDTO) dto);
             }
@@ -228,8 +228,8 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
     }
 
     private void addPatientOnFilterList(ArrayList<FilterDataDTO> patients, AppointmentPayloadDTO appointmentPayloadDTO) {
-        PatientDTO patientDTO = appointmentPayloadDTO.getPatient();
-        FilterDataDTO filterDataDTO = new FilterDataDTO(patientDTO.getId(), patientDTO.getFullName(), FilterDataDTO.FilterDataType.PATIENT);
+        PatientModel patientDTO = appointmentPayloadDTO.getPatient();
+        FilterDataDTO filterDataDTO = new FilterDataDTO(patientDTO.getPatientId(), patientDTO.getFullName(), FilterDataDTO.FilterDataType.PATIENT);
         if (patients.indexOf(filterDataDTO) < 0) {
             filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
             patients.add(filterDataDTO);
@@ -528,4 +528,34 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
             }
         }
     };
+
+    @Override
+    public void startPartialPayment() {
+
+    }
+
+    @Override
+    public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
+
+    }
+
+    @Override
+    public void onPaymentMethodAction(String selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
+
+    }
+
+    @Override
+    public void onPaymentPlanAction() {
+
+    }
+
+    @Override
+    public void showReceipt(PaymentsModel paymentsModel) {
+
+    }
+
+    @Override
+    public void showAddCard(double amount) {
+
+    }
 }

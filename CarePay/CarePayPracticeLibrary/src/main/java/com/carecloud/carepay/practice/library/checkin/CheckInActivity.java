@@ -22,7 +22,6 @@ import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInLabelDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.PatientBalanceDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.PatientDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.PendingBalanceDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.CustomFilterPopupWindow;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
@@ -33,6 +32,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.LocationDTO;
@@ -253,9 +253,9 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
 
     private void addPatientOnFilterList(ArrayList<FilterDataDTO> patientsList, AppointmentPayloadDTO appointmentPayloadDTO) {
         FilterDataDTO filterDataDTO;
-        PatientDTO patientDTO = appointmentPayloadDTO.getPatient();
+        PatientModel patientDTO = appointmentPayloadDTO.getPatient();
 
-        filterDataDTO = new FilterDataDTO(patientDTO.getId(), patientDTO.getFullName(), FilterDataDTO.FilterDataType.PATIENT);
+        filterDataDTO = new FilterDataDTO(patientDTO.getPatientId(), patientDTO.getFullName(), FilterDataDTO.FilterDataType.PATIENT);
         if (patientsList.indexOf(filterDataDTO) < 0) {
             //filterDataDTO.setFilterId(patientDTO.getId());
             filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
@@ -494,7 +494,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
      */
     public void onCheckInItemClick(AppointmentPayloadDTO appointmentPayloadDTO, boolean isWaitingRoom) {
         AppointmentDetailDialog dialog = new AppointmentDetailDialog(context,
-                checkInDTO, getPatientBalanceDTOs(appointmentPayloadDTO.getPatient().getId()),
+                checkInDTO, getPatientBalanceDTOs(appointmentPayloadDTO.getPatient().getPatientId()),
                 appointmentPayloadDTO, isWaitingRoom);
         dialog.show();
     }

@@ -1,8 +1,5 @@
 package com.carecloud.carepaylibray.customcomponents;
 
-import android.content.Context;
-import android.support.v4.content.ContextCompat;
-
 import com.squareup.timessquare.CalendarCellDecorator;
 import com.squareup.timessquare.CalendarCellView;
 

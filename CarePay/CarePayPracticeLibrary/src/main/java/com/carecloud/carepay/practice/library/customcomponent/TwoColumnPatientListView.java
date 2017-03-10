@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.appointments.adapters.PatientListAdapter;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;

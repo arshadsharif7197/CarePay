@@ -28,7 +28,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDT
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLocationsDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentPatientDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
@@ -36,6 +35,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -60,7 +60,6 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
     private Date endDate;
     private AppointmentAvailabilityDTO availabilityDTO;
     private VisitTypeDTO selectedVisitTypeDTO;
-    //    private AppointmentResourcesDTO selectedResourcesDTO;
     private AppointmentsResultModel resourcesToScheduleDTO;
     private AppointmentResourcesItemDTO selectedResource;
 
@@ -69,8 +68,6 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
     private TextView titleView;
     private View singleLocation;
     private TextView singleLocationText;
-
-//    private CarePayTextView dateRangeCustomTextView;
 
     private String addAppointmentPatientId;
     private List<AppointmentLocationsDTO> selectedLocations = new LinkedList<>();
@@ -252,7 +249,6 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
             ex.printStackTrace();
         }
     }
-
 
     /**
      * Method to update date range that is selected on calendar
@@ -464,8 +460,8 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
         payloadDTO.setResourceId(selectedResource.getId());
         payloadDTO.setChiefComplaint(selectedVisitTypeDTO.getName());
 
-        AppointmentPatientDTO patientDTO = new AppointmentPatientDTO();
-        patientDTO.setId(addAppointmentPatientId);
+        PatientModel patientDTO = new PatientModel();
+        patientDTO.setPatientId(addAppointmentPatientId);
         payloadDTO.setPatient(patientDTO);
 
         AppointmentProviderDTO providersDTO;

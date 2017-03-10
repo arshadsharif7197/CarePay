@@ -19,10 +19,10 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
-import com.carecloud.carepaylibray.appointments.models.AppointmentChargeDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
@@ -45,8 +45,8 @@ public class ResponsibilityDialog extends Dialog {
     private PaymentsModel paymentsModel;
     private PaymentsPatientBalancessDTO patientPayments;
     private PayResponsibilityCallback callback;
-
     private PaymentNavigationCallback navigationCallback;
+    private double owedAmount = 0;
 
     /**
      * Constructor
@@ -128,7 +128,7 @@ public class ResponsibilityDialog extends Dialog {
 
         ImageView profilePhoto = (ImageView) findViewById(R.id.patient_profile_photo);
         final TextView shortName = (TextView) findViewById(R.id.patient_profile_short_name);
-        shortName.setText(StringUtil.onShortDrName(patientModel.getFullName()));
+        shortName.setText(patientModel.getShortName());
 
         String photoUrl = patientModel.getProfilePhoto();
         if (!TextUtils.isEmpty(photoUrl)) {
@@ -136,7 +136,7 @@ public class ResponsibilityDialog extends Dialog {
             builder.listener(new Picasso.Listener() {
                 @Override
                 public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                    shortName.setText(StringUtil.onShortDrName(patientModel.getFullName()));
+                    shortName.setText(patientModel.getShortName());
                 }
             });
 
@@ -162,38 +162,62 @@ public class ResponsibilityDialog extends Dialog {
         return null;
     }
 
-    private void initializeBody(PaymentsLabelDTO paymentsLabel) {
-        double totalAmount = 0;
-
+    private void initializeBody(PaymentsLabelDTO labels) {
         if (null != patientPayments && null != patientPayments.getBalances() && !patientPayments.getBalances().isEmpty()) {
             List<PatienceBalanceDTO> balances = patientPayments.getBalances();
 
-            RecyclerView amountDetails = (RecyclerView) findViewById(R.id.payment_responsibility_balance_details);
-            amountDetails.setLayoutManager(new LinearLayoutManager(context));
+            initializeOwedAmount(balances);
 
-            String detailsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPracticePaymentsDetailDialogLabel();
-            PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(context, paymentsModel, balances, navigationCallback, detailsLabel, dismissDetailsListener);
-            amountDetails.setAdapter(adapter);
-
-
-            for (PatienceBalanceDTO patiencePayload : balances) {
-                if (!patiencePayload.getPayload().isEmpty()) {
-                    totalAmount += patiencePayload.getPayload().get(0).getAmount();
-                }
+            if (owedAmount > 0) {
+                initializePaymentLines(balances);
             }
 
-            List<AppointmentChargeDTO> details = balances.get(0).getPayload().get(0).getDetails();
-            if (details.isEmpty()) {
-                ((TextView) findViewById(R.id.patient_provider_name)).setText(
-                        getProviderName(balances.get(0).getMetadata().getPatientId()));
-            } else {
-                ((TextView) findViewById(R.id.patient_provider_name)).setText(details.get(0).getProvider().getName());
-            }
+            initializePatientProvider(balances);
         }
 
-        ((TextView) findViewById(R.id.payment_responsibility_balance)).setText(
-                paymentsLabel.getPracticePaymentsDetailDialogBalance() + ": "
-                        + StringUtil.getFormattedBalanceAmount(totalAmount));
+        initializeOwedAmountTextView(labels);
+    }
+
+    private void initializePaymentLines(List<PatienceBalanceDTO> balances) {
+        RecyclerView amountDetails = (RecyclerView) findViewById(R.id.payment_responsibility_balance_details);
+        amountDetails.setLayoutManager(new LinearLayoutManager(context));
+
+        String detailsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPracticePaymentsDetailDialogLabel();
+        PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(context, paymentsModel, balances, navigationCallback, detailsLabel, dismissDetailsListener);
+        amountDetails.setAdapter(adapter);
+    }
+
+    private void initializePatientProvider(List<PatienceBalanceDTO> balances) {
+        String provider;
+
+        List<PatiencePayloadDTO> patiencePayloadDTOList = balances.get(0).getPayload();
+        if (!patiencePayloadDTOList.isEmpty() && !patiencePayloadDTOList.get(0).getDetails().isEmpty()) {
+
+            provider = patiencePayloadDTOList.get(0).getDetails().get(0).getProvider().getName();
+
+        } else {
+
+            provider = getProviderName(balances.get(0).getMetadata().getPatientId());
+
+        }
+
+        TextView patientProviderNameTextView = (TextView) findViewById(R.id.patient_provider_name);
+        patientProviderNameTextView.setText(provider);
+    }
+
+    private void initializeOwedAmount(List<PatienceBalanceDTO> balances) {
+        for (PatienceBalanceDTO patiencePayload : balances) {
+            if (!patiencePayload.getPayload().isEmpty()) {
+                owedAmount += patiencePayload.getPayload().get(0).getAmount();
+            }
+        }
+    }
+
+    private void initializeOwedAmountTextView(PaymentsLabelDTO labels) {
+        String text = labels.getPracticePaymentsDetailDialogBalance() + ": " +
+                StringUtil.getFormattedBalanceAmount(owedAmount);
+
+        ((TextView) findViewById(R.id.payment_responsibility_balance)).setText(text);
     }
 
     private OnDismissListener dismissDetailsListener = new OnDismissListener() {
@@ -231,7 +255,7 @@ public class ResponsibilityDialog extends Dialog {
             @Override
             public void onClick(View view) {
                 if (null != callback) {
-                    callback.onRightActionTapped(patientPayments.getBalances().get(0).getPayload().get(0).getAmount());
+                    callback.onRightActionTapped(owedAmount);
                 }
 
                 dismiss();
@@ -254,7 +278,7 @@ public class ResponsibilityDialog extends Dialog {
             }
         }
 
-        return StringUtil.getLabelForView("");
+        return "";
     }
 
     public interface PayResponsibilityCallback{
