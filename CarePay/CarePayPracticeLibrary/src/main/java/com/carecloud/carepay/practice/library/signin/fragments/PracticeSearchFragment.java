@@ -22,6 +22,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,7 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
 
     private RecyclerView searchRecycler;
     private Button continueButton;
+    private SearchView searchView;
 
     private SelectPracticeCallback callback;
 
@@ -106,22 +108,13 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
             }
         });
 
-        SearchView searchView = (SearchView) view.findViewById(R.id.search_entry_view);
+        searchView = (SearchView) view.findViewById(R.id.search_entry_view);
         searchView.setOnQueryTextListener(queryTextListener);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         searchRecycler = (RecyclerView) view.findViewById(R.id.search_recycler);
         searchRecycler.setLayoutManager(layoutManager);
 
-        if(practiceList.isEmpty()){
-            callback.onSelectPracticeCanceled();
-            dismiss();
-        }
-
-        if(practiceList.size() == 1){
-            callback.onSelectPractice(practiceSelectionModel, practiceList.get(0));
-            dismiss();
-        }
         setAdapter(practiceList);
     }
 
@@ -141,13 +134,15 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
     private SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
         @Override
         public boolean onQueryTextSubmit(String query) {
-            return false;
+            searchView.clearFocus();
+            SystemUtil.hideSoftKeyboard(getActivity());
+            return true;
         }
 
         @Override
         public boolean onQueryTextChange(String newText) {
+            clearSelectedPractice();
             findPractice(newText);
-            selectedPractice = null;
             continueButton.setEnabled(false);
             return true;
         }
@@ -158,12 +153,15 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
         public void onClick(View view) {
             if(selectedPractice!=null){
                 callback.onSelectPractice(practiceSelectionModel, selectedPractice);
+                dismiss();
             }
         }
     };
 
     @Override
     public void onSelectPractice(PracticeSelectionUserPractice practice) {
+        searchView.clearFocus();
+        SystemUtil.hideSoftKeyboard(getActivity());
         selectedPractice = practice;
         continueButton.setEnabled(true);
     }
@@ -177,6 +175,12 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
         }
 
         setAdapter(searchList);
+    }
+
+    private void clearSelectedPractice(){
+        selectedPractice = null;
+        PracticeSearchAdapter searchAdapter = (PracticeSearchAdapter) searchRecycler.getAdapter();
+        searchAdapter.setSelectedPractice(selectedPractice);
     }
 
 }
