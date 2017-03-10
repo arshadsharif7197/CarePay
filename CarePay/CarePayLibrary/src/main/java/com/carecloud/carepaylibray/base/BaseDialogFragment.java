@@ -117,6 +117,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
             return ((ISession) getActivity()).getWorkflowServiceHelper();
         }
 
+        @Override
         public AppAuthorizationHelper getAppAuthorizationHelper() {
             return ((IApplicationSession) getActivity()).getAppAuthorizationHelper();
         }

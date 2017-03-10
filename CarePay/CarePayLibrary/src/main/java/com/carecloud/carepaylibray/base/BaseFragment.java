@@ -78,6 +78,7 @@ public abstract class BaseFragment extends Fragment implements ISession {
         return ((ISession) getActivity()).getWorkflowServiceHelper();
     }
 
+    @Override
     public AppAuthorizationHelper getAppAuthorizationHelper() {
         return ((IApplicationSession) getActivity()).getAppAuthorizationHelper();
     }

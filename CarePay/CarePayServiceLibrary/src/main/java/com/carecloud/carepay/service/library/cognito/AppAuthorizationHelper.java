@@ -53,7 +53,7 @@ public class AppAuthorizationHelper {
     //                      New Unified Authorization Handling                      //
     //////////////////////////////////////////////////////////////////////////////////
 
-    private String AccessToken;
+    private String accessToken;
     private String refreshToken;
     private String idToken;
     private String userAlias;
@@ -62,11 +62,11 @@ public class AppAuthorizationHelper {
     private boolean isTokenExpired = true;
 
     public String getAccessToken() {
-        return AccessToken;
+        return accessToken;
     }
 
     public void setAccessToken(String accessToken) {
-        AccessToken = accessToken;
+        this.accessToken = accessToken;
     }
 
     /**
@@ -281,6 +281,10 @@ public class AppAuthorizationHelper {
         return emailAvailable;
     }
 
+    /**
+     * @param exception object
+     * @return formatted exception
+     */
     public static String formatException(Exception exception) {
         String formattedString = "Internal Error";
         Log.e("App Error", exception.toString());
