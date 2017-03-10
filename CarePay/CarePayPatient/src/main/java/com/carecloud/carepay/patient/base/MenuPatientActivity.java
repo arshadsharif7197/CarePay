@@ -125,7 +125,10 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
                 Log.v(LOG_TAG, "sign out");
                 Map<String, String> headersMap = new HashMap<>();
                 headersMap.put("x-api-key", HttpConstants.getApiStartKey());
-                headersMap.put("Authorization", getAppAuthoriztionHelper().getCurrSession().getIdToken().getJWTToken());
+                if(!HttpConstants.isUseUnifiedAuth())
+                {
+                    headersMap.put("Authorization", getAppAuthoriztionHelper().getCurrSession().getIdToken().getJWTToken());
+                }
                 headersMap.put("transition", "true");
                 Map<String, String> queryMap = new HashMap<>();
                 getWorkflowServiceHelper().execute(transitionLogout, appointmentsWorkflowCallback, queryMap, headersMap);
