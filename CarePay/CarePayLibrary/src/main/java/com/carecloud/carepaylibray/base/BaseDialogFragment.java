@@ -26,6 +26,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             this.dialog = getDialog();
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            setCancelable(false);
         }
 
         @Override

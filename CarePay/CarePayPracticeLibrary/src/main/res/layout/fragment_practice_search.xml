@@ -67,7 +67,7 @@
                 android:id="@+id/search_entry_view"
                 android:background="@drawable/search_rounded_border"
                 app:iconifiedByDefault="false"
-                android:theme="@style/SearchViewStyle"/>
+                android:theme="@style/SearchViewStyleDark"/>
 
         </FrameLayout>
 
