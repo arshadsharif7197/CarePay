@@ -20,6 +20,9 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entitie
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -395,6 +398,11 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
 
     @Override
     protected DemographicDTO updateDemographicDTO(View view) {
+        DemographicDTO updatableDemographicDTO = new DemographicDTO();
+        updatableDemographicDTO.setPayload(new DemographicPayloadResponseDTO());
+        updatableDemographicDTO.getPayload().setDemographics(new DemographicPayloadInfoDTO());
+        updatableDemographicDTO.getPayload().getDemographics().setPayload(new DemographicPayloadDTO());
+
         DemographicPersDetailsPayloadDTO demographicPersDetailsPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
 
         if (demographicPersDetailsPayloadDTO == null) {
@@ -431,7 +439,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
             demographicPersDetailsPayloadDTO.setProfilePhoto(profileImage);
         }
 
-        demographicDTO.getPayload().getDemographics().getPayload().setPersonalDetails(demographicPersDetailsPayloadDTO);
+        updatableDemographicDTO.getPayload().getDemographics().getPayload().setPersonalDetails(demographicPersDetailsPayloadDTO);
 
         DemographicAddressPayloadDTO demographicAddressPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getAddress();
         // save address
@@ -444,9 +452,10 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
             // 'de-format' before saving to model
             demographicAddressPayloadDTO.setPhone(StringUtil.revertToRawPhoneFormat(phoneNumber));
         }
-        demographicDTO.getPayload().getDemographics().getPayload().setAddress(demographicAddressPayloadDTO);
-
-        return demographicDTO;
+        updatableDemographicDTO.getPayload().getDemographics().getPayload().setAddress(demographicAddressPayloadDTO);
+        updatableDemographicDTO.getPayload().setAppointmentpayloaddto(demographicDTO.getPayload().getAppointmentpayloaddto());
+        updatableDemographicDTO.setMetadata(demographicDTO.getMetadata());
+        return updatableDemographicDTO;
     }
 
     public interface UpdateProfilePictureListener{
