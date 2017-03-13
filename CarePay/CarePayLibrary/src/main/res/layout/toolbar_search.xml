@@ -17,12 +17,13 @@
         android:layout_height="wrap_content"
         android:id="@+id/search_edit_frame">
 
-        <android.support.v7.widget.SearchView
+        <com.carecloud.carepaylibray.customcomponents.CarePaySearchView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/search_entry_view"
             app:iconifiedByDefault="false"
-            android:theme="@style/SearchViewStyleLight"/>
+            android:theme="@style/SearchViewStyleLight"
+            app:customAssetFont="proxima_nova_regular"/>
 
     </FrameLayout>
 </android.support.v7.widget.Toolbar>

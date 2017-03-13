@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.support.v7.widget.SearchView;
 import android.util.AttributeSet;
+import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 
@@ -151,8 +152,9 @@ public class CarePaySearchView extends SearchView {
                 assetFontName = FONT_PROXIMA_NOVA_REGULAR;
         }
 
+        TextView searchText = (TextView) findViewById(android.support.v7.appcompat.R.id.search_src_text);
         Typeface tf = Typeface.createFromAsset(getContext().getAssets(), assetFontName);
-//        this.setTypeface(tf);
+        searchText.setTypeface(tf);
     }
 
     @Override
