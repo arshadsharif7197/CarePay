@@ -90,6 +90,9 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
         @Override
         public void onClick(View view) {
             setCloverPayment();
+            if(getDialog()!=null){
+                dismiss();
+            }
         }
     };
 

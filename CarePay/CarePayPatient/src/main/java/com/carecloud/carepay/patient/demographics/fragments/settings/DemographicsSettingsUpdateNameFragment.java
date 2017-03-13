@@ -240,9 +240,9 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
         String userId ;
 
         if(!HttpConstants.isUseUnifiedAuth()) {
-            userId = getAppAuthoriztionHelper().getCurrUser();
+            userId = getAppAuthorizationHelper().getCurrUser();
         }else{
-            userId = getAppAuthoriztionHelper().getUserAlias();
+            userId = getAppAuthorizationHelper().getUserAlias();
         }
 
         if (demographicsSettingsDTO != null) {

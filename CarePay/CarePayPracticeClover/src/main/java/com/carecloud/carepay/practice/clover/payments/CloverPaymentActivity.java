@@ -75,6 +75,7 @@ public class CloverPaymentActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.dialog_progress);
         try
         {
 
@@ -428,8 +429,6 @@ public class CloverPaymentActivity extends BaseActivity {
         header.put("transition", "true");
 
         TransitionDTO transitionDTO = gson.fromJson(paymentTransitionString, TransitionDTO.class);
-        transitionDTO.setUrl("http://2e8fd472.ngrok.io/workflow_engine/workflow/shamrock/practice_mode/practice_payments/make_payment");
-
         getWorkflowServiceHelper().execute(transitionDTO, makePaymentCallback, paymentModelJson, queries, header);
 
     }

@@ -181,8 +181,8 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
         // log out previous user from Cognito
         Log.v(this.getClass().getSimpleName(), "sign out Cognito");
         if(!HttpConstants.isUseUnifiedAuth()) {
-            getAppAuthoriztionHelper().getPool().getUser().signOut();
-            getAppAuthoriztionHelper().setUser(null);
+            getAppAuthorizationHelper().getPool().getUser().signOut();
+            getAppAuthorizationHelper().setUser(null);
         }
         getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
     }

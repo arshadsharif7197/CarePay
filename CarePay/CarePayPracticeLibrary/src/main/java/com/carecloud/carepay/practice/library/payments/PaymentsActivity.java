@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
@@ -253,18 +252,10 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             hideProgressDialog();
 
             PaymentsModel patientDetails = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
-            if (patientDetails != null && patientDetails.getPaymentPayload().getPatientBalances() != null
-                    && !patientDetails.getPaymentPayload().getPatientBalances().isEmpty()) {
-
-                PaymentsPatientBalancessDTO paymentsPatientBalancessDTO = patientDetails.getPaymentPayload().getPatientBalances().get(0);
-                if (paymentsPatientBalancessDTO.getBalances().get(0).getPayload().isEmpty()) {
-                    Toast.makeText(getContext(), "Patient has no balance", Toast.LENGTH_LONG).show();
-                } else {
-                    showResponsibilityDialog(patientDetails);
-                }
-            } else {
-                Toast.makeText(getContext(), "Patient has no balance", Toast.LENGTH_LONG).show();
+            if(patientDetails!=null){
+                showResponsibilityDialog(patientDetails);
             }
+
         }
 
         @Override
@@ -333,7 +324,11 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
 
     private void showResponsibilityDialog(PaymentsModel patientDetails) {
-        PaymentsPatientBalancessDTO balancessDTO = patientDetails.getPaymentPayload().getPatientBalances().get(0);
+        PaymentsPatientBalancessDTO balancessDTO = null;
+
+        if(!patientDetails.getPaymentPayload().getPatientBalances().isEmpty()){
+            balancessDTO = patientDetails.getPaymentPayload().getPatientBalances().get(0);
+        }
         new ResponsibilityDialog(
                 getContext(),
                 paymentsLabel.getPracticePaymentsDetailDialogPaymentPlan(),

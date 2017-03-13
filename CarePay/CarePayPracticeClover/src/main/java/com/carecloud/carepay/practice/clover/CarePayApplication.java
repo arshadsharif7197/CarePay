@@ -11,7 +11,7 @@ import android.util.Log;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.cognito.AppAuthoriztionHelper;
+import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
@@ -26,7 +26,7 @@ public class CarePayApplication extends MultiDexApplication
 
     private ApplicationPreferences applicationPreferences;
     private WorkflowServiceHelper workflowServiceHelper;
-    private AppAuthoriztionHelper appAuthoriztionHelper;
+    private AppAuthorizationHelper appAuthorizationHelper;
     private ApplicationMode applicationMode;
 
     @Override
@@ -84,8 +84,8 @@ public class CarePayApplication extends MultiDexApplication
         if(activity instanceof SigninActivity) {
             // log out previous user from Cognito
             Log.v(this.getClass().getSimpleName(), "sign out Cognito");
-            //getAppAuthoriztionHelper().getPool().getUser().signOut();
-            //getAppAuthoriztionHelper().setUser(null);
+            //getAppAuthorizationHelper().getPool().getUser().signOut();
+            //getAppAuthorizationHelper().setUser(null);
         }
     }
 
@@ -108,13 +108,13 @@ public class CarePayApplication extends MultiDexApplication
     }
 
     @Override
-    public AppAuthoriztionHelper getAppAuthoriztionHelper() {
-        if (appAuthoriztionHelper == null) {
-            appAuthoriztionHelper = new AppAuthoriztionHelper(this, getApplicationMode());
-            getWorkflowServiceHelper().setAppAuthoriztionHelper(appAuthoriztionHelper);
+    public AppAuthorizationHelper getAppAuthorizationHelper() {
+        if (appAuthorizationHelper == null) {
+            appAuthorizationHelper = new AppAuthorizationHelper(this, getApplicationMode());
+            getWorkflowServiceHelper().setAppAuthorizationHelper(appAuthorizationHelper);
         }
 
-        return appAuthoriztionHelper;
+        return appAuthorizationHelper;
     }
 
     @Override

@@ -25,13 +25,16 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.IdsDTO;
 import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class AppointmentsActivity extends MenuPatientActivity implements AppointmentNavigationCallback, RequestAppointmentDialog.RequestAppointmentCallback {
 
@@ -54,11 +57,18 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
         if (appointmentsDTO.getPayload() != null ){
             try{
-                practiceId = appointmentsDTO.getPayload().getPracticePatientIds().get(0).getPracticeId();
-                practiceMgmt = appointmentsDTO.getPayload().getPracticePatientIds().get(0).getPracticeManagement();
-                patientId = appointmentsDTO.getPayload().getPracticePatientIds().get(0).getPatientId();
-                prefix = appointmentsDTO.getPayload().getPracticePatientIds().get(0).getPrefix();
-                userId = appointmentsDTO.getPayload().getPracticePatientIds().get(0).getUserId();
+                List<IdsDTO> practicePatientIds = appointmentsDTO.getPayload().getPracticePatientIds();
+                if(practicePatientIds.isEmpty()){
+                    IdsDTO[] practicePatientIdArray = getApplicationPreferences().getObjectFromSharedPreferences(CarePayConstants.KEY_PRACTICE_PATIENT_IDS, IdsDTO[].class);
+                    practicePatientIds = Arrays.asList(practicePatientIdArray);
+                }else {
+                    getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants.KEY_PRACTICE_PATIENT_IDS, appointmentsDTO.getPayload().getPracticePatientIds());
+                }
+                practiceId = practicePatientIds.get(0).getPracticeId();
+                practiceMgmt = practicePatientIds.get(0).getPracticeManagement();
+                patientId = practicePatientIds.get(0).getPatientId();
+                prefix = practicePatientIds.get(0).getPrefix();
+                userId = practicePatientIds.get(0).getUserId();
                 getApplicationPreferences().setPatientId(patientId);
                 getApplicationPreferences().setPracticeManagement(practiceMgmt);
                 getApplicationPreferences().setPracticeId(practiceId);
@@ -103,9 +113,9 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             }
         }else {
 
-            if (!HttpConstants.isUseUnifiedAuth() && getAppAuthoriztionHelper().getPool().getUser() != null) {
-                getAppAuthoriztionHelper().getPool().getUser().signOut();
-                getAppAuthoriztionHelper().setUser(null);
+            if (!HttpConstants.isUseUnifiedAuth() && getAppAuthorizationHelper().getPool().getUser() != null) {
+                getAppAuthorizationHelper().getPool().getUser().signOut();
+                getAppAuthorizationHelper().setUser(null);
             }
             // finish the app
             finishAffinity();
@@ -170,11 +180,10 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     public void availableTimes(VisitTypeDTO visitTypeDTO, AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel) {
         Bundle bundle = new Bundle();
         Gson gson = new Gson();
-        String patientID = appointmentsDTO.getPayload().getPracticePatientIds().get(0).getPatientId(); //TODO this should be updated for multi practice support
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(appointmentResourcesDTO.getResource()));
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(visitTypeDTO));
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(appointmentsResultModel));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID, patientID);
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID, patientId);//TODO this should be updated for multi practice support
 
         AvailableHoursFragment availableHoursFragment = new AvailableHoursFragment();
         availableHoursFragment.setArguments(bundle);
@@ -187,8 +196,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     public void availableTimes(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource, AppointmentsResultModel appointmentsResultModel) {
         Bundle bundle = new Bundle();
         Gson gson = new Gson();
-        String patientID = appointmentsDTO.getPayload().getPracticePatientIds().get(0).getPatientId(); //TODO this should be updated for multi practice support
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID, patientID);
+        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID, patientId);//TODO this should be updated for multi practice support
         bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, startDate);
         bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, endDate);
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(appointmentResource));
