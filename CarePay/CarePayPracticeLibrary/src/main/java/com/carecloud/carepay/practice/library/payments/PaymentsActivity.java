@@ -19,6 +19,7 @@ import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityDia
 import com.carecloud.carepay.practice.library.payments.fragments.NoAddChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentPlanFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
+import com.carecloud.carepay.practice.library.util.PracticeUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -26,17 +27,18 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.LocationDTO;
-import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderDTO;
+import com.carecloud.carepaylibray.payments.models.XPatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.XPendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItemMetadata;
 import com.carecloud.carepaylibray.payments.models.updatebalance.PaymentUpdateBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -99,7 +101,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         if (paymentsModel != null && paymentsModel.getPaymentPayload().getPatientBalances() != null
                 && paymentsModel.getPaymentPayload().getPatientBalances().size() > 0) {
 
-            List<PaymentsPatientBalancessDTO> patientBalancesList = paymentsModel.getPaymentPayload().getPatientBalances();
+            List<XPatientBalanceDTO> patientBalancesList = paymentsModel.getPaymentPayload().getPatientBalances();
 
             filter.setDoctors(addProviderOnProviderFilterList(paymentsModel));
             filter.setLocations(addLocationOnFilterList(paymentsModel));
@@ -127,13 +129,13 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         patientListView.setCallback(new TwoColumnPatientListView.TwoColumnPatientListViewListener() {
             @Override
             public void onPatientTapped(Object dto) {
-                PaymentsPatientBalancessDTO balancessDTO = (PaymentsPatientBalancessDTO) dto;
+                XPatientBalanceDTO balancessDTO = (XPatientBalanceDTO) dto;
                 PatientModel patient = new PatientModel();
                 patient.setPatientId(balancessDTO.getBalances().get(0).getMetadata().getPatientId());
 
                 getPatientBalanceDetails(patient);
 
-//                showResponsibilityDialog((PaymentsPatientBalancessDTO) dto);
+//                showResponsibilityDialog((XPatientBalanceDTO) dto);
             }
         });
     }
@@ -164,25 +166,31 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         return locations;
     }
 
-    private ArrayList<FilterDataDTO> addPatientOnFilterList(List<PaymentsPatientBalancessDTO> balances) {
+    private ArrayList<FilterDataDTO> addPatientOnFilterList(List<XPatientBalanceDTO> balances) {
         ArrayList<FilterDataDTO> patients = new ArrayList<>();
+        Map<String, String> photoMap = PracticeUtil.getProfilePhotoMap(paymentsModel.getPaymentPayload().getPatientBalances());
 
-        for (PaymentsPatientBalancessDTO patientBalances : balances) {
+        for (XPatientBalanceDTO patientBalances : balances) {
 
             PatientModel patientModel = patientBalances.getDemographics().getPayload().getPersonalDetails();
             String patientId = getPatientId(patientBalances);
             FilterDataDTO filterDataDTO = new FilterDataDTO(patientId, patientModel.getFullName(), FilterDataDTO.FilterDataType.PATIENT);
 
+            if(StringUtil.isNullOrEmpty(filterDataDTO.getImageURL())){
+                filterDataDTO.setImageURL(photoMap.get(filterDataDTO.getId()));
+            }
+
             if (patients.indexOf(filterDataDTO) < 0) {
                 patients.add(filterDataDTO);
             }
+
         }
 
         return patients;
     }
 
-    private String getPatientId(PaymentsPatientBalancessDTO patientBalances) {
-        List<PatienceBalanceDTO> balances = patientBalances.getBalances();
+    private String getPatientId(XPatientBalanceDTO patientBalances) {
+        List<XPendingBalanceDTO> balances = patientBalances.getBalances();
         if (balances.isEmpty()) {
             return null;
         }
@@ -292,17 +300,17 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
 
     private void updatePatientBalance(UpdatePatientBalancesDTO updateBalance){
-        ListIterator<PaymentsPatientBalancessDTO> iterator = paymentsModel.getPaymentPayload().getPatientBalances().listIterator();
+        ListIterator<XPatientBalanceDTO> iterator = paymentsModel.getPaymentPayload().getPatientBalances().listIterator();
         while (iterator.hasNext()){
-            PaymentsPatientBalancessDTO paymentsPatientBalancessDTO = iterator.next();
-            if(isObject(paymentsPatientBalancessDTO, updateBalance)){
+            XPatientBalanceDTO xPatientBalanceDTO = iterator.next();
+            if(isObject(xPatientBalanceDTO, updateBalance)){
                 try {
                     double pendingResponsibility = Double.parseDouble(updateBalance.getPendingRepsonsibility());
                     if (pendingResponsibility== 0d){
                         iterator.remove();
                     }else{
-                        paymentsPatientBalancessDTO.setPendingRepsonsibility(updateBalance.getPendingRepsonsibility());
-                        paymentsPatientBalancessDTO.setBalances(updateBalance.getBalances());
+                        xPatientBalanceDTO.setPendingRepsonsibility(updateBalance.getPendingRepsonsibility());
+                        xPatientBalanceDTO.setBalances(updateBalance.getBalances());
                     }
                     break;
                 }catch (NumberFormatException nfe){
@@ -317,14 +325,14 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     }
 
-    private boolean isObject(PaymentsPatientBalancessDTO paymentsPatientBalance, UpdatePatientBalancesDTO updateBalance){
+    private boolean isObject(XPatientBalanceDTO paymentsPatientBalance, UpdatePatientBalancesDTO updateBalance){
         return paymentsPatientBalance.getDemographics().getMetadata().getUserId().equals(updateBalance.getDemographics().getMetadata().getUserId()) &&
                 paymentsPatientBalance.getBalances().get(0).getMetadata().getPatientId().equals(updateBalance.getBalances().get(0).getMetadata().getPatientId());
     }
 
 
     private void showResponsibilityDialog(PaymentsModel patientDetails) {
-        PaymentsPatientBalancessDTO balancessDTO = null;
+        XPatientBalanceDTO balancessDTO = null;
 
         if(!patientDetails.getPaymentPayload().getPatientBalances().isEmpty()){
             balancessDTO = patientDetails.getPaymentPayload().getPatientBalances().get(0);
@@ -422,9 +430,9 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
 
-    private void setCloverPayment(PaymentsPatientBalancessDTO patientPayments)
+    private void setCloverPayment(XPatientBalanceDTO patientPayments)
     {
-        List<PatienceBalanceDTO> balances = patientPayments.getBalances();
+        List<XPendingBalanceDTO> balances = patientPayments.getBalances();
         if (balances.isEmpty()) {
             return;
         }
@@ -439,7 +447,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         intent.putExtra(CarePayConstants.CLOVER_PAYMENT_TRANSITION, paymentTransitionString);
         List<PaymentLineItem> paymentLineItems = new ArrayList<>();
 
-        for(PatienceBalanceDTO balance : balances) {
+        for(XPendingBalanceDTO balance : balances) {
 
             PaymentLineItem paymentLineItem = new PaymentLineItem();
             paymentLineItem.setAmount(balance.getPayload().get(0).getAmount());

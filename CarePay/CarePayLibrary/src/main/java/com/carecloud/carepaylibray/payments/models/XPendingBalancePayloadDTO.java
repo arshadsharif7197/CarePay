@@ -1,14 +1,14 @@
 
 package com.carecloud.carepaylibray.payments.models;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.carecloud.carepaylibray.appointments.models.AppointmentChargeDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PatiencePayloadDTO {
+import java.util.ArrayList;
+import java.util.List;
+
+public class XPendingBalancePayloadDTO {
 
     @SerializedName("type")
     @Expose
@@ -16,9 +16,13 @@ public class PatiencePayloadDTO {
     @SerializedName("amount")
     @Expose
     private Double amount;
+    @SerializedName("unapplied_credit")
+    @Expose
+    private double unappliedCredit;
     @SerializedName("details")
     @Expose
     private List<AppointmentChargeDTO> details = new ArrayList<>();
+
 
     public String getType() {
         return type;
@@ -44,4 +48,11 @@ public class PatiencePayloadDTO {
         this.details = details;
     }
 
+    public double getUnappliedCredit() {
+        return unappliedCredit;
+    }
+
+    public void setUnappliedCredit(double unappliedCredit) {
+        this.unappliedCredit = unappliedCredit;
+    }
 }

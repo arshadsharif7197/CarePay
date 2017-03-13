@@ -7,19 +7,35 @@ import com.google.gson.annotations.SerializedName;
  * Created by Jahirul Bhuiyan on 9/26/2016.
  * Model for payload info metadata.
  */
-public class DemographicPayloadInfoMetaDataDTO {
+public class XDemographicsInfoMetaDataDTO {
 
-    @SerializedName("user_id") @Expose
+    @SerializedName("user_id")
+    @Expose
     private String userId;
 
-    @SerializedName("username") @Expose
+    @SerializedName("username")
+    @Expose
     private String username;
 
-    @SerializedName("updated_dt") @Expose
+    @SerializedName("updated_dt")
+    @Expose
     private String updatedDt;
 
-    @SerializedName("created_dt")@Expose
+    @SerializedName("created_dt")
+    @Expose
     private String createdDt;
+
+    @SerializedName("practice_mgmt")
+    @Expose
+    private String practiceMgmt;
+
+    @SerializedName("practice_id")
+    @Expose
+    private String practiceId;
+
+    @SerializedName("patient_id")
+    @Expose
+    private String patientId;
 
     /**
      *
@@ -81,5 +97,29 @@ public class DemographicPayloadInfoMetaDataDTO {
 
     public void setCreatedDt(String createdDt) {
         this.createdDt = createdDt;
+    }
+
+    public String getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(String patientId) {
+        this.patientId = patientId;
+    }
+
+    public String getPracticeId() {
+        return practiceId;
+    }
+
+    public void setPracticeId(String practiceId) {
+        this.practiceId = practiceId;
+    }
+
+    public String getPracticeMgmt() {
+        return practiceMgmt;
+    }
+
+    public void setPracticeMgmt(String practiceMgmt) {
+        this.practiceMgmt = practiceMgmt;
     }
 }

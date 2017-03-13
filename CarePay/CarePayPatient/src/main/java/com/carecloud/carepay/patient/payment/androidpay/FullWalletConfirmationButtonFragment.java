@@ -35,7 +35,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
+import com.carecloud.carepaylibray.payments.models.XPendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -637,7 +637,7 @@ public class FullWalletConfirmationButtonFragment extends BaseFragment
             paymentMethods.put(paymentMethod);
             payload.put("payment_methods", paymentMethods);
 
-            PaymentPayloadMetaDataDTO metadata = intakePaymentModel.getPaymentPayload()
+            XPendingBalanceMetadataDTO metadata = intakePaymentModel.getPaymentPayload()
                     .getPatientBalances().get(0).getBalances().get(0).getMetadata();
 
             Map<String, String> queries = new HashMap<>();

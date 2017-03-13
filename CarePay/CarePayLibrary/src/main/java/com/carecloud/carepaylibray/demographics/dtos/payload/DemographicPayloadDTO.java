@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographics.dtos.payload;
 
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,22 +12,21 @@ import java.util.List;
  * Model for Demographics payload
  */
 public class DemographicPayloadDTO {
-
-    @SerializedName("address")
-    @Expose
-    private DemographicAddressPayloadDTO address = new DemographicAddressPayloadDTO();
-
     @SerializedName("personal_details")
     @Expose
-    private DemographicPersDetailsPayloadDTO personalDetails = new DemographicPersDetailsPayloadDTO();
+    private PatientModel personalDetails = new PatientModel();
+
+    @SerializedName("insurances")
+    @Expose
+    private List<DemographicInsurancePayloadDTO> insurances = new ArrayList<>();
 
     @SerializedName("identity_documents")
     @Expose
     private List<DemographicIdDocPayloadDTO> idDocuments = new ArrayList<>();
 
-    @SerializedName("insurances")
+    @SerializedName("address")
     @Expose
-    private List<DemographicInsurancePayloadDTO> insurances = new ArrayList<>();
+    private DemographicAddressPayloadDTO address = new DemographicAddressPayloadDTO();
 
     @SerializedName("updates")
     @Expose
@@ -49,14 +49,14 @@ public class DemographicPayloadDTO {
     /**
      * @return The personalDetails
      */
-    public DemographicPersDetailsPayloadDTO getPersonalDetails() {
+    public PatientModel getPersonalDetails() {
         return personalDetails;
     }
 
     /**
      * @param personalDetails The personal_details
      */
-    public void setPersonalDetails(DemographicPersDetailsPayloadDTO personalDetails) {
+    public void setPersonalDetails(PatientModel personalDetails) {
         this.personalDetails = personalDetails;
     }
 

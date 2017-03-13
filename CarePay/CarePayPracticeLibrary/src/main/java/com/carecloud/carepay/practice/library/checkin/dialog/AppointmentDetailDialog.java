@@ -24,7 +24,6 @@ import com.carecloud.carepay.practice.library.checkin.dtos.CheckInLabelDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInMetadataDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInStatusDataPayloadValueDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInStatusPayloadDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.PendingBalanceDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.QueryStrings;
 import com.carecloud.carepay.practice.library.checkin.dtos.QueueDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.QueueStatusPayloadDTO;
@@ -38,7 +37,8 @@ import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
+import com.carecloud.carepaylibray.payments.models.XPatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.XPendingBalanceDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -64,7 +64,7 @@ public class AppointmentDetailDialog extends Dialog {
     private Context context;
     private CheckInDTO checkInDTO;
     private AppointmentPayloadDTO appointmentPayloadDTO;
-    private PendingBalanceDTO pendingBalanceDTO;
+    private XPendingBalanceDTO pendingBalanceDTO;
     private CheckInLabelDTO checkInLabelDTO;
 
     private CarePayTextView checkingInLabel;
@@ -95,7 +95,7 @@ public class AppointmentDetailDialog extends Dialog {
      *
      * @param context context
      */
-    public AppointmentDetailDialog(Context context, CheckInDTO checkInDTO, PendingBalanceDTO pendingBalanceDTO,
+    public AppointmentDetailDialog(Context context, CheckInDTO checkInDTO, XPendingBalanceDTO pendingBalanceDTO,
                                    AppointmentPayloadDTO payloadDTO, boolean isWaitingRoom) {
         super(context);
         this.context = context;
@@ -520,11 +520,11 @@ public class AppointmentDetailDialog extends Dialog {
             if (patientDetails != null && patientDetails.getPaymentPayload().getPatientBalances() != null
                     && !patientDetails.getPaymentPayload().getPatientBalances().isEmpty()) {
 
-                PaymentsPatientBalancessDTO paymentsPatientBalancessDTO = patientDetails.getPaymentPayload().getPatientBalances().get(0);
-                if (paymentsPatientBalancessDTO.getBalances().get(0).getPayload().isEmpty()) {
+                XPatientBalanceDTO xPatientBalanceDTO = patientDetails.getPaymentPayload().getPatientBalances().get(0);
+                if (xPatientBalanceDTO.getBalances().get(0).getPayload().isEmpty()) {
                     Toast.makeText(getContext(), "Patient has no balance", Toast.LENGTH_LONG).show();
                 } else {
-                    showResponsibilityDialog(paymentsPatientBalancessDTO, patientDetails);
+                    showResponsibilityDialog(xPatientBalanceDTO, patientDetails);
                     cancel();
                 }
             } else {
@@ -540,13 +540,13 @@ public class AppointmentDetailDialog extends Dialog {
     };
 
 
-    private void showResponsibilityDialog(PaymentsPatientBalancessDTO paymentsPatientBalancessDTO, PaymentsModel paymentsModel){
+    private void showResponsibilityDialog(XPatientBalanceDTO xPatientBalanceDTO, PaymentsModel paymentsModel){
         new ResponsibilityDialog(
                 context,
                 paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPracticePaymentsDetailDialogPaymentPlan(),
                 paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPracticePaymentsDetailDialogPay(),
                 paymentsModel,
-                paymentsPatientBalancessDTO,
+                xPatientBalanceDTO,
                 getResponsibilityCallback(paymentsModel)
         ).show();
 

@@ -13,19 +13,17 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.PatientBalanceDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.PendingBalanceDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.models.MapFilterModel;
+import com.carecloud.carepay.practice.library.util.PracticeUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.payments.models.LocationIndexDTO;
-import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
+import com.carecloud.carepaylibray.payments.models.XPatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.XPendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.XPendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -238,7 +236,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private void loadPatients(CheckInDTO checkInDTO) {
         List<AppointmentDTO> appointments = checkInDTO.getPayload().getAppointments();
-        Map<String, String> profilePhotoMap = getProfilePhotoMap(checkInDTO.getPayload().getPatientBalances());
+        Map<String, String> profilePhotoMap = PracticeUtil.getProfilePhotoMap(checkInDTO.getPayload().getPatientBalances());
         this.allPatients = new ArrayList<>(appointments.size());
 
         for (AppointmentDTO appointmentDTO : appointments) {
@@ -253,12 +251,12 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     private void loadPatients(PaymentsModel paymentsModel) {
-        List<PaymentsPatientBalancessDTO> dtoList = paymentsModel.getPaymentPayload().getPatientBalances();
+        List<XPatientBalanceDTO> dtoList = paymentsModel.getPaymentPayload().getPatientBalances();
         Map<String, ProviderIndexDTO> providerMap = getProviderMap(paymentsModel.getPaymentPayload().getProviderIndex());
         Map<String, LocationIndexDTO> locationMap = getLocationMap(paymentsModel.getPaymentPayload().getLocationIndex());
         this.allPatients = new ArrayList<>(dtoList.size());
 
-        for (PaymentsPatientBalancessDTO dto : dtoList) {
+        for (XPatientBalanceDTO dto : dtoList) {
             createPatient(providerMap, locationMap, dto);
         }
     }
@@ -275,8 +273,8 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         });
     }
 
-    private void createPatient(Map<String, ProviderIndexDTO> providerMap, Map<String, LocationIndexDTO> locationMap, PaymentsPatientBalancessDTO dto) {
-        List<PatienceBalanceDTO> patientBalances = dto.getBalances();
+    private void createPatient(Map<String, ProviderIndexDTO> providerMap, Map<String, LocationIndexDTO> locationMap, XPatientBalanceDTO dto) {
+        List<XPendingBalanceDTO> patientBalances = dto.getBalances();
         double balance = getBalance(patientBalances);
         String patientId = patientBalances.get(0).getMetadata().getPatientId();
         ProviderIndexDTO provider = providerMap.get(patientId);
@@ -285,11 +283,11 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         allPatients.add(new Patient(dto, patientId, provider, location, balance, personalDetails));
     }
 
-    private double getBalance(List<PatienceBalanceDTO> balances) {
+    private double getBalance(List<XPendingBalanceDTO> balances) {
         double amount = 0;
 
         for (int i = 0; i < balances.size(); i++) {
-            List<PatiencePayloadDTO> payload = balances.get(i).getPayload();
+            List<XPendingBalancePayloadDTO> payload = balances.get(i).getPayload();
             for (int j = 0; j < payload.size(); j++) {
                 amount += payload.get(j).getAmount();
             }
@@ -326,29 +324,6 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return map;
     }
 
-    private Map<String, String> getProfilePhotoMap(List<PatientBalanceDTO> patientBalances) {
-        Map<String, String> map = new HashMap<>();
-
-        for (PatientBalanceDTO patientBalanceDTO: patientBalances) {
-            DemographicPayloadInfoDTO demographics = patientBalanceDTO.getDemographics();
-            String photoUrl = demographics.getPayload().getPersonalDetails().getProfilePhoto();
-
-            if (null == photoUrl || photoUrl.isEmpty()) {
-                continue;
-            }
-
-            for (PendingBalanceDTO pendingBalanceDTO: patientBalanceDTO.getPendingBalances()) {
-
-                String patientId = pendingBalanceDTO.getMetadata().getPatientId();
-                if (!map.containsKey(patientId)) {
-                    map.put(patientId, photoUrl);
-                    break;
-                }
-            }
-        }
-
-        return map;
-    }
 
     public void setTapListener(OnItemTappedListener tapListener) {
         this.tapListener = tapListener;

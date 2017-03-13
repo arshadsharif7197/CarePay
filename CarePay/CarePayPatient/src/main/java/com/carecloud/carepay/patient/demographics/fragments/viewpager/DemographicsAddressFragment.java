@@ -22,29 +22,27 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.utils.ValidationHelper;
+import com.smartystreets.api.us_zipcode.City;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
-
-import com.carecloud.carepaylibray.utils.ValidationHelper;
-
-import com.smartystreets.api.us_zipcode.City;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +96,7 @@ public class DemographicsAddressFragment extends BaseFragment {
     private boolean isNextVisible = false;
 
     private DemographicAddressPayloadDTO            addressDTO;
-    private DemographicPersDetailsPayloadDTO        persDetailsDTO;
+    private PatientModel                            persDetailsDTO;
     private DemographicMetadataEntityAddressDTO     addressMetaDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
     private DemographicLabelsDTO                    globalLabelsMetaDTO;
@@ -332,7 +330,7 @@ public class DemographicsAddressFragment extends BaseFragment {
         }
         persDetailsDTO = ((DemographicsActivity) getActivity()).getDetailsDTO();
         if (persDetailsDTO == null) {
-            persDetailsDTO = new DemographicPersDetailsPayloadDTO();
+            persDetailsDTO = new PatientModel();
         }
         addressMetaDTO = DtoHelper.getConvertedDTO(DemographicMetadataEntityAddressDTO.class, getArguments());
     }

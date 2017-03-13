@@ -38,12 +38,12 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.api.client.util.Base64;
 import com.google.gson.Gson;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -330,7 +330,7 @@ public class DemographicsSettingsChangePasswordFragment extends BaseFragment {
                                             DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
                                             if (demographicsSettingsPayloadDTO != null) {
                                                 //DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-                                                //DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload().;
+                                                //DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload().;
                                                 //PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
 
                                                 Gson gson = new Gson();

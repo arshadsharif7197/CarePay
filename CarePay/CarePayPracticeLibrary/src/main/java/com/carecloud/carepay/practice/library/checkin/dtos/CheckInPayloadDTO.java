@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.checkin.dtos;
 
+import com.carecloud.carepaylibray.payments.models.XPatientBalanceDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -13,7 +14,7 @@ import java.util.List;
 public class CheckInPayloadDTO {
     @SerializedName("patient_balances")
     @Expose
-    private List<PatientBalanceDTO> patientBalances = new ArrayList<>();
+    private List<XPatientBalanceDTO> patientBalances = new ArrayList<>();
     @SerializedName("appointments")
     @Expose
     private List<AppointmentDTO> appointments = new ArrayList<>();
@@ -32,7 +33,7 @@ public class CheckInPayloadDTO {
      * @return
      * The patientBalances
      */
-    public List<PatientBalanceDTO> getPatientBalances() {
+    public List<XPatientBalanceDTO> getPatientBalances() {
         return patientBalances;
     }
 
@@ -41,7 +42,7 @@ public class CheckInPayloadDTO {
      * @param patientBalances
      * The patient_balances
      */
-    public void setPatientBalances(List<PatientBalanceDTO> patientBalances) {
+    public void setPatientBalances(List<XPatientBalanceDTO> patientBalances) {
         this.patientBalances = patientBalances;
     }
 

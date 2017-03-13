@@ -9,10 +9,10 @@ import android.view.ViewGroup;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.checkin.CheckInActivity;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.PatientBalanceDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.PendingBalanceDTO;
 import com.carecloud.carepay.practice.library.customcomponent.AppointmentStatusCardView;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.payments.models.XPatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.XPendingBalanceDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
 
     private Context context;
     private ArrayList<AppointmentPayloadDTO> appointmentArrayList;
-    private List<PatientBalanceDTO> patientBalances;
+    private List<XPatientBalanceDTO> patientBalances;
     private boolean isWaitingRoom;
 
     /**
@@ -37,7 +37,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
      * @param data    list of appointments
      */
     public CheckedInAppointmentAdapter(Context context, ArrayList<AppointmentPayloadDTO> data,
-                                       List<PatientBalanceDTO> patientBalances, boolean isWaitingRoom) {
+                                       List<XPatientBalanceDTO> patientBalances, boolean isWaitingRoom) {
 
         this.context = context;
         this.appointmentArrayList = data;
@@ -91,8 +91,8 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
         AppointmentPayloadDTO appointmentItem = appointmentArrayList.get(position);
         String id = appointmentItem.getPatient().getPatientId();
 
-        for (PatientBalanceDTO patientBalanceDTO: patientBalances) {
-            PendingBalanceDTO pendingBalanceDTO = patientBalanceDTO.getPendingBalances().get(0);
+        for (XPatientBalanceDTO patientBalanceDTO: patientBalances) {
+            XPendingBalanceDTO pendingBalanceDTO = patientBalanceDTO.getBalances().get(0);
             if (pendingBalanceDTO.getMetadata().getPatientId().equals(id) && !pendingBalanceDTO.getPayload().isEmpty()) {
                 return pendingBalanceDTO.getPayload().get(0).getAmount();
             }

@@ -9,13 +9,27 @@ import com.google.gson.annotations.SerializedName;
  */
 public class DemographicAddressPayloadDTO {
 
-    @SerializedName("phone") @Expose private    String phone;
-    @SerializedName("zipcode") @Expose private  String zipcode;
-    @SerializedName("address1") @Expose private String address1;
-    @SerializedName("address2") @Expose private String address2;
-    @SerializedName("city") @Expose private     String city;
-    @SerializedName("state") @Expose private    String state;
-    @SerializedName("country") @Expose private  String country;
+    @SerializedName("phone")
+    @Expose
+    private String phone;
+    @SerializedName("zipcode")
+    @Expose
+    private String zipcode;
+    @SerializedName("city")
+    @Expose
+    private String city;
+    @SerializedName("address1")
+    @Expose
+    private String address1;
+    @SerializedName("address2")
+    @Expose
+    private String address2;
+    @SerializedName("state")
+    @Expose
+    private String state;
+    @SerializedName("country")
+    @Expose
+    private String country;
 
     /**
      * @return The phone

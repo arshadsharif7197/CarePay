@@ -8,13 +8,13 @@ public class PaymentReceiptPayloadDTO {
 
     @SerializedName("metadata")
     @Expose
-    private PaymentPayloadMetaDataDTO metadata = new PaymentPayloadMetaDataDTO();
+    private XPendingBalanceMetadataDTO metadata = new XPendingBalanceMetadataDTO();
 
-    public PaymentPayloadMetaDataDTO getMetadata() {
+    public XPendingBalanceMetadataDTO getMetadata() {
         return metadata;
     }
 
-    public void setMetadata(PaymentPayloadMetaDataDTO metadata) {
+    public void setMetadata(XPendingBalanceMetadataDTO metadata) {
         this.metadata = metadata;
     }
 }

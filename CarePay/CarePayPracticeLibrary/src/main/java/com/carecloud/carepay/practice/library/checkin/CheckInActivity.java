@@ -21,8 +21,6 @@ import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInLabelDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.PatientBalanceDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.PendingBalanceDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.CustomFilterPopupWindow;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountReceiptDialog;
@@ -38,6 +36,8 @@ import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.LocationDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.ProviderDTO;
+import com.carecloud.carepaylibray.payments.models.XPatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.XPendingBalanceDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
@@ -475,11 +475,11 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         setAdapter();
     }
 
-    private PendingBalanceDTO getPatientBalanceDTOs(String patientId) {
-        List<PatientBalanceDTO> patientBalances = checkInDTO.getPayload().getPatientBalances();
+    private XPendingBalanceDTO getPatientBalanceDTOs(String patientId) {
+        List<XPatientBalanceDTO> patientBalances = checkInDTO.getPayload().getPatientBalances();
 
-        for (PatientBalanceDTO patientBalanceDTO: patientBalances) {
-            PendingBalanceDTO pendingBalanceDTO = patientBalanceDTO.getPendingBalances().get(0);
+        for (XPatientBalanceDTO patientBalanceDTO: patientBalances) {
+            XPendingBalanceDTO pendingBalanceDTO = patientBalanceDTO.getBalances().get(0);
             if (pendingBalanceDTO.getMetadata().getPatientId().equals(patientId)) {
                 return pendingBalanceDTO;
             }

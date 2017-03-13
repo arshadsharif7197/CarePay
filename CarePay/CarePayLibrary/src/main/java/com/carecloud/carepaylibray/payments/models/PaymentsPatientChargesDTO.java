@@ -14,7 +14,7 @@ import java.util.List;
 public class PaymentsPatientChargesDTO {
     @SerializedName("metadata")
     @Expose
-    private PaymentPayloadMetaDataDTO metadata = new PaymentPayloadMetaDataDTO();
+    private XPendingBalanceMetadataDTO metadata = new XPendingBalanceMetadataDTO();
     @SerializedName("payload")
     @Expose
     private List<AppointmentChargeDTO> charges = new ArrayList<>();
@@ -27,11 +27,11 @@ public class PaymentsPatientChargesDTO {
         this.charges = charges;
     }
 
-    public PaymentPayloadMetaDataDTO getMetadata() {
+    public XPendingBalanceMetadataDTO getMetadata() {
         return metadata;
     }
 
-    public void setMetadata(PaymentPayloadMetaDataDTO metadata) {
+    public void setMetadata(XPendingBalanceMetadataDTO metadata) {
         this.metadata = metadata;
     }
 
