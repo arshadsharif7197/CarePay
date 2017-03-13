@@ -190,10 +190,10 @@ public class ResponsibilityDialog extends Dialog {
     private void initializePatientProvider(List<PendingBalanceDTO> balances) {
         String provider;
 
-        List<PendingBalancePayloadDTO> PendingBalancePayloadDTOList = balances.get(0).getPayload();
-        if (!PendingBalancePayloadDTOList.isEmpty() && !PendingBalancePayloadDTOList.get(0).getDetails().isEmpty()) {
+        List<PendingBalancePayloadDTO> pendingBalancePayloadDTOList = balances.get(0).getPayload();
+        if (!pendingBalancePayloadDTOList.isEmpty() && !pendingBalancePayloadDTOList.get(0).getDetails().isEmpty()) {
 
-            provider = PendingBalancePayloadDTOList.get(0).getDetails().get(0).getProvider().getName();
+            provider = pendingBalancePayloadDTOList.get(0).getDetails().get(0).getProvider().getName();
 
         } else {
 

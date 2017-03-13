@@ -14,6 +14,11 @@ import java.util.Map;
 
 public class PracticeUtil {
 
+    /**
+     * Create a map of all image urls as provided by the Demographics portion of patient balance payload
+     * @param patientBalances patient balance list payload
+     * @return map of urls
+     */
     public static Map<String, String> getProfilePhotoMap(List<PatientBalanceDTO> patientBalances) {
         Map<String, String> map = new HashMap<>();
 

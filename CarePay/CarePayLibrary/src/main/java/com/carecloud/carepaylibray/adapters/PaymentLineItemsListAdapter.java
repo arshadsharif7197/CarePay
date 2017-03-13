@@ -78,10 +78,10 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
     @Override
     public void onBindViewHolder(final PaymentDetailsListViewHolder holder, int position) {
 
-        PendingBalanceDTO PendingBalanceDTO = detailsList.get(position);
+        PendingBalanceDTO pendingBalanceDTO = detailsList.get(position);
 
-        if (!PendingBalanceDTO.getPayload().isEmpty()) {
-            final PendingBalancePayloadDTO paymentLineItem = PendingBalanceDTO.getPayload().get(0);
+        if (!pendingBalanceDTO.getPayload().isEmpty()) {
+            final PendingBalancePayloadDTO paymentLineItem = pendingBalanceDTO.getPayload().get(0);
             holder.paymentDetailLabel.setText(paymentLineItem.getType());
             holder.paymentDetailAmount.setText(StringUtil.getFormattedBalanceAmount(paymentLineItem.getAmount()));
 
