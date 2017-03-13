@@ -14,7 +14,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.models.XPendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -60,7 +60,7 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment {
         appCompatActivity = (AppCompatActivity) getActivity();
     }
 
-    protected void fillDetailAdapter(View view, List<XPendingBalanceDTO> paymentList){
+    protected void fillDetailAdapter(View view, List<PendingBalanceDTO> paymentList){
         RecyclerView paymentDetailsListRecyclerView = ((RecyclerView) view.findViewById(R.id.responsibility_line_item_recycle_view));
         paymentDetailsListRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 

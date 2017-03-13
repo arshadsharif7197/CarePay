@@ -16,7 +16,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.models.XPendingBalanceMetadataDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.CreditCardModel;
@@ -236,7 +236,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
 //            JSONArray paymentMethods = new JSONArray();
 //            paymentMethods.put(paymentMethod);
 //            payload.put("payment_methods", paymentMethods);
-//            XPendingBalanceMetadataDTO metadata = intakePaymentModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
+//            PendingBalanceMetadataDTO metadata = intakePaymentModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
 //            Map<String, String> queries = new HashMap<>();
 //            queries.put("practice_mgmt", metadata.getPracticeMgmt());
 //            queries.put("practice_id", metadata.getPracticeId());
@@ -252,7 +252,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
     }
 
     private void postPayment(String paymentModelJson){
-        XPendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
+        PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
         Map<String, String> queries = new HashMap<>();
         queries.put("practice_mgmt", metadata.getPracticeMgmt());
         queries.put("practice_id", metadata.getPracticeId());

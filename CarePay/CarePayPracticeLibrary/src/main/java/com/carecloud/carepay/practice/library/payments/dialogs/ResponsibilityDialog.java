@@ -21,9 +21,9 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.models.XPatientBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.XPendingBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.XPendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
@@ -43,7 +43,7 @@ public class ResponsibilityDialog extends Dialog {
     private final String leftLabel;
     private final String rightLabel;
     private PaymentsModel paymentsModel;
-    private XPatientBalanceDTO patientPayments;
+    private PatientBalanceDTO patientPayments;
     private PayResponsibilityCallback callback;
     private PaymentNavigationCallback navigationCallback;
     private double owedAmount = 0;
@@ -54,13 +54,13 @@ public class ResponsibilityDialog extends Dialog {
      * @param leftLabel label for left button
      * @param rightLabel label for right button
      * @param paymentsModel Payments Model
-     * @param patientPayments XPatientBalanceDTO
+     * @param patientPayments PatientBalanceDTO
      */
     public ResponsibilityDialog(Context context,
                                 String leftLabel,
                                 String rightLabel,
                                 PaymentsModel paymentsModel,
-                                XPatientBalanceDTO patientPayments,
+                                PatientBalanceDTO patientPayments,
                                 PayResponsibilityCallback callback) {
         super(context);
         this.context = context;
@@ -164,7 +164,7 @@ public class ResponsibilityDialog extends Dialog {
 
     private void initializeBody(PaymentsLabelDTO labels) {
         if (null != patientPayments && null != patientPayments.getBalances() && !patientPayments.getBalances().isEmpty()) {
-            List<XPendingBalanceDTO> balances = patientPayments.getBalances();
+            List<PendingBalanceDTO> balances = patientPayments.getBalances();
 
             initializeOwedAmount(balances);
 
@@ -178,7 +178,7 @@ public class ResponsibilityDialog extends Dialog {
         initializeOwedAmountTextView(labels);
     }
 
-    private void initializePaymentLines(List<XPendingBalanceDTO> balances) {
+    private void initializePaymentLines(List<PendingBalanceDTO> balances) {
         RecyclerView amountDetails = (RecyclerView) findViewById(R.id.payment_responsibility_balance_details);
         amountDetails.setLayoutManager(new LinearLayoutManager(context));
 
@@ -187,13 +187,13 @@ public class ResponsibilityDialog extends Dialog {
         amountDetails.setAdapter(adapter);
     }
 
-    private void initializePatientProvider(List<XPendingBalanceDTO> balances) {
+    private void initializePatientProvider(List<PendingBalanceDTO> balances) {
         String provider;
 
-        List<XPendingBalancePayloadDTO> XPendingBalancePayloadDTOList = balances.get(0).getPayload();
-        if (!XPendingBalancePayloadDTOList.isEmpty() && !XPendingBalancePayloadDTOList.get(0).getDetails().isEmpty()) {
+        List<PendingBalancePayloadDTO> PendingBalancePayloadDTOList = balances.get(0).getPayload();
+        if (!PendingBalancePayloadDTOList.isEmpty() && !PendingBalancePayloadDTOList.get(0).getDetails().isEmpty()) {
 
-            provider = XPendingBalancePayloadDTOList.get(0).getDetails().get(0).getProvider().getName();
+            provider = PendingBalancePayloadDTOList.get(0).getDetails().get(0).getProvider().getName();
 
         } else {
 
@@ -205,8 +205,8 @@ public class ResponsibilityDialog extends Dialog {
         patientProviderNameTextView.setText(provider);
     }
 
-    private void initializeOwedAmount(List<XPendingBalanceDTO> balances) {
-        for (XPendingBalanceDTO patiencePayload : balances) {
+    private void initializeOwedAmount(List<PendingBalanceDTO> balances) {
+        for (PendingBalanceDTO patiencePayload : balances) {
             if (!patiencePayload.getPayload().isEmpty()) {
                 owedAmount += patiencePayload.getPayload().get(0).getAmount();
             }

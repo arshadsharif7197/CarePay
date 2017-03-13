@@ -13,8 +13,8 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
-import com.carecloud.carepaylibray.payments.models.XPatientBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.XPendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItem;
@@ -120,7 +120,7 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
     {
         try
         {
-            XPatientBalanceDTO patientPayments = paymentList.get(0);
+            PatientBalanceDTO patientPayments = paymentList.get(0);
 
             double paymentAmount = getArguments().getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
             if(paymentAmount==0){
@@ -136,8 +136,8 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
             intent.putExtra(CarePayConstants.CLOVER_PAYMENT_TRANSITION, paymentTransitionString);
 
             List<PaymentLineItem> paymentLineItems = new ArrayList<>();
-            List<XPendingBalanceDTO> balances = paymentList.get(0).getBalances();
-            for(XPendingBalanceDTO balance : balances) {
+            List<PendingBalanceDTO> balances = paymentList.get(0).getBalances();
+            for(PendingBalanceDTO balance : balances) {
 
                 PaymentLineItem paymentLineItem = new PaymentLineItem();
                 paymentLineItem.setAmount(balance.getPayload().get(0).getAmount());

@@ -19,7 +19,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.models.XPendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -116,10 +116,10 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         SystemUtil.setGothamRoundedMediumTypeface(context, enterPartialAmountEditText);
 
         if (paymentsDTO != null && !paymentsDTO.getPaymentPayload().getPatientBalances().isEmpty()) {
-            List<XPendingBalancePayloadDTO> paymentList = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
+            List<PendingBalancePayloadDTO> paymentList = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
 
             if (paymentList != null && paymentList.size() > 0) {
-                for (XPendingBalancePayloadDTO payment : paymentList) {
+                for (PendingBalancePayloadDTO payment : paymentList) {
                     if (payment.getType().equalsIgnoreCase(CarePayConstants.PATIENT_BALANCE)) {
                         patientBalance = payment.getAmount();
                     } else if (payment.getType().equalsIgnoreCase(CarePayConstants.INSURANCE_COPAY)) {

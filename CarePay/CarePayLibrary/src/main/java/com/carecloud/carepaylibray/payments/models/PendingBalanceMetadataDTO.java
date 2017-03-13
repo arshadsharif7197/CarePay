@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class XPendingBalanceMetadataDTO implements Serializable {
+public class PendingBalanceMetadataDTO implements Serializable {
     @SerializedName("user_id")
     @Expose
     private String userId;

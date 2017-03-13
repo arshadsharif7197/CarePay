@@ -33,7 +33,7 @@ import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.LocationDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.XPatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -382,7 +382,7 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
 
             PaymentsModel patientDetails = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
 
-            XPatientBalanceDTO balancesDTO = null;
+            PatientBalanceDTO balancesDTO = null;
             if (patientDetails != null && patientDetails.getPaymentPayload().getPatientBalances() != null && !patientDetails.getPaymentPayload().getPatientBalances().isEmpty()) {
                 balancesDTO = patientDetails.getPaymentPayload().getPatientBalances().get(0);
             }

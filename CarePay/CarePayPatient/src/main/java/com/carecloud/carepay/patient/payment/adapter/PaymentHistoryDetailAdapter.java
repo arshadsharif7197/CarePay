@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.payments.models.XPendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.List;
@@ -20,9 +20,9 @@ import java.util.List;
 
 public class PaymentHistoryDetailAdapter extends RecyclerView.Adapter<PaymentHistoryDetailAdapter.PaymentHistoryDetailViewHolder> {
     private Context context;
-    private List<XPendingBalanceDTO> detail;
+    private List<PendingBalanceDTO> detail;
 
-    public PaymentHistoryDetailAdapter(Context context, List<XPendingBalanceDTO> detail) {
+    public PaymentHistoryDetailAdapter(Context context, List<PendingBalanceDTO> detail) {
         this.context = context;
         this.detail = detail;
     }
@@ -36,7 +36,7 @@ public class PaymentHistoryDetailAdapter extends RecyclerView.Adapter<PaymentHis
 
     @Override
     public void onBindViewHolder(final PaymentHistoryDetailAdapter.PaymentHistoryDetailViewHolder holder, int position) {
-        final XPendingBalanceDTO charge = detail.get(position);
+        final PendingBalanceDTO charge = detail.get(position);
             String locationName = CarePayConstants.NOT_DEFINED;
             holder.description.setText(locationName);
             //mock model not final

@@ -42,7 +42,7 @@ public class PaymentsPayloadDTO implements Serializable {
     private Integer inOfficeCounts;
     @SerializedName("patient_balances")
     @Expose
-    private List<XPatientBalanceDTO> patientBalances = new ArrayList<>();
+    private List<PatientBalanceDTO> patientBalances = new ArrayList<>();
     @SerializedName("providers")
     @Expose
     private List<ProviderDTO> providers = new ArrayList<>();
@@ -144,7 +144,7 @@ public class PaymentsPayloadDTO implements Serializable {
      *
      * @return The patientBalances
      */
-    public List<XPatientBalanceDTO> getPatientBalances() {
+    public List<PatientBalanceDTO> getPatientBalances() {
         return patientBalances;
     }
 
@@ -152,7 +152,7 @@ public class PaymentsPayloadDTO implements Serializable {
      *
      * @param patientBalances The patient_balances
      */
-    public void setPatientBalances(List<XPatientBalanceDTO>patientBalances) {
+    public void setPatientBalances(List<PatientBalanceDTO>patientBalances) {
         this.patientBalances = patientBalances;
     }
 

@@ -25,7 +25,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.XPatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public abstract class PaymentMethodFragment extends BaseDialogFragment {
     private ListView paymentMethodList;
 
     protected PaymentsModel paymentsModel;
-    protected List<XPatientBalanceDTO> paymentList = new ArrayList<>();
+    protected List<PatientBalanceDTO> paymentList = new ArrayList<>();
     protected List<PaymentsMethodsDTO> paymentMethodsList = new ArrayList<>();
     protected String selectedPaymentMethod;
     protected HashMap<String, Integer> paymentTypeMap;

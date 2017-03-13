@@ -20,8 +20,8 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.models.XPendingBalancePayloadDTO;
-import com.carecloud.carepaylibray.payments.models.XPendingBalanceMetadataDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLinksDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -105,7 +105,7 @@ public class PaymentHistoryFragment extends BaseFragment implements PaymentBalan
                 //check if we have valid data
                 if(!paymentDTO.getPaymentPayload().getPatientBalances().isEmpty() &&
                         paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).hasValidMetadata()){
-                    XPendingBalanceMetadataDTO metadata = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
+                    PendingBalanceMetadataDTO metadata = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
 
                     queryString.put("practice_id",  metadata.getPracticeId() );
                     queryString.put("practice_mgmt", metadata.getPracticeMgmt());
@@ -122,7 +122,7 @@ public class PaymentHistoryFragment extends BaseFragment implements PaymentBalan
             case SECTION_HISTORY:{
                 //check if we have valid data
                 if(paymentDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges().hasValidMetadata()){
-                    XPendingBalanceMetadataDTO metadata = paymentDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges().getMetadata();
+                    PendingBalanceMetadataDTO metadata = paymentDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges().getMetadata();
 
                     queryString.put("practice_id",  metadata.getPracticeId() );
                     queryString.put("practice_mgmt", metadata.getPracticeMgmt());
@@ -234,14 +234,14 @@ public class PaymentHistoryFragment extends BaseFragment implements PaymentBalan
         }
     };
 
-    private void loadPaymentAmountScreen(XPendingBalancePayloadDTO model) {
+    private void loadPaymentAmountScreen(PendingBalancePayloadDTO model) {
         PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(getContext() , paymentDTO, model, payNowClickListener, null);
         detailsDialog.show();
     }
 
     @Override
     public void onBalanceListItemClickListener(int position) {
-        XPendingBalancePayloadDTO model = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload().get(position);
+        PendingBalancePayloadDTO model = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload().get(position);
         total = model.getAmount();
         loadPaymentAmountScreen(model);
     }

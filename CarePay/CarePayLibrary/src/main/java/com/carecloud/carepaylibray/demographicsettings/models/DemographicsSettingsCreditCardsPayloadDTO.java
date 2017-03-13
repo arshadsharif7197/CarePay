@@ -1,6 +1,6 @@
 package com.carecloud.carepaylibray.demographicsettings.models;
 
-import com.carecloud.carepaylibray.demographics.dtos.payload.XDemographicsInfoMetaDataDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicsInfoMetaDataDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,16 +11,16 @@ import com.google.gson.annotations.SerializedName;
 public class DemographicsSettingsCreditCardsPayloadDTO {
     @SerializedName("metadata")
     @Expose
-    private XDemographicsInfoMetaDataDTO metadata = new XDemographicsInfoMetaDataDTO();
+    private DemographicsInfoMetaDataDTO metadata = new DemographicsInfoMetaDataDTO();
     @SerializedName("payload")
     @Expose
     private DemographicsSettingsPayloadPropertiesDTO payload = new DemographicsSettingsPayloadPropertiesDTO();
 
-    public XDemographicsInfoMetaDataDTO getMetadata() {
+    public DemographicsInfoMetaDataDTO getMetadata() {
         return metadata;
     }
 
-    public void setMetadata(XDemographicsInfoMetaDataDTO metadata) {
+    public void setMetadata(DemographicsInfoMetaDataDTO metadata) {
         this.metadata = metadata;
     }
 

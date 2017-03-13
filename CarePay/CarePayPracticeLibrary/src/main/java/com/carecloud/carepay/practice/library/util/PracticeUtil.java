@@ -1,8 +1,8 @@
 package com.carecloud.carepay.practice.library.util;
 
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
-import com.carecloud.carepaylibray.payments.models.XPatientBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.XPendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,10 +14,10 @@ import java.util.Map;
 
 public class PracticeUtil {
 
-    public static Map<String, String> getProfilePhotoMap(List<XPatientBalanceDTO> patientBalances) {
+    public static Map<String, String> getProfilePhotoMap(List<PatientBalanceDTO> patientBalances) {
         Map<String, String> map = new HashMap<>();
 
-        for (XPatientBalanceDTO patientBalanceDTO: patientBalances) {
+        for (PatientBalanceDTO patientBalanceDTO: patientBalances) {
             DemographicPayloadInfoDTO demographics = patientBalanceDTO.getDemographics();
             String photoUrl = demographics.getPayload().getPersonalDetails().getProfilePhoto();
 
@@ -25,7 +25,7 @@ public class PracticeUtil {
                 continue;
             }
 
-            for (XPendingBalanceDTO pendingBalanceDTO: patientBalanceDTO.getBalances()) {
+            for (PendingBalanceDTO pendingBalanceDTO: patientBalanceDTO.getBalances()) {
 
                 String patientId = pendingBalanceDTO.getMetadata().getPatientId();
                 if (!map.containsKey(patientId)) {

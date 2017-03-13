@@ -18,7 +18,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
-import com.carecloud.carepaylibray.payments.models.XPendingBalanceMetadataDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.CreditCardModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
@@ -361,7 +361,7 @@ public class CloverPaymentActivity extends BaseActivity {
             paymentMethods.put(paymentMethod);
             payload.put("payment_methods", paymentMethods);
 
-            XPendingBalanceMetadataDTO metadataDTO = gson.fromJson(patientPaymentMetaDataString, XPendingBalanceMetadataDTO.class);
+            PendingBalanceMetadataDTO metadataDTO = gson.fromJson(patientPaymentMetaDataString, PendingBalanceMetadataDTO.class);
             Map<String, String> queries = new HashMap<>();
             queries.put("practice_mgmt", metadataDTO.getPracticeMgmt());
             queries.put("practice_id", metadataDTO.getPracticeId());
@@ -421,7 +421,7 @@ public class CloverPaymentActivity extends BaseActivity {
 
     private void postPayment(String paymentModelJson){
         Gson gson = new Gson();
-        XPendingBalanceMetadataDTO metadataDTO = gson.fromJson(patientPaymentMetaDataString, XPendingBalanceMetadataDTO.class);
+        PendingBalanceMetadataDTO metadataDTO = gson.fromJson(patientPaymentMetaDataString, PendingBalanceMetadataDTO.class);
         Map<String, String> queries = new HashMap<>();
         queries.put("patient_id", metadataDTO.getPatientId());
 

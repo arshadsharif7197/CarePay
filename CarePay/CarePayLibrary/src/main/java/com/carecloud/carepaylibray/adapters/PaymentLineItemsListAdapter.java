@@ -11,8 +11,8 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.models.XPendingBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.XPendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
@@ -21,7 +21,7 @@ import java.util.List;
 public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLineItemsListAdapter.PaymentDetailsListViewHolder> {
 
     private Context context;
-    private List<XPendingBalanceDTO> detailsList;
+    private List<PendingBalanceDTO> detailsList;
     private PaymentsModel paymentReceiptModel;
     private PaymentNavigationCallback payListener;
     private String detailsLabel;
@@ -35,7 +35,7 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
      * @param payListener listener
      */
     public PaymentLineItemsListAdapter(Context context, PaymentsModel paymentReceiptModel,
-                                       List<XPendingBalanceDTO> detailsList,
+                                       List<PendingBalanceDTO> detailsList,
                                        PaymentNavigationCallback payListener,
                                        String detailsLabel,
                                        DialogInterface.OnDismissListener dismissListener) {
@@ -78,10 +78,10 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
     @Override
     public void onBindViewHolder(final PaymentDetailsListViewHolder holder, int position) {
 
-        XPendingBalanceDTO XPendingBalanceDTO = detailsList.get(position);
+        PendingBalanceDTO PendingBalanceDTO = detailsList.get(position);
 
-        if (!XPendingBalanceDTO.getPayload().isEmpty()) {
-            final XPendingBalancePayloadDTO paymentLineItem = XPendingBalanceDTO.getPayload().get(0);
+        if (!PendingBalanceDTO.getPayload().isEmpty()) {
+            final PendingBalancePayloadDTO paymentLineItem = PendingBalanceDTO.getPayload().get(0);
             holder.paymentDetailLabel.setText(paymentLineItem.getType());
             holder.paymentDetailAmount.setText(StringUtil.getFormattedBalanceAmount(paymentLineItem.getAmount()));
 

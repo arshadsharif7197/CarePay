@@ -12,7 +12,7 @@ import java.util.List;
  * Created by Rahul on 11/30/16.
  */
 
-public class XPatientBalanceDTO implements Serializable {
+public class PatientBalanceDTO implements Serializable {
     @SerializedName("demographics")
     @Expose
     private DemographicPayloadInfoDTO demographics = new DemographicPayloadInfoDTO();
@@ -27,7 +27,7 @@ public class XPatientBalanceDTO implements Serializable {
 
     @SerializedName("pending_balances")
     @Expose
-    private List<XPendingBalanceDTO> balances = new ArrayList<>();
+    private List<PendingBalanceDTO> balances = new ArrayList<>();
 
     @SerializedName("payload")
     @Expose
@@ -38,7 +38,7 @@ public class XPatientBalanceDTO implements Serializable {
      * @return
      * The balances
      */
-    public List<XPendingBalanceDTO> getBalances() {
+    public List<PendingBalanceDTO> getBalances() {
         return balances;
     }
 
@@ -47,7 +47,7 @@ public class XPatientBalanceDTO implements Serializable {
      * @param balances
      * The balances
      */
-    public void setBalances(List<XPendingBalanceDTO> balances) {
+    public void setBalances(List<PendingBalanceDTO> balances) {
         this.balances = balances;
     }
 

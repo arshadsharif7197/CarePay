@@ -11,7 +11,7 @@ public class DemographicPayloadInfoDTO {
 
     @SerializedName("metadata")
     @Expose
-    private XDemographicsInfoMetaDataDTO metadata = new XDemographicsInfoMetaDataDTO();
+    private DemographicsInfoMetaDataDTO metadata = new DemographicsInfoMetaDataDTO();
     @SerializedName("payload")
     @Expose
     private DemographicPayloadDTO payload = new DemographicPayloadDTO();
@@ -21,7 +21,7 @@ public class DemographicPayloadInfoDTO {
      * @return
      * The metadata
      */
-    public XDemographicsInfoMetaDataDTO getMetadata() {
+    public DemographicsInfoMetaDataDTO getMetadata() {
         return metadata;
     }
 
@@ -30,7 +30,7 @@ public class DemographicPayloadInfoDTO {
      * @param metadata
      * The metadata
      */
-    public void setMetadata(XDemographicsInfoMetaDataDTO metadata) {
+    public void setMetadata(DemographicsInfoMetaDataDTO metadata) {
         this.metadata = metadata;
     }
 

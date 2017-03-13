@@ -21,8 +21,8 @@ import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.Chec
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
-import com.carecloud.carepaylibray.payments.models.XPendingBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.XPendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.practice.FlowStateInfo;
 
 import java.text.DecimalFormat;
@@ -87,11 +87,11 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
             try {
                 ((TextView) view.findViewById(R.id.respons_title)).setText(paymentsTitleString);
 
-                List<XPendingBalanceDTO> paymentList = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances();
+                List<PendingBalanceDTO> paymentList = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances();
 
                 total = 0;
                 if (paymentList != null && paymentList.size() > 0) {
-                    for (XPendingBalancePayloadDTO payment : paymentList.get(0).getPayload()) {
+                    for (PendingBalancePayloadDTO payment : paymentList.get(0).getPayload()) {
                         total += payment.getAmount();
                     }
 

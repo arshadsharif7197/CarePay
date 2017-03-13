@@ -1,7 +1,7 @@
 package com.carecloud.carepaylibray.payments.models.updatebalance;
 
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
-import com.carecloud.carepaylibray.payments.models.XPendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -16,7 +16,7 @@ public class UpdatePatientBalancesDTO {
 
     @SerializedName("pending_balances")
     @Expose
-    private List<XPendingBalanceDTO> balances = new ArrayList<>();
+    private List<PendingBalanceDTO> balances = new ArrayList<>();
     @SerializedName("demographics")
     @Expose
     private DemographicsSettingsDemographicsDTO demographics = new DemographicsSettingsDemographicsDTO();
@@ -24,11 +24,11 @@ public class UpdatePatientBalancesDTO {
     @Expose
     private String pendingRepsonsibility;
 
-    public List<XPendingBalanceDTO> getBalances() {
+    public List<PendingBalanceDTO> getBalances() {
         return balances;
     }
 
-    public void setBalances(List<XPendingBalanceDTO> balances) {
+    public void setBalances(List<PendingBalanceDTO> balances) {
         this.balances = balances;
     }
 
