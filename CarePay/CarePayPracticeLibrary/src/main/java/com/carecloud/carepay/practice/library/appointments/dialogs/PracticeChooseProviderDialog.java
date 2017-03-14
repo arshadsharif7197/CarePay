@@ -38,6 +38,7 @@ public class PracticeChooseProviderDialog extends BaseDialogFragment
 
     private List<AppointmentResourcesDTO> providerList = new ArrayList<>();
     private AppointmentResourcesDTO selectedProvider;
+    private AppointmentsResultModel resourcesToScheduleModel;
 
     private RecyclerView searchRecycler;
     private Button continueButton;
@@ -139,7 +140,7 @@ public class PracticeChooseProviderDialog extends BaseDialogFragment
         @Override
         public void onClick(View view) {
             if(selectedProvider != null){
-                callback.selectVisitType(selectedProvider);
+                callback.selectVisitType(selectedProvider, resourcesToScheduleModel);
                 dismiss();
             }
         }
@@ -184,7 +185,7 @@ public class PracticeChooseProviderDialog extends BaseDialogFragment
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            AppointmentsResultModel resourcesToScheduleModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
+            resourcesToScheduleModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
 
             if (resourcesToScheduleModel != null && resourcesToScheduleModel.getPayload() != null
                     && resourcesToScheduleModel.getPayload().getResourcesToSchedule() != null
