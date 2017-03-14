@@ -153,7 +153,7 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
         this.globalLabelsDTO = globalLabelsDTO;
     }
 
-    public DemographicPersDetailsPayloadDTO getDemographicPersDetailsPayloadDTO() {
+    public PatientModel getDemographicPersDetailsPayloadDTO() {
         return demographicPersDetailsPayloadDTO;
     }
 

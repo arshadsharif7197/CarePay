@@ -31,6 +31,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticePayment
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
@@ -39,7 +40,6 @@ import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemIdDocDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
 import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
@@ -796,7 +796,7 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
     }
 
     public void initializeProfilePictureFragment(DemographicLabelsDTO globalLabelDTO,
-                                                 DemographicPersDetailsPayloadDTO persDetailsDTO) {
+                                                 PatientModel persDetailsDTO) {
 
         FragmentManager fm = getSupportFragmentManager();
         String tag = ProfilePictureFragment.class.getSimpleName();
@@ -820,7 +820,7 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
                 getSupportFragmentManager().findFragmentById(R.id.revdemographicsAddressPicCapturer);
 
         if (fragment != null) {
-            DemographicPersDetailsPayloadDTO demographicPersDetailsPayloadDTO = fragment.getDemographicPersDetailsPayloadDTO();
+            PatientModel demographicPersDetailsPayloadDTO = fragment.getDemographicPersDetailsPayloadDTO();
             if(demographicPersDetailsPayloadDTO != null){
                 return demographicPersDetailsPayloadDTO.getProfilePhoto();
             }
