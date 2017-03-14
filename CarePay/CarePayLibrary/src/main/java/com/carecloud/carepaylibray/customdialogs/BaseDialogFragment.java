@@ -1,8 +1,8 @@
 package com.carecloud.carepaylibray.customdialogs;
 
-import android.app.DialogFragment;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,13 +43,13 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
     public void onClick(View view) {
         int viewId = view.getId();
 
-        if(R.id.closeViewLayout == viewId){
+        if (R.id.closeViewLayout == viewId) {
             onDialogCancel();
         }
     }
 
     // if caller want to change on cancel then override this method in extended class
-    protected  void onDialogCancel(){
+    protected void onDialogCancel() {
         dismiss();
     }
 
