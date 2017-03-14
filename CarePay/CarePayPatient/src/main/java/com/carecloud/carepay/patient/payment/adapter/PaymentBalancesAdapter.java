@@ -47,7 +47,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
     public void onBindViewHolder(final PaymentBalancesAdapter.PaymentHistoryViewHolder holder, int position) {
         final PendingBalancePayloadDTO charge = paymentsPatientBalances.get(position);
         String locationName= CarePayConstants.NOT_DEFINED;
-        holder.shortName.setText(StringUtil.onShortName(locationName));
+        holder.shortName.setText(StringUtil.getShortName(locationName));
         holder.locationName.setText(locationName);
         holder.amount.setText(StringUtil.getFormattedBalanceAmount(charge.getAmount()));
         holder.payNow.setText(paymentDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentDetailsPayNow());

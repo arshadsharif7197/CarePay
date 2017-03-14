@@ -13,8 +13,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 
 import java.util.Collections;
@@ -39,7 +39,7 @@ public class VisitTypeDialog extends Dialog {
     public VisitTypeDialog(Context context,
                            AppointmentResourcesDTO model,
                            OnDialogListItemClickListener callback,
-                           AppointmentsResultModel appointmentsResultModel) {
+                           AppointmentLabelDTO appointmentLabelDTO) {
         super(context);
         this.callback = callback;
 
@@ -51,12 +51,12 @@ public class VisitTypeDialog extends Dialog {
         visitTypeList = model.getResource().getVisitReasons();
         sortVisitTypeListByName();
 
-        initializeViews(context, appointmentsResultModel);
+        initializeViews(context, appointmentLabelDTO);
     }
 
-    private void initializeViews(Context context, AppointmentsResultModel appointmentsResultModel) {
+    private void initializeViews(Context context, AppointmentLabelDTO appointmentLabelDTO) {
         TextView titleView = (TextView) findViewById(R.id.visit_type_header_title);
-        titleView.setText(appointmentsResultModel.getMetadata().getLabel().getVisitTypeHeading());
+        titleView.setText(appointmentLabelDTO.getVisitTypeHeading());
 
         // Load and display list
         ListView visitTypeListView = (ListView) findViewById(R.id.visitTypeList);

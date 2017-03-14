@@ -35,6 +35,18 @@ public class LinksDTO {
     @Expose
     private TransitionDTO profileUpdate = new TransitionDTO();
 
+    @SerializedName("find_patient")
+    @Expose
+    private TransitionDTO findPatient = new TransitionDTO();
+
+    @SerializedName("checkin_status")
+    @Expose
+    private TransitionDTO checkinStatus = new TransitionDTO();
+
+    @SerializedName("queue_status")
+    @Expose
+    private TransitionDTO queueStatus = new TransitionDTO();
+
     /**
      * @return The self
      */
@@ -152,4 +164,15 @@ public class LinksDTO {
         this.profileUpdate = profileUpdate;
     }
 
+    public TransitionDTO getFindPatient() {
+        return findPatient;
+    }
+
+    public TransitionDTO getCheckinStatus() {
+        return checkinStatus;
+    }
+
+    public TransitionDTO getQueueStatus() {
+        return queueStatus;
+    }
 }

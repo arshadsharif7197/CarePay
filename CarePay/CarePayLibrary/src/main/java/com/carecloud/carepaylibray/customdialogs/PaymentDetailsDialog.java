@@ -83,7 +83,7 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
                 ((TextView) findViewById(R.id.payment_receipt_title)).setText(paymentsLabel.getPaymentReceiptTitle());
                 ((TextView) findViewById(R.id.payment_receipt_total_label)).setText(paymentsLabel.getPaymentDetailsPatientBalanceLabel());
                 ((TextView) findViewById(R.id.payment_receipt_total_value)).setText(totalAmount);
-                ((TextView) findViewById(R.id.avTextView)).setText(StringUtil.onShortName(paymentsLabel.getPaymentReceiptTitle()));
+                ((TextView) findViewById(R.id.avTextView)).setText(StringUtil.getShortName(paymentsLabel.getPaymentReceiptTitle()));
 
                 payNowButton.setText(paymentsLabel.getPaymentDetailsPayNow());
 

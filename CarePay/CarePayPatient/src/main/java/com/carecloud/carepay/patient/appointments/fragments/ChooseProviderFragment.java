@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.appointments.AppointmentNavigationCallback;
+import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepay.patient.appointments.adapters.ProviderAdapter;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -211,7 +211,7 @@ public class ChooseProviderFragment extends BaseFragment implements ProviderAdap
     }
 
     private void loadVisitTypeScreen(AppointmentResourcesDTO model) {
-        VisitTypeDialog visitTypeDialog = new VisitTypeDialog(this.getContext(), model, this, appointmentsResultModel);
+        VisitTypeDialog visitTypeDialog = new VisitTypeDialog(getContext(), model, this, appointmentsResultModel.getMetadata().getLabel());
         visitTypeDialog.show();
     }
 
