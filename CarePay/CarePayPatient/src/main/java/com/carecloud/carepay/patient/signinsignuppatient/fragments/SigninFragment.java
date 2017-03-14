@@ -163,12 +163,12 @@ public class SigninFragment extends BaseFragment {
             public void onClick(View view) {
                 if(passwordEditText.getInputType()!=InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
                     setInputType(passwordEditText, InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            setInputType(passwordEditText, InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                        }
-                    }, 3 * 1000);
+//                    handler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            setInputType(passwordEditText, InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
+//                        }
+//                    }, 3 * 1000);
                 }else{
                     setInputType(passwordEditText, InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 }

@@ -29,9 +29,9 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDataModelsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDetailsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsFirstNameDTO;
@@ -249,7 +249,7 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
             DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
             if (demographicsSettingsPayloadDTO != null) {
                 DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-                DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
+                DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
                 PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
                 firstNameValString = demographicsPersonalDetails.getFirstName();
                 lastNameValString = demographicsPersonalDetails.getLastName();
@@ -407,7 +407,7 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
                                         DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
                                         if (demographicsSettingsPayloadDTO != null) {
                                             DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-                                            DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
+                                            DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
                                             PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
                                             demographicsPersonalDetails.setFirstName(firstNameEditText.getText().toString());
                                             demographicsPersonalDetails.setLastName(lastNameEditText.getText().toString());

@@ -20,19 +20,16 @@ import com.carecloud.carepay.patient.demographics.activities.DemographicsActivit
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataValidationDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -40,6 +37,9 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtrabo
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -66,14 +66,14 @@ public class DemographicsDetailsFragment extends BaseFragment
     private TextView        genderLabel;
     private TextView        dobHint;
 
-    private DemographicPersDetailsPayloadDTO        persDetailsDTO;
+    private PatientModel persDetailsDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
     private DemographicLabelsDTO                    globalLabelDTO;
 
     DemographicsDetailsFragmentListener activityCallback;
 
     public interface DemographicsDetailsFragmentListener {
-        void initializeProfilePictureFragment(DemographicLabelsDTO globalLabelDTO, DemographicPersDetailsPayloadDTO persDetailsDTO);
+        void initializeProfilePictureFragment(DemographicLabelsDTO globalLabelDTO, PatientModel persDetailsDTO);
     }
 
     @Override
@@ -309,7 +309,7 @@ public class DemographicsDetailsFragment extends BaseFragment
      *
      * @return The DTO for personal details
      */
-    public DemographicPersDetailsPayloadDTO getPersDetailsDTO() {
+    public PatientModel getPersDetailsDTO() {
         DemographicPayloadDTO payload
                 = ((DemographicsActivity) getActivity()).getDemographicInfoPayloadModel();
         if (payload != null) {
@@ -345,7 +345,7 @@ public class DemographicsDetailsFragment extends BaseFragment
             view.requestFocus();
         } else {
             Log.v(LOG_TAG, "demographics details: views populated with defaults");
-            persDetailsDTO = new DemographicPersDetailsPayloadDTO();
+            persDetailsDTO = new PatientModel();
         }
     }
 
