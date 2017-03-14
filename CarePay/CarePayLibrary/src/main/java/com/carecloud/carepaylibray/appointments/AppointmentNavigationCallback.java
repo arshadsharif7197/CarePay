@@ -17,7 +17,7 @@ public interface AppointmentNavigationCallback {
 
     void rescheduleAppointment(AppointmentDTO appointmentDTO);
 
-    void selectVisitType(AppointmentResourcesDTO appointmentResourcesDTO);
+    void selectVisitType(AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel);
 
     void availableTimes(VisitTypeDTO visitTypeDTO, AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel);
 
