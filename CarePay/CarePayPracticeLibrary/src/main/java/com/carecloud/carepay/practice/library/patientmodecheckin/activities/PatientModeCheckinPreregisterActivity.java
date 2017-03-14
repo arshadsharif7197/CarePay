@@ -810,7 +810,7 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
             fragment.setArguments(args);
         }
         fm.beginTransaction()
-                .replace(com.carecloud.carepaylibrary.R.id.revdemographicsAddressPicCapturer, fragment, tag)
+                .replace(R.id.revdemographicsAddressPicCapturer, fragment, tag)
                 .commit();
     }
 
