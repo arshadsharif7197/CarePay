@@ -1,7 +1,7 @@
 package com.carecloud.carepay.practice.library.appointments;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 
 import com.carecloud.carepay.practice.library.R;
@@ -23,7 +23,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LinksDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
-import com.carecloud.carepaylibray.customdialogs.VisitTypeDialog;
+import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -43,7 +43,6 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         implements AppointmentNavigationCallback,
         DateRangePickerDialog.DateRangePickerDialogListener,
         PracticeAvailableHoursDialog.PracticeAvailableHoursDialogListener,
-        VisitTypeDialog.OnDialogListItemClickListener,
         PracticeRequestAppointmentDialog.PracticeRequestAppointmentDialogListener {
 
     private Date startDate;
@@ -75,17 +74,6 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         }
     }
 
-    /**
-     * what to do with the selected visit type and provider
-     * @param visitTypeDTO selected visit type from dialog
-     */
-    public void onDialogListItemClickListener(VisitTypeDTO visitTypeDTO) {
-        this.visitTypeDTO = visitTypeDTO;
-
-        String cancelString = getLabels().getAvailableHoursBack();
-        new PracticeAvailableHoursDialog(getContext(), cancelString, getLabels(), appointmentResourcesDTO, visitTypeDTO, getLinks().getAppointmentAvailability(), this).show();
-    }
-
     @Override
     public void onAppointmentTimeSelected(AppointmentAvailabilityDTO availabilityDTO, AppointmentsSlotsDTO appointmentsSlotsDTO) {
         this.availabilityDTO = availabilityDTO;
@@ -102,8 +90,8 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         // DialogFragment.show() will take care of adding the fragment
         // in a transaction.  We also want to remove any currently showing
         // dialog, so make our own transaction and take care of that here.
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag(tag);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
         if (prev != null) {
             ft.remove(prev);
         }
@@ -212,14 +200,31 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     }
 
     @Override
-    public void selectVisitType(AppointmentResourcesDTO appointmentResourcesDTO) {
+    public void selectVisitType(AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel) {
         this.appointmentResourcesDTO = appointmentResourcesDTO;
-        new VisitTypeDialog(this, appointmentResourcesDTO, this, getLabels()).show();
+
+        String tag = VisitTypeFragmentDialog.class.getSimpleName();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        VisitTypeFragmentDialog dialog = VisitTypeFragmentDialog.newInstance(appointmentResourcesDTO, appointmentsResultModel, getLabels().getVisitTypeHeading());
+        dialog.show(ft, tag);
     }
 
+    /**
+     * what to do with the selected visit type and provider
+     * @param visitTypeDTO selected visit type from dialog
+     */
     @Override
     public void availableTimes(VisitTypeDTO visitTypeDTO, AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel) {
+        this.visitTypeDTO = visitTypeDTO;
 
+        String cancelString = getLabels().getAvailableHoursBack();
+        new PracticeAvailableHoursDialog(getContext(), cancelString, getLabels(), appointmentResourcesDTO, visitTypeDTO, getLinks().getAppointmentAvailability(), this).show();
     }
 
     @Override

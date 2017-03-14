@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.widget.TextView;
 
-import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentDateRangeFragment;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepay.patient.appointments.fragments.AvailableHoursFragment;
@@ -21,6 +20,7 @@ import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
@@ -29,6 +29,7 @@ import com.carecloud.carepaylibray.appointments.models.IdsDTO;
 import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
+import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
@@ -55,13 +56,13 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
         appointmentsDTO = getConvertedDTO(AppointmentsResultModel.class);
 
-        if (appointmentsDTO.getPayload() != null ){
-            try{
+        if (appointmentsDTO.getPayload() != null) {
+            try {
                 List<IdsDTO> practicePatientIds = appointmentsDTO.getPayload().getPracticePatientIds();
-                if(practicePatientIds.isEmpty()){
+                if (practicePatientIds.isEmpty()) {
                     IdsDTO[] practicePatientIdArray = getApplicationPreferences().getObjectFromSharedPreferences(CarePayConstants.KEY_PRACTICE_PATIENT_IDS, IdsDTO[].class);
                     practicePatientIds = Arrays.asList(practicePatientIdArray);
-                }else {
+                } else {
                     getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants.KEY_PRACTICE_PATIENT_IDS, appointmentsDTO.getPayload().getPracticePatientIds());
                 }
                 practiceId = practicePatientIds.get(0).getPracticeId();
@@ -74,7 +75,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                 getApplicationPreferences().setPracticeId(practiceId);
                 getApplicationPreferences().setUserId(userId);
                 getApplicationPreferences().setPrefix(prefix);
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println(e.getMessage());
             }
@@ -106,12 +107,12 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }else if(getSupportFragmentManager().getBackStackEntryCount()>0){
+        } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStackImmediate();
-            if(getSupportFragmentManager().getBackStackEntryCount()<1){
+            if (getSupportFragmentManager().getBackStackEntryCount() < 1) {
                 displayToolbar(true, null);
             }
-        }else {
+        } else {
 
             if (!HttpConstants.isUseUnifiedAuth() && getAppAuthorizationHelper().getPool().getUser() != null) {
                 getAppAuthorizationHelper().getPool().getUser().signOut();
@@ -130,10 +131,10 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     }
 
 
-    private void navigateToFragment(Fragment fragment, boolean addToBackStack){
+    private void navigateToFragment(Fragment fragment, boolean addToBackStack) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container_main, fragment, fragment.getClass().getSimpleName());
-        if(addToBackStack) {
+        if (addToBackStack) {
             transaction.addToBackStack(fragment.getClass().getSimpleName());
         }
         transaction.commit();
@@ -169,7 +170,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(appointmentDTO.getPayload().getVisitType()));
         bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(appointmentsDTO));
 
-        AvailableHoursFragment availableHoursFragment  = new AvailableHoursFragment();
+        AvailableHoursFragment availableHoursFragment = new AvailableHoursFragment();
         availableHoursFragment.setArguments(bundle);
 
         navigateToFragment(availableHoursFragment, true);
@@ -177,8 +178,19 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     }
 
     @Override
-    public void selectVisitType(AppointmentResourcesDTO appointmentResourcesDTO) {
+    public void selectVisitType(AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel) {
+        String tag = VisitTypeFragmentDialog.class.getSimpleName();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
 
+        VisitTypeFragmentDialog dialog = VisitTypeFragmentDialog.newInstance(appointmentResourcesDTO,
+                appointmentsResultModel,
+                appointmentsDTO.getMetadata().getLabel().getVisitTypeHeading());
+        dialog.show(ft, tag);
     }
 
     @Override
@@ -237,7 +249,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     public void onAppointmentRequestSuccess() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         int backStackCount = fragmentManager.getBackStackEntryCount();
-        for(int i=0; i<backStackCount; i++){
+        for (int i = 0; i < backStackCount; i++) {
             fragmentManager.popBackStackImmediate();
         }
         displayToolbar(true, null);

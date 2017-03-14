@@ -18,17 +18,7 @@
 
     <ListView
         android:id="@+id/visitTypeList"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/visit_type_list_height"
         android:scrollbars="none" />
-
-    <Button
-        android:id="@+id/visitTypeCancelButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:background="@null"
-        android:text="@string/cancel_button"
-        android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/visit_type_button_font" />
 </LinearLayout>

@@ -1,7 +1,7 @@
 package com.carecloud.carepay.practice.library.appointments;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -275,8 +275,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                 // DialogFragment.show() will take care of adding the fragment
                 // in a transaction.  We also want to remove any currently showing
                 // dialog, so make our own transaction and take care of that here.
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                Fragment prev = getFragmentManager().findFragmentByTag(tag);
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
                 if (prev != null) {
                     ft.remove(prev);
                 }
@@ -438,8 +438,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         // DialogFragment.show() will take care of adding the fragment
         // in a transaction.  We also want to remove any currently showing
         // dialog, so make our own transaction and take care of that here.
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag(tag);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
         if (prev != null) {
             ft.remove(prev);
         }
