@@ -62,6 +62,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             @Override
             public void onClick(View view) {
                 getActivity().onBackPressed();
+                checkInNavListener.setCurrentStep(checkInNavListener.getCurrentStep()-1);
             }
         });
 
@@ -135,6 +136,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     public interface CheckInNavListener {
         public void applyChangesAndNavTo(DemographicDTO demographicDTO, Integer step);
         public Integer getCurrentStep();
+        public void setCurrentStep(Integer step);
     }
 
 

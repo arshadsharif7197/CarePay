@@ -593,6 +593,7 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
 
     @Override
     public void onBackPressed() {
+        setCurrentStep(currentDemographicStep-1);
         try{
             BaseCheckinFragment fragment = (BaseCheckinFragment) getSupportFragmentManager().findFragmentById(R.id.checkInContentHolderId);
             if(!fragment.navigateBack())  {
@@ -861,6 +862,13 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
     @Override
     public Integer getCurrentStep() {
         return currentDemographicStep;
+    }
+
+    @Override
+    public void setCurrentStep(Integer step){
+        if(step>0){
+            currentDemographicStep=step;
+        }
     }
 
     public void navigateToDemographicFragment(Integer step) {
