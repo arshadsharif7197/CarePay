@@ -24,6 +24,7 @@ import com.carecloud.carepay.practice.library.customdialog.FilterDialog;
 import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepay.practice.library.payments.dialogs.FindPatientDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityDialog;
+import com.carecloud.carepay.practice.library.util.PracticeUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -32,10 +33,11 @@ import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.LocationDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
@@ -197,6 +199,8 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
         ArrayList<FilterDataDTO> locations = new ArrayList<>();
         ArrayList<FilterDataDTO> patients = new ArrayList<>();
 
+        Map<String, String> photoMap = PracticeUtil.getProfilePhotoMap(checkInDTO.getPayload().getPatientBalances());
+
         CheckInPayloadDTO payload = checkInDTO.getPayload();
         if (null == payload) {
             return;
@@ -207,7 +211,7 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
             AppointmentPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
             addProviderOnProviderFilterList(doctors, appointmentPayloadDTO);
             addLocationOnFilterList(locations, appointmentPayloadDTO);
-            addPatientOnFilterList(patients, appointmentPayloadDTO);
+            addPatientOnFilterList(patients, appointmentPayloadDTO, photoMap);
         }
 
         filter.setDoctors(doctors);
@@ -227,7 +231,7 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
         }
     }
 
-    private void addPatientOnFilterList(ArrayList<FilterDataDTO> patients, AppointmentPayloadDTO appointmentPayloadDTO) {
+    private void addPatientOnFilterList(ArrayList<FilterDataDTO> patients, AppointmentPayloadDTO appointmentPayloadDTO, Map<String, String> photoMap) {
         PatientModel patientDTO = appointmentPayloadDTO.getPatient();
         FilterDataDTO filterDataDTO = new FilterDataDTO(patientDTO.getPatientId(), patientDTO.getFullName(), FilterDataDTO.FilterDataType.PATIENT);
         if (patients.indexOf(filterDataDTO) < 0) {
@@ -236,6 +240,10 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
         } else {
             filterDataDTO = patients.get(patients.indexOf(filterDataDTO));
             filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
+        }
+
+        if (StringUtil.isNullOrEmpty(filterDataDTO.getImageURL())) {
+            filterDataDTO.setImageURL(photoMap.get(filterDataDTO.getId()));
         }
     }
 
@@ -374,7 +382,7 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
 
             PaymentsModel patientDetails = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
 
-            PaymentsPatientBalancessDTO balancesDTO = null;
+            PatientBalanceDTO balancesDTO = null;
             if (patientDetails != null && patientDetails.getPaymentPayload().getPatientBalances() != null && !patientDetails.getPaymentPayload().getPatientBalances().isEmpty()) {
                 balancesDTO = patientDetails.getPaymentPayload().getPatientBalances().get(0);
             }

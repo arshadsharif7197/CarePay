@@ -9,10 +9,10 @@ import android.view.ViewGroup;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.checkin.CheckInActivity;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.PatientBalanceDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.PendingBalanceDTO;
 import com.carecloud.carepay.practice.library.customcomponent.AppointmentStatusCardView;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
 import java.util.ArrayList;
@@ -92,7 +92,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
         String id = appointmentItem.getPatient().getPatientId();
 
         for (PatientBalanceDTO patientBalanceDTO: patientBalances) {
-            PendingBalanceDTO pendingBalanceDTO = patientBalanceDTO.getPendingBalances().get(0);
+            PendingBalanceDTO pendingBalanceDTO = patientBalanceDTO.getBalances().get(0);
             if (pendingBalanceDTO.getMetadata().getPatientId().equals(id) && !pendingBalanceDTO.getPayload().isEmpty()) {
                 return pendingBalanceDTO.getPayload().get(0).getAmount();
             }

@@ -16,8 +16,8 @@ import com.carecloud.carepay.patient.payment.dialogs.PatientPartialPaymentDialog
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
-import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
@@ -75,13 +75,13 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
             getPaymentInformation();
             if (paymentDTO != null) {
                 getPaymentLabels();
-                List<PatienceBalanceDTO> paymentList = paymentDTO.getPaymentPayload()
+                List<PendingBalanceDTO> paymentList = paymentDTO.getPaymentPayload()
                         .getPatientBalances().get(0).getBalances();
 
                 total = 0;
                 if (paymentList != null && paymentList.size() > 0) {
                     fillDetailAdapter(view, paymentList);
-                    for (PatiencePayloadDTO payment : paymentList.get(0).getPayload()) {
+                    for (PendingBalancePayloadDTO payment : paymentList.get(0).getPayload()) {
                         total += payment.getAmount();
                     }
                     try {

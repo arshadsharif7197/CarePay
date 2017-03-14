@@ -291,7 +291,7 @@ public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
                                         DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
                                         if (demographicsSettingsPayloadDTO != null) {
                                             //DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-                                            //DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload().;
+                                            //DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload().;
                                             //PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
 
                                             Gson gson = new Gson();

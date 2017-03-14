@@ -26,7 +26,7 @@
         android:layout_height="@dimen/custom_filter_patient_image_size"
         android:layout_margin="@dimen/custom_filter_view_margin"
         android:gravity="center_vertical"
-        android:src="@drawable/container_avatar"
+        android:src="@drawable/icn_placeholder_user_profile_png"
         android:visibility="gone"
         android:clickable="false"
         android:focusable="false"
