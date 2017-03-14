@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographics.fragments;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -102,6 +103,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
 
     @Override
     protected DemographicDTO updateDemographicDTO(View view) {
+        demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(0);
         return demographicDTO;
     }
 
@@ -443,16 +445,16 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
         }
     }
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        try {
-//            documentCallback = (InsuranceDocumentScannerListener) context;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(context.toString()
-//                    + " must implement InsuranceDocumentScannerListener");
-//        }
-//    }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            documentCallback = (InsuranceDocumentScannerListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement InsuranceDocumentScannerListener");
+        }
+    }
 
     public interface InsuranceDocumentScannerListener {
         void navigateToInsuranceDocumentFragment(int index, DemographicInsurancePayloadDTO model);

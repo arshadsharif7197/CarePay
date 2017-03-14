@@ -39,6 +39,7 @@ import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemIdDocDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
@@ -76,7 +77,7 @@ import java.util.Map;
  */
 public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity implements IFragmentCallback, DemographicsReviewLabelsHolder, DemographicsLabelsHolder,
         /*CheckinDemographicsFragment.CheckinDemographicsFragmentListener, DemographicsCheckInDocumentsFragment.DemographicsCheckInDocumentsFragmentListener,
-        HealthInsuranceFragment.InsuranceDocumentScannerListener,*/ MedicationsAllergyFragment.MedicationAllergyCallback,
+        */HealthInsuranceFragment.InsuranceDocumentScannerListener, MedicationsAllergyFragment.MedicationAllergyCallback,
         CheckinDemographicsInterface, MedicationAllergySearchFragment.MedicationAllergySearchCallback,
         PaymentNavigationCallback, CheckinFlowCallback,
         CheckInDemographicsBaseFragment.CheckInNavListener, AddressFragment.AddressFragmentListener, DemographicsFragment.DemographicsListener,
@@ -488,6 +489,25 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
         receiptDialog.show();
     }
 
+    @Override
+    public void navigateToInsuranceDocumentFragment(int index, DemographicInsurancePayloadDTO model) {
+
+    }
+
+    @Override
+    public void navigateToParentFragment() {
+
+    }
+
+    @Override
+    public void updateInsuranceDTO(int index, DemographicInsurancePayloadDTO model) {
+
+    }
+
+    @Override
+    public void disableMainButton(boolean isDisabled) {
+
+    }
 
 
     /**
