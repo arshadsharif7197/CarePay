@@ -15,7 +15,7 @@ public class PaymentsPatientsPlansDTO {
 
     @SerializedName("metadata")
     @Expose
-    private PaymentPayloadMetaDataDTO metadata = new PaymentPayloadMetaDataDTO();
+    private PendingBalanceMetadataDTO metadata = new PendingBalanceMetadataDTO();
     @SerializedName("payload")
     @Expose
     private List<PaymentPatientPlansPayloadDTO> payload = new ArrayList<PaymentPatientPlansPayloadDTO>();
@@ -23,14 +23,14 @@ public class PaymentsPatientsPlansDTO {
     /**
      * @return The metadata
      */
-    public PaymentPayloadMetaDataDTO getMetadata() {
+    public PendingBalanceMetadataDTO getMetadata() {
         return metadata;
     }
 
     /**
      * @param metadata The metadata
      */
-    public void setMetadata(PaymentPayloadMetaDataDTO metadata) {
+    public void setMetadata(PendingBalanceMetadataDTO metadata) {
         this.metadata = metadata;
     }
 

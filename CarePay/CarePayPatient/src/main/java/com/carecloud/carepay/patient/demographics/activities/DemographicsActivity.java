@@ -20,14 +20,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
-import com.carecloud.carepaylibray.demographics.fragments.CheckinDemographicsFragment;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsAddressFragment;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsAllSetFragment;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsDetailsFragment;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsDocumentsFragmentWthWrapper;
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CustomViewPager;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.DemographicMetadataDTO;
@@ -42,7 +42,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPay
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
+import com.carecloud.carepaylibray.demographics.fragments.CheckinDemographicsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
@@ -74,7 +74,7 @@ public class DemographicsActivity extends BasePatientActivity
     // jsons (payload)
     private DemographicDTO modelGet = null;
     private DemographicAddressPayloadDTO     addressModel;
-    private DemographicPersDetailsPayloadDTO detailsModel;
+    private PatientModel detailsModel;
     private DemographicIdDocPayloadDTO       idDocModel;
     private List<DemographicInsurancePayloadDTO> insuranceModelList = new ArrayList<>();
     // jsons (metadata)
@@ -227,7 +227,7 @@ public class DemographicsActivity extends BasePatientActivity
         this.modelGet = modelGet;
     }
 
-    public DemographicPersDetailsPayloadDTO getDetailsDTO() {
+    public PatientModel getDetailsDTO() {
         return detailsModel;
     }
 
@@ -239,7 +239,7 @@ public class DemographicsActivity extends BasePatientActivity
         this.addressModel = addressModel;
     }
 
-    public void setDetailsModel(DemographicPersDetailsPayloadDTO detailsModel) {
+    public void setDetailsModel(PatientModel detailsModel) {
         this.detailsModel = detailsModel;
     }
 
@@ -333,7 +333,7 @@ public class DemographicsActivity extends BasePatientActivity
             insuranceModelList = infoModel.getInsurances();
         } else {
             addressModel = new DemographicAddressPayloadDTO();
-            detailsModel = new DemographicPersDetailsPayloadDTO();
+            detailsModel = new PatientModel();
             idDocModel = new DemographicIdDocPayloadDTO();
             insuranceModelList = new ArrayList<>();
         }
@@ -511,7 +511,7 @@ public class DemographicsActivity extends BasePatientActivity
 
     @Override
     public void initializeProfilePictureFragment(DemographicLabelsDTO globalLabelDTO,
-                                                 DemographicPersDetailsPayloadDTO persDetailsDTO) {
+                                                 PatientModel persDetailsDTO) {
 
         FragmentManager fm = getSupportFragmentManager();
         String tag = ProfilePictureFragment.class.getSimpleName();

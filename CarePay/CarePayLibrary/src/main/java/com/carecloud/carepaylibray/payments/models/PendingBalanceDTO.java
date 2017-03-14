@@ -7,29 +7,29 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PatienceBalanceDTO {
+public class PendingBalanceDTO {
 
     @SerializedName("metadata")
     @Expose
-    private PaymentPayloadMetaDataDTO metadata = new PaymentPayloadMetaDataDTO();
+    private PendingBalanceMetadataDTO metadata = new PendingBalanceMetadataDTO();
 
     @SerializedName("payload")
     @Expose
-    private List<PatiencePayloadDTO> payload = new ArrayList<>();
+    private List<PendingBalancePayloadDTO> payload = new ArrayList<>();
 
-    public PaymentPayloadMetaDataDTO getMetadata() {
+    public PendingBalanceMetadataDTO getMetadata() {
         return metadata;
     }
 
-    public void setMetadata(PaymentPayloadMetaDataDTO metadata) {
+    public void setMetadata(PendingBalanceMetadataDTO metadata) {
         this.metadata = metadata;
     }
 
-    public List<PatiencePayloadDTO> getPayload() {
+    public List<PendingBalancePayloadDTO> getPayload() {
         return payload;
     }
 
-    public void setPayload(List<PatiencePayloadDTO> payload) {
+    public void setPayload(List<PendingBalancePayloadDTO> payload) {
         this.payload = payload;
     }
 
