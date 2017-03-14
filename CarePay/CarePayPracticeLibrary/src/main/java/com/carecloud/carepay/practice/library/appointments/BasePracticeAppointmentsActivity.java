@@ -74,18 +74,6 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         }
     }
 
-    /**
-     * what to do with the selected visit type and provider
-     * @param visitTypeDTO selected visit type from dialog
-     */
-    @Override
-    public void availableTimes(VisitTypeDTO visitTypeDTO, AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel) {
-        this.visitTypeDTO = visitTypeDTO;
-
-        String cancelString = getLabels().getAvailableHoursBack();
-        new PracticeAvailableHoursDialog(getContext(), cancelString, getLabels(), appointmentResourcesDTO, visitTypeDTO, getLinks().getAppointmentAvailability(), this).show();
-    }
-
     @Override
     public void onAppointmentTimeSelected(AppointmentAvailabilityDTO availabilityDTO, AppointmentsSlotsDTO appointmentsSlotsDTO) {
         this.availabilityDTO = availabilityDTO;
@@ -225,6 +213,18 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
         VisitTypeFragmentDialog dialog = VisitTypeFragmentDialog.newInstance(appointmentResourcesDTO, appointmentsResultModel, getLabels().getVisitTypeHeading());
         dialog.show(ft, tag);
+    }
+
+    /**
+     * what to do with the selected visit type and provider
+     * @param visitTypeDTO selected visit type from dialog
+     */
+    @Override
+    public void availableTimes(VisitTypeDTO visitTypeDTO, AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel) {
+        this.visitTypeDTO = visitTypeDTO;
+
+        String cancelString = getLabels().getAvailableHoursBack();
+        new PracticeAvailableHoursDialog(getContext(), cancelString, getLabels(), appointmentResourcesDTO, visitTypeDTO, getLinks().getAppointmentAvailability(), this).show();
     }
 
     @Override

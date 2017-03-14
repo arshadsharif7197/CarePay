@@ -56,7 +56,7 @@ public class VisitTypeFragmentDialog extends BaseDialogFragment {
     /**
      * Creates a VisitTypeFragmentDialog fragment
      * @param model The appointment Resource DTO
-     * @param appointmentsResultModel
+     * @param appointmentsResultModel The appointment resource model
      *@param visitTypeHeading The title for the header  @return VisitTypeFragmentDialog object
      */
     public static VisitTypeFragmentDialog newInstance(AppointmentResourcesDTO model,
