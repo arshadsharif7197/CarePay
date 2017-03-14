@@ -33,6 +33,13 @@
                 app:customAssetFont="gotham_rounded_medium" />
         </LinearLayout>
    </FrameLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/demo_view_height"
+        android:layout_marginBottom="@dimen/divider_margin_bottom"
+        android:layout_marginTop="@dimen/divider_margin_top"
+        android:background="@color/light_gray"/>
+
 
     <com.marcok.stepprogressbar.StepProgressBar
         android:id="@+id/stepProgressBarCheckin"
@@ -75,6 +82,13 @@
             android:orientation="vertical"-->
 
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/demo_view_height"
+        android:layout_marginBottom="@dimen/divider_margin_bottom"
+        android:layout_marginTop="@dimen/divider_margin_top"
+        android:background="@color/light_gray"/>
+
     <Button
         android:id="@+id/checkinDemographicsNextButton"
         android:layout_width="match_parent"
@@ -84,5 +98,13 @@
         android:gravity="center"
         android:textColor="@color/white"
         android:enabled="false"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/demo_view_height"
+        android:layout_marginBottom="@dimen/divider_margin_bottom"
+        android:layout_marginTop="@dimen/divider_margin_top"
+        android:background="@color/light_gray"/>
+
 
 </LinearLayout>
