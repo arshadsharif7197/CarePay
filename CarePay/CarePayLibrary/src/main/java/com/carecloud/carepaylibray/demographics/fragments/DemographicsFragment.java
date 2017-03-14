@@ -105,11 +105,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        //View mainView = inflater.inflate(R.layout.fragment_review_demographic_demographics, container, false);
-
-
         View mainView  = super.onCreateView(inflater, container, savedInstanceState);
-
 
         initializeDemographicsDTO();
 
@@ -117,19 +113,9 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
 
         setTypefaces(mainView);
 
-        //formatEditText(view);
-
         initUiFromModels(mainView);
 
         checkIfEnableButton(mainView);
-        /*
-
-         initialiseUIFields(view);
-        setTypefaces(view);
-        formatEditText(view);
-        initViewFromModels(view);
-         */
-
 
         stepProgressBar.setCurrentProgressDot(2);
 
@@ -188,7 +174,6 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
         updatableDemographicDTO.getPayload().setDemographics(new DemographicPayloadInfoDTO());
         updatableDemographicDTO.getPayload().getDemographics().setPayload(new DemographicPayloadDTO());
 
-
         String gender = ((TextView)findViewById(R.id.chooseGenderTextView)).getText().toString();
         if (!StringUtil.isNullOrEmpty(gender)) {
             demographicPersDetailsPayloadDTO.setGender(gender);
@@ -232,30 +217,6 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
     }
 
     private void initUiFromModels(View view){
-
-        /*
-         String getGender = demographicPersDetailsPayloadDTO.getGender();
-            if (SystemUtil.isNotEmptyString(getGender)) {
-                selectGender.setText(getGender);
-            } else {
-                selectGender.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
-
-            }
-            String getRace = demographicPersDetailsPayloadDTO.getPrimaryRace();
-            if (SystemUtil.isNotEmptyString(getRace)) {
-                raceDataTextView.setText(getRace);
-            } else {
-                raceDataTextView.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
-            }
-            String getethnicity = demographicPersDetailsPayloadDTO.getEthnicity();
-            if (SystemUtil.isNotEmptyString(getethnicity)) {
-                ethnicityDataTextView.setText(getethnicity);
-            } else {
-                ethnicityDataTextView.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
-            }
-         */
-
-
 
         if (demographicPersDetailsPayloadDTO != null) {
 

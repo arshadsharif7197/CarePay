@@ -82,9 +82,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
     private boolean isZipEmpty;
 
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
 
     private EditText cityEditText;
@@ -102,7 +99,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         @Override
         public void onClick(View view) {
 
-            showDialogState(AddressUtil.states, globalLabelsMetaDTO.getDemographicsTitleSelectState(), "cancelLabel");
+            showDialogState(AddressUtil.states, globalLabelsMetaDTO.getDemographicsTitleSelectState(), globalLabelsMetaDTO.getDemographicsCancelLabel());
 
         }
     };
@@ -129,8 +126,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+
         }
     }
 
@@ -212,20 +208,10 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
                 if (smartyStreetsResponse != null) {
 
-                    //((EditText) views.findViewById(R.id.cityId)).setText(smartyStreetsResponse.getCity());
                     cityEditText.setText(smartyStreetsResponse.getCity());
-
-
                     stateAbbr = smartyStreetsResponse.getStateAbbreviation();
                     stateEditText.setText(stateAbbr);
-                    //((TextView) views.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView)).setText(stateAbbr);
 
-                    //(TextView) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView)
-
-                    /*cityEditText.setText(smartyStreetsResponse.getCity());
-
-                    stateAbbr = smartyStreetsResponse.getStateAbbreviation();
-                    stateEditText.setText(stateAbbr);*/
                 }
             }
 
@@ -235,9 +221,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
     public void formatEditText(final View mainView){
 
-   /*     final EditText address1EditText = (EditText) view.findViewById(R.id.addressEditTextId);
-        final TextInputLayout address1Label=(TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
-*/
 
         ((TextInputLayout) mainView.findViewById(R.id.address1TextInputLayout)).setTag(addressMetaDTO.properties.address1.getLabel());
         ((EditText) mainView.findViewById(R.id.addressEditTextId)).setTag( ((TextInputLayout) mainView.findViewById(R.id.address1TextInputLayout)));
@@ -255,10 +238,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         ((EditText) mainView.findViewById(R.id.cityId)).setTag(((TextInputLayout) mainView.findViewById(R.id.cityTextInputLayout)));
 
         ((TextView) mainView.findViewById(R.id.stateTextInputLayout)).setText(addressMetaDTO.properties.state.getLabel().toUpperCase());
-
-
-
-
 
         ((EditText) mainView.findViewById(R.id.addressEditTextId)).setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -306,12 +285,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
 
 
-
-   /*     setTextListener(addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.address1.validations.get(0).getErrorMessage(),
-                R.id.address1TextInputLayout, R.id.addressEditTextId, mainView);
-*/
-
-
         ((EditText) mainView.findViewById(R.id.addressEditTextId)).addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
@@ -337,17 +310,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
                 checkIfEnableButton(mainView);
             }
         });
-
-
-
-     /*   final EditText zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeId);
-        final TextInputLayout zipcodeLabel = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
-*/
-
- /*       setTextListener(addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.address1.validations.get(0).getErrorMessage(),
-                R.id.zipCodeTextInputLayout, R.id.zipCodeId, view);
-*/
-
 
 
 
@@ -383,15 +345,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
             }
         });
 
-
-    /*    final EditText cityEditText = (EditText) view.findViewById(R.id.cityId);
-        final TextInputLayout cityLabel = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
-*/
-
-
- /*       setTextListener(addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.address1.validations.get(0).getErrorMessage(),
-                R.id.cityTextInputLayout, R.id.cityId, mainView);
-*/
 
 
         ((EditText) mainView.findViewById(R.id.cityId)).addTextChangedListener(new TextWatcher() {
@@ -474,26 +427,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
         ((TextInputLayout) view.findViewById(R.id.address1TextInputLayout)).setTag(addressMetaDTO.properties.address1.getLabel());
 
-    /*
-
-        address1EditText.setTag(address1Label);
-
-
-        address2Label.setTag(addressMetaDTO.properties.address2.getLabel());
-        address2EditText.setTag(address2Label);
-
-
-        zipcodeLabel.setTag(addressMetaDTO.properties.zipcode.getLabel());
-        zipCodeEditText.setTag(zipcodeLabel);
-
-
-        cityLabel.setTag(addressMetaDTO.properties.city.getLabel());
-        cityEditText.setTag(cityLabel);
-
-        stateLabel.setText(addressMetaDTO.properties.state.getLabel().toUpperCase());
-
-
-        setChangeFocusListeners();*/
     }
 
 
@@ -527,13 +460,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
                 ((EditText) view.findViewById(R.id.cityId)).requestFocus();
             }
 
-/*
-            if (SystemUtil.isNotEmptyString(demographicAddressPayloadDTO.getState()) || !((TextView) view.findViewById(R.id.stateTextInputLayout)).getText().toString().isEmpty()) {
-                ((TextView) view.findViewById(R.id.stateTextInputLayout)).setText(demographicAddressPayloadDTO.getState());
-            } else {
-                ((TextView) view.findViewById(R.id.stateTextInputLayout)).setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
-            }
-*/
 
             String state = demographicAddressPayloadDTO.getState();
             if (SystemUtil.isNotEmptyString(state) || !((TextView) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView)).getText().toString().isEmpty()) {
@@ -603,7 +529,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         addressFragmentListener = null;
     }
 
-
+/*
     public void onClick(View view) {
 
         if (view == findViewById(R.id.buttonAddDemographicInfo)){
@@ -624,6 +550,9 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
                         globalLabelsMetaDTO.getDemographicsMissingInformation(), CustomPopupNotification.TYPE_ERROR_NOTIFICATION);
                 popup.showPopWindow();
 */
+
+
+/*
             }
         }
 
@@ -636,6 +565,12 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         }
 
     }
+
+*/
+
+
+
+
 
     private void  updateModels(){
 
@@ -771,19 +706,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
         cityEditText = (EditText) view.findViewById(R.id.cityId);
         stateEditText = (TextView) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView);
-/*
-        address1EditText = (EditText) view.findViewById(R.id.addressEditTextId);
-        address2EditText = (EditText) view.findViewById(R.id.addressEditText2Id);
-        zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeId);
-
-        stateEditText = (TextView) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView);
-
-        address1Label = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
-        address2Label = (TextInputLayout) view.findViewById(R.id.address2TextInputLayout);
-        zipcodeLabel = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
-        cityLabel = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
-        stateLabel = (TextView) view.findViewById(R.id.stateTextInputLayout);
-*/
 
 
         TextView optinalLabelTextView = (TextView) view.findViewById(R.id.demogrAddressOptionalLabel);
@@ -800,42 +722,11 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
 
         String label = addressMetaDTO.properties.address1.getLabel();
-        //initTextLabel(label, R.id.address1TextInputLayout, R.id.addressEditTextId, view);
 
-
-        //view.findViewById(R.id.address1TextInputLayout).setTag(addressMetaDTO.properties.address1.getLabel());
-
-        //view.findViewById(R.id.addressEditTextId).setTag((view.findViewById(R.id.address1TextInputLayout)));
-
- /*       ((TextInputLayout) view.findViewById(R.id.address2TextInputLayout)).setTag(addressMetaDTO.properties.address2.getLabel());
-        ((EditText) view.findViewById(R.id.addressEditText2Id)).setTag(((TextInputLayout) view.findViewById(R.id.address2TextInputLayout)));
-*/
-/*
-        ((TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout)).setTag(addressMetaDTO.properties.zipcode.getLabel());
-        ((EditText) view.findViewById(R.id.zipCodeId)).setTag(((TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout)));
-*/
-/*
-
-        ((TextInputLayout) view.findViewById(R.id.cityTextInputLayout)).setTag(addressMetaDTO.properties.city.getLabel());
-        ((EditText) view.findViewById(R.id.cityId)).setTag(((TextInputLayout) view.findViewById(R.id.cityTextInputLayout)));
-
-        ((TextView) view.findViewById(R.id.stateTextInputLayout)).setText(addressMetaDTO.properties.state.getLabel().toUpperCase());
-
-        ((TextView) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView)).setOnClickListener(editStateListener);
-*/
 
     }
 
-/*
-    public void checkIfEnableButton() {
-        checkIfDisableButton(false);
-    }
 
-
-    public void checkIfDisableButton(boolean isDisabled) {
-        enableButton(isAllFieldsValid() && !isDisabled);
-    }
-*/
 
     /**
      * Enable or disable main button
