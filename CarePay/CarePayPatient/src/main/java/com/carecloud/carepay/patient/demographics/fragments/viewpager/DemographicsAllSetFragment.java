@@ -122,7 +122,7 @@ public class DemographicsAllSetFragment extends BaseFragment {
         }
 
         DemographicIdDocPayloadDTO idDocPojo = ((DemographicsActivity) getActivity()).getIdDocModel();
-        if (idDocPojo != null) { // add the doc
+        if (idDocPojo != null && idDocPojo.getIdType()!=null) { // add the doc
             List<DemographicIdDocPayloadDTO> idDocPayloadDTOs = new ArrayList<>();
             idDocPojo.setIdCountry("USA"); // to remove
             idDocPayloadDTOs.add(idDocPojo);
