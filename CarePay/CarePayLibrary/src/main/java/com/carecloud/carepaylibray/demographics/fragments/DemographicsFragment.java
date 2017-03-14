@@ -20,6 +20,9 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
@@ -180,6 +183,12 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
     @Override
     protected DemographicDTO updateDemographicDTO(View view) {
 
+        DemographicDTO updatableDemographicDTO = new DemographicDTO();
+        updatableDemographicDTO.setPayload(new DemographicPayloadResponseDTO());
+        updatableDemographicDTO.getPayload().setDemographics(new DemographicPayloadInfoDTO());
+        updatableDemographicDTO.getPayload().getDemographics().setPayload(new DemographicPayloadDTO());
+
+
         String gender = ((TextView)findViewById(R.id.chooseGenderTextView)).getText().toString();
         if (!StringUtil.isNullOrEmpty(gender)) {
             demographicPersDetailsPayloadDTO.setGender(gender);
@@ -195,9 +204,10 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
             demographicPersDetailsPayloadDTO.setEthnicity(ethnicity);
         }
 
-        demographicDTO.getPayload().getDemographics().getPayload().setPersonalDetails(demographicPersDetailsPayloadDTO);
-
-        return demographicDTO;
+        updatableDemographicDTO.getPayload().getDemographics().getPayload().setPersonalDetails(demographicPersDetailsPayloadDTO);
+        updatableDemographicDTO.setMetadata(demographicDTO.getMetadata());
+        updatableDemographicDTO.getPayload().setAppointmentpayloaddto(demographicDTO.getPayload().getAppointmentpayloaddto());
+        return updatableDemographicDTO;
 
     }
 

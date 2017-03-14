@@ -31,6 +31,9 @@ import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -852,14 +855,22 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
     @Override
     protected DemographicDTO updateDemographicDTO(View view) {
 
+        DemographicDTO updatableDemographicDTO = new DemographicDTO();
+        updatableDemographicDTO.setPayload(new DemographicPayloadResponseDTO());
+        updatableDemographicDTO.getPayload().setDemographics(new DemographicPayloadInfoDTO());
+        updatableDemographicDTO.getPayload().getDemographics().setPayload(new DemographicPayloadDTO());
+
+
         String address1 = ((EditText) view.findViewById(R.id.addressEditTextId)).getText().toString();
         if (!StringUtil.isNullOrEmpty(address1)) {
             demographicAddressPayloadDTO.setAddress1(address1);
         }
+
         String address2 = ((EditText) view.findViewById(R.id.addressEditText2Id)).getText().toString();
         if (!StringUtil.isNullOrEmpty(address2)) {
             demographicAddressPayloadDTO.setAddress2(address2);
         }
+
         String zipCode =  ((EditText) view.findViewById(R.id.zipCodeId)).getText().toString();
         if (!StringUtil.isNullOrEmpty(zipCode)) {
             // 'de-format' before saving to model
@@ -874,8 +885,12 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         if (!StringUtil.isNullOrEmpty(state)) {
             demographicAddressPayloadDTO.setState(state);
         }
-        demographicDTO.getPayload().getDemographics().getPayload().setAddress(demographicAddressPayloadDTO);
-        return demographicDTO;
+
+        updatableDemographicDTO.getPayload().getDemographics().getPayload().setAddress(demographicAddressPayloadDTO);
+        updatableDemographicDTO.setMetadata(demographicDTO.getMetadata());
+        updatableDemographicDTO.getPayload().setAppointmentpayloaddto(demographicDTO.getPayload().getAppointmentpayloaddto());
+        return updatableDemographicDTO;
+
     }
 
     private boolean isAllFieldsValid() {
