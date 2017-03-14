@@ -11,11 +11,11 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.appointments.ScheduleAppointmentActivity;
 import com.carecloud.carepay.practice.library.customdialog.BasePracticeDialog;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLocationsDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
@@ -28,6 +28,7 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
     private Context context;
     private LayoutInflater inflater;
     private AppointmentLabelDTO labelDTO;
+    private final AppointmentResourcesDTO appointmentResourcesDTO;
     private AppointmentsSlotsDTO appointmentsSlotsDTO;
     private AppointmentAvailabilityDTO appointmentAvailabilityDTO;
     private VisitTypeDTO visitTypeDTO;
@@ -50,6 +51,7 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
      */
     public PracticeRequestAppointmentDialog(Context context, String cancelString,
                                             AppointmentLabelDTO labelDTO,
+                                            AppointmentResourcesDTO appointmentResourcesDTO,
                                             AppointmentsSlotsDTO appointmentsSlotsDTO,
                                             AppointmentAvailabilityDTO appointmentAvailabilityDTO,
                                             VisitTypeDTO visitTypeDTO,
@@ -58,6 +60,7 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         super(context, cancelString, false);
         this.context = context;
         this.labelDTO = labelDTO;
+        this.appointmentResourcesDTO = appointmentResourcesDTO;
         this.appointmentsSlotsDTO = appointmentsSlotsDTO;
         this.appointmentAvailabilityDTO = appointmentAvailabilityDTO;
         this.visitTypeDTO = visitTypeDTO;
@@ -105,14 +108,11 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         SystemUtil.setGothamRoundedBoldTypeface(context,appointmentTimeTextView);
 
         CarePayTextView providerImageTextView = (CarePayTextView)view.findViewById(R.id.provider_short_name);
-        providerImageTextView.setText(StringUtil.onShortName(((ScheduleAppointmentActivity)context)
-                .getSelectedResource().getResource().getProvider().getName()));
+        providerImageTextView.setText(StringUtil.getShortName(appointmentResourcesDTO.getResource().getProvider().getName()));
         CarePayTextView appointmentDoctorNameTextView = (CarePayTextView)view.findViewById(R.id.provider_doctor_name);
-        appointmentDoctorNameTextView.setText(((ScheduleAppointmentActivity)context).getSelectedResource()
-                .getResource().getProvider().getName());
+        appointmentDoctorNameTextView.setText(appointmentResourcesDTO.getResource().getProvider().getName());
         CarePayTextView appointmentDoctorSpecialityTextView = (CarePayTextView)view.findViewById(R.id.provider_doctor_speciality);
-        appointmentDoctorSpecialityTextView.setText(((ScheduleAppointmentActivity)context).getSelectedResource()
-                .getResource().getProvider().getSpecialty().getName());
+        appointmentDoctorSpecialityTextView.setText(appointmentResourcesDTO.getResource().getProvider().getSpecialty().getName());
 
         //Endpoint not support location for individual resource,
         //Hence used 0th item from location array

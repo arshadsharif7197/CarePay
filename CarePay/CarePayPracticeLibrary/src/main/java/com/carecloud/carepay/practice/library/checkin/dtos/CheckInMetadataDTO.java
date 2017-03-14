@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.checkin.dtos;
 
+import com.carecloud.carepaylibray.appointments.models.LinksDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -18,7 +19,6 @@ public class CheckInMetadataDTO {
     @SerializedName("transitions")
     @Expose
     private CheckInTransitionsDTO transitions = new CheckInTransitionsDTO();
-
 
     /**
      *

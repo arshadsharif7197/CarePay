@@ -7,7 +7,7 @@
                 android:layout_height="match_parent"
                 android:paddingBottom="@dimen/dimen_25dp"
                 android:background="@drawable/screen_background"
-                tools:context=".appointments.ScheduleAppointmentActivity">
+                tools:context=".appointments.PatientModePracticeAppointmentActivity">
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/provider_logout"

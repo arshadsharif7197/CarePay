@@ -6,12 +6,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAppointmentDialog;
 import com.carecloud.carepay.practice.library.appointments.dtos.PracticeAppointmentDTO;
-import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
@@ -29,11 +27,13 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
+import com.carecloud.carepaylibray.appointments.models.LinksDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.LocationDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.ProviderDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -51,7 +51,7 @@ import java.util.Map;
  * Created by cocampo on 2/10/17.
  */
 
-public class PracticeAppointmentsActivity extends BasePracticeActivity
+public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppointmentsActivity
         implements FilterDialog.FilterCallBack,
         DateRangePickerDialog.DateRangePickerDialogListener,
         PracticeAppointmentDialog.PracticeAppointmentDialogListener,
@@ -291,7 +291,7 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
                         endDate,
                         DateRangePickerDialog.getPreviousSixMonthCalendar(),
                         DateRangePickerDialog.getNextSixMonthCalendar(),
-                        PracticeAppointmentsActivity.this
+                        PracticeModePracticeAppointmentsActivity.this
                 );
                 dialog.show(ft, tag);
             }
@@ -412,7 +412,7 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
 
             @Override
             public void onRightActionTapped(double amount) {
-                Toast.makeText(getContext(), "THIS FEATURE IS STILL PENDING", Toast.LENGTH_SHORT).show();
+                newAppointment();
             }
         };
     }
@@ -453,7 +453,7 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
                 leftAction,
                 rightAction,
                 appointmentDTO,
-                PracticeAppointmentsActivity.this
+                PracticeModePracticeAppointmentsActivity.this
         );
         dialog.show(ft, tag);
     }
@@ -565,5 +565,25 @@ public class PracticeAppointmentsActivity extends BasePracticeActivity
     @Override
     public void showAddCard(double amount) {
 
+    }
+
+    @Override
+    public void onAppointmentRequestSuccess() {
+
+    }
+
+    @Override
+    protected AppointmentLabelDTO getLabels() {
+        return checkInLabelDTO;
+    }
+
+    @Override
+    protected TransitionDTO getMakeAppointmentTransition() {
+        return checkInDTO.getMetadata().getTransitions().getMakeAppointment();
+    }
+
+    @Override
+    protected LinksDTO getLinks() {
+        return checkInDTO.getMetadata().getLinks();
     }
 }

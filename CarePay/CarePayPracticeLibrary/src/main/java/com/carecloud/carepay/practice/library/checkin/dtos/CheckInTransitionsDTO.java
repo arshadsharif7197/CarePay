@@ -23,6 +23,10 @@ public class CheckInTransitionsDTO {
     @Expose
     private TransitionDTO confirmAppointment = new TransitionDTO();
 
+    @SerializedName("make_appointment")
+    @Expose
+    private TransitionDTO makeAppointment = new TransitionDTO();
+
     /**
      *
      * @return
@@ -79,5 +83,9 @@ public class CheckInTransitionsDTO {
 
     public TransitionDTO getConfirmAppointment() {
         return confirmAppointment;
+    }
+
+    public TransitionDTO getMakeAppointment() {
+        return makeAppointment;
     }
 }

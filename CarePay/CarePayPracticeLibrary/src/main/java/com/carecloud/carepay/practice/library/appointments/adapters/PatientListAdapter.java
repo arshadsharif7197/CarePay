@@ -433,7 +433,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             this.raw = raw;
             this.id = id;
             this.name = dto.getFullName();
-            this.initials = StringUtil.onShortName(name);
+            this.initials = dto.getShortName();
             this.photoUrl = dto.getProfilePhoto();
             this.providerName = StringUtil.getLabelForView(provider.getName());
             this.providerId = provider.getId();
@@ -447,7 +447,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             PatientModel patientModel = dto.getPatient();
             this.id = patientModel.getPatientId();
             this.name = patientModel.getFullName();
-            this.initials = StringUtil.onShortName(this.name);
+            this.initials = patientModel.getShortName();
             this.photoUrl = patientModel.getProfilePhoto();
             this.providerId = dto.getProvider().getId().toString();
             this.providerName = dto.getProvider().getName();

@@ -11,7 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.appointments.AppointmentNavigationCallback;
+import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentDateRangeFragment;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepay.patient.appointments.fragments.AvailableHoursFragment;
@@ -174,6 +174,11 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
         navigateToFragment(availableHoursFragment, true);
         displayToolbar(false, null);
+    }
+
+    @Override
+    public void selectVisitType(AppointmentResourcesDTO appointmentResourcesDTO) {
+
     }
 
     @Override

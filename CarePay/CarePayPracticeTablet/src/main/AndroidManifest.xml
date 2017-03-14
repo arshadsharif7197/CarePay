@@ -53,7 +53,7 @@
                 android:value="com.carecloud.carepay.practice.library.homescreen.CloverMainActivity" />
         </activity>
         <activity
-            android:name="com.carecloud.carepay.practice.library.appointments.PracticeAppointmentsActivity"
+            android:name="com.carecloud.carepay.practice.library.appointments.PracticeModePracticeAppointmentsActivity"
             android:screenOrientation="sensorLandscape"/>
         <activity
             android:name="com.carecloud.carepay.practice.library.payments.PatientResponsibilityActivity"
@@ -71,7 +71,7 @@
             android:name="com.carecloud.carepay.practice.library.appointments.AppointmentsActivity"
             android:screenOrientation="sensorLandscape"/>
         <activity
-            android:name="com.carecloud.carepay.practice.library.appointments.ScheduleAppointmentActivity"
+            android:name="com.carecloud.carepay.practice.library.appointments.PatientModePracticeAppointmentActivity"
             android:screenOrientation="sensorLandscape"/>
         <activity
             android:name="com.carecloud.carepay.practice.library.checkin.activities.PersonalInformationActivity"
