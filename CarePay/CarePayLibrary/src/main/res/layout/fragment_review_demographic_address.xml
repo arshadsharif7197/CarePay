@@ -113,12 +113,12 @@
 -->
                 <TextView
                     android:id="@+id/stateTextInputLayout"
-                    style="@style/FloatingLabelStyle"
+                    style="@style/SigninSignupEditStyle"
                     android:paddingLeft="@dimen/dimen_15dp"
                     android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:includeFontPadding="false"
-                    android:layout_height="@dimen/dimen_5dp"/>
+                    android:layout_height="wrap_content"/>
 
                 <TextView
                     android:id="@+id/reviewDemographicsStateAutoCompleteTextView"

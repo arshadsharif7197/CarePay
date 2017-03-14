@@ -79,7 +79,7 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
         HealthInsuranceFragment.InsuranceDocumentScannerListener,*/ MedicationsAllergyFragment.MedicationAllergyCallback,
         CheckinDemographicsInterface, MedicationAllergySearchFragment.MedicationAllergySearchCallback,
         PaymentNavigationCallback, CheckinFlowCallback,
-        CheckInDemographicsBaseFragment.CheckInNavListener, AddressFragment.AddressFragmentListener, DemographicsFragment.DemographicsListener,
+        CheckInDemographicsBaseFragment.CheckInNavListener,
         PersonalInfoFragment.UpdateProfilePictureListener {
 
 
@@ -154,8 +154,8 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
 
         // place the initial fragment
         demographicFragMap.put(1, new PersonalInfoFragment());
-        demographicFragMap.put(2, AddressFragment.newInstance(null, null));
-        demographicFragMap.put(3, DemographicsFragment.newInstance(null, null));
+        demographicFragMap.put(2, new AddressFragment());
+        demographicFragMap.put(3, new DemographicsFragment());
         demographicFragMap.put(4, new IdentificationFragment());
         demographicFragMap.put(5, new HealthInsuranceFragment());
 
@@ -888,37 +888,6 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
                     demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(0),
                     demographicDTO.getMetadata().getDataModels().demographic.identityDocuments.properties.items.identityDocument);
         }
-    }
-
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
-
-    @Override
-    public void navigateToAddressFragment() {
-
-    }
-
-    @Override
-    public void navigateToIdentificationFragment() {
-
-    }
-
-    @Override
-    public void updateDTO(DemographicDTO model) {
-
-    }
-
-    @Override
-    public void navigateToPersonalInformationFragment() {
-
-    }
-
-    @Override
-    public void navigateToDemographicsFragment() {
-
     }
 
 

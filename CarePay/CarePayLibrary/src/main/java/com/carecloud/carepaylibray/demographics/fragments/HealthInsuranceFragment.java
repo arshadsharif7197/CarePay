@@ -87,6 +87,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
         initActiveSection(view);
         checkIfEnableButton(view);
         SystemUtil.hideSoftKeyboard(getActivity());
+        stepProgressBar.setCurrentProgressDot(4);
         return view;
     }
 

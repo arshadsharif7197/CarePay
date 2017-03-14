@@ -1,36 +1,25 @@
 package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
-import com.carecloud.carepaylibray.utils.AddressUtil;
-import com.carecloud.carepaylibray.utils.CircleImageTransform;
-import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,28 +28,19 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * to handle interaction events.
- * Use the {@link DemographicsFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * A simple {@link CheckInDemographicsBaseFragment} subclass.
  */
 public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private DemographicDTO demographicDTO;
     private DemographicLabelsDTO globalLabelsMetaDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
     private PatientModel demographicPersDetailsPayloadDTO;
-    private DemographicsListener demographicsListener;
 
+
+    /**
+     * gender listener
+     */
     private View.OnClickListener genderListener = new View.OnClickListener(){
         @Override
         public void onClick(View view) {
@@ -72,6 +52,10 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
                     (TextView) findViewById(R.id.chooseGenderTextView));
         }
     };
+
+    /**
+     * race listener
+     */
     private View.OnClickListener raceListener = new View.OnClickListener(){
         @Override
         public void onClick(View view) {
@@ -83,6 +67,10 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
                     (TextView) findViewById(R.id.raceListDataTextView));
         }
     };
+
+    /**
+     * ethnicity listener
+     */
     private View.OnClickListener ethnicityListener = new View.OnClickListener(){
         @Override
         public void onClick(View view) {
@@ -95,12 +83,18 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
         }
     };
 
+    /**
+     * constructor
+     */
     public DemographicsFragment() {
         // Required empty public constructor
     }
 
 
 
+    /**
+     * on create view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -123,6 +117,9 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
     }
 
 
+    /**
+     * Set type faces
+     */
     public void setTypefaces(View view){
 
         setProximaNovaRegularTypeface(getActivity(), ((TextView) view.findViewById(R.id.raceDataTextView)));
@@ -136,36 +133,20 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
     }
 
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DemographicsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static DemographicsFragment newInstance(String param1, String param2) {
-        DemographicsFragment fragment = new DemographicsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
+    /**
+     * on create
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
 
-
-
+    /**
+     * Update demographic dto
+     */
     @Override
     protected DemographicDTO updateDemographicDTO(View view) {
 
@@ -196,6 +177,9 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
 
     }
 
+    /**
+     * Init ui fields
+     */
     private void initialiseUIFields(View view) {
 
         //globalLabelsMetaDTO.getDemographicsAddressHeader()
@@ -216,6 +200,9 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
 
     }
 
+    /**
+     * Init ui from models
+     */
     private void initUiFromModels(View view){
 
         if (demographicPersDetailsPayloadDTO != null) {
@@ -242,48 +229,18 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
     }
 
 
-    public void onButtonPressed(Uri uri) {
-        if (demographicsListener != null) {
-            demographicsListener.onFragmentInteraction(uri);
-        }
-    }
 
-    public void navigateToIdentificationFragment() {
-        if (demographicsListener != null) {
-            demographicsListener.navigateToIdentificationFragment();
-        }
-    }
-
-
-    public void navigateToAddressFragment() {
-        if (demographicsListener != null) {
-            demographicsListener.navigateToAddressFragment();
-        }
-    }
-
-    public void updateDto() {
-        if (demographicsListener != null) {
-            demographicsListener.updateDTO(demographicDTO);
-        }
-    }
-
-
-
-
+    /**
+     * on attach
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof DemographicsListener) {
-            demographicsListener = (DemographicsListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement DemographicsListener");
-        }
+
     }
 
     /**
      * Init data
-     *
      * */
     private void initializeDemographicsDTO() {
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
@@ -299,9 +256,11 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
     @Override
     public void onDetach() {
         super.onDetach();
-        demographicsListener = null;
     }
 
+    /**
+     * Get options
+     */
     private String[] getOptionsFrom(List<MetadataOptionDTO> options){
         List<String> strOptions = new ArrayList<>();
         for (MetadataOptionDTO o : options) {
@@ -331,31 +290,9 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
 
 
 
-
     /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
+     * Pass contraints
      */
-    public interface DemographicsListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-
-        void navigateToAddressFragment();
-
-        void navigateToIdentificationFragment();
-
-        void updateDTO(DemographicDTO model);
-
-
-    }
-
-
     @Override
     protected boolean passConstraints(View view) {
 
@@ -367,6 +304,9 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
 
     }
 
+    /**
+     * Get content id
+     */
     @Override
     protected int getContentId() {
         return R.layout.fragment_review_demographic_demographics;
