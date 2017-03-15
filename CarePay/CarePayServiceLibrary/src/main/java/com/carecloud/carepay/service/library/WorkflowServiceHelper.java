@@ -45,6 +45,11 @@ public class WorkflowServiceHelper {
     private LabelProvider labelProvider;
     private ApplicationMode applicationMode;
 
+    /**
+     * @param applicationPreferences application preferences
+     * @param labelProvider label provider
+     * @param applicationMode application mode
+     */
     public WorkflowServiceHelper(ApplicationPreferences applicationPreferences,
                                  LabelProvider labelProvider,
                                  ApplicationMode applicationMode) {
