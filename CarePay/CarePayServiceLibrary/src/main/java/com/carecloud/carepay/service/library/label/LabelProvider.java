@@ -10,18 +10,18 @@ public interface LabelProvider {
      * Returns the language resource for an specified key. If there is no resource, returns the key.
      * @param key the key related to the value
      */
-    String getLabel(String key);
+    String getValue(String key);
 
     /**
      * Returns a boolean indicating if the language resource exists or not for the specified key.
      * @param key the key related to the value
      */
-    boolean hasLabel(String key);
+    boolean hasValue(String key);
 
     /**
      * Saves the label
      * @param key the key related to the value
      * @param value the value to store related to the key
      */
-    void putLabel(String key, String value);
+    void putValue(String key, String value);
 }

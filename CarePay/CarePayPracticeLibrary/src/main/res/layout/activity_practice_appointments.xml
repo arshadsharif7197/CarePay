@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_practice_appointments"
     android:layout_width="match_parent"
@@ -39,8 +38,7 @@
             android:paddingStart="@dimen/dimen_10dp"
             android:textColor="@color/confirm_pin_sub_title"
             android:textSize="@dimen/text_size_20sp"
-            app:customAssetFont="gotham_rounded_medium"
-            breeze:textKey="activity_heading"/>
+            app:customAssetFont="gotham_rounded_medium" />
 
         <LinearLayout
             android:id="@+id/practice_filter_layout"
