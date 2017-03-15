@@ -2,8 +2,8 @@ package com.carecloud.carepaylibray;
 
 import android.support.multidex.MultiDexApplication;
 
-import com.carecloud.carepaylibray.base.AndroidPlatform;
-import com.carecloud.carepaylibray.base.Platform;
+import com.carecloud.carepay.service.library.platform.AndroidPlatform;
+import com.carecloud.carepay.service.library.platform.Platform;
 
 /**
  * Created by pjohnson on 15/03/17.

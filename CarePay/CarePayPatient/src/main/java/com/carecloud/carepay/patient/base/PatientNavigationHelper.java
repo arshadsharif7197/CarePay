@@ -35,6 +35,7 @@ public class PatientNavigationHelper {
 
     /**
      * Get the customized instance of the helper
+     *
      * @param context The context from which the helper has been invoked
      * @return The instance holding the fresh context
      */
@@ -52,7 +53,7 @@ public class PatientNavigationHelper {
      * Access pending payments and history payments from menu.
      * We got same state on json to responsibility and pending payments and need to
      * handle it manually
-     * */
+     */
     public static void setAccessPaymentsBalances(boolean accessPaymentsBalances) {
         PatientNavigationHelper.accessPaymentsBalances = accessPaymentsBalances;
     }
@@ -60,7 +61,7 @@ public class PatientNavigationHelper {
     /**
      * @param workflowDTO workflowdto
      */
-        public void navigateToWorkflow(WorkflowDTO workflowDTO) {
+    public void navigateToWorkflow(WorkflowDTO workflowDTO) {
         Bundle bundle = new Bundle();
         bundle.putString(PatientNavigationHelper.class.getSimpleName(), workflowDTO.toString());
         navigateToWorkflow(workflowDTO.getState(), bundle);
@@ -109,7 +110,7 @@ public class PatientNavigationHelper {
                 break;
             }
             case PatientNavigationStateConstants.PAYMENTS: {
-                intent = new Intent(context, accessPaymentsBalances?ViewPaymentBalanceHistoryActivity.class:PaymentActivity.class);
+                intent = new Intent(context, accessPaymentsBalances ? ViewPaymentBalanceHistoryActivity.class : PaymentActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }
@@ -128,7 +129,7 @@ public class PatientNavigationHelper {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }
-            case PatientNavigationStateConstants.MEDICATION_ALLERGIES:{
+            case PatientNavigationStateConstants.MEDICATION_ALLERGIES: {
                 intent = new Intent(context, MedicationAllergyActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;

@@ -14,13 +14,14 @@ import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
+import com.carecloud.carepaylibray.CarePlayApplication;
 import com.carecloud.carepaylibray.base.IApplicationSession;
 
 /**
  * Created by Jahirul Bhuiyan on 10/24/2016.
  */
 
-public class CarePayApplication extends Application
+public class CarePayPracticeApplication extends CarePlayApplication
         implements Application.ActivityLifecycleCallbacks, IApplicationSession {
 
     private ApplicationPreferences applicationPreferences;
@@ -37,13 +38,13 @@ public class CarePayApplication extends Application
     /**
      * init app
      */
-    public void start(){
+    public void start() {
         setHttpConstants();
         registerActivityLifecycleCallbacks(this);
     }
 
     private void setHttpConstants() {
-        DeviceIdentifierDTO deviceIdentifierDTO=new DeviceIdentifierDTO();
+        DeviceIdentifierDTO deviceIdentifierDTO = new DeviceIdentifierDTO();
         deviceIdentifierDTO.setDeviceIdentifier(Settings.Secure.ANDROID_ID);
         deviceIdentifierDTO.setDeviceType("Android");
         deviceIdentifierDTO.setDeviceSystemVersion(Build.VERSION.RELEASE);
@@ -86,7 +87,7 @@ public class CarePayApplication extends Application
 
     @Override
     public void onActivityDestroyed(Activity activity) {
-        if(activity instanceof SigninActivity) {
+        if (activity instanceof SigninActivity) {
             // log out previous user from Cognito
             Log.v(this.getClass().getSimpleName(), "sign out Cognito");
             //getAppAuthorizationHelper().getPool().getUser().signOut();

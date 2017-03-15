@@ -1,12 +1,13 @@
 package com.carecloud.carepaylibray.base;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+
+import com.carecloud.carepay.service.library.label.Label;
 
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
@@ -56,11 +57,10 @@ public class CarePayLayoutInflaterFactory implements LayoutInflater.Factory2 {
 
     public static void applyAttributes(View view, Context context, AttributeSet attrs) {
         if ((view != null) && (view instanceof TextView)) {
-            SharedPreferences sp = context.getSharedPreferences("Pablo", Context.MODE_PRIVATE);
             // Text
             String textKey = attrs.getAttributeValue(PABLO_SCHEMA, PABLO_ATTR_TEXT_KEY);
             if (textKey != null) {
-                ((TextView) view).setText(sp.getString(textKey, textKey));
+                ((TextView) view).setText(Label.getLabel(textKey));
             }
         }
     }
