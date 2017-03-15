@@ -308,13 +308,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         this.startDate = start;
         this.endDate = end;
 
-        TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getPracticeAppointments();
-
-        Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("start_date", DateUtil.getInstance().setDate(startDate).toStringWithFormatYyyyDashMmDashDd());
-        queryMap.put("end_date", DateUtil.getInstance().setDate(endDate).toStringWithFormatYyyyDashMmDashDd());
-
-        getWorkflowServiceHelper().execute(transitionDTO, allAppointmentsServiceCallback, queryMap);
+        onAppointmentRequestSuccess();
     }
 
     @Override
@@ -586,7 +580,13 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void onAppointmentRequestSuccess() {
+        TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getPracticeAppointments();
 
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("start_date", DateUtil.getInstance().setDate(startDate).toStringWithFormatYyyyDashMmDashDd());
+        queryMap.put("end_date", DateUtil.getInstance().setDate(endDate).toStringWithFormatYyyyDashMmDashDd());
+
+        getWorkflowServiceHelper().execute(transitionDTO, allAppointmentsServiceCallback, queryMap);
     }
 
     @Override

@@ -102,8 +102,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     @Override
     public void onDateRangeCancelled() {
-        String cancelString = getLabels().getAvailableHoursBack();
-        new PracticeAvailableHoursDialog(getContext(), cancelString, getLabels(), appointmentResourcesDTO.getResource(), appointmentsResultModel, visitTypeDTO, getLinks().getAppointmentAvailability(), this, startDate, endDate).show();
+        selectTime(startDate, endDate, visitTypeDTO, appointmentResourcesDTO.getResource(), appointmentsResultModel);
     }
 
     @Override
@@ -204,7 +203,8 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     @Override
     public void selectTime(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource, AppointmentsResultModel appointmentsResultModel) {
-
+        String cancelString = getLabels().getAvailableHoursBack();
+        new PracticeAvailableHoursDialog(getContext(), cancelString, getLabels(), appointmentResource, appointmentsResultModel, visitTypeDTO, getLinks().getAppointmentAvailability(), this, startDate, endDate).show();
     }
 
     @Override
