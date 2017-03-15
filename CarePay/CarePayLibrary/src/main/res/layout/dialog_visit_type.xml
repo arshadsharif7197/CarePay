@@ -8,17 +8,18 @@
 
     <TextView
         android:id="@+id/visit_type_header_title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/visit_type_vertical_margin"
         android:layout_marginStart="@dimen/visit_type_horizontal_margin"
+        android:gravity="left"
         android:layout_marginTop="@dimen/visit_type_vertical_margin"
         android:textColor="@color/black"
         android:textSize="@dimen/visit_type_label_font" />
 
     <ListView
         android:id="@+id/visitTypeList"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/visit_type_list_height"
         android:scrollbars="none" />
 </LinearLayout>

@@ -12,13 +12,14 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepaylibray.base.IApplicationSession;
+import com.carecloud.carepaylibray.CarePlayApplication;
 
 
 /**
  * Created by Jahirul on 8/25/2016.
  * this is the application class for the patient app
  */
-public class CarePayPatientApplication extends Application implements IApplicationSession {
+public class CarePayPatientApplication extends CarePlayApplication implements IApplicationSession {
 
     private ApplicationPreferences applicationPreferences;
     private WorkflowServiceHelper workflowServiceHelper;
