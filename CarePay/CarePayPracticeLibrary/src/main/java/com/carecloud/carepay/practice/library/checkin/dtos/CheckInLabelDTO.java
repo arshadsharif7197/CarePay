@@ -156,10 +156,6 @@ public class CheckInLabelDTO extends AppointmentLabelDTO {
     @Expose
     private String rejectLabel;
 
-    @SerializedName("add_appointment_label")
-    @Expose
-    private String addAppointmentLabel;
-
     /**
      * @return The practiceCheckinDetailDialogCheckingIn
      */
@@ -510,9 +506,5 @@ public class CheckInLabelDTO extends AppointmentLabelDTO {
 
     public String getRejectLabel() {
         return StringUtil.getLabelForView(rejectLabel);
-    }
-
-    public String getAddAppointmentLabel() {
-        return StringUtil.getLabelForView(addAppointmentLabel);
     }
 }

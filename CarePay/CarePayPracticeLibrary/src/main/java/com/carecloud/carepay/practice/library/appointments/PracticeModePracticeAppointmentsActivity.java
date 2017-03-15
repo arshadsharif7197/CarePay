@@ -131,7 +131,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         addAppointmentTextView.setOnClickListener(getFindPatientListener(false));
 
         if (checkInLabelDTO != null) {
-            setTextViewById(R.id.practice_title, checkInLabelDTO.getActivityHeading());
             setTextViewById(R.id.practice_go_back, checkInLabelDTO.getGoBack());
             setTextViewById(R.id.activity_practice_appointments_change_date_range_label, checkInLabelDTO.getChangeDateRangeLabel());
             setTextViewById(R.id.activity_practice_appointments_show_all_appointments_label, checkInLabelDTO.getAllAppointmentsLabel());
@@ -139,7 +138,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             setTextViewById(R.id.practice_pending_count_label, checkInLabelDTO.getPendingLabel());
             setTextViewById(R.id.practice_filter_label, checkInLabelDTO.getPracticeCheckinFilter());
             findPatientTextView.setText(checkInLabelDTO.getPracticeCheckinFilterFindPatient());
-            addAppointmentTextView.setText(checkInLabelDTO.getAddAppointmentLabel());
         }
 
         findViewById(R.id.practice_go_back).setOnClickListener(new View.OnClickListener() {
@@ -583,10 +581,22 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getPracticeAppointments();
 
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("start_date", DateUtil.getInstance().setDate(startDate).toStringWithFormatYyyyDashMmDashDd());
-        queryMap.put("end_date", DateUtil.getInstance().setDate(endDate).toStringWithFormatYyyyDashMmDashDd());
+        queryMap.put("start_date", getFormattedDate(startDate));
+        queryMap.put("end_date", getFormattedDate(endDate));
 
         getWorkflowServiceHelper().execute(transitionDTO, allAppointmentsServiceCallback, queryMap);
+    }
+
+    private String getFormattedDate(Date date) {
+        DateUtil dateUtil = DateUtil.getInstance();
+
+        if (date == null) {
+            dateUtil = dateUtil.setToCurrent();
+        } else {
+            dateUtil = dateUtil.setDate(date);
+        }
+
+        return dateUtil.toStringWithFormatYyyyDashMmDashDd();
     }
 
     @Override

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_practice_appointments"
     android:layout_width="match_parent"
@@ -38,7 +39,8 @@
             android:paddingStart="@dimen/dimen_10dp"
             android:textColor="@color/confirm_pin_sub_title"
             android:textSize="@dimen/text_size_20sp"
-            app:customAssetFont="gotham_rounded_medium" />
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="activity_heading"/>
 
         <LinearLayout
             android:id="@+id/practice_filter_layout"
@@ -181,7 +183,8 @@
                     android:paddingStart="20dp"
                     android:paddingTop="10dp"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_16sp"/>
+                    android:textSize="@dimen/text_size_16sp"
+                    breeze:textKey="add_appointment_label"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/activity_practice_appointments_change_date_range_label"
