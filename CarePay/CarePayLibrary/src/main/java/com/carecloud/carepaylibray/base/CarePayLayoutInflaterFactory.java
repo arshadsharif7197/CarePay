@@ -55,7 +55,7 @@ public class CarePayLayoutInflaterFactory implements LayoutInflater.Factory2 {
         return view;
     }
 
-    public static void applyAttributes(View view, Context context, AttributeSet attrs) {
+    private static void applyAttributes(View view, Context context, AttributeSet attrs) {
         if ((view != null) && (view instanceof TextView)) {
             // Text
             String textKey = attrs.getAttributeValue(PABLO_SCHEMA, PABLO_ATTR_TEXT_KEY);
@@ -69,14 +69,11 @@ public class CarePayLayoutInflaterFactory implements LayoutInflater.Factory2 {
      * Low-level function for instantiating a view by name. This attempts to
      * instantiate a view class of the given <var>name</var> found in this
      * factory's ClassLoader.
-     * <p>
      * There are two things that can happen in an error case: either the
      * exception describing the error will be thrown, or a null will be
      * returned. You must deal with both possibilities -- the former will happen
      * the first time createView() is called for a class of a particular name,
      * the latter every time there-after for that class name.
-     * <p/>
-     * TCM: the following is borrowwed heavily from {@code LayoutInflater#createView}
      *
      * @param name  The full name of the class to be instantiated.
      * @param attrs The XML attributes supplied for this instance.
@@ -87,7 +84,9 @@ public class CarePayLayoutInflaterFactory implements LayoutInflater.Factory2 {
 
         // Determine the qualified name of the view; if null, do not attempt to create a view
         String qualifiedName = asQualifiedName(name);
-        if (qualifiedName == null) return null;
+        if (qualifiedName == null) {
+            return null;
+        }
 
         Constructor<? extends View> constructor = constructorMap.get(qualifiedName);
         Class<? extends View> clazz = null;
@@ -124,7 +123,9 @@ public class CarePayLayoutInflaterFactory implements LayoutInflater.Factory2 {
         if (name != null && (name.indexOf('.') < 0)) {
 
             // Look for known, unqualified 'special cases'.  For now, let them be resolved by other factories
-            if (FILTER_TYPES.contains(name)) return null;
+            if (FILTER_TYPES.contains(name)) {
+                return null;
+            }
 
             qualifiedName = "android.widget." + name;
         }

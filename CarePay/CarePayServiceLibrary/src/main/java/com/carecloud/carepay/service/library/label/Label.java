@@ -27,7 +27,7 @@ public class Label {
     /**
      * static method to know if a label exists
      * @param key label key
-     * @return
+     * @return true if the label exists, false if not
      */
     public static boolean hasLabel(String key) {
         return getLabelProvider().hasValue(key);
@@ -35,7 +35,7 @@ public class Label {
 
     /**
      * static method to save a label
-     * @param key label key
+     * @param key   label key
      * @param value label value
      */
     public static void putLabel(String key, String value) {

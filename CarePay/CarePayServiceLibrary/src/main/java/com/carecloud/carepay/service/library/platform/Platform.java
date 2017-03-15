@@ -1,7 +1,6 @@
 package com.carecloud.carepay.service.library.platform;
 
 /**
- *
  * Created by pjohnson on 15/03/17.
  */
 public class Platform {

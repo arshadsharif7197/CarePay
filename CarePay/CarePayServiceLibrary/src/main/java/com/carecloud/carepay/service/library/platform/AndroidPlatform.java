@@ -20,34 +20,30 @@ public class AndroidPlatform extends Platform {
     }
 
     /**
-     * Returns the context
-     * @return
+     * @return the Application Context
      */
     public Context getContext() {
         return context;
     }
 
     /**
-     *
      * @return the default Shared Preferences file
      */
-    public SharedPreferences openDefaultSharedPreferences(){
+    public SharedPreferences openDefaultSharedPreferences() {
         return openSharedPreferences(DEFAULT_FILE, Context.MODE_PRIVATE);
     }
 
     /**
-     *
      * @param fileName name of the Shared Preferences file
      * @return an specific Shared Preferences file opened in private mode
      */
-    public SharedPreferences openSharedPreferences(String fileName){
+    public SharedPreferences openSharedPreferences(String fileName) {
         return openSharedPreferences(fileName, Context.MODE_PRIVATE);
     }
 
     /**
-     *
      * @param fileName name of the Shared Preferences file.
-     * @param mode file opening mode
+     * @param mode     file opening mode
      * @return an specific Shared Preferences file
      */
     public SharedPreferences openSharedPreferences(String fileName, int mode) {
