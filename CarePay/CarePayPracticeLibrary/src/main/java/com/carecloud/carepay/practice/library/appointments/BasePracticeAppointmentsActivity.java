@@ -165,14 +165,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     @Override
     public void newAppointment() {
-        Bundle bundle= new Bundle();
-        bundle.putString("titleLabel", getLabels().getPracticeListSelectProvider());
-        bundle.putString("continueButtonLabel", getLabels().getPracticeListContinue());
-        DtoHelper.bundleDto(bundle, getLinks().getResourcesToSchedule());
-
-        PracticeChooseProviderDialog fragment = new PracticeChooseProviderDialog();
-        fragment.setArguments(bundle);
-        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+        getWorkflowServiceHelper().execute(getLinks().getResourcesToSchedule(), scheduleResourcesCallback, null, null, null);
     }
 
     @Override
@@ -243,6 +236,38 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
         dialog.show(ft, tag);
     }
+
+    private WorkflowServiceCallback scheduleResourcesCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            AppointmentsResultModel resourcesToScheduleModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
+
+            if (resourcesToScheduleModel != null && resourcesToScheduleModel.getPayload() != null
+                    && resourcesToScheduleModel.getPayload().getResourcesToSchedule() != null
+                    && resourcesToScheduleModel.getPayload().getResourcesToSchedule().size() > 0) {
+
+                Bundle bundle= new Bundle();
+                bundle.putString("titleLabel", getLabels().getPracticeListSelectProvider());
+                bundle.putString("continueButtonLabel", getLabels().getPracticeListContinue());
+                DtoHelper.bundleDto(bundle, resourcesToScheduleModel);
+
+                PracticeChooseProviderDialog fragment = new PracticeChooseProviderDialog();
+                fragment.setArguments(bundle);
+                fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+            }
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            SystemUtil.doDefaultFailureBehavior(getContext(), exceptionMessage);
+        }
+    };
 
     protected abstract AppointmentLabelDTO getLabels();
 

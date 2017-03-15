@@ -66,6 +66,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     private CheckInLabelDTO checkInLabelDTO;
 
     private TwoColumnPatientListView patientListView;
+    private boolean needsToConfirmAppointmentCreation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,8 +124,11 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     private void initializeViews() {
-        TextView practicePaymentFindPatientTextView = (TextView) findViewById(R.id.practice_find_patient);
-        practicePaymentFindPatientTextView.setOnClickListener(getPracticePaymentFindPatientTextViewListener());
+        TextView findPatientTextView = (TextView) findViewById(R.id.practice_find_patient);
+        findPatientTextView.setOnClickListener(getFindPatientListener(true));
+
+        TextView addAppointmentTextView = (TextView) findViewById(R.id.activity_practice_appointments_add);
+        addAppointmentTextView.setOnClickListener(getFindPatientListener(false));
 
         if (checkInLabelDTO != null) {
             setTextViewById(R.id.practice_title, checkInLabelDTO.getActivityHeading());
@@ -134,7 +138,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             setTextViewById(R.id.practice_patient_count_label, checkInLabelDTO.getTodayLabel());
             setTextViewById(R.id.practice_pending_count_label, checkInLabelDTO.getPendingLabel());
             setTextViewById(R.id.practice_filter_label, checkInLabelDTO.getPracticeCheckinFilter());
-            practicePaymentFindPatientTextView.setText(checkInLabelDTO.getPracticeCheckinFilterFindPatient());
+            findPatientTextView.setText(checkInLabelDTO.getPracticeCheckinFilterFindPatient());
+            addAppointmentTextView.setText(checkInLabelDTO.getAddAppointmentLabel());
         }
 
         findViewById(R.id.practice_go_back).setOnClickListener(new View.OnClickListener() {
@@ -317,11 +322,13 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     }
 
-    private View.OnClickListener getPracticePaymentFindPatientTextViewListener() {
+    private View.OnClickListener getFindPatientListener(final boolean needsConfirmation) {
         return new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
+                needsToConfirmAppointmentCreation = needsConfirmation;
+
                 TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getFindPatient();
 
                 FindPatientDialog findPatientDialog = new FindPatientDialog(getContext(),
@@ -337,6 +344,16 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         return new FindPatientDialog.OnItemClickedListener() {
             @Override
             public void onItemClicked(PatientModel patient) {
+                setPatientId(patient.getPatientId());
+
+                if (needsToConfirmAppointmentCreation) {
+                    getPatientBalances(patient);
+                } else {
+                    newAppointment();
+                }
+            }
+
+            private void getPatientBalances(PatientModel patient) {
                 Map<String, String> queryMap = new HashMap<>();
                 queryMap.put("patient_id", patient.getPatientId());
 

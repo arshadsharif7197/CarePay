@@ -3,6 +3,8 @@ package com.carecloud.carepay.practice.library.appointments.dialogs;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -25,7 +27,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
@@ -67,8 +68,8 @@ public class PracticeChooseProviderDialog extends BaseDialogFragment
         continueButtonLabel = bundle.getString("continueButtonLabel");
         titleLabel = bundle.getString("titleLabel");
 
-        TransitionDTO resourcesToSchedule = DtoHelper.getConvertedDTO(TransitionDTO.class, bundle);
-        getWorkflowServiceHelper().execute(resourcesToSchedule, scheduleResourcesCallback, null, null, null);
+        resourcesToScheduleModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, bundle);
+        providerList = resourcesToScheduleModel.getPayload().getResourcesToSchedule().get(0).getResources();
     }
 
     @Override
@@ -110,6 +111,8 @@ public class PracticeChooseProviderDialog extends BaseDialogFragment
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         searchRecycler = (RecyclerView) view.findViewById(R.id.search_recycler);
         searchRecycler.setLayoutManager(layoutManager);
+
+        setAdapter(providerList);
     }
 
     private void setAdapter(List<AppointmentResourcesDTO> practiceList){
@@ -123,7 +126,6 @@ public class PracticeChooseProviderDialog extends BaseDialogFragment
             practiceSearchAdapter.notifyDataSetChanged();
         }
     }
-
 
     private SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
         @Override
@@ -176,30 +178,4 @@ public class PracticeChooseProviderDialog extends BaseDialogFragment
         ProviderSearchAdapter searchAdapter = (ProviderSearchAdapter) searchRecycler.getAdapter();
         searchAdapter.setSelectedPractice(selectedProvider);
     }
-
-    private WorkflowServiceCallback scheduleResourcesCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            resourcesToScheduleModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
-
-            if (resourcesToScheduleModel != null && resourcesToScheduleModel.getPayload() != null
-                    && resourcesToScheduleModel.getPayload().getResourcesToSchedule() != null
-                    && resourcesToScheduleModel.getPayload().getResourcesToSchedule().size() > 0) {
-
-                providerList = resourcesToScheduleModel.getPayload().getResourcesToSchedule().get(0).getResources();
-                setAdapter(providerList);
-            }
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            SystemUtil.doDefaultFailureBehavior(getActivity(), exceptionMessage);
-        }
-    };
 }
