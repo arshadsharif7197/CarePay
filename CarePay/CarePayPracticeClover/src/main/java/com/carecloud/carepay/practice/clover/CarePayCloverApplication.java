@@ -5,7 +5,6 @@ import android.app.Application;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
@@ -15,13 +14,14 @@ import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
+import com.carecloud.carepaylibray.CarePlayApplication;
 import com.carecloud.carepaylibray.base.IApplicationSession;
 
 /**
  * Created by Jahirul Bhuiyan on 10/24/2016.
  */
 
-public class CarePayApplication extends MultiDexApplication
+public class CarePayCloverApplication extends CarePlayApplication
         implements Application.ActivityLifecycleCallbacks, IApplicationSession {
 
     private ApplicationPreferences applicationPreferences;
@@ -33,7 +33,6 @@ public class CarePayApplication extends MultiDexApplication
     public void onCreate() {
         super.onCreate();
         setHttpConstants();
-
         registerActivityLifecycleCallbacks(this);
     }
 
@@ -81,7 +80,7 @@ public class CarePayApplication extends MultiDexApplication
 
     @Override
     public void onActivityDestroyed(Activity activity) {
-        if(activity instanceof SigninActivity) {
+        if (activity instanceof SigninActivity) {
             // log out previous user from Cognito
             Log.v(this.getClass().getSimpleName(), "sign out Cognito");
             //getAppAuthorizationHelper().getPool().getUser().signOut();

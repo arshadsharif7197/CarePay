@@ -2,8 +2,11 @@ package com.carecloud.carepaylibray.base;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -17,6 +20,13 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
     private Dialog progressDialog;
     private CustomPopupNotification errorNotification;
     private boolean isVisible = false;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        inflater.setFactory2(new CarePayLayoutInflaterFactory(this));
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     protected void onPause() {
@@ -53,7 +63,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         return ((IApplicationSession) getApplication()).getApplicationMode();
     }
 
-    public Context getContext(){
+    public Context getContext() {
         return this;
     }
 
@@ -63,11 +73,11 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             return;
         }
 
-        if(null != progressDialog && progressDialog.isShowing()) {
+        if (null != progressDialog && progressDialog.isShowing()) {
             return;
         }
 
-        if(null == progressDialog) {
+        if (null == progressDialog) {
             progressDialog = new ProgressDialogUtil(this);
         }
 
@@ -77,7 +87,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
 
     @Override
     public void hideProgressDialog() {
-        if(null != progressDialog && progressDialog.isShowing()){
+        if (null != progressDialog && progressDialog.isShowing()) {
             progressDialog.dismiss();
             progressDialog = null;
         }
@@ -89,11 +99,11 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             return;
         }
 
-        if(null != errorNotification && errorNotification.isShowing()) {
+        if (null != errorNotification && errorNotification.isShowing()) {
             return;
         }
-        try{
-            if(null == errorNotification) {
+        try {
+            if (null == errorNotification) {
 
                 errorNotification = new CustomPopupNotification(getContext(), getCurrentFocus(), getWindow(), errorMessage, CustomPopupNotification.TYPE_ERROR_NOTIFICATION, getCancelReasonAppointmentDialogListener());
             }
@@ -119,7 +129,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
 
     @Override
     public void hideErrorNotification() {
-        if(null != errorNotification && errorNotification.isShowing()){
+        if (null != errorNotification && errorNotification.isShowing()) {
             errorNotification.dismiss();
             errorNotification = null;
         }
