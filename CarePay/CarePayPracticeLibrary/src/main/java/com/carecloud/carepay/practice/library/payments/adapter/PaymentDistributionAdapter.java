@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
@@ -98,9 +99,10 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
         amountTextView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
+                SystemUtil.hideSoftKeyboard(context, textView);
                 double amount = 0D;
                 try{
-                    Double.parseDouble(textView.getText().toString());
+                    amount = Double.parseDouble(textView.getText().toString());
                 }catch (NumberFormatException nfe){
                     nfe.printStackTrace();
                 }
@@ -109,20 +111,20 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
             }
         });
 
-        amountTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if(!hasFocus){
-                    double amount = 0D;
-                    try{
-                        Double.parseDouble(((TextView) view).getText().toString());
-                    }catch (NumberFormatException nfe){
-                        nfe.printStackTrace();
-                    }
-                    callback.editAmount(amount, balanceItem);
-                }
-            }
-        });
+//        amountTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View view, boolean hasFocus) {
+//                if(!hasFocus){
+//                    double amount = 0D;
+//                    try{
+//                        amount = Double.parseDouble(((TextView) view).getText().toString());
+//                    }catch (NumberFormatException nfe){
+//                        nfe.printStackTrace();
+//                    }
+//                    callback.editAmount(amount, balanceItem);
+//                }
+//            }
+//        });
 
         holder.getClearButton().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,6 +146,20 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
 //            }
 //        });
 
+        holder.pickProviderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.pickProvider(view, balanceItem);
+            }
+        });
+
+        holder.pickLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.pickLocation(view, balanceItem);
+            }
+        });
+
     }
 
     @Override
@@ -155,7 +171,7 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
         this.balanceItems = balanceItems;
     }
 
-    class PaymentDistributionViewHolder extends RecyclerView.ViewHolder{
+    public class PaymentDistributionViewHolder extends RecyclerView.ViewHolder{
 
         private TextView description;
         private TextView providerName;

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +14,13 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.adapter.PaymentDistributionAdapter;
+import com.carecloud.carepay.practice.library.payments.adapter.PopupPickLocationAdapter;
+import com.carecloud.carepay.practice.library.payments.adapter.PopupPickProviderAdapter;
+import com.carecloud.carepay.practice.library.payments.adapter.PopupPickerAdapter;
+import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerWindow;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepaylibray.appointments.models.AppointmentLocationsDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentProviderDTO;
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
+import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
@@ -35,12 +40,15 @@ import java.util.List;
  * Created by lmenendez on 3/14/17.
  */
 
-public class PaymentDistributionFragment extends BaseDialogFragment implements PaymentDistributionAdapter.PaymentDistributionCallback {
+public class PaymentDistributionFragment extends BaseDialogFragment implements PaymentDistributionAdapter.PaymentDistributionCallback, PopupPickerAdapter.PopupPickCallback {
 
     private TextView patientName;
     private TextView balance;
     private TextView paymentTotal;
     private RecyclerView balanceDetailsRecycler;
+
+    private PopupPickerWindow locationPickerWindow;
+    private PopupPickerWindow providerPickerWindow;
 
     private PaymentsModel paymentsModel;
     private PaymentsLabelDTO labels;
@@ -103,8 +111,12 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         balanceDetailsRecycler = (RecyclerView) view.findViewById(R.id.balances_recycler);
         balanceDetailsRecycler.setLayoutManager(layoutManager);
 
+        ItemTouchHelper touchHelper = new ItemTouchHelper(swipeCallback);
+        touchHelper.attachToRecyclerView(balanceDetailsRecycler);
+
         setInitialValues();
         setAdapter();
+        setupPickerWindows();
     }
 
     private void setupToolbar(View view){
@@ -176,6 +188,18 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         }
     }
 
+    private void setupPickerWindows(){
+        locationPickerWindow = new PopupPickerWindow(getContext());
+        List<LocationDTO> locations = paymentsModel.getPaymentPayload().getLocations();
+        PopupPickLocationAdapter locationAdapter = new PopupPickLocationAdapter(getContext(), locations, this);
+        locationPickerWindow.setAdapter(locationAdapter);
+
+        providerPickerWindow = new PopupPickerWindow(getContext());
+        List<ProviderDTO> providers = paymentsModel.getPaymentPayload().getProviders();
+        PopupPickProviderAdapter providerAdapter = new PopupPickProviderAdapter(getContext(), providers, this);
+        providerPickerWindow.setAdapter(providerAdapter);
+    }
+
     private double calculateTotalBalance(){
         double total = 0D;
         for(PatientBalanceDTO patientBalance : paymentsModel.getPaymentPayload().getPatientBalances()){
@@ -190,19 +214,19 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         return total;
     }
 
-    private void modifyLineItem(BalanceItemDTO updateBalanceItem, AppointmentProviderDTO updateProvider, AppointmentLocationsDTO updateLocation, Double updateAmount){
+    private void modifyLineItem(BalanceItemDTO updateBalanceItem, ProviderDTO updateProvider, LocationDTO updateLocation, Double updateAmount){
         for(BalanceItemDTO balanceItem : balanceItems){
             if(balanceItem.equals(updateBalanceItem)){
                 if(updateAmount!=null){
                     double difference;
                     double currentAmount = 0;
                     try{
-                        currentAmount = Double.parseDouble(balanceItem.getAmount());
+                        currentAmount = Double.parseDouble(balanceItem.getBalance());
                     }catch (NumberFormatException nfe){
                         nfe.printStackTrace();
                     }
                     difference = currentAmount-updateAmount;
-                    balanceItem.setAmount(String.valueOf(updateAmount));
+                    balanceItem.setBalance(updateAmount.toString());
                     paymentAmount-=difference;
                     setCurrency(paymentTotal, paymentAmount);
                 }
@@ -228,16 +252,71 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
     @Override
     public void pickProvider(View view, BalanceItemDTO balanceItem) {
-
+        clearPickers();
+        providerPickerWindow.showAsDropDown(view);
     }
 
     @Override
     public void pickLocation(View view, BalanceItemDTO balanceItem) {
-
+        clearPickers();
+        locationPickerWindow.showAsDropDown(view);
     }
 
     @Override
     public void editAmount(double amount, BalanceItemDTO balanceItem) {
         modifyLineItem(balanceItem, null, null, amount);
     }
+
+
+    private ItemTouchHelper.SimpleCallback swipeCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            PaymentDistributionAdapter.PaymentDistributionViewHolder paymentViewHolder = (PaymentDistributionAdapter.PaymentDistributionViewHolder) viewHolder;
+            View clearButton = paymentViewHolder.getClearButton();
+            View rowLayout = paymentViewHolder.getRowLayout();
+
+            if(direction == ItemTouchHelper.LEFT) {
+                showClearButton(clearButton, rowLayout);
+            }else if (direction == ItemTouchHelper.RIGHT){
+                hideClearButton(clearButton, rowLayout);
+            }
+
+        }
+    };
+
+
+    private void showClearButton(View clearButton, View rowLyout){
+        clearButton.setVisibility(View.VISIBLE);
+        clearButton.measure(0, 0);
+        rowLyout.setLeft(-clearButton.getMeasuredWidth());
+    }
+
+    private void hideClearButton(View clearButton, View rowLayout){
+        clearButton.setVisibility(View.GONE);
+        rowLayout.setLeft(0);
+    }
+
+    private void clearPickers(){
+        providerPickerWindow.dismiss();
+        locationPickerWindow.dismiss();
+    }
+
+    @Override
+    public void pickLocation(LocationDTO location, BalanceItemDTO balanceItem) {
+        clearPickers();
+        modifyLineItem(balanceItem, null, location, null);
+    }
+
+    @Override
+    public void pickProvider(ProviderDTO provider, BalanceItemDTO balanceItem) {
+        clearPickers();
+        modifyLineItem(balanceItem, provider, null, null);
+    }
+
+
 }

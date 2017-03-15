@@ -34,7 +34,7 @@ public class AppointmentChargeDTO {
     private Integer locationId;
     @SerializedName("location")
     @Expose
-    private AppointmentLocationsDTO location = new AppointmentLocationsDTO();
+    private LocationDTO location = new LocationDTO();
     @SerializedName("attending_provider_id")
     @Expose
     private Integer attendingProviderId;
@@ -43,7 +43,7 @@ public class AppointmentChargeDTO {
     private Integer providerId;
     @SerializedName("provider")
     @Expose
-    private AppointmentProviderDTO provider = new AppointmentProviderDTO();
+    private ProviderDTO provider = new ProviderDTO();
     @SerializedName("units")
     @Expose
     private String units;
@@ -115,11 +115,11 @@ public class AppointmentChargeDTO {
         this.locationId = locationId;
     }
 
-    public AppointmentLocationsDTO getLocation() {
+    public LocationDTO getLocation() {
         return location;
     }
 
-    public void setLocation(AppointmentLocationsDTO location) {
+    public void setLocation(LocationDTO location) {
         this.location = location;
     }
 
@@ -139,11 +139,11 @@ public class AppointmentChargeDTO {
         this.providerId = providerId;
     }
 
-    public AppointmentProviderDTO getProvider() {
+    public ProviderDTO getProvider() {
         return provider;
     }
 
-    public void setProvider(AppointmentProviderDTO provider) {
+    public void setProvider(ProviderDTO provider) {
         this.provider = provider;
     }
 

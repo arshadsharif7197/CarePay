@@ -1,8 +1,8 @@
 package com.carecloud.carepay.practice.library.appointments;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -28,13 +28,13 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
+import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.LinksDTO;
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.models.LocationDTO;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.ProviderDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -220,8 +220,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     private void addLocationOnFilterList(ArrayList<FilterDataDTO> locations, AppointmentPayloadDTO appointmentPayloadDTO) {
-        LocationDTO locationDTO = appointmentPayloadDTO.getLocation();
-        FilterDataDTO filterDataDTO = new FilterDataDTO(locationDTO.getId(), locationDTO.getName(), FilterDataDTO.FilterDataType.LOCATION);
+        LocationDTO XLocationDTO = appointmentPayloadDTO.getLocation();
+        FilterDataDTO filterDataDTO = new FilterDataDTO(XLocationDTO.getId(), XLocationDTO.getName(), FilterDataDTO.FilterDataType.LOCATION);
         if (locations.indexOf(filterDataDTO) < 0) {
             filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
             locations.add(filterDataDTO);

@@ -1,5 +1,7 @@
 package com.carecloud.carepaylibray.payments.models;
 
+import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMerchantServicesDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiAccountsDTO;

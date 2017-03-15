@@ -30,13 +30,13 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.models.LocationDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.ProviderDTO;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
@@ -239,10 +239,10 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
 
     private void addLocationOnFilterList(ArrayList<FilterDataDTO> locationsList, AppointmentPayloadDTO appointmentPayloadDTO) {
         FilterDataDTO filterDataDTO;
-        LocationDTO locationDTO = appointmentPayloadDTO.getLocation();
-        filterDataDTO = new FilterDataDTO(locationDTO.getId(), locationDTO.getName(), FilterDataDTO.FilterDataType.LOCATION);
+        LocationDTO XLocationDTO = appointmentPayloadDTO.getLocation();
+        filterDataDTO = new FilterDataDTO(XLocationDTO.getId(), XLocationDTO.getName(), FilterDataDTO.FilterDataType.LOCATION);
         if (locationsList.indexOf(filterDataDTO) < 0) {
-            //filterDataDTO.setFilterId(locationDTO.getId());
+            //filterDataDTO.setFilterId(LocationDTO.getId());
             filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
             locationsList.add(filterDataDTO);
         } else {
