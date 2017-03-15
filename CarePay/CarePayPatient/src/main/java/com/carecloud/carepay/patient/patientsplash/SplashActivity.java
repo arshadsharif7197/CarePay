@@ -43,8 +43,10 @@ public class SplashActivity extends BasePatientActivity {
         public void onFailure(String exceptionMessage) {
             SystemUtil.showDefaultFailureDialog(SplashActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+
         }
     };
+
     WorkflowServiceCallback applicationStartCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {

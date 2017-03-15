@@ -16,7 +16,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
-        android:name="com.carecloud.carepay.practice.tablet.CarePayApplication"
+        android:name="com.carecloud.carepay.practice.tablet.CarePayPracticeApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
