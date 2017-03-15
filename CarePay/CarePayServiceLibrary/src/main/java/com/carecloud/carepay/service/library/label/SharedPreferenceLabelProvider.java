@@ -53,6 +53,13 @@ public class SharedPreferenceLabelProvider implements LabelProvider {
     }
 
     /**
+     * @return the default Shared Preferences file
+     */
+    public SharedPreferences openDefaultSharedPreferences() {
+        return openSharedPreferences(DEFAULT_FILE, Context.MODE_PRIVATE);
+    }
+
+    /**
      * @param fileName name of the Shared Preferences file
      * @return an specific Shared Preferences file opened in private mode
      */
