@@ -29,6 +29,7 @@ public abstract class CarePlayApplication extends MultiDexApplication implements
         return applicationPreferences;
     }
 
+    @Override
     public LabelProvider getLabelProvider() {
         if (labelProvider == null) {
             labelProvider = new SharedPreferenceLabelProvider(this);
