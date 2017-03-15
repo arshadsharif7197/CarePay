@@ -3,9 +3,11 @@ package com.carecloud.carepaylibray.demographics.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
@@ -49,7 +51,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
                     getOptionsFrom(persDetailsMetaDTO.properties.gender.options) ,
                     globalLabelsMetaDTO.getDemographicsTitleSelectGender(),
                     globalLabelsMetaDTO.getDemographicsCancelLabel(),
-                    (TextView) findViewById(R.id.chooseGenderTextView));
+                    (TextView) findViewById(R.id.chooseGenderTextView),
+                    getView());
         }
     };
 
@@ -64,7 +67,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
                     getOptionsFrom(persDetailsMetaDTO.properties.primaryRace.options) ,
                     globalLabelsMetaDTO.getDemographicsTitleSelectRace(),
                     globalLabelsMetaDTO.getDemographicsCancelLabel(),
-                    (TextView) findViewById(R.id.raceListDataTextView));
+                    (TextView) findViewById(R.id.raceListDataTextView),
+                    getView());
         }
     };
 
@@ -79,7 +83,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
                     getOptionsFrom(persDetailsMetaDTO.properties.ethnicity.options) ,
                     globalLabelsMetaDTO.getDemographicsTitleSelectEthnicity(),
                     globalLabelsMetaDTO.getDemographicsCancelLabel(),
-                    (TextView) findViewById(R.id.ethnicityListDataTextView));
+                    (TextView) findViewById(R.id.ethnicityListDataTextView),
+                    getView());
         }
     };
 
@@ -182,8 +187,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
      */
     private void initialiseUIFields(View view) {
 
-        //globalLabelsMetaDTO.getDemographicsAddressHeader()
-        setHeaderTitle("Demographics", view);
+        setHeaderTitle(globalLabelsMetaDTO.getDemographicsReviewDemographics(), view);
         initNextButton(globalLabelsMetaDTO.getDemographicsReviewNextButton(), null, view);
 
         ((TextView) view.findViewById(R.id.raceListDataTextView)).setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
@@ -274,7 +278,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
      * Show dialog
      *
      * */
-    private void showDialog(final String[] dataArray, String title, String cancelLabel, final TextView editText){
+    private void showDialog(final String[] dataArray, String title, String cancelLabel, final TextView editText, final View view){
         SystemUtil.showChooseDialog(getActivity(),
                 dataArray, title, cancelLabel,
                 editText,
@@ -282,9 +286,11 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
                     @Override
                     public void executeOnClick(TextView destination, String selectedOption) {
                         editText.setText(selectedOption);
+                        checkIfEnableButton(view);
                     }
                 });
     }
+
 
 
 

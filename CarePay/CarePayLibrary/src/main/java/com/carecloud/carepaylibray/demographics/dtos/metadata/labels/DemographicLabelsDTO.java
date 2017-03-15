@@ -422,6 +422,9 @@ public class DemographicLabelsDTO {
     @SerializedName("demographics_review_take_photo_of_back")
     @Expose
     private String demographicsReviewTakePhotoOfBack;
+    @SerializedName("demographics_review_demographics")
+    @Expose
+    private String demographicsReviewDemographics;
 
     public String getDemographicsInsuranceCardNumber() {
         return StringUtil.getLabelForView(demographicsInsuranceCardNumber);
@@ -1809,5 +1812,13 @@ public class DemographicLabelsDTO {
 
     public void setDemographicsReviewTakePhotoOfBack(String demographicsReviewTakePhotoOfBack) {
         this.demographicsReviewTakePhotoOfBack = demographicsReviewTakePhotoOfBack;
+    }
+
+    public String getDemographicsReviewDemographics() {
+        return demographicsReviewDemographics;
+    }
+
+    public void setDemographicsReviewDemographics(String demographicsReviewDemographics) {
+        this.demographicsReviewDemographics = demographicsReviewDemographics;
     }
 }
