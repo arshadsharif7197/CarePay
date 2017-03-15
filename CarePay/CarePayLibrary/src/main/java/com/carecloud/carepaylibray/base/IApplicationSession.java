@@ -4,6 +4,7 @@ import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.label.LabelProvider;
 
 /**
  * Created by cocampo on 2/20/17.
@@ -17,4 +18,6 @@ public interface IApplicationSession {
     AppAuthorizationHelper getAppAuthorizationHelper();
 
     ApplicationMode getApplicationMode();
+
+    LabelProvider getLabelProvider();
 }

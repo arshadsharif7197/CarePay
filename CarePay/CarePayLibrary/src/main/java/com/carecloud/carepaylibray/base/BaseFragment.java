@@ -9,6 +9,7 @@ import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.label.LabelProvider;
 
 /**
  * Created by cocampo on 2/6/17.
@@ -86,6 +87,10 @@ public abstract class BaseFragment extends Fragment implements ISession {
     @Override
     public ApplicationMode getApplicationMode() {
         return ((IApplicationSession) getActivity()).getApplicationMode();
+    }
+
+    public LabelProvider getLabelProvider() {
+        return ((IApplicationSession) getActivity()).getLabelProvider();
     }
 
     @Override

@@ -7,8 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.carecloud.carepay.service.library.label.Label;
-
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -19,8 +17,8 @@ import java.util.List;
  */
 public class CarePayLayoutInflaterFactory implements LayoutInflater.Factory2 {
 
-    public static final String PABLO_SCHEMA = "http://schemas.carecloud.com/breeze";
-    public static final String PABLO_ATTR_TEXT_KEY = "textKey";
+    private static final String PABLO_SCHEMA = "http://schemas.carecloud.com/breeze";
+    private static final String PABLO_ATTR_TEXT_KEY = "textKey";
     public static final String PABLO_ATTR_HINT_KEY = "hintKey";
     private static final List<String> FILTER_TYPES = Arrays.asList(new String[]{
             "ViewStub", "View"
@@ -28,9 +26,9 @@ public class CarePayLayoutInflaterFactory implements LayoutInflater.Factory2 {
     private static HashMap<String, Constructor<? extends View>> constructorMap = new HashMap<>();
     private static final Class<?>[] CONSTRUCTOR_SIGNATURE = new Class[]{Context.class, AttributeSet.class};
 
-    private final LayoutInflater.Factory2 baseFactory;
+    private final BaseActivity baseFactory;
 
-    public CarePayLayoutInflaterFactory(LayoutInflater.Factory2 baseFactory) {
+    public CarePayLayoutInflaterFactory(BaseActivity baseFactory) {
         super();
         this.baseFactory = baseFactory;
     }
@@ -55,12 +53,12 @@ public class CarePayLayoutInflaterFactory implements LayoutInflater.Factory2 {
         return view;
     }
 
-    private static void applyAttributes(View view, Context context, AttributeSet attrs) {
+    private void applyAttributes(View view, Context context, AttributeSet attrs) {
         if ((view != null) && (view instanceof TextView)) {
             // Text
             String textKey = attrs.getAttributeValue(PABLO_SCHEMA, PABLO_ATTR_TEXT_KEY);
             if (textKey != null) {
-                ((TextView) view).setText(Label.getLabel(textKey));
+                ((TextView) view).setText(baseFactory.getLabelProvider().getLabel(textKey));
             }
         }
     }

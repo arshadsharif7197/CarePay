@@ -12,6 +12,7 @@ import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.label.LabelProvider;
 import com.carecloud.carepaylibray.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 
@@ -61,6 +62,10 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
     @Override
     public ApplicationMode getApplicationMode() {
         return ((IApplicationSession) getApplication()).getApplicationMode();
+    }
+
+    public LabelProvider getLabelProvider() {
+        return ((IApplicationSession) getApplication()).getLabelProvider();
     }
 
     public Context getContext() {
