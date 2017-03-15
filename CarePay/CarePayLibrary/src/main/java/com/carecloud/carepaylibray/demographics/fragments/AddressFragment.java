@@ -82,9 +82,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
     }
 
     @Override
@@ -131,12 +128,12 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
         ((EditText) view.findViewById(R.id.zipCodeId)).setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
                     SystemUtil.showSoftKeyboard(getActivity());
                 }
-                SystemUtil.handleHintChange(view, bool);
-                if (!bool) { // for SmartyStreets
+                SystemUtil.handleHintChange(view, hasFocus);
+                if (!hasFocus) { // for SmartyStreets
                     getCityAndState(view, ((EditText) view.findViewById(R.id.zipCodeId)).getText().toString());
                 }
             }
@@ -263,9 +260,14 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
                     ((TextInputLayout) mainView.findViewById(R.id.address1TextInputLayout)).setError(null);
                     ((TextInputLayout) mainView.findViewById(R.id.address1TextInputLayout)).setErrorEnabled(false);
                 } else {
-                    final String lastNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.address1.validations.get(0).getErrorMessage();
-                    ((TextInputLayout) mainView.findViewById(R.id.address1TextInputLayout)).setError(lastNameError);
-                    ((TextInputLayout) mainView.findViewById(R.id.address1TextInputLayout)).setErrorEnabled(true);
+                    try {
+                        final String lastNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.address1.validations.get(0).getErrorMessage();
+                        ((TextInputLayout) mainView.findViewById(R.id.address1TextInputLayout)).setError(lastNameError);
+                        ((TextInputLayout) mainView.findViewById(R.id.address1TextInputLayout)).setErrorEnabled(true);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
                 }
                 checkIfEnableButton(mainView);
             }
@@ -295,9 +297,13 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
                     ( (TextInputLayout) mainView.findViewById(R.id.zipCodeTextInputLayout)).setError(null);
                     ( (TextInputLayout) mainView.findViewById(R.id.zipCodeTextInputLayout)).setErrorEnabled(false);
                 } else {
-                    final String zipcodeError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.zipcode.validations.get(0).getErrorMessage();
-                    ( (TextInputLayout) mainView.findViewById(R.id.zipCodeTextInputLayout)).setError(zipcodeError);
-                    ((TextInputLayout) mainView.findViewById(R.id.zipCodeTextInputLayout)).setErrorEnabled(true);
+                    try {
+                        final String zipcodeError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.zipcode.validations.get(0).getErrorMessage();
+                        ( (TextInputLayout) mainView.findViewById(R.id.zipCodeTextInputLayout)).setError(zipcodeError);
+                        ((TextInputLayout) mainView.findViewById(R.id.zipCodeTextInputLayout)).setErrorEnabled(true);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
 
                 StringUtil.autoFormatZipcode(editable, prevLen);
@@ -626,20 +632,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
 
 
-    /**
-     * Enable or disable main button
-     *
-     * @param isEnabled is Button enabled
-     */
-    public void enableButton(boolean isEnabled) {
-        if (isPractice) {
-            //buttonConfirmData.setBackground(ContextCompat.getDrawable(getContext(), isEnabled ? R.drawable.bg_green_overlay : R.drawable.bg_silver_overlay));
-            //buttonConfirmData.setPadding(20, 0, 20, 0);
-        } else {
-            //buttonConfirmData.setBackground(ContextCompat.getDrawable(getContext(), isEnabled ? R.drawable.language_button_selector : R.drawable.button_light_gray_bg));
-        }
-        //buttonConfirmData.setEnabled(isEnabled);
-    }
 
     @Override
     protected DemographicDTO updateDemographicDTO(View view) {
@@ -682,25 +674,10 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
     }
 
-    /**
-     * Is all fields valid
-     */
-    private boolean isAllFieldsValid() {
-
-        boolean isStateValid =   true;  // !globalLabelsMetaDTO.getDemographicsChooseLabel().equals(((EditText) findViewById(R.id.reviewDemographicsStateAutoCompleteTextView)).getText().toString());
-
-        return !isZipEmpty && !isAddressEmpty && !isCityEmpty && isStateValid;
-
-    }
-
-
-
     @Override
     protected boolean passConstraints(View view) {
         boolean isStateValid = ! globalLabelsMetaDTO.getDemographicsChooseLabel().equals(((TextView) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView)).getText().toString());
-
         return !isZipEmpty && !isAddressEmpty && !isCityEmpty && isStateValid && checkFormatedFields(view);
-
     }
 
     @Override
