@@ -22,11 +22,8 @@ import com.carecloud.carepaylibray.base.IApplicationSession;
  */
 
 public class CarePayPracticeApplication extends CarePlayApplication
-        implements Application.ActivityLifecycleCallbacks, IApplicationSession {
+        implements Application.ActivityLifecycleCallbacks {
 
-    private ApplicationPreferences applicationPreferences;
-    private WorkflowServiceHelper workflowServiceHelper;
-    private AppAuthorizationHelper appAuthorizationHelper;
     private ApplicationMode applicationMode;
 
     @Override
@@ -93,34 +90,6 @@ public class CarePayPracticeApplication extends CarePlayApplication
             //getAppAuthorizationHelper().getPool().getUser().signOut();
             //getAppAuthorizationHelper().setUser(null);
         }
-    }
-
-    @Override
-    public ApplicationPreferences getApplicationPreferences() {
-        if (applicationPreferences == null) {
-            applicationPreferences = new ApplicationPreferences(this);
-        }
-
-        return applicationPreferences;
-    }
-
-    @Override
-    public WorkflowServiceHelper getWorkflowServiceHelper() {
-        if (workflowServiceHelper == null) {
-            workflowServiceHelper = new WorkflowServiceHelper(getApplicationPreferences(), getApplicationMode());
-        }
-
-        return workflowServiceHelper;
-    }
-
-    @Override
-    public AppAuthorizationHelper getAppAuthorizationHelper() {
-        if (appAuthorizationHelper == null) {
-            appAuthorizationHelper = new AppAuthorizationHelper(this, getApplicationMode());
-            getWorkflowServiceHelper().setAppAuthorizationHelper(appAuthorizationHelper);
-        }
-
-        return appAuthorizationHelper;
     }
 
     @Override

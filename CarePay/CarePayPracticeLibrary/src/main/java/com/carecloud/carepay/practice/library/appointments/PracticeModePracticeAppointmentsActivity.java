@@ -127,7 +127,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         practicePaymentFindPatientTextView.setOnClickListener(getPracticePaymentFindPatientTextViewListener());
 
         if (checkInLabelDTO != null) {
-            setTextViewById(R.id.practice_title, checkInLabelDTO.getActivityHeading());
             setTextViewById(R.id.practice_go_back, checkInLabelDTO.getGoBack());
             setTextViewById(R.id.activity_practice_appointments_change_date_range_label, checkInLabelDTO.getChangeDateRangeLabel());
             setTextViewById(R.id.activity_practice_appointments_show_all_appointments_label, checkInLabelDTO.getAllAppointmentsLabel());

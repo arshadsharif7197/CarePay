@@ -26,7 +26,6 @@ import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
@@ -167,7 +166,7 @@ public class SigninFragment extends BaseFragment {
         passwordEditText = (EditText) view.findViewById(R.id.passwordEditText);
         passwordTexInput = (TextInputLayout) view.findViewById(R.id.passwordTextInputLayout);
         if (signInSignUpDTO != null) {
-            String emailAddress = Label.getLabel("signup_email");
+            String emailAddress = getLabelProvider().getLabel("signup_email");
             emailTextInput.setTag(emailAddress);
             emailEditText.setHint(emailAddress);
             emailEditText.setTag(emailTextInput);
@@ -289,9 +288,9 @@ public class SigninFragment extends BaseFragment {
         boolean isEmailValid = StringUtil.isValidmail(email);
         emailTextInput.setErrorEnabled(isEmptyEmail || !isEmailValid); // enable for error if either empty or invalid email
         if (isEmptyEmail) {
-            emailTextInput.setError(Label.getLabel("signup_please_enter_email"));
+            emailTextInput.setError(getLabelProvider().getLabel("signup_please_enter_email"));
         } else if (!isEmailValid) {
-            emailTextInput.setError(Label.getLabel("signup_invalid_email"));
+            emailTextInput.setError(getLabelProvider().getLabel("signup_invalid_email"));
         } else {
             emailTextInput.setError(null);
         }
@@ -300,7 +299,7 @@ public class SigninFragment extends BaseFragment {
 
     private boolean checkPassword() {
         isEmptyPassword = StringUtil.isNullOrEmpty(passwordEditText.getText().toString());
-        String error = (isEmptyPassword ? Label.getLabel("signup_please_enter_password") : null);
+        String error = (isEmptyPassword ? getLabelProvider().getLabel("signup_please_enter_password") : null);
         passwordTexInput.setErrorEnabled(isEmptyPassword);
         passwordTexInput.setError(error);
         return !isEmptyPassword;

@@ -10,9 +10,7 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.RefreshDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepay.service.library.platform.AndroidPlatform;
-import com.carecloud.carepay.service.library.platform.Platform;
+import com.carecloud.carepay.service.library.label.LabelProvider;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.google.gson.Gson;
@@ -44,11 +42,14 @@ public class WorkflowServiceHelper {
 
     private AppAuthorizationHelper appAuthorizationHelper;
     private ApplicationPreferences applicationPreferences;
+    private LabelProvider labelProvider;
     private ApplicationMode applicationMode;
 
     public WorkflowServiceHelper(ApplicationPreferences applicationPreferences,
+                                 LabelProvider labelProvider,
                                  ApplicationMode applicationMode) {
         this.applicationPreferences = applicationPreferences;
+        this.labelProvider = labelProvider;
         this.applicationMode = applicationMode;
     }
 
@@ -303,15 +304,11 @@ public class WorkflowServiceHelper {
             private void saveLabels(WorkflowDTO workflowDTO) {
                 //TODO: this should change after the creation of the Label service
                 JsonObject labels = workflowDTO.getMetadata().getAsJsonObject("labels");
-                String state = workflowDTO.getState();
-                boolean contains = ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences().contains("labelFor" + state);
-                if (labels != null && !contains) {
+                if (labels != null) {
                     Set<Map.Entry<String, JsonElement>> set = labels.entrySet();
                     for (Map.Entry<String, JsonElement> entry : set) {
-                        Label.putLabel(entry.getKey(), entry.getValue().getAsString());
+                        labelProvider.putLabel(entry.getKey(), entry.getValue().getAsString());
                     }
-                    SharedPreferences.Editor editor = ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences().edit();
-                    editor.putBoolean("labelFor" + state, true).apply();
                 }
             }
 
