@@ -14,8 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingEnd="@dimen/dimen_164dp"
-        android:paddingStart="@dimen/dimen_164dp">
+        android:paddingEnd="@dimen/dimen_114dp"
+        android:paddingStart="@dimen/dimen_114dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -293,6 +293,20 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="0dp"
+        android:orientation="vertical"
+        android:padding="0dp">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/insurance_detail_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/dimen_10dp" />
+    </LinearLayout>
+
+    <LinearLayout
         style="@style/DemographicsDocsHeaderStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -428,7 +442,6 @@
             android:padding="0dp">
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/insurance_detail_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/dimen_10dp" />
