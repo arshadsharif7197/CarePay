@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.AppointmentChargeDTO;
+import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
@@ -16,9 +16,9 @@ import java.util.List;
 public class PaymentItemsListAdapter extends RecyclerView.Adapter<PaymentItemsListAdapter.PaymentDetailsListViewHolder> {
 
     private Context context;
-    private List<AppointmentChargeDTO> detailsList;
+    private List<BalanceItemDTO> detailsList;
 
-    public PaymentItemsListAdapter(Context context, List<AppointmentChargeDTO> detailsList) {
+    public PaymentItemsListAdapter(Context context, List<BalanceItemDTO> detailsList) {
         this.context = context;
         this.detailsList = detailsList;
     }
@@ -32,7 +32,7 @@ public class PaymentItemsListAdapter extends RecyclerView.Adapter<PaymentItemsLi
 
     @Override
     public void onBindViewHolder(final PaymentDetailsListViewHolder holder, int position) {
-        AppointmentChargeDTO paymentDetailsItem = detailsList.get(position);
+        BalanceItemDTO paymentDetailsItem = detailsList.get(position);
         holder.paymentDetailLabel.setText(paymentDetailsItem.getDescription());
         holder.paymentDetailAmount.setText(StringUtil.getFormattedBalanceAmount(Double.parseDouble(paymentDetailsItem.getAmount())));
     }

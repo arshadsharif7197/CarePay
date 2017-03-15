@@ -65,7 +65,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
     CheckedInAppointmentAdapter waitingRoomAdapter;
 
     ArrayList<FilterDataDTO> filterableDoctorLocationList = new ArrayList<>();
-    ArrayList<FilterDataDTO> patientList;
+    ArrayList<FilterDataDTO> patientList = new ArrayList<>();
     private ArrayList<FilterDataDTO> searchedPatientList = new ArrayList<>();
 
     CarePayTextView goBackTextview;

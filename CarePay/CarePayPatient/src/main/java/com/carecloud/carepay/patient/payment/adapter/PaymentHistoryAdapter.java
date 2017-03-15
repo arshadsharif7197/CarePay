@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepaylibray.appointments.models.AppointmentChargeDTO;
+import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -25,7 +25,7 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
 
     private Context context;
     private PaymentsModel paymentsModel;
-    private List<AppointmentChargeDTO> historyList;
+    private List<BalanceItemDTO> historyList;
 
     /**
      * Constructor
@@ -50,7 +50,7 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
 
     @Override
     public void onBindViewHolder(final PaymentHistoryAdapter.PaymentHistoryViewHolder holder, int position) {
-        final AppointmentChargeDTO charge = historyList.get(position);
+        final BalanceItemDTO charge = historyList.get(position);
         String locationName = CarePayConstants.NOT_DEFINED;//charge.getLocation().getName();
 
         holder.shortName.setText(StringUtil.getShortName(locationName));

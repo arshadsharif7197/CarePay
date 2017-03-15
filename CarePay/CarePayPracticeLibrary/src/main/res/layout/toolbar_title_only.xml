@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         style="@style/ResponsibilityToolbarTextStyle"
         app:customAssetFont="gotham_rounded_medium"
+        android:gravity="center"
         android:visibility="visible"/>
 
 </android.support.v7.widget.Toolbar>

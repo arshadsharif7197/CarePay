@@ -18,6 +18,7 @@ import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountRece
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityDialog;
 import com.carecloud.carepay.practice.library.payments.fragments.NoAddChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentPlanFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -261,7 +262,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
             PaymentsModel patientDetails = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
             if(patientDetails!=null){
-                showResponsibilityDialog(patientDetails);
+//                showResponsibilityDialog(patientDetails);
+                showPaymentDistributionDialog(patientDetails);
             }
 
         }
@@ -330,6 +332,16 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 paymentsPatientBalance.getBalances().get(0).getMetadata().getPatientId().equals(updateBalance.getBalances().get(0).getMetadata().getPatientId());
     }
 
+
+    private void showPaymentDistributionDialog(PaymentsModel paymentsModel){
+        Bundle args = new Bundle();
+        Gson gson = new Gson();
+        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(paymentsModel));
+
+        PaymentDistributionFragment fragment = new PaymentDistributionFragment();
+        fragment.setArguments(args);
+        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+    }
 
     private void showResponsibilityDialog(PaymentsModel patientDetails) {
         PatientBalanceDTO balancessDTO = null;
