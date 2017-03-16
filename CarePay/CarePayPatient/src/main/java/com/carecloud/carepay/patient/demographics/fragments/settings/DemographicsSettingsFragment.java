@@ -131,7 +131,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
         if(!HttpConstants.isUseUnifiedAuth()) {
             patientIdTextview.setText(getAppAuthorizationHelper().getCurrUser());
         }else{
-            patientIdTextview.setText(getAppAuthorizationHelper().getUserAlias());
+            patientIdTextview.setText(getAppAuthorizationHelper().getCurrUser());
         }
         try {
             DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();

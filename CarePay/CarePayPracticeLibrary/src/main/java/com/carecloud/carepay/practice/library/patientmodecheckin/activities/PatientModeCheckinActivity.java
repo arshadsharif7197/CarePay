@@ -64,6 +64,7 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -625,6 +626,18 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
             demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().clear();
             demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments()
                     .add(idDocScannerFragment.getModel());
+
+            List<DemographicIdDocPayloadDTO> demographicIds = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments();
+            if(!demographicIds.isEmpty()){
+                Iterator<DemographicIdDocPayloadDTO> iterator = demographicIds.iterator();
+                while (iterator.hasNext()){
+                    if(iterator.next().getIdType()==null){
+                        iterator.remove();
+                    }
+                }
+            }
+
+            demographicDTO.getPayload().getDemographics().getPayload().setIdDocuments(demographicIds);
         }
     }
 
