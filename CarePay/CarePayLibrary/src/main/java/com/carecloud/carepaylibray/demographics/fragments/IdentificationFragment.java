@@ -17,12 +17,7 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 
 public class IdentificationFragment extends CheckInDemographicsBaseFragment {
 
-    public interface UpdateIdentificationDocListener{
-        DemographicIdDocPayloadDTO getUpdatedDocuments();
-    }
-
     private DemographicDTO demographicDTO;
-    private UpdateIdentificationDocListener updateIdentificationDocListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,18 +36,6 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        try {
-            updateIdentificationDocListener = (UpdateIdentificationDocListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " must implement UpdateIdentificationDocListener");
-        }
-    }
-
-    @Override
     protected boolean passConstraints(View view) {
         return true;
     }
@@ -64,7 +47,10 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment {
 
     @Override
     protected DemographicDTO updateDemographicDTO(View view) {
-        demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().add(0,updateIdentificationDocListener.getUpdatedDocuments());
+        PracticeIdDocScannerFragment fragment = (PracticeIdDocScannerFragment)getChildFragmentManager().findFragmentById(R.id.revDemographicsIdentificationPicCapturer);
+        if (fragment != null) {
+            demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().add(0, fragment.getModel());
+        }
         return demographicDTO;
     }
 

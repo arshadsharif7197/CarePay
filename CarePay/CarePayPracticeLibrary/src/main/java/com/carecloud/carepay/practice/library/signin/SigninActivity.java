@@ -130,17 +130,8 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
 //        setTypeFace();
 
         changeScreenMode(signinScreenMode);
-        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
-            //emailEditText.setText("plewis@carecloud.com");
-            //passwordEditText.setText("Password123!");
-            emailEditText.setText("practice@cc.com");
-            passwordEditText.setText("Test123!");
-        } else {
-            emailEditText.setText("gsaraf@carecloud.com");
-            passwordEditText.setText("Test123!");
-        }
-        isEmptyEmail = false;
-        isEmptyPassword = false;
+        isEmptyEmail = true;
+        isEmptyPassword = true;
 
     }
 

@@ -35,7 +35,6 @@ import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsD
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemIdDocDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
@@ -45,7 +44,6 @@ import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
 import com.carecloud.carepaylibray.demographics.fragments.IdentificationFragment;
 import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
-import com.carecloud.carepaylibray.demographics.fragments.PracticeIdDocScannerFragment;
 import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterface;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHolder;
@@ -79,7 +77,7 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
         CheckinDemographicsInterface, MedicationAllergySearchFragment.MedicationAllergySearchCallback,
         PaymentNavigationCallback, CheckinFlowCallback,
         CheckInDemographicsBaseFragment.CheckInNavListener,
-        PersonalInfoFragment.UpdateProfilePictureListener, IdentificationFragment.UpdateIdentificationDocListener {
+        PersonalInfoFragment.UpdateProfilePictureListener {
 
 
     public final static  int SUBFLOW_DEMOGRAPHICS_INS = 0;
@@ -845,41 +843,6 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
         return null;
     }
 
-    public void initializeIdentificationFragment(DemographicLabelsDTO globalLabelDTO,
-                                                 DemographicIdDocPayloadDTO demPayloadIdDocDTO,
-                                                 DemographicMetadataEntityItemIdDocDTO demographicMetadataEntityItemIdDocDTO) {
-
-        FragmentManager fm = getSupportFragmentManager();
-        String tag = PracticeIdDocScannerFragment.class.getSimpleName();
-        PracticeIdDocScannerFragment fragment = (PracticeIdDocScannerFragment) fm.findFragmentByTag(tag);
-        if (fragment == null) {
-            fragment = new PracticeIdDocScannerFragment();
-            fragment.setGlobalLabelsDTO(globalLabelDTO);
-            Bundle args = new Bundle();
-            DtoHelper.bundleDto(args, demPayloadIdDocDTO);
-
-            if (null != demographicMetadataEntityItemIdDocDTO) {
-                DtoHelper.bundleDto(args, demographicMetadataEntityItemIdDocDTO);
-            }
-
-            fragment.setArguments(args);
-        }
-        fm.beginTransaction()
-                .replace(com.carecloud.carepaylibrary.R.id.revDemographicsIdentificationPicCapturer, fragment, tag)
-                .commit();
-    }
-
-    @Override
-    public DemographicIdDocPayloadDTO getUpdatedDocuments() {
-        PracticeIdDocScannerFragment fragment = (PracticeIdDocScannerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.revDemographicsIdentificationPicCapturer);
-
-        if (fragment != null) {
-            return fragment.getModel();
-        }
-        return null;
-    }
-
     @Override
     public void applyChangesAndNavTo(DemographicDTO demographicDTO, Integer step) {
         currentDemographicStep = step;
@@ -902,8 +865,7 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
     public void navigateToDemographicFragment(Integer step) {
         CheckInDemographicsBaseFragment fragment = demographicFragMap.get(step);
         Bundle args = new Bundle();
-        DtoHelper.bundleBaseDTO(args, getIntent(), demographicDTO.getClass());
-
+        DtoHelper.bundleDto(args, demographicDTO);
         fragment.setArguments(args);
 
         navigateToFragment(fragment, true);
