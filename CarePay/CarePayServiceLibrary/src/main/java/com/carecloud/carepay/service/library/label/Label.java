@@ -1,5 +1,7 @@
 package com.carecloud.carepay.service.library.label;
 
+import com.carecloud.carepay.service.library.CarePayConstants;
+
 /**
  * This class permits an easily handling of the LangProvider
  * Created by pjohnson on 15/03/17.
@@ -21,7 +23,7 @@ public class Label {
      * @return a String containing the label value
      */
     public static String getLabel(String key) {
-        return getLabelProvider().getValue(key);
+        return getLabelForView(getLabelProvider().getValue(key));
     }
 
     /**
@@ -49,5 +51,30 @@ public class Label {
      */
     public static void putLabel(String key, String value) {
         getLabelProvider().putValue(key, value);
+    }
+
+    /**
+     * Returns label for view.
+     *
+     * @param label string received from endpoint
+     * @return label for view
+     */
+    public static String getLabelForView(String label) {
+        if (isNullOrEmpty(label)) {
+            return CarePayConstants.NOT_DEFINED;
+        }
+
+        return label;
+    }
+
+    /**
+     * Determines if the specified String object is null or equal to
+     * an empty string.
+     *
+     * @param string the string to evaluate
+     * @return true if object <code>string</code> is null or equal to an empty string
+     */
+    public static boolean isNullOrEmpty(String string) {
+        return (string == null || string.trim().equals(""));
     }
 }

@@ -261,11 +261,8 @@ public class HowToCheckInActivity extends BasePracticeActivity {
                 && scanQRCodeResultDTO.getPracticeId()
                 .equals(getApplicationMode().getUserPracticeDTO().getPracticeId())){
 
-            if(!HttpConstants.isUseUnifiedAuth()) {
-                getAppAuthorizationHelper().setUser(scanQRCodeResultDTO.getUserName());
-            }else{
-                getAppAuthorizationHelper().setUserAlias(scanQRCodeResultDTO.getUserName());
-            }
+            getAppAuthorizationHelper().setUser(scanQRCodeResultDTO.getUserName());
+
            // getApplicationMode().getUserPracticeDTO().setUserName(scanQRCodeResultDTO.getUserName());
             Map<String, String> queryMap = new HashMap<String, String>();
             queryMap.put("appointment_id", scanQRCodeResultDTO.getAppointmentId());

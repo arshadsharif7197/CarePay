@@ -446,38 +446,7 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
 
     @Override
     public void onSelectAppointmentTimeSlot(AppointmentsSlotsDTO appointmentsSlotsDTO) {
-
-        AppointmentsPayloadDTO payloadDTO = new AppointmentsPayloadDTO();
-        payloadDTO.setStartTime(appointmentsSlotsDTO.getStartTime());
-        payloadDTO.setEndTime(appointmentsSlotsDTO.getEndTime());
-        payloadDTO.setProviderId(selectedResource.getProvider().getId().toString());
-        payloadDTO.setVisitReasonId(selectedVisitTypeDTO.getId());
-        payloadDTO.setResourceId(selectedResource.getId());
-        payloadDTO.setChiefComplaint(selectedVisitTypeDTO.getName());
-
-        PatientModel patientDTO = new PatientModel();
-        patientDTO.setPatientId(addAppointmentPatientId);
-        payloadDTO.setPatient(patientDTO);
-
-        AppointmentProviderDTO providersDTO;
-        providersDTO = selectedResource.getProvider();
-
-        AppointmentLocationsDTO locationDTO = availabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getLocation();
-        if(locationDTO == null){
-            locationDTO = new AppointmentLocationsDTO();
-            AppointmentAddressDTO addressDTO = new AppointmentAddressDTO();
-            locationDTO.setName(resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentsPlaceNameHeading());
-            locationDTO.setAddress(addressDTO);
-        }
-
-        payloadDTO.setLocation(locationDTO);
-        payloadDTO.setProvider(providersDTO);
-
-        AppointmentDTO appointmentDTO = new AppointmentDTO();
-        appointmentDTO.setPayload(payloadDTO);
-
-        final RequestAppointmentDialog requestAppointmentDialog =  new RequestAppointmentDialog(getActivity(),appointmentDTO,resourcesToScheduleDTO);
-        requestAppointmentDialog.show();
+        callback.confirmAppointment(appointmentsSlotsDTO.getStartTime(), appointmentsSlotsDTO.getEndTime(), availabilityDTO);
     }
 
     @Override
@@ -499,9 +468,7 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
         }
 
         setAdapters();
-
     }
-
 
     private List<AppointmentLocationsDTO> extractAvailableLocations(AppointmentAvailabilityDTO availabilityDTO){
         List<AppointmentLocationsDTO> locationsDTOs = new LinkedList<>();
