@@ -2,12 +2,9 @@ package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
@@ -26,6 +23,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
@@ -230,6 +228,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
             }
 
         }
+
+        hideSoftKeyboard(getActivity());
     }
 
 

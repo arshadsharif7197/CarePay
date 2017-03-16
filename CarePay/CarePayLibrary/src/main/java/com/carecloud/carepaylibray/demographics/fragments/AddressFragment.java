@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -37,6 +38,7 @@ import com.smartystreets.api.us_zipcode.City;
 
 import java.util.Arrays;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
@@ -109,6 +111,14 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         return mainView;
 
     }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        hideSoftKeyboard(getActivity());
+    }
+
+
+
 
 
     private boolean checkFormatedFields(View view) {
@@ -446,6 +456,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         } else {
             Log.v(TAG, "Demographic adress is empty ");
         }
+
     }
 
 
@@ -491,6 +502,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
                     @Override
                     public void executeOnClick(TextView destination, String selectedOption) {
                         ((TextView) findViewById(R.id.reviewDemographicsStateAutoCompleteTextView)).setText(selectedOption);
+                        checkIfEnableButton(getView());
                     }
                 });
     }
