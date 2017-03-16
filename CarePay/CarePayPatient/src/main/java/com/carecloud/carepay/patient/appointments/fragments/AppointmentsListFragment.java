@@ -444,6 +444,9 @@ public class AppointmentsListFragment extends BaseFragment {
         });
     }
 
+    /**
+     * Reload appointment list
+     */
     public void refreshAppointmentList() {
         if (appointmentsItems != null) {
             appointmentsItems.clear();
