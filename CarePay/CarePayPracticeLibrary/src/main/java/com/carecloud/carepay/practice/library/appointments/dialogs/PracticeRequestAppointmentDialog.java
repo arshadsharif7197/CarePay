@@ -12,11 +12,11 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.customdialog.BasePracticeDialog;
+import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLocationsDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -28,40 +28,38 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
     private Context context;
     private LayoutInflater inflater;
     private AppointmentLabelDTO labelDTO;
+    private final String startTime;
+    private final String endTime;
     private final AppointmentResourcesDTO appointmentResourcesDTO;
-    private AppointmentsSlotsDTO appointmentsSlotsDTO;
     private AppointmentAvailabilityDTO appointmentAvailabilityDTO;
     private VisitTypeDTO visitTypeDTO;
-    private final PracticeRequestAppointmentDialogListener callback;
+    private final AppointmentNavigationCallback callback;
     private TextView visitTypeTextView;
-
-    public interface PracticeRequestAppointmentDialogListener {
-        void onAppointmentRequested(String comments);
-
-        void onAppointmentCancelled();
-    }
 
     /**
      * Constructor.
      * @param context activity context
      * @param cancelString String
+     * @param startTime start time
+     * @param endTime end time
      * @param labelDTO labels for dialog
-     * @param appointmentsSlotsDTO AppointmentsSlotsDTO
      * @param callback for dialog actions
      */
     public PracticeRequestAppointmentDialog(Context context, String cancelString,
                                             AppointmentLabelDTO labelDTO,
+                                            String startTime,
+                                            String endTime,
                                             AppointmentResourcesDTO appointmentResourcesDTO,
-                                            AppointmentsSlotsDTO appointmentsSlotsDTO,
                                             AppointmentAvailabilityDTO appointmentAvailabilityDTO,
                                             VisitTypeDTO visitTypeDTO,
-                                            PracticeRequestAppointmentDialogListener callback) {
+                                            AppointmentNavigationCallback callback) {
 
         super(context, cancelString, false);
         this.context = context;
         this.labelDTO = labelDTO;
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.appointmentResourcesDTO = appointmentResourcesDTO;
-        this.appointmentsSlotsDTO = appointmentsSlotsDTO;
         this.appointmentAvailabilityDTO = appointmentAvailabilityDTO;
         this.visitTypeDTO = visitTypeDTO;
         this.callback = callback;
@@ -99,7 +97,7 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         requestAppointmentButton.requestFocus();
         SystemUtil.setGothamRoundedBookTypeface(context,requestAppointmentButton);
 
-        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentsSlotsDTO.getStartTime());
+        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(startTime);
 
         setDialogTitle(dateUtil.getDateAsDayMonthDayOrdinalYear(labelDTO.getAppointmentsTodayHeadingSmall()));
 
@@ -152,7 +150,7 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         @Override
         public void onClick(View view) {
             if (null != callback) {
-                callback.onAppointmentRequested(visitTypeTextView.getText().toString().trim());
+                callback.requestAppointment(startTime, endTime, visitTypeTextView.getText().toString().trim());
             }
 
             dismiss();
@@ -164,7 +162,7 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         super.onDialogCancel();
 
         if (null != callback) {
-            callback.onAppointmentCancelled();
+            callback.onAppointmentUnconfirmed();
         }
 
         dismiss();

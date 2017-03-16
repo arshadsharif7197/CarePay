@@ -240,7 +240,7 @@ public class StringUtil {
             return "";
         }
 
-        String splitArr[] = fullName.split(" ");
+        String[] splitArr = fullName.split(" ");
         if (splitArr.length == 1) {
             return getFirstChar(splitArr[0]);
         }
