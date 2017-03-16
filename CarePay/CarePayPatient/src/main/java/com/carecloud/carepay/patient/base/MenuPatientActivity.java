@@ -59,12 +59,8 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        String userId;
-        if(!HttpConstants.isUseUnifiedAuth()) {
-            userId = getAppAuthorizationHelper().getCurrUser();
-        }else{
-            userId = getAppAuthorizationHelper().getCurrUser();
-        }
+        String userId = getAppAuthorizationHelper().getCurrUser();
+
 
         if (userId != null) {
             appointmentsDrawerUserIdTextView.setText(userId);
@@ -115,12 +111,8 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
 
         } else if (id == com.carecloud.carepaylibrary.R.id.nav_logout && transitionLogout != null) {
             // perform log out, of course
-            String userName;
-            if(!HttpConstants.isUseUnifiedAuth()) {
-                userName = getAppAuthorizationHelper().getCurrUser();
-            }else{
-                userName = getAppAuthorizationHelper().getCurrUser();
-            }
+            String userName = getAppAuthorizationHelper().getCurrUser();
+
             if (userName != null) {
                 Log.v(LOG_TAG, "sign out");
                 Map<String, String> headersMap = new HashMap<>();
