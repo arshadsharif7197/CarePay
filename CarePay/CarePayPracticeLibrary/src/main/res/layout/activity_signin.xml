@@ -102,7 +102,6 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/signinEmailpracticeEditText"
                 style="@style/EditTextStyle"
-                android:text="plewis@carecloud.com"
                 android:imeOptions="actionNext"
                 android:inputType="textEmailAddress"
                 app:customAssetFont="proxima_nova_semi_bold"/>
@@ -124,7 +123,6 @@
                     style="@style/EditTextStyle"
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"
-                    android:text="Password123!"
                     android:paddingEnd="@dimen/dimen_30dp"
                     app:customAssetFont="proxima_nova_semi_bold" />
 

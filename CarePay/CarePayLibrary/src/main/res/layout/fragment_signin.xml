@@ -58,7 +58,6 @@
                     android:id="@+id/signinEmailEditText"
                     style="@style/EditTextStyle"
                     android:hint="@string/signin_signup_email_hint"
-                    android:text="plewis@carecloud.com"
                     android:inputType="textEmailAddress"
                     app:customAssetFont="proxima_nova_semi_bold" />
 
@@ -81,7 +80,6 @@
                         android:hint="@string/password_text"
                         android:imeOptions="actionDone"
                         android:inputType="textPassword"
-                        android:text="Password123!"
                         android:paddingRight="@dimen/dimen_30dp"
                         app:customAssetFont="proxima_nova_semi_bold" />
 
