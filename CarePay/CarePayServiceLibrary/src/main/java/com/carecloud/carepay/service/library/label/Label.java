@@ -29,7 +29,7 @@ public class Label {
     /**
      * static method to retrieve a label
      * @param key label key
-     * @return a String containing the label value
+     * @return a String containing the label value, if doesnt exist returns defaultValue
      */
     public static String getLabel(String key, String defaultValue) {
         return getLabelProvider().getValue(key, defaultValue);
