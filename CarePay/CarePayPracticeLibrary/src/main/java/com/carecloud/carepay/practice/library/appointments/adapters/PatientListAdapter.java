@@ -21,9 +21,9 @@ import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.models.LocationIndexDTO;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -120,14 +120,35 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         final Patient patient = filteredPatients.get(position);
 
         if (null == patient.raw) {
-            bindHeaderViewHolder((HeaderViewHolder) holder, patient.appointmentStartTime);
+            int patientCount = 0;
+            if (patient.appointmentStartTime != null) {
+                patientCount = getPatientCount(position);
+            }
+            bindHeaderViewHolder((HeaderViewHolder) holder, patient.appointmentStartTime, patientCount);
+
         } else {
             bindCardViewHolder((CardViewHolder) holder, patient);
         }
     }
 
-    private void bindHeaderViewHolder(HeaderViewHolder holder, Date appointmentTime) {
+    private int getPatientCount(int position) {
+        int counter = 0;
+        for (int i = position+1; i < filteredPatients.size(); i++) {
+            Patient patient = filteredPatients.get(i);
+            if (patient.raw != null) {
+                counter++;
+            } else if (patient.appointmentStartTime != null) {
+                return counter;
+            }
+        }
+        return counter;
+    }
+
+    private void bindHeaderViewHolder(HeaderViewHolder holder, Date appointmentTime, int count) {
         holder.setTimeView(appointmentTime);
+        if (count != 0) {
+            holder.patientCount.setText("(" + count + ")");
+        }
     }
 
     private void bindCardViewHolder(final CardViewHolder holder, final Patient patient) {
@@ -399,10 +420,12 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private class HeaderViewHolder extends CardViewHolder {
         CarePayTextView dateTextView;
+        CarePayTextView patientCount;
 
         HeaderViewHolder(View view) {
             super(view);
             dateTextView = (CarePayTextView) view.findViewById(R.id.timeTextView);
+            patientCount = (CarePayTextView) view.findViewById(R.id.patientCountView);
         }
 
         void setTimeView(Date date) {
