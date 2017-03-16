@@ -116,7 +116,6 @@ public class DemographicsSettingsFragment extends BaseFragment {
         editTextview = (CarePayTextView) view.findViewById(R.id.editTextView);
         signOutButton = (Button) view.findViewById(R.id.signOutButton);
         CarePayTextView patientNameTextview = (CarePayTextView) view.findViewById(R.id.patient_name);
-        CarePayTextView patientIdTextview = (CarePayTextView) view.findViewById(R.id.patient_id);
         profileImageview = (ImageView) view.findViewById(R.id.providerPicImageView);
 
         demographicsTextview.setText(demographicsString);
@@ -128,6 +127,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
         title.setText(settingsString);
         patientNameTextview.setText(getUserName());
 
+        CarePayTextView patientIdTextview = (CarePayTextView) view.findViewById(R.id.patient_id);
         patientIdTextview.setText(getAppAuthorizationHelper().getCurrUser());
 
         try {
