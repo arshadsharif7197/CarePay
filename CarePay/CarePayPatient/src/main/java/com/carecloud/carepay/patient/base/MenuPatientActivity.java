@@ -63,7 +63,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         if(!HttpConstants.isUseUnifiedAuth()) {
             userId = getAppAuthorizationHelper().getCurrUser();
         }else{
-            userId = getAppAuthorizationHelper().getUserAlias();
+            userId = getAppAuthorizationHelper().getCurrUser();
         }
 
         if (userId != null) {
@@ -119,7 +119,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
             if(!HttpConstants.isUseUnifiedAuth()) {
                 userName = getAppAuthorizationHelper().getCurrUser();
             }else{
-                userName = getAppAuthorizationHelper().getUserAlias();
+                userName = getAppAuthorizationHelper().getCurrUser();
             }
             if (userName != null) {
                 Log.v(LOG_TAG, "sign out");
