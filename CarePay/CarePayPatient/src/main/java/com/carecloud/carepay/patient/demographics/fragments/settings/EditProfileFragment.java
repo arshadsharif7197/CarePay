@@ -119,7 +119,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
         if(!HttpConstants.isUseUnifiedAuth()){
             userId = getAppAuthorizationHelper().getCurrUser();
         }else{
-            userId = getAppAuthorizationHelper().getUserAlias();
+            userId = getAppAuthorizationHelper().getCurrUser();
         }
 
         CarePayTextView patientNameValue = (CarePayTextView) view.findViewById(R.id.patientNameTextView);
