@@ -128,7 +128,9 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
 
     @Override
     protected DemographicDTO updateDemographicDTO(View view) {
-        demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(0);
+
+        //demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(0);
+
         return demographicDTO;
     }
 
