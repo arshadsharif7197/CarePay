@@ -20,7 +20,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LinksDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
@@ -41,20 +40,21 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public abstract class BasePracticeAppointmentsActivity extends BasePracticeActivity
         implements AppointmentNavigationCallback,
-        DateRangePickerDialog.DateRangePickerDialogListener,
-        PracticeAvailableHoursDialog.PracticeAvailableHoursDialogListener,
-        PracticeRequestAppointmentDialog.PracticeRequestAppointmentDialogListener {
+        DateRangePickerDialog.DateRangePickerDialogListener {
 
     private Date startDate;
     private Date endDate;
 
     private AppointmentResourcesDTO appointmentResourcesDTO;
+    private AppointmentsResultModel appointmentsResultModel;
     private AppointmentAvailabilityDTO availabilityDTO;
-    private AppointmentsSlotsDTO appointmentsSlotsDTO;
     private VisitTypeDTO visitTypeDTO;
 
     private String patientId;
 
+    /**
+     * Shows Confirmation after Appointment Created
+     */
     public void showAppointmentConfirmation() {
         if (isVisible()) {
             new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
@@ -63,8 +63,8 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
                     .setConfirmText(getString(R.string.alert_ok))
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
-                        public void onClick(SweetAlertDialog sDialog) {
-                            sDialog.dismissWithAnimation();
+                        public void onClick(SweetAlertDialog dialog) {
+                            dialog.dismissWithAnimation();
                             onAppointmentRequestSuccess();
                         }
                     })
@@ -75,42 +75,21 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     }
 
     @Override
-    public void onAppointmentTimeSelected(AppointmentAvailabilityDTO availabilityDTO, AppointmentsSlotsDTO appointmentsSlotsDTO) {
+    public void confirmAppointment(String startTime, String endTime, AppointmentAvailabilityDTO availabilityDTO) {
         this.availabilityDTO = availabilityDTO;
-        this.appointmentsSlotsDTO = appointmentsSlotsDTO;
         // Call Request appointment Summary dialog from here
         String cancelString = getLabels().getAvailableHoursBack();
-        new PracticeRequestAppointmentDialog(this, cancelString, getLabels(), appointmentResourcesDTO, appointmentsSlotsDTO, availabilityDTO, visitTypeDTO, this).show();
-    }
-
-    @Override
-    public void onDateRangeTapped() {
-        String tag = DateRangePickerDialog.class.getSimpleName();
-
-        // DialogFragment.show() will take care of adding the fragment
-        // in a transaction.  We also want to remove any currently showing
-        // dialog, so make our own transaction and take care of that here.
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
-
-        DateUtil dateUtil = DateUtil.getInstance().setToCurrent();
-        DateRangePickerDialog dialog = DateRangePickerDialog.newInstance(
-                getLabels().getPickDateHeading(),
-                getLabels().getDatepickerCancelOption(),
-                getLabels().getTodayDateOption(),
-                false,
-                startDate,
-                endDate,
-                dateUtil.getDate(),
-                dateUtil.addDays(92).getDate(),
+        new PracticeRequestAppointmentDialog(
+                this,
+                cancelString,
+                getLabels(),
+                startTime,
+                endTime,
+                appointmentResourcesDTO,
+                availabilityDTO,
+                visitTypeDTO,
                 this
-        );
-
-        dialog.show(ft, tag);
+        ).show();
     }
 
     @Override
@@ -124,11 +103,11 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     @Override
     public void onDateRangeCancelled() {
         String cancelString = getLabels().getAvailableHoursBack();
-        new PracticeAvailableHoursDialog(getContext(), cancelString, getLabels(), appointmentResourcesDTO, visitTypeDTO, getLinks().getAppointmentAvailability(), this, startDate, endDate).show();
+        new PracticeAvailableHoursDialog(getContext(), cancelString, getLabels(), appointmentResourcesDTO.getResource(), appointmentsResultModel, visitTypeDTO, getLinks().getAppointmentAvailability(), this, startDate, endDate).show();
     }
 
     @Override
-    public void onAppointmentRequested(String comments) {
+    public void requestAppointment(String startTime, String endTime, String comments) {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("language", getApplicationPreferences().getUserLanguage());
         queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
@@ -138,8 +117,8 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         JsonObject patientJSONObj = new JsonObject();
 
         patientJSONObj.addProperty("id", patientId);
-        appointmentJSONObj.addProperty("start_time", appointmentsSlotsDTO.getStartTime());
-        appointmentJSONObj.addProperty("end_time", appointmentsSlotsDTO.getEndTime());
+        appointmentJSONObj.addProperty("start_time", startTime);
+        appointmentJSONObj.addProperty("end_time", endTime);
         appointmentJSONObj.addProperty("appointment_status_id", "5");
         appointmentJSONObj.addProperty("location_id", availabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getLocation().getId());
         appointmentJSONObj.addProperty("provider_id", appointmentResourcesDTO.getResource().getProvider().getId());
@@ -157,7 +136,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     }
 
     @Override
-    public void onAppointmentCancelled() {
+    public void onAppointmentUnconfirmed() {
         onDateRangeCancelled();
     }
 
@@ -187,6 +166,8 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     @Override
     public void newAppointment() {
         Bundle bundle= new Bundle();
+        bundle.putString("titleLabel", getLabels().getPracticeListSelectProvider());
+        bundle.putString("continueButtonLabel", getLabels().getPracticeListContinue());
         DtoHelper.bundleDto(bundle, getLinks().getResourcesToSchedule());
 
         PracticeChooseProviderDialog fragment = new PracticeChooseProviderDialog();
@@ -202,6 +183,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     @Override
     public void selectVisitType(AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel) {
         this.appointmentResourcesDTO = appointmentResourcesDTO;
+        this.appointmentsResultModel = appointmentsResultModel;
 
         String tag = VisitTypeFragmentDialog.class.getSimpleName();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -220,21 +202,46 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
      * @param visitTypeDTO selected visit type from dialog
      */
     @Override
-    public void availableTimes(VisitTypeDTO visitTypeDTO, AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel) {
+    public void selectTime(VisitTypeDTO visitTypeDTO, AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel) {
         this.visitTypeDTO = visitTypeDTO;
 
         String cancelString = getLabels().getAvailableHoursBack();
-        new PracticeAvailableHoursDialog(getContext(), cancelString, getLabels(), appointmentResourcesDTO, visitTypeDTO, getLinks().getAppointmentAvailability(), this).show();
+        new PracticeAvailableHoursDialog(getContext(), cancelString, getLabels(), appointmentResourcesDTO.getResource(), appointmentsResultModel, visitTypeDTO, getLinks().getAppointmentAvailability(), this).show();
     }
 
     @Override
-    public void availableTimes(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource, AppointmentsResultModel appointmentsResultModel) {
+    public void selectTime(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource, AppointmentsResultModel appointmentsResultModel) {
 
     }
 
     @Override
-    public void selectDate(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource, AppointmentsResultModel appointmentsResultModel) {
+    public void selectDateRange(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource, AppointmentsResultModel appointmentsResultModel) {
+        String tag = DateRangePickerDialog.class.getSimpleName();
 
+        // DialogFragment.show() will take care of adding the fragment
+        // in a transaction.  We also want to remove any currently showing
+        // dialog, so make our own transaction and take care of that here.
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        DateUtil dateUtil = DateUtil.getInstance().setToCurrent();
+        DateRangePickerDialog dialog = DateRangePickerDialog.newInstance(
+                getLabels().getPickDateHeading(),
+                getLabels().getDatepickerCancelOption(),
+                getLabels().getTodayDateOption(),
+                false,
+                startDate,
+                endDate,
+                dateUtil.getDate(),
+                dateUtil.addDays(92).getDate(),
+                this
+        );
+
+        dialog.show(ft, tag);
     }
 
     protected abstract AppointmentLabelDTO getLabels();

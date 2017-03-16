@@ -133,7 +133,7 @@ public class VisitTypeFragmentDialog extends BaseDialogFragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 VisitTypeDTO selectedVisitType = visitTypeList.get(position);
                 dismiss();
-                callback.availableTimes(selectedVisitType, model, appointmentsResultModel);
+                callback.selectTime(selectedVisitType, model, appointmentsResultModel);
 
             }
         });
