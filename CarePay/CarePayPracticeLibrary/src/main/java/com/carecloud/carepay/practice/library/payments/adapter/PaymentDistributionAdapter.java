@@ -126,17 +126,17 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
 //            }
 //        });
 
-        holder.getClearButton().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                View rowLayout = holder.getRowLayout();
-                ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) rowLayout.getLayoutParams();
-                layoutParams.leftMargin = 0;
-                view.setVisibility(View.GONE);
-                rowLayout.setLayoutParams(layoutParams);
-                callback.editAmount(0D, balanceItem);
-            }
-        });
+//        holder.getClearButton().setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                View rowLayout = holder.getRowLayout();
+//                ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) rowLayout.getLayoutParams();
+//                layoutParams.leftMargin = 0;
+//                view.setVisibility(View.GONE);
+//                rowLayout.setLayoutParams(layoutParams);
+//                callback.editAmount(0D, balanceItem);
+//            }
+//        });
 
 //        final GestureDetectorCompat gestureDetector = new GestureDetectorCompat(context, new SwipeGestureDetector(balanceItem));
 //        holder.getRowLayout().setOnTouchListener(new View.OnTouchListener() {
@@ -160,6 +160,7 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
             }
         });
 
+        holder.setBalanceItem(balanceItem);
     }
 
     @Override
@@ -183,6 +184,8 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
         private View pickProviderButton;
         private View pickLocationButton;
         private View rowLayout;
+
+        private BalanceItemDTO balanceItem;
 
         public PaymentDistributionViewHolder(View itemView) {
             super(itemView);
@@ -276,6 +279,14 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
 
         public void setRowLayout(View rowLayout) {
             this.rowLayout = rowLayout;
+        }
+
+        public BalanceItemDTO getBalanceItem() {
+            return balanceItem;
+        }
+
+        public void setBalanceItem(BalanceItemDTO balanceItem) {
+            this.balanceItem = balanceItem;
         }
     }
 

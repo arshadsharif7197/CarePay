@@ -263,6 +263,10 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             PaymentsModel patientDetails = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
             if(patientDetails!=null){
 //                showResponsibilityDialog(patientDetails);
+
+                //need to add these as they do not return in this call
+                patientDetails.getPaymentPayload().setLocations(paymentsModel.getPaymentPayload().getLocations());
+                patientDetails.getPaymentPayload().setProviders(paymentsModel.getPaymentPayload().getProviders());
                 showPaymentDistributionDialog(patientDetails);
             }
 

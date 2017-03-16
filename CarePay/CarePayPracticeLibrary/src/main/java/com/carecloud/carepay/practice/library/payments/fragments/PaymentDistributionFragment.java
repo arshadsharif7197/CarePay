@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,9 +20,9 @@ import com.carecloud.carepay.practice.library.payments.adapter.PopupPickProvider
 import com.carecloud.carepay.practice.library.payments.adapter.PopupPickerAdapter;
 import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerWindow;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
-import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
@@ -269,6 +270,19 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
 
     private ItemTouchHelper.SimpleCallback swipeCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        private float MAX_DISTANCE = -1F;
+
+        @Override
+        public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+            if (viewHolder != null){
+                PaymentDistributionAdapter.PaymentDistributionViewHolder paymentViewHolder = (PaymentDistributionAdapter.PaymentDistributionViewHolder) viewHolder;
+                View rowLayout = paymentViewHolder.getRowLayout();
+
+//                getDefaultUIUtil().onSelected(rowLayout);
+            }
+        }
+
+
         @Override
         public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
             return false;
@@ -276,24 +290,84 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+//            PaymentDistributionAdapter.PaymentDistributionViewHolder paymentViewHolder = (PaymentDistributionAdapter.PaymentDistributionViewHolder) viewHolder;
+//            View clearButton = paymentViewHolder.getClearButton();
+//            View rowLayout = paymentViewHolder.getRowLayout();
+
+//            if(direction == ItemTouchHelper.LEFT) {
+//                showClearButton(clearButton, rowLayout);
+//            }else if (direction == ItemTouchHelper.RIGHT){
+//                hideClearButton(clearButton, rowLayout);
+//            }
+
+        }
+
+        @Override
+        public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float distanceX, float distanceY, int actionState, boolean isCurrentlyActive) {
+            PaymentDistributionAdapter.PaymentDistributionViewHolder paymentViewHolder = (PaymentDistributionAdapter.PaymentDistributionViewHolder) viewHolder;
+            View rowLayout = paymentViewHolder.getRowLayout();
+
+            distanceX = getMaxDistance(viewHolder, distanceX);
+
+//            drawBackground(viewHolder, distanceX, actionState);
+
+//            getDefaultUIUtil().onDraw(c, recyclerView, rowLayout, distanceX, distanceY, actionState, isCurrentlyActive);
+
+            rowLayout.setTranslationX(distanceX);
+
+            if(distanceX >= MAX_DISTANCE){
+                modifyLineItem(paymentViewHolder.getBalanceItem(), null, null, 0D);
+            }
+
+        }
+
+        @Override
+        public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder){
             PaymentDistributionAdapter.PaymentDistributionViewHolder paymentViewHolder = (PaymentDistributionAdapter.PaymentDistributionViewHolder) viewHolder;
             View clearButton = paymentViewHolder.getClearButton();
             View rowLayout = paymentViewHolder.getRowLayout();
 
-            if(direction == ItemTouchHelper.LEFT) {
-                showClearButton(clearButton, rowLayout);
-            }else if (direction == ItemTouchHelper.RIGHT){
-                hideClearButton(clearButton, rowLayout);
-            }
+//            clearButton.setRight(0);
 
+//            getDefaultUIUtil().clearView(rowLayout);
+        }
+
+
+        private void drawBackground(RecyclerView.ViewHolder viewHolder, float distanceX, int actionState) {
+            PaymentDistributionAdapter.PaymentDistributionViewHolder paymentViewHolder = (PaymentDistributionAdapter.PaymentDistributionViewHolder) viewHolder;
+            View clearButton = paymentViewHolder.getClearButton();
+
+            if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                //noinspection NumericCastThatLosesPrecision
+                clearButton.setRight((int) Math.max(distanceX, 0));
+            }
+        }
+
+        private float getMaxDistance(RecyclerView.ViewHolder viewHolder, float distanceX) {
+            if(MAX_DISTANCE < 0) {
+                PaymentDistributionAdapter.PaymentDistributionViewHolder paymentViewHolder = (PaymentDistributionAdapter.PaymentDistributionViewHolder) viewHolder;
+                View clearButton = paymentViewHolder.getClearButton();
+                MAX_DISTANCE = paymentViewHolder.getClearButton().getMeasuredWidth() * 2;
+            }
+            if(Math.abs(distanceX)<MAX_DISTANCE){
+                return distanceX;
+            }else{
+                if(distanceX<0) {
+                    return -MAX_DISTANCE;
+                }else{
+                    return MAX_DISTANCE;
+                }
+            }
         }
     };
 
 
-    private void showClearButton(View clearButton, View rowLyout){
+    private void showClearButton(View clearButton, View rowLayout){
         clearButton.setVisibility(View.VISIBLE);
         clearButton.measure(0, 0);
-        rowLyout.setLeft(-clearButton.getMeasuredWidth());
+        int width = clearButton.getMeasuredWidth();
+        float left = rowLayout.getTranslationX();
+        rowLayout.setTranslationX(left-width);
     }
 
     private void hideClearButton(View clearButton, View rowLayout){
