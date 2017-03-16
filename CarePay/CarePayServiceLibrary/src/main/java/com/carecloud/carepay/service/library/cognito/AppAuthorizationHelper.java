@@ -57,6 +57,7 @@ public class AppAuthorizationHelper {
     private String refreshToken;
     private String idToken;
     private String userAlias;
+    private String patientAlias;
 
     private TransitionDTO refreshTransition;
 
@@ -451,5 +452,13 @@ public class AppAuthorizationHelper {
 
     public void setRefreshTransition(TransitionDTO refreshTransition) {
         this.refreshTransition = refreshTransition;
+    }
+
+    public String getPatientAlias() {
+        return patientAlias;
+    }
+
+    public void setPatientAlias(String patientAlias) {
+        this.patientAlias = patientAlias;
     }
 }

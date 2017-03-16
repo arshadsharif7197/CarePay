@@ -75,7 +75,7 @@ public class WorkflowServiceHelper {
                     userAuthHeaders.put("Authorization", appAuthorizationHelper.getIdToken());
 
                     if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
-                        userAuthHeaders.put("username_patient", appAuthorizationHelper.getUserAlias());
+                        userAuthHeaders.put("username_patient", appAuthorizationHelper.getPatientAlias());
                     }
                 } else {
                     userAuthHeaders.put("Authorization", appAuthorizationHelper.getCurrSession().getIdToken().getJWTToken());
