@@ -716,9 +716,11 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
     public void onBackPressed() {
         super.onBackPressed();
         // log out previous user from Cognito
-        Log.v(this.getClass().getSimpleName(), "sign out Cognito");
-        getAppAuthorizationHelper().getPool().getUser().signOut();
-        getAppAuthorizationHelper().setUser(null);
+        if(!HttpConstants.isUseUnifiedAuth()) {
+            Log.v(this.getClass().getSimpleName(), "sign out Cognito");
+            getAppAuthorizationHelper().getPool().getUser().signOut();
+            getAppAuthorizationHelper().setUser(null);
+        }
         if (!(getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)){
             getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
         }
