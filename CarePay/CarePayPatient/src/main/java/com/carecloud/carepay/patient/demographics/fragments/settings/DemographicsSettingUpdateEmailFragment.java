@@ -186,7 +186,7 @@ public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
         if(!HttpConstants.isUseUnifiedAuth()) {
             userId = getAppAuthorizationHelper().getCurrUser();
         }else{
-            userId = getAppAuthorizationHelper().getUserAlias();
+            userId = getAppAuthorizationHelper().getCurrUser();
         }
 
         if (SystemUtil.isNotEmptyString(userId)) {

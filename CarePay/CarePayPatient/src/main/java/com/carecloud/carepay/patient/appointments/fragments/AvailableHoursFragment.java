@@ -459,12 +459,12 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
         patientDTO.setPatientId(addAppointmentPatientId);
         payloadDTO.setPatient(patientDTO);
 
-        ProviderDTO providersDTO;
+        AppointmentProviderDTO providersDTO;
         providersDTO = selectedResource.getProvider();
 
-        LocationDTO locationDTO = availabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getLocation();
+        AppointmentLocationsDTO locationDTO = availabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getLocation();
         if(locationDTO == null){
-            locationDTO = new LocationDTO();
+            locationDTO = new AppointmentLocationsDTO();
             AppointmentAddressDTO addressDTO = new AppointmentAddressDTO();
             locationDTO.setName(resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentsPlaceNameHeading());
             locationDTO.setAddress(addressDTO);
@@ -499,9 +499,7 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
         }
 
         setAdapters();
-
     }
-
 
     private List<LocationDTO> extractAvailableLocations(AppointmentAvailabilityDTO availabilityDTO){
         List<LocationDTO> locationsDTOs = new LinkedList<>();

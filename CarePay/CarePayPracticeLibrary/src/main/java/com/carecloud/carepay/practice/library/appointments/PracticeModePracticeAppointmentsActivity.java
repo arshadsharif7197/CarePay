@@ -66,6 +66,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     private CheckInLabelDTO checkInLabelDTO;
 
     private TwoColumnPatientListView patientListView;
+    private boolean needsToConfirmAppointmentCreation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,18 +124,20 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     private void initializeViews() {
-        TextView practicePaymentFindPatientTextView = (TextView) findViewById(R.id.practice_find_patient);
-        practicePaymentFindPatientTextView.setOnClickListener(getPracticePaymentFindPatientTextViewListener());
+        TextView findPatientTextView = (TextView) findViewById(R.id.practice_find_patient);
+        findPatientTextView.setOnClickListener(getFindPatientListener(true));
+
+        TextView addAppointmentTextView = (TextView) findViewById(R.id.activity_practice_appointments_add);
+        addAppointmentTextView.setOnClickListener(getFindPatientListener(false));
 
         if (checkInLabelDTO != null) {
-            setTextViewById(R.id.practice_title, checkInLabelDTO.getActivityHeading());
             setTextViewById(R.id.practice_go_back, checkInLabelDTO.getGoBack());
             setTextViewById(R.id.activity_practice_appointments_change_date_range_label, checkInLabelDTO.getChangeDateRangeLabel());
             setTextViewById(R.id.activity_practice_appointments_show_all_appointments_label, checkInLabelDTO.getAllAppointmentsLabel());
             setTextViewById(R.id.practice_patient_count_label, checkInLabelDTO.getTodayLabel());
             setTextViewById(R.id.practice_pending_count_label, checkInLabelDTO.getPendingLabel());
             setTextViewById(R.id.practice_filter_label, checkInLabelDTO.getPracticeCheckinFilter());
-            practicePaymentFindPatientTextView.setText(checkInLabelDTO.getPracticeCheckinFilterFindPatient());
+            findPatientTextView.setText(checkInLabelDTO.getPracticeCheckinFilterFindPatient());
         }
 
         findViewById(R.id.practice_go_back).setOnClickListener(new View.OnClickListener() {
@@ -303,13 +306,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         this.startDate = start;
         this.endDate = end;
 
-        TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getPracticeAppointments();
-
-        Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("start_date", DateUtil.getInstance().setDate(startDate).toStringWithFormatYyyyDashMmDashDd());
-        queryMap.put("end_date", DateUtil.getInstance().setDate(endDate).toStringWithFormatYyyyDashMmDashDd());
-
-        getWorkflowServiceHelper().execute(transitionDTO, allAppointmentsServiceCallback, queryMap);
+        onAppointmentRequestSuccess();
     }
 
     @Override
@@ -317,11 +314,13 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     }
 
-    private View.OnClickListener getPracticePaymentFindPatientTextViewListener() {
+    private View.OnClickListener getFindPatientListener(final boolean needsConfirmation) {
         return new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
+                needsToConfirmAppointmentCreation = needsConfirmation;
+
                 TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getFindPatient();
 
                 FindPatientDialog findPatientDialog = new FindPatientDialog(getContext(),
@@ -337,6 +336,16 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         return new FindPatientDialog.OnItemClickedListener() {
             @Override
             public void onItemClicked(PatientModel patient) {
+                setPatientId(patient.getPatientId());
+
+                if (needsToConfirmAppointmentCreation) {
+                    getPatientBalances(patient);
+                } else {
+                    newAppointment();
+                }
+            }
+
+            private void getPatientBalances(PatientModel patient) {
                 Map<String, String> queryMap = new HashMap<>();
                 queryMap.put("patient_id", patient.getPatientId());
 
@@ -569,7 +578,25 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void onAppointmentRequestSuccess() {
+        TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getPracticeAppointments();
 
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("start_date", getFormattedDate(startDate));
+        queryMap.put("end_date", getFormattedDate(endDate));
+
+        getWorkflowServiceHelper().execute(transitionDTO, allAppointmentsServiceCallback, queryMap);
+    }
+
+    private String getFormattedDate(Date date) {
+        DateUtil dateUtil = DateUtil.getInstance();
+
+        if (date == null) {
+            dateUtil = dateUtil.setToCurrent();
+        } else {
+            dateUtil = dateUtil.setDate(date);
+        }
+
+        return dateUtil.toStringWithFormatYyyyDashMmDashDd();
     }
 
     @Override

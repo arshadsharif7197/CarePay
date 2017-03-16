@@ -826,14 +826,16 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         }
         demographicDTO.getPayload().getDemographics().getPayload().setPersonalDetails(demographicPersDetailsPayloadDTO);
 
-        // save id doc
-        if (demographicIdDocPayloadDTO == null) {
-            demographicIdDocPayloadDTO = new DemographicIdDocPayloadDTO();
-        }
+//        // save id doc
+//        if (demographicIdDocPayloadDTO == null) {
+//            demographicIdDocPayloadDTO = new DemographicIdDocPayloadDTO();
+//        }
 
-        List<DemographicIdDocPayloadDTO> ids = new ArrayList<>();
-        ids.add(demographicIdDocPayloadDTO);
-        demographicDTO.getPayload().getDemographics().getPayload().setIdDocuments(ids);
+        if(demographicIdDocPayloadDTO !=null && demographicIdDocPayloadDTO.getIdType()!=null) {
+            List<DemographicIdDocPayloadDTO> ids = new ArrayList<>();
+            ids.add(demographicIdDocPayloadDTO);
+            demographicDTO.getPayload().getDemographics().getPayload().setIdDocuments(ids);
+        }
 
         // save address
         if (demographicAddressPayloadDTO == null) {
@@ -1221,15 +1223,15 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             allFieldsValid = false;
         }
 
-        if(!globalLabelsMetaDTO.getDemographicsChooseLabel().equals(stateEditText.getText().toString())){
-            cityLabel.setError(null);
-            cityLabel.setErrorEnabled(false);
-        } else {
-            final String stateError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.state.validations.get(0).getErrorMessage();
-            stateEditText.setError(stateError);
-            stateEditText.requestFocus();
-            allFieldsValid = false;
-        }
+//        if(!globalLabelsMetaDTO.getDemographicsChooseLabel().equals(stateEditText.getText().toString())){
+//            cityLabel.setError(null);
+//            cityLabel.setErrorEnabled(false);
+//        } else {
+//            final String stateError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.state.validations.get(0).getErrorMessage();
+//            stateEditText.setError(stateError);
+//            stateEditText.requestFocus();
+//            allFieldsValid = false;
+//        }
         enableButton(allFieldsValid);
 
         return allFieldsValid;

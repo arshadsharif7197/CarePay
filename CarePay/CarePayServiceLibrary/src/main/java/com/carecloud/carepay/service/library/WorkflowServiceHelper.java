@@ -73,25 +73,22 @@ public class WorkflowServiceHelper {
                 userAuthHeaders.put("username", applicationMode.getUserPracticeDTO().getUserName());
                 if (HttpConstants.isUseUnifiedAuth()) {
                     userAuthHeaders.put("Authorization", appAuthorizationHelper.getIdToken());
-
-                    if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
-                        userAuthHeaders.put("username_patient", appAuthorizationHelper.getUserAlias());
-                    }
                 } else {
                     userAuthHeaders.put("Authorization", appAuthorizationHelper.getCurrSession().getIdToken().getJWTToken());
+                }
 
-                    if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
-                        userAuthHeaders.put("username_patient", appAuthorizationHelper.getCurrUser());
-                    }
+                if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+                    userAuthHeaders.put("username_patient", appAuthorizationHelper.getCurrUser());
                 }
 
             } else {
+                userAuthHeaders.put("username", appAuthorizationHelper.getCurrUser());
+
                 if (HttpConstants.isUseUnifiedAuth()) {
                     userAuthHeaders.put("Authorization", appAuthorizationHelper.getIdToken());
-                    userAuthHeaders.put("username", appAuthorizationHelper.getUserAlias());
 
                 } else if (!isNullOrEmpty(appAuthorizationHelper.getCurrUser())) {//this is the old way
-                    userAuthHeaders.put("username", appAuthorizationHelper.getCurrUser());
+
                     if (appAuthorizationHelper.getCurrSession() != null && !isNullOrEmpty(appAuthorizationHelper.getCurrSession().getIdToken().getJWTToken())) {
                         userAuthHeaders.put("Authorization", appAuthorizationHelper.getCurrSession().getIdToken().getJWTToken());
                     }

@@ -75,7 +75,6 @@ public class AppointmentsListFragment extends BaseFragment {
 
     private AppointmentNavigationCallback callback;
 
-
     @Override
     public void onAttach(Context context){
         super.onAttach(context);
@@ -83,16 +82,6 @@ public class AppointmentsListFragment extends BaseFragment {
             callback = (AppointmentNavigationCallback) context;
         }catch (ClassCastException cce){
             throw new ClassCastException("Attached context must implement AppointmentNavigationCallback");
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if(RequestAppointmentDialog.isAppointmentAdded){
-            refreshAppointmentList();
-            showAppointmentConfirmation();
-            RequestAppointmentDialog.isAppointmentAdded = false;
         }
     }
 
@@ -133,7 +122,6 @@ public class AppointmentsListFragment extends BaseFragment {
 
         //Fetch appointment data
         loadAppointmentList();
-
     }
 
     private void init() {
@@ -456,7 +444,10 @@ public class AppointmentsListFragment extends BaseFragment {
         });
     }
 
-    private void refreshAppointmentList() {
+    /**
+     * Reload appointment list
+     */
+    public void refreshAppointmentList() {
         if (appointmentsItems != null) {
             appointmentsItems.clear();
         }
@@ -496,7 +487,6 @@ public class AppointmentsListFragment extends BaseFragment {
                 Gson gson = new Gson();
                 appointmentInfo = gson.fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
                 loadAppointmentList();
-//                checkUpcomingAppointments();
             }
         }
 
@@ -598,19 +588,6 @@ public class AppointmentsListFragment extends BaseFragment {
         }
         return appointmentListWithHeader;
     }
-
-    private void showAppointmentConfirmation() {
-        String appointmentRequestSuccessMessage = "";
-
-        if (appointmentInfo != null) {
-            appointmentRequestSuccessMessage = appointmentInfo.getMetadata().getLabel()
-                    .getAppointmentRequestSuccessMessage();
-        }
-
-        PatientAppUtil.showSuccessToast(getContext(), appointmentRequestSuccessMessage );
-
-    }
-
 
     private WorkflowServiceCallback preRegisterCallback = new WorkflowServiceCallback() {
         @Override
