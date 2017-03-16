@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 
 import java.util.List;
@@ -17,11 +18,9 @@ import java.util.List;
 
 public class VisitTypeListAdapter extends BaseAdapter {
 
-    private Context context;
     private List<VisitTypeDTO> listItems;
 
     public VisitTypeListAdapter(Context context, List<VisitTypeDTO> items) {
-        this.context = context;
         this.listItems = items;
     }
 
@@ -45,7 +44,7 @@ public class VisitTypeListAdapter extends BaseAdapter {
         VisitTypeListHolder holder;
         if (view == null) {
             view = LayoutInflater.from(viewGroup.getContext()).inflate(
-                    com.carecloud.carepaylibrary.R.layout.dialog_visit_type_list_item, viewGroup, false);
+                    R.layout.dialog_visit_type_list_item, viewGroup, false);
 
             holder = new VisitTypeListHolder();
             holder.type = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.visitTypeListItem);
