@@ -13,7 +13,7 @@ import com.carecloud.carepaylibray.base.IApplicationSession;
  * Created by pjohnson on 15/03/17.
  */
 
-public abstract class CarePlayApplication extends MultiDexApplication implements IApplicationSession {
+public abstract class CarePayApplication extends MultiDexApplication implements IApplicationSession {
 
     private ApplicationPreferences applicationPreferences;
     private WorkflowServiceHelper workflowServiceHelper;

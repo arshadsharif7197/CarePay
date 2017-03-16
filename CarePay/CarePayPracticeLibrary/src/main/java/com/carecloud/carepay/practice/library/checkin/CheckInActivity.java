@@ -20,7 +20,6 @@ import com.carecloud.carepay.practice.library.checkin.dialog.AppointmentDetailDi
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.CheckInLabelDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.CustomFilterPopupWindow;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountReceiptDialog;
@@ -30,15 +29,15 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.LocationDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.ProviderDTO;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
-import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.payments.models.ProviderDTO;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -71,21 +70,17 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
     CarePayTextView goBackTextview;
     CarePayTextView filterOnTextView;
     CarePayTextView filterTextView;
-    CarePayTextView checkingInTextView;
-    CarePayTextView waitingRoomTextView;
     CarePayTextView checkingInCounterTextview;
     CarePayTextView waitingCounterTextview;
     private boolean isFilterOn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-
         checkInDTO = getConvertedDTO(CheckInDTO.class);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_check_in);
-        patientFiltered=false;
+        patientFiltered = false;
         this.context = this;
         setNavigationBarVisibility();
         initializationView();
@@ -96,8 +91,6 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         goBackTextview = (CarePayTextView) findViewById(R.id.goBackTextview);
         filterOnTextView = (CarePayTextView) findViewById(R.id.filterOnTextView);
         filterTextView = (CarePayTextView) findViewById(R.id.filterTextView);
-        checkingInTextView = (CarePayTextView) findViewById(R.id.checkingInTextView);
-        waitingRoomTextView = (CarePayTextView) findViewById(R.id.waitingRoomTextView);
         checkingInCounterTextview = (CarePayTextView) findViewById(R.id.checkingInCounterTextview);
         waitingCounterTextview = (CarePayTextView) findViewById(R.id.waitingCounterTextview);
 
@@ -118,23 +111,6 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
 
         goBackTextview.setOnClickListener(onGobackButtonClick());
         findViewById(R.id.filterLayout).setOnClickListener(onFilterIconClick());
-
-        setLabels();
-
-    }
-
-    private void setLabels() {
-        CheckInLabelDTO checkInLabelDTO = checkInDTO.getMetadata().getLabel();
-        if (checkInLabelDTO != null) {
-            goBackTextview.setText(checkInLabelDTO.getGoBack());
-            filterOnTextView.setText(checkInLabelDTO.getPracticeCheckinFilterOn());
-            filterTextView.setText(checkInLabelDTO.getPracticeCheckinFilter());
-            checkingInTextView.setText(checkInLabelDTO.getPracticeCheckinDetailDialogCheckingIn().toUpperCase());
-            waitingRoomTextView.setText(checkInLabelDTO.getPracticeCheckinWaitingRoom().toUpperCase());
-            checkingInCounterTextview.setText("0");
-            waitingCounterTextview.setText("0");
-            ((TextView) findViewById(R.id.drop_here_icon)).setText(checkInLabelDTO.getPracticeCheckinDropHereLabel());
-        }
     }
 
     @NonNull
@@ -157,19 +133,12 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CheckInLabelDTO checkInLabelDTO = checkInDTO.getMetadata().getLabel();
                 CustomFilterPopupWindow customFilterPopupWindow = new CustomFilterPopupWindow(
                         CheckInActivity.this, findViewById(R.id.activity_checked_in),
                         filterableDoctorLocationList, patientList, searchedPatientList);
-
-                if (checkInLabelDTO != null) {
-                    customFilterPopupWindow.setTitle(StringUtil.getFormatedLabal(
-                            CheckInActivity.this, checkInLabelDTO.getPracticeCheckinFilter()));
-                    customFilterPopupWindow.setSearchHint(StringUtil.getFormatedLabal(
-                            CheckInActivity.this, checkInLabelDTO.getPracticeCheckinFilterFindPatientByName()));
-                    customFilterPopupWindow.setClearFiltersButtonText(StringUtil.getFormatedLabal(
-                            CheckInActivity.this, checkInLabelDTO.getPracticeCheckinFilterClearFilters()));
-                }
+                customFilterPopupWindow.setTitle(Label.getLabel("practice_checkin_filter"));
+                customFilterPopupWindow.setSearchHint(Label.getLabel("practice_checkin_filter_find_patient_by_name"));
+                customFilterPopupWindow.setClearFiltersButtonText(Label.getLabel("practice_checkin_filter_clear_filters"));
                 customFilterPopupWindow.showPopWindow();
                 customFilterPopupWindow.showClearFilterButton(isFilterOn);
             }
@@ -228,12 +197,9 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
     private void setFilterableData(ArrayList<FilterDataDTO> doctorsList, ArrayList<FilterDataDTO> locationsList) {
         applyFilterSortByName(doctorsList);
         applyFilterSortByName(locationsList);
-
-        CheckInLabelDTO checkInLabelDTO = checkInDTO.getMetadata().getLabel();
-
-        filterableDoctorLocationList.add(new FilterDataDTO(checkInLabelDTO.getPracticeCheckinFilterDoctors()));
+        filterableDoctorLocationList.add(new FilterDataDTO(Label.getLabel("practice_checkin_filter_doctors", "Doctors")));
         filterableDoctorLocationList.addAll(doctorsList);
-        filterableDoctorLocationList.add(new FilterDataDTO(checkInLabelDTO.getPracticeCheckinFilterLocations()));
+        filterableDoctorLocationList.add(new FilterDataDTO(Label.getLabel("practice_checkin_filter_locations", "Locations")));
         filterableDoctorLocationList.addAll(locationsList);
     }
 
@@ -361,8 +327,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
                         checkingInCounterTextview.setText(String.valueOf(checkingInAppointments.size()));
                         waitingCounterTextview.setText(String.valueOf(waitingRoomAppointments.size()));
 
-                        CheckInLabelDTO checkInLabelDTO = checkInDTO.getMetadata().getLabel();
-                        ((TextView) findViewById(R.id.drop_here_icon)).setText(checkInLabelDTO.getPracticeCheckinSuccessLabel());
+                        ((TextView) findViewById(R.id.drop_here_icon)).setText(Label.getLabel("practice_checkin_success_label"));
                         ((TextView) findViewById(R.id.drop_here_icon)).setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icn_check, 0, 0);
                         onCheckInAppointment(appointmentDTO);
                     }
@@ -384,7 +349,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
             queryMap.put("practice_mgmt", checkInDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeMgmt());
             queryMap.put("practice_id", checkInDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeId());
         }
-        queryMap.put("appointment_id" , appointmentDTO.getId());
+        queryMap.put("appointment_id", appointmentDTO.getId());
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getCheckinAppointment();
         getWorkflowServiceHelper().execute(transitionDTO, checkInAppointmentCallback, queryMap);
     }
@@ -401,8 +366,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
             findViewById(R.id.drop_down_area_view).setVisibility(View.GONE);
 
             // Reset to original state
-            CheckInLabelDTO checkInLabelDTO = checkInDTO.getMetadata().getLabel();
-            ((TextView) findViewById(R.id.drop_here_icon)).setText(checkInLabelDTO.getPracticeCheckinDropHereLabel());
+            ((TextView) findViewById(R.id.drop_here_icon)).setText(Label.getLabel("practice_checkin_drop_here_label"));
             ((TextView) findViewById(R.id.drop_here_icon)).setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icn_drop_here, 0, 0);
         }
 
@@ -478,7 +442,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
     private PendingBalanceDTO getPatientBalanceDTOs(String patientId) {
         List<PatientBalanceDTO> patientBalances = checkInDTO.getPayload().getPatientBalances();
 
-        for (PatientBalanceDTO patientBalanceDTO: patientBalances) {
+        for (PatientBalanceDTO patientBalanceDTO : patientBalances) {
             PendingBalanceDTO pendingBalanceDTO = patientBalanceDTO.getBalances().get(0);
             if (pendingBalanceDTO.getMetadata().getPatientId().equals(patientId)) {
                 return pendingBalanceDTO;
@@ -501,17 +465,19 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
 
     /**
      * if patients was filtered by provider or location set TRUE or FALSE
+     *
      * @param patientFiltered true or false if patient screen state on filterpopup
      */
-    public void setPatientFiltered(boolean patientFiltered){
-        this.patientFiltered=patientFiltered;
+    public void setPatientFiltered(boolean patientFiltered) {
+        this.patientFiltered = patientFiltered;
     }
 
     /**
      * patients was filtered flag
+     *
      * @return if patient was filtered by provider or location
      */
-    public boolean isPatientFiltered(){
+    public boolean isPatientFiltered() {
         return this.patientFiltered;
     }
 
@@ -536,7 +502,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
 
     @Override
     public void onPaymentMethodAction(String selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
-        if(paymentsModel.getPaymentPayload().getPatientCreditCards()!=null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()){
+        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             Gson gson = new Gson();
             Bundle args = new Bundle();
             String paymentsDTOString = gson.toJson(paymentsModel);

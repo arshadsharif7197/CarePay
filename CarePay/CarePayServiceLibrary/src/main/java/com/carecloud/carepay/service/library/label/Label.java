@@ -27,6 +27,15 @@ public class Label {
     }
 
     /**
+     * static method to retrieve a label
+     * @param key label key
+     * @return a String containing the label value, if doesnt exist returns defaultValue
+     */
+    public static String getLabel(String key, String defaultValue) {
+        return getLabelProvider().getValue(key, defaultValue);
+    }
+
+    /**
      * static method to know if a label exists
      * @param key label key
      * @return true if the label exists, false if not
