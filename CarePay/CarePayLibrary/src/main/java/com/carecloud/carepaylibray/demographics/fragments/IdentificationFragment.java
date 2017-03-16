@@ -1,6 +1,5 @@
 package com.carecloud.carepaylibray.demographics.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -12,6 +11,7 @@ import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemIdDocDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
+import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 
@@ -28,10 +28,10 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment {
         setHeaderTitle(demographicDTO.getMetadata().getLabels().getDemographicsReviewIdentification(), view);
         initNextButton(demographicDTO.getMetadata().getLabels().getDemographicsReviewNextButton(), null, view);
         stepProgressBar.setCurrentProgressDot(3);
-
         initialiseChildFragment(demographicDTO.getMetadata().getLabels(),
                 demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(0),
                 demographicDTO.getMetadata().getDataModels().demographic.identityDocuments.properties.items.identityDocument);
+        checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 4);
         return view;
     }
 

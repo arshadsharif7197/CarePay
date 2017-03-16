@@ -485,7 +485,9 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
         if(signInDTO.isValidUser()){
             Gson gson = new Gson();
             getWorkflowServiceHelper().execute(signIn, unifiedLoginCallback, gson.toJson(signInDTO), queryParams, headers);
-            getAppAuthorizationHelper().setUserAlias(userName);// This must be set after the signin call is executed
+            if(getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
+                getAppAuthorizationHelper().setUserAlias(userName);// This must be set after the signin call is executed
+            }
         }
     }
 

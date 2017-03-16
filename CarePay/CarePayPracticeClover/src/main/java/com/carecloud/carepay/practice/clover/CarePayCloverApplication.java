@@ -1,4 +1,4 @@
-package com.carecloud.carepay.practice.tablet;
+package com.carecloud.carepay.practice.clover;
 
 import android.app.Activity;
 import android.app.Application;
@@ -14,13 +14,14 @@ import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
+import com.carecloud.carepaylibray.CarePlayApplication;
 import com.carecloud.carepaylibray.base.IApplicationSession;
 
 /**
  * Created by Jahirul Bhuiyan on 10/24/2016.
  */
 
-public class CarePayApplication extends Application
+public class CarePayCloverApplication extends CarePlayApplication
         implements Application.ActivityLifecycleCallbacks, IApplicationSession {
 
     private ApplicationPreferences applicationPreferences;
@@ -31,21 +32,14 @@ public class CarePayApplication extends Application
     @Override
     public void onCreate() {
         super.onCreate();
-        start();
-    }
-
-    /**
-     * init app
-     */
-    public void start(){
         setHttpConstants();
         registerActivityLifecycleCallbacks(this);
     }
 
     private void setHttpConstants() {
-        DeviceIdentifierDTO deviceIdentifierDTO=new DeviceIdentifierDTO();
+        DeviceIdentifierDTO deviceIdentifierDTO = new DeviceIdentifierDTO();
         deviceIdentifierDTO.setDeviceIdentifier(Settings.Secure.ANDROID_ID);
-        deviceIdentifierDTO.setDeviceType("Android");
+        deviceIdentifierDTO.setDeviceType("Clover");
         deviceIdentifierDTO.setDeviceSystemVersion(Build.VERSION.RELEASE);
         HttpConstants.setDeviceInformation(deviceIdentifierDTO);
         HttpConstants.setApiBaseUrl(BuildConfig.API_BASE_URL);
@@ -86,7 +80,7 @@ public class CarePayApplication extends Application
 
     @Override
     public void onActivityDestroyed(Activity activity) {
-        if(activity instanceof SigninActivity) {
+        if (activity instanceof SigninActivity) {
             // log out previous user from Cognito
             Log.v(this.getClass().getSimpleName(), "sign out Cognito");
             //getAppAuthorizationHelper().getPool().getUser().signOut();

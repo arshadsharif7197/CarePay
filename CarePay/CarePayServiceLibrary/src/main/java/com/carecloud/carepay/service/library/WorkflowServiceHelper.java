@@ -1,5 +1,6 @@
 package com.carecloud.carepay.service.library;
 
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
@@ -9,13 +10,19 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.RefreshDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepay.service.library.platform.AndroidPlatform;
+import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -64,13 +71,13 @@ public class WorkflowServiceHelper {
                     applicationMode.getUserPracticeDTO() != null) {
 
                 userAuthHeaders.put("username", applicationMode.getUserPracticeDTO().getUserName());
-                if(HttpConstants.isUseUnifiedAuth()){
+                if (HttpConstants.isUseUnifiedAuth()) {
                     userAuthHeaders.put("Authorization", appAuthorizationHelper.getIdToken());
 
                     if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
                         userAuthHeaders.put("username_patient", appAuthorizationHelper.getUserAlias());
                     }
-                }else {
+                } else {
                     userAuthHeaders.put("Authorization", appAuthorizationHelper.getCurrSession().getIdToken().getJWTToken());
 
                     if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
@@ -79,11 +86,11 @@ public class WorkflowServiceHelper {
                 }
 
             } else {
-                if(HttpConstants.isUseUnifiedAuth()){
+                if (HttpConstants.isUseUnifiedAuth()) {
                     userAuthHeaders.put("Authorization", appAuthorizationHelper.getIdToken());
                     userAuthHeaders.put("username", appAuthorizationHelper.getUserAlias());
 
-                }else if (!isNullOrEmpty(appAuthorizationHelper.getCurrUser())) {//this is the old way
+                } else if (!isNullOrEmpty(appAuthorizationHelper.getCurrUser())) {//this is the old way
                     userAuthHeaders.put("username", appAuthorizationHelper.getCurrUser());
                     if (appAuthorizationHelper.getCurrSession() != null && !isNullOrEmpty(appAuthorizationHelper.getCurrSession().getIdToken().getJWTToken())) {
                         userAuthHeaders.put("Authorization", appAuthorizationHelper.getCurrSession().getIdToken().getJWTToken());
@@ -122,7 +129,7 @@ public class WorkflowServiceHelper {
     public Map<String, String> getApplicationStartHeaders() {
         Map<String, String> appStartHeaders = new HashMap<>();
         appStartHeaders.put("x-api-key", HttpConstants.getApiStartKey());
-        if( applicationPreferences.getUserLanguage().isEmpty()) {
+        if (applicationPreferences.getUserLanguage().isEmpty()) {
             appStartHeaders.put("Accept-Language", "en");
         } else {
             appStartHeaders.put("Accept-Language", applicationPreferences.getUserLanguage());
@@ -133,9 +140,9 @@ public class WorkflowServiceHelper {
     /**
      * @return map with language header
      */
-    public  Map<String, String> getPreferredLanguageHeader(){
+    public Map<String, String> getPreferredLanguageHeader() {
         Map<String, String> prefredLanguage = new HashMap<>();
-        if( applicationPreferences.getUserLanguage().isEmpty()) {
+        if (applicationPreferences.getUserLanguage().isEmpty()) {
             prefredLanguage.put("Accept-Language", "en");
         } else {
             prefredLanguage.put("Accept-Language", applicationPreferences.getUserLanguage());
@@ -213,7 +220,7 @@ public class WorkflowServiceHelper {
             } else {
                 call = workflowService.executeGet(transitionDTO.getUrl());
             }
-        } else if (transitionDTO.isPost()){
+        } else if (transitionDTO.isPost()) {
             if (jsonBody != null && queryMap == null) {
                 call = workflowService.executePost(transitionDTO.getUrl(), jsonBody);
             } else if (jsonBody == null && queryMap != null) {
@@ -282,10 +289,29 @@ public class WorkflowServiceHelper {
 
             private void onResponseOk(Response<WorkflowDTO> response) throws IOException {
                 WorkflowDTO workflowDTO = response.body();
+                // This is temporary. We should use an exclusive service for labels
+                // in order to retrieve them and save them only once.
+                // TODO: errase this code when that service exists
+                saveLabels(workflowDTO);
                 if (workflowDTO != null && !isNullOrEmpty(workflowDTO.getState())) {
                     callback.onPostExecute(response.body());
                 } else {
                     onFailure(response);
+                }
+            }
+
+            private void saveLabels(WorkflowDTO workflowDTO) {
+                //TODO: this should change after the creation of the Label service
+                JsonObject labels = workflowDTO.getMetadata().getAsJsonObject("labels");
+                String state = workflowDTO.getState();
+                boolean contains = ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences().contains("labelFor" + state);
+                if (labels != null && !contains) {
+                    Set<Map.Entry<String, JsonElement>> set = labels.entrySet();
+                    for (Map.Entry<String, JsonElement> entry : set) {
+                        Label.putLabel(entry.getKey(), entry.getValue().getAsString());
+                    }
+                    SharedPreferences.Editor editor = ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences().edit();
+                    editor.putBoolean("labelFor" + state, true).apply();
                 }
             }
 
@@ -294,7 +320,7 @@ public class WorkflowServiceHelper {
                     onFailure(response);
                 } else if (!HttpConstants.isUseUnifiedAuth() && !appAuthorizationHelper.refreshToken(getCognitoActionCallback(transitionDTO, callback, jsonBody, queryMap, headers))) {
                     callback.onFailure("No User found to refresh token");
-                } else if (HttpConstants.isUseUnifiedAuth()){
+                } else if (HttpConstants.isUseUnifiedAuth()) {
                     executeRefreshTokenRequest(getRefreshTokenCallback(transitionDTO, callback, jsonBody, queryMap, headers));
                 }
             }
@@ -371,7 +397,7 @@ public class WorkflowServiceHelper {
                 Gson gson = new Gson();
                 String signInResponseString = gson.toJson(workflowDTO);
                 UnifiedSignInResponse signInResponse = gson.fromJson(signInResponseString, UnifiedSignInResponse.class);
-                if(signInResponse != null) {
+                if (signInResponse != null) {
                     UnifiedAuthenticationTokens authTokens = signInResponse.getPayload().getPracticeModeAuth().getCognito().getAuthenticationTokens();
                     appAuthorizationHelper.setAuthorizationTokens(authTokens);
                 }

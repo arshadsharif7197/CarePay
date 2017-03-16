@@ -262,6 +262,14 @@ public class AppointmentLabelDTO implements Serializable {
     @Expose
     private String appointmentScheduleNewButton;
 
+    @SerializedName("practice_list_select_a_provider")
+    @Expose
+    private String practiceListSelectProvider;
+
+    @SerializedName("practice_list_continue")
+    @Expose
+    private String practiceListContinue;
+
     public String getAppointmentRequestCheckoutNow() {
         return StringUtil.getLabelForView(appointmentRequestCheckoutNow);
     }
@@ -1314,5 +1322,13 @@ public class AppointmentLabelDTO implements Serializable {
 
     public void setAppointmentScheduleNewButton(String appointmentScheduleNewButton) {
         this.appointmentScheduleNewButton = appointmentScheduleNewButton;
+    }
+
+    public String getPracticeListSelectProvider() {
+        return StringUtil.getLabelForView(practiceListSelectProvider);
+    }
+
+    public String getPracticeListContinue() {
+        return StringUtil.getLabelForView(practiceListContinue);
     }
 }
