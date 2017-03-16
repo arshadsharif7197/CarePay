@@ -24,7 +24,6 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
@@ -237,14 +236,6 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
     }
 
     private void getPersonalDetails() {
-        String userId ;
-
-        if(!HttpConstants.isUseUnifiedAuth()) {
-            userId = getAppAuthorizationHelper().getCurrUser();
-        }else{
-            userId = getAppAuthorizationHelper().getUserAlias();
-        }
-
         if (demographicsSettingsDTO != null) {
             DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
             if (demographicsSettingsPayloadDTO != null) {

@@ -3,40 +3,27 @@ package com.carecloud.carepaylibray.customdialogs;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.google.gson.JsonObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
-
-    public interface RequestAppointmentCallback{
-        void onAppointmentRequestSuccess();
-    }
 
     private Context context;
     private LinearLayout mainLayout;
     private AppointmentsResultModel appointmentsResultModel;
     private AppointmentDTO appointmentDTO;
-    public static boolean isAppointmentAdded = false;
 
-    private RequestAppointmentCallback callback;
+    private AppointmentNavigationCallback callback;
 
     /**
      * Constructor.
@@ -51,13 +38,12 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         this.context = context;
         this.appointmentDTO = appointmentDTO;
         this.appointmentsResultModel = appointmentsResultModel;
-        isAppointmentAdded=false;
         setupCallback();
     }
 
     private void setupCallback(){
         try{
-            callback = (RequestAppointmentCallback) context;
+            callback = (AppointmentNavigationCallback) context;
         }catch (ClassCastException cce){
             throw new ClassCastException("Provided Context must implement RequestAppointmentCallback");
         }
@@ -105,62 +91,8 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         super.onClick(view);
         int viewId = view.getId();
         if (viewId == R.id.requestAppointmentButton) {
-            onRequestAppointment();
-        }
-    }
-
-    /**
-     * call make_appointment api.
-     */
-    private void onRequestAppointment() {
-
-        Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("language", ((ISession) context).getApplicationPreferences().getUserLanguage());
-        queryMap.put("practice_mgmt", appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getPractice().getPracticeMgmt());
-        queryMap.put("practice_id", appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getPractice().getPracticeId());
-
-        JsonObject appointmentJSONObj = new JsonObject();
-        JsonObject patientJSONObj = new JsonObject();
-
-        patientJSONObj.addProperty("id", appointmentDTO.getPayload().getPatient().getPatientId());
-        appointmentJSONObj.addProperty("start_time", appointmentDTO.getPayload().getStartTime());
-        appointmentJSONObj.addProperty("end_time", appointmentDTO.getPayload().getEndTime());
-        appointmentJSONObj.addProperty("appointment_status_id", "5");
-        appointmentJSONObj.addProperty("location_id", appointmentDTO.getPayload().getLocation().getId());
-        appointmentJSONObj.addProperty("provider_id", appointmentDTO.getPayload().getProviderId());
-        appointmentJSONObj.addProperty("visit_reason_id", appointmentDTO.getPayload().getVisitReasonId());
-        appointmentJSONObj.addProperty("resource_id", appointmentDTO.getPayload().getResourceId());
-        appointmentJSONObj.addProperty("chief_complaint", appointmentDTO.getPayload().getChiefComplaint().toString());
-        appointmentJSONObj.addProperty("comments", "");
-        appointmentJSONObj.add("patient", patientJSONObj);
-
-        JsonObject makeAppointmentJSONObj = new JsonObject();
-        makeAppointmentJSONObj.add("appointment", appointmentJSONObj);
-
-        TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getMakeAppointment();
-
-        ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, getMakeAppointmentCallback,makeAppointmentJSONObj.toString(), queryMap);
-    }
-
-    private WorkflowServiceCallback getMakeAppointmentCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            ((ISession) context).showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            ((ISession) context).hideProgressDialog();
-            isAppointmentAdded = true;
             dismiss();
-            callback.onAppointmentRequestSuccess();
+            callback.requestAppointment(appointmentDTO.getPayload().getStartTime(), appointmentDTO.getPayload().getEndTime(), "");
         }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            ((ISession) context).hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(context);
-            Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
+    }
 }

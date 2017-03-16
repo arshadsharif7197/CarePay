@@ -21,7 +21,6 @@ import com.carecloud.carepay.patient.appointments.utils.PatientAppUtil;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DemographicSettingsCurrentPasswordDTO;
 import com.carecloud.carepay.service.library.dtos.DemographicsSettingsEmailProperties;
 import com.carecloud.carepay.service.library.dtos.DemographicsSettingsHeaderDTO;
@@ -183,11 +182,7 @@ public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
     private void getPersonalDetails() {
         String userId;
 
-        if(!HttpConstants.isUseUnifiedAuth()) {
-            userId = getAppAuthorizationHelper().getCurrUser();
-        }else{
-            userId = getAppAuthorizationHelper().getUserAlias();
-        }
+        userId = getAppAuthorizationHelper().getCurrUser();
 
         if (SystemUtil.isNotEmptyString(userId)) {
             emailEditText.setText(userId);
@@ -259,51 +254,51 @@ public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
             public void onClick(View view) {
                 try {
                     if (isEmailValid() && demographicsSettingsDTO != null ) {
-                            DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
-                                DemographicsSettingsTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
-                                TransitionDTO demographicsSettingsUpdateEmailDTO = demographicsSettingsTransitionsDTO.getChangeLoginEmail();
-                                DemographicsSettingsHeaderDTO demographicsSettingsHeaderDTO =  demographicsSettingsUpdateEmailDTO.getHeader();
-                                DemographicsSettingsMaintainanceDTO demographicsSettingsMaintainanceDTO = demographicsSettingsHeaderDTO.getMaintenance();
-                                DemographicsSettingsEmailProperties demographicsSettingsEmailProperties = demographicsSettingsMaintainanceDTO.getProperties();
-                                DemographicsSettingsLoginEmailDTO demographicsSettingsLoginEmailDTO = demographicsSettingsEmailProperties.getLoginEmail();
-                                DemographicsSettingsProposedEmailDTO demographicsSettingsProposedEmailDTO = demographicsSettingsEmailProperties.getProposedEmail();
-                                DemographicSettingsCurrentPasswordDTO demographicSettingsCurrentPasswordDTO = demographicsSettingsEmailProperties.getCurrentPassword();
+                        DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
+                        DemographicsSettingsTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
+                        TransitionDTO demographicsSettingsUpdateEmailDTO = demographicsSettingsTransitionsDTO.getChangeLoginEmail();
+                        DemographicsSettingsHeaderDTO demographicsSettingsHeaderDTO =  demographicsSettingsUpdateEmailDTO.getHeader();
+                        DemographicsSettingsMaintainanceDTO demographicsSettingsMaintainanceDTO = demographicsSettingsHeaderDTO.getMaintenance();
+                        DemographicsSettingsEmailProperties demographicsSettingsEmailProperties = demographicsSettingsMaintainanceDTO.getProperties();
+                        DemographicsSettingsLoginEmailDTO demographicsSettingsLoginEmailDTO = demographicsSettingsEmailProperties.getLoginEmail();
+                        DemographicsSettingsProposedEmailDTO demographicsSettingsProposedEmailDTO = demographicsSettingsEmailProperties.getProposedEmail();
+                        DemographicSettingsCurrentPasswordDTO demographicSettingsCurrentPasswordDTO = demographicsSettingsEmailProperties.getCurrentPassword();
 
-                                demographicsSettingsEmailProperties.setLoginEmail(demographicsSettingsLoginEmailDTO);
-                                demographicsSettingsEmailProperties.setProposedEmail(demographicsSettingsProposedEmailDTO);
-                                demographicsSettingsEmailProperties.setCurrentPassword(demographicSettingsCurrentPasswordDTO);
+                        demographicsSettingsEmailProperties.setLoginEmail(demographicsSettingsLoginEmailDTO);
+                        demographicsSettingsEmailProperties.setProposedEmail(demographicsSettingsProposedEmailDTO);
+                        demographicsSettingsEmailProperties.setCurrentPassword(demographicSettingsCurrentPasswordDTO);
 
-                                Map<String, String> properties = null;
-                                properties = new HashMap<>();
-                                properties = new HashMap<>();
+                        Map<String, String> properties = null;
+                        properties = new HashMap<>();
+                        properties = new HashMap<>();
 
-                                properties.put("login_email",getCurrentEmail());
-                                properties.put("proposed_email", emailEditText.getText().toString());
-                                properties.put("current_password",passwordEditText.getText().toString());
-                                JSONObject attributes = new JSONObject( properties );
-                                String encodedAttributes = new String(Base64.encodeBase64( attributes.toString().getBytes()));
-                                Map<String, String> header = null;
-                                header = new HashMap<>();
-                                header.put("maintenance", encodedAttributes);
+                        properties.put("login_email",getCurrentEmail());
+                        properties.put("proposed_email", emailEditText.getText().toString());
+                        properties.put("current_password",passwordEditText.getText().toString());
+                        JSONObject attributes = new JSONObject( properties );
+                        String encodedAttributes = new String(Base64.encodeBase64( attributes.toString().getBytes()));
+                        Map<String, String> header = null;
+                        header = new HashMap<>();
+                        header.put("maintenance", encodedAttributes);
 
-                                try {
-                                    if (demographicsSettingsDTO != null) {
-                                        DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
-                                        if (demographicsSettingsPayloadDTO != null) {
-                                            //DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-                                            //DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload().;
-                                            //PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+                        try {
+                            if (demographicsSettingsDTO != null) {
+                                DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
+                                if (demographicsSettingsPayloadDTO != null) {
+                                    //DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
+                                    //DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload().;
+                                    //PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
 
-                                            Gson gson = new Gson();
-                                            String jsonInString = gson.toJson(demographicsSettingsPayloadDTO);
-                                            getWorkflowServiceHelper().execute(demographicsSettingsUpdateEmailDTO, updateEmailCallback,null, null, header);
-                                        }
-                                    }
-
-                                } catch (Exception e) {
-                                    e.printStackTrace();
+                                    Gson gson = new Gson();
+                                    String jsonInString = gson.toJson(demographicsSettingsPayloadDTO);
+                                    getWorkflowServiceHelper().execute(demographicsSettingsUpdateEmailDTO, updateEmailCallback,null, null, header);
                                 }
                             }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }catch (Exception e){
                     e.printStackTrace();
                 }

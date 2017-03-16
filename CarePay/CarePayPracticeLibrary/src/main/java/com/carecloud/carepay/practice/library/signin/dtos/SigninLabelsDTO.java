@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by Jahirul Bhuiyan on 10/25/2016.
  */
-
+@Deprecated
 public class SigninLabelsDTO {
     @SerializedName("signin_button")
     @Expose

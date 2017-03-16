@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by Jahirul Bhuiyan on 10/27/2016.
  */
-
+@Deprecated
 public class CheckInLabelDTO extends AppointmentLabelDTO {
 
     @SerializedName("practice_checkin_detail_dialog_checking_in")
