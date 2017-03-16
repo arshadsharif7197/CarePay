@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 
@@ -24,6 +25,7 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment {
         setHeaderTitle(demographicDTO.getMetadata().getLabels().getDemographicsReviewIdentification(), view);
         initNextButton(demographicDTO.getMetadata().getLabels().getDemographicsReviewNextButton(), null, view);
         stepProgressBar.setCurrentProgressDot(3);
+        checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 4);
         return view;
     }
 

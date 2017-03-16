@@ -43,6 +43,8 @@ public class PracticeChooseProviderDialog extends BaseDialogFragment
     private RecyclerView searchRecycler;
     private Button continueButton;
     private SearchView searchView;
+    private String continueButtonLabel;
+    private String titleLabel;
 
     @Override
     public void onAttach(Context context){
@@ -61,8 +63,12 @@ public class PracticeChooseProviderDialog extends BaseDialogFragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        TransitionDTO resourcesToSchedule = DtoHelper.getConvertedDTO(TransitionDTO.class, getArguments());
-        getResourcesInformation(resourcesToSchedule);
+        Bundle bundle = getArguments();
+        continueButtonLabel = bundle.getString("continueButtonLabel");
+        titleLabel = bundle.getString("titleLabel");
+
+        TransitionDTO resourcesToSchedule = DtoHelper.getConvertedDTO(TransitionDTO.class, bundle);
+        getWorkflowServiceHelper().execute(resourcesToSchedule, scheduleResourcesCallback, null, null, null);
     }
 
     @Override
@@ -81,12 +87,12 @@ public class PracticeChooseProviderDialog extends BaseDialogFragment
                 title.setLayoutParams(layoutParams);
                 title.setGravity(Gravity.CENTER_HORIZONTAL);
 
-                title.setText(StringUtil.getLabelForView("labels.getTitle()"));
+                title.setText(titleLabel);
             }
         }
 
         continueButton = (Button) findViewById(R.id.nextButton);
-        continueButton.setText(StringUtil.getLabelForView("labels.getContinueButton()"));
+        continueButton.setText(continueButtonLabel);
         continueButton.setOnClickListener(continueClick);
         continueButton.setEnabled(false);
 
@@ -171,11 +177,6 @@ public class PracticeChooseProviderDialog extends BaseDialogFragment
         searchAdapter.setSelectedPractice(selectedProvider);
     }
 
-    private void getResourcesInformation(TransitionDTO resourcesToSchedule) {
-
-        getWorkflowServiceHelper().execute(resourcesToSchedule, scheduleResourcesCallback, null, null, null);
-    }
-
     private WorkflowServiceCallback scheduleResourcesCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -198,9 +199,7 @@ public class PracticeChooseProviderDialog extends BaseDialogFragment
 
         @Override
         public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(getActivity());
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            SystemUtil.doDefaultFailureBehavior(getActivity(), exceptionMessage);
         }
     };
 }

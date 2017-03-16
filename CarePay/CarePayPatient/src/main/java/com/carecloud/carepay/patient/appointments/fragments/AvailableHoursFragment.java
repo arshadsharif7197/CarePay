@@ -55,7 +55,6 @@ import java.util.Map;
 
 public class AvailableHoursFragment extends BaseFragment implements AvailableHoursAdapter.SelectAppointmentTimeSlotCallback, AvailableLocationsAdapter.SelectLocationCallback{
 
-    private static String appointmentDate;
     private Date startDate;
     private Date endDate;
     private AppointmentAvailabilityDTO availabilityDTO;
@@ -286,13 +285,9 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
     private View.OnClickListener dateRangeClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            callback.selectDate(startDate, endDate, selectedVisitTypeDTO, selectedResource, resourcesToScheduleDTO);
+            callback.selectDateRange(startDate, endDate, selectedVisitTypeDTO, selectedResource, resourcesToScheduleDTO);
         }
     };
-
-    public static String getAppointmentDate() {
-        return appointmentDate;
-    }
 
     private void resetLocatonSelections(boolean clearAll){
         RecyclerView.LayoutManager layoutManager = availableLocationsRecycleView.getLayoutManager();

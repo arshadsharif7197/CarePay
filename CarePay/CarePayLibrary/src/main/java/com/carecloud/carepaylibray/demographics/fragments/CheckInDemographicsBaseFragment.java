@@ -20,6 +20,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterface;
+import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -39,6 +40,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     StepProgressBar stepProgressBar;
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_review_demographic_base, container, false);
@@ -48,6 +50,8 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         inflateContent(inflater,view);
         //initializeToolbar(view);
         inflateToolbarViews(view);
+
+
         return view;
     }
 
@@ -138,7 +142,10 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         public void applyChangesAndNavTo(DemographicDTO demographicDTO, Integer step);
         public Integer getCurrentStep();
         public void setCurrentStep(Integer step);
+        void setCheckinFlow(CheckinFlowState flowState, int totalPages, int currentPage);
     }
+
+
 
 
     private void openNextFragment( DemographicDTO demographicDTO, boolean transition){
