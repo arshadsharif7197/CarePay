@@ -33,11 +33,7 @@ public class ApplicationMode {
      */
     public void setUserPracticeDTO(AppAuthorizationHelper appAuthorizationHelper, UserPracticeDTO userPracticeDTO) {
         this.userPracticeDTO = userPracticeDTO;
-        if(HttpConstants.isUseUnifiedAuth()){
-            this.userPracticeDTO.setUserName(appAuthorizationHelper.getUserAlias());
-        }else {
-            this.userPracticeDTO.setUserName(appAuthorizationHelper.getCurrUser());
-        }
+        this.userPracticeDTO.setUserName(appAuthorizationHelper.getCurrUser());
     }
 
     public ApplicationType getApplicationType() {

@@ -56,8 +56,8 @@ public class AppAuthorizationHelper {
     private String accessToken;
     private String refreshToken;
     private String idToken;
-    private String userAlias;
-    private String patientAlias;
+    private String practiceUser;
+    private String patientUser;
 
     private TransitionDTO refreshTransition;
 
@@ -95,17 +95,6 @@ public class AppAuthorizationHelper {
     }
 
     /**
-     * @return user alias
-     */
-    public String getUserAlias() {
-        return userAlias;
-    }
-
-    public void setUserAlias(String userAlias) {
-        this.userAlias = userAlias;
-    }
-
-    /**
      * @param authTokens new auth tokens
      */
     public void setAuthorizationTokens(UnifiedAuthenticationTokens authTokens){
@@ -118,6 +107,38 @@ public class AppAuthorizationHelper {
         if(authTokens.getRefreshToken()!=null) {
             setRefreshToken(authTokens.getRefreshToken());
         }
+    }
+
+    /**
+     * Gives current user
+     * @return current user
+     */
+    public String getCurrUser() {
+        if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            return patientUser;
+        }
+
+        return practiceUser;
+    }
+
+    /**
+     * Set current user
+     * @param newUser user
+     */
+    public void setUser(String newUser) {
+        if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            patientUser = newUser;
+        } else {
+            practiceUser = newUser;
+        }
+    }
+
+    public TransitionDTO getRefreshTransition() {
+        return refreshTransition;
+    }
+
+    public void setRefreshTransition(TransitionDTO refreshTransition) {
+        this.refreshTransition = refreshTransition;
     }
 
 
@@ -133,12 +154,9 @@ public class AppAuthorizationHelper {
 
     private ApplicationMode applicationMode;
     private CognitoUserPool  userPool;
-    private String           user;
-    private String           patientUser;
+
     private CognitoDevice    newDevice;
     private int              itemCount;
-
-
 
     /**
      * App secret associated with your app id - if the App id does not have an associated App secret,
@@ -208,50 +226,6 @@ public class AppAuthorizationHelper {
 
     public CognitoUserSession getCurrSession() {
         return currSession;
-    }
-
-    public void setUserDetails(CognitoUserDetails details) {
-        userDetails = details;
-        refreshWithSync();
-    }
-
-    /**
-     * Gives current user
-     * @return current user
-     */
-    public String getCurrUser() {
-        if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
-            return patientUser;
-        }
-        return user;
-    }
-
-    /**
-     * Set current user
-     * @param newUser user
-     */
-    public void setUser(String newUser) {
-        if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
-            patientUser = newUser;
-        } else {
-            user = newUser;
-        }
-    }
-
-    public boolean isPhoneVerified() {
-        return phoneVerified;
-    }
-
-    public boolean isEmailVerified() {
-        return emailVerified;
-    }
-
-    public boolean isPhoneAvailable() {
-        return phoneAvailable;
-    }
-
-    public boolean isEmailAvailable() {
-        return emailAvailable;
     }
 
     /**
@@ -443,22 +417,5 @@ public class AppAuthorizationHelper {
         AuthenticationDetails authenticationDetails = new AuthenticationDetails(username, password, null);
         continuation.setAuthenticationDetails(authenticationDetails);
         continuation.continueTask();
-    }
-
-
-    public TransitionDTO getRefreshTransition() {
-        return refreshTransition;
-    }
-
-    public void setRefreshTransition(TransitionDTO refreshTransition) {
-        this.refreshTransition = refreshTransition;
-    }
-
-    public String getPatientAlias() {
-        return patientAlias;
-    }
-
-    public void setPatientAlias(String patientAlias) {
-        this.patientAlias = patientAlias;
     }
 }

@@ -360,7 +360,7 @@ public class SigninFragment extends BaseFragment {
         if (signInDTO.isValidUser()) {
             Gson gson = new Gson();
             getWorkflowServiceHelper().execute(signIn, unifiedLoginCallback, gson.toJson(signInDTO), queryParams, headers);
-            getAppAuthorizationHelper().setUserAlias(userName);
+            getAppAuthorizationHelper().setUser(userName);
         }
     }
 
