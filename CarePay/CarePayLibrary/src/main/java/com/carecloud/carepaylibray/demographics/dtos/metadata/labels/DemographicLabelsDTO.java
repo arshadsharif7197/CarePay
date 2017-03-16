@@ -330,6 +330,26 @@ public class DemographicLabelsDTO {
     @Expose
     private String demographicsSetupInsuranceLabel;
 
+    @SerializedName("demographics_consent_forms_title")
+    @Expose
+    private String demographicsConsentFormsTitle;
+
+    @SerializedName("demographics_meds_allergies_title")
+    @Expose
+    private String demographicsMedsAllergiesTitle;
+
+    @SerializedName("demographics_payment_title")
+    @Expose
+    private String demographicsPaymentTitle;
+
+    @SerializedName("practice_chekin_section_intake_forms")
+    @Expose
+    private String practiceChekinSectionIntakeForms;
+
+    @SerializedName("demographics_patient_information_title")
+    @Expose
+    private String demographicsPatientInformationTitle;
+
     @SerializedName("demographics_insurance_label")
     @Expose
     private String demographicsInsuranceTitle;
@@ -1802,6 +1822,46 @@ public class DemographicLabelsDTO {
      */
     public void setDemographicsDocumentsPictureOfBack(String demographicsDocumentsPictureOfBack) {
         this.demographicsDocumentsPictureOfBack = demographicsDocumentsPictureOfBack;
+    }
+
+    public String getDemographicsConsentFormsTitle() {
+        return StringUtil.getLabelForView(demographicsConsentFormsTitle);
+    }
+
+    public void setDemographicsConsentFormsTitle(String demographicsConsentFormsTitle) {
+        this.demographicsConsentFormsTitle = demographicsConsentFormsTitle;
+    }
+
+    public String getDemographicsMedsAllergiesTitle() {
+        return StringUtil.getLabelForView(demographicsMedsAllergiesTitle);
+    }
+
+    public void setDemographicsMedsAllergiesTitle(String demographicsMedsAllergiesTitle) {
+        this.demographicsMedsAllergiesTitle = demographicsMedsAllergiesTitle;
+    }
+
+    public String getDemographicsPaymentTitle() {
+        return StringUtil.getLabelForView(demographicsPaymentTitle);
+    }
+
+    public void setDemographicsPaymentTitle(String demographicsPaymentTitle) {
+        this.demographicsPaymentTitle = demographicsPaymentTitle;
+    }
+
+    public String getPracticeChekinSectionIntakeForms() {
+        return StringUtil.getLabelForView(practiceChekinSectionIntakeForms);
+    }
+
+    public void setPracticeChekinSectionIntakeForms(String practiceChekinSectionIntakeForms) {
+        this.practiceChekinSectionIntakeForms = practiceChekinSectionIntakeForms;
+    }
+
+    public String getDemographicsPatientInformationTitle() {
+        return StringUtil.getLabelForView(demographicsPatientInformationTitle);
+    }
+
+    public void setDemographicsPatientInformationTitle(String demographicsPatientInformationTitle) {
+        this.demographicsPatientInformationTitle = demographicsPatientInformationTitle;
     }
 
     public String getDemographicsReviewNextButton() {

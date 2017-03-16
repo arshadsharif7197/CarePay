@@ -27,6 +27,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentP
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
@@ -214,7 +215,7 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
         checkinPayment = findViewById(R.id.checkin_flow_payment);
 
         checkinFlowViews = new View[]{checkinDemographics, checkinConsent, checkinMedications, checkinIntake, checkinPayment};
-        checkinFlowLabels = new String[]{"Patient Information", "Consent Forms", "Medications & Allergies", "Patient Intake", "Payment"};//todo get from DTO
+        checkinFlowLabels = new String[]{Label.getLabel("demographics_patient_information_title"), Label.getLabel("demographics_consent_forms_title"), Label.getLabel("demographics_meds_allergies_title"), Label.getLabel("practice_chekin_section_intake_forms"), Label.getLabel("demographics_payment_title")};
         for(int i=0; i<checkinFlowViews.length; i++){
             View view = checkinFlowViews[i];
             TextView textView = (TextView) view.findViewById(R.id.checkin_flow_title);
