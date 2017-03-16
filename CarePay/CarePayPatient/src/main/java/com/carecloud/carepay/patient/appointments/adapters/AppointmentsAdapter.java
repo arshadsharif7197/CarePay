@@ -146,13 +146,13 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
             String photoUrl = item.getProvider().getPhoto();
             if (TextUtils.isEmpty(photoUrl)) {
-                holder.shortName.setText(StringUtil.onShortName(item.getProvider().getName()));
+                holder.shortName.setText(StringUtil.getShortName(item.getProvider().getName()));
             } else {
                 Picasso.Builder builder = new Picasso.Builder(context);
                 builder.listener(new Picasso.Listener() {
                     @Override
                     public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                        holder.shortName.setText(StringUtil.onShortName(item.getProvider().getName()));
+                        holder.shortName.setText(StringUtil.getShortName(item.getProvider().getName()));
                     }
                 });
 

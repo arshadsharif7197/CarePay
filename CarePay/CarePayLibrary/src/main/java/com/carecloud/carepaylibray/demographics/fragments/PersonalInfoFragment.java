@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
@@ -23,7 +24,6 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressP
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -289,7 +289,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
     }
 
     private void initViewFromModels(View view) {
-        DemographicPersDetailsPayloadDTO demographicPersDetailsPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
+        PatientModel demographicPersDetailsPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
         if (demographicPersDetailsPayloadDTO != null) {
 
             //Personal Details
@@ -403,10 +403,10 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         updatableDemographicDTO.getPayload().setDemographics(new DemographicPayloadInfoDTO());
         updatableDemographicDTO.getPayload().getDemographics().setPayload(new DemographicPayloadDTO());
 
-        DemographicPersDetailsPayloadDTO demographicPersDetailsPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
+        PatientModel demographicPersDetailsPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
 
         if (demographicPersDetailsPayloadDTO == null) {
-            demographicPersDetailsPayloadDTO = new DemographicPersDetailsPayloadDTO();
+            demographicPersDetailsPayloadDTO = new PatientModel();
         }
 
 

@@ -27,19 +27,19 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadAddressDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -123,7 +123,7 @@ public class SettingsCreditCardDetailsFragment extends BaseFragment {
                 CarePayTextView addressValue = (CarePayTextView) view.findViewById(R.id.addressValue);
                 addressLabel.setText(settingsLabelsDTO.getSettingAddressLabel());
 
-                DemographicsSettingsPayloadAddressDTO addressDTO = demographicsSettingsDTO.getPayload().getDemographics()
+                DemographicAddressPayloadDTO addressDTO = demographicsSettingsDTO.getPayload().getDemographics()
                         .getPayload().getAddress();
                 addressValue.setText(addressDTO.getAddress1());
 

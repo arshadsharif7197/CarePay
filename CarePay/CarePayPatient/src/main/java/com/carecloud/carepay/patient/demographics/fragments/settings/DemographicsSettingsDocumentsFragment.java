@@ -34,12 +34,12 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.Demographic
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePhotoDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapper;
 import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapperCollection;
 import com.carecloud.carepaylibray.demographics.misc.OnClickRemoveOrAddCallback;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDataModelsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDetailsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
@@ -49,14 +49,14 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 
 public class DemographicsSettingsDocumentsFragment extends BaseFragment {
@@ -259,9 +259,9 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
             DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
             if(demographicsSettingsPayloadDTO!=null) {
                 DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-                DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
+                DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
 
-                demPayloadIdDocDTO = demographicPayload.getIdentityDocuments();
+                demPayloadIdDocDTO = demographicPayload.getIdDocuments();
                 insuranceDTOsList = demographicPayload.getInsurances();
 
                 if (demPayloadIdDocDTO == null) {
@@ -335,7 +335,7 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
                                 DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
                                 if (demographicsSettingsPayloadDTO != null) {
                                     DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-                                    DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
+                                    DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
 
                                     List<DemographicInsurancePayloadDTO> demographicsInsuranceDetailsPayloadDTO = demographicPayload.getInsurances();
                                     for(int i = 0; i<=demographicsInsuranceDetailsPayloadDTO.size()-1;i++){

@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.appointments.AppointmentNavigationCallback;
+import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepay.patient.appointments.adapters.ProviderAdapter;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -29,7 +29,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderM
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
-import com.carecloud.carepaylibray.customdialogs.VisitTypeDialog;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -40,8 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ChooseProviderFragment extends BaseFragment implements ProviderAdapter.OnProviderListItemClickListener,
-        VisitTypeDialog.OnDialogListItemClickListener {
+public class ChooseProviderFragment extends BaseFragment implements ProviderAdapter.OnProviderListItemClickListener {
 
     private RecyclerView providersRecyclerView;
     private ProgressBar appointmentProgressBar;
@@ -210,15 +208,10 @@ public class ChooseProviderFragment extends BaseFragment implements ProviderAdap
         return resourcesListWithHeader;
     }
 
-    private void loadVisitTypeScreen(AppointmentResourcesDTO model) {
-        VisitTypeDialog visitTypeDialog = new VisitTypeDialog(this.getContext(), model, this, appointmentsResultModel);
-        visitTypeDialog.show();
-    }
-
     @Override
     public void onProviderListItemClickListener(int position) {
         selectedResource = resources.get(position - 1);
-        loadVisitTypeScreen(selectedResource);
+        callback.selectVisitType(selectedResource, resourcesToScheduleModel);
     }
 
     /**
@@ -226,6 +219,6 @@ public class ChooseProviderFragment extends BaseFragment implements ProviderAdap
      * @param selectedVisitType selected visit type from dialog
      */
     public void onDialogListItemClickListener(VisitTypeDTO selectedVisitType) {
-        callback.availableTimes(selectedVisitType, selectedResource, resourcesToScheduleModel);
+
     }
 }

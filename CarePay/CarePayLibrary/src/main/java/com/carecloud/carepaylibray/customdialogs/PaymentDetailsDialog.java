@@ -19,7 +19,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.PaymentItemsListAdapter;
 import com.carecloud.carepaylibray.base.IApplicationSession;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -28,7 +28,7 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
 
     private Context context;
     private PaymentsModel paymentReceiptModel;
-    private PatiencePayloadDTO paymentPayload;
+    private PendingBalancePayloadDTO paymentPayload;
     private PaymentNavigationCallback callback;
     private double size;
     private OnDismissListener payDismissListener;
@@ -42,7 +42,7 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
      */
     public PaymentDetailsDialog(Context context,
                                 PaymentsModel paymentReceiptModel,
-                                PatiencePayloadDTO paymentPayload,
+                                PendingBalancePayloadDTO paymentPayload,
                                 PaymentNavigationCallback callback,
                                 OnDismissListener payDismissListener) {
         super(context);
@@ -83,7 +83,7 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
                 ((TextView) findViewById(R.id.payment_receipt_title)).setText(paymentsLabel.getPaymentReceiptTitle());
                 ((TextView) findViewById(R.id.payment_receipt_total_label)).setText(paymentsLabel.getPaymentDetailsPatientBalanceLabel());
                 ((TextView) findViewById(R.id.payment_receipt_total_value)).setText(totalAmount);
-                ((TextView) findViewById(R.id.avTextView)).setText(StringUtil.onShortName(paymentsLabel.getPaymentReceiptTitle()));
+                ((TextView) findViewById(R.id.avTextView)).setText(StringUtil.getShortName(paymentsLabel.getPaymentReceiptTitle()));
 
                 payNowButton.setText(paymentsLabel.getPaymentDetailsPayNow());
 

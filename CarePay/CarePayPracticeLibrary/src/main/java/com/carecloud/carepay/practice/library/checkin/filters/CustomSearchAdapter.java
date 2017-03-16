@@ -16,7 +16,9 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,6 +131,12 @@ public class CustomSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 selectedItemImageView.setVisibility(View.VISIBLE);
             } else {
                 selectedItemImageView.setVisibility(View.GONE);
+            }
+            if(!StringUtil.isNullOrEmpty(filterDataDTO.getImageURL())) {
+                Picasso.with(context)
+                        .load(filterDataDTO.getImageURL())
+                        .placeholder(R.drawable.icn_placeholder_user_profile_png)
+                        .into(patientImageView);
             }
         }
     }

@@ -165,6 +165,6 @@ public class PatientModel {
     }
 
     public String getShortName() {
-        return StringUtil.onShortName(getFullName());
+        return StringUtil.getShortName(getFullName());
     }
 }

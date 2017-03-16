@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
+
     android:background="@android:color/white"
     android:orientation="vertical">
 
@@ -34,6 +35,7 @@
         </LinearLayout>
    </FrameLayout>
 
+
     <com.marcok.stepprogressbar.StepProgressBar
         android:id="@+id/stepProgressBarCheckin"
         style="@style/InTakeDottedProgressBarStyle"
@@ -45,8 +47,16 @@
         app:numberDots="5"
         app:dotSize="10dp"
         app:spacing="12dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="0dp"
         />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/demo_view_height"
+        android:layout_marginBottom="@dimen/divider_margin_bottom"
+        android:layout_marginTop="@dimen/divider_margin_top"
+        android:background="@color/light_gray"/>
+
 
 
     <ScrollView
@@ -59,8 +69,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
 
-                android:layout_marginLeft="@dimen/dimen_20dp"
-                android:layout_marginRight="@dimen/dimen_20dp"
+                android:layout_marginLeft="@dimen/dimen_130dp"
+                android:layout_marginRight="@dimen/dimen_130dp"
                 android:orientation="vertical">
 
     </FrameLayout>
@@ -75,6 +85,13 @@
             android:orientation="vertical"-->
 
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/demo_view_height"
+        android:layout_marginBottom="@dimen/divider_margin_bottom"
+        android:layout_marginTop="@dimen/divider_margin_top"
+        android:background="@color/light_gray"/>
+
     <Button
         android:id="@+id/checkinDemographicsNextButton"
         android:layout_width="match_parent"
@@ -84,5 +101,8 @@
         android:gravity="center"
         android:textColor="@color/white"
         android:enabled="false"/>
+
+
+
 
 </LinearLayout>

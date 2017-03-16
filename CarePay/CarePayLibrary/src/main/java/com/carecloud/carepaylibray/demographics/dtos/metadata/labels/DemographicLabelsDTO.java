@@ -422,6 +422,31 @@ public class DemographicLabelsDTO {
     @SerializedName("demographics_review_take_photo_of_back")
     @Expose
     private String demographicsReviewTakePhotoOfBack;
+    @SerializedName("demographics_insurance_retake_front_photo")
+    @Expose
+    private String demographicsInsuranceRetakeFrontPhoto;
+    @SerializedName("demographics_insurance_retake_back_photo")
+    @Expose
+    private String demographicsInsuranceRetakeBackPhoto;
+
+    public String getDemographicsInsuranceRetakeFrontPhoto() {
+        return StringUtil.getLabelForView(demographicsInsuranceRetakeFrontPhoto);
+    }
+
+    public void setDemographicsInsuranceRetakeFrontPhoto(String demographicsInsuranceRetakeFrontPhoto) {
+        this.demographicsInsuranceRetakeFrontPhoto = demographicsInsuranceRetakeFrontPhoto;
+    }
+
+    public String getDemographicsInsuranceRetakeBackPhoto() {
+        return StringUtil.getLabelForView(demographicsInsuranceRetakeBackPhoto);
+    }
+
+    public void setDemographicsInsuranceRetakeBackPhoto(String demographicsInsuranceRetakeBackPhoto) {
+        this.demographicsInsuranceRetakeBackPhoto = demographicsInsuranceRetakeBackPhoto;
+    }
+    @SerializedName("demographics_review_demographics")
+    @Expose
+    private String demographicsReviewDemographics;
 
     public String getDemographicsInsuranceCardNumber() {
         return StringUtil.getLabelForView(demographicsInsuranceCardNumber);
@@ -1809,5 +1834,13 @@ public class DemographicLabelsDTO {
 
     public void setDemographicsReviewTakePhotoOfBack(String demographicsReviewTakePhotoOfBack) {
         this.demographicsReviewTakePhotoOfBack = demographicsReviewTakePhotoOfBack;
+    }
+
+    public String getDemographicsReviewDemographics() {
+        return demographicsReviewDemographics;
+    }
+
+    public void setDemographicsReviewDemographics(String demographicsReviewDemographics) {
+        this.demographicsReviewDemographics = demographicsReviewDemographics;
     }
 }

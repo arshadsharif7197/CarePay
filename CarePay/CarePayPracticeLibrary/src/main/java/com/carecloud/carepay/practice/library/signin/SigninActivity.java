@@ -130,8 +130,17 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
 //        setTypeFace();
 
         changeScreenMode(signinScreenMode);
-        isEmptyEmail = true;
-        isEmptyPassword = true;
+        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
+            //emailEditText.setText("plewis@carecloud.com");
+            //passwordEditText.setText("Password123!");
+            emailEditText.setText("practice@cc.com");
+            passwordEditText.setText("Test123!");
+        } else {
+            emailEditText.setText("gsaraf@carecloud.com");
+            passwordEditText.setText("Test123!");
+        }
+        isEmptyEmail = false;
+        isEmptyPassword = false;
 
     }
 
@@ -293,12 +302,12 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
             public void onClick(View view) {
                 if(passwordEditText.getInputType()!=InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
                     setInputType(passwordEditText, InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            setInputType(passwordEditText, InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                        }
-                    }, 3 * 1000);
+//                    handler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            setInputType(passwordEditText, InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
+//                        }
+//                    }, 3 * 1000);
                 }else{
                     setInputType(passwordEditText, InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 }
@@ -560,7 +569,8 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
             }
 
             if(practiceList.size() == 1){
-                onSelectPractice(practiceSelectionModel, practiceList.get(0));
+                PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+                signInButton.setClickable(true);
             }else {
 
                 Gson gson = new Gson();

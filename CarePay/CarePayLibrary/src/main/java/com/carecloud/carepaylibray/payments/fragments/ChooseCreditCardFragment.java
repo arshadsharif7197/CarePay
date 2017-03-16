@@ -24,7 +24,7 @@ import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.adapter.CreditCardsAdapter;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -215,7 +215,7 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
     };
 
     private void postPayment(String paymentModelJson){
-        PaymentPayloadMetaDataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
+        PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
         Map<String, String> queries = new HashMap<>();
         queries.put("practice_mgmt", metadata.getPracticeMgmt());
         queries.put("practice_id", metadata.getPracticeId());
