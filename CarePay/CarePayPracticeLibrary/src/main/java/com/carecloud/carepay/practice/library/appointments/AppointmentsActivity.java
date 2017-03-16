@@ -88,11 +88,6 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
@@ -107,7 +102,6 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
                             goToHome(appointmentsResultModel.getMetadata().getTransitions().getLogout());
                         }
                     }, 300);
-                    handler.sendEmptyMessage(0);
                 }
                 break;
             }
