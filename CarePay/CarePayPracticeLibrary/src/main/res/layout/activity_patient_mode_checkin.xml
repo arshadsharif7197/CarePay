@@ -92,20 +92,25 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <include layout="@layout/item_checkin_flow"
-                         android:id="@+id/checkin_flow_demographics"/>
+                <include
+                    android:id="@+id/checkin_flow_demographics"
+                    layout="@layout/item_checkin_flow" />
 
-                <include layout="@layout/item_checkin_flow"
-                         android:id="@+id/checkin_flow_consent"/>
+                <include
+                    android:id="@+id/checkin_flow_consent"
+                    layout="@layout/item_checkin_flow" />
 
-                <include layout="@layout/item_checkin_flow"
-                         android:id="@+id/checkin_flow_medications"/>
+                <include
+                    android:id="@+id/checkin_flow_medications"
+                    layout="@layout/item_checkin_flow" />
 
-                <include layout="@layout/item_checkin_flow"
-                         android:id="@+id/checkin_flow_intake"/>
+                <include
+                    android:id="@+id/checkin_flow_intake"
+                    layout="@layout/item_checkin_flow" />
 
-                <include layout="@layout/item_checkin_flow"
-                         android:id="@+id/checkin_flow_payment"/>
+                <include
+                    android:id="@+id/checkin_flow_payment"
+                    layout="@layout/item_checkin_flow" />
 
 
             </LinearLayout>
@@ -217,7 +222,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="-25dp"
-            android:src="@drawable/side_shadow"/>
+            android:src="@drawable/side_shadow" />
 
     </RelativeLayout>
 
