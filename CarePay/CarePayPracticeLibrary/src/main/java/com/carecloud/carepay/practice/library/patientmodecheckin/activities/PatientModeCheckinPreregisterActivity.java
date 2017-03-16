@@ -20,7 +20,6 @@ import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.Check
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinIntakeForm1Fragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinMedicationsAllergyFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.IFragmentCallback;
-import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.PracticeIdDocScannerFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckinFlowCallback;
 import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckinFlowState;
@@ -46,10 +45,10 @@ import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
 import com.carecloud.carepaylibray.demographics.fragments.IdentificationFragment;
 import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
+import com.carecloud.carepaylibray.demographics.fragments.PracticeIdDocScannerFragment;
 import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterface;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHolder;
-import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
 import com.carecloud.carepaylibray.demographics.scanner.ProfilePictureFragment;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
 import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearchFragment;
@@ -80,7 +79,7 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
         CheckinDemographicsInterface, MedicationAllergySearchFragment.MedicationAllergySearchCallback,
         PaymentNavigationCallback, CheckinFlowCallback,
         CheckInDemographicsBaseFragment.CheckInNavListener, AddressFragment.AddressFragmentListener, DemographicsFragment.DemographicsListener,
-        PersonalInfoFragment.UpdateProfilePictureListener {
+        PersonalInfoFragment.UpdateProfilePictureListener, IdentificationFragment.UpdateIdentificationDocListener {
 
 
     public final static  int SUBFLOW_DEMOGRAPHICS_INS = 0;
@@ -853,6 +852,17 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
     }
 
     @Override
+    public DemographicIdDocPayloadDTO getUpdatedDocuments() {
+        PracticeIdDocScannerFragment fragment = (PracticeIdDocScannerFragment)
+                getSupportFragmentManager().findFragmentById(R.id.revDemographicsIdentificationPicCapturer);
+
+        if (fragment != null) {
+            return fragment.getModel();
+        }
+        return null;
+    }
+
+    @Override
     public void applyChangesAndNavTo(DemographicDTO demographicDTO, Integer step) {
         currentDemographicStep = step;
         this.demographicDTO = demographicDTO;
@@ -883,13 +893,7 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
             initializeProfilePictureFragment(demographicDTO.getMetadata().getLabels(),
                     demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails());
         }
-        if(step==4){
-            initializeIdentificationFragment(demographicDTO.getMetadata().getLabels(),
-                    demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(0),
-                    demographicDTO.getMetadata().getDataModels().demographic.identityDocuments.properties.items.identityDocument);
-        }
     }
-
 
     @Override
     public void onFragmentInteraction(Uri uri) {

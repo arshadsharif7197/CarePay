@@ -1,6 +1,6 @@
-package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
+package com.carecloud.carepaylibray.demographics.fragments;
 
-import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
 
 
