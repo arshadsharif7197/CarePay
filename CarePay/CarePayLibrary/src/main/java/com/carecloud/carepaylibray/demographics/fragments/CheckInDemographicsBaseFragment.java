@@ -71,7 +71,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             }
         });
 
-        (view.findViewById(R.id.toolbar_layout)).setVisibility(View.INVISIBLE);
+
     }
 
     protected boolean checkTextEmptyValue( int textEditableId, View view) {
