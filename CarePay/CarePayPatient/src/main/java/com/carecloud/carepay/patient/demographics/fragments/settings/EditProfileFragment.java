@@ -21,7 +21,6 @@ import com.carecloud.carepay.patient.appointments.utils.PatientAppUtil;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
@@ -97,9 +96,9 @@ public class EditProfileFragment extends DocumentScannerFragment {
         ImageView profileImageview = (ImageView) view.findViewById(R.id.providerPicImageView);
 
         if (demographicsSettingsDTO != null) {
-                DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
-                demographicsSettingsLabelsDTO = demographicsSettingsMetadataDTO.getLabels();
-                imageCaptureHelper = new ImageCaptureHelper(appCompatActivity, profileImageview, demographicsSettingsLabelsDTO);
+            DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
+            demographicsSettingsLabelsDTO = demographicsSettingsMetadataDTO.getLabels();
+            imageCaptureHelper = new ImageCaptureHelper(appCompatActivity, profileImageview, demographicsSettingsLabelsDTO);
         }
 
         getPersonalDetails();
@@ -116,11 +115,8 @@ public class EditProfileFragment extends DocumentScannerFragment {
         }
         String userId;
 
-        if(!HttpConstants.isUseUnifiedAuth()){
-            userId = getAppAuthorizationHelper().getCurrUser();
-        }else{
-            userId = getAppAuthorizationHelper().getCurrUser();
-        }
+        userId = getAppAuthorizationHelper().getCurrUser();
+
 
         CarePayTextView patientNameValue = (CarePayTextView) view.findViewById(R.id.patientNameTextView);
         patientNameValue.setText(firstNameValString + " " + middleNameValString+" " + lastNameValString);
