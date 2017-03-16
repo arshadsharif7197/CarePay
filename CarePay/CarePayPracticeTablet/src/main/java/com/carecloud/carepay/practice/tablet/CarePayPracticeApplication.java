@@ -8,25 +8,18 @@ import android.provider.Settings;
 import android.util.Log;
 
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
-import com.carecloud.carepay.service.library.ApplicationPreferences;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
 import com.carecloud.carepaylibray.CarePlayApplication;
-import com.carecloud.carepaylibray.base.IApplicationSession;
 
 /**
  * Created by Jahirul Bhuiyan on 10/24/2016.
  */
 
 public class CarePayPracticeApplication extends CarePlayApplication
-        implements Application.ActivityLifecycleCallbacks, IApplicationSession {
+        implements Application.ActivityLifecycleCallbacks {
 
-    private ApplicationPreferences applicationPreferences;
-    private WorkflowServiceHelper workflowServiceHelper;
-    private AppAuthorizationHelper appAuthorizationHelper;
     private ApplicationMode applicationMode;
 
     @Override
@@ -93,34 +86,6 @@ public class CarePayPracticeApplication extends CarePlayApplication
             //getAppAuthorizationHelper().getPool().getUser().signOut();
             //getAppAuthorizationHelper().setUser(null);
         }
-    }
-
-    @Override
-    public ApplicationPreferences getApplicationPreferences() {
-        if (applicationPreferences == null) {
-            applicationPreferences = new ApplicationPreferences(this);
-        }
-
-        return applicationPreferences;
-    }
-
-    @Override
-    public WorkflowServiceHelper getWorkflowServiceHelper() {
-        if (workflowServiceHelper == null) {
-            workflowServiceHelper = new WorkflowServiceHelper(getApplicationPreferences(), getApplicationMode());
-        }
-
-        return workflowServiceHelper;
-    }
-
-    @Override
-    public AppAuthorizationHelper getAppAuthorizationHelper() {
-        if (appAuthorizationHelper == null) {
-            appAuthorizationHelper = new AppAuthorizationHelper(this, getApplicationMode());
-            getWorkflowServiceHelper().setAppAuthorizationHelper(appAuthorizationHelper);
-        }
-
-        return appAuthorizationHelper;
     }
 
     @Override
