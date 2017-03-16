@@ -29,7 +29,7 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment {
         initNextButton(demographicDTO.getMetadata().getLabels().getDemographicsReviewNextButton(), null, view);
         stepProgressBar.setCurrentProgressDot(3);
         initialiseChildFragment(demographicDTO.getMetadata().getLabels(),
-                demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(0),
+                demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().size()>0?demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(0):new DemographicIdDocPayloadDTO(),
                 demographicDTO.getMetadata().getDataModels().demographic.identityDocuments.properties.items.identityDocument);
         checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 4);
         return view;
