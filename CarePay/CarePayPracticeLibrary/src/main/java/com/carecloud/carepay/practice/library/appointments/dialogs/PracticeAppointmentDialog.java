@@ -1,9 +1,16 @@
 package com.carecloud.carepay.practice.library.appointments.dialogs;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +26,9 @@ import com.carecloud.carepaylibray.customdialogs.BaseDialogFragment;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -35,6 +44,10 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
     private String leftAction;
     private String rightAction;
     private String visitTypeLabel;
+    private String photoUrl;
+
+    private View view;
+    private LinearLayout headerView;
 
     public interface PracticeAppointmentDialogListener {
         void onLeftActionTapped(AppointmentDTO appointmentDTO);
@@ -111,17 +124,16 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
+        view = super.onCreateView(inflater, container, savedInstanceState);
 
-        initializeViews(view);
+        initializeViews();
 
         return view;
     }
 
     @SuppressWarnings("deprecation")
-    private void initializeViews(View view) {
-        LinearLayout headerView = (LinearLayout) view.findViewById(R.id.appointment_card_header);
-        headerView.setBackgroundResource(headerColor);
+    private void initializeViews() {
+        headerView = (LinearLayout) view.findViewById(R.id.appointment_card_header);
 
         AppointmentPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
 
@@ -140,6 +152,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         setTextViewById(R.id.appointment_doctor, appointmentPayloadDTO.getProvider().getName());
 
         PatientModel patientDTO = appointmentDTO.getPayload().getPatient();
+        photoUrl = patientDTO.getProfilePhoto();
         setTextViewById(R.id.appointment_patient_name, patientDTO.getFullName());
 
         String primaryPhoneNumber = patientDTO.getPrimaryPhoneNumber();
@@ -155,15 +168,72 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         setTextViewById(R.id.appointment_visit_type_label, visitTypeLabel);
 
         initializeButtons();
+    }
 
-        String photoUrl = patientDTO.getProfilePhoto();
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         if (!TextUtils.isEmpty(photoUrl)) {
-            ImageView profileImage = (ImageView) view.findViewById(R.id.appointment_patient_picture_image_view);
-
-            Picasso.with(getActivity()).load(photoUrl).transform(new CircleImageTransform())
-                    .resize(58, 58).into(profileImage);
-            profileImage.setVisibility(View.VISIBLE);
+            initializeHeaderBackgroundView();
+        } else {
+            headerView.setBackgroundResource(headerColor);
         }
+    }
+
+    private void initializeHeaderBackgroundView() {
+        final ImageView imageView = (ImageView) view.findViewById(R.id.appointment_card_header_background);
+
+        Picasso.with(getActivity()).load(photoUrl).resize(510, 510).into(imageView, new Callback() {
+            @Override
+            public void onSuccess() {
+                imageView.setVisibility(View.VISIBLE);
+                initializeProfilePhotoView();
+
+                int trueHeaderColor = getResources().getColor(headerColor);
+                headerView.setBackgroundColor(Color.argb(
+                        230,
+                        Color.red(trueHeaderColor),
+                        Color.green(trueHeaderColor),
+                        Color.blue(trueHeaderColor)
+                ));
+            }
+
+            @Override
+            public void onError() {
+                headerView.setBackgroundResource(headerColor);
+            }
+        });
+    }
+
+    private void initializeProfilePhotoView() {
+        ImageView profileImage = (ImageView) view.findViewById(R.id.appointment_patient_picture_image_view);
+
+        Picasso.with(getActivity()).load(photoUrl).transform(new CircleImageTransform())
+                .resize(58, 58).into(profileImage);
+        profileImage.setVisibility(View.VISIBLE);
+    }
+
+    @NonNull
+    private Target getHeaderTarget() {
+        return new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                headerView.setBackground(new BitmapDrawable(getResources(), bitmap));
+
+                initializeProfilePhotoView();
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+                headerView.setBackgroundResource(headerColor);
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        };
     }
 
     private void initializeButtons() {
