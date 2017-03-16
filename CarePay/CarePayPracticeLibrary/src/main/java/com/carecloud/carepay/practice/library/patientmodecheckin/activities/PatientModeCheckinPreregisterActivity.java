@@ -1,7 +1,6 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.activities;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -31,6 +30,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticePayment
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
@@ -40,7 +40,6 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entitie
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
 import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
@@ -50,7 +49,6 @@ import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
 import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterface;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHolder;
-import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
 import com.carecloud.carepaylibray.demographics.scanner.ProfilePictureFragment;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
 import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearchFragment;
@@ -80,7 +78,7 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
         */HealthInsuranceFragment.InsuranceDocumentScannerListener, MedicationsAllergyFragment.MedicationAllergyCallback,
         CheckinDemographicsInterface, MedicationAllergySearchFragment.MedicationAllergySearchCallback,
         PaymentNavigationCallback, CheckinFlowCallback,
-        CheckInDemographicsBaseFragment.CheckInNavListener, AddressFragment.AddressFragmentListener, DemographicsFragment.DemographicsListener,
+        CheckInDemographicsBaseFragment.CheckInNavListener,
         PersonalInfoFragment.UpdateProfilePictureListener {
 
 
@@ -155,13 +153,12 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
 
         // place the initial fragment
         demographicFragMap.put(1, new PersonalInfoFragment());
-        demographicFragMap.put(2, AddressFragment.newInstance(null, null));
-        demographicFragMap.put(3, DemographicsFragment.newInstance(null, null));
+        demographicFragMap.put(2, new AddressFragment());
+        demographicFragMap.put(3, new DemographicsFragment());
         demographicFragMap.put(4, new IdentificationFragment());
         demographicFragMap.put(5, new HealthInsuranceFragment());
 
         navigateToDemographicFragment(1);
-
     }
 
 
@@ -816,7 +813,7 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
     }
 
     public void initializeProfilePictureFragment(DemographicLabelsDTO globalLabelDTO,
-                                                 DemographicPersDetailsPayloadDTO persDetailsDTO) {
+                                                 PatientModel persDetailsDTO) {
 
         FragmentManager fm = getSupportFragmentManager();
         String tag = ProfilePictureFragment.class.getSimpleName();
@@ -830,7 +827,7 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
             fragment.setArguments(args);
         }
         fm.beginTransaction()
-                .replace(com.carecloud.carepaylibrary.R.id.revdemographicsAddressPicCapturer, fragment, tag)
+                .replace(R.id.revdemographicsAddressPicCapturer, fragment, tag)
                 .commit();
     }
 
@@ -840,7 +837,7 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
                 getSupportFragmentManager().findFragmentById(R.id.revdemographicsAddressPicCapturer);
 
         if (fragment != null) {
-            DemographicPersDetailsPayloadDTO demographicPersDetailsPayloadDTO = fragment.getDemographicPersDetailsPayloadDTO();
+            PatientModel demographicPersDetailsPayloadDTO = fragment.getDemographicPersDetailsPayloadDTO();
             if(demographicPersDetailsPayloadDTO != null){
                 return demographicPersDetailsPayloadDTO.getProfilePhoto();
             }
@@ -908,37 +905,6 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
                     demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(0),
                     demographicDTO.getMetadata().getDataModels().demographic.identityDocuments.properties.items.identityDocument);
         }
-    }
-
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
-
-    @Override
-    public void navigateToAddressFragment() {
-
-    }
-
-    @Override
-    public void navigateToIdentificationFragment() {
-
-    }
-
-    @Override
-    public void updateDTO(DemographicDTO model) {
-
-    }
-
-    @Override
-    public void navigateToPersonalInformationFragment() {
-
-    }
-
-    @Override
-    public void navigateToDemographicsFragment() {
-
     }
 
 

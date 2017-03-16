@@ -148,8 +148,11 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
         selectedProvider = (CarePayTextView) view.findViewById(R.id.health_insurance_providers);
         selectedProvider.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
 
-        selectedPlan = (CarePayTextView) view.findViewById(R.id.health_insurance_plans);
-        selectedPlan.setText(globalLabelsMetaDTO.getDemographicsDocumentsChoosePlanLabel());
+        ((CarePayTextView) view.findViewById(R.id.health_insurance_plans)).setText(
+                globalLabelsMetaDTO.getDemographicsDocumentsChoosePlanLabel());
+
+        selectedPlan = (CarePayTextView) view.findViewById(R.id.health_insurance_choose_plans);
+        selectedPlan.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
 
         selectedType = (CarePayTextView) view.findViewById(R.id.health_insurance_types);
         selectedType.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
@@ -277,7 +280,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
         }
     }
 
-    private void showAlertDialogWithListView(final String[] dataArray, String title,
+    private void showAlertDialogWithListView(final View parentView, final String[] dataArray, String title,
                                              String cancelLabel, final int index) {
 
         final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
@@ -306,12 +309,12 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
                 switch (index) {
                     case 0:
                         selectedProvider.setText(dataArray[position]);
+                        selectedPlan.setVisibility(View.VISIBLE);
+                        parentView.findViewById(R.id.health_insurance_plans).setVisibility(View.GONE);
                         break;
 
                     case 1:
                         selectedPlan.setText(dataArray[position]);
-                        selectedPlan.setTextSize(getResources().getDimension(R.dimen.text_size_16));
-                        selectedPlan.setTextColor(getResources().getColor(R.color.colorPrimary));
                         break;
 
                     case 2:
@@ -414,7 +417,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
      * enable or disable sections
      * @param view main view
      */
-    public void initActiveSection(View view) {
+    public void initActiveSection(final View view) {
         setHeaderTitle(globalLabelsMetaDTO.getDemographicsInsuranceTitle(), view);
         initNextButton(globalLabelsMetaDTO.getDemographicsReviewNextButton(), null, view);
 
@@ -447,7 +450,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
             selectedProvider.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View providerView) {
-                    showAlertDialogWithListView(providers, "Choose Provider", "Cancel", 0);
+                    showAlertDialogWithListView(view, providers, "Choose Provider", "Cancel", 0);
                 }
             });
 
@@ -460,7 +463,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
             selectedPlan.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View providerView) {
-                    showAlertDialogWithListView(plans, "Choose Plan", "Cancel", 1);
+                    showAlertDialogWithListView(view, plans, "Choose Plan", "Cancel", 1);
                 }
             });
 
@@ -473,24 +476,9 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
             selectedType.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View providerView) {
-                    showAlertDialogWithListView(types, "Choose Type", "Cancel", 2);
+                    showAlertDialogWithListView(view, types, "Choose Type", "Cancel", 2);
                 }
             });
-
-//            Spinner providers = (Spinner) view.findViewById(R.id.health_insurance_providers);
-//            ArrayAdapter<MetadataOptionDTO> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, providerList);
-//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//            providers.setAdapter(adapter);
-
-//            Spinner plans = (Spinner) view.findViewById(R.id.health_insurance_plans);
-//            adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, planList);
-//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//            plans.setAdapter(adapter);
-
-//            Spinner types = (Spinner) view.findViewById(R.id.health_insurance_types);
-//            adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, typeList);
-//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//            types.setAdapter(adapter);
         }
 
         setTextListeners();

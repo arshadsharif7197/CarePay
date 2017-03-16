@@ -235,26 +235,34 @@ public class StringUtil {
      * @param fullName full name
      * @return short two letter name
      */
-    public static String onShortName(String fullName) {
-        if (fullName != null && fullName.length() > 1) {
-            String stringSplitArr[] = fullName.split(" ");
-            if (fullName.contains(".")) {
-                if (stringSplitArr.length >= 3) {
-                    return String.valueOf(stringSplitArr[1].charAt(0)).toUpperCase()
-                            + String.valueOf(stringSplitArr[stringSplitArr.length - 1].charAt(0)).toUpperCase();
-                } else if (stringSplitArr.length == 2) {
-                    return String.valueOf(stringSplitArr[1].charAt(0)).toUpperCase();
-                }
-            } else {
-                if (stringSplitArr.length == 2) {
-                    return String.valueOf(stringSplitArr[0].charAt(0)).toUpperCase()
-                            + String.valueOf(stringSplitArr[stringSplitArr.length - 1].charAt(0)).toUpperCase();
-                } else {
-                    return String.valueOf(stringSplitArr[0].charAt(0)).toUpperCase();
-                }
-            }
+    public static String getShortName(String fullName) {
+        if (fullName == null || fullName.isEmpty()) {
+            return "";
         }
-        return "";
+
+        String splitArr[] = fullName.split(" ");
+        if (splitArr.length == 1) {
+            return getFirstChar(splitArr[0]);
+        }
+
+        // Check for doctor
+        if (fullName.contains(".")) {
+            if (splitArr.length > 2) {
+                return getFirstChar(splitArr[1]) + getFirstChar(splitArr[splitArr.length - 1]);
+            }
+
+            return getFirstChar(splitArr[1]);
+        }
+
+        return getFirstChar(splitArr[0]) + getFirstChar(splitArr[splitArr.length - 1]);
+    }
+
+    private static String getFirstChar(String word) {
+        if (word.isEmpty()) {
+            return "";
+        }
+
+        return String.valueOf(word.charAt(0)).toUpperCase();
     }
 
     /**

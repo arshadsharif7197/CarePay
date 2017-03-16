@@ -87,7 +87,7 @@ public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener
         }
 
         CarePayTextView shortNameTextView = ((CarePayTextView) findViewById(R.id.appointShortnameTextView));
-        shortNameTextView.setText(StringUtil.onShortName(payload.getProvider().getName()));
+        shortNameTextView.setText(StringUtil.getShortName(payload.getProvider().getName()));
 
         CarePayTextView nameTextView = ((CarePayTextView) findViewById(R.id.appointNameTextView));
         nameTextView.setText(payload.getProvider().getName());

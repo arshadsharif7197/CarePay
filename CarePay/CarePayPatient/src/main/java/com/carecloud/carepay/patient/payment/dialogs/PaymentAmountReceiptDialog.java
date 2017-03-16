@@ -24,7 +24,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.payments.models.PaymentDetailsItemDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -126,7 +126,7 @@ public class PaymentAmountReceiptDialog extends Dialog implements View.OnClickLi
     }
 
     private void showPaymentHistory() {
-        PaymentPayloadMetaDataDTO metadata = paymentReceiptModel.getPaymentPayload()
+        PendingBalanceMetadataDTO metadata = paymentReceiptModel.getPaymentPayload()
                 .getPatientPayments().getPayload().get(0).getMetadata();
         Map<String, String> queryString = new HashMap<>();
         queryString.put("practice_id", metadata.getPracticeId());

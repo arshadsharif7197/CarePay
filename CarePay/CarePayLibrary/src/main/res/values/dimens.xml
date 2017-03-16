@@ -288,8 +288,8 @@
     <dimen name="activity_separation_large">150dp</dimen>
 
     <!--Add Appointment-->
-    <dimen name="visit_type_dialog_width">280dp</dimen>
-    <dimen name="visit_type_list_height">329dp</dimen>
+    <dimen name="visit_type_dialog_width">510dp</dimen>
+    <dimen name="visit_type_list_height">400dp</dimen>
     <dimen name="visit_type_dialog_padding">11dp</dimen>
     <dimen name="visit_type_label_font">20sp</dimen>
     <dimen name="visit_type_vertical_margin">9dp</dimen>

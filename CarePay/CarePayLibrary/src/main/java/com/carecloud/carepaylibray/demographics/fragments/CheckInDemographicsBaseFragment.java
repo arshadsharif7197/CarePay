@@ -38,6 +38,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     protected CheckInNavListener checkInNavListener;
     StepProgressBar stepProgressBar;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_review_demographic_base, container, false);

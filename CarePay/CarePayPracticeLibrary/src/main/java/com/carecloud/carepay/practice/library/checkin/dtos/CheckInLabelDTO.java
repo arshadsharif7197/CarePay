@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.checkin.dtos;
 
+import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -8,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by Jahirul Bhuiyan on 10/27/2016.
  */
 
-public class CheckInLabelDTO {
+public class CheckInLabelDTO extends AppointmentLabelDTO {
 
     @SerializedName("practice_checkin_detail_dialog_checking_in")
     @Expose
@@ -154,10 +155,6 @@ public class CheckInLabelDTO {
     @SerializedName("reject_label")
     @Expose
     private String rejectLabel;
-
-    @SerializedName("visit_type_heading")
-    @Expose
-    private String visitTypeHeading;
 
     /**
      * @return The practiceCheckinDetailDialogCheckingIn
@@ -509,9 +506,5 @@ public class CheckInLabelDTO {
 
     public String getRejectLabel() {
         return StringUtil.getLabelForView(rejectLabel);
-    }
-
-    public String getVisitTypeHeading() {
-        return StringUtil.getLabelForView(visitTypeHeading);
     }
 }

@@ -64,7 +64,7 @@ public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.Provid
             AppointmentResourcesDTO resources = (AppointmentResourcesDTO) object;
             String providerName = resources.getResource().getProvider().getName();
 
-            holder.shortName.setText(StringUtil.onShortName(providerName));
+            holder.shortName.setText(StringUtil.getShortName(providerName));
             holder.doctorName.setText(providerName);
             holder.doctorType.setText(resources.getResource().getProvider().getSpecialty().getName());
 

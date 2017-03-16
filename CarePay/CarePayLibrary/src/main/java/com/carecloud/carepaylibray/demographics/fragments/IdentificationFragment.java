@@ -23,6 +23,7 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment {
         (view.findViewById(R.id.toolbar_layout)).setVisibility(View.INVISIBLE);
         setHeaderTitle(demographicDTO.getMetadata().getLabels().getDemographicsReviewIdentification(), view);
         initNextButton(demographicDTO.getMetadata().getLabels().getDemographicsReviewNextButton(), null, view);
+        stepProgressBar.setCurrentProgressDot(3);
         return view;
     }
 

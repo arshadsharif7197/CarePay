@@ -20,7 +20,7 @@ import android.widget.ProgressBar;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.payments.models.PaymentsPatientBalancessDTO;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
@@ -37,7 +37,7 @@ public class BaseAmountInfoDialog extends Dialog implements View.OnClickListener
     private CarePayTextView userNameTextView;
 
     private ImageView dialogCloseHeader;
-    protected PaymentsPatientBalancessDTO model;
+    protected PatientBalanceDTO model;
     private View rootLayout;
 
     /**
@@ -45,7 +45,7 @@ public class BaseAmountInfoDialog extends Dialog implements View.OnClickListener
      * @param context context
      * @param paymentModel payment model
      */
-    public BaseAmountInfoDialog(Context context, PaymentsPatientBalancessDTO paymentModel) {
+    public BaseAmountInfoDialog(Context context, PatientBalanceDTO paymentModel) {
         super(context);
         this.context = context;
         this.model = paymentModel;

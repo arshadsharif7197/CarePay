@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.appointments.AppointmentNavigationCallback;
+import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepay.patient.appointments.adapters.AvailableHoursAdapter;
 import com.carecloud.carepay.patient.appointments.adapters.AvailableLocationsAdapter;
 import com.carecloud.carepay.service.library.CarePayConstants;

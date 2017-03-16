@@ -27,9 +27,9 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMetadataDTO;
@@ -107,7 +107,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
 
         DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
         DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-        DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
+        DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
         PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
         String imageUrl = demographicsPersonalDetails.getProfilePhoto();
         if (!StringUtil.isNullOrEmpty(imageUrl)) {
@@ -171,7 +171,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
             DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
             if (demographicsSettingsPayloadDTO != null) {
                 DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-                DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
+                DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
                 PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
                 firstNameValString = demographicsPersonalDetails.getFirstName();
                 lastNameValString = demographicsPersonalDetails.getLastName();
@@ -207,7 +207,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
                                     DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
                                     if (demographicsSettingsPayloadDTO != null) {
                                         DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-                                        DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
+                                        DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
 
                                         Gson gson = new Gson();
                                         String jsonInString = gson.toJson(demographicPayload);
@@ -349,7 +349,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
         DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
         if (demographicsSettingsPayloadDTO != null) {
             DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-            DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
+            DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
             PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
             String profilePicURL = demographicsPersonalDetails.getProfilePhoto();
             if (!StringUtil.isNullOrEmpty(profilePicURL)) {
@@ -388,7 +388,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
             DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
             if (demographicsSettingsPayloadDTO != null) {
                 DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-                DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
+                DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
                 PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
                 demographicsPersonalDetails.setProfilePhoto(imageAsBase64);
             }
