@@ -11,13 +11,13 @@ import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
-import com.carecloud.carepaylibray.CarePlayApplication;
+import com.carecloud.carepaylibray.CarePayApplication;
 
 /**
  * Created by Jahirul Bhuiyan on 10/24/2016.
  */
 
-public class CarePayCloverApplication extends CarePlayApplication
+public class CarePayCloverApplication extends CarePayApplication
         implements Application.ActivityLifecycleCallbacks {
 
     private ApplicationMode applicationMode;

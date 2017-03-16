@@ -7,14 +7,14 @@ import com.carecloud.carepay.patient.BuildConfig;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
-import com.carecloud.carepaylibray.CarePlayApplication;
+import com.carecloud.carepaylibray.CarePayApplication;
 
 
 /**
  * Created by Jahirul on 8/25/2016.
  * this is the application class for the patient app
  */
-public class CarePayPatientApplication extends CarePlayApplication {
+public class CarePayPatientApplication extends CarePayApplication {
 
     private ApplicationMode applicationMode;
 

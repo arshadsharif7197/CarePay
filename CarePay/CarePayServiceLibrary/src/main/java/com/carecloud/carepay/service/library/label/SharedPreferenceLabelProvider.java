@@ -24,6 +24,7 @@ public class SharedPreferenceLabelProvider implements LabelProvider {
 
     /**
      * Returns the language resource for an specified key. If there is no resource, returns the key.
+     *
      * @param key the key related to the value
      */
     @Override
@@ -32,7 +33,19 @@ public class SharedPreferenceLabelProvider implements LabelProvider {
     }
 
     /**
+     * Returns the language resource for an specified key. If there is no resource, returns the defaultValue.
+     *
+     * @param key          the key related to the value
+     * @param defaultValue returns this if key-value does not exits
+     */
+    @Override
+    public String getValue(String key, String defaultValue) {
+        return hasValue(key) ? getValue(key) : defaultValue;
+    }
+
+    /**
      * Returns a boolean indicating if the language resource exists or not for the specified key.
+     *
      * @param key the key related to the value
      */
     @Override
@@ -42,7 +55,8 @@ public class SharedPreferenceLabelProvider implements LabelProvider {
 
     /**
      * Saves the label in the shared preferences
-     * @param key the key related to the value
+     *
+     * @param key   the key related to the value
      * @param value the value to store related to the key
      */
     @Override
