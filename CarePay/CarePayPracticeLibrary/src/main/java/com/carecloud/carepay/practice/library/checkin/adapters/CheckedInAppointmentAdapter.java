@@ -163,6 +163,11 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
         return 0;
     }
 
+    /**
+     * @param id patient ID
+     * @param filtered true if search have to be scoped to only displayed patients
+     * @return patient
+     */
     public CardViewPatient getAppointmentById(String id, boolean filtered) {
         List<CardViewPatient> list = filtered ? filteredPatients : allPatients;
         for (CardViewPatient patient : list) {
@@ -173,6 +178,12 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
         return null;
     }
 
+    /**
+     * Flip patient between Pending / Checking-In and Checked-In states
+     * @param id patient ID
+     * @param filtered true if search have to be scoped to only displayed patients
+     * @return true is patient was found and was successfully flipped
+     */
     public boolean flipAppointmentById(String id, boolean filtered) {
         CardViewPatient patient = getAppointmentById(id, filtered);
 

@@ -43,6 +43,11 @@ public class PracticeUtil {
         return map;
     }
 
+    /**
+     * Create a map of total balances as provided by the Pending Balances portion of patient balance payload
+     * @param patientBalances patient balance list payload
+     * @return map of balances
+     */
     public static Map<String, Double> getTotalBalanceMap(List<PatientBalanceDTO> patientBalances) {
         Map<String, Double> map = new HashMap<>();
 

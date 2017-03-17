@@ -36,7 +36,6 @@ public class CardViewPatient {
     public Boolean isPending;
     int headCount;
 
-
     CardViewPatient(Object raw, String id, ProviderIndexDTO provider, LocationIndexDTO location, Double balance, PatientModel dto) {
         this.raw = raw;
         this.id = id;
@@ -53,10 +52,19 @@ public class CardViewPatient {
         this.isPending = false;
     }
 
+    /**
+     * @param dto Appointment Payload DTO
+     * @param balance owed
+     */
     public CardViewPatient(AppointmentPayloadDTO dto, Double balance) {
         this(dto, dto, balance);
     }
 
+    /**
+     * @param raw main DTO
+     * @param dto Appointment Payload DTO
+     * @param balance owed
+     */
     public CardViewPatient(Object raw, AppointmentPayloadDTO dto, Double balance) {
         this.raw = raw;
         PatientModel patientModel = dto.getPatient();
@@ -77,6 +85,9 @@ public class CardViewPatient {
         this.isPending = code.equalsIgnoreCase(CarePayConstants.PENDING);
     }
 
+    /**
+     * @param appointmentTime header date
+     */
     public CardViewPatient(Date appointmentTime) {
         this.appointmentStartTime = appointmentTime;
     }
