@@ -472,6 +472,7 @@ public class DemographicLabelsDTO {
     public void setDemographicsInsuranceRetakeBackPhoto(String demographicsInsuranceRetakeBackPhoto) {
         this.demographicsInsuranceRetakeBackPhoto = demographicsInsuranceRetakeBackPhoto;
     }
+
     @SerializedName("demographics_review_demographics")
     @Expose
     private String demographicsReviewDemographics;
