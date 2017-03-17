@@ -498,6 +498,8 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
                     case 2:
                         selectedType.setText(dataArray[position]);
                         break;
+                    default:
+                        break;
                 }
                 alert.dismiss();
             }
