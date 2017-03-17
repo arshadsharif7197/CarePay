@@ -163,6 +163,45 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
         return 0;
     }
 
+    public CardViewPatient getAppointmentById(String id, boolean filtered) {
+        List<CardViewPatient> list = filtered ? filteredPatients : allPatients;
+        for (CardViewPatient patient : list) {
+            if (patient.id.equalsIgnoreCase(id)) {
+                return patient;
+            }
+        }
+        return null;
+    }
+
+    public boolean flipAppointmentById(String id, boolean filtered) {
+        CardViewPatient patient = getAppointmentById(id, filtered);
+
+        if (patient == null) {
+            return false;
+        }
+
+        if (patient.isCheckedIn) {
+            patient.isCheckedIn = false;
+            patient.isPending = true;
+
+            applyFilter();
+
+            return true;
+        }
+
+        if (patient.isPending || patient.isCheckingIn) {
+            patient.isCheckedIn = true;
+            patient.isPending = false;
+            patient.isCheckingIn = false;
+
+            applyFilter();
+
+            return true;
+        }
+
+        return false;
+    }
+
     class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         AppointmentStatusCardView appointmentStatusCartView;
 

@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.appointments.adapters.CardViewPatient;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.checkin.adapters.CheckedInAppointmentAdapter;
 import com.carecloud.carepay.practice.library.checkin.dialog.AppointmentDetailDialog;
@@ -128,7 +129,7 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity
             @Override
             public void onClick(View view) {
                 FilterDialog filterDialog = new FilterDialog(getContext(),
-                        findViewById(R.id.activity_practice_appointments), filter,
+                        findViewById(R.id.activity_checked_in), filter,
                         Label.getLabel("practice_checkin_filter_doctors"),
                         Label.getLabel("practice_checkin_filter_locations"),
                         Label.getLabel("practice_checkin_filter"),
@@ -209,15 +210,14 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity
     View.OnDragListener onCheckingInListDragListener = new View.OnDragListener() {
         @Override
         public boolean onDrag(View view, DragEvent dragEvent) {
+            String patientId = dragEvent.getClipDescription().getLabel().toString();
             switch (dragEvent.getAction()) {
                 //signal for the start of a drag and drop operation.
                 case DragEvent.ACTION_DRAG_STARTED:
                     // do nothing
-//                    AppointmentPayloadDTO draggedAppointment = getAppintmentById(
-//                            dragEvent.getClipDescription().getLabel().toString(), waitingRoomAppointments);
-//                    if (draggedAppointment == null) {
-//                        findViewById(R.id.drop_down_area_view).setVisibility(View.VISIBLE);
-//                    }
+                    if (waitingRoomAdapter.getAppointmentById(patientId, true) == null) {
+                        findViewById(R.id.drop_down_area_view).setVisibility(View.VISIBLE);
+                    }
                     break;
                 //the drag point has entered the bounding box of the View
                 case DragEvent.ACTION_DRAG_ENTERED:
@@ -227,21 +227,13 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity
                     break;
                 //drag shadow has been released,the drag point is within the bounding box of the View
                 case DragEvent.ACTION_DROP:
-//                    AppointmentPayloadDTO appointmentDTO = getAppintmentById(
-//                            dragEvent.getClipDescription().getLabel().toString(), waitingRoomAppointments);
-//
-//                    if (appointmentDTO != null) {
-//                        waitingRoomAppointments.remove(appointmentDTO);
-//                        appointmentDTO.getAppointmentStatus().setName("Pending");
-//
-//                        checkingInAppointments.add(appointmentDTO);
-//                        waitingRoomAdapter.notifyDataSetChanged();
-//                        checkedInAdapter.notifyDataSetChanged();
-//                        checkingInCounterTextview.setText(String.valueOf(checkedInAdapter.getItemCount()));
-//                        waitingCounterTextview.setText(String.valueOf(waitingRoomAdapter.getItemCount()));
-//                    } else {
-//                        findViewById(R.id.drop_down_area_view).setVisibility(View.GONE);
-//                    }
+                    if (waitingRoomAdapter.flipAppointmentById(patientId, true)) {
+                        checkedInAdapter.flipAppointmentById(patientId, false);
+
+                        applyFilter();
+                    } else {
+                        findViewById(R.id.drop_down_area_view).setVisibility(View.GONE);
+                    }
                     break;
                 //the drag and drop operation has concluded.
                 case DragEvent.ACTION_DRAG_ENDED:
@@ -270,23 +262,16 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity
                     break;
                 //drag shadow has been released,the drag point is within the bounding box of the View
                 case DragEvent.ACTION_DROP:
-//                    AppointmentPayloadDTO appointmentDTO = getAppintmentById(
-//                            dragEvent.getClipDescription().getLabel().toString(), checkingInAppointments);
+                    String patientId = dragEvent.getClipDescription().getLabel().toString();
+                    if (checkedInAdapter.flipAppointmentById(patientId, true)) {
+                        waitingRoomAdapter.flipAppointmentById(patientId, false);
 
-//                    if (appointmentDTO != null) {
-//                        checkingInAppointments.remove(appointmentDTO);
-//                        appointmentDTO.getAppointmentStatus().setName("Checked-In");
-//
-//                        waitingRoomAppointments.add(appointmentDTO);
-//                        waitingRoomAdapter.notifyDataSetChanged();
-//                        checkedInAdapter.notifyDataSetChanged();
-//                        checkingInCounterTextview.setText(String.valueOf(checkedInAdapter.getItemCount()));
-//                        waitingCounterTextview.setText(String.valueOf(waitingRoomAdapter.getItemCount()));
-//
-//                        ((TextView) findViewById(R.id.drop_here_icon)).setText(Label.getLabel("practice_checkin_success_label"));
-//                        ((TextView) findViewById(R.id.drop_here_icon)).setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icn_check, 0, 0);
-//                        onCheckInAppointment(appointmentDTO);
-//                    }
+                        applyFilter();
+
+                        ((TextView) findViewById(R.id.drop_here_icon)).setText(Label.getLabel("practice_checkin_success_label"));
+                        ((TextView) findViewById(R.id.drop_here_icon)).setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icn_check, 0, 0);
+                        onCheckInAppointment(patientId);
+                    }
                     break;
                 //the drag and drop operation has concluded.
                 case DragEvent.ACTION_DRAG_ENDED:
@@ -299,13 +284,13 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity
         }
     };
 
-    private void onCheckInAppointment(AppointmentPayloadDTO appointmentDTO) {
+    private void onCheckInAppointment(String patientId) {
         Map<String, String> queryMap = new HashMap<>();
         if (checkInDTO.getPayload().getAppointments() != null && checkInDTO.getPayload().getAppointments().size() > 0) {
             queryMap.put("practice_mgmt", checkInDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeMgmt());
             queryMap.put("practice_id", checkInDTO.getPayload().getAppointments().get(0).getMetadata().getPracticeId());
         }
-        queryMap.put("appointment_id", appointmentDTO.getId());
+        queryMap.put("appointment_id", patientId);
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getCheckinAppointment();
         getWorkflowServiceHelper().execute(transitionDTO, checkInAppointmentCallback, queryMap);
     }
@@ -333,43 +318,10 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity
         }
     };
 
-    private AppointmentPayloadDTO getAppintmentById(String appointmentId, ArrayList<AppointmentPayloadDTO> appointments) {
-        for (AppointmentPayloadDTO appointmentDTO : appointments) {
-            if (appointmentDTO.getId().equalsIgnoreCase(appointmentId)) {
-                return appointmentDTO;
-            }
-        }
-        return null;
-    }
-
     @Override
     public void applyFilter() {
         checkedInAdapter.applyFilter(filter);
         waitingRoomAdapter.applyFilter(filter);
-//        List<AppointmentDTO> appointmentDTOs = checkInDTO.getPayload().getAppointments();
-//        checkingInAppointments.clear();
-//        waitingRoomAppointments.clear();
-//        for (AppointmentDTO appointmentDTO : appointmentDTOs) {
-//            AppointmentPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
-//            if (appointments.contains(appointmentPayloadDTO.getId())) {
-//                if (appointmentPayloadDTO.getAppointmentStatus().getName().equalsIgnoreCase(getString(R.string.checked_in))) {
-//                    waitingRoomAppointments.add(appointmentPayloadDTO);
-//                } else {
-//                    checkingInAppointments.add(appointmentPayloadDTO);
-//                }
-//            }
-//        }
-//
-//        if (appointments.size() == appointmentDTOs.size()) {
-//            filterOnTextView.setVisibility(View.GONE);
-//            filterTextView.setVisibility(View.VISIBLE);
-//            isFilterOn = false;
-//        } else {
-//            filterOnTextView.setVisibility(View.VISIBLE);
-//            filterTextView.setVisibility(View.GONE);
-//            isFilterOn = true;
-//        }
-//        setAdapter();
 
         checkingInCounterTextview.setText(String.valueOf(checkedInAdapter.getItemCount()));
         waitingCounterTextview.setText(String.valueOf(waitingRoomAdapter.getItemCount()));

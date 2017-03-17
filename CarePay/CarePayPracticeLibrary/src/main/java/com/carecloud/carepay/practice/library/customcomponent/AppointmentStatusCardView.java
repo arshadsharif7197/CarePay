@@ -143,6 +143,10 @@ public class AppointmentStatusCardView extends LinearLayout {
      * @param appointmentTime appointment Time
      */
     public void setAppointmentTime(Date appointmentTime) {
+        if (null == appointmentTime) {
+            return;
+        }
+
         final DateTime appointmentDateTime = new DateTime(appointmentTime);
         timeTextView.setText(appointmentDateTime.toString("hh:mm a"));
         if (appointmentDateTime.isBeforeNow()) {
@@ -150,39 +154,9 @@ public class AppointmentStatusCardView extends LinearLayout {
         } else {
             timeTextView.setBackgroundResource(R.drawable.bg_green_overlay);
         }
-    }
 
-    OnDragListener onDragListener = new OnDragListener() {
-        @Override
-        public boolean onDrag(View view, DragEvent dragEvent) {
-            AppointmentStatusCardView appointmentStatusCartView = (AppointmentStatusCardView) view;
-            switch (dragEvent.getAction()) {
-                //signal for the start of a drag and drop operation.
-                case DragEvent.ACTION_DRAG_STARTED:
-                    // do nothing
-                    break;
-                //the drag point has entered the bounding box of the View
-                case DragEvent.ACTION_DRAG_ENTERED:
-                    appointmentStatusCartView.containerLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.light_gray));
-                    break;
-                //the user has moved the drag shadow outside the bounding box of the View
-                case DragEvent.ACTION_DRAG_EXITED:
-                    appointmentStatusCartView.containerLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
-                    break;
-                //drag shadow has been released,the drag point is within the bounding box of the View
-                case DragEvent.ACTION_DROP:
-                    appointmentStatusCartView.containerLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
-                    break;
-                //the drag and drop operation has concluded.
-                case DragEvent.ACTION_DRAG_ENDED:
-                    //rv.updateState(customState);
-                    break;
-                default:
-                    break;
-            }
-            return true;
-        }
-    };
+        timeTextView.setVisibility(View.VISIBLE);
+    }
 
     OnLongClickListener onLongClickListener = new OnLongClickListener() {
         @Override
