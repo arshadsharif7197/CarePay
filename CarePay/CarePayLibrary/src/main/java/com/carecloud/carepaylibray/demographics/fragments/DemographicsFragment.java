@@ -277,9 +277,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
     }
 
     /**
-     *
      * Show dialog
-     *
      * */
     private void showDialog(final String[] dataArray, String title, String cancelLabel, final TextView editText, final View view){
         SystemUtil.showChooseDialog(getActivity(),
