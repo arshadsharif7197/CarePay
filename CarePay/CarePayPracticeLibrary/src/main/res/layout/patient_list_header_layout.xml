@@ -17,13 +17,4 @@
         android:textColor="@color/confirm_pin_sub_title"
         android:textSize="@dimen/text_size_22sp"
         card_view:customAssetFont="gotham_rounded_medium" />
-
-    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-        android:id="@+id/patientCountView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen_10dp"
-        android:textColor="@color/confirm_pin_sub_title"
-        android:textSize="@dimen/text_size_22sp"
-        card_view:customAssetFont="gotham_rounded_medium" />
 </LinearLayout>
