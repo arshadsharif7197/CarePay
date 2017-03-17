@@ -215,7 +215,8 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
         checkinPayment = findViewById(R.id.checkin_flow_payment);
 
         checkinFlowViews = new View[]{checkinDemographics, checkinConsent, checkinMedications, checkinIntake, checkinPayment};
-        checkinFlowLabels = new String[]{Label.getLabel("demographics_patient_information_title"), Label.getLabel("demographics_consent_forms_title"), Label.getLabel("demographics_meds_allergies_title"), Label.getLabel("practice_chekin_section_intake_forms"), Label.getLabel("demographics_payment_title")};
+        checkinFlowLabels = new String[]{demographicDTO.getMetadata().getLabels().getDemographicsPatientInformationTitle(),
+                Label.getLabel("demographics_consent_forms_title"), Label.getLabel("demographics_meds_allergies_title"), Label.getLabel("practice_chekin_section_intake_forms"), Label.getLabel("demographics_payment_title")};
         for(int i=0; i<checkinFlowViews.length; i++){
             View view = checkinFlowViews[i];
             TextView textView = (TextView) view.findViewById(R.id.checkin_flow_title);
