@@ -19,21 +19,13 @@ import com.carecloud.carepay.practice.library.models.MapFilterModel;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
-import com.carecloud.carepaylibray.utils.DateUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-
-/**
- * Created by Jahirul Bhuiyan on 10/17/2016.
- */
 
 public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInAppointmentAdapter.CartViewHolder> {
 
@@ -59,7 +51,9 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
 
     private void loadPatients(CheckInDTO checkInDTO) {
         List<AppointmentDTO> appointments = checkInDTO.getPayload().getAppointments();
-        Map<String, String> profilePhotoMap = PracticeUtil.getProfilePhotoMap(checkInDTO.getPayload().getPatientBalances());
+        List<PatientBalanceDTO> patientBalances = checkInDTO.getPayload().getPatientBalances();
+        Map<String, String> profilePhotoMap = PracticeUtil.getProfilePhotoMap(patientBalances);
+        Map<String, Double> totalBalanceMap = PracticeUtil.getTotalBalanceMap(patientBalances);
         this.allPatients = new ArrayList<>(appointments.size());
 
         for (AppointmentDTO appointmentDTO : appointments) {
@@ -67,7 +61,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
             PatientModel patientDTO = appointmentDTO.getPayload().getPatient();
             patientDTO.setProfilePhoto(profilePhotoMap.get(patientDTO.getPatientId()));
 
-            this.allPatients.add(new CardViewPatient(appointmentDTO, appointmentDTO.getPayload()));
+            this.allPatients.add(new CardViewPatient(appointmentDTO.getPayload(), totalBalanceMap.get(patientDTO.getPatientId())));
         }
 
         sortListByDate(this.allPatients);
@@ -115,12 +109,17 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
                 continue;
             }
 
+            // Filter other statuses
+            if (!patient.isPending && !patient.isCheckingIn && !patient.isCheckedIn) {
+                continue;
+            }
+
             if (isWaitingRoom) {
                 if (!patient.isCheckedIn) {
                     continue;
                 }
-            } else {
-
+            } else if (patient.isCheckedIn) {
+                continue;
             }
 
             filteredPatients.add(patient);
@@ -138,8 +137,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
      */
     public CheckedInAppointmentAdapter.CartViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.checked_in_list_item_layout, parent, false);
-        CartViewHolder viewHolder = new CartViewHolder(view);
-        return viewHolder;
+        return new CartViewHolder(view);
     }
 
     @Override
@@ -147,28 +145,14 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
         final CardViewPatient patient = filteredPatients.get(position);
         holder.appointmentStatusCartView.setPatientName(patient.name);
         holder.appointmentStatusCartView.setAppointmentId(patient.id);
-
-//        holder.appointmentStatusCartView.setAmount(getTotalBalance(position));
-        //holder.appointmentStatusCartView.setPatientImage(patientModel.getPhoto());
+        holder.appointmentStatusCartView.setAmount(patient.balance);
+        holder.appointmentStatusCartView.setPatientImage(patient.photoUrl);
         holder.appointmentStatusCartView.setProviderName(patient.providerName);
-//        holder.appointmentStatusCartView.setAppointmentTime(DateUtil.getInstance().setDateRaw(appointmentItem.getStartTime()).getDate().getTime());
-        holder.appointmentStatusCartView.setTag(patient);
+        holder.appointmentStatusCartView.setAppointmentTime(patient.appointmentStartTime);
+        holder.appointmentStatusCartView.setTag(patient.raw);
         holder.appointmentStatusCartView.setWaitingRoom(isWaitingRoom);
         holder.appointmentStatusCartView.setShortName(patient.initials);
     }
-
-//    private double getTotalBalance(int position) {
-//        AppointmentPayloadDTO appointmentItem = appointmentArrayList.get(position);
-//        String id = appointmentItem.getPatient().getPatientId();
-//
-//        for (PatientBalanceDTO patientBalanceDTO: patientBalances) {
-//            PendingBalanceDTO pendingBalanceDTO = patientBalanceDTO.getBalances().get(0);
-//            if (pendingBalanceDTO.getMetadata().getPatientId().equals(id) && !pendingBalanceDTO.getPayload().isEmpty()) {
-//                return pendingBalanceDTO.getPayload().get(0).getAmount();
-//            }
-//        }
-//        return 0;
-//    }
 
     @Override
     public int getItemCount() {

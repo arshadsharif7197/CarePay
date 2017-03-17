@@ -240,7 +240,9 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private void loadPatients(CheckInDTO checkInDTO) {
         List<AppointmentDTO> appointments = checkInDTO.getPayload().getAppointments();
-        Map<String, String> profilePhotoMap = PracticeUtil.getProfilePhotoMap(checkInDTO.getPayload().getPatientBalances());
+        List<PatientBalanceDTO> patientBalances = checkInDTO.getPayload().getPatientBalances();
+        Map<String, String> profilePhotoMap = PracticeUtil.getProfilePhotoMap(patientBalances);
+        Map<String, Double> totalBalanceMap = PracticeUtil.getTotalBalanceMap(patientBalances);
         this.allPatients = new ArrayList<>(appointments.size());
 
         for (AppointmentDTO appointmentDTO : appointments) {
@@ -248,7 +250,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             PatientModel patientDTO = appointmentDTO.getPayload().getPatient();
             patientDTO.setProfilePhoto(profilePhotoMap.get(patientDTO.getPatientId()));
 
-            this.allPatients.add(new CardViewPatient(appointmentDTO, appointmentDTO.getPayload()));
+            this.allPatients.add(new CardViewPatient(appointmentDTO, appointmentDTO.getPayload(), totalBalanceMap.get(patientDTO.getPatientId())));
         }
 
         sortListByDate(this.allPatients);
