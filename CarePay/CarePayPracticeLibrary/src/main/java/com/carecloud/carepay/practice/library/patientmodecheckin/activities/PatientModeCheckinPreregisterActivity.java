@@ -826,19 +826,16 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
 
         FragmentManager fm = getSupportFragmentManager();
         String tag = ProfilePictureFragment.class.getSimpleName();
-        ProfilePictureFragment fragment = (ProfilePictureFragment) fm.findFragmentByTag(tag);
-        if (fragment == null) {
-            fragment = new ProfilePictureFragment();
-            fragment.setGlobalLabelsDTO(globalLabelDTO);
+        ProfilePictureFragment fragment = new ProfilePictureFragment();
+        fragment.setGlobalLabelsDTO(globalLabelDTO);
 
-            Bundle args = new Bundle();
-            DtoHelper.bundleDto(args, persDetailsDTO);
-            args.putBoolean(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE, true);
-            fragment.setArguments(args);
-        }
-        fm.beginTransaction()
-                .replace(R.id.revdemographicsAddressPicCapturer, fragment, tag)
-                .commit();
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, persDetailsDTO);
+        args.putBoolean(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE, true);
+        fragment.setArguments(args);
+        fm.beginTransaction().replace(R.id.revdemographicsAddressPicCapturer, fragment, tag)
+                             .commit();
+
     }
 
     @Override
@@ -874,6 +871,11 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
         }
     }
 
+    @Override
+    public void loadPictureFragment(){
+        initializeProfilePictureFragment(demographicDTO.getMetadata().getLabels(),
+                demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails());
+    }
 
 
     public void navigateToDemographicFragment(Integer step) {
@@ -883,9 +885,5 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
         fragment.setArguments(args);
 
         navigateToFragment(fragment, true);
-        if(step==1){
-            initializeProfilePictureFragment(demographicDTO.getMetadata().getLabels(),
-                    demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails());
-        }
     }
 }

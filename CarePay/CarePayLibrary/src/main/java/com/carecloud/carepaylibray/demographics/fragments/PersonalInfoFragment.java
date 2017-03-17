@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -59,11 +60,13 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
+        profilePicturelistener.loadPictureFragment();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 SystemUtil.hideSoftKeyboard(getActivity());
+                ((ScrollView)view.findViewById(R.id.reviewdemographicsPersonalContainer)).smoothScrollTo(0,0);
             }
         }, 300);
     }
@@ -476,5 +479,6 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
 
     public interface UpdateProfilePictureListener{
         public String getProfilePicture();
+        public void loadPictureFragment();
     }
 }
