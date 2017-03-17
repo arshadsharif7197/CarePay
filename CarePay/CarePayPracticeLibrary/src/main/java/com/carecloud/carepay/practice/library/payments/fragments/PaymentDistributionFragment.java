@@ -320,7 +320,29 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
     @Override
     public void applyNewDistributionAmount(double amount) {
-        paymentTotal.setText(currencyFormatter.format(amount));
+        paymentAmount = amount;
+        setCurrency(paymentTotal, amount);
+        distributeAmountOverBalanceItems(amount);
+    }
+
+    private void distributeAmountOverBalanceItems(double amount){
+        balanceItems.clear();
+        calculateTotalBalance();
+
+        for (BalanceItemDTO balanceItem : balanceItems){
+            double balance = balanceItem.getBalance();
+            if(amount>=balance){
+                amount-=balance;
+            }else{
+                balance = amount;
+                balanceItem.setBalance(balance);
+                if(amount > 0) {
+                    amount -= balance;
+                }
+            }
+        }
+
+        setAdapter();
     }
 
 
