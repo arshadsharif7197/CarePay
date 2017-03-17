@@ -102,7 +102,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         if (listener == null){
             listener =  new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View buttonView) {
                     if(passConstraints(view)) {
                         DemographicDTO demographicDTO = updateDemographicDTO(view);
                         openNextFragment(demographicDTO, (checkInNavListener.getCurrentStep() + 1)>5);
@@ -125,7 +125,9 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     }
 
     protected abstract boolean passConstraints(View view);
+
     protected abstract int getContentId();
+
     protected abstract DemographicDTO updateDemographicDTO(View view);
 
     @Override
@@ -144,8 +146,11 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     public interface CheckInNavListener {
         public void applyChangesAndNavTo(DemographicDTO demographicDTO, Integer step);
+
         public Integer getCurrentStep();
+
         public void setCurrentStep(Integer step);
+
         void setCheckinFlow(CheckinFlowState flowState, int totalPages, int currentPage);
     }
 
