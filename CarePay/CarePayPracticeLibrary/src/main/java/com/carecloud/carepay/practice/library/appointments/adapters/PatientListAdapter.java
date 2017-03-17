@@ -152,6 +152,8 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     .resize(60, 60).into(holder.profilePicture);
 
             holder.profilePicture.setVisibility(View.VISIBLE);
+        } else {
+            holder.profilePicture.setVisibility(View.INVISIBLE);
         }
     }
 

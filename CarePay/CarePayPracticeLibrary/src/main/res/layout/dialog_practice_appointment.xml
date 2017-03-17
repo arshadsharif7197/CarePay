@@ -11,6 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="240dp">
 
+        <ImageView
+            android:id="@+id/appointment_card_header_background"
+            android:layout_width="match_parent"
+            android:layout_height="190dp"
+            android:layout_alignParentTop="true"
+            android:scaleType="centerCrop"
+            android:visibility="gone" />
+
         <LinearLayout
             android:id="@+id/appointment_card_header"
             android:layout_width="match_parent"
@@ -76,7 +84,7 @@
             android:gravity="center"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_24sp"
-            app:customAssetFont="proxima_nova_regular" />
+            app:customAssetFont="proxima_nova_semi_bold" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/appointment_doctor"
@@ -102,7 +110,7 @@
             android:textColor="@color/lightSlateGray"
             android:textSize="@dimen/text_size_24sp"
             android:textStyle="bold"
-            app:customAssetFont="proxima_nova_semi_bold" />
+            app:customAssetFont="proxima_nova_extra_bold" />
 
     </LinearLayout>
 
@@ -144,7 +152,7 @@
         android:paddingStart="24dp"
         android:paddingTop="10dp">
 
-        <Button
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/button_left_action"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -152,10 +160,12 @@
             android:layout_marginEnd="5dp"
             android:layout_weight="1"
             android:background="@drawable/bg_red_overlay"
+            android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_22sp" />
+            android:textSize="@dimen/text_size_22sp"
+            app:customAssetFont="gotham_rounded_medium" />
 
-        <Button
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/button_right_action"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -163,7 +173,9 @@
             android:layout_marginStart="5dp"
             android:layout_weight="1"
             android:background="@drawable/bg_yellow_overlay"
+            android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_22sp" />
+            android:textSize="@dimen/text_size_22sp"
+            app:customAssetFont="gotham_rounded_medium" />
     </LinearLayout>
 </LinearLayout>
