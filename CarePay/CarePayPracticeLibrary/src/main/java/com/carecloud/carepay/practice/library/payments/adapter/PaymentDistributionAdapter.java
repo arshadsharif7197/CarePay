@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -25,20 +26,15 @@ import java.util.List;
  */
 
 public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDistributionAdapter.PaymentDistributionViewHolder> {
-    private static final int MINIMUM_SWIPE_DISTANCE = 200;
-    private static final int MAX_VERTICAL_VARIANCE = 30;
-
     private Context context;
     private List<BalanceItemDTO> balanceItems = new ArrayList<>();
     private PaymentDistributionCallback callback;
-    private String clearLabel;
     private NumberFormat currencyFormat;
 
-    public PaymentDistributionAdapter(Context context, List<BalanceItemDTO> balanceItems, PaymentDistributionCallback callback, String clearLabel){
+    public PaymentDistributionAdapter(Context context, List<BalanceItemDTO> balanceItems, PaymentDistributionCallback callback){
         this.context = context;
         this.balanceItems = balanceItems;
         this.callback = callback;
-        this.clearLabel = clearLabel;
         this.currencyFormat = NumberFormat.getCurrencyInstance();
     }
 
@@ -53,18 +49,29 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
     public void onBindViewHolder(final PaymentDistributionViewHolder holder, int position) {
         final BalanceItemDTO balanceItem = balanceItems.get(position);
         holder.getDescription().setText(StringUtil.getLabelForView(balanceItem.getDescription()));
-        holder.getProviderName().setText(StringUtil.getLabelForView(balanceItem.getProvider().getName()));
-        holder.getProviderInitials().setText(StringUtil.getShortName(balanceItem.getProvider().getName()));
-        holder.getLocationName().setText(StringUtil.getLabelForView(balanceItem.getLocation().getName()));
-        holder.getClearButton().setText(clearLabel);
 
-        double amount=0D;
-        TextView amountTextView = holder.getAmount();
-        try{
-            amount = Double.parseDouble(balanceItem.getBalance());
-        }catch (NumberFormatException nfe){
-            nfe.printStackTrace();
+        String providerName = balanceItem.getProvider().getName();
+        if(providerName == null){
+            holder.getProviderName().setText(Label.getLabelForView("payment_choose_provider"));
+        }else {
+            holder.getProviderName().setText(StringUtil.getLabelForView(providerName));
         }
+
+        String providerInitials = StringUtil.getShortName(balanceItem.getProvider().getName());
+        if(providerName == null){
+            providerInitials = "+";
+        }
+        holder.getProviderInitials().setText(providerInitials);
+
+        String locationName = balanceItem.getLocation().getName();
+        if(locationName == null){
+            holder.getLocationName().setText(Label.getLabelForView("payment_choose_location"));
+        }else {
+            holder.getLocationName().setText(StringUtil.getLabelForView(locationName));
+        }
+
+        double amount = balanceItem.getBalance();
+        TextView amountTextView = holder.getAmount();
         if(amount==0D) {
             amountTextView.setText(context.getString(R.string.em_dash));
         }else{
@@ -111,6 +118,8 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
             }
         });
 
+        amountTextView.setSelectAllOnFocus(true);
+
 //        amountTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 //            @Override
 //            public void onFocusChange(View view, boolean hasFocus) {
@@ -126,25 +135,16 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
 //            }
 //        });
 
-//        holder.getClearButton().setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                View rowLayout = holder.getRowLayout();
-//                ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) rowLayout.getLayoutParams();
-//                layoutParams.leftMargin = 0;
-//                view.setVisibility(View.GONE);
-//                rowLayout.setLayoutParams(layoutParams);
-//                callback.editAmount(0D, balanceItem);
-//            }
-//        });
-
-//        final GestureDetectorCompat gestureDetector = new GestureDetectorCompat(context, new SwipeGestureDetector(balanceItem));
-//        holder.getRowLayout().setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                return gestureDetector.onTouchEvent(event);
-//            }
-//        });
+        holder.getClearButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                View rowLayout = holder.getRowLayout();
+                ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) rowLayout.getLayoutParams();
+                layoutParams.leftMargin = 0;
+                rowLayout.setLayoutParams(layoutParams);
+                callback.editAmount(0D, balanceItem);
+            }
+        });
 
         holder.pickProviderButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,7 +160,6 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
             }
         });
 
-        holder.setBalanceItem(balanceItem);
     }
 
     @Override
@@ -184,8 +183,6 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
         private View pickProviderButton;
         private View pickLocationButton;
         private View rowLayout;
-
-        private BalanceItemDTO balanceItem;
 
         public PaymentDistributionViewHolder(View itemView) {
             super(itemView);
@@ -281,13 +278,6 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
             this.rowLayout = rowLayout;
         }
 
-        public BalanceItemDTO getBalanceItem() {
-            return balanceItem;
-        }
-
-        public void setBalanceItem(BalanceItemDTO balanceItem) {
-            this.balanceItem = balanceItem;
-        }
     }
 
     public interface PaymentDistributionCallback{
@@ -298,28 +288,4 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
         void editAmount(double amount, BalanceItemDTO balanceItem);
     }
 
-//    private class SwipeGestureDetector extends GestureDetector.SimpleOnGestureListener{
-//        private PaymentDistributionViewHolder viewHolder;
-//
-//        public SwipeGestureDetector(PaymentDistributionViewHolder viewHolder){
-//            this.viewHolder = viewHolder;
-//        }
-//
-//        @Override
-//        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY){
-//            if(Math.abs(e1.getX()-e2.getX()) > MINIMUM_SWIPE_DISTANCE && Math.abs(e1.getY() - e2.getY()) < MAX_VERTICAL_VARIANCE){
-//                //swipe is detected, now which direction???
-//                if(e1.getX() > e2.getX()){
-//                    //this is right to left swipe
-//
-//                }else{
-//                    //must be left to right
-//
-//                }
-//                return true;
-//            }
-//            return false;
-//        }
-//
-//    }
 }

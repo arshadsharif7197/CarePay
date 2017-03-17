@@ -2,25 +2,27 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/remove_red">
+        android:layout_height="@dimen/dimen_81dp"
+        android:background="@color/light_gray">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/clear_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:background="@color/remove_red"
             android:padding="@dimen/dimen_16dp"
             android:layout_gravity="right"
             android:gravity="center"
             android:textSize="@dimen/text_size_20"
             android:textColor="@color/white"
-            android:text="Clear"
+            breeze:textKey="payment_clear_button"
             app:customAssetFont="proxima_nova_regular"
             android:visibility="visible"/>
 
@@ -28,16 +30,16 @@
         <LinearLayout
             android:id="@+id/payment_info_row"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:layout_height="match_parent"
             android:orientation="horizontal">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/payment_detail_description"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/dimen_81dp"
+                android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:padding="@dimen/dimen_8dp"
+                android:background="@color/white"
                 android:maxLines="2"
                 android:ellipsize="end"
                 android:gravity="start|center_vertical"
@@ -53,7 +55,8 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="@dimen/dimen_81dp"
+                android:layout_height="match_parent"
+                android:background="@color/white"
                 android:layout_weight="2"
                 android:padding="@dimen/dimen_8dp">
 
@@ -67,10 +70,10 @@
                         android:layout_width="@dimen/dimen_50dp"
                         android:layout_height="@dimen/dimen_50dp"
                         android:layout_gravity="center"
-                        android:background="@drawable/round_list_tv"
+                        android:background="@drawable/round_list_tv_dark"
                         android:src="@drawable/icn_placeholder_user_profile_png"
-                        android:textColor="@color/lightSlateGray"
-                        android:textSize="@dimen/text_size_24sp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_15"
                         app:customAssetFont="gotham_rounded_medium"/>
 
                     <ImageView
@@ -113,7 +116,8 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="@dimen/dimen_81dp"
+                android:layout_height="match_parent"
+                android:background="@color/white"
                 android:layout_weight="2"
                 android:padding="@dimen/dimen_8dp">
 
@@ -158,10 +162,10 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/payment_amount"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/dimen_81dp"
+                android:layout_height="match_parent"
+                android:background="@color/white"
                 android:layout_weight="1"
                 android:padding="@dimen/dimen_8dp"
-                android:background="@color/transparent_apt"
                 android:maxLines="2"
                 android:ellipsize="end"
                 android:inputType="numberDecimal"

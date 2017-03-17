@@ -28,7 +28,7 @@ public class PopupPickProviderAdapter extends PopupPickerAdapter {
         final ProviderDTO provider = appointmentProvider.get(position);
 
         holder.getName().setText(provider.getName());
-        holder.getName().setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 callback.pickProvider(provider, selectedBalanceItem);

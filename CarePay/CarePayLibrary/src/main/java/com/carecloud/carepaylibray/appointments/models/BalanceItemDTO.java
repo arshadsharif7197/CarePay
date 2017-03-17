@@ -13,13 +13,13 @@ public class BalanceItemDTO {
     private Long id;
     @SerializedName("amount")
     @Expose
-    private String amount;
+    private double amount;
     @SerializedName("balance")
     @Expose
-    private String balance;
+    private double balance;
     @SerializedName("unapplied_credit")
     @Expose
-    private Integer unappliedCredit;
+    private double unappliedCredit;
     @SerializedName("posting_date")
     @Expose
     private String postingDate;
@@ -59,27 +59,27 @@ public class BalanceItemDTO {
         this.id = id;
     }
 
-    public String getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(String amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
-    public String getBalance() {
+    public double getBalance() {
         return balance;
     }
 
-    public void setBalance(String balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 
-    public Integer getUnappliedCredit() {
+    public double getUnappliedCredit() {
         return unappliedCredit;
     }
 
-    public void setUnappliedCredit(Integer unappliedCredit) {
+    public void setUnappliedCredit(double unappliedCredit) {
         this.unappliedCredit = unappliedCredit;
     }
 

@@ -1,6 +1,8 @@
 package com.carecloud.carepay.practice.library.payments.dialogs;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +11,7 @@ import android.widget.PopupWindow;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.adapter.PopupPickerAdapter;
+import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 
 /**
  * Created by lmenendez on 3/15/17.
@@ -29,11 +32,18 @@ public class PopupPickerWindow extends PopupWindow {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.popup_picker_list, null, false);
         setContentView(view);
+        setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setElevation(10);
+        }
     }
 
     @Override
     public void setContentView(View view){
         super.setContentView(view);
+
+        setWidth(context.getResources().getDimensionPixelSize(R.dimen.popup_picker_width));
+        setHeight(context.getResources().getDimensionPixelSize(R.dimen.popup_picker_height));
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         popupRecycler = (RecyclerView) view.findViewById(R.id.pick_list_recycler);
@@ -48,4 +58,7 @@ public class PopupPickerWindow extends PopupWindow {
         return (PopupPickerAdapter) popupRecycler.getAdapter();
     }
 
+    public void setBalanceItemDTO(BalanceItemDTO balanceItemDTO) {
+        ((PopupPickerAdapter) popupRecycler.getAdapter()).setSelectedBalanceItem(balanceItemDTO);
+    }
 }

@@ -333,6 +333,9 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_clear_button")
     @Expose
     private String paymentClearButton;
+    @SerializedName("payment_title")
+    @Expose
+    private String paymentTitle;
 
     public String getPaymentBalanceOwedLabel() {
         return paymentBalanceOwedLabel;
@@ -1967,5 +1970,13 @@ public class PaymentsLabelDTO {
 
     public void setPaymentClearButton(String paymentClearButton) {
         this.paymentClearButton = paymentClearButton;
+    }
+
+    public String getPaymentTitle() {
+        return paymentTitle;
+    }
+
+    public void setPaymentTitle(String paymentTitle) {
+        this.paymentTitle = paymentTitle;
     }
 }

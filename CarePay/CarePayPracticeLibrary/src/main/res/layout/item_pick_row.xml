@@ -13,6 +13,7 @@
         android:paddingTop="@dimen/dimen_8dp"
         android:paddingBottom="@dimen/dimen_8dp"
         android:textSize="@dimen/text_size_17"
+        android:gravity="start"
         android:textColor="@color/slateGray"
         android:maxLines="1"
         android:ellipsize="end"

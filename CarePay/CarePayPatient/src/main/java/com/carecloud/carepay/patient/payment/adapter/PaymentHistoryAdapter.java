@@ -55,7 +55,7 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
 
         holder.shortName.setText(StringUtil.getShortName(locationName));
         holder.locationName.setText(locationName);
-        holder.amount.setText(StringUtil.getFormattedBalanceAmount(Double.parseDouble(charge.getAmount())));
+        holder.amount.setText(StringUtil.getFormattedBalanceAmount(charge.getAmount()));
         holder.paymentDate.setText(DateUtil.getInstance().setDateRaw(charge.getPostingDate())
                 .getDateAsMonthLiteralDayOrdinalYear());
 

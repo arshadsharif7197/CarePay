@@ -459,12 +459,12 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
         patientDTO.setPatientId(addAppointmentPatientId);
         payloadDTO.setPatient(patientDTO);
 
-        AppointmentProviderDTO providersDTO;
+        ProviderDTO providersDTO;
         providersDTO = selectedResource.getProvider();
 
-        AppointmentLocationsDTO locationDTO = availabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getLocation();
+        LocationDTO locationDTO = availabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getLocation();
         if(locationDTO == null){
-            locationDTO = new AppointmentLocationsDTO();
+            locationDTO = new LocationDTO();
             AppointmentAddressDTO addressDTO = new AppointmentAddressDTO();
             locationDTO.setName(resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentsPlaceNameHeading());
             locationDTO.setAddress(addressDTO);
