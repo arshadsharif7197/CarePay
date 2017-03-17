@@ -125,8 +125,6 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = super.onCreateView(inflater, container, savedInstanceState);
 
-        initializeViews();
-
         return view;
     }
 
@@ -172,6 +170,8 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        initializeViews();
 
         if (!TextUtils.isEmpty(photoUrl)) {
             initializeHeaderBackgroundView();
