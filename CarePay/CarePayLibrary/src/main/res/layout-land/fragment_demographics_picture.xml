@@ -19,6 +19,7 @@
     <Button
         android:id="@+id/changeCurrentPhotoButton"
         style="@style/DemographicsDocsButtonStyle"
+        android:layout_marginStart="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_20dp"
         android:paddingLeft="@dimen/dimen_20dp"

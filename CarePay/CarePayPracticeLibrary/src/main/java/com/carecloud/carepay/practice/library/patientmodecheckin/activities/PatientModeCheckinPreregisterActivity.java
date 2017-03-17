@@ -612,7 +612,7 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
         setCurrentStep(currentDemographicStep-1);
         try{
             BaseCheckinFragment fragment = (BaseCheckinFragment) getSupportFragmentManager().findFragmentById(R.id.checkInContentHolderId);
-            if(!fragment.navigateBack())  {
+            if(fragment!=null && !fragment.navigateBack())  {
                 super.onBackPressed();
             }
         }catch (ClassCastException cce){
@@ -620,6 +620,15 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
             super.onBackPressed();
         }
     }
+
+    private void popFragStack() {
+         if (getFragmentManager().getBackStackEntryCount() > 1) {
+             getFragmentManager().popBackStack();
+             return;
+         }
+        super.onBackPressed();
+    }
+
 
 
 
@@ -823,6 +832,7 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
 
             Bundle args = new Bundle();
             DtoHelper.bundleDto(args, persDetailsDTO);
+            args.putBoolean(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE, true);
             fragment.setArguments(args);
         }
         fm.beginTransaction()

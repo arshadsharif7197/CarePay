@@ -2,6 +2,8 @@ package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -54,6 +56,16 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         stepProgressBar.setCurrentProgressDot(0);
         checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 1);
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                SystemUtil.hideSoftKeyboard(getActivity());
+            }
+        }, 300);
     }
 
     @Override
@@ -181,9 +193,8 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
 
 
         setTextFocusListener(R.id.reviewdemogrMiddleNameEdit,view);
+
     }
-
-
 
     private void setTextListener(final String message, final int layOutTextLabel, final int textEditableId, final View view){
         final TextInputLayout textLayout = (TextInputLayout) view.findViewById(layOutTextLabel);
@@ -291,12 +302,20 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
     }
 
     private void initViewFromModels(View view) {
+        DemographicAddressPayloadDTO demographicAddressPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getAddress();
+        if (demographicAddressPayloadDTO != null){
+
+            String phonenumber = demographicAddressPayloadDTO.getPhone();
+            if(SystemUtil.isNotEmptyString(phonenumber)) {
+                phonenumber = StringUtil.formatPhoneNumber(phonenumber);
+            }
+            initTextInputLayoutValue(phonenumber, R.id.reviewgrdemoPhoneNumberEdit, view);
+        }
+
         PatientModel demographicPersDetailsPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
         if (demographicPersDetailsPayloadDTO != null) {
 
             //Personal Details
-            String firstName = demographicPersDetailsPayloadDTO.getFirstName();
-            initTextInputLayoutValue(firstName, R.id.reviewdemogrFirstNameEdit, view);
 
             String lastName = demographicPersDetailsPayloadDTO.getLastName();
             initTextInputLayoutValue(lastName, R.id.reviewdemogrLastNameEdit, view);
@@ -311,16 +330,11 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
                 dobEditText.setText(dateOfBirthString);
                 dobEditText.requestFocus();
             }
-        }
-        DemographicAddressPayloadDTO demographicAddressPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getAddress();
-        if (demographicAddressPayloadDTO != null){
 
-            String phonenumber = demographicAddressPayloadDTO.getPhone();
-            if(SystemUtil.isNotEmptyString(phonenumber)) {
-                phonenumber = StringUtil.formatPhoneNumber(phonenumber);
-            }
-            initTextInputLayoutValue(phonenumber, R.id.reviewgrdemoPhoneNumberEdit, view);
+            String firstName = demographicPersDetailsPayloadDTO.getFirstName();
+            initTextInputLayoutValue(firstName, R.id.reviewdemogrFirstNameEdit, view);
         }
+
     }
 
     private void initTextInputLayoutValue(String value, int textEditableId, View view){

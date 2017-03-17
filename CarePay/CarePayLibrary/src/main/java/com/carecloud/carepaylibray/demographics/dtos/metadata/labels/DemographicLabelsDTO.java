@@ -338,6 +338,14 @@ public class DemographicLabelsDTO {
     @Expose
     private String demographicsMedsAllergiesTitle;
 
+    @SerializedName("demographics_take_another_picture_button_title")
+    @Expose
+    private String demographicsTakeAnotherPictureButtonTitle;
+
+    @SerializedName("demographics_take_picture_button_title")
+    @Expose
+    private String demographicsTakePictureButtonTitle;
+
     @SerializedName("demographics_payment_title")
     @Expose
     private String demographicsPaymentTitle;
@@ -1846,6 +1854,22 @@ public class DemographicLabelsDTO {
 
     public void setDemographicsPaymentTitle(String demographicsPaymentTitle) {
         this.demographicsPaymentTitle = demographicsPaymentTitle;
+    }
+
+    public String getDemographicsTakeAnotherPictureButtonTitle() {
+        return StringUtil.getLabelForView(demographicsTakeAnotherPictureButtonTitle);
+    }
+
+    public void setDemographicsTakeAnotherPictureButtonTitle(String demographicsTakeAnotherPictureButtonTitle) {
+        this.demographicsTakeAnotherPictureButtonTitle = demographicsTakeAnotherPictureButtonTitle;
+    }
+
+    public String getDemographicsTakePictureButtonTitle() {
+        return StringUtil.getLabelForView(demographicsTakePictureButtonTitle);
+    }
+
+    public void setDemographicsTakePictureButtonTitle(String demographicsTakePictureButtonTitle) {
+        this.demographicsTakePictureButtonTitle = demographicsTakePictureButtonTitle;
     }
 
     public String getPracticeChekinSectionIntakeForms() {

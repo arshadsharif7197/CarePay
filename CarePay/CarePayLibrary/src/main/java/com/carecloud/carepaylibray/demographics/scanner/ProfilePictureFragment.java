@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
@@ -43,12 +44,14 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
     private String recaptureCaption;
     private PatientModel demographicPersDetailsPayloadDTO;
     private DemographicLabelsDTO globalLabelsDTO;
+    private boolean isRevScreen;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(getLayoutRes(), container, false);
-
+        Bundle bundle = getArguments();
+        isRevScreen = bundle.getBoolean(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE, false);
         populateViewsFromModel(view);
 
         return view;
@@ -85,7 +88,8 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
             labelsMetaDTO = new DemographicLabelsDTO();
         }
 
-        recaptureCaption = labelsMetaDTO.getDemographicsProfileReCaptureCaption();
+        recaptureCaption = isRevScreen? labelsMetaDTO.getDemographicsTakeAnotherPictureButtonTitle():
+                labelsMetaDTO.getDemographicsProfileReCaptureCaption();
 
         ImageView imageViewDetailsImage = (ImageView) view.findViewById(R.id.DetailsProfileImage);
         imageCaptureHelper = new ImageCaptureHelper(getActivity(), imageViewDetailsImage, globalLabelsDTO);
@@ -97,7 +101,8 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
                 selectImage(imageCaptureHelper, ImageCaptureHelper.CameraType.DEFAULT_CAMERA);
             }
         });
-        String captureCaption = labelsMetaDTO.getDemographicsProfileCaptureCaption();
+        String captureCaption = isRevScreen? labelsMetaDTO.getDemographicsTakePictureButtonTitle():
+                               labelsMetaDTO.getDemographicsProfileCaptureCaption();
         buttonChangeCurrentPhoto.setText(captureCaption);
 
         demographicPersDetailsPayloadDTO = DtoHelper.getConvertedDTO(PatientModel.class, getArguments());
