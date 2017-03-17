@@ -258,7 +258,6 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
 
     private void initialiseUIFields(View view){
         DemographicLabelsDTO globalLabelsMetaDTO = demographicDTO.getMetadata().getLabels();
-        DemographicMetadataEntityAddressDTO addressMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.address;
         DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.personalDetails;
         setHeaderTitle(globalLabelsMetaDTO.getDemographicsReviewPeronsonalinfoSection(), view);
 
@@ -274,6 +273,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         label = persDetailsMetaDTO.properties.lastName.getLabel();
         initTextLabel(label, R.id.reviewdemogrDOBTextInput, R.id.revewidemogrDOBEdit, view);
 
+        DemographicMetadataEntityAddressDTO addressMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.address;
         label = addressMetaDTO.properties.phone.getLabel();
         initTextLabel(label, R.id.reviewdemogrPhoneNumberTextInput, R.id.reviewgrdemoPhoneNumberEdit, view);
 
