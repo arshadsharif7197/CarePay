@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -55,7 +56,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     private boolean amountChangeFlag = true;
     private String balanceBeforeTextChange;
 
-
+    private boolean deviceLarge;
     private PaymentNavigationCallback payNowClickListener;
 
     /**
@@ -87,15 +88,18 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
         params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.90);
         getWindow().setAttributes(params);
+        deviceLarge = ((context.getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE);
         getPartialPaymentLabels();
 
         initViews();
+        if(deviceLarge) {
+            onSetListener();
+        }
 
     }
 
-
     private void initViews() {
-        findViewById(R.id.dialogCloseImageView).setOnClickListener(this);
         enterPartialAmountEditText = (EditText) findViewById(R.id.enterPartialAmountEditText);
         partialPaymentTotalAmountTitle = (CarePayTextView) findViewById(R.id.partialPaymentTotalAmountTitle);
         payPartialButton = (Button) findViewById(R.id.payPartialButton);
@@ -142,6 +146,15 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         } else if (viewId == R.id.payPartialButton) {
             onPaymentClick();
 
+        } else if (deviceLarge && viewId == R.id.key_clear) {
+            onEnterNumberClear();
+        } else if(deviceLarge && viewId == R.id.closeViewLayout){
+            dismiss();
+        } else {
+            if (deviceLarge){
+                String buttonValue = ((Button) view).getText().toString();
+                onEnterNumber(buttonValue);
+         }
         }
     }
 
@@ -252,5 +265,37 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         }
     }
 
+    private void onEnterNumber(String numberStr) {
+        String actualValue = enterPartialAmountEditText.getText().toString();
+        numberStr = actualValue + numberStr;
+        enterPartialAmountEditText.setText(numberStr);
+    }
+
+    private void onEnterNumberClear() {
+        String actualValue = enterPartialAmountEditText.getText().toString();
+        if (actualValue.length() > 0) {
+            actualValue = actualValue.substring(0, actualValue.length() - 1);
+            enterPartialAmountEditText.setText(actualValue);
+        }
+    }
+
+    /**
+     * set listner for keypad components .
+     */
+    private void onSetListener() {
+        (findViewById(R.id.key_one)).setOnClickListener(this);
+        (findViewById(R.id.key_two)).setOnClickListener(this);
+        (findViewById(R.id.key_three)).setOnClickListener(this);
+        (findViewById(R.id.key_four)).setOnClickListener(this);
+        (findViewById(R.id.key_five)).setOnClickListener(this);
+        (findViewById(R.id.key_six)).setOnClickListener(this);
+        (findViewById(R.id.key_seven)).setOnClickListener(this);
+        (findViewById(R.id.key_eighth)).setOnClickListener(this);
+        (findViewById(R.id.key_nine)).setOnClickListener(this);
+        (findViewById(R.id.key_zero)).setOnClickListener(this);
+        (findViewById(R.id.key_blank)).setOnClickListener(this);
+        (findViewById(R.id.key_clear)).setOnClickListener(this);
+        (findViewById(R.id.closeViewLayout)).setOnClickListener(this);
+    }
 
 }
