@@ -58,8 +58,8 @@ public class StringUtil {
     }
 
 
-    public static String getFormatedLabal(Context context, String labal){
-        return isNullOrEmpty(labal)?context.getString(R.string.not_defined):labal;
+    public static String getFormatedLabal(Context context, String label){
+        return isNullOrEmpty(label)?context.getString(R.string.not_defined):label;
     }
 
     /**

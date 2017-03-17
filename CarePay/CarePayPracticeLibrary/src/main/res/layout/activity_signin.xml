@@ -124,7 +124,7 @@
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"
                     android:paddingEnd="@dimen/dimen_30dp"
-                    app:customAssetFont="proxima_nova_semi_bold"/>
+                    app:customAssetFont="proxima_nova_semi_bold" />
 
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 

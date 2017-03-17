@@ -77,12 +77,11 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
         if (viewId == R.id.provider_logout) {
             logout();
         } else if (viewId == R.id.btnHome) {
-            getWorkflowServiceHelper().execute(scheduleResourcesModel.getMetadata()
-                    .getTransitions().getLogout(), homeCall);
+            goToHome(scheduleResourcesModel.getMetadata().getTransitions().getLogout());
         }
     }
 
-    private void logout(){
+    private void logout() {
         Map<String, String> headers = new HashMap<>();
         headers.put("x-api-key", HttpConstants.getApiStartKey());
 
@@ -94,27 +93,6 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
     }
 
     WorkflowServiceCallback logOutCall = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            PatientModePracticeAppointmentActivity.this.finish();
-            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(PatientModePracticeAppointmentActivity.this);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
-
-    WorkflowServiceCallback homeCall = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             showProgressDialog();
@@ -155,7 +133,7 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
         queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
 
         AppointmentsResultModel appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
-        setPatientId(getApplicationMode().getPatientId()==null?"":getApplicationMode().getPatientId());
+        setPatientId(getApplicationMode().getPatientId() == null ? "" : getApplicationMode().getPatientId());
         TransitionDTO resourcesToSchedule = appointmentsResultModel.getMetadata().getLinks().getResourcesToSchedule();
         getWorkflowServiceHelper().execute(resourcesToSchedule, scheduleResourcesCallback, queryMap);
     }
