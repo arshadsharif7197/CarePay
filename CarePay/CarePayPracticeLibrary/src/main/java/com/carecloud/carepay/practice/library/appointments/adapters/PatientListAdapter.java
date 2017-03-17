@@ -120,35 +120,15 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         final Patient patient = filteredPatients.get(position);
 
         if (null == patient.raw) {
-            int patientCount = 0;
-            if (patient.appointmentStartTime != null) {
-                patientCount = getPatientCount(position);
-            }
-            bindHeaderViewHolder((HeaderViewHolder) holder, patient.appointmentStartTime, patientCount);
+            bindHeaderViewHolder((HeaderViewHolder) holder, patient);
 
         } else {
             bindCardViewHolder((CardViewHolder) holder, patient);
         }
     }
 
-    private int getPatientCount(int position) {
-        int counter = 0;
-        for (int i = position+1; i < filteredPatients.size(); i++) {
-            Patient patient = filteredPatients.get(i);
-            if (patient.raw != null) {
-                counter++;
-            } else if (patient.appointmentStartTime != null) {
-                return counter;
-            }
-        }
-        return counter;
-    }
-
-    private void bindHeaderViewHolder(HeaderViewHolder holder, Date appointmentTime, int count) {
-        holder.setTimeView(appointmentTime);
-        if (count != 0) {
-            holder.patientCount.setText("(" + count + ")");
-        }
+    private void bindHeaderViewHolder(HeaderViewHolder holder, Patient patient) {
+        holder.setTimeView(patient);
     }
 
     private void bindCardViewHolder(final CardViewHolder holder, final Patient patient) {
@@ -184,7 +164,6 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return 0;
     }
 
-
     public void applyFilter(MapFilterModel filterModel) {
         this.filterModel = filterModel;
         applyFilter();
@@ -207,6 +186,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         Date dateTime = new Date(0);
         int countDifferentDates = 0;
         int countByDay = 0;
+        Patient header = null;
         for (Patient patient : allPatients) {
             // Check filter by patient
             if (filterModel.isFilteringByPatients() && !patients.containsKey(patient.id)) {
@@ -237,10 +217,15 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     filteredPatients.add(new Patient());
                 }
 
-                filteredPatients.add(new Patient(dateTime));
+                header = new Patient(dateTime);
+                filteredPatients.add(header);
                 filteredPatients.add(new Patient());
                 countDifferentDates++;
                 countByDay = 0;
+            }
+
+            if (header != null) {
+                header.headCount++;
             }
 
             filteredPatients.add(patient);
@@ -420,18 +405,20 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private class HeaderViewHolder extends CardViewHolder {
         CarePayTextView dateTextView;
-        CarePayTextView patientCount;
 
         HeaderViewHolder(View view) {
             super(view);
             dateTextView = (CarePayTextView) view.findViewById(R.id.timeTextView);
-            patientCount = (CarePayTextView) view.findViewById(R.id.patientCountView);
         }
 
-        void setTimeView(Date date) {
+        void setTimeView(Patient patient) {
             String text = "";
-            if (null != date) {
-                text = DateUtil.getInstance().setDate(date).getDateAsMonthLiteralDayOrdinal();
+            if (null != patient.appointmentStartTime) {
+                text = DateUtil.getInstance().setDate(patient.appointmentStartTime).getDateAsMonthLiteralDayOrdinal();
+
+                if (patient.headCount > 0) {
+                    text += " (" + patient.headCount + ")";
+                }
             }
 
             dateTextView.setText(text);
@@ -451,6 +438,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         private Date appointmentStartTime;
         private Boolean isAppointmentOver;
         private Boolean isRequested;
+        private int headCount;
 
         public Patient(Object raw, String id, ProviderIndexDTO provider, LocationIndexDTO location, double balance, PatientModel dto) {
             this.raw = raw;

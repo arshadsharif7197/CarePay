@@ -45,7 +45,7 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         try{
             callback = (AppointmentNavigationCallback) context;
         }catch (ClassCastException cce){
-            throw new ClassCastException("Provided Context must implement RequestAppointmentCallback");
+            throw new ClassCastException("Provided Context must implement AppointmentNavigationCallback");
         }
     }
 
