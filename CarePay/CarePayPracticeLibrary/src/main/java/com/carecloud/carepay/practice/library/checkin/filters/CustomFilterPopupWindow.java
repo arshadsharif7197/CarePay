@@ -18,7 +18,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.checkin.CheckInActivity;
+import com.carecloud.carepay.practice.library.checkin.PracticeModePracticeCheckInActivity;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -204,7 +204,7 @@ public class CustomFilterPopupWindow extends PopupWindow
      * @param patientFiltered true or false if patient screen state
      */
     private void setPatientFiltered(boolean patientFiltered) {
-        ((CheckInActivity)this.context).setPatientFiltered(patientFiltered);
+        ((PracticeModePracticeCheckInActivity)this.context).setPatientFiltered(patientFiltered);
     }
 
     /**
@@ -212,7 +212,7 @@ public class CustomFilterPopupWindow extends PopupWindow
      * @return if patient was filtered by provider or location
      */
     private boolean isPatientFiltered() {
-        return ((CheckInActivity)this.context).isPatientFiltered();
+        return ((PracticeModePracticeCheckInActivity)this.context).isPatientFiltered();
     }
 
     /**

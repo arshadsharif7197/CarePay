@@ -48,7 +48,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-public class CheckInActivity extends BasePracticeActivity implements CustomFilterPopupWindow.FilterCallBack, PaymentNavigationCallback {
+public class PracticeModePracticeCheckInActivity extends BasePracticeActivity implements CustomFilterPopupWindow.FilterCallBack, PaymentNavigationCallback {
 
     private RecyclerView checkinginRecyclerView;
     private RecyclerView waitingRoomRecyclerView;
@@ -97,13 +97,13 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         checkinginRecyclerView = (RecyclerView) findViewById(R.id.checkinginRecyclerView);
         checkinginRecyclerView.setHasFixedSize(true);
         checkinginRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        checkinginRecyclerView.setLayoutManager(new LinearLayoutManager(CheckInActivity.this));
+        checkinginRecyclerView.setLayoutManager(new LinearLayoutManager(PracticeModePracticeCheckInActivity.this));
         checkinginRecyclerView.setOnDragListener(onCheckingInListDragListener);
 
         waitingRoomRecyclerView = (RecyclerView) findViewById(R.id.waitingRoomRecyclerView);
         waitingRoomRecyclerView.setHasFixedSize(true);
         waitingRoomRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        waitingRoomRecyclerView.setLayoutManager(new LinearLayoutManager(CheckInActivity.this));
+        waitingRoomRecyclerView.setLayoutManager(new LinearLayoutManager(PracticeModePracticeCheckInActivity.this));
         waitingRoomRecyclerView.setOnDragListener(onWaitListDragListener);
 
         filterOnTextView.setVisibility(View.GONE);
@@ -134,7 +134,7 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
             @Override
             public void onClick(View view) {
                 CustomFilterPopupWindow customFilterPopupWindow = new CustomFilterPopupWindow(
-                        CheckInActivity.this, findViewById(R.id.activity_checked_in),
+                        PracticeModePracticeCheckInActivity.this, findViewById(R.id.activity_checked_in),
                         filterableDoctorLocationList, patientList, searchedPatientList);
                 customFilterPopupWindow.setTitle(Label.getLabel("practice_checkin_filter"));
                 customFilterPopupWindow.setSearchHint(Label.getLabel("practice_checkin_filter_find_patient_by_name"));
@@ -185,11 +185,11 @@ public class CheckInActivity extends BasePracticeActivity implements CustomFilte
         checkingInCounterTextview.setText(String.valueOf(checkingInAppointments.size()));
         waitingCounterTextview.setText(String.valueOf(waitingRoomAppointments.size()));
 
-        checkedInAdapter = new CheckedInAppointmentAdapter(CheckInActivity.this, checkingInAppointments,
+        checkedInAdapter = new CheckedInAppointmentAdapter(PracticeModePracticeCheckInActivity.this, checkingInAppointments,
                 checkInDTO.getPayload().getPatientBalances(), false);
         checkinginRecyclerView.setAdapter(checkedInAdapter);
 
-        waitingRoomAdapter = new CheckedInAppointmentAdapter(CheckInActivity.this, waitingRoomAppointments,
+        waitingRoomAdapter = new CheckedInAppointmentAdapter(PracticeModePracticeCheckInActivity.this, waitingRoomAppointments,
                 checkInDTO.getPayload().getPatientBalances(), true);
         waitingRoomRecyclerView.setAdapter(waitingRoomAdapter);
     }

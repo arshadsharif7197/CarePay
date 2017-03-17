@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.checkin.CheckInActivity;
+import com.carecloud.carepay.practice.library.checkin.PracticeModePracticeCheckInActivity;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.practice.library.customcomponent.AppointmentStatusCardView;
 import com.carecloud.carepaylibray.base.models.PatientModel;
@@ -147,7 +147,7 @@ public class CheckedInAppointmentAdapter extends RecyclerView.Adapter<CheckedInA
 
         @Override
         public void onClick(View view) {
-            ((CheckInActivity)context).onCheckInItemClick((AppointmentPayloadDTO)view.getTag(), isWaitingRoom);
+            ((PracticeModePracticeCheckInActivity)context).onCheckInItemClick((AppointmentPayloadDTO)view.getTag(), isWaitingRoom);
         }
 
         /*@Override
