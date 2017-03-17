@@ -884,6 +884,6 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
         DtoHelper.bundleDto(args, demographicDTO);
         fragment.setArguments(args);
 
-        navigateToFragment(fragment, true);
+        navigateToFragment(fragment, currentDemographicStep==1? false: true);
     }
 }
