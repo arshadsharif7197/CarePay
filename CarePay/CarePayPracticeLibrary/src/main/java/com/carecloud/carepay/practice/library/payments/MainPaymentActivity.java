@@ -11,10 +11,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.payments.adapter.PaymentBalancesAdapter;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-
-import java.util.List;
 
 /**
  * Created by pjohnson on 16/03/17.
@@ -33,16 +30,26 @@ public class MainPaymentActivity extends BasePracticeActivity {
         if (paymentResultModel.getPaymentPayload().getPatientBalances().isEmpty()) {
             showNoPaymentsImage();
         } else {
-            showPaymentsRecyclerView(paymentResultModel.getPaymentPayload().getPatientBalances());
+            showPaymentsRecyclerView(paymentResultModel);
         }
+        findViewById(R.id.btnHome).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
-    private void showPaymentsRecyclerView(List<PatientBalanceDTO> patientBalances) {
+    private void showPaymentsRecyclerView(PaymentsModel paymentsModel) {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.appointmentsRecyclerView);
         recyclerView.setVisibility(View.VISIBLE);
         findViewById(R.id.emptyPaymentsImageView).setVisibility(View.GONE);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        recyclerView.setAdapter(new PaymentBalancesAdapter(patientBalances));
+        recyclerView.setAdapter(new PaymentBalancesAdapter(paymentsModel.getPaymentPayload().getPatientBalances(),
+                paymentsModel.getPaymentPayload().getUserPractices().get(0)));
+        //TODO: Should change this to the proper keys
+        ((TextView) findViewById(R.id.title)).setText("Select a pending payment");
+        ((TextView) findViewById(R.id.subtitle)).setText(Label.getLabel("no_payment_description"));
 
     }
 
