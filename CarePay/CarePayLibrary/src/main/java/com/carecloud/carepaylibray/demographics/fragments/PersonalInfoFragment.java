@@ -479,6 +479,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
 
     public interface UpdateProfilePictureListener{
         public String getProfilePicture();
+
         public void loadPictureFragment();
     }
 }
