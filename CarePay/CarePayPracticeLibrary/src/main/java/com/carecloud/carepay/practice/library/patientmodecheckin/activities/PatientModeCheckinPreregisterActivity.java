@@ -821,11 +821,14 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
         navigateToFragment(medicationsAllergyFragment, true);
     }
 
+    /**
+     * Entry point for navigating to medication fragment
+     * @param globalLabelDTO global dto
+     * @param persDetailsDTO personal details dto
+     */
     public void initializeProfilePictureFragment(DemographicLabelsDTO globalLabelDTO,
                                                  PatientModel persDetailsDTO) {
 
-        FragmentManager fm = getSupportFragmentManager();
-        String tag = ProfilePictureFragment.class.getSimpleName();
         ProfilePictureFragment fragment = new ProfilePictureFragment();
         fragment.setGlobalLabelsDTO(globalLabelDTO);
 
@@ -833,6 +836,8 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
         DtoHelper.bundleDto(args, persDetailsDTO);
         args.putBoolean(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE, true);
         fragment.setArguments(args);
+        FragmentManager fm = getSupportFragmentManager();
+        String tag = ProfilePictureFragment.class.getSimpleName();
         fm.beginTransaction().replace(R.id.revdemographicsAddressPicCapturer, fragment, tag)
                              .commit();
 
@@ -878,6 +883,10 @@ public class PatientModeCheckinPreregisterActivity extends BasePracticeActivity 
     }
 
 
+    /**
+     * Navigate to fragment
+     * @param step fragment
+     */
     public void navigateToDemographicFragment(Integer step) {
         CheckInDemographicsBaseFragment fragment = demographicFragMap.get(step);
         Bundle args = new Bundle();
