@@ -35,6 +35,13 @@ public class AddPaymentItemAdapter extends RecyclerView.Adapter<AddPaymentItemAd
 
     private NumberFormat currencyFormatter;
 
+    /**
+     * Constructor
+     * @param context context
+     * @param templateItems list of template items
+     * @param simpleChargeItems list of simple charge items
+     * @param callback callback
+     */
     public AddPaymentItemAdapter(Context context, List<BalanceItemDTO> templateItems, List<BalanceItemDTO> simpleChargeItems, AddPaymentItemCallback callback){
         this.context = context;
         this.templateItems = templateItems;
@@ -115,6 +122,10 @@ public class AddPaymentItemAdapter extends RecyclerView.Adapter<AddPaymentItemAd
         }
     }
 
+    /**
+     * set the template items
+     * @param templateItems template items
+     */
     public void setTemplateItems(List<BalanceItemDTO> templateItems) {
         if(templateItems!=null) {
             this.templateItems = templateItems;
@@ -123,6 +134,10 @@ public class AddPaymentItemAdapter extends RecyclerView.Adapter<AddPaymentItemAd
         }
     }
 
+    /**
+     * Set the simple charge items
+     * @param simpleChargeItems simle charge items
+     */
     public void setSimpleChargeItems(List<BalanceItemDTO> simpleChargeItems) {
         if(simpleChargeItems!=null) {
             this.simpleChargeItems = simpleChargeItems;
@@ -132,12 +147,12 @@ public class AddPaymentItemAdapter extends RecyclerView.Adapter<AddPaymentItemAd
     }
 
 
-    public class AddPaymentItemViewHolder extends RecyclerView.ViewHolder{
+    class AddPaymentItemViewHolder extends RecyclerView.ViewHolder{
         private TextView header;
         private TextView description;
         private TextView amount;
 
-        public AddPaymentItemViewHolder(View itemView) {
+        AddPaymentItemViewHolder(View itemView) {
             super(itemView);
             header = (TextView) itemView.findViewById(R.id.charge_item_header);
             description = (TextView) itemView.findViewById(R.id.charge_item_description);

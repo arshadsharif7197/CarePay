@@ -17,6 +17,12 @@ public class PopupPickLocationAdapter extends PopupPickerAdapter {
     private List<LocationDTO> appointmentLocations = new ArrayList<>();
     private PopupPickCallback callback;
 
+    /**
+     * Constructor
+     * @param context context
+     * @param appointmentLocations list of locations
+     * @param callback callback
+     */
     public PopupPickLocationAdapter(Context context, List<LocationDTO> appointmentLocations, PopupPickCallback callback){
         super(context);
         this.appointmentLocations = appointmentLocations;
@@ -30,7 +36,7 @@ public class PopupPickLocationAdapter extends PopupPickerAdapter {
         holder.getName().setText(location.getName());
         holder.getName().setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 callback.pickLocation(location, selectedBalanceItem);
             }
         });

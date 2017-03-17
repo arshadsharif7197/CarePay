@@ -223,8 +223,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     private void addLocationOnFilterList(ArrayList<FilterDataDTO> locations, AppointmentPayloadDTO appointmentPayloadDTO) {
-        LocationDTO XLocationDTO = appointmentPayloadDTO.getLocation();
-        FilterDataDTO filterDataDTO = new FilterDataDTO(XLocationDTO.getId(), XLocationDTO.getName(), FilterDataDTO.FilterDataType.LOCATION);
+        LocationDTO locationDTO = appointmentPayloadDTO.getLocation();
+        FilterDataDTO filterDataDTO = new FilterDataDTO(locationDTO.getId(), locationDTO.getName(), FilterDataDTO.FilterDataType.LOCATION);
         if (locations.indexOf(filterDataDTO) < 0) {
             filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
             locations.add(filterDataDTO);

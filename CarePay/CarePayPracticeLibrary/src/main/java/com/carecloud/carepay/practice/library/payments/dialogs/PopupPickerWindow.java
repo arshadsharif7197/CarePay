@@ -21,6 +21,10 @@ public class PopupPickerWindow extends PopupWindow {
     private Context context;
     private RecyclerView popupRecycler;
 
+    /**
+     * Constructor
+     * @param context context
+     */
     public PopupPickerWindow(Context context){
         super(context);
         this.context = context;

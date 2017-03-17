@@ -268,37 +268,24 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     public void pickProvider(View view, BalanceItemDTO balanceItem) {
         clearPickers();
         clearLastSwipeView();
-        int xOffset = view.getWidth()/2-providerPickerWindow.getWidth()/2;
+        int offset = view.getWidth()/2-providerPickerWindow.getWidth()/2;
         providerPickerWindow.setBalanceItemDTO(balanceItem);
-        providerPickerWindow.showAsDropDown(view, xOffset, 10);
+        providerPickerWindow.showAsDropDown(view, offset, 10);
     }
 
     @Override
     public void pickLocation(View view, BalanceItemDTO balanceItem) {
         clearPickers();
         clearLastSwipeView();
-        int xOffset = view.getWidth()/2-locationPickerWindow.getWidth()/2;
+        int offset = view.getWidth()/2-locationPickerWindow.getWidth()/2;
         locationPickerWindow.setBalanceItemDTO(balanceItem);
-        locationPickerWindow.showAsDropDown(view, xOffset, 10);
+        locationPickerWindow.showAsDropDown(view, offset, 10);
     }
 
     @Override
     public void editAmount(double amount, BalanceItemDTO balanceItem) {
         modifyLineItem(balanceItem, null, null, amount);
     }
-
-
-    private void clearPickers(){
-        providerPickerWindow.dismiss();
-        locationPickerWindow.dismiss();
-    }
-
-    private void clearLastSwipeView(){
-        if(lastSwipeView !=null){
-            lastSwipeView.setLeft(0);
-        }
-    }
-
 
     @Override
     public void pickLocation(LocationDTO location, BalanceItemDTO balanceItem) {
@@ -325,6 +312,19 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         distributeAmountOverBalanceItems(amount);
     }
 
+
+    private void clearPickers(){
+        providerPickerWindow.dismiss();
+        locationPickerWindow.dismiss();
+    }
+
+    private void clearLastSwipeView(){
+        if(lastSwipeView !=null){
+            lastSwipeView.setLeft(0);
+        }
+    }
+
+
     private void distributeAmountOverBalanceItems(double amount){
         balanceItems.clear();
         calculateTotalBalance();
@@ -347,10 +347,11 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
 
     private class SwipeHelperCallback extends ItemTouchHelper.Callback {
-        private float CLEAR_WIDTH = 0;
+        private float clearWidth = 0;
         private float maxSwipe = 0;
 
         private boolean bounceBack = false;
+
         @Override
         public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
             if(viewHolder!=null) {
@@ -377,11 +378,11 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
 
         @Override
-        public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float distanceX, float distanceY, int actionState, boolean isCurrentlyActive) {
+        public void onChildDraw(Canvas canvas, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float distanceX, float distanceY, int actionState, boolean isCurrentlyActive) {
             PaymentDistributionAdapter.PaymentDistributionViewHolder paymentViewHolder = (PaymentDistributionAdapter.PaymentDistributionViewHolder) viewHolder;
             View rowLayout = paymentViewHolder.getRowLayout();
 
-            getDefaultUIUtil().onDraw(c, recyclerView, rowLayout, distanceX, distanceY, actionState, isCurrentlyActive);
+            getDefaultUIUtil().onDraw(canvas, recyclerView, rowLayout, distanceX, distanceY, actionState, isCurrentlyActive);
 
             float swipeDistance = Math.abs(distanceX);
             if( swipeDistance > maxSwipe){
@@ -415,11 +416,11 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
         private View.OnTouchListener swipeTouchListener = new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public boolean onTouch(View view, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
                     bounceBack = true;
-                    if (maxSwipe > CLEAR_WIDTH) {
-                        lastSwipeView.setLeft((int)-CLEAR_WIDTH);
+                    if (maxSwipe > clearWidth) {
+                        lastSwipeView.setLeft((int)-clearWidth);
                     }
                 } else {
                     bounceBack = false;
@@ -430,9 +431,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
 
         private void getMaxDistance(RecyclerView.ViewHolder viewHolder) {
-            if(CLEAR_WIDTH == 0) {
+            if(clearWidth == 0) {
                 PaymentDistributionAdapter.PaymentDistributionViewHolder paymentViewHolder = (PaymentDistributionAdapter.PaymentDistributionViewHolder) viewHolder;
-                CLEAR_WIDTH = paymentViewHolder.getClearButton().getMeasuredWidth();
+                clearWidth = paymentViewHolder.getClearButton().getMeasuredWidth();
             }
         }
 

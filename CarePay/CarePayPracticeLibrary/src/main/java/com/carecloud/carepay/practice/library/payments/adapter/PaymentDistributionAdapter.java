@@ -31,6 +31,12 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
     private PaymentDistributionCallback callback;
     private NumberFormat currencyFormat;
 
+    /**
+     * Constructor
+     * @param context Context
+     * @param balanceItems List of Balance Items
+     * @param callback callback
+     */
     public PaymentDistributionAdapter(Context context, List<BalanceItemDTO> balanceItems, PaymentDistributionCallback callback){
         this.context = context;
         this.balanceItems = balanceItems;
@@ -184,7 +190,7 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
         private View pickLocationButton;
         private View rowLayout;
 
-        public PaymentDistributionViewHolder(View itemView) {
+        PaymentDistributionViewHolder(View itemView) {
             super(itemView);
             description = (TextView) itemView.findViewById(R.id.payment_detail_description);
             providerName = (TextView) itemView.findViewById(R.id.provider_name);

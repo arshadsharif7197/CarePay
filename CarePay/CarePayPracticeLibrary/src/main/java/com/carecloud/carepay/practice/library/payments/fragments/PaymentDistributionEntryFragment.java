@@ -111,11 +111,15 @@ public class PaymentDistributionEntryFragment extends BaseDialogFragment impleme
 
         @Override
         public void afterTextChanged(Editable str) {
+            if(str.length()>0) {
+                amountSymbol.setTextColor(getResources().getColor(R.color.white));
+            }else{
+                amountSymbol.setTextColor(getResources().getColor(R.color.white_transparent));
+            }
         }
 
         @Override
         public void beforeTextChanged(CharSequence str, int start, int count, int after) {
-//            amountSymbolTextView.setTextColor(getResources().getColor(R.color.white));
             balanceBeforeTextChange = str.toString();
         }
 
