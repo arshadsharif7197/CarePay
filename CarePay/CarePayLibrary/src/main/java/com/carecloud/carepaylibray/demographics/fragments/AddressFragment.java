@@ -91,9 +91,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
-        View mainView  = super.onCreateView(inflater, container, savedInstanceState);
-
         isPractice = getApplicationMode().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
 
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
@@ -102,7 +99,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         if (demographicDTO.getPayload().getDemographics() != null) {
             demographicAddressPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getAddress();
         }
-
+        View mainView  = super.onCreateView(inflater, container, savedInstanceState);
         initialiseUIFields(mainView);
         formatEditText(mainView);
         setTypefaces(mainView);
