@@ -28,13 +28,13 @@ import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAddressDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentLocationsDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.IdsDTO;
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
+import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.ResourcesPracticeDTO;
 import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
@@ -268,7 +268,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     @Override
     public void confirmAppointment(String startTime, String endTime, AppointmentAvailabilityDTO availabilityDTO) {
         this.availabilityDTO = availabilityDTO;
-        AppointmentProviderDTO providersDTO = selectedAppointmentResourcesDTO.getResource().getProvider();
+        ProviderDTO providersDTO = selectedAppointmentResourcesDTO.getResource().getProvider();
 
         AppointmentsPayloadDTO payloadDTO = new AppointmentsPayloadDTO();
         payloadDTO.setStartTime(startTime);
@@ -282,9 +282,9 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         patientDTO.setPatientId(patientId);
         payloadDTO.setPatient(patientDTO);
 
-        AppointmentLocationsDTO locationDTO = availabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getLocation();
+        LocationDTO locationDTO = availabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getLocation();
         if(locationDTO == null){
-            locationDTO = new AppointmentLocationsDTO();
+            locationDTO = new LocationDTO();
             AppointmentAddressDTO addressDTO = new AppointmentAddressDTO();
             locationDTO.setName(appointmentsResultModel.getMetadata().getLabel().getAppointmentsPlaceNameHeading());
             locationDTO.setAddress(addressDTO);

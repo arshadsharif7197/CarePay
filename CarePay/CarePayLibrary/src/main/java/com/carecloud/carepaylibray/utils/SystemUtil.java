@@ -142,6 +142,17 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
     }
 
     /**
+     * Hides the keyboard
+     *
+     * @param context the context for the view
+     * @param view the view showing the keyboard
+     */
+    public static void hideSoftKeyboard(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    /**
      * Shows the soft keyboard
      *
      * @param activity The activity

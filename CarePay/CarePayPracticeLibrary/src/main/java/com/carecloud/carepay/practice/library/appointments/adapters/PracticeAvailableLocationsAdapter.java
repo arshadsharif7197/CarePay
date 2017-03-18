@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.AppointmentLocationsDTO;
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -16,15 +16,15 @@ import java.util.List;
 public class PracticeAvailableLocationsAdapter extends RecyclerView.Adapter<PracticeAvailableLocationsAdapter.ViewHolderLocation> {
 
     public interface SelectLocationCallback{
-        void onSelectLocation(AppointmentLocationsDTO appointmentLocationsDTO);
+        void onSelectLocation(LocationDTO locationDTO);
     }
 
     // The items to display in your RecyclerView
-    private List<AppointmentLocationsDTO> items;
+    private List<LocationDTO> items;
     private Context context;
     private SelectLocationCallback selectLocationCallback;
     private String allButtonText;
-    private List<AppointmentLocationsDTO> selectedLocations = new LinkedList<>();
+    private List<LocationDTO> selectedLocations = new LinkedList<>();
 
     /**
      * Constructor.
@@ -32,7 +32,7 @@ public class PracticeAvailableLocationsAdapter extends RecyclerView.Adapter<Prac
      * @param items list of occurrence
      * @param callback callback on select time slot
      */
-    public PracticeAvailableLocationsAdapter(Context context, List<AppointmentLocationsDTO> items, SelectLocationCallback callback, String allButtonText) {
+    public PracticeAvailableLocationsAdapter(Context context, List<LocationDTO> items, SelectLocationCallback callback, String allButtonText) {
         this.context = context;
         this.items = items;
         this.selectLocationCallback = callback;
@@ -57,7 +57,7 @@ public class PracticeAvailableLocationsAdapter extends RecyclerView.Adapter<Prac
 
     @Override
     public void onBindViewHolder(ViewHolderLocation viewHolder, final int position) {
-        final AppointmentLocationsDTO appointmentLocations = position>0?items.get(position-1):null;
+        final LocationDTO appointmentLocations = position>0?items.get(position-1):null;
         TextView locationTextView = viewHolder.getLocationTextView();
         if(position == 0) {
             locationTextView.setText(allButtonText);
@@ -90,11 +90,11 @@ public class PracticeAvailableLocationsAdapter extends RecyclerView.Adapter<Prac
         notifyDataSetChanged();
     }
 
-    public void updateSelectedLocations(List<AppointmentLocationsDTO> selectedLocations){
+    public void updateSelectedLocations(List<LocationDTO> selectedLocations){
         this.selectedLocations = selectedLocations;
     }
 
-    public void setItems(List<AppointmentLocationsDTO> items){
+    public void setItems(List<LocationDTO> items){
         this.items = items;
     }
 

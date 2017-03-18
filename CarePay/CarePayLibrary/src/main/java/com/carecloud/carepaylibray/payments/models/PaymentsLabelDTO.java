@@ -321,6 +321,45 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_pay_using_payment_plan_label")
     @Expose
     private String paymentPayUsingPaymentPlan;
+    @SerializedName("payment_balance_owed_label")
+    @Expose
+    private String paymentBalanceOwedLabel;
+    @SerializedName("payment_total_paid_label")
+    @Expose
+    private String paymentTotalPaidLabel;
+    @SerializedName("payment_add_item_button")
+    @Expose
+    private String paymentAddItemButton;
+    @SerializedName("payment_clear_button")
+    @Expose
+    private String paymentClearButton;
+    @SerializedName("payment_title")
+    @Expose
+    private String paymentTitle;
+
+    public String getPaymentBalanceOwedLabel() {
+        return paymentBalanceOwedLabel;
+    }
+
+    public void setPaymentBalanceOwedLabel(String paymentBalanceOwedLabel) {
+        this.paymentBalanceOwedLabel = paymentBalanceOwedLabel;
+    }
+
+    public String getPaymentTotalPaidLabel() {
+        return paymentTotalPaidLabel;
+    }
+
+    public void setPaymentTotalPaidLabel(String paymentTotalPaidLabel) {
+        this.paymentTotalPaidLabel = paymentTotalPaidLabel;
+    }
+
+    public String getPaymentAddItemButton() {
+        return paymentAddItemButton;
+    }
+
+    public void setPaymentAddItemButton(String paymentAddItemButton) {
+        this.paymentAddItemButton = paymentAddItemButton;
+    }
 
     public String getPaymentPostedSuccessMessage() {
         return StringUtil.getLabelForView(paymentPostedSuccessMessage);
@@ -1923,5 +1962,21 @@ public class PaymentsLabelDTO {
      */
     public void setPaymentPayUsingPaymentPlan(String paymentPayUsingPaymentPlan) {
         this.paymentPayUsingPaymentPlan = paymentPayUsingPaymentPlan;
+    }
+
+    public String getPaymentClearButton() {
+        return paymentClearButton;
+    }
+
+    public void setPaymentClearButton(String paymentClearButton) {
+        this.paymentClearButton = paymentClearButton;
+    }
+
+    public String getPaymentTitle() {
+        return paymentTitle;
+    }
+
+    public void setPaymentTitle(String paymentTitle) {
+        this.paymentTitle = paymentTitle;
     }
 }

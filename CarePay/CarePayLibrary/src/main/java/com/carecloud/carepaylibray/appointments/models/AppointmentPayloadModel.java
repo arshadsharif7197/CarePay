@@ -27,7 +27,7 @@ public class AppointmentPayloadModel implements Serializable {
     private List<AppointmentProvidersDTO> providers = new ArrayList<>();
     @SerializedName("locations")
     @Expose
-    private List<AppointmentLocationsDTO> locations = new ArrayList<>();
+    private List<LocationDTO> locations = new ArrayList<>();
     @SerializedName("resources")
     @Expose
     private List<AppointmentResourcesDTO> resources = new ArrayList<>();
@@ -92,14 +92,14 @@ public class AppointmentPayloadModel implements Serializable {
     /**
      * @return The locations
      */
-    public List<AppointmentLocationsDTO> getLocations() {
+    public List<LocationDTO> getLocations() {
         return locations;
     }
 
     /**
      * @param locations The locations
      */
-    public void setLocations(List<AppointmentLocationsDTO> locations) {
+    public void setLocations(List<LocationDTO> locations) {
         this.locations = locations;
     }
 

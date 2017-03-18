@@ -56,7 +56,7 @@ public class AppointmentResourcesItemDTO {
     private List<VisitTypeDTO> visitReasons = new ArrayList<>();
     @SerializedName("provider")
     @Expose
-    private AppointmentProviderDTO provider = new AppointmentProviderDTO();
+    private ProviderDTO provider = new ProviderDTO();
 
     /**
      * 
@@ -312,7 +312,7 @@ public class AppointmentResourcesItemDTO {
      *
      * @return provider
      */
-    public AppointmentProviderDTO getProvider() {
+    public ProviderDTO getProvider() {
         return provider;
     }
 
@@ -320,7 +320,7 @@ public class AppointmentResourcesItemDTO {
      *
      * @param provider provider
      */
-    public void setProvider(AppointmentProviderDTO provider) {
+    public void setProvider(ProviderDTO provider) {
         this.provider = provider;
     }
 }
