@@ -274,6 +274,12 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     }
 
     @Override
+    public void pickProvider(ProviderDTO provider, BalanceItemDTO balanceItem) {
+        clearPickers();
+        modifyLineItem(balanceItem, provider, null, null);
+    }
+
+    @Override
     public void pickLocation(View view, BalanceItemDTO balanceItem) {
         clearPickers();
         clearLastSwipeView();
@@ -291,12 +297,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     @Override
     public void editAmount(double amount, BalanceItemDTO balanceItem) {
         modifyLineItem(balanceItem, null, null, amount);
-    }
-
-    @Override
-    public void pickProvider(ProviderDTO provider, BalanceItemDTO balanceItem) {
-        clearPickers();
-        modifyLineItem(balanceItem, provider, null, null);
     }
 
     @Override
