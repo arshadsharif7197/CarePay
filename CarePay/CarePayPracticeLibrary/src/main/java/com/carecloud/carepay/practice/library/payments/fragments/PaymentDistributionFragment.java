@@ -283,14 +283,14 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     }
 
     @Override
-    public void editAmount(double amount, BalanceItemDTO balanceItem) {
-        modifyLineItem(balanceItem, null, null, amount);
-    }
-
-    @Override
     public void pickLocation(LocationDTO location, BalanceItemDTO balanceItem) {
         clearPickers();
         modifyLineItem(balanceItem, null, location, null);
+    }
+
+    @Override
+    public void editAmount(double amount, BalanceItemDTO balanceItem) {
+        modifyLineItem(balanceItem, null, null, amount);
     }
 
     @Override
