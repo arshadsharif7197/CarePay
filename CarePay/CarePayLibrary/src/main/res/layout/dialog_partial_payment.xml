@@ -58,7 +58,7 @@
                     android:background="@android:color/transparent"
                     android:textColor="@color/white_transparent"
                     android:layout_height="wrap_content" />
-                <EditText
+                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                     android:layout_width="wrap_content"
                     android:hint="0.00"
                     android:textSize="@dimen/payment_header_amount_size"
@@ -67,7 +67,8 @@
                     android:inputType="numberDecimal"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    android:id="@+id/enterPartialAmountEditText" />
+                    android:id="@+id/enterPartialAmountEditText"
+                    app:customAssetFont="gotham_rounded_medium"/>
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
@@ -93,11 +94,12 @@
                 android:layout_marginTop="@dimen/payment_header_top_margin"
                 android:layout_height="@dimen/apt_dl_boader_ht"
                 android:background="@color/light_gray_dialog" />
-            <Button
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/payPartialButton"
                 style="@style/SigninSignupButtonStyle"
                 android:layout_marginTop="@dimen/payment_button_margin_top"
-                android:text="PAY PARTIAL AMOUNT"/>
+                android:text="PAY PARTIAL AMOUNT"
+                app:customAssetFont="gotham_rounded_medium"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
