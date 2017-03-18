@@ -226,11 +226,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         LocationDTO locationDTO = appointmentPayloadDTO.getLocation();
         FilterDataDTO filterDataDTO = new FilterDataDTO(locationDTO.getId(), locationDTO.getName(), FilterDataDTO.FilterDataType.LOCATION);
         if (locations.indexOf(filterDataDTO) < 0) {
-            filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
             locations.add(filterDataDTO);
-        } else {
-            filterDataDTO = locations.get(locations.indexOf(filterDataDTO));
-            filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
         }
     }
 
@@ -238,11 +234,9 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         PatientModel patientDTO = appointmentPayloadDTO.getPatient();
         FilterDataDTO filterDataDTO = new FilterDataDTO(patientDTO.getPatientId(), patientDTO.getFullName(), FilterDataDTO.FilterDataType.PATIENT);
         if (patients.indexOf(filterDataDTO) < 0) {
-            filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
             patients.add(filterDataDTO);
         } else {
             filterDataDTO = patients.get(patients.indexOf(filterDataDTO));
-            filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
         }
 
         if (StringUtil.isNullOrEmpty(filterDataDTO.getImageURL())) {
@@ -254,11 +248,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         ProviderDTO providerDTO = appointmentPayloadDTO.getProvider();
         FilterDataDTO filterDataDTO = new FilterDataDTO(providerDTO.getId(), providerDTO.getName(), FilterDataDTO.FilterDataType.PROVIDER);
         if (doctors.indexOf(filterDataDTO) < 0) {
-            filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
             doctors.add(filterDataDTO);
-        } else {
-            filterDataDTO = doctors.get(doctors.indexOf(filterDataDTO));
-            filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
         }
     }
 

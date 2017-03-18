@@ -1,4 +1,4 @@
-package com.carecloud.carepay.practice.library.appointments;
+package com.carecloud.carepay.practice.library.checkin;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AppointmentsActivity extends BasePracticeActivity implements View.OnClickListener,
+public class PatientModePracticeCheckInActivity extends BasePracticeActivity implements View.OnClickListener,
         AppointmentsListAdapter.AppointmentsAdapterStartCheckInListener {
 
     private RecyclerView appointmentsRecyclerView;
@@ -139,7 +139,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             findViewById(R.id.logoutTextview).setEnabled(true);
-            AppointmentsActivity.this.finish();
+            PatientModePracticeCheckInActivity.this.finish();
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
 
@@ -147,7 +147,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             findViewById(R.id.logoutTextview).setEnabled(true);
-            SystemUtil.showDefaultFailureDialog(AppointmentsActivity.this);
+            SystemUtil.showDefaultFailureDialog(PatientModePracticeCheckInActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -172,13 +172,13 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
 //            }
 
             AppointmentsListAdapter appointmentsListAdapter = new AppointmentsListAdapter(
-                    AppointmentsActivity.this, appointmentsItems, appointmentsResultModel);
+                    PatientModePracticeCheckInActivity.this, appointmentsItems, appointmentsResultModel);
             appointmentsRecyclerView.setAdapter(appointmentsListAdapter);
             appointmentsListAdapter.setListener(this);
 
             //Layout manager for the Recycler View
             RecyclerView.LayoutManager appointmentsLayoutManager = new LinearLayoutManager(
-                    AppointmentsActivity.this, LinearLayoutManager.HORIZONTAL, false);
+                    PatientModePracticeCheckInActivity.this, LinearLayoutManager.HORIZONTAL, false);
             appointmentsRecyclerView.setLayoutManager(appointmentsLayoutManager);
         } else {
             findViewById(R.id.titleSelectappointmentsubheader).setVisibility(View.INVISIBLE);
@@ -192,7 +192,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
                     //todo go to Appointment screen
                     getApplicationPreferences().setNavigateToAppointments(true);
                     WorkflowDTO workflowDTO = getConvertedDTO(WorkflowDTO.class);
-                    PracticeNavigationHelper.navigateToWorkflow(AppointmentsActivity.this, workflowDTO);
+                    PracticeNavigationHelper.navigateToWorkflow(PatientModePracticeCheckInActivity.this, workflowDTO);
 
                 }
             });
@@ -232,7 +232,7 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             appointmentProgressBar.setVisibility(View.GONE);
-            SystemUtil.showDefaultFailureDialog(AppointmentsActivity.this);
+            SystemUtil.showDefaultFailureDialog(PatientModePracticeCheckInActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -286,13 +286,13 @@ public class AppointmentsActivity extends BasePracticeActivity implements View.O
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            PracticeNavigationHelper.navigateToWorkflow(AppointmentsActivity.this, workflowDTO, true, CarePayConstants.CLOVER_PAYMENT_INTENT_REQUEST_CODE);
+            PracticeNavigationHelper.navigateToWorkflow(PatientModePracticeCheckInActivity.this, workflowDTO, true, CarePayConstants.CLOVER_PAYMENT_INTENT_REQUEST_CODE);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(AppointmentsActivity.this);
+            SystemUtil.showDefaultFailureDialog(PatientModePracticeCheckInActivity.this);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
