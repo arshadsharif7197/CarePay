@@ -127,9 +127,18 @@ public class FilterDialog extends PopupWindow
         clearSearchImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                clearPatientSearch();
+                filterModel.clearFilterByPatients();
+
+                applyFilter();
+            }
+
+            private void clearPatientSearch() {
                 searchPatientEditText.setText("");
                 searchPatientEditText.clearFocus();
-                filterModel.clearFilterByPatients();
+
+                InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getContentView().getWindowToken(), 0);
             }
         });
 
@@ -157,13 +166,6 @@ public class FilterDialog extends PopupWindow
 
             @Override
             public void afterTextChanged(Editable string) {
-                if (string.toString().isEmpty()) {
-                    InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(getContentView().getWindowToken(), 0);
-                    clearFiltersButton.setVisibility(View.GONE);
-                } else {
-                    clearFiltersButton.setVisibility(View.VISIBLE);
-                }
             }
         });
 
@@ -202,12 +204,16 @@ public class FilterDialog extends PopupWindow
 
     @Override
     public void onFilterChanged(FilterDataDTO filteredDataDTO) {
-        clearFiltersButton.setVisibility(View.VISIBLE);
-        filterCallBack.applyFilter();
+        applyFilter();
     }
 
     @Override
     public void onSearchChanged(FilterDataDTO filteredDataDTO) {
+        applyFilter();
+    }
+
+    private void applyFilter() {
+        clearFiltersButton.setVisibility(View.VISIBLE);
         filterCallBack.applyFilter();
     }
 
