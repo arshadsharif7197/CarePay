@@ -38,6 +38,11 @@ public class PracticePartialPaymentDialog extends PartialPaymentDialog {
     private boolean amountChangeFlag = true;
     private String balanceBeforeTextChange;
 
+    /**
+     *
+     * @param context the context
+     * @param paymentsDTO the paymentDTO
+     */
     public PracticePartialPaymentDialog(Context context, PaymentsModel paymentsDTO) {
         super(context, paymentsDTO);
         this.context = context;
