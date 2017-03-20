@@ -13,6 +13,7 @@ import com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInAct
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
+import com.carecloud.carepay.practice.library.payments.PatientModePracticePaymentsActivity;
 import com.carecloud.carepay.practice.library.payments.PaymentsActivity;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
@@ -36,10 +37,10 @@ public class PracticeNavigationHelper {
     /**
      * Navigation using application context
      *
-     * @param context activity context
-     * @param workflowDTO response DTO
+     * @param context       activity context
+     * @param workflowDTO   response DTO
      * @param expectsResult should launch with startActivityForResult
-     * @param requestCode RequestCode for activity Result
+     * @param requestCode   RequestCode for activity Result
      */
     public static void navigateToWorkflow(Context context, WorkflowDTO workflowDTO, boolean expectsResult, int requestCode) {
         shouldExpectResult = expectsResult;
@@ -50,7 +51,7 @@ public class PracticeNavigationHelper {
     /**
      * Navigation using application context
      *
-     *  @param context    activity context
+     * @param context     activity context
      * @param workflowDTO WorkflowDTO
      */
     public static void navigateToWorkflow(Context context, WorkflowDTO workflowDTO) {
@@ -111,7 +112,7 @@ public class PracticeNavigationHelper {
 //                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             }
-            case PracticeNavigationStateConstants.MEDICATION_ALLERGIES:{
+            case PracticeNavigationStateConstants.MEDICATION_ALLERGIES: {
                 if (context instanceof PatientModeCheckinActivity) {
                     ((PatientModeCheckinActivity) context).loadMedicationsAllergy(workflowDTO.toString());
                     return;
@@ -138,6 +139,9 @@ public class PracticeNavigationHelper {
                 if (context instanceof PatientModeCheckinActivity) {
                     ((PatientModeCheckinActivity) context).getPaymentInformation(workflowDTO.toString());
                     return;
+                } else {
+                    intent = new Intent(context, PatientModePracticePaymentsActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 }
                 break;
             }
@@ -161,11 +165,11 @@ public class PracticeNavigationHelper {
         bundle.putSerializable(WorkflowDTO.class.getSimpleName(), workflowDTO.toString());
         if (intent != null) {
             intent.putExtras(bundle);
-            if(shouldExpectResult && context instanceof Activity){
-                ((Activity)context).startActivityForResult(intent, expectRequestCode);
+            if (shouldExpectResult && context instanceof Activity) {
+                ((Activity) context).startActivityForResult(intent, expectRequestCode);
                 shouldExpectResult = false;
                 expectRequestCode = -1;
-            }else {
+            } else {
                 context.startActivity(intent);
             }
         }
