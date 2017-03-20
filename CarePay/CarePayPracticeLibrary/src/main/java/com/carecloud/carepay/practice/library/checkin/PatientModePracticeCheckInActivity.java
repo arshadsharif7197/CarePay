@@ -193,7 +193,6 @@ public class PatientModePracticeCheckInActivity extends BasePracticeActivity imp
                     getApplicationPreferences().setNavigateToAppointments(true);
                     WorkflowDTO workflowDTO = getConvertedDTO(WorkflowDTO.class);
                     PracticeNavigationHelper.navigateToWorkflow(PatientModePracticeCheckInActivity.this, workflowDTO);
-
                 }
             });
         }
