@@ -539,8 +539,8 @@ public class AppointmentDetailDialog extends Dialog {
         ft.addToBackStack(null);
 
         ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
-                .newInstance(paymentsModel, Label.getLabel("practice_payments_detail_dialog_payment_plan")
-                        , Label.getLabel("practice_payments_detail_dialog_pay"));
+                .newInstance(paymentsModel, Label.getLabel("practice_payments_detail_dialog_payment_plan"),
+                        Label.getLabel("practice_payments_detail_dialog_pay"));
         dialog.show(ft, tag);
     }
 }

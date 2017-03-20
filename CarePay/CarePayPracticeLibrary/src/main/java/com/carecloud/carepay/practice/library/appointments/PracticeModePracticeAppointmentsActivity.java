@@ -442,18 +442,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         dialog.show(ft, tag);
     }
 
-    @Override
-    public void onLeftActionTapped(AppointmentDTO appointmentDTO) {
-        cancelAppointment(appointmentDTO);
-    }
-
-    @Override
-    public void onRightActionTapped(AppointmentDTO appointmentDTO) {
-        if (appointmentDTO.getPayload().getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
-            confirmAppointment(appointmentDTO);
-        }
-    }
-
     private void confirmAppointment(AppointmentDTO appointmentDTO) {
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getConfirmAppointment();
         transitionAppointment(transitionDTO, appointmentDTO);
@@ -597,6 +585,18 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     @Override
     public void onRightActionTapped(PaymentsModel paymentsModel, double amount) {
         newAppointment();
+    }
+
+    @Override
+    public void onLeftActionTapped(AppointmentDTO appointmentDTO) {
+        cancelAppointment(appointmentDTO);
+    }
+
+    @Override
+    public void onRightActionTapped(AppointmentDTO appointmentDTO) {
+        if (appointmentDTO.getPayload().getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
+            confirmAppointment(appointmentDTO);
+        }
     }
 
     @Override

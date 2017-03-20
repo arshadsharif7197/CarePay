@@ -67,11 +67,15 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
     @Override
     public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
         callback.onDetailItemClick(paymentsModel, paymentLineItem);
-//        PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(getContext(),
-//                paymentsModel, paymentLineItem, callback, null);
-//        detailsDialog.show();
     }
 
+    /**
+     *
+     * @param paymentsModel the payment model
+     * @param leftLabel the label of the left bottom button
+     * @param rightLabel the label of the right bottom button
+     * @return new instance of a ResponsibilityFragmentDialog
+     */
     public static ResponsibilityFragmentDialog newInstance(PaymentsModel paymentsModel, String leftLabel, String rightLabel) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
@@ -120,8 +124,8 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
 
     @SuppressWarnings("AccessStaticViaInstance")
     private void handleException() {
-        Thread t = Thread.currentThread();
-        t.setDefaultUncaughtExceptionHandler(new SystemUtil());
+        Thread thread = Thread.currentThread();
+        thread.setDefaultUncaughtExceptionHandler(new SystemUtil());
     }
 
     private void onInitialization(View view) {
