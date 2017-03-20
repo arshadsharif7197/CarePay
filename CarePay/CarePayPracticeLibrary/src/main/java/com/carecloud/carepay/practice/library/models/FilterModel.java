@@ -112,15 +112,23 @@ public class FilterModel {
         return patients;
     }
 
-    public void clearFilterByPatients() {
-        clear(patients);
-    }
-
     public boolean isFilteringByPending() {
         return filteringByPending;
     }
 
     public void setFilteringByPending(boolean newValue) {
         this.filteringByPending = newValue;
+    }
+
+    public ArrayList<FilterDataDTO> getCheckedPatients() {
+        ArrayList<FilterDataDTO> checked = new ArrayList<>();
+
+        for (FilterDataDTO dto: patients) {
+            if (dto.isChecked()) {
+                checked.add(dto);
+            }
+        }
+
+        return checked;
     }
 }

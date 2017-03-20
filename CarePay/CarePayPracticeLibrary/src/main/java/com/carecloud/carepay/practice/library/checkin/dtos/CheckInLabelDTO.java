@@ -50,12 +50,6 @@ public class CheckInLabelDTO extends AppointmentLabelDTO {
     @SerializedName("practice_checkin_filter_clear_filters")
     @Expose
     private String practiceCheckinFilterClearFilters;
-    @SerializedName("practice_checkin_filter_doctors")
-    @Expose
-    private String practiceCheckinFilterDoctors;
-    @SerializedName("practice_checkin_filter_locations")
-    @Expose
-    private String practiceCheckinFilterLocations;
     @SerializedName("practice_checkin_detail_dialog_ordinal_th")
     @Expose
     private String practiceCheckinDetailDialogOrdinalTh;
@@ -322,34 +316,6 @@ public class CheckInLabelDTO extends AppointmentLabelDTO {
      */
     public void setPracticeCheckinFilterClearFilters(String practiceCheckinFilterClearFilters) {
         this.practiceCheckinFilterClearFilters = practiceCheckinFilterClearFilters;
-    }
-
-    /**
-     * @return The practiceCheckinFilterDoctors
-     */
-    public String getPracticeCheckinFilterDoctors() {
-        return practiceCheckinFilterDoctors == null ? "Doctors" : practiceCheckinFilterDoctors;
-    }
-
-    /**
-     * @param practiceCheckinFilterDoctors The practice_checkin_filter_doctors
-     */
-    public void setPracticeCheckinFilterDoctors(String practiceCheckinFilterDoctors) {
-        this.practiceCheckinFilterDoctors = practiceCheckinFilterDoctors;
-    }
-
-    /**
-     * @return The practiceCheckinFilterLocations
-     */
-    public String getPracticeCheckinFilterLocations() {
-        return practiceCheckinFilterLocations == null ? "Locations" : practiceCheckinFilterLocations;
-    }
-
-    /**
-     * @param practiceCheckinFilterLocations The practice_checkin_filter_locations
-     */
-    public void setPracticeCheckinFilterLocations(String practiceCheckinFilterLocations) {
-        this.practiceCheckinFilterLocations = practiceCheckinFilterLocations;
     }
 
     public String getPracticeCheckinWaitingRoom() {
