@@ -1,7 +1,7 @@
 
 package com.carecloud.carepaylibray.payments.models;
 
-import com.carecloud.carepaylibray.appointments.models.AppointmentChargeDTO;
+import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,6 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PendingBalancePayloadDTO {
+
+    public static final String PATIENT_BALANCE_TYPE = "Patient Balance";
+    public static final String CO_PAY_TYPE = "Insurance CoPay";
+    public static final String CO_INSURANCE_TYPE = "Co-Insurance";
+    public static final String DEDUCTIBLE_TYPE = "Insurance Deductible";
 
     @SerializedName("type")
     @Expose
@@ -21,7 +26,7 @@ public class PendingBalancePayloadDTO {
     private double unappliedCredit;
     @SerializedName("details")
     @Expose
-    private List<AppointmentChargeDTO> details = new ArrayList<>();
+    private List<BalanceItemDTO> details = new ArrayList<>();
 
 
     public String getType() {
@@ -40,11 +45,11 @@ public class PendingBalancePayloadDTO {
         this.amount = amount;
     }
 
-    public List<AppointmentChargeDTO> getDetails() {
+    public List<BalanceItemDTO> getDetails() {
         return details;
     }
 
-    public void setDetails(List<AppointmentChargeDTO> details) {
+    public void setDetails(List<BalanceItemDTO> details) {
         this.details = details;
     }
 
@@ -55,4 +60,5 @@ public class PendingBalancePayloadDTO {
     public void setUnappliedCredit(double unappliedCredit) {
         this.unappliedCredit = unappliedCredit;
     }
+
 }

@@ -2,10 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.carecloud.carepay.practice.library">
 
-    <application>
+    <application
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppBaseTheme">
+        <activity
+            android:name=".payments.PatientModePracticePaymentsActivity"
+            android:screenOrientation="sensorLandscape" />
         <activity
             android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinPreregisterActivity"
             android:screenOrientation="sensorLandscape"
             android:windowSoftInputMode="adjustNothing" />
     </application>
+
 </manifest>

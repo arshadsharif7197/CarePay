@@ -21,7 +21,7 @@ public class AppointmentProvidersDTO {
     private String name;
     @SerializedName("specialty")
     @Expose
-    private AppointmentSpecialtyDTO specialty = new AppointmentSpecialtyDTO();
+    private SpecialtyDTO specialty = new SpecialtyDTO();
     @SerializedName("phone_number")
     @Expose
     private String phone;
@@ -88,7 +88,7 @@ public class AppointmentProvidersDTO {
      * @return
      *     The specialty
      */
-    public AppointmentSpecialtyDTO getSpecialty() {
+    public SpecialtyDTO getSpecialty() {
         return specialty;
     }
 
@@ -97,7 +97,7 @@ public class AppointmentProvidersDTO {
      * @param specialty
      *     The Specialty
      */
-    public void setSpecialty(AppointmentSpecialtyDTO specialty) {
+    public void setSpecialty(SpecialtyDTO specialty) {
         this.specialty = specialty;
     }
 

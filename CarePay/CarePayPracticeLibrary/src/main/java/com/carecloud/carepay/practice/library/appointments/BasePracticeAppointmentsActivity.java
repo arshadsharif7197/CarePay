@@ -1,8 +1,8 @@
 package com.carecloud.carepay.practice.library.appointments;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.os.Bundle;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAvailableHoursDialog;
@@ -191,6 +191,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     /**
      * what to do with the selected visit type and provider
+     *
      * @param visitTypeDTO selected visit type from dialog
      */
     @Override
@@ -252,7 +253,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
                     && resourcesToScheduleModel.getPayload().getResourcesToSchedule() != null
                     && resourcesToScheduleModel.getPayload().getResourcesToSchedule().size() > 0) {
 
-                Bundle bundle= new Bundle();
+                Bundle bundle = new Bundle();
                 bundle.putString("titleLabel", getLabels().getPracticeListSelectProvider());
                 bundle.putString("continueButtonLabel", getLabels().getPracticeListContinue());
                 DtoHelper.bundleDto(bundle, resourcesToScheduleModel);

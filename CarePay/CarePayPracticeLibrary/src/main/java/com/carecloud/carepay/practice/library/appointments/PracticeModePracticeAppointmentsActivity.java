@@ -1,8 +1,8 @@
 package com.carecloud.carepay.practice.library.appointments;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -28,13 +28,13 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
+import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.LinksDTO;
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.models.LocationDTO;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.ProviderDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -226,11 +226,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         LocationDTO locationDTO = appointmentPayloadDTO.getLocation();
         FilterDataDTO filterDataDTO = new FilterDataDTO(locationDTO.getId(), locationDTO.getName(), FilterDataDTO.FilterDataType.LOCATION);
         if (locations.indexOf(filterDataDTO) < 0) {
-            filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
             locations.add(filterDataDTO);
-        } else {
-            filterDataDTO = locations.get(locations.indexOf(filterDataDTO));
-            filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
         }
     }
 
@@ -238,11 +234,9 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         PatientModel patientDTO = appointmentPayloadDTO.getPatient();
         FilterDataDTO filterDataDTO = new FilterDataDTO(patientDTO.getPatientId(), patientDTO.getFullName(), FilterDataDTO.FilterDataType.PATIENT);
         if (patients.indexOf(filterDataDTO) < 0) {
-            filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
             patients.add(filterDataDTO);
         } else {
             filterDataDTO = patients.get(patients.indexOf(filterDataDTO));
-            filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
         }
 
         if (StringUtil.isNullOrEmpty(filterDataDTO.getImageURL())) {
@@ -254,11 +248,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         ProviderDTO providerDTO = appointmentPayloadDTO.getProvider();
         FilterDataDTO filterDataDTO = new FilterDataDTO(providerDTO.getId(), providerDTO.getName(), FilterDataDTO.FilterDataType.PROVIDER);
         if (doctors.indexOf(filterDataDTO) < 0) {
-            filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
             doctors.add(filterDataDTO);
-        } else {
-            filterDataDTO = doctors.get(doctors.indexOf(filterDataDTO));
-            filterDataDTO.getAppointmentList().add(appointmentPayloadDTO.getId());
         }
     }
 

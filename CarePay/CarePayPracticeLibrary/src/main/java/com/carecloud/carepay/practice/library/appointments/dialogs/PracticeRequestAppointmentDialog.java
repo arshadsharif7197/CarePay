@@ -15,7 +15,7 @@ import com.carecloud.carepay.practice.library.customdialog.BasePracticeDialog;
 import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentLocationsDTO;
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
@@ -114,7 +114,7 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
 
         //Endpoint not support location for individual resource,
         //Hence used 0th item from location array
-        AppointmentLocationsDTO location = appointmentAvailabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getLocation();
+        LocationDTO location = appointmentAvailabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getLocation();
         CarePayTextView appointmentPlaceNameTextView = (CarePayTextView)view.findViewById(R.id.provider_place_name);
         appointmentPlaceNameTextView.setText(location.getName());
         SystemUtil.setProximaNovaExtraboldTypeface(context,appointmentPlaceNameTextView);

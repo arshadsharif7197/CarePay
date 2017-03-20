@@ -71,11 +71,6 @@ public class WorkflowServiceHelper {
                     applicationMode.getUserPracticeDTO() != null) {
 
                 userAuthHeaders.put("username", applicationMode.getUserPracticeDTO().getUserName());
-                if (HttpConstants.isUseUnifiedAuth()) {
-                    userAuthHeaders.put("Authorization", appAuthorizationHelper.getIdToken());
-                } else {
-                    userAuthHeaders.put("Authorization", appAuthorizationHelper.getCurrSession().getIdToken().getJWTToken());
-                }
 
                 if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
                     userAuthHeaders.put("username_patient", appAuthorizationHelper.getCurrUser());
@@ -83,18 +78,13 @@ public class WorkflowServiceHelper {
 
             } else {
                 userAuthHeaders.put("username", appAuthorizationHelper.getCurrUser());
-
-                if (HttpConstants.isUseUnifiedAuth()) {
-                    userAuthHeaders.put("Authorization", appAuthorizationHelper.getIdToken());
-
-                } else if (!isNullOrEmpty(appAuthorizationHelper.getCurrUser())) {//this is the old way
-
-                    if (appAuthorizationHelper.getCurrSession() != null && !isNullOrEmpty(appAuthorizationHelper.getCurrSession().getIdToken().getJWTToken())) {
-                        userAuthHeaders.put("Authorization", appAuthorizationHelper.getCurrSession().getIdToken().getJWTToken());
-                    }
-                }
             }
 
+            if (HttpConstants.isUseUnifiedAuth()) {
+                userAuthHeaders.put("Authorization", appAuthorizationHelper.getIdToken());
+            } else {
+                userAuthHeaders.put("Authorization", appAuthorizationHelper.getCurrSession().getIdToken().getJWTToken());
+            }
         }
 
         userAuthHeaders.putAll(getPreferredLanguageHeader());

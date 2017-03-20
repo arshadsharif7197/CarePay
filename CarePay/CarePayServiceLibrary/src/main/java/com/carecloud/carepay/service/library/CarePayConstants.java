@@ -5,18 +5,25 @@ package com.carecloud.carepay.service.library;
  */
 public class CarePayConstants {
 
+    private CarePayConstants() {
+    }
+
     // Default data
 
     public static final String DEFAULT_LANGUAGE = "English";
 
+    // Generic Constants
+    public static final int HOME_PRESSED = 999;
+
     //Appointments Constants
-    public static final String PENDING      = "P";
-    public static final String CHECKED_IN   = "I";
-    public static final String CANCELLED    = "C";
-    public static final String REQUESTED    = "R";
+    public static final String PENDING = "P";
+    public static final String CHECKED_IN = "I";
+    public static final String CANCELLED = "C";
+    public static final String REQUESTED = "R";
+    public static final String CHECKING_IN = "CI";
 
     public static final String ATTR_APPOINTMENTS = "appointments";
-    public static final String ATTR_APPT_ID= "appointment_id";
+    public static final String ATTR_APPT_ID = "appointment_id";
     public static final String ATTR_TIME = "time";
     public static final String DAY_UPCOMING = "UPCOMING";
     public static final String DAY_TODAY = "TODAY";
@@ -28,16 +35,16 @@ public class CarePayConstants {
 
     public static final int SIGNATURE_REQ_CODE = 100;
     public static final int NO_INDEX = -1;
-    public static final String FORM_DATA  = "formdata";
-    public static final String CHECKED_IN_APPOINTMENT_BUNDLE  = "Checked_in_appointment_bundle";
-    public static final String INTAKE_BUNDLE  = "intake_bundle";
-    public static final String COPAY  = "Insurance";
-    public static final String INSURANCE_COPAY  = "Insurance CoPay";
-    public static final String ACCOUNT  = "Account";
-    public static final String PREVIOUS_BALANCE  = "Patient";
-    public static final String PATIENT_BALANCE  = "Patient Balance";
-    public static final String DOLLAR  = "$";
-    public static final String RESPONSIBILITY_FORMATTER  = "#0.00";
+    public static final String FORM_DATA = "formdata";
+    public static final String CHECKED_IN_APPOINTMENT_BUNDLE = "Checked_in_appointment_bundle";
+    public static final String INTAKE_BUNDLE = "intake_bundle";
+    public static final String COPAY = "Insurance";
+    public static final String INSURANCE_COPAY = "Insurance CoPay";
+    public static final String ACCOUNT = "Account";
+    public static final String PREVIOUS_BALANCE = "Patient";
+    public static final String PATIENT_BALANCE = "Patient Balance";
+    public static final String DOLLAR = "$";
+    public static final String RESPONSIBILITY_FORMATTER = "#0.00";
 
     public static final String PREF_LAST_REMINDER_POPUP_APPT_ID = "last_reminder_popup_appt_id";
     public static final String DEFAULT_STRING_PREFERENCES = "-";
@@ -60,38 +67,38 @@ public class CarePayConstants {
     public static final String ADD_APPOINTMENT_PATIENT_ID = "add_appointment_patient_id";
     public static final String PAYMENT_CREDIT_CARD_INFO = "payment_credit_card_info";
     public static final String TAB_SECTION_NUMBER = "section_number";
-    public static final int    MAX_INSURANCE_DOC = 3;
+    public static final int MAX_INSURANCE_DOC = 3;
 
-    public static final String RAW_DATE_FORMAT_FOR_TESTS               = "yyyy-MM-dd'T'HH:mm:ssX";
+    public static final String RAW_DATE_FORMAT_FOR_TESTS = "yyyy-MM-dd'T'HH:mm:ssX";
     public static final String RAW_DATE_FORMAT_FOR_CALENDAR_DATE_RANGE = "EEE, MMM d, ''yy";
-    public static final String NOT_DEFINED                             = "Not Defined";
+    public static final String NOT_DEFINED = "Not Defined";
 
     public static final String PRACTICE_APP_MODE_DEFAULT_PIN = "1234";
-    public static final String ZERO_BALANCE  = "$0.00";
+    public static final String ZERO_BALANCE = "$0.00";
 
-    public static final String TYPE_CASH  = "cash";
-    public static final String TYPE_CREDIT_CARD  = "credit_card";
-    public static final String TYPE_CHECK  = "check";
-    public static final String TYPE_GIFT_CARD  = "gift_card";
-    public static final String TYPE_PAYPAL  = "paypal";
-    public static final String TYPE_HSA  = "hsa";
-    public static final String TYPE_FSA  = "fsa";
-    public static final String TYPE_ANDROID_PAY  = "android_pay";
-    public static final String TYPE_PAYMENT_PLAN  = "pay_using_payment_plan";
+    public static final String TYPE_CASH = "cash";
+    public static final String TYPE_CREDIT_CARD = "credit_card";
+    public static final String TYPE_CHECK = "check";
+    public static final String TYPE_GIFT_CARD = "gift_card";
+    public static final String TYPE_PAYPAL = "paypal";
+    public static final String TYPE_HSA = "hsa";
+    public static final String TYPE_FSA = "fsa";
+    public static final String TYPE_ANDROID_PAY = "android_pay";
+    public static final String TYPE_PAYMENT_PLAN = "pay_using_payment_plan";
 
     public static final int PAYMENT_PLAN_REQUIRED_BALANCE = 20;
     public static final String APPOINTMENTS_STATUS_COMPLETED = "completed";
 
-    public static final String DEMOGRAPHICS_SETTINGS_BUNDLE  = "demographics_settings_bundle";
-    public static final String DEMOGRAPHICS_ADDRESS_BUNDLE  = "demographics_address_bundle";
-    public static final String PAYEEZY_MERCHANT_SERVICE_BUNDLE  = "payeezy_merchant_service_bundle";
-    public static final String CREDIT_CARD_BUNDLE  = "credit_card_bundle";
+    public static final String DEMOGRAPHICS_SETTINGS_BUNDLE = "demographics_settings_bundle";
+    public static final String DEMOGRAPHICS_ADDRESS_BUNDLE = "demographics_address_bundle";
+    public static final String PAYEEZY_MERCHANT_SERVICE_BUNDLE = "payeezy_merchant_service_bundle";
+    public static final String CREDIT_CARD_BUNDLE = "credit_card_bundle";
 
-    public static final int ANDROID_PAY_BUTTON_HEIGHT= 58;
-    public static final int NAVIGATION_ITEM_INDEX_APPOINTMENTS= 0;
-    public static final int NAVIGATION_ITEM_INDEX_PAYMENTS= 1;
-    public static final int NAVIGATION_ITEM_INDEX_PURCHASE= 2;
-    public static final int NAVIGATION_ITEM_INDEX_NOTIFICATION= 3;
+    public static final int ANDROID_PAY_BUTTON_HEIGHT = 58;
+    public static final int NAVIGATION_ITEM_INDEX_APPOINTMENTS = 0;
+    public static final int NAVIGATION_ITEM_INDEX_PAYMENTS = 1;
+    public static final int NAVIGATION_ITEM_INDEX_PURCHASE = 2;
+    public static final int NAVIGATION_ITEM_INDEX_NOTIFICATION = 3;
 
 
     public static final String MEDICATION_ALLERGIES_DTO_EXTRA = "medication_allergies_payload_extra";

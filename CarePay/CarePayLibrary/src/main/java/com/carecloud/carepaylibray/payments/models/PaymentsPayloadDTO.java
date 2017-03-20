@@ -1,5 +1,9 @@
 package com.carecloud.carepaylibray.payments.models;
 
+
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
+import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMerchantServicesDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiAccountsDTO;
@@ -61,6 +65,9 @@ public class PaymentsPayloadDTO implements Serializable {
     @SerializedName("merchant_services")
     @Expose
     private List<DemographicsSettingsMerchantServicesDTO> merchantServices = new ArrayList<>();
+    @SerializedName("user_practices")
+    @Expose
+    private List<UserPracticeDTO> userPractices = new ArrayList<>();
 
     public List<PatientModel> getPatients() {
         return patients;
@@ -79,54 +86,42 @@ public class PaymentsPayloadDTO implements Serializable {
     }
 
     /**
-     *
-     * @return
-     * The intakeForms
+     * @return The intakeForms
      */
     public PaymentsPayloadIntakeFormsDTO getIntakeForms() {
         return intakeForms;
     }
 
     /**
-     *
-     * @param intakeForms
-     * The intake_forms
+     * @param intakeForms The intake_forms
      */
     public void setIntakeForms(PaymentsPayloadIntakeFormsDTO intakeForms) {
         this.intakeForms = intakeForms;
     }
 
     /**
-     *
-     * @return
-     * The patientPaymentPlans
+     * @return The patientPaymentPlans
      */
     public PaymentsPatientsPlansDTO getPatientPaymentPlans() {
         return patientPaymentPlans;
     }
 
     /**
-     *
-     * @param patientPaymentPlans
-     * The patient_payment_plans
+     * @param patientPaymentPlans The patient_payment_plans
      */
     public void setPatientPaymentPlans(PaymentsPatientsPlansDTO patientPaymentPlans) {
         this.patientPaymentPlans = patientPaymentPlans;
     }
 
     /**
-     *
-     * @return
-     * The patientCreditCards
+     * @return The patientCreditCards
      */
     public List<PaymentsPatientsCreditCardsPayloadListDTO> getPatientCreditCards() {
         return patientCreditCards;
     }
 
     /**
-     *
-     * @param patientCreditCards
-     * The patient_credit_cards
+     * @param patientCreditCards The patient_credit_cards
      */
     public void setPatientCreditCards(List<PaymentsPatientsCreditCardsPayloadListDTO> patientCreditCards) {
         this.patientCreditCards = patientCreditCards;
@@ -141,7 +136,6 @@ public class PaymentsPayloadDTO implements Serializable {
     }
 
     /**
-     *
      * @return The patientBalances
      */
     public List<PatientBalanceDTO> getPatientBalances() {
@@ -149,10 +143,9 @@ public class PaymentsPayloadDTO implements Serializable {
     }
 
     /**
-     *
      * @param patientBalances The patient_balances
      */
-    public void setPatientBalances(List<PatientBalanceDTO>patientBalances) {
+    public void setPatientBalances(List<PatientBalanceDTO> patientBalances) {
         this.patientBalances = patientBalances;
     }
 
@@ -238,5 +231,13 @@ public class PaymentsPayloadDTO implements Serializable {
 
     public void setPaymentSettings(List<PaymentsPayloadSettingsDTO> paymentSettings) {
         this.paymentSettings = paymentSettings;
+    }
+
+    public List<UserPracticeDTO> getUserPractices() {
+        return userPractices;
+    }
+
+    public void setUserPractices(List<UserPracticeDTO> userPractices) {
+        this.userPractices = userPractices;
     }
 }
