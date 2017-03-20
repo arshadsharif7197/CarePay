@@ -7,10 +7,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppBaseTheme">
-
         <activity
             android:name=".payments.PatientModePracticePaymentsActivity"
             android:screenOrientation="sensorLandscape" />
-
     </application>
+
 </manifest>
