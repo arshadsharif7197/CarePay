@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 
 import java.text.NumberFormat;
@@ -23,9 +24,12 @@ import java.text.NumberFormat;
 public class PaymentDistributionEntryFragment extends BaseDialogFragment implements View.OnClickListener {
     public interface PaymentDistributionAmountCallback{
         void applyNewDistributionAmount(double amount);
+
+        void applyAmountToBalanceItem(double amount, BalanceItemDTO balanceItemDTO);
     }
 
     private PaymentDistributionAmountCallback callback;
+    private BalanceItemDTO balanceItem;
 
     private EditText amountText;
     private TextView amountSymbol;
@@ -57,6 +61,12 @@ public class PaymentDistributionEntryFragment extends BaseDialogFragment impleme
         setEntryListeners(view);
     }
 
+    @Override
+    public void onPause(){
+        super.onPause();
+        dismiss();
+    }
+
     private void setEntryListeners(View view){
         view.findViewById(R.id.key_one).setOnClickListener(this);
         view.findViewById(R.id.key_two).setOnClickListener(this);
@@ -79,7 +89,11 @@ public class PaymentDistributionEntryFragment extends BaseDialogFragment impleme
             dismiss();
         }else if(id == R.id.payPartialButton && callback!=null){
             try {
-                callback.applyNewDistributionAmount(Double.parseDouble(amountText.getText().toString()));
+                if(balanceItem!=null){
+                    callback.applyAmountToBalanceItem(Double.parseDouble(amountText.getText().toString()), balanceItem);
+                }else {
+                    callback.applyNewDistributionAmount(Double.parseDouble(amountText.getText().toString()));
+                }
                 dismiss();
             }catch (NumberFormatException nfe){
                 nfe.printStackTrace();
@@ -103,6 +117,10 @@ public class PaymentDistributionEntryFragment extends BaseDialogFragment impleme
 
     public void setCallback(PaymentDistributionAmountCallback callback) {
         this.callback = callback;
+    }
+
+    public void setBalanceItem(BalanceItemDTO balanceItem) {
+        this.balanceItem = balanceItem;
     }
 
     private TextWatcher textWatcher = new TextWatcher() {

@@ -17,7 +17,6 @@ import com.carecloud.carepay.practice.library.payments.dialogs.FindPatientDialog
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityDialog;
 import com.carecloud.carepay.practice.library.payments.fragments.AddPaymentItemFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.NoAddChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentPlanFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionEntryFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionFragment;
@@ -32,10 +31,12 @@ import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItemMetadata;
@@ -415,7 +416,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
             args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
 
-            DialogFragment fragment = new NoAddChooseCreditCardFragment();
+            DialogFragment fragment = new ChooseCreditCardFragment();
             fragment.setArguments(args);
             fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
         } else {
@@ -449,7 +450,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void lookupChargeItem(List<BalanceItemDTO> simpleChargeItems, AddPaymentItemFragment.AddItemCallback callback) {
+    public void lookupChargeItem(List<SimpleChargeItem> simpleChargeItems, AddPaymentItemFragment.AddItemCallback callback) {
 
         Bundle args = new Bundle();
         Gson gson = new Gson();
@@ -465,8 +466,17 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void showAmountEntry(PaymentDistributionEntryFragment.PaymentDistributionAmountCallback callback) {
+    public void showAmountEntry(PaymentDistributionEntryFragment.PaymentDistributionAmountCallback callback, BalanceItemDTO balanceItem) {
+        Gson gson = new Gson();
+        Bundle args = new Bundle();
+
         PaymentDistributionEntryFragment entryFragment = new PaymentDistributionEntryFragment();
+        if(balanceItem != null) {
+//            args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(balanceItem));
+//            entryFragment.setArguments(args);
+            entryFragment.setBalanceItem(balanceItem);
+        }
+
         entryFragment.setCallback(callback);
         entryFragment.show(getSupportFragmentManager(), entryFragment.getClass().getSimpleName());
     }

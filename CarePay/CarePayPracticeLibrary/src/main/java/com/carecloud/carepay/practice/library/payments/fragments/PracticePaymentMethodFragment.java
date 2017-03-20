@@ -14,11 +14,14 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsPayloadDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItemMetadata;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -89,7 +92,7 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
     private View.OnClickListener swipeCreditCarNowButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            setCloverPayment();
+            setCloverPayment(paymentsModel.getPaymentPayload());
             if(getDialog()!=null){
                 dismiss();
             }
@@ -146,9 +149,6 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
                 PaymentLineItemMetadata metadata = new PaymentLineItemMetadata();
                 metadata.setPatientID(balance.getMetadata().getPatientId());
                 metadata.setPracticeID(balance.getMetadata().getPracticeId());
-//                metadata.setProviderID(balance.getMetadata().getProviderID()); //TODO this is missing in the DTO
-//                metadata.setLocationID(balance.getMetadata().getLocationID()); //TODO this is missing in the DTO
-
                 paymentLineItems.add(paymentLineItem);
 
             }
@@ -160,4 +160,47 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
             e.printStackTrace();
         }
     }
+
+    private void setCloverPayment(PaymentsPayloadDTO paymentsPayloadDTO){
+        PaymentPostModel postModel = paymentsPayloadDTO.getPaymentPostModel();
+
+        Intent intent = new Intent();
+        intent.setAction(CarePayConstants.CLOVER_PAYMENT_INTENT);
+
+        double paymentAmount = postModel.getAmount();
+        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, paymentAmount);
+
+        Gson gson = new Gson();
+        String paymentTransitionString = gson.toJson(paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment());
+        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_TRANSITION, paymentTransitionString);
+
+        if(postModel!=null && postModel.getAmount()>0) {
+            String paymentPostModelString = gson.toJson(postModel);
+            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_POST_MODEL, paymentPostModelString);
+        }
+
+        List<PaymentLineItem> paymentLineItems = new ArrayList<>();
+        for(PaymentObject paymentObject : postModel.getPaymentObjects()){
+            PaymentLineItem paymentLineItem = new PaymentLineItem();
+            paymentLineItem.setAmount(paymentObject.getAmount());
+            paymentLineItem.setDescription(paymentObject.getDescription());
+
+            PaymentLineItemMetadata metadata = new PaymentLineItemMetadata();
+            metadata.setPatientID(paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getMetadata().getPatientId());
+            metadata.setPracticeID(paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getMetadata().getPracticeId());
+            metadata.setLocationID(paymentObject.getLocationID());
+            metadata.setProviderID(paymentObject.getProviderID());
+
+            paymentLineItems.add(paymentLineItem);
+
+        }
+        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS, gson.toJson(paymentLineItems));
+        getActivity().startActivityForResult(intent, CarePayConstants.CLOVER_PAYMENT_INTENT_REQUEST_CODE, new Bundle());
+
+    }
+
+
+
+
+
 }

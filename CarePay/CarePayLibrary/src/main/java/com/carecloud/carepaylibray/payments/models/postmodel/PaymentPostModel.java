@@ -14,8 +14,8 @@ public class PaymentPostModel {
     @SerializedName("amount")
     private double amount = -1;
 
-    @SerializedName("payment_methods")
-    private List<PaymentMethod> paymentMethods = new ArrayList<>();
+    @SerializedName("payments")
+    private List<PaymentObject> paymentObjects = new ArrayList<>();
 
     public double getAmount() {
         return amount;
@@ -25,16 +25,16 @@ public class PaymentPostModel {
         this.amount = amount;
     }
 
-    public List<PaymentMethod> getPaymentMethods() {
-        return paymentMethods;
+    public List<PaymentObject> getPaymentObjects() {
+        return paymentObjects;
     }
 
-    public void setPaymentMethods(List<PaymentMethod> paymentMethods) {
-        this.paymentMethods = paymentMethods;
+    public void setPaymentObjects(List<PaymentObject> paymentObjects) {
+        this.paymentObjects = paymentObjects;
     }
 
-    public void addPaymentMethod(PaymentMethod paymentMethod){
-        paymentMethods.add(paymentMethod);
+    public void addPaymentMethod(PaymentObject paymentObject){
+        paymentObjects.add(paymentObject);
     }
 
     /**
@@ -42,13 +42,13 @@ public class PaymentPostModel {
      * @return true if payment model is valid
      */
     public boolean isPaymentModelValid(){
-        if(amount <0 || paymentMethods.isEmpty()){
+        if(amount <0 || paymentObjects.isEmpty()){
             return false;
         }
         double payAmount = 0;
-        for(PaymentMethod paymentMethod : paymentMethods){
-            payAmount += paymentMethod.getAmount();
-            if(!paymentMethod.isPaymentMethodValid()){
+        for(PaymentObject paymentObject : paymentObjects){
+            payAmount += paymentObject.getAmount();
+            if(!paymentObject.isPaymentMethodValid()){
                 return false;
             }
         }

@@ -24,7 +24,6 @@ import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.customdialog.FilterDialog;
 import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountReceiptDialog;
-import com.carecloud.carepay.practice.library.payments.fragments.NoAddChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -37,6 +36,7 @@ import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -378,7 +378,7 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity
             args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
             args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
 
-            DialogFragment fragment = new NoAddChooseCreditCardFragment();
+            DialogFragment fragment = new ChooseCreditCardFragment();
             fragment.setArguments(args);
             fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
         } else {

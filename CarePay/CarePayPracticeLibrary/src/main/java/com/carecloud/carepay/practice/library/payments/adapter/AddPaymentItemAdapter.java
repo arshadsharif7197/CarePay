@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
+import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -22,15 +22,15 @@ import java.util.List;
 public class AddPaymentItemAdapter extends RecyclerView.Adapter<AddPaymentItemAdapter.AddPaymentItemViewHolder> {
 
     public interface AddPaymentItemCallback{
-        void paymentItemSelected(BalanceItemDTO balanceItem);
+        void paymentItemSelected(SimpleChargeItem chargeItem);
     }
 
     private static final int VIEW_TYPE_HEADER = 0x100;
     private static final int VIEW_TYPE_LINE = 0x200;
 
     private Context context;
-    private List<BalanceItemDTO> templateItems = new ArrayList<>();
-    private List<BalanceItemDTO> simpleChargeItems = new ArrayList<>();
+    private List<SimpleChargeItem> templateItems = new ArrayList<>();
+    private List<SimpleChargeItem> simpleChargeItems = new ArrayList<>();
     private AddPaymentItemCallback callback;
 
     private NumberFormat currencyFormatter;
@@ -42,7 +42,7 @@ public class AddPaymentItemAdapter extends RecyclerView.Adapter<AddPaymentItemAd
      * @param simpleChargeItems list of simple charge items
      * @param callback callback
      */
-    public AddPaymentItemAdapter(Context context, List<BalanceItemDTO> templateItems, List<BalanceItemDTO> simpleChargeItems, AddPaymentItemCallback callback){
+    public AddPaymentItemAdapter(Context context, List<SimpleChargeItem> templateItems, List<SimpleChargeItem> simpleChargeItems, AddPaymentItemCallback callback){
         this.context = context;
         this.templateItems = templateItems;
         this.simpleChargeItems = simpleChargeItems;
@@ -75,7 +75,7 @@ public class AddPaymentItemAdapter extends RecyclerView.Adapter<AddPaymentItemAd
 
     @Override
     public void onBindViewHolder(AddPaymentItemViewHolder holder, int position) {
-        BalanceItemDTO chargeItem = null;
+        SimpleChargeItem chargeItem = null;
         switch (getItemViewType(position)){
             case VIEW_TYPE_HEADER:{
                 if(position == 0){
@@ -101,7 +101,7 @@ public class AddPaymentItemAdapter extends RecyclerView.Adapter<AddPaymentItemAd
 
             holder.getAmount().setText(currencyFormatter.format(chargeItem.getAmount()));
 
-            final BalanceItemDTO callbackChargeItem = chargeItem;
+            final SimpleChargeItem callbackChargeItem = chargeItem;
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -126,7 +126,7 @@ public class AddPaymentItemAdapter extends RecyclerView.Adapter<AddPaymentItemAd
      * set the template items
      * @param templateItems template items
      */
-    public void setTemplateItems(List<BalanceItemDTO> templateItems) {
+    public void setTemplateItems(List<SimpleChargeItem> templateItems) {
         if(templateItems!=null) {
             this.templateItems = templateItems;
         }else{
@@ -138,7 +138,7 @@ public class AddPaymentItemAdapter extends RecyclerView.Adapter<AddPaymentItemAd
      * Set the simple charge items
      * @param simpleChargeItems simle charge items
      */
-    public void setSimpleChargeItems(List<BalanceItemDTO> simpleChargeItems) {
+    public void setSimpleChargeItems(List<SimpleChargeItem> simpleChargeItems) {
         if(simpleChargeItems!=null) {
             this.simpleChargeItems = simpleChargeItems;
         }else{

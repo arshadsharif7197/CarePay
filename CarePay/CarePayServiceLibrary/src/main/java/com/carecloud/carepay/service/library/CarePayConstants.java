@@ -112,6 +112,7 @@ public class CarePayConstants {
     public static final String CLOVER_PAYMENT_METADATA = "clover_payment_metadata";
     public static final String CLOVER_PAYMENT_TRANSITION = "clover_payment_transition";
     public static final String CLOVER_PAYMENT_LINE_ITEMS = "clover_payment_line_items";
+    public static final String CLOVER_PAYMENT_POST_MODEL = "clover_payment_post_model";
     public static final String CLOVER_PAYMENT_SUCCESS_INTENT_DATA = "clover_payment_success_intent_data";
 
 

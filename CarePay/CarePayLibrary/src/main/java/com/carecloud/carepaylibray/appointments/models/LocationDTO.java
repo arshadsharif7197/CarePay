@@ -8,6 +8,9 @@ import com.google.gson.annotations.SerializedName;
  * Model for appointment locations.
  */
 public class LocationDTO {
+    @Expose(serialize = false)
+    private boolean error = false;
+
 
     @SerializedName("id")
     @Expose
@@ -92,6 +95,14 @@ public class LocationDTO {
      */
     public void setAddress(AppointmentAddressDTO address) {
         this.address = address;
+    }
+
+    public boolean hasError() {
+        return error;
+    }
+
+    public void setError(boolean hasError) {
+        this.error = hasError;
     }
 
 }
