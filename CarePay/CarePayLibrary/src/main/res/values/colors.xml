@@ -73,6 +73,7 @@
     <color name="viewfinder_laser">#00cc0000</color>
     <color name="viewfinder_border">#ffafed44</color>
     <color name="gray_white">#80ffffff</color>
+    <color name="gray_divider">#3378909C</color>
 
     <!--Android Pay-->
     <color name="android_pay_background_color">#78C257</color>

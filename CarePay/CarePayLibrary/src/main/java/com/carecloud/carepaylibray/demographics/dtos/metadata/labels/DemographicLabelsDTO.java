@@ -330,6 +330,34 @@ public class DemographicLabelsDTO {
     @Expose
     private String demographicsSetupInsuranceLabel;
 
+    @SerializedName("demographics_consent_forms_title")
+    @Expose
+    private String demographicsConsentFormsTitle;
+
+    @SerializedName("demographics_meds_allergies_title")
+    @Expose
+    private String demographicsMedsAllergiesTitle;
+
+    @SerializedName("demographics_take_another_picture_button_title")
+    @Expose
+    private String demographicsTakeAnotherPictureButtonTitle;
+
+    @SerializedName("demographics_take_picture_button_title")
+    @Expose
+    private String demographicsTakePictureButtonTitle;
+
+    @SerializedName("demographics_payment_title")
+    @Expose
+    private String demographicsPaymentTitle;
+
+    @SerializedName("practice_chekin_section_intake_forms")
+    @Expose
+    private String practiceChekinSectionIntakeForms;
+
+    @SerializedName("demographics_patient_information_title")
+    @Expose
+    private String demographicsPatientInformationTitle;
+
     @SerializedName("demographics_insurance_label")
     @Expose
     private String demographicsInsuranceTitle;
@@ -393,6 +421,101 @@ public class DemographicLabelsDTO {
     @SerializedName("demographics_documents_picture_of_back")
     @Expose
     private String demographicsDocumentsPictureOfBack;
+
+    @SerializedName("demographics_review_next_button")
+    @Expose
+    private String demographicsReviewNextButton;
+
+    @SerializedName("demographics_insurance_card_number")
+    @Expose
+    private String demographicsInsuranceCardNumber;
+    @SerializedName("demographics_insurance_take_front_photo")
+    @Expose
+    private String demographicsInsuranceTakeFrontPhotoLabel;
+    @SerializedName("demographics_insurance_take_back_photo")
+    @Expose
+    private String demographicsInsuranceTakeBackPhotoLabel;
+    @SerializedName("practice_checkin_demogr_ins_dont_have_one_button_label")
+    @Expose
+    private String practiceCheckinDemogrInsDontHaveOneButtonLabel;
+    @SerializedName("practice_checkin_demogr_ins_add_new_button_label")
+    @Expose
+    private String practiceCheckinDemogrInsAddNewButtonLabel;
+    @SerializedName("demographics_review_identification")
+    @Expose
+    private String demographicsReviewIdentification;
+    @SerializedName("demographics_review_take_photo_of_front")
+    @Expose
+    private String demographicsReviewTakePhotoOfFront;
+    @SerializedName("demographics_review_take_photo_of_back")
+    @Expose
+    private String demographicsReviewTakePhotoOfBack;
+    @SerializedName("demographics_insurance_retake_front_photo")
+    @Expose
+    private String demographicsInsuranceRetakeFrontPhoto;
+    @SerializedName("demographics_insurance_retake_back_photo")
+    @Expose
+    private String demographicsInsuranceRetakeBackPhoto;
+
+    public String getDemographicsInsuranceRetakeFrontPhoto() {
+        return StringUtil.getLabelForView(demographicsInsuranceRetakeFrontPhoto);
+    }
+
+    public void setDemographicsInsuranceRetakeFrontPhoto(String demographicsInsuranceRetakeFrontPhoto) {
+        this.demographicsInsuranceRetakeFrontPhoto = demographicsInsuranceRetakeFrontPhoto;
+    }
+
+    public String getDemographicsInsuranceRetakeBackPhoto() {
+        return StringUtil.getLabelForView(demographicsInsuranceRetakeBackPhoto);
+    }
+
+    public void setDemographicsInsuranceRetakeBackPhoto(String demographicsInsuranceRetakeBackPhoto) {
+        this.demographicsInsuranceRetakeBackPhoto = demographicsInsuranceRetakeBackPhoto;
+    }
+
+    @SerializedName("demographics_review_demographics")
+    @Expose
+    private String demographicsReviewDemographics;
+
+    public String getDemographicsInsuranceCardNumber() {
+        return StringUtil.getLabelForView(demographicsInsuranceCardNumber);
+    }
+
+    public void setDemographicsInsuranceCardNumber(String demographicsInsuranceCardNumber) {
+        this.demographicsInsuranceCardNumber = demographicsInsuranceCardNumber;
+    }
+
+    public String getDemographicsInsuranceTakeFrontPhotoLabel() {
+        return StringUtil.getLabelForView(demographicsInsuranceTakeFrontPhotoLabel);
+    }
+
+    public void setDemographicsInsuranceTakeFrontPhotoLabel(String demographicsInsuranceTakeFrontPhotoLabel) {
+        this.demographicsInsuranceTakeFrontPhotoLabel = demographicsInsuranceTakeFrontPhotoLabel;
+    }
+
+    public String getDemographicsInsuranceTakeBackPhotoLabel() {
+        return StringUtil.getLabelForView(demographicsInsuranceTakeBackPhotoLabel);
+    }
+
+    public void setDemographicsInsuranceTakeBackPhotoLabel(String demographicsInsuranceTakeBackPhotoLabel) {
+        this.demographicsInsuranceTakeBackPhotoLabel = demographicsInsuranceTakeBackPhotoLabel;
+    }
+
+    public String getPracticeCheckinDemogrInsDontHaveOneButtonLabel() {
+        return StringUtil.getLabelForView(practiceCheckinDemogrInsDontHaveOneButtonLabel);
+    }
+
+    public void setPracticeCheckinDemogrInsDontHaveOneButtonLabel(String practiceCheckinDemogrInsDontHaveOneButtonLabel) {
+        this.practiceCheckinDemogrInsDontHaveOneButtonLabel = practiceCheckinDemogrInsDontHaveOneButtonLabel;
+    }
+
+    public String getPracticeCheckinDemogrInsAddNewButtonLabel() {
+        return StringUtil.getLabelForView(practiceCheckinDemogrInsAddNewButtonLabel);
+    }
+
+    public void setPracticeCheckinDemogrInsAddNewButtonLabel(String practiceCheckinDemogrInsAddNewButtonLabel) {
+        this.practiceCheckinDemogrInsAddNewButtonLabel = practiceCheckinDemogrInsAddNewButtonLabel;
+    }
 
     /**
      * @return The demographicsUpdateButton
@@ -1708,5 +1831,101 @@ public class DemographicLabelsDTO {
      */
     public void setDemographicsDocumentsPictureOfBack(String demographicsDocumentsPictureOfBack) {
         this.demographicsDocumentsPictureOfBack = demographicsDocumentsPictureOfBack;
+    }
+
+    public String getDemographicsConsentFormsTitle() {
+        return StringUtil.getLabelForView(demographicsConsentFormsTitle);
+    }
+
+    public void setDemographicsConsentFormsTitle(String demographicsConsentFormsTitle) {
+        this.demographicsConsentFormsTitle = demographicsConsentFormsTitle;
+    }
+
+    public String getDemographicsMedsAllergiesTitle() {
+        return StringUtil.getLabelForView(demographicsMedsAllergiesTitle);
+    }
+
+    public void setDemographicsMedsAllergiesTitle(String demographicsMedsAllergiesTitle) {
+        this.demographicsMedsAllergiesTitle = demographicsMedsAllergiesTitle;
+    }
+
+    public String getDemographicsPaymentTitle() {
+        return StringUtil.getLabelForView(demographicsPaymentTitle);
+    }
+
+    public void setDemographicsPaymentTitle(String demographicsPaymentTitle) {
+        this.demographicsPaymentTitle = demographicsPaymentTitle;
+    }
+
+    public String getDemographicsTakeAnotherPictureButtonTitle() {
+        return StringUtil.getLabelForView(demographicsTakeAnotherPictureButtonTitle);
+    }
+
+    public void setDemographicsTakeAnotherPictureButtonTitle(String demographicsTakeAnotherPictureButtonTitle) {
+        this.demographicsTakeAnotherPictureButtonTitle = demographicsTakeAnotherPictureButtonTitle;
+    }
+
+    public String getDemographicsTakePictureButtonTitle() {
+        return StringUtil.getLabelForView(demographicsTakePictureButtonTitle);
+    }
+
+    public void setDemographicsTakePictureButtonTitle(String demographicsTakePictureButtonTitle) {
+        this.demographicsTakePictureButtonTitle = demographicsTakePictureButtonTitle;
+    }
+
+    public String getPracticeChekinSectionIntakeForms() {
+        return StringUtil.getLabelForView(practiceChekinSectionIntakeForms);
+    }
+
+    public void setPracticeChekinSectionIntakeForms(String practiceChekinSectionIntakeForms) {
+        this.practiceChekinSectionIntakeForms = practiceChekinSectionIntakeForms;
+    }
+
+    public String getDemographicsPatientInformationTitle() {
+        return StringUtil.getLabelForView(demographicsPatientInformationTitle);
+    }
+
+    public void setDemographicsPatientInformationTitle(String demographicsPatientInformationTitle) {
+        this.demographicsPatientInformationTitle = demographicsPatientInformationTitle;
+    }
+
+    public String getDemographicsReviewNextButton() {
+        return StringUtil.getLabelForView(demographicsReviewNextButton);
+    }
+
+    public void setDemographicsReviewNextButton(String demographicsReviewNextButton) {
+        this.demographicsReviewNextButton = demographicsReviewNextButton;
+    }
+
+    public String getDemographicsReviewIdentification() {
+        return StringUtil.getLabelForView(demographicsReviewIdentification);
+    }
+
+    public void setDemographicsReviewIdentification(String demographicsReviewIdentification) {
+        this.demographicsReviewIdentification = demographicsReviewIdentification;
+    }
+
+    public String getDemographicsReviewTakePhotoOfFront() {
+        return StringUtil.getLabelForView(demographicsReviewTakePhotoOfFront);
+    }
+
+    public void setDemographicsReviewTakePhotoOfFront(String demographicsReviewTakePhotoOfFront) {
+        this.demographicsReviewTakePhotoOfFront = demographicsReviewTakePhotoOfFront;
+    }
+
+    public String getDemographicsReviewTakePhotoOfBack() {
+        return StringUtil.getLabelForView(demographicsReviewTakePhotoOfBack);
+    }
+
+    public void setDemographicsReviewTakePhotoOfBack(String demographicsReviewTakePhotoOfBack) {
+        this.demographicsReviewTakePhotoOfBack = demographicsReviewTakePhotoOfBack;
+    }
+
+    public String getDemographicsReviewDemographics() {
+        return demographicsReviewDemographics;
+    }
+
+    public void setDemographicsReviewDemographics(String demographicsReviewDemographics) {
+        this.demographicsReviewDemographics = demographicsReviewDemographics;
     }
 }

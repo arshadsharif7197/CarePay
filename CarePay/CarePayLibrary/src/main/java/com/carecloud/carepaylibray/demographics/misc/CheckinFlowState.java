@@ -1,8 +1,5 @@
-package com.carecloud.carepay.practice.library.patientmodecheckin.interfaces;
+package com.carecloud.carepaylibray.demographics.misc;
 
-/**
- * Created by lmenendez on 3/5/17.
- */
 
 public enum CheckinFlowState {
     DEMOGRAPHICS,

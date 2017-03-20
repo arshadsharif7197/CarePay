@@ -62,7 +62,11 @@
 
             <TextView
                 android:id="@+id/demogrAddressOptionalLabel"
-                style="@style/SignupRequireHintStyle" />
+                style="@style/SignupRequireHintStyle"
+                android:textColor="@color/cadet_gray"
+                />
+
+
 
         </FrameLayout>
 
