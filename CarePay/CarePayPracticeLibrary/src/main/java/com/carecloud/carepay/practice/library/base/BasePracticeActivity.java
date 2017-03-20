@@ -3,16 +3,21 @@ package com.carecloud.carepay.practice.library.base;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.customdialog.IConfirmPracticeAppPin;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import org.apache.commons.lang3.NotImplementedException;
@@ -179,4 +184,31 @@ public abstract class BasePracticeActivity extends BaseActivity
 
     }
 
+
+    protected WorkflowServiceCallback homeCall = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            findViewById(R.id.btnHome).setEnabled(true);
+            finish();
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            findViewById(R.id.btnHome).setEnabled(false);
+            SystemUtil.showDefaultFailureDialog(BasePracticeActivity.this);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+    protected void goToHome(TransitionDTO logOutDto) {
+        getWorkflowServiceHelper().execute(logOutDto, homeCall);
+    }
 }

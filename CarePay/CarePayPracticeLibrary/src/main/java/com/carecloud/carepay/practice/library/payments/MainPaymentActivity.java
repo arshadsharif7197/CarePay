@@ -11,13 +11,14 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.payments.adapter.PaymentBalancesAdapter;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 
 /**
  * Created by pjohnson on 16/03/17.
  */
 
-public class MainPaymentActivity extends BasePracticeActivity {
+public class MainPaymentActivity extends BasePracticeActivity implements PaymentBalancesAdapter.PaymentRecyclerViewCallback {
 
     private PaymentsModel paymentResultModel;
 
@@ -35,7 +36,8 @@ public class MainPaymentActivity extends BasePracticeActivity {
         findViewById(R.id.btnHome).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                //TODO: go to home transition is missing
+                //goToHome(paymentResultModel.getPaymentsMetadata().getPaymentsTransitions().get);
             }
         });
     }
@@ -63,5 +65,10 @@ public class MainPaymentActivity extends BasePracticeActivity {
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onPayButtonClicked(PatientBalanceDTO patientBalanceDTO) {
+
     }
 }

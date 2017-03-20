@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix">
 
     <LinearLayout
         android:layout_width="@dimen/provider_card_width"
@@ -97,7 +100,8 @@
                 android:background="@drawable/bg_yellow_overlay"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_22sp"
-                android:visibility="visible" />
+                android:visibility="visible"
+                breeze:textKey="practice_app_check_in_text" />
 
             <LinearLayout
                 android:id="@+id/appointment_location_view"
@@ -160,6 +164,6 @@
         android:layout_marginTop="-30dp"
         android:paddingEnd="@dimen/dimen_18dp"
         android:paddingStart="@dimen/dimen_18dp"
-        android:visibility="gone"
-        android:src="@drawable/home_shadow" />
+        android:src="@drawable/home_shadow"
+        android:visibility="gone" />
 </LinearLayout>
