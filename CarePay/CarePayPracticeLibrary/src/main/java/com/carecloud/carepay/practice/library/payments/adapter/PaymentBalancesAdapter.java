@@ -47,7 +47,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
         holder.placeNameTextView.setText(userPractice.getPracticeName());
         holder.payButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 callback.onPayButtonClicked(patientBalanceDTO);
             }
         });
@@ -81,6 +81,11 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
         Button payButton;
         TextView providerImageTextView;
 
+        /**
+         * View holder constructor
+         *
+         * @param itemView view holder item
+         */
         public ViewHolder(View itemView) {
             super(itemView);
             placeNameTextView = (TextView) itemView.findViewById(R.id.placeNameTextView);

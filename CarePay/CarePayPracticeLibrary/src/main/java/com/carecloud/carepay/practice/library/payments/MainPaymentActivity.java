@@ -39,7 +39,7 @@ public class MainPaymentActivity extends BasePracticeActivity implements Payment
         }
         findViewById(R.id.btnHome).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 //TODO: go to home transition is missing
                 //goToHome(paymentResultModel.getPaymentsMetadata().getPaymentsTransitions().get);
             }
@@ -47,7 +47,7 @@ public class MainPaymentActivity extends BasePracticeActivity implements Payment
         TextView logoutTextview = (TextView) findViewById(R.id.logoutTextview);
         logoutTextview.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 //TODO: logout transition is missing
                 //goToHome(paymentResultModel.getPaymentsMetadata().getPaymentsTransitions().get);
             }
