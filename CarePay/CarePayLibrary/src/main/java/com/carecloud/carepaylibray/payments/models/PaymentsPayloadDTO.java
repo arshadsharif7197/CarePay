@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.payments.models;
 
+
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
