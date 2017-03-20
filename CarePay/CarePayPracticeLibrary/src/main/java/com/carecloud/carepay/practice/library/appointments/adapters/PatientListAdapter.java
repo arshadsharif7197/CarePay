@@ -214,7 +214,6 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 if (countByDay % 2 == 1) {
                     filteredPatients.add(new CardViewPatient());
                 }
-
                 header = new CardViewPatient(dateTime);
                 filteredPatients.add(header);
                 filteredPatients.add(new CardViewPatient());
@@ -319,7 +318,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private Map<String, LocationIndexDTO> getLocationMap(List<LocationIndexDTO> locationIndex) {
         Map<String, LocationIndexDTO> map = new HashMap<>();
 
-        for (LocationIndexDTO indexDTO: locationIndex) {
+        for (LocationIndexDTO indexDTO : locationIndex) {
             List<String> patientIds = indexDTO.getPatientIds();
 
             for (String patientId : patientIds) {
@@ -424,5 +423,4 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             dateTextView.setText(text);
         }
     }
-
 }
