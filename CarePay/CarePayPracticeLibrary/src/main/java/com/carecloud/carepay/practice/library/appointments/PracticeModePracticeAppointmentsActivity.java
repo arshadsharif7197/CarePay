@@ -21,20 +21,22 @@ import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog
 import com.carecloud.carepay.practice.library.customdialog.FilterDialog;
 import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepay.practice.library.payments.dialogs.FindPatientDialog;
-import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityDialog;
+import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFragmentDialog;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
-import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.LinksDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
+import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -55,7 +57,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         implements FilterDialog.FilterCallBack,
         DateRangePickerDialog.DateRangePickerDialogListener,
         PracticeAppointmentDialog.PracticeAppointmentDialogListener,
-        PaymentNavigationCallback {
+        PaymentNavigationCallback, ResponsibilityFragmentDialog.PayResponsibilityCallback {
 
     private FilterModel filter;
 
@@ -378,22 +380,19 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-
             PaymentsModel patientDetails = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
 
-            PatientBalanceDTO balancesDTO = null;
-            if (patientDetails != null && patientDetails.getPaymentPayload().getPatientBalances() != null && !patientDetails.getPaymentPayload().getPatientBalances().isEmpty()) {
-                balancesDTO = patientDetails.getPaymentPayload().getPatientBalances().get(0);
+            String tag = ResponsibilityFragmentDialog.class.getSimpleName();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
+            if (prev != null) {
+                ft.remove(prev);
             }
+            ft.addToBackStack(null);
 
-            new ResponsibilityDialog(
-                    getContext(),
-                    null,
-                    checkInLabelDTO.getCreateAppointmentLabel(),
-                    patientDetails,
-                    balancesDTO,
-                    getResponsibilityDialogListener()
-            ).show();
+            ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
+                    .newInstance(patientDetails, null, Label.getLabel("create_appointment_label"));
+            dialog.show(ft, tag);
         }
 
         @Override
@@ -401,20 +400,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             SystemUtil.doDefaultFailureBehavior(getContext(), exceptionMessage);
         }
     };
-
-    private ResponsibilityDialog.PayResponsibilityCallback getResponsibilityDialogListener() {
-        return new ResponsibilityDialog.PayResponsibilityCallback() {
-            @Override
-            public void onLeftActionTapped() {
-
-            }
-
-            @Override
-            public void onRightActionTapped(double amount) {
-                newAppointment();
-            }
-        };
-    }
 
     private void showPracticeAppointmentDialog(AppointmentDTO appointmentDTO) {
         int headerColor = R.color.colorPrimary;
@@ -602,5 +587,22 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     @Override
     protected LinksDTO getLinks() {
         return checkInDTO.getMetadata().getLinks();
+    }
+
+    @Override
+    public void onLeftActionTapped() {
+
+    }
+
+    @Override
+    public void onRightActionTapped(PaymentsModel paymentsModel, double amount) {
+        newAppointment();
+    }
+
+    @Override
+    public void onDetailItemClick(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem) {
+        PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(getContext(),
+                paymentsModel, paymentLineItem, this, null);
+        detailsDialog.show();
     }
 }

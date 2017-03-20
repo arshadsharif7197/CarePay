@@ -7,7 +7,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -27,17 +30,17 @@ import com.carecloud.carepay.practice.library.checkin.dtos.CheckInStatusPayloadD
 import com.carecloud.carepay.practice.library.checkin.dtos.QueryStrings;
 import com.carecloud.carepay.practice.library.checkin.dtos.QueueDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.QueueStatusPayloadDTO;
-import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityDialog;
+import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFragmentDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -88,7 +91,7 @@ public class AppointmentDetailDialog extends Dialog {
     private Vector<CheckBox> checkBoxes = new Vector<>();
 
     private ISession sessionHandler;
-    private PaymentNavigationCallback paymentNavigationCallback;
+    private PaymentsModel paymentsModel;
 
     /**
      * Constructor.
@@ -107,17 +110,11 @@ public class AppointmentDetailDialog extends Dialog {
         setHandlersAndListeners();
     }
 
-    private void setHandlersAndListeners(){
-        try{
+    private void setHandlersAndListeners() {
+        try {
             sessionHandler = (ISession) context;
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Provided context must be an instance of ISession");
-        }
-
-        try{
-            paymentNavigationCallback = (PaymentNavigationCallback) context;
-        }catch (ClassCastException cce){
-            throw new ClassCastException("Provided context must implement PaymentNavigationCallback");
         }
     }
 
@@ -136,13 +133,12 @@ public class AppointmentDetailDialog extends Dialog {
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         setCancelable(true);
 
-        callGetCheckinStatusAPI(); //API call for getting check-in status
+        callGetCheckInStatusAPI(); //API call for getting check-in status
         onInitialization();
         onSetValuesFromDTO();
 //        onSettingStyle();
 
         if (getPatientBalance() == 0) {
-//            paymentButton.setVisibility(View.GONE);
             paymentButton.setEnabled(false);
         }
 
@@ -185,20 +181,16 @@ public class AppointmentDetailDialog extends Dialog {
         checkingInLabel.setTextColor(ContextCompat.getColor(context, R.color.white));
 
         GradientDrawable bgShapeAssistButton = (GradientDrawable) assistButton.getBackground();
-        if(checkInDTO.getMetadata().hasAssistEnabled())
-        {
+        if (checkInDTO.getMetadata().hasAssistEnabled()) {
             bgShapeAssistButton.setColor(ContextCompat.getColor(context, R.color.colorPrimary));
-        }else
-        {
+        } else {
             bgShapeAssistButton.setColor(ContextCompat.getColor(context, R.color.light_gray));
         }
 
         GradientDrawable bgShapePageButton = (GradientDrawable) pageButton.getBackground();
-        if(checkInDTO.getMetadata().hasPageEnabled())
-        {
+        if (checkInDTO.getMetadata().hasPageEnabled()) {
             bgShapePageButton.setColor(ContextCompat.getColor(context, R.color.rose_madder));
-        }else
-        {
+        } else {
             bgShapePageButton.setColor(ContextCompat.getColor(context, R.color.light_gray));
         }
     }
@@ -266,8 +258,7 @@ public class AppointmentDetailDialog extends Dialog {
         enableActionItems();
     }
 
-    private void enableActionItems()
-    {
+    private void enableActionItems() {
         paymentButton.setEnabled(checkInDTO.getMetadata().hasPaymentEnabled());
         assistButton.setEnabled(checkInDTO.getMetadata().hasAssistEnabled());
         pageButton.setEnabled(checkInDTO.getMetadata().hasPageEnabled());
@@ -295,7 +286,7 @@ public class AppointmentDetailDialog extends Dialog {
     };
 
 
-    private void getPatientBalances(){
+    private void getPatientBalances() {
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getPatientBalances();
 
     }
@@ -303,7 +294,7 @@ public class AppointmentDetailDialog extends Dialog {
     /**
      * Method to get checkin status API
      */
-    private void callGetCheckinStatusAPI() {
+    private void callGetCheckInStatusAPI() {
         if (checkInDTO != null && checkInDTO.getMetadata().getLinks() != null &&
                 checkInDTO.getMetadata().getLinks().getCheckinStatus() != null) {
 
@@ -495,7 +486,7 @@ public class AppointmentDetailDialog extends Dialog {
         }
     }
 
-    private void getPatientBalanceDetails(){
+    private void getPatientBalanceDetails() {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("patient_id", appointmentPayloadDTO.getPatient().getPatientId());
 
@@ -515,16 +506,14 @@ public class AppointmentDetailDialog extends Dialog {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             sessionHandler.hideProgressDialog();
-
             PaymentsModel patientDetails = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
-            if (patientDetails != null && patientDetails.getPaymentPayload().getPatientBalances() != null
-                    && !patientDetails.getPaymentPayload().getPatientBalances().isEmpty()) {
+            if (patientDetails != null && !patientDetails.getPaymentPayload().getPatientBalances().isEmpty()) {
 
                 PatientBalanceDTO patientBalanceDTO = patientDetails.getPaymentPayload().getPatientBalances().get(0);
                 if (patientBalanceDTO.getBalances().get(0).getPayload().isEmpty()) {
                     Toast.makeText(getContext(), "Patient has no balance", Toast.LENGTH_LONG).show();
                 } else {
-                    showResponsibilityDialog(patientBalanceDTO, patientDetails);
+                    showResponsibilityDialog(patientDetails);
                     cancel();
                 }
             } else {
@@ -539,31 +528,19 @@ public class AppointmentDetailDialog extends Dialog {
         }
     };
 
+    private void showResponsibilityDialog(PaymentsModel paymentsModel) {
+        this.paymentsModel = paymentsModel;
+        String tag = ResponsibilityFragmentDialog.class.getSimpleName();
+        FragmentTransaction ft = ((AppCompatActivity) getOwnerActivity()).getSupportFragmentManager().beginTransaction();
+        Fragment prev = ((AppCompatActivity) getOwnerActivity()).getSupportFragmentManager().findFragmentByTag(tag);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
 
-    private void showResponsibilityDialog(PatientBalanceDTO patientBalanceDTO, PaymentsModel paymentsModel){
-        new ResponsibilityDialog(
-                context,
-                paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPracticePaymentsDetailDialogPaymentPlan(),
-                paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPracticePaymentsDetailDialogPay(),
-                paymentsModel,
-                patientBalanceDTO,
-                getResponsibilityCallback(paymentsModel)
-        ).show();
-
+        ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
+                .newInstance(paymentsModel, Label.getLabel("practice_payments_detail_dialog_payment_plan")
+                        , Label.getLabel("practice_payments_detail_dialog_pay"));
+        dialog.show(ft, tag);
     }
-
-    private ResponsibilityDialog.PayResponsibilityCallback getResponsibilityCallback(final PaymentsModel paymentsModel){
-        return new ResponsibilityDialog.PayResponsibilityCallback() {
-            @Override
-            public void onLeftActionTapped() {
-
-            }
-
-            @Override
-            public void onRightActionTapped(double amount) {
-                paymentNavigationCallback.onPayButtonClicked(amount, paymentsModel);
-            }
-        };
-    }
-
 }

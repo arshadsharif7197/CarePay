@@ -83,6 +83,12 @@ public class VisitTypeFragmentDialog extends BaseDialogFragment {
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        callback = null;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

@@ -22,7 +22,7 @@ import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.Check
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinMedicationsAllergyFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.IFragmentCallback;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.PracticeIdDocScannerFragment;
-import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityFragment;
+import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckInFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckinFlowCallback;
 import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckinFlowState;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountReceiptDialog;
@@ -349,7 +349,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
      * @param workflowJson intake DTO
      */
     public void getPaymentInformation(final String workflowJson) {
-        ResponsibilityFragment responsibilityFragment = new ResponsibilityFragment();
+        ResponsibilityCheckInFragment responsibilityFragment = new ResponsibilityCheckInFragment();
         Bundle bundle = new Bundle();
         bundle.putString(CarePayConstants.INTAKE_BUNDLE, workflowJson);
         bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, workflowJson);
