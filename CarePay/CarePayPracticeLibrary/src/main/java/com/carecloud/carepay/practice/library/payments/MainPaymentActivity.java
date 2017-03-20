@@ -28,6 +28,10 @@ public class MainPaymentActivity extends BasePracticeActivity implements Payment
         setContentView(R.layout.activity_main_payment);
         paymentResultModel = getConvertedDTO(PaymentsModel.class);
 
+        setUpUI();
+    }
+
+    private void setUpUI() {
         if (paymentResultModel.getPaymentPayload().getPatientBalances().isEmpty()) {
             showNoPaymentsImage();
         } else {
@@ -40,6 +44,16 @@ public class MainPaymentActivity extends BasePracticeActivity implements Payment
                 //goToHome(paymentResultModel.getPaymentsMetadata().getPaymentsTransitions().get);
             }
         });
+        TextView logoutTextview = (TextView) findViewById(R.id.logoutTextview);
+        logoutTextview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO: logout transition is missing
+                //goToHome(paymentResultModel.getPaymentsMetadata().getPaymentsTransitions().get);
+            }
+        });
+        //TODO: this should be replaced by the proper key
+        logoutTextview.setText("Log Out");
     }
 
     private void showPaymentsRecyclerView(PaymentsModel paymentsModel) {
@@ -47,8 +61,10 @@ public class MainPaymentActivity extends BasePracticeActivity implements Payment
         recyclerView.setVisibility(View.VISIBLE);
         findViewById(R.id.emptyPaymentsImageView).setVisibility(View.GONE);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        recyclerView.setAdapter(new PaymentBalancesAdapter(paymentsModel.getPaymentPayload().getPatientBalances(),
-                paymentsModel.getPaymentPayload().getUserPractices().get(0)));
+        PaymentBalancesAdapter paymentBalancesAdapter = new PaymentBalancesAdapter(paymentsModel.getPaymentPayload().getPatientBalances(),
+                paymentsModel.getPaymentPayload().getUserPractices().get(0));
+        paymentBalancesAdapter.setCallback(this);
+        recyclerView.setAdapter(paymentBalancesAdapter);
         //TODO: Should change this to the proper keys
         ((TextView) findViewById(R.id.title)).setText("Select a pending payment");
         ((TextView) findViewById(R.id.subtitle)).setText(Label.getLabel("no_payment_description"));
@@ -63,12 +79,7 @@ public class MainPaymentActivity extends BasePracticeActivity implements Payment
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public void onPayButtonClicked(PatientBalanceDTO patientBalanceDTO) {
-
+        //TODO on SHMRK-2401
     }
 }

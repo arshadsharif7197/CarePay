@@ -1,7 +1,5 @@
 package com.carecloud.carepay.practice.library.payments.adapter;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -14,10 +12,8 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
-import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.util.List;
 
@@ -96,5 +92,13 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
 
     public interface PaymentRecyclerViewCallback {
         void onPayButtonClicked(PatientBalanceDTO patientBalanceDTO);
+    }
+
+    /**
+     * Sets the callback that will manage the events on the item views
+     * @param callback to manage item views events
+     */
+    public void setCallback(PaymentRecyclerViewCallback callback){
+        this.callback= callback;
     }
 }
