@@ -87,7 +87,7 @@ public class AddPaymentItemFragment extends BaseDialogFragment implements AddPay
     private void setupToolbar(View view){
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.search_toolbar);
         TextView textView = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        textView.setText(Label.getLabelForView("payment_add_item_button"));
+        textView.setText(Label.getLabel("payment_add_item_button"));
 
     }
 

@@ -54,7 +54,9 @@ public class BalanceItemDTO {
     @SerializedName("responsibility_type")
     @Expose
     private ResponsibilityType responsibilityType;
-
+    @SerializedName("new_charge")
+    @Expose
+    private boolean newCharge = false;
 
     public Long getId() {
         return id;
@@ -176,4 +178,11 @@ public class BalanceItemDTO {
         this.responsibilityType = responsibilityType;
     }
 
+    public boolean isNewCharge() {
+        return newCharge;
+    }
+
+    public void setNewCharge(boolean newCharge) {
+        this.newCharge = newCharge;
+    }
 }

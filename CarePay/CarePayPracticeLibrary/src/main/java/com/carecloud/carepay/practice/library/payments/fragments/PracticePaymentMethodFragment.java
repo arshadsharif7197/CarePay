@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItem;
@@ -57,6 +59,18 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
 
         setSwipeCardNowVisibility(view);
 
+        paymentMethodList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                PaymentsMethodsDTO paymentMethod = paymentMethodsList.get(position);
+                Bundle args = getArguments();
+                double amount = args.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
+
+                handlePaymentButton(paymentMethod.getType(), amount);
+            }
+        });
+
+
     }
 
     @Override
@@ -75,17 +89,20 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
         Button swipeCreditCarNowButton = (Button) view.findViewById(R.id.swipeCreditCarNowButton);
         TextView swipeCardSeparatorLabel = (TextView) view.findViewById(R.id.swipeCardSeparatorLabel);
         View swipeCreditCardNowLayout = view.findViewById(R.id.swipeCreditCardNowLayout);
-        if(isCloverDevice) {
-            swipeCreditCarNowButton.setEnabled(true);
-            swipeCreditCarNowButton.setText(swipeCardNowString);
-            swipeCreditCarNowButton.setOnClickListener(swipeCreditCarNowButtonClickListener);
-
-            swipeCardSeparatorLabel.setText(swipeCardAlternateSeparatorString);
-        } else {
-            swipeCreditCarNowButton.setEnabled(false);
-            swipeCardSeparatorLabel.setText(swipeCardSeparatorString);
-            swipeCreditCardNowLayout.setVisibility(View.GONE);
-        }
+//        if(isCloverDevice) {
+//            swipeCreditCarNowButton.setEnabled(true);
+//            swipeCreditCarNowButton.setText(swipeCardNowString);
+//            swipeCreditCarNowButton.setOnClickListener(swipeCreditCarNowButtonClickListener);
+//
+//            swipeCardSeparatorLabel.setText(swipeCardAlternateSeparatorString);
+//        } else {
+//            swipeCreditCarNowButton.setEnabled(false);
+//            swipeCardSeparatorLabel.setText(swipeCardSeparatorString);
+//            swipeCreditCardNowLayout.setVisibility(View.GONE);
+//        }
+        swipeCreditCarNowButton.setEnabled(false);
+        swipeCardSeparatorLabel.setText(swipeCardSeparatorString);
+        swipeCreditCardNowLayout.setVisibility(View.GONE);
 
     }
 

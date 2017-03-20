@@ -202,12 +202,12 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
 
             navigateToFragment(fragment, true);
         } else {
-            showAddCard(amount);
+            showAddCard(amount, paymentsModel);
         }
     }
 
     @Override
-    public void showAddCard(double amount) {
+    public void showAddCard(double amount, PaymentsModel paymentsModel) {
         Gson gson = new Gson();
         Bundle args = new Bundle();
         String paymentsDTOString = gson.toJson(paymentsDTO);

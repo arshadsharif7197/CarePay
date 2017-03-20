@@ -14,6 +14,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
 
 import java.text.NumberFormat;
 
@@ -26,37 +27,46 @@ public class PaymentDistributionEntryFragment extends BaseDialogFragment impleme
         void applyNewDistributionAmount(double amount);
 
         void applyAmountToBalanceItem(double amount, BalanceItemDTO balanceItemDTO);
+
+        void addNewCharge(double amount, SimpleChargeItem chargeItem);
     }
 
     private PaymentDistributionAmountCallback callback;
     private BalanceItemDTO balanceItem;
+    private SimpleChargeItem chargeItem;
 
     private EditText amountText;
     private TextView amountSymbol;
-    private Button apply;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
-        return inflater.inflate(R.layout.dialog_partial_payment, container, false);
+        return inflater.inflate(R.layout.dialog_enter_amount, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle icicle){
-        amountText = (EditText) view.findViewById(R.id.enterPartialAmountEditText);
+
+        amountText = (EditText) view.findViewById(R.id.enter_amount_text);
         amountText.addTextChangedListener(textWatcher);
 
         String symbol = NumberFormat.getCurrencyInstance().getCurrency().getSymbol();
         amountSymbol = (TextView) view.findViewById(R.id.amountSymbolTextView);
         amountSymbol.setText(symbol);
 
-        apply = (Button) view.findViewById(R.id.payPartialButton);
-        apply.setText(Label.getLabelForView("payment_apply_amount"));
+        Button apply = (Button) view.findViewById(R.id.enter_amount_button);
         apply.setOnClickListener(this);
+        TextView header = (TextView) view.findViewById(R.id.enter_amount_header);
+        if(chargeItem!=null){
+            apply.setText(Label.getLabel("payment_add_item"));
+            header.setText(chargeItem.getDescription());
+            amountText.setText(String.valueOf(chargeItem.getAmount()));
+        }else {
+            apply.setText(Label.getLabel("payment_apply_amount"));
+            header.setText(Label.getLabel("payment_enter_amount"));
+        }
 
         View close = view.findViewById(R.id.closeViewLayout);
         close.setOnClickListener(this);
-
-        view.findViewById(R.id.partialPaymentTotalAmountTitle).setVisibility(View.GONE);
 
         setEntryListeners(view);
     }
@@ -87,10 +97,12 @@ public class PaymentDistributionEntryFragment extends BaseDialogFragment impleme
         int id = view.getId();
         if(id == R.id.closeViewLayout){
             dismiss();
-        }else if(id == R.id.payPartialButton && callback!=null){
+        }else if(id == R.id.enter_amount_button && callback!=null){
             try {
                 if(balanceItem!=null){
                     callback.applyAmountToBalanceItem(Double.parseDouble(amountText.getText().toString()), balanceItem);
+                }else if(chargeItem!=null){
+                    callback.addNewCharge(Double.parseDouble(amountText.getText().toString()), chargeItem);
                 }else {
                     callback.applyNewDistributionAmount(Double.parseDouble(amountText.getText().toString()));
                 }
@@ -121,6 +133,10 @@ public class PaymentDistributionEntryFragment extends BaseDialogFragment impleme
 
     public void setBalanceItem(BalanceItemDTO balanceItem) {
         this.balanceItem = balanceItem;
+    }
+
+    public void setChargeItem(SimpleChargeItem chargeItem) {
+        this.chargeItem = chargeItem;
     }
 
     private TextWatcher textWatcher = new TextWatcher() {

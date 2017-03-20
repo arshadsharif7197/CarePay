@@ -41,6 +41,9 @@ public class PaymentObject {
     @SerializedName("application")
     private PaymentApplication paymentApplication;
 
+    @SerializedName("new_charge")
+    private PaymentNewCharge paymentNewCharge;
+
     @SerializedName("description")
     private String description;
 

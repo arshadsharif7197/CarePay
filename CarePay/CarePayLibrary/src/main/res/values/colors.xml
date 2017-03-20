@@ -13,6 +13,7 @@
     <color name="cadet_gray">#ff90a4ae</color>
     <!--<color name="rich_electric_blue">#ff009bde</color>-->
     <color name="light_gray">#CFD8DC</color>
+    <color name="light_gray_trans">#4BCFD8DC</color>
 
     <color name="glitter">#ccebf9</color>
     <color name="yellowGreen">#FF7ED321</color>

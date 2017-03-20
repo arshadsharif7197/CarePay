@@ -79,9 +79,9 @@ public class AddPaymentItemAdapter extends RecyclerView.Adapter<AddPaymentItemAd
         switch (getItemViewType(position)){
             case VIEW_TYPE_HEADER:{
                 if(position == 0){
-                    holder.getHeader().setText(Label.getLabelForView("add_item_header_top"));
+                    holder.getHeader().setText(Label.getLabel("add_item_header_top"));
                 }else{
-                    holder.getHeader().setText(Label.getLabelForView("add_item_header_other"));
+                    holder.getHeader().setText(Label.getLabel("add_item_header_other"));
                 }
                 break;
             }

@@ -525,7 +525,7 @@ public class PatientPaymentPlanFragment extends BaseCheckinFragment {
 
     private void addNewCreditCard() {
 
-        callback.showAddCard(0);
+        callback.showAddCard(0, paymentsModel);
 //        PracticeAddNewCreditCardFragment fragment = new PracticeAddNewCreditCardFragment();
 //        Bundle args = new Bundle();
 //        Gson gson = new Gson();

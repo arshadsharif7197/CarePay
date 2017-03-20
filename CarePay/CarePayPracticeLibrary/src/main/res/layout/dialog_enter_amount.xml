@@ -52,7 +52,7 @@
             android:orientation="vertical">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/partialPaymentPayingToday"
+                android:id="@+id/enter_amount_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/dimen_25dp"
@@ -82,7 +82,7 @@
                     app:customAssetFont="gotham_rounded_medium"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayEditText
-                    android:id="@+id/enterPartialAmountEditText"
+                    android:id="@+id/enter_amount_text"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:focusable="false"
@@ -108,18 +108,6 @@
             android:paddingBottom="@dimen/dimen_10dp"
             android:paddingStart="@dimen/dimen_100dp"
             android:paddingEnd="@dimen/dimen_100dp">
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                app:customAssetFont="proxima_nova_semi_bold"
-                android:id="@+id/partialPaymentTotalAmountTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal"
-                android:textColor="@color/payne_gray"
-                android:layout_marginTop="@dimen/dimen_30dp"
-                android:layout_marginBottom="@dimen/dimen_30dp"
-                android:visibility="gone"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -337,7 +325,7 @@
             android:background="@drawable/patient_mode_dialog_body_bg">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                android:id="@+id/payPartialButton"
+                android:id="@+id/enter_amount_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/PaymentButtonStyle"

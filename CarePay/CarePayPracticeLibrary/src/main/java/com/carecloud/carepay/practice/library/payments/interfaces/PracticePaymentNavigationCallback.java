@@ -15,6 +15,6 @@ import java.util.List;
 public interface PracticePaymentNavigationCallback extends PaymentNavigationCallback {
     void lookupChargeItem(List<SimpleChargeItem> simpleChargeItems, AddPaymentItemFragment.AddItemCallback callback);
 
-    void showAmountEntry(PaymentDistributionEntryFragment.PaymentDistributionAmountCallback callback, BalanceItemDTO balanceItemDTO);
+    void showAmountEntry(PaymentDistributionEntryFragment.PaymentDistributionAmountCallback callback, BalanceItemDTO balanceItemDTO, SimpleChargeItem chargeItem);
 
 }

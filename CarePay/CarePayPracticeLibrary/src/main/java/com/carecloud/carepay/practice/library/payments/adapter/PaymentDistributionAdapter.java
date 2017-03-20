@@ -58,10 +58,10 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
 
         String providerName = balanceItem.getProvider().getName();
         if(providerName == null){
-            holder.getProviderName().setText(Label.getLabelForView("payment_choose_provider"));
+            holder.getProviderName().setText(Label.getLabel("payment_choose_provider"));
             holder.getProviderName().setTextColor(context.getResources().getColor(R.color.slateGray));
             if(balanceItem.getProvider().hasError()){
-                holder.getProviderName().setError(Label.getLabelForView("payment_choose_provider"));
+                holder.getProviderName().setError(Label.getLabel("payment_choose_provider"));
             }
         }else {
             holder.getProviderName().setText(StringUtil.getLabelForView(providerName));
@@ -77,10 +77,10 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
 
         String locationName = balanceItem.getLocation().getName();
         if(locationName == null){
-            holder.getLocationName().setText(Label.getLabelForView("payment_choose_location"));
+            holder.getLocationName().setText(Label.getLabel("payment_choose_location"));
             holder.getLocationName().setTextColor(context.getResources().getColor(R.color.slateGray));
             if(balanceItem.getLocation().hasError()){
-                holder.getLocationName().setError(Label.getLabelForView("payment_choose_location"));
+                holder.getLocationName().setError(Label.getLabel("payment_choose_location"));
             }
         }else {
             holder.getLocationName().setText(StringUtil.getLabelForView(locationName));

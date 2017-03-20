@@ -55,7 +55,7 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
     private ListView creditCardsListView;
 
     private int selectedCreditCard = -1;
-    private PaymentsModel paymentsModel;
+    protected PaymentsModel paymentsModel;
     private double amountToMakePayment;
 
     private String titleLabel;
@@ -315,7 +315,7 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
     private View.OnClickListener addNewCardButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            callback.showAddCard(amountToMakePayment);
+            callback.showAddCard(amountToMakePayment, paymentsModel);
             if(getDialog()!=null){
                 dismiss();
             }
