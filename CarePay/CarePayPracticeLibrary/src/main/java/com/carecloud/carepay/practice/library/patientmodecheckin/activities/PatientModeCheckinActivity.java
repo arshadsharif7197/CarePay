@@ -29,7 +29,9 @@ import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentP
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
@@ -39,14 +41,20 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entitie
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
+import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
+import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckinDemographicsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.DemographicsCheckInDocumentsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
+import com.carecloud.carepaylibray.demographics.fragments.IdentificationFragment;
+import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
 import com.carecloud.carepaylibray.demographics.fragments.PracticeIdDocScannerFragment;
 import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterface;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHolder;
+import com.carecloud.carepaylibray.demographics.scanner.ProfilePictureFragment;
 import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
 import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearchFragment;
@@ -64,31 +72,39 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * Created by lsoco_user on 11/16/2016.
  * Main activity for patient check in flow
  */
 public class PatientModeCheckinActivity extends BasePracticeActivity implements IFragmentCallback, DemographicsReviewLabelsHolder, DemographicsLabelsHolder,
-        CheckinDemographicsFragment.CheckinDemographicsFragmentListener, DemographicsCheckInDocumentsFragment.DemographicsCheckInDocumentsFragmentListener,
-        HealthInsuranceFragment.InsuranceDocumentScannerListener, MedicationsAllergyFragment.MedicationAllergyCallback,
+        /*CheckinDemographicsFragment.CheckinDemographicsFragmentListener, DemographicsCheckInDocumentsFragment.DemographicsCheckInDocumentsFragmentListener,
+        */HealthInsuranceFragment.InsuranceDocumentScannerListener, MedicationsAllergyFragment.MedicationAllergyCallback,
         CheckinDemographicsInterface, MedicationAllergySearchFragment.MedicationAllergySearchCallback,
-        PaymentNavigationCallback, CheckinFlowCallback {
+        PaymentNavigationCallback, CheckinFlowCallback,
+        CheckInDemographicsBaseFragment.CheckInNavListener,
+        PersonalInfoFragment.UpdateProfilePictureListener {
 
 
-    public final static int SUBFLOW_DEMOGRAPHICS_INS = 0;
-    public final static int SUBFLOW_CONSENT = 1;
-    public final static int SUBFLOW_INTAKE = 2;
-    public final static int SUBFLOW_PAYMENTS = 3;
-    private static final int NUM_OF_SUBFLOWS = 4;
-    private int numIntakeForms = 3;
-    private static final int numConsentForms = 3;
+    public final static  int SUBFLOW_DEMOGRAPHICS_INS = 0;
+    public final static  int SUBFLOW_CONSENT          = 1;
+    public final static  int SUBFLOW_INTAKE           = 2;
+    public final static  int SUBFLOW_PAYMENTS         = 3;
+    private static final int NUM_OF_SUBFLOWS          = 4;
+    private              int numIntakeForms           = 3;
+    private static final int numConsentForms          = 3;
 
-    private DemographicDTO demographicDTO;
+    //demographics nav
+    private Map<Integer, CheckInDemographicsBaseFragment> demographicFragMap= new HashMap<>();
+    private int currentDemographicStep = 1;
+    //
+
+    private DemographicDTO  demographicDTO;
     private CarePayTextView backButton;
-    private ImageView logoImageView;
+    private ImageView       logoImageView;
     private ImageView homeClickable;
 
     private View[] sectionTitleTextViews;
@@ -143,11 +159,13 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         initializeCheckinViews();
 
         // place the initial fragment
-        navigateToParentFragment();
-        initializeDocumentFragment();
-        initializeInsurancesFragment();
-        initializeIdDocScannerFragment();
+        demographicFragMap.put(1, new PersonalInfoFragment());
+        demographicFragMap.put(2, new AddressFragment());
+        demographicFragMap.put(3, new DemographicsFragment());
+        demographicFragMap.put(4, new IdentificationFragment());
+        demographicFragMap.put(5, new HealthInsuranceFragment());
 
+        navigateToDemographicFragment(1);
     }
 
 
@@ -192,13 +210,14 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         homeClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //PatientModeCheckinActivity.this.finish();
                 setResult(CarePayConstants.HOME_PRESSED);
                 finish();
             }
         });
     }
 
-    private void initializeCheckinViews() {
+    private void initializeCheckinViews(){
         checkinDemographics = findViewById(R.id.checkin_flow_demographics);
         checkinConsent = findViewById(R.id.checkin_flow_consent);
         checkinMedications = findViewById(R.id.checkin_flow_medications);
@@ -206,8 +225,9 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         checkinPayment = findViewById(R.id.checkin_flow_payment);
 
         checkinFlowViews = new View[]{checkinDemographics, checkinConsent, checkinMedications, checkinIntake, checkinPayment};
-        checkinFlowLabels = new String[]{"Patient Information", "Consent Forms", "Medications & Allergies", "Patient Intake", "Payment"};//todo get from DTO
-        for (int i = 0; i < checkinFlowViews.length; i++) {
+        checkinFlowLabels = new String[]{demographicDTO.getMetadata().getLabels().getDemographicsPatientInformationTitle(),
+                Label.getLabel("demographics_consent_forms_title"), Label.getLabel("demographics_meds_allergies_title"), Label.getLabel("practice_chekin_section_intake_forms"), Label.getLabel("demographics_payment_title")};
+        for(int i=0; i<checkinFlowViews.length; i++){
             View view = checkinFlowViews[i];
             TextView textView = (TextView) view.findViewById(R.id.checkin_flow_title);
             textView.setText(checkinFlowLabels[i]);
@@ -299,6 +319,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     }
 
 
+
     ////////////////////////////
     // Consent form framework //
     ////////////////////////////
@@ -369,7 +390,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     @Override
     public void showMedicationSearch() {
         MedicationAllergySearchFragment medicationAllergySearchFragment = new MedicationAllergySearchFragment();
-        if (medicationsAllergiesDTO != null) {
+        if(medicationsAllergiesDTO!=null){
             Gson gson = new Gson();
             String jsonExtra = gson.toJson(medicationsAllergiesDTO);
             Bundle bundle = new Bundle();
@@ -427,7 +448,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
 
     @Override
     public void onPaymentMethodAction(String selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
-        if (paymentDTO.getPaymentPayload().getPatientCreditCards() != null && !paymentDTO.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+        if(paymentDTO.getPaymentPayload().getPatientCreditCards()!=null && !paymentDTO.getPaymentPayload().getPatientCreditCards().isEmpty()){
             Gson gson = new Gson();
             Bundle args = new Bundle();
             String paymentsDTOString = gson.toJson(paymentDTO);
@@ -449,7 +470,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         Bundle args = new Bundle();
         String paymentsDTOString = gson.toJson(paymentDTO);
         args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
-        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE,  amount);
         DialogFragment fragment = new AddNewCreditCardFragment();
         fragment.setArguments(args);
 //        navigateToFragment(fragment, true);
@@ -473,6 +494,26 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     public void showReceipt(PaymentsModel paymentsModel) {
         PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(this, paymentsModel, paymentsModel);
         receiptDialog.show();
+    }
+
+    @Override
+    public void navigateToInsuranceDocumentFragment(int index, DemographicInsurancePayloadDTO model) {
+
+    }
+
+    @Override
+    public void navigateToParentFragment() {
+
+    }
+
+    @Override
+    public void updateInsuranceDTO(int index, DemographicInsurancePayloadDTO model) {
+
+    }
+
+    @Override
+    public void disableMainButton(boolean isDisabled) {
+
     }
 
 
@@ -524,10 +565,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     }
 
 
+
     @Override
-    public void setCheckinFlow(CheckinFlowState flowState, int totalPages, int currentPage) {
+    public void setCheckinFlow(CheckinFlowState flowState, int totalPages, int currentPage){
         View view = null;
-        switch (flowState) {
+        switch (flowState){
             case DEMOGRAPHICS:
                 view = checkinDemographics;
                 break;
@@ -550,24 +592,24 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         updateCheckinFlow(view, totalPages, currentPage);
     }
 
-    private void updateCheckinFlow(View highlightView, int totalPages, int currentPage) {
-        if (highlightView == null) {
+    private void updateCheckinFlow(View highlightView, int totalPages, int currentPage){
+        if(highlightView==null){
             return;
         }
 
-        for (View flowView : checkinFlowViews) {
+        for(View flowView : checkinFlowViews) {
             CarePayTextView section = (CarePayTextView) flowView.findViewById(R.id.checkin_flow_title);
             TextView progress = (TextView) flowView.findViewById(R.id.checkin_flow_progress);
 
-            if (flowView == highlightView) {
+            if(flowView == highlightView) {
                 section.setFontAttribute(CustomAssetStyleable.GOTHAM_ROUNDED_BOLD);
-                if (totalPages > 1) {
+                if(totalPages>1){
                     progress.setVisibility(View.VISIBLE);
                     progress.setText(String.format("%d %s %d", currentPage, "of", totalPages));//todo label for "of"
-                } else {
+                }else{
                     progress.setVisibility(View.GONE);
                 }
-            } else {
+            }else{
                 section.setFontAttribute(CustomAssetStyleable.GOTHAM_ROUNDED_LIGHT);
                 progress.setVisibility(View.GONE);
             }
@@ -575,24 +617,36 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     }
 
 
+
     @Override
     public void onBackPressed() {
-        try {
+        setCurrentStep(currentDemographicStep-1);
+        try{
             BaseCheckinFragment fragment = (BaseCheckinFragment) getSupportFragmentManager().findFragmentById(R.id.checkInContentHolderId);
-            if (!fragment.navigateBack()) {
+            if(fragment!=null && !fragment.navigateBack())  {
                 super.onBackPressed();
             }
-        } catch (ClassCastException cce) {
+        }catch (ClassCastException cce){
             cce.printStackTrace();
             super.onBackPressed();
         }
     }
 
+    private void popFragStack() {
+         if (getFragmentManager().getBackStackEntryCount() > 1) {
+             getFragmentManager().popBackStack();
+             return;
+         }
+        super.onBackPressed();
+    }
+
+
+
 
     /**
      * Launch intake forms
-     *
      * @param workflowJson workflowJson
+     *
      */
     public void startIntakeForms(String workflowJson) {
         intakeResponseModel = getConvertedDTO(IntakeResponseModel.class, workflowJson);
@@ -606,11 +660,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         navigateToFragment(checkinIntakeForm1Fragment, true);
     }
 
-    /**
+    /*
      * Changes the global DTO
      *
      * @param demographicDTO The new DTO
-     */
+     *
     @Override
     public void onDemographicDtoChanged(DemographicDTO demographicDTO) {
         this.demographicDTO = demographicDTO;
@@ -639,7 +693,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     }
 
     @Override
-    public void initializeDocumentFragment() {
+    public void initializeDocumentFragment(){
 
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, demographicDTO.getMetadata().getDataModels().demographic.identityDocuments);
@@ -656,7 +710,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     }
 
     @Override
-    public void initializeInsurancesFragment() {
+    public void initializeInsurancesFragment(){
         String tag = HealthInsuranceFragment.class.getSimpleName();
 
         HealthInsuranceFragment fragment = new HealthInsuranceFragment();
@@ -688,7 +742,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
             }
         };
 
-        CheckinInsuranceEditDialog checkinInsuranceEditDialog = new CheckinInsuranceEditDialog(this, false, demographicDTO, index, listener);
+        CheckinInsuranceEditDialog checkinInsuranceEditDialog = new CheckinInsuranceEditDialog(this,false,demographicDTO, index, listener);
         checkinInsuranceEditDialog.show();
     }
 
@@ -708,7 +762,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     public void updateInsuranceDTO(int index, DemographicInsurancePayloadDTO model) {
         List<DemographicInsurancePayloadDTO> insurances = demographicDTO.getPayload().getDemographics().getPayload()
                 .getInsurances();
-        if (index >= 0) {
+        if (index>=0){
             insurances.set(index, model);
         } else if (index == CarePayConstants.NO_INDEX) {
             insurances.add(model);
@@ -743,7 +797,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         FragmentManager fm = getSupportFragmentManager();
         fragment.setArguments(args);
         fm.beginTransaction().replace(R.id.demographicsDocsLicense, fragment, tag).commit();
-    }
+    }*/
 
     @Override
     public void navigateToConsentFlow(WorkflowDTO workflowDTO) {
@@ -766,8 +820,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
 
 
     @Override
-    protected void processExternalPayment(PaymentExecution execution, Intent data) {
-        if (data.hasExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA)) {
+    protected void processExternalPayment(PaymentExecution execution, Intent data){
+        if(data.hasExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA)) {
             Intent intent = getIntent();
             intent.putExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA, data.getStringExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA));
             setResult(RESULT_OK, intent);
@@ -777,10 +831,9 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
 
     /**
      * Entry point for navigating to medication fragment
-     *
      * @param workflowDTO navigation dto
      */
-    public void loadMedicationsAllergy(String workflowDTO) {
+    public void loadMedicationsAllergy(String workflowDTO){
         CheckinMedicationsAllergyFragment medicationsAllergyFragment = new CheckinMedicationsAllergyFragment();
         medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class, workflowDTO);
         Bundle args = new Bundle();
@@ -790,4 +843,78 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         navigateToFragment(medicationsAllergyFragment, true);
     }
 
+    /**
+     * Entry point for navigating to medication fragment
+     * @param globalLabelDTO global dto
+     * @param persDetailsDTO personal details dto
+     */
+    public void initializeProfilePictureFragment(DemographicLabelsDTO globalLabelDTO,
+                                                 PatientModel persDetailsDTO) {
+
+        ProfilePictureFragment fragment = new ProfilePictureFragment();
+        fragment.setGlobalLabelsDTO(globalLabelDTO);
+
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, persDetailsDTO);
+        args.putBoolean(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE, true);
+        fragment.setArguments(args);
+        FragmentManager fm = getSupportFragmentManager();
+        String tag = ProfilePictureFragment.class.getSimpleName();
+        fm.beginTransaction().replace(R.id.revdemographicsAddressPicCapturer, fragment, tag)
+                             .commit();
+
+    }
+
+    @Override
+    public String getProfilePicture() {
+        ProfilePictureFragment fragment = (ProfilePictureFragment)
+                getSupportFragmentManager().findFragmentById(R.id.revdemographicsAddressPicCapturer);
+
+        if (fragment != null) {
+            PatientModel demographicPersDetailsPayloadDTO = fragment.getDemographicPersDetailsPayloadDTO();
+            if(demographicPersDetailsPayloadDTO != null){
+                return demographicPersDetailsPayloadDTO.getProfilePhoto();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void applyChangesAndNavTo(DemographicDTO demographicDTO, Integer step) {
+        currentDemographicStep = step;
+        this.demographicDTO = demographicDTO;
+        navigateToDemographicFragment(step);
+    }
+
+    @Override
+    public Integer getCurrentStep() {
+        return currentDemographicStep;
+    }
+
+    @Override
+    public void setCurrentStep(Integer step){
+        if(step>0){
+            currentDemographicStep=step;
+        }
+    }
+
+    @Override
+    public void loadPictureFragment(){
+        initializeProfilePictureFragment(demographicDTO.getMetadata().getLabels(),
+                demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails());
+    }
+
+
+    /**
+     * Navigate to fragment
+     * @param step fragment
+     */
+    public void navigateToDemographicFragment(Integer step) {
+        CheckInDemographicsBaseFragment fragment = demographicFragMap.get(step);
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, demographicDTO);
+        fragment.setArguments(args);
+
+        navigateToFragment(fragment, currentDemographicStep==1? false: true);
+    }
 }

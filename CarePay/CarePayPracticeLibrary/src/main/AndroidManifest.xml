@@ -10,10 +10,6 @@
         <activity
             android:name=".payments.PatientModePracticePaymentsActivity"
             android:screenOrientation="sensorLandscape" />
-        <activity
-            android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinPreregisterActivity"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustNothing" />
     </application>
 
 </manifest>
