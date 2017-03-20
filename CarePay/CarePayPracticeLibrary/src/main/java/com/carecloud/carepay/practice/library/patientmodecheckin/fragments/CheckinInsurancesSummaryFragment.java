@@ -16,7 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
+import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinPreregisterActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
@@ -106,7 +106,7 @@ public class CheckinInsurancesSummaryFragment extends BaseCheckinFragment {
     }
 
     private void initDTOs() {
-        demographicDTO = ((PatientModeCheckinActivity) getActivity()).getDemographicDTO();
+        demographicDTO = ((PatientModeCheckinPreregisterActivity) getActivity()).getDemographicDTO();
 
         insurancesMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.insurances;
         globalLabelsMetaDTO = demographicDTO.getMetadata().getLabels();
@@ -163,7 +163,7 @@ public class CheckinInsurancesSummaryFragment extends BaseCheckinFragment {
 
 
         final Gson gson = new Gson();
-        ((PatientModeCheckinActivity) getActivity()).resetDemographicDTO(gson.toJson(demographicDTO));
+        ((PatientModeCheckinPreregisterActivity) getActivity()).resetDemographicDTO(gson.toJson(demographicDTO));
 
         // move to demographics review
         FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -171,7 +171,7 @@ public class CheckinInsurancesSummaryFragment extends BaseCheckinFragment {
         if (demInsRevFrag == null) {
             demInsRevFrag = new CheckinDemographicsRevFragment();
         }
-        ((PatientModeCheckinActivity) getActivity()).navigateToFragment(demInsRevFrag, true);
+        ((PatientModeCheckinPreregisterActivity) getActivity()).navigateToFragment(demInsRevFrag, true);
     }
 
     private boolean isInsuaranceNonTrivial(DemographicInsurancePayloadDTO insModel) {

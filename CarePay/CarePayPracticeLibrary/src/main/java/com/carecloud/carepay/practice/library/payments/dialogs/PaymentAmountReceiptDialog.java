@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
+import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinPreregisterActivity;
 import com.carecloud.carepay.practice.library.payments.adapter.PaymentDetailsListAdapter;
 import com.carecloud.carepaylibray.payments.models.PaymentDetailsItemDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
@@ -100,8 +100,8 @@ public class PaymentAmountReceiptDialog extends Dialog implements View.OnClickLi
 
     private void onSaveButton() {
         cancel();
-        if(context instanceof PatientModeCheckinActivity){
-            ((PatientModeCheckinActivity)context).getPaymentInformation(new Gson().toJson(intakeBundle,PaymentsModel.class));
+        if(context instanceof PatientModeCheckinPreregisterActivity){
+            ((PatientModeCheckinPreregisterActivity)context).getPaymentInformation(new Gson().toJson(intakeBundle,PaymentsModel.class));
         }
     }
 }

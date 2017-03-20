@@ -16,7 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
-import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
+import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinPreregisterActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckinFlowCallback;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -44,7 +44,7 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
-import static com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity.SUBFLOW_DEMOGRAPHICS_INS;
+import static com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinPreregisterActivity.SUBFLOW_DEMOGRAPHICS_INS;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
@@ -190,7 +190,7 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
      */
     private void initializeDemographicsDTO() {
         // fetch the main DTO
-        demographicDTO = ((PatientModeCheckinActivity) getActivity()).getDemographicDTO();
+        demographicDTO = ((PatientModeCheckinPreregisterActivity) getActivity()).getDemographicDTO();
 
         // fetch the metadata
         globalLabelsMetaDTO = demographicDTO.getMetadata().getLabels();
@@ -516,8 +516,8 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
             updateInformationUpdate.setEnabled(false);
             // transition
             CheckinDemographicsFragment fragment = new CheckinDemographicsFragment();
-            ((PatientModeCheckinActivity) getActivity()).navigateToFragment(fragment, true);
-            ((PatientModeCheckinActivity) getActivity()).toggleVisibleBackButton(false);
+            ((PatientModeCheckinPreregisterActivity) getActivity()).navigateToFragment(fragment, true);
+            ((PatientModeCheckinPreregisterActivity) getActivity()).toggleVisibleBackButton(false);
         }
     }
 
@@ -605,7 +605,7 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
     @Override
     public void onStart() {
         super.onStart();
-        ((PatientModeCheckinActivity)getActivity()).toggleVisibleBackButton(false);
+        ((PatientModeCheckinPreregisterActivity)getActivity()).toggleVisibleBackButton(false);
 //        ((PatientModeCheckinActivity)getActivity()).updateSection(flowStateInfo);
         flowCallback.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 0, 0);
     }
@@ -613,6 +613,6 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
     @Override
     public void onStop() {
         super.onStop();
-        ((PatientModeCheckinActivity)getActivity()).toggleVisibleBackButton(true);
+        ((PatientModeCheckinPreregisterActivity)getActivity()).toggleVisibleBackButton(true);
     }
 }
