@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.VisitTypeListAdapter;
 import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
@@ -29,7 +30,6 @@ public class VisitTypeFragmentDialog extends BaseDialogFragment {
     private AppointmentNavigationCallback callback;
     private List<VisitTypeDTO> visitTypeList;
     private String cancelString;
-    private String visitTypeHeading;
     private AppointmentResourcesDTO model;
     private AppointmentsResultModel appointmentsResultModel;
 
@@ -55,15 +55,14 @@ public class VisitTypeFragmentDialog extends BaseDialogFragment {
 
     /**
      * Creates a VisitTypeFragmentDialog fragment
-     * @param model The appointment Resource DTO
+     *
+     * @param model                   The appointment Resource DTO
      * @param appointmentsResultModel The appointment resource model
-     *@param visitTypeHeading The title for the header  @return VisitTypeFragmentDialog object
      */
     public static VisitTypeFragmentDialog newInstance(AppointmentResourcesDTO model,
-                                                      AppointmentsResultModel appointmentsResultModel, String visitTypeHeading) {
+                                                      AppointmentsResultModel appointmentsResultModel) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
-        args.putString("visitTypeHeading", visitTypeHeading);
         DtoHelper.bundleDto(args, model);
         DtoHelper.bundleDto(args, appointmentsResultModel);
 
@@ -79,8 +78,7 @@ public class VisitTypeFragmentDialog extends BaseDialogFragment {
         try {
             callback = (AppointmentNavigationCallback) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " must implement AppointmentNavigationCallback");
+            throw new ClassCastException(context.toString() + " must implement AppointmentNavigationCallback");
         }
     }
 
@@ -90,7 +88,6 @@ public class VisitTypeFragmentDialog extends BaseDialogFragment {
 
         Bundle arguments = getArguments();
         this.cancelString = arguments.getString("cancelString");
-        this.visitTypeHeading = arguments.getString("visitTypeHeading");
         model = DtoHelper.getConvertedDTO(AppointmentResourcesDTO.class, arguments);
         appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, arguments);
         visitTypeList = model.getResource().getVisitReasons();
@@ -101,22 +98,22 @@ public class VisitTypeFragmentDialog extends BaseDialogFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         sortVisitTypeListByName();
-        initializeViews(view, visitTypeHeading);
+        initializeViews(view);
 
         return view;
     }
 
-    protected void initializeViews(View view, String visitTypeHeading) {
+    protected void initializeViews(View view) {
         view.findViewById(R.id.closeViewLayout).setVisibility(View.GONE);
         if (view.findViewById(R.id.visit_type_header_title) != null) {
             TextView title = (TextView) view.findViewById(R.id.visit_type_header_title);
-            title.setText(visitTypeHeading);
+            title.setText(Label.getLabel("visit_type_heading"));
         }
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.respons_toolbar);
         if (toolbar != null) {
             TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
-            title.setText(visitTypeHeading);
+            title.setText(Label.getLabel("visit_type_heading"));
             toolbar.setTitle("");
             ViewGroup.LayoutParams layoutParams = title.getLayoutParams();
             layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;

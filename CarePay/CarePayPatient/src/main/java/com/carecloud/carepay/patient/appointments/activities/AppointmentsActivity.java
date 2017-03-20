@@ -207,8 +207,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         ft.addToBackStack(null);
 
         VisitTypeFragmentDialog dialog = VisitTypeFragmentDialog.newInstance(appointmentResourcesDTO,
-                appointmentsResultModel,
-                this.appointmentsResultModel.getMetadata().getLabel().getVisitTypeHeading());
+                appointmentsResultModel);
         dialog.show(ft, tag);
     }
 
