@@ -50,7 +50,8 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment {
         PracticeIdDocScannerFragment fragment = (PracticeIdDocScannerFragment)getChildFragmentManager().findFragmentById(R.id.revDemographicsIdentificationPicCapturer);
         DemographicDTO updatableDemographicDTO = new DemographicDTO();
         if (fragment != null) {
-            updatableDemographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().add(0, fragment.getModel());
+            updatableDemographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().clear();
+            updatableDemographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().add(fragment.getModel());
         }
         updatableDemographicDTO.getPayload().setAppointmentpayloaddto(demographicDTO.getPayload().getAppointmentpayloaddto());
         updatableDemographicDTO.setMetadata(demographicDTO.getMetadata());

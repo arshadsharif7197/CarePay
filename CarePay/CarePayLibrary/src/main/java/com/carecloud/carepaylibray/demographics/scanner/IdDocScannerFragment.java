@@ -128,12 +128,16 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                 String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
                 DemographicIdDocPhotoDTO frontDTO = model.getIdDocPhothos().get(0);
                 frontDTO.setIdDocPhoto(imageAsBase64); // create the image dto
+                frontDTO.setPage(1);
+                frontDTO.setDelete(false);
             } else if (scanner == scannerBack) {
                 // change button caption to 'rescan'
                 scanBackButton.setText(R.string.demogr_docs_rescan_back);
                 String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
                 DemographicIdDocPhotoDTO backDTO = model.getIdDocPhothos().get(1);
                 backDTO.setIdDocPhoto(imageAsBase64); // create the image dto
+                backDTO.setPage(2);
+                backDTO.setDelete(false);
             }
         }
     }
