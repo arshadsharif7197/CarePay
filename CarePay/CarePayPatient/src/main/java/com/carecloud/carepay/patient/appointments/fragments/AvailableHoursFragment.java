@@ -27,8 +27,8 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentAddressDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentLocationsDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentProviderDTO;
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
+import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
@@ -69,7 +69,7 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
     private TextView singleLocationText;
 
     private String addAppointmentPatientId;
-    private List<AppointmentLocationsDTO> selectedLocations = new LinkedList<>();
+    private List<LocationDTO> selectedLocations = new LinkedList<>();
     private SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
 
     private AppointmentNavigationCallback callback;
@@ -213,7 +213,7 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
 
     private void setAdapters(){
         try {
-            List<AppointmentLocationsDTO> locations = extractAvailableLocations(availabilityDTO);
+            List<LocationDTO> locations = extractAvailableLocations(availabilityDTO);
 
             if (availableHoursRecycleView.getAdapter() == null) {
                 availableHoursRecycleView.setAdapter(new AvailableHoursAdapter(getActivity(),
@@ -446,21 +446,52 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
 
     @Override
     public void onSelectAppointmentTimeSlot(AppointmentsSlotsDTO appointmentsSlotsDTO) {
-        callback.confirmAppointment(appointmentsSlotsDTO.getStartTime(), appointmentsSlotsDTO.getEndTime(), availabilityDTO);
+
+        AppointmentsPayloadDTO payloadDTO = new AppointmentsPayloadDTO();
+        payloadDTO.setStartTime(appointmentsSlotsDTO.getStartTime());
+        payloadDTO.setEndTime(appointmentsSlotsDTO.getEndTime());
+        payloadDTO.setProviderId(selectedResource.getProvider().getId().toString());
+        payloadDTO.setVisitReasonId(selectedVisitTypeDTO.getId());
+        payloadDTO.setResourceId(selectedResource.getId());
+        payloadDTO.setChiefComplaint(selectedVisitTypeDTO.getName());
+
+        PatientModel patientDTO = new PatientModel();
+        patientDTO.setPatientId(addAppointmentPatientId);
+        payloadDTO.setPatient(patientDTO);
+
+        ProviderDTO providersDTO;
+        providersDTO = selectedResource.getProvider();
+
+        LocationDTO locationDTO = availabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getLocation();
+        if(locationDTO == null){
+            locationDTO = new LocationDTO();
+            AppointmentAddressDTO addressDTO = new AppointmentAddressDTO();
+            locationDTO.setName(resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentsPlaceNameHeading());
+            locationDTO.setAddress(addressDTO);
+        }
+
+        payloadDTO.setLocation(locationDTO);
+        payloadDTO.setProvider(providersDTO);
+
+        AppointmentDTO appointmentDTO = new AppointmentDTO();
+        appointmentDTO.setPayload(payloadDTO);
+
+        final RequestAppointmentDialog requestAppointmentDialog =  new RequestAppointmentDialog(getActivity(),appointmentDTO,resourcesToScheduleDTO);
+        requestAppointmentDialog.show();
     }
 
     @Override
-    public void onSelectLocation(AppointmentLocationsDTO appointmentLocationsDTO) {
-        if(appointmentLocationsDTO == null) {//selected ALL locations
+    public void onSelectLocation(LocationDTO locationDTO) {
+        if(locationDTO == null) {//selected ALL locations
             resetLocatonSelections(true);
         }else{
             if(selectedLocations.isEmpty()) {//Initial state, reset location selections to remove the All selected status
                 resetLocatonSelections(false);
             }
-            if(!selectedLocations.contains(appointmentLocationsDTO)){
-                selectedLocations.add(appointmentLocationsDTO);
-            }else if(selectedLocations.contains(appointmentLocationsDTO)){
-                selectedLocations.remove(appointmentLocationsDTO);
+            if(!selectedLocations.contains(locationDTO)){
+                selectedLocations.add(locationDTO);
+            }else if(selectedLocations.contains(locationDTO)){
+                selectedLocations.remove(locationDTO);
             }
 
             updateSelectedLocationsForAdapter();
@@ -470,8 +501,8 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
         setAdapters();
     }
 
-    private List<AppointmentLocationsDTO> extractAvailableLocations(AppointmentAvailabilityDTO availabilityDTO){
-        List<AppointmentLocationsDTO> locationsDTOs = new LinkedList<>();
+    private List<LocationDTO> extractAvailableLocations(AppointmentAvailabilityDTO availabilityDTO){
+        List<LocationDTO> locationsDTOs = new LinkedList<>();
         List<AppointmentAvailabilityPayloadDTO> availableAppointments = availabilityDTO.getPayload().getAppointmentAvailability().getPayload();
         for(AppointmentAvailabilityPayloadDTO availableAppointment : availableAppointments){
             locationsDTOs.add(availableAppointment.getLocation());
@@ -513,8 +544,8 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
         return appointmentsSlots;
     }
 
-    private boolean isLocationSelected(AppointmentLocationsDTO appointmentLocationsDTO){
-        return selectedLocations.isEmpty() || selectedLocations.contains(appointmentLocationsDTO);
+    private boolean isLocationSelected(LocationDTO locationDTO){
+        return selectedLocations.isEmpty() || selectedLocations.contains(locationDTO);
     }
 
 }

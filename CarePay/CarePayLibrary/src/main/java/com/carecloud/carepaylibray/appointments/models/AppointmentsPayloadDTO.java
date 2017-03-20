@@ -28,7 +28,7 @@ public class AppointmentsPayloadDTO {
     private PatientModel patient = new PatientModel();
     @SerializedName("location")
     @Expose
-    private AppointmentLocationsDTO location = new AppointmentLocationsDTO();
+    private LocationDTO location = new LocationDTO();
     @SerializedName("cancellation_details")
     @Expose
     private AppointmentCancellationDetailsDTO cancellationDetails = new AppointmentCancellationDetailsDTO();
@@ -109,7 +109,7 @@ public class AppointmentsPayloadDTO {
     private Object encounterId;
     @SerializedName("provider")
     @Expose
-    private AppointmentProviderDTO provider = new AppointmentProviderDTO();
+    private ProviderDTO provider = new ProviderDTO();
     @SerializedName("resource")
     @Expose
     private AppointmentResourceDTO resource = new AppointmentResourceDTO();
@@ -173,7 +173,7 @@ public class AppointmentsPayloadDTO {
      * @return
      *     The location
      */
-    public AppointmentLocationsDTO getLocation() {
+    public LocationDTO getLocation() {
         return location;
     }
 
@@ -182,7 +182,7 @@ public class AppointmentsPayloadDTO {
      * @param location
      *     The location
      */
-    public void setLocation(AppointmentLocationsDTO location) {
+    public void setLocation(LocationDTO location) {
         this.location = location;
     }
 
@@ -641,7 +641,7 @@ public class AppointmentsPayloadDTO {
      * @return
      *     The provider
      */
-    public AppointmentProviderDTO getProvider() {
+    public ProviderDTO getProvider() {
         return provider;
     }
 
@@ -650,7 +650,7 @@ public class AppointmentsPayloadDTO {
      * @param provider
      *     The provider
      */
-    public void setProvider(AppointmentProviderDTO provider) {
+    public void setProvider(ProviderDTO provider) {
         this.provider = provider;
     }
 

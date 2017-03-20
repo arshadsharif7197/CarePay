@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Model for appointment providers speciality.
  */
-public class AppointmentSpecialtyDTO {
+public class SpecialtyDTO {
 
     @SerializedName("name")
     @Expose

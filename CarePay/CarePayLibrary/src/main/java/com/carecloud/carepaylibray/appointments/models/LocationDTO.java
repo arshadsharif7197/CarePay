@@ -1,13 +1,14 @@
-package com.carecloud.carepaylibray.payments.models;
+
+package com.carecloud.carepaylibray.appointments.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by Jahirul Bhuiyan on 10/27/2016.
+ * Model for appointment locations.
  */
-
 public class LocationDTO {
+
     @SerializedName("id")
     @Expose
     private Integer id;
@@ -19,77 +20,78 @@ public class LocationDTO {
     private Boolean isVisibleAppointmentScheduler;
     @SerializedName("address")
     @Expose
-    private AddressDTO address = new AddressDTO();
+    private AppointmentAddressDTO address = new AppointmentAddressDTO();
 
     /**
-     *
+     * 
      * @return
-     * The id
+     *     The id
      */
     public Integer getId() {
         return id;
     }
 
     /**
-     *
+     * 
      * @param id
-     * The id
+     *     The id
      */
     public void setId(Integer id) {
         this.id = id;
     }
 
     /**
-     *
+     * 
      * @return
-     * The name
+     *     The name
      */
     public String getName() {
         return name;
     }
 
     /**
-     *
+     * 
      * @param name
-     * The name
+     *     The name
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     *
+     * 
      * @return
-     * The isVisibleAppointmentScheduler
+     *     The isVisibleAppointmentScheduler
      */
     public Boolean getIsVisibleAppointmentScheduler() {
         return isVisibleAppointmentScheduler;
     }
 
     /**
-     *
+     * 
      * @param isVisibleAppointmentScheduler
-     * The is_visible_appointment_scheduler
+     *     The is_visible_appointment_scheduler
      */
     public void setIsVisibleAppointmentScheduler(Boolean isVisibleAppointmentScheduler) {
         this.isVisibleAppointmentScheduler = isVisibleAppointmentScheduler;
     }
 
     /**
-     *
+     * 
      * @return
-     * The address
+     *     The address
      */
-    public AddressDTO getAddress() {
+    public AppointmentAddressDTO getAddress() {
         return address;
     }
 
     /**
-     *
+     * 
      * @param address
-     * The address
+     *     The address
      */
-    public void setAddress(AddressDTO address) {
+    public void setAddress(AppointmentAddressDTO address) {
         this.address = address;
     }
+
 }

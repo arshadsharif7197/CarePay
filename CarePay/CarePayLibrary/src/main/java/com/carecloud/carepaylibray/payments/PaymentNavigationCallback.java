@@ -41,4 +41,5 @@ public interface PaymentNavigationCallback {
      * @param amount amount to pay
      */
     void showAddCard(double amount);
+
 }

@@ -5,10 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.carecloud.carepay.practice.library.appointments.AppointmentsActivity;
 import com.carecloud.carepay.practice.library.appointments.PatientModePracticeAppointmentActivity;
 import com.carecloud.carepay.practice.library.appointments.PracticeModePracticeAppointmentsActivity;
-import com.carecloud.carepay.practice.library.checkin.CheckInActivity;
+import com.carecloud.carepay.practice.library.checkin.PatientModePracticeCheckInActivity;
+import com.carecloud.carepay.practice.library.checkin.PracticeModePracticeCheckInActivity;
 import com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInActivity;
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity;
@@ -87,7 +87,7 @@ public class PracticeNavigationHelper {
             case PracticeNavigationStateConstants.PATIENT_APPOINTMENTS: {
                 ApplicationPreferences applicationPreferences = ((ISession) context).getApplicationPreferences();
                 intent = new Intent(context, applicationPreferences.isNavigatingToAppointments()
-                        ? PatientModePracticeAppointmentActivity.class : AppointmentsActivity.class);
+                        ? PatientModePracticeAppointmentActivity.class : PatientModePracticeCheckInActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             }
@@ -98,7 +98,7 @@ public class PracticeNavigationHelper {
             }
 
             case PracticeNavigationStateConstants.PRACTICE_CHECKIN: {
-                intent = new Intent(context, CheckInActivity.class);
+                intent = new Intent(context, PracticeModePracticeCheckInActivity.class);
                 break;
             }
 

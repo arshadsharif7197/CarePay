@@ -16,21 +16,25 @@ import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepay.practice.library.payments.dialogs.FindPatientDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityDialog;
+import com.carecloud.carepay.practice.library.payments.fragments.AddPaymentItemFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.NoAddChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentPlanFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionEntryFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
+import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentNavigationCallback;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
+import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
-import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.models.LocationDTO;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.ProviderDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItem;
@@ -49,7 +53,7 @@ import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 
-public class PaymentsActivity extends BasePracticeActivity implements FilterDialog.FilterCallBack, PaymentNavigationCallback {
+public class PaymentsActivity extends BasePracticeActivity implements FilterDialog.FilterCallBack, PracticePaymentNavigationCallback {
 
     private PaymentsLabelDTO paymentsLabel;
     private PaymentsModel paymentsModel;
@@ -261,7 +265,12 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
             PaymentsModel patientDetails = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
             if(patientDetails!=null){
-                showResponsibilityDialog(patientDetails);
+//                showResponsibilityDialog(patientDetails);
+
+                //need to add these as they do not return in this call
+                patientDetails.getPaymentPayload().setLocations(paymentsModel.getPaymentPayload().getLocations());
+                patientDetails.getPaymentPayload().setProviders(paymentsModel.getPaymentPayload().getProviders());
+                showPaymentDistributionDialog(patientDetails);
             }
 
         }
@@ -330,6 +339,16 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 paymentsPatientBalance.getBalances().get(0).getMetadata().getPatientId().equals(updateBalance.getBalances().get(0).getMetadata().getPatientId());
     }
 
+
+    private void showPaymentDistributionDialog(PaymentsModel paymentsModel){
+        Bundle args = new Bundle();
+        Gson gson = new Gson();
+        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(paymentsModel));
+
+        PaymentDistributionFragment fragment = new PaymentDistributionFragment();
+        fragment.setArguments(args);
+        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+    }
 
     private void showResponsibilityDialog(PaymentsModel patientDetails) {
         PatientBalanceDTO balancessDTO = null;
@@ -427,6 +446,29 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     @Override
     public void showAddCard(double amount) {
 
+    }
+
+    @Override
+    public void lookupChargeItem(List<BalanceItemDTO> simpleChargeItems, AddPaymentItemFragment.AddItemCallback callback) {
+
+        Bundle args = new Bundle();
+        Gson gson = new Gson();
+        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(simpleChargeItems));
+
+        AddPaymentItemFragment fragment = new AddPaymentItemFragment();
+        fragment.setCallback(callback);
+        if(simpleChargeItems != null && !simpleChargeItems.isEmpty()){
+            fragment.setArguments(args);
+        }
+
+        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+    }
+
+    @Override
+    public void showAmountEntry(PaymentDistributionEntryFragment.PaymentDistributionAmountCallback callback) {
+        PaymentDistributionEntryFragment entryFragment = new PaymentDistributionEntryFragment();
+        entryFragment.setCallback(callback);
+        entryFragment.show(getSupportFragmentManager(), entryFragment.getClass().getSimpleName());
     }
 
 

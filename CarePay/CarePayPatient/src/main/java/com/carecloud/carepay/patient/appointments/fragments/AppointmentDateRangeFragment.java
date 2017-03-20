@@ -140,7 +140,7 @@ public class AppointmentDateRangeFragment extends BaseFragment {
     private void inflateUIComponents(View view) {
         TextView sundayTextView = (TextView) view.findViewById(R.id.sundayTextView);
         sundayTextView.setTextColor(ContextCompat.getColor(getContext(),
-            R.color.medium_jungle_green));
+            R.color.dark_blue));
 
         TextView mondayTextView = (TextView) view.findViewById(R.id.mondayTextView);
         mondayTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
@@ -159,7 +159,7 @@ public class AppointmentDateRangeFragment extends BaseFragment {
 
         TextView saturdayTextView = (TextView) view.findViewById(R.id.saturdayTextView);
         saturdayTextView.setTextColor(ContextCompat.getColor(getContext(),
-            R.color.medium_jungle_green));
+            R.color.dark_blue));
     }
 
     /**

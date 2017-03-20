@@ -45,7 +45,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.carecloud.carepay.practice.library.checkin.CheckInActivity"
+            android:name="com.carecloud.carepay.practice.library.checkin.PracticeModePracticeCheckInActivity"
             android:parentActivityName="com.carecloud.carepay.practice.library.homescreen.CloverMainActivity"
             android:screenOrientation="sensorLandscape">
             <meta-data
@@ -68,7 +68,7 @@
             android:name="com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity"
             android:screenOrientation="sensorLandscape"/>
         <activity
-            android:name="com.carecloud.carepay.practice.library.appointments.AppointmentsActivity"
+            android:name="com.carecloud.carepay.practice.library.checkin.PatientModePracticeCheckInActivity"
             android:screenOrientation="sensorLandscape"/>
         <activity
             android:name="com.carecloud.carepay.practice.library.appointments.PatientModePracticeAppointmentActivity"

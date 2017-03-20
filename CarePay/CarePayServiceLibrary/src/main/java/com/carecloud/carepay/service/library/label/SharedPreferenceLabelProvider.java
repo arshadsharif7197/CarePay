@@ -29,7 +29,7 @@ public class SharedPreferenceLabelProvider implements LabelProvider {
      */
     @Override
     public String getValue(String key) {
-        return getSharedPreferences().getString(key, key);
+        return getSharedPreferences().getString(key, null);
     }
 
     /**

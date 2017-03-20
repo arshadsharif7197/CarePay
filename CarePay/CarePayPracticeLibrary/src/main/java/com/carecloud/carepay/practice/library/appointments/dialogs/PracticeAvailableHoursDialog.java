@@ -22,7 +22,7 @@ import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentLocationsDTO;
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
@@ -64,7 +64,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     private TextView singleLocationText;
     private View progressView;
 
-    private List<AppointmentLocationsDTO> selectedLocations = new LinkedList<>();
+    private List<LocationDTO> selectedLocations = new LinkedList<>();
     private SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
 
     /**
@@ -184,7 +184,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
 
     private void setAdapters(){
         try {
-            List<AppointmentLocationsDTO> locations = extractAvailableLocations(availabilityDTO);
+            List<LocationDTO> locations = extractAvailableLocations(availabilityDTO);
 
             if (availableHoursRecycleView.getAdapter() == null) {
                 availableHoursRecycleView.setAdapter(new PracticeAvailableHoursAdapter(context,
@@ -430,17 +430,17 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     }
 
     @Override
-    public void onSelectLocation(AppointmentLocationsDTO appointmentLocationsDTO) {
-        if(appointmentLocationsDTO == null) {//selected ALL locations
+    public void onSelectLocation(LocationDTO locationDTO) {
+        if(locationDTO == null) {//selected ALL locations
             resetLocatonSelections(true);
         }else{
             if(selectedLocations.isEmpty()) {//Initial state, reset location selections to remove the All selected status
                 resetLocatonSelections(false);
             }
-            if(!selectedLocations.contains(appointmentLocationsDTO)){
-                selectedLocations.add(appointmentLocationsDTO);
-            }else if(selectedLocations.contains(appointmentLocationsDTO)){
-                selectedLocations.remove(appointmentLocationsDTO);
+            if(!selectedLocations.contains(locationDTO)){
+                selectedLocations.add(locationDTO);
+            }else if(selectedLocations.contains(locationDTO)){
+                selectedLocations.remove(locationDTO);
             }
 
             updateSelectedLocationsForAdapter();
@@ -448,8 +448,8 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
         }
     }
 
-    private List<AppointmentLocationsDTO> extractAvailableLocations(AppointmentAvailabilityDTO availabilityDTO){
-        List<AppointmentLocationsDTO> locationsDTOs = new LinkedList<>();
+    private List<LocationDTO> extractAvailableLocations(AppointmentAvailabilityDTO availabilityDTO){
+        List<LocationDTO> locationsDTOs = new LinkedList<>();
         List<AppointmentAvailabilityPayloadDTO> availableAppointments = availabilityDTO.getPayload().getAppointmentAvailability().getPayload();
         for(AppointmentAvailabilityPayloadDTO availableAppointment : availableAppointments){
             locationsDTOs.add(availableAppointment.getLocation());
@@ -490,8 +490,8 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
         return appointmentsSlots;
     }
 
-    private boolean isLocationSelected(AppointmentLocationsDTO appointmentLocationsDTO){
-        return selectedLocations.isEmpty() || selectedLocations.contains(appointmentLocationsDTO);
+    private boolean isLocationSelected(LocationDTO locationDTO){
+        return selectedLocations.isEmpty() || selectedLocations.contains(locationDTO);
     }
 
 }

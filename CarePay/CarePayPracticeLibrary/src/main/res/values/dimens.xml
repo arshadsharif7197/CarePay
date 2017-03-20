@@ -238,5 +238,13 @@
 
     <dimen name="list_dialog_min_height">400dp</dimen>
     <dimen name="dimen_72dp">72dp</dimen>
+    <dimen name="payment_distibution_dialog_height">540dp</dimen>
+    <dimen name="payment_distribution_dialog_width">800dp</dimen>
 
+    <dimen name="popup_picker_width">300dp</dimen>
+    <dimen name="popup_picker_height">200dp</dimen>
+
+    <dimen name="keypad_width">600dp</dimen>
+    <dimen name="keypad_height">700dp</dimen>
+    <dimen name="calculator_entry_text">90sp</dimen>
 </resources>
