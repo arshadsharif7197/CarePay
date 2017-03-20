@@ -18,7 +18,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
  * Created by pjohnson on 16/03/17.
  */
 
-public class MainPaymentActivity extends BasePracticeActivity implements PaymentBalancesAdapter.PaymentRecyclerViewCallback {
+public class PatientModePracticePaymentsActivity extends BasePracticeActivity implements PaymentBalancesAdapter.PaymentRecyclerViewCallback {
 
     private PaymentsModel paymentResultModel;
 

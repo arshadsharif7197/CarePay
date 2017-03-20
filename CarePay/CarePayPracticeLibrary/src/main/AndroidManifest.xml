@@ -9,7 +9,7 @@
         android:theme="@style/AppBaseTheme">
 
         <activity
-            android:name=".payments.MainPaymentActivity"
+            android:name=".payments.PatientModePracticePaymentsActivity"
             android:screenOrientation="sensorLandscape" />
 
     </application>
