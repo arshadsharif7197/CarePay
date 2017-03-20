@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckinFlowCallback;
-import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckinFlowState;
 import com.carecloud.carepaylibray.demographics.fragments.CheckinDemographicsFragment;
+import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 
 /**
  * Created by lmenendez on 3/6/17.

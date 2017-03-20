@@ -1,5 +1,7 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.interfaces;
 
+import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
+
 /**
  * Created by lmenendez on 3/5/17.
  */
