@@ -120,6 +120,9 @@ public class FilterModel {
         this.filteringByPending = newValue;
     }
 
+    /**
+     * @return checked patients
+     */
     public ArrayList<FilterDataDTO> getCheckedPatients() {
         ArrayList<FilterDataDTO> checked = new ArrayList<>();
 

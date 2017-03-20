@@ -64,6 +64,9 @@ public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.V
         load();
     }
 
+    /**
+     * Loads filterable list
+     */
     public void load() {
         filterableDataDTOList = new ArrayList<>();
 
