@@ -54,12 +54,6 @@
             android:name="com.carecloud.carepay.practice.library.appointments.PracticeModePracticeAppointmentsActivity"
             android:screenOrientation="sensorLandscape"/>
         <activity
-            android:name="com.carecloud.carepay.practice.library.payments.PatientResponsibilityActivity"
-            android:screenOrientation="sensorLandscape"/>
-        <activity
-            android:name="com.carecloud.carepay.practice.library.payments.RotateActivity"
-            android:screenOrientation="sensorLandscape"/>
-        <activity
             android:name="com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInActivity"
             android:screenOrientation="sensorLandscape"/>
         <activity
