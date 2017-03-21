@@ -21,8 +21,6 @@
         </item> <!-- color of the underlying bar when no focus -->
         <item name="colorControlActivated">@color/light_gray
         </item> <!-- hint and underlying bar when focus -->
-
-        <item name="searchViewStyle">@style/SearchViewStyleDark</item>
     </style>
 
 
