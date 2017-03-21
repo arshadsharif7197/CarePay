@@ -21,7 +21,6 @@ import com.carecloud.carepay.patient.appointments.adapters.AppointmentsAdapter;
 import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentDialog;
 import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
 import com.carecloud.carepay.patient.appointments.dialog.CheckInOfficeNowAppointmentDialog;
-import com.carecloud.carepay.patient.appointments.utils.PatientAppUtil;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -388,8 +387,6 @@ public class AppointmentsListFragment extends BaseFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            PatientAppUtil.showSuccessToast(getContext());
-
         }
 
         @Override

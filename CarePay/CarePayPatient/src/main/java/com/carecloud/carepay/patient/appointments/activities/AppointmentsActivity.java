@@ -15,7 +15,6 @@ import com.carecloud.carepay.patient.appointments.fragments.AppointmentDateRange
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepay.patient.appointments.fragments.AvailableHoursFragment;
 import com.carecloud.carepay.patient.appointments.fragments.ChooseProviderFragment;
-import com.carecloud.carepay.patient.appointments.utils.PatientAppUtil;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -362,7 +361,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                     .getAppointmentRequestSuccessMessage();
         }
 
-        PatientAppUtil.showSuccessToast(getContext(), appointmentRequestSuccessMessage );
+        SystemUtil.showSuccessToast(getContext(), appointmentRequestSuccessMessage, true );
     }
 
     private WorkflowServiceCallback getMakeAppointmentCallback = new WorkflowServiceCallback() {

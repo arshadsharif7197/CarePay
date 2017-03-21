@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.appointments.utils.PatientAppUtil;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -317,7 +316,7 @@ public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
             hideProgressDialog();
             updateEmailButton.setEnabled(true);
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
-            PatientAppUtil.showSuccessToast(getContext());
+            SystemUtil.showSuccessToast(getContext(), demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getLabels().getSettingsSavedSuccessMessage() , true);
         }
 
         @Override
