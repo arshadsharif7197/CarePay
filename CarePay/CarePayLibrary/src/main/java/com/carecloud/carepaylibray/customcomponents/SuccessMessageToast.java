@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.customcomponents;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.text.Html;
 import android.view.Gravity;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.qrcodescanner.DisplayUtils;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 /**
@@ -26,9 +28,9 @@ public class SuccessMessageToast extends Toast {
      * @param context The context to use.  Usually your {@link Application}
      *                or {@link Activity} object.
      */
-    public SuccessMessageToast(Context context, String successMessage, Boolean isPortraitMode) {
+    public SuccessMessageToast(Context context, String successMessage) {
         super(context);
-
+        int orientation = DisplayUtils.getScreenOrientation(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout = inflater.inflate(R.layout.success_message_toast, null);
         if(!StringUtil.isNullOrEmpty(successMessage))
@@ -41,7 +43,7 @@ public class SuccessMessageToast extends Toast {
             }
         }
         setView(layout);
-        if(isPortraitMode){
+        if(orientation == Configuration.ORIENTATION_PORTRAIT){
             setGravity(Gravity.FILL_HORIZONTAL|Gravity.TOP, 0, 0);
         }else {
             setGravity(Gravity.TOP, 0, 0);

@@ -8,6 +8,9 @@ import com.google.gson.annotations.SerializedName;
  * Model for appointment providers.
  */
 public class ProviderDTO {
+    @Expose(serialize = false)
+    private boolean error = false;
+
     @SerializedName("id")
     @Expose
     private Integer id;
@@ -130,5 +133,14 @@ public class ProviderDTO {
     public void setPhoto(String photo) {
         this.photo = photo;
     }
+
+    public boolean hasError() {
+        return error;
+    }
+
+    public void setError(boolean hasError) {
+        this.error = hasError;
+    }
+
 
 }

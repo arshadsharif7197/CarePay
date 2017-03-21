@@ -316,7 +316,7 @@ public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
             hideProgressDialog();
             updateEmailButton.setEnabled(true);
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
-            SystemUtil.showSuccessToast(getContext(), demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getLabels().getSettingsSavedSuccessMessage() , true);
+            SystemUtil.showSuccessToast(getContext(), demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getLabels().getSettingsSavedSuccessMessage());
         }
 
         @Override

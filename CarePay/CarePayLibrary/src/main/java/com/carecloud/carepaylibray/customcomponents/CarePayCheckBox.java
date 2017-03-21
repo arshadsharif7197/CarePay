@@ -3,13 +3,15 @@ package com.carecloud.carepaylibray.customcomponents;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
-import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
+import android.widget.CheckBox;
+import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_GOTHAM_ROUNDED_BOLD;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_GOTHAM_ROUNDED_BOOK;
+import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_GOTHAM_ROUNDED_LIGHT;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_GOTHAM_ROUNDED_MEDIUM;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_PROXIMA_NOVA_EXTRA_BOLD;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_PROXIMA_NOVA_LIGHT;
@@ -17,17 +19,20 @@ import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_PR
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.FONT_PROXIMA_NOVA_SEMI_BOLD;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.GOTHAM_ROUNDED_BOLD;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.GOTHAM_ROUNDED_BOOK;
+import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.GOTHAM_ROUNDED_LIGHT;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.GOTHAM_ROUNDED_MEDIUM;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.PROXIMA_NOVA_EXTRA_BOLD;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.PROXIMA_NOVA_LIGHT;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.PROXIMA_NOVA_REGULAR;
 import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD;
 
-/**
- * Created by arpit_jain1 on 10/27/2016.
- */
-public class CarePayButton extends AppCompatButton {
 
+/**
+ * Created by Jahirul Bhuiyan on 10/13/2016.
+ * This is a custom textview component that allow t set custom font from assets
+ */
+
+public class CarePayCheckBox extends CheckBox {
     Context context;
     int fontAttribute;
 
@@ -36,7 +41,7 @@ public class CarePayButton extends AppCompatButton {
      *
      * @param context sender context
      */
-    public CarePayButton(Context context) {
+    public CarePayCheckBox(Context context) {
         super(context);
         this.context = context;
         init(null);
@@ -49,11 +54,10 @@ public class CarePayButton extends AppCompatButton {
      * @param context sender context
      * @param attrs   styleable attributes
      */
-    public CarePayButton(Context context, AttributeSet attrs) {
+    public CarePayCheckBox(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
         init(attrs);
-
 
     }
 
@@ -67,11 +71,10 @@ public class CarePayButton extends AppCompatButton {
      * @param defStyleAttr styleable default attributes
      */
 
-    public CarePayButton(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CarePayCheckBox(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
         init(attrs);
-
 
     }
 
@@ -112,6 +115,7 @@ public class CarePayButton extends AppCompatButton {
         } catch (Exception exception) {
             fontAttribute = PROXIMA_NOVA_REGULAR;
         }
+
         setFont();
     }
 
@@ -128,6 +132,10 @@ public class CarePayButton extends AppCompatButton {
             }
             case GOTHAM_ROUNDED_MEDIUM: {
                 assetFontName = FONT_GOTHAM_ROUNDED_MEDIUM;
+                break;
+            }
+            case GOTHAM_ROUNDED_LIGHT: {
+                assetFontName = FONT_GOTHAM_ROUNDED_LIGHT;
                 break;
             }
             case PROXIMA_NOVA_EXTRA_BOLD: {
@@ -149,4 +157,5 @@ public class CarePayButton extends AppCompatButton {
         Typeface tf = Typeface.createFromAsset(getContext().getAssets(), assetFontName);
         this.setTypeface(tf);
     }
+
 }

@@ -8,6 +8,7 @@ public enum PaymentExecution {
     clover,
     android_pay,
     apple_pay,
-    papi;
+    papi,
+    cash;
 
 }

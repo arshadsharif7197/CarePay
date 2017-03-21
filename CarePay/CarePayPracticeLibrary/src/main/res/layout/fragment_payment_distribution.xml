@@ -135,7 +135,7 @@
                 android:layout_marginEnd="@dimen/dimen_8dp"
                 android:layout_marginStart="@dimen/dimen_8dp"
                 android:text="$325.00"
-                android:textColor="@color/lightning_yellow"
+                android:textColor="@color/emerald"
                 android:textSize="@dimen/text_size_16sp"
                 app:customAssetFont="proxima_nova_semi_bold"/>
 

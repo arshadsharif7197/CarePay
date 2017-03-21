@@ -227,12 +227,12 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
             fragment.setArguments(args);
             navigateToFragment(fragment, true);
         } else {
-            showAddCard(amount);
+            showAddCard(amount, paymentsModel);
         }
     }
 
     @Override
-    public void showAddCard(double amount) {
+    public void showAddCard(double amount, PaymentsModel paymentsModel) {
         Gson gson = new Gson();
         Bundle args = new Bundle();
         Fragment fragment;

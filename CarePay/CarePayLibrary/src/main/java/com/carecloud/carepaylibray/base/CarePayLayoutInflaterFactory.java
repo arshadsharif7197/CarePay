@@ -62,6 +62,10 @@ public class CarePayLayoutInflaterFactory implements LayoutInflater.Factory2 {
             if (textKey != null) {
                 ((TextView) view).setText(Label.getLabel(textKey));
             }
+            String hintKey = attrs.getAttributeValue(PABLO_SCHEMA, PABLO_ATTR_HINT_KEY);
+            if(hintKey != null){
+                ((TextView) view).setHint(Label.getLabel(hintKey));
+            }
         }
     }
 

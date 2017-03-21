@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.appointments.models;
 
+import com.carecloud.carepaylibray.payments.models.postmodel.ResponsibilityType;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -50,6 +51,12 @@ public class BalanceItemDTO {
     @SerializedName("description")
     @Expose
     private String description;
+    @SerializedName("responsibility_type")
+    @Expose
+    private ResponsibilityType responsibilityType;
+    @SerializedName("new_charge")
+    @Expose
+    private boolean newCharge = false;
 
     public Long getId() {
         return id;
@@ -161,5 +168,21 @@ public class BalanceItemDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public ResponsibilityType getResponsibilityType() {
+        return responsibilityType;
+    }
+
+    public void setResponsibilityType(ResponsibilityType responsibilityType) {
+        this.responsibilityType = responsibilityType;
+    }
+
+    public boolean isNewCharge() {
+        return newCharge;
+    }
+
+    public void setNewCharge(boolean newCharge) {
+        this.newCharge = newCharge;
     }
 }

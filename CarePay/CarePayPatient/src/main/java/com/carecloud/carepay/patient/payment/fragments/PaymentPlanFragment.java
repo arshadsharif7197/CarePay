@@ -530,7 +530,7 @@ public class PaymentPlanFragment extends BaseFragment {
     }
 
     private void addNewCreditCard() {
-        callback.showAddCard(0);
+        callback.showAddCard(0, paymentsModel);
 //        FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
 //        PatientAddNewCreditCardFragment fragment = (PatientAddNewCreditCardFragment)
 //                fragmentmanager.findFragmentByTag(PatientAddNewCreditCardFragment.class.getSimpleName());

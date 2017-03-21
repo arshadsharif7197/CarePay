@@ -31,6 +31,11 @@ import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentApplication;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentNewCharge;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
@@ -137,7 +142,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.lookupChargeItem(null, PaymentDistributionFragment.this);
+                callback.lookupChargeItem(paymentsModel.getPaymentPayload().getSimpleChargeItems(), PaymentDistributionFragment.this);
             }
         });
 
@@ -153,7 +158,10 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         payButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.onPayButtonClicked(paymentAmount, paymentsModel);
+                if(validateBalanceItems()) {
+                    generatePaymentsModel();
+                    callback.onPayButtonClicked(paymentAmount, paymentsModel);
+                }
             }
         });
 
@@ -161,7 +169,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         paymentTotal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.showAmountEntry(PaymentDistributionFragment.this);
+                callback.showAmountEntry(PaymentDistributionFragment.this, null, null);
             }
         });
 
@@ -209,7 +217,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             for(PendingBalanceDTO pendingBalance : patientBalance.getBalances()){
                 for(PendingBalancePayloadDTO pendingBalancePayload : pendingBalance.getPayload()){
                     total+=pendingBalancePayload.getAmount();
-                    total-=pendingBalancePayload.getUnappliedCredit();
+//                    total-=pendingBalancePayload.getUnappliedCredit();
                     switch (pendingBalancePayload.getType()){
                         case PendingBalancePayloadDTO.CO_PAY_TYPE:{
                             BalanceItemDTO balanceItemDTO = new BalanceItemDTO();
@@ -300,9 +308,28 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     }
 
     @Override
-    public void addChargeItem(BalanceItemDTO chargeItem) {
-        balanceItems.add(chargeItem);
+    public void pickAmount(BalanceItemDTO balanceItem) {
+        callback.showAmountEntry(this, balanceItem, null);
+    }
+
+    @Override
+    public void addNewCharge(double amount, SimpleChargeItem chargeItem){
+        BalanceItemDTO balanceItemDTO = new BalanceItemDTO();
+        balanceItemDTO.setNewCharge(true);
+        balanceItemDTO.setId(chargeItem.getId());
+        balanceItemDTO.setDescription(chargeItem.getDescription());
+        balanceItemDTO.setAmount(amount);
+        balanceItemDTO.setBalance(amount);
+        balanceItemDTO.setResponsibilityType(chargeItem.getResponsibilityType());
+        balanceItems.add(balanceItemDTO);
+        balanceAmount+=chargeItem.getAmount();
+        setCurrency(paymentTotal, balanceAmount);
         setAdapter();
+    }
+
+    @Override
+    public void addChargeItem(SimpleChargeItem chargeItem) {
+        callback.showAmountEntry(this, null, chargeItem);
     }
 
     @Override
@@ -310,6 +337,12 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         paymentAmount = amount;
         setCurrency(paymentTotal, amount);
         distributeAmountOverBalanceItems(amount);
+    }
+
+    @Override
+    public void applyAmountToBalanceItem(double amount, BalanceItemDTO balanceItem){
+        modifyLineItem(balanceItem, null, null, amount);
+        setAdapter();
     }
 
 
@@ -343,6 +376,72 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         }
 
         setAdapter();
+    }
+
+    private boolean validateBalanceItems(){
+        boolean isValid = true;
+        for(BalanceItemDTO balanceItem : balanceItems){
+            if(balanceItem.getBalance() > 0) {
+                if (balanceItem.getLocation() == null || balanceItem.getLocation().getId() == null) {
+                    isValid = false;
+                    if (balanceItem.getLocation() != null) {
+                        balanceItem.getLocation().setError(true);
+                    }
+                }
+                if (balanceItem.getProvider() == null || balanceItem.getProvider().getId() == null) {
+                    isValid = false;
+                    if (balanceItem.getProvider() != null) {
+                        balanceItem.getProvider().setError(true);
+                    }
+                }
+            }
+        }
+
+        if(!isValid){
+            setAdapter();
+        }
+        return isValid;
+    }
+
+    private void generatePaymentsModel(){
+        PaymentPostModel postModel = new PaymentPostModel();
+        postModel.setAmount(paymentAmount);
+        for(BalanceItemDTO balanceItemDTO : balanceItems){
+            addPaymentObject(balanceItemDTO, postModel);
+        }
+
+        paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
+    }
+
+    private void addPaymentObject(BalanceItemDTO balanceItem, PaymentPostModel postModel){
+        if(balanceItem.getBalance()>0){
+            PaymentObject paymentObject = new PaymentObject();
+            paymentObject.setAmount(balanceItem.getBalance());
+            paymentObject.setDescription(balanceItem.getDescription());
+
+            if(balanceItem.getResponsibilityType()!=null){
+                //this is a responsibility item
+                paymentObject.setResponsibilityType(balanceItem.getResponsibilityType());
+            }else if(balanceItem.isNewCharge()){
+                PaymentNewCharge paymentNewCharge = new PaymentNewCharge();
+                paymentNewCharge.setChargeType(balanceItem.getId());
+                paymentNewCharge.setAmount(balanceItem.getAmount());
+            }else if(balanceItem.getId()!=null){
+                PaymentApplication paymentApplication = new PaymentApplication();
+                paymentApplication.setDebitTransactionID(balanceItem.getId());
+                paymentObject.setPaymentApplication(paymentApplication);
+            }
+
+            if(balanceItem.getLocation()!=null){
+                paymentObject.setLocationID(balanceItem.getLocation().getId().toString());
+            }
+
+            if(balanceItem.getProvider()!=null){
+                paymentObject.setProviderID(balanceItem.getProvider().getId().toString());
+            }
+
+            postModel.addPaymentMethod(paymentObject);
+        }
     }
 
 

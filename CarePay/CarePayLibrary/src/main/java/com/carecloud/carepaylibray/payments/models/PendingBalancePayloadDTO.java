@@ -28,7 +28,6 @@ public class PendingBalancePayloadDTO {
     @Expose
     private List<BalanceItemDTO> details = new ArrayList<>();
 
-
     public String getType() {
         return type;
     }
