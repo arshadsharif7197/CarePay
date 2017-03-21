@@ -606,7 +606,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     @Override
     public void onBackPressed() {
 
-        // log out previous user from Cognito
         if(!HttpConstants.isUseUnifiedAuth()) {
             Log.v(this.getClass().getSimpleName(), "sign out Cognito");
             getAppAuthorizationHelper().getPool().getUser().signOut();
@@ -619,6 +618,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
             final PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
             logOut(transitionsDTO.getLogout());
+            getAppAuthorizationHelper().setUser(null);
+            getApplicationMode().setUserPracticeDTO(getAppAuthorizationHelper(),null);
         }
 
         super.onBackPressed();

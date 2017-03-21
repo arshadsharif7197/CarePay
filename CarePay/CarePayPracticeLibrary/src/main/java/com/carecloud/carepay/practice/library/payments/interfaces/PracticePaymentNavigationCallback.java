@@ -4,6 +4,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.AddPaymentItemF
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionEntryFragment;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
 
 import java.util.List;
 
@@ -12,8 +13,8 @@ import java.util.List;
  */
 
 public interface PracticePaymentNavigationCallback extends PaymentNavigationCallback {
-    void lookupChargeItem(List<BalanceItemDTO> simpleChargeItems, AddPaymentItemFragment.AddItemCallback callback);
+    void lookupChargeItem(List<SimpleChargeItem> simpleChargeItems, AddPaymentItemFragment.AddItemCallback callback);
 
-    void showAmountEntry(PaymentDistributionEntryFragment.PaymentDistributionAmountCallback callback);
+    void showAmountEntry(PaymentDistributionEntryFragment.PaymentDistributionAmountCallback callback, BalanceItemDTO balanceItemDTO, SimpleChargeItem chargeItem);
 
 }

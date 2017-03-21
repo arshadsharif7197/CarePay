@@ -24,7 +24,7 @@ public class PaymentCreditCardsPayloadDTO {
     @SerializedName("cvv")
     @Expose
     private String cvv;
-    @SerializedName("hash_credit_cards_id")
+    @SerializedName("card_id")
     @Expose
     private String creditCardsId;
     @SerializedName("token")

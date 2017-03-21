@@ -41,6 +41,6 @@ public interface PaymentNavigationCallback {
      * Callback to add new card
      * @param amount amount to pay
      */
-    void showAddCard(double amount);
+    void showAddCard(double amount, PaymentsModel paymentsModel);
 
 }

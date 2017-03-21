@@ -9,6 +9,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class CreditCardModel {
 
+    @SerializedName("tokenization_service")
+    private TokenizationService tokenizationService;
+
     @SerializedName("card_type")
     private String cardType;
 
@@ -120,5 +123,13 @@ public class CreditCardModel {
 
     public void setDefault(boolean isDefault) {
         this.isDefault = isDefault;
+    }
+
+    public TokenizationService getTokenizationService() {
+        return tokenizationService;
+    }
+
+    public void setTokenizationService(TokenizationService tokenizationService) {
+        this.tokenizationService = tokenizationService;
     }
 }

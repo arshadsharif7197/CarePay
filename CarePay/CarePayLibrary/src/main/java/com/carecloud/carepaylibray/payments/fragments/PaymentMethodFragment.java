@@ -44,7 +44,7 @@ public abstract class PaymentMethodFragment extends BaseDialogFragment {
     private Button paymentChoiceButton;
     private RadioGroup paymentMethodRadioGroup;
     private RadioGroup.LayoutParams radioGroupLayoutParam;
-    private ListView paymentMethodList;
+    protected ListView paymentMethodList;
 
     protected PaymentsModel paymentsModel;
     protected List<PatientBalanceDTO> paymentList = new ArrayList<>();
