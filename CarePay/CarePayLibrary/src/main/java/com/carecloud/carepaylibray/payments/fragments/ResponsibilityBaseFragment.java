@@ -12,14 +12,12 @@ import android.view.View;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
-import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.google.gson.Gson;
 
@@ -62,13 +60,6 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
         super.onCreate(savedInstanceState);
         appCompatActivity = (AppCompatActivity) getActivity();
     }
-
-//    @Override
-//    public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
-//        PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(getContext(),
-//                paymentDTO, paymentLineItem, actionCallback, null);
-//        detailsDialog.show();
-//    }
 
     protected void fillDetailAdapter(View view, List<PendingBalanceDTO> paymentList) {
         RecyclerView paymentDetailsListRecyclerView = ((RecyclerView) view.findViewById(R.id.responsibility_line_item_recycle_view));

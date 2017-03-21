@@ -26,6 +26,12 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
     OnBalanceListItemClickListener listener;
     PaymentsModel paymentDTO;
 
+    /**
+     *
+     * @param context The context
+     * @param paymentDTO    The payment DTO
+     * @param listener the listener
+     */
     public PaymentBalancesAdapter(Context context, PaymentsModel paymentDTO, OnBalanceListItemClickListener listener) {
         this.paymentDTO = paymentDTO;
         this.context = context;

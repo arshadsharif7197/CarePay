@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.adapters.PaymentBalancesAdapter;
@@ -44,7 +43,11 @@ public class PatientPaymentHistoryFragment extends BaseFragment implements Payme
     private View noPaymentsLayout;
     private PaymentPatientInterface callback;
 
-
+    /**
+     * @param sectionNumber the section number
+     * @param paymentDTO    the payment dto
+     * @return an instance of PatientPaymentHistoryFragment
+     */
     public static PatientPaymentHistoryFragment newInstance(int sectionNumber, PaymentsModel paymentDTO) {
         PatientPaymentHistoryFragment fragment = new PatientPaymentHistoryFragment();
         Gson gson = new Gson();
@@ -130,6 +133,9 @@ public class PatientPaymentHistoryFragment extends BaseFragment implements Payme
                     callback.showNoPaymentsLayout(sectionNumber);
                 }
 
+                break;
+            }
+            default: {
                 break;
             }
         }

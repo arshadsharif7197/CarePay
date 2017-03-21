@@ -35,7 +35,6 @@ import com.carecloud.carepaylibray.appointments.models.LinksDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
-import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;

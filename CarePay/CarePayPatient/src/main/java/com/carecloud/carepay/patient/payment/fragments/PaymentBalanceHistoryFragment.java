@@ -14,15 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialog;
-import com.carecloud.carepay.patient.payment.interfaces.PaymentPatientInterface;
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.patient.payment.adapters.PaymentsSectionsPagerAdapter;
+import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialog;
+import com.carecloud.carepay.patient.payment.interfaces.PaymentPatientInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
-import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
@@ -63,7 +62,6 @@ public class PaymentBalanceHistoryFragment extends BaseFragment implements Payme
         Bundle bundle = getArguments();
         Gson gson = new Gson();
         String paymentsDTOString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
-        PaymentsModel paymentDTO = gson.fromJson(paymentsDTOString, PaymentsModel.class);
 
         noPaymentsLayout = balanceHistoryView.findViewById(R.id.no_payment_layout);
         pagerLayout = balanceHistoryView.findViewById(R.id.payments_pager_layout);
@@ -73,6 +71,7 @@ public class PaymentBalanceHistoryFragment extends BaseFragment implements Payme
         noPaymentTitle.setText(Label.getLabel("no_payment_title"));
         noPaymentDesc.setText(Label.getLabel("no_payment_description"));
 
+        PaymentsModel paymentDTO = gson.fromJson(paymentsDTOString, PaymentsModel.class);
         setupViewPager(balanceHistoryView, paymentDTO);
         hideNoPaymentsLayout();
 
@@ -122,12 +121,6 @@ public class PaymentBalanceHistoryFragment extends BaseFragment implements Payme
     private void showNoPaymentsLayout() {
         noPaymentsLayout.setVisibility(View.VISIBLE);
         pagerLayout.setVisibility(View.GONE);
-
-    }
-
-    private void hideNoPaymentsLayout() {
-        noPaymentsLayout.setVisibility(View.GONE);
-        pagerLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -137,6 +130,11 @@ public class PaymentBalanceHistoryFragment extends BaseFragment implements Payme
         } else if (this.sectionNumber != sectionNumber) {//this is the second one so we should hide the pager
             showNoPaymentsLayout();
         }
+    }
+
+    private void hideNoPaymentsLayout() {
+        noPaymentsLayout.setVisibility(View.GONE);
+        pagerLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
