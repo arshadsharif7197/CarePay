@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,6 +46,8 @@ public class WorkflowServiceHelper {
     private AppAuthorizationHelper appAuthorizationHelper;
     private ApplicationPreferences applicationPreferences;
     private ApplicationMode applicationMode;
+
+    private Stack<Call<?>> callStack = new Stack<>();
 
     public WorkflowServiceHelper(ApplicationPreferences applicationPreferences,
                                  ApplicationMode applicationMode) {
@@ -257,6 +260,7 @@ public class WorkflowServiceHelper {
         call.enqueue(new Callback<WorkflowDTO>() {
             @Override
             public void onResponse(Call<WorkflowDTO> call, Response<WorkflowDTO> response) {
+                callStack.remove(call);
                 try {
                     switch (response.code()) {
                         case STATUS_CODE_OK:
@@ -322,6 +326,7 @@ public class WorkflowServiceHelper {
 
             @Override
             public void onFailure(Call<WorkflowDTO> call, Throwable throwable) {
+                callStack.remove(call);
                 onFailure(throwable.getMessage());
             }
 
@@ -334,6 +339,8 @@ public class WorkflowServiceHelper {
                 }
             }
         });
+
+        callStack.push(call);
     }
 
     private CognitoActionCallback getCognitoActionCallback(@NonNull final TransitionDTO transitionDTO,
@@ -403,4 +410,15 @@ public class WorkflowServiceHelper {
     private static boolean isNullOrEmpty(String string) {
         return (string == null || string.trim().equals(""));
     }
+
+    public void interrupt(){
+        while(!callStack.isEmpty()){
+            Call<?> call = callStack.peek();
+            call.cancel();
+            callStack.pop();
+        }
+    }
+
+
+
 }

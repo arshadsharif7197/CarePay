@@ -36,8 +36,8 @@ import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -174,7 +174,7 @@ public class AppointmentDetailDialog extends Dialog {
 
         profilePhoto = (ImageView) findViewById(R.id.patient_profile_photo);
         bgImage = (ImageView) findViewById(R.id.profile_bg_image);
-        shortName = (TextView) findViewById(R.id.patient_profile_short_name);
+        shortName = (TextView) findViewById(R.id.patientNameLabelShort);
     }
 
     /**
@@ -242,7 +242,7 @@ public class AppointmentDetailDialog extends Dialog {
             }
         });
 
-        String photoUrl = ""; //NOT PHOTO YET
+        String photoUrl = appointmentPayloadDTO.getPatient().getProfilePhoto();
         if (!TextUtils.isEmpty(photoUrl)) {
             Picasso.Builder builder = new Picasso.Builder(context);
             builder.listener(new Picasso.Listener() {
@@ -258,6 +258,10 @@ public class AppointmentDetailDialog extends Dialog {
             load.fit().into(bgImage);
 
             profilePhoto.setVisibility(View.VISIBLE);
+            bgImage.setScaleX(5);
+            bgImage.setScaleY(5);
+        }else{
+            shortName.setText(appointmentPayloadDTO.getPatient().getShortName());
         }
 
         checkingInLabel.bringToFront();
@@ -361,18 +365,15 @@ public class AppointmentDetailDialog extends Dialog {
     private WorkflowServiceCallback getStatusCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ((ISession) context).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ((ISession) context).hideProgressDialog();
             updateUI(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ((ISession) context).hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(context);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -381,18 +382,15 @@ public class AppointmentDetailDialog extends Dialog {
     private WorkflowServiceCallback getQueueCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ((ISession) context).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ((ISession) context).hideProgressDialog();
             updateQueueStatus(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ((ISession) context).hideProgressDialog();
             SystemUtil.showDefaultFailureDialog(context);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
@@ -500,6 +498,7 @@ public class AppointmentDetailDialog extends Dialog {
         queryMap.put("patient_id", appointmentPayloadDTO.getPatient().getPatientId());
 
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getPatientBalances();
+        sessionHandler.getWorkflowServiceHelper().interrupt();
         sessionHandler.getWorkflowServiceHelper().execute(transitionDTO, patientBalancesCallback, queryMap);
 
     }
