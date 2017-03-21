@@ -582,20 +582,13 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     @Override
-    public void onRightActionTapped(PaymentsModel paymentsModel, double amount) {
-        newAppointment();
-    }
-
-    @Override
-    public void onDetailItemClick(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem) {
-        PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(getContext(),
-                paymentsModel, paymentLineItem, this, null);
-        detailsDialog.show();
-    }
-
-    @Override
     public void onLeftActionTapped(AppointmentDTO appointmentDTO) {
         cancelAppointment(appointmentDTO);
+    }
+
+    @Override
+    public void onRightActionTapped(PaymentsModel paymentsModel, double amount) {
+        newAppointment();
     }
 
     @Override
@@ -603,5 +596,12 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         if (appointmentDTO.getPayload().getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
             confirmAppointment(appointmentDTO);
         }
+    }
+
+    @Override
+    public void onDetailItemClick(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem) {
+        PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(getContext(),
+                paymentsModel, paymentLineItem, this, null);
+        detailsDialog.show();
     }
 }
