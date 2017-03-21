@@ -129,7 +129,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
     }
 
     @Override
-    public void showAddCard(double amount) {
+    public void showAddCard(double amount, PaymentsModel paymentsModel) {
 
     }
 
