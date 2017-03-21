@@ -43,8 +43,7 @@ public class SuccessMessageToast extends Toast {
         setView(layout);
         if(isPortraitMode){
             setGravity(Gravity.FILL_HORIZONTAL|Gravity.TOP, 0, 0);
-        }
-        else {
+        }else {
             setGravity(Gravity.TOP, 0, 0);
         }
         setDuration(Toast.LENGTH_SHORT);
