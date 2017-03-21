@@ -13,12 +13,12 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.CreditCardModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
@@ -36,7 +36,6 @@ import java.util.Map;
 
 public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implements BaseAddCreditCardFragment.IAuthoriseCreditCardResponse{
     private PaymentsModel paymentsModel;
-    private PaymentsLabelDTO paymentsLabelDTO;
 
     PaymentNavigationCallback callback;
 
@@ -53,13 +52,11 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        paymentsLabelDTO = new PaymentsLabelDTO();
         Bundle arguments = getArguments();
         if (arguments != null) {
             Gson gson = new Gson();
             String paymentsDTOString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
             paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
-            paymentsLabelDTO = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
         }
     }
 
@@ -71,8 +68,8 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
 
     @Override
     public void onViewCreated(View view, Bundle icicle){
-        title.setText(paymentsLabelDTO.getPaymentNewCreditCard());
-        initilizeViews();
+        title.setText(Label.getLabel("payment_new_credit_card"));
+//        initilizeViews();
     }
 
     @Override
@@ -80,43 +77,43 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         super.onResume();
     }
 
-    private void initilizeViews() {
-        creditCardNoTextInput.setTag(paymentsLabelDTO.getPaymentCreditCardNumber());
-        creditCardNoEditText.setHint(paymentsLabelDTO.getPaymentCreditCardNumber());
+//    private void initilizeViews() {
+//        creditCardNoTextInput.setTag(paymentsLabelDTO.getPaymentCreditCardNumber());
+//        creditCardNoEditText.setHint(paymentsLabelDTO.getPaymentCreditCardNumber());
 
-        nameOnCardTextInputLayout.setTag(paymentsLabelDTO.getPaymentNameOnCardText());
-        nameOnCardEditText.setHint(paymentsLabelDTO.getPaymentNameOnCardText());
+//        nameOnCardTextInputLayout.setTag(paymentsLabelDTO.getPaymentNameOnCardText());
+//        nameOnCardEditText.setHint(paymentsLabelDTO.getPaymentNameOnCardText());
 
-        verificationCodeTextInput.setTag(paymentsLabelDTO.getPaymentVerificationNumber());
-        verificationCodeEditText.setHint(paymentsLabelDTO.getPaymentVerificationNumber());
+//        verificationCodeTextInput.setTag(paymentsLabelDTO.getPaymentVerificationNumber());
+//        verificationCodeEditText.setHint(paymentsLabelDTO.getPaymentVerificationNumber());
 
-        expirationDateTextView.setText(paymentsLabelDTO.getPaymentExpirationDate());
-        pickDateTextView.setText(paymentsLabelDTO.getPaymentPickDate());
+//        expirationDateTextView.setText(paymentsLabelDTO.getPaymentExpirationDate());
+//        pickDateTextView.setText(paymentsLabelDTO.getPaymentPickDate());
 
-        saveCardOnFileCheckBox.setText(paymentsLabelDTO.getPaymentSaveCardOnFile());
-        setAsDefaultCheckBox.setText(paymentsLabelDTO.getPaymentSetAsDefaultCreditCard());
+//        saveCardOnFileCheckBox.setText(paymentsLabelDTO.getPaymentSaveCardOnFile());
+//        setAsDefaultCheckBox.setText(paymentsLabelDTO.getPaymentSetAsDefaultCreditCard());
 
-        billingAddressTextView.setText(paymentsLabelDTO.getPaymentBillingAddressText());
-        useProfileAddressCheckBox.setText(paymentsLabelDTO.getPaymentUseProfileAddress());
+//        billingAddressTextView.setText(paymentsLabelDTO.getPaymentBillingAddressText());
+//        useProfileAddressCheckBox.setText(paymentsLabelDTO.getPaymentUseProfileAddress());
 
-        address1TextInput.setTag(paymentsLabelDTO.getPaymentAddressLine1Text());
-        address1EditText.setHint(paymentsLabelDTO.getPaymentAddressLine1Text());
+//        address1TextInput.setTag(paymentsLabelDTO.getPaymentAddressLine1Text());
+//        address1EditText.setHint(paymentsLabelDTO.getPaymentAddressLine1Text());
 
-        address2TextInput.setTag(paymentsLabelDTO.getPaymentAddressLine2Text());
-        address2EditText.setHint(paymentsLabelDTO.getPaymentAddressLine2Text());
+//        address2TextInput.setTag(paymentsLabelDTO.getPaymentAddressLine2Text());
+//        address2EditText.setHint(paymentsLabelDTO.getPaymentAddressLine2Text());
 
-        zipCodeTextInput.setTag(paymentsLabelDTO.getPaymentZipcode());
-        zipCodeEditText.setHint(paymentsLabelDTO.getPaymentZipcode());
+//        zipCodeTextInput.setTag(paymentsLabelDTO.getPaymentZipcode());
+//        zipCodeEditText.setHint(paymentsLabelDTO.getPaymentZipcode());
 
-        cityTextInput.setTag(paymentsLabelDTO.getPaymentCity());
-        cityEditText.setHint(paymentsLabelDTO.getPaymentCity());
+//        cityTextInput.setTag(paymentsLabelDTO.getPaymentCity());
+//        cityEditText.setHint(paymentsLabelDTO.getPaymentCity());
 
-        stateTextInput.setTag(paymentsLabelDTO.getPaymentState());
-        stateAutoCompleteTextView.setHint(paymentsLabelDTO.getPaymentState());
+//        stateTextInput.setTag(paymentsLabelDTO.getPaymentState());
+//        stateAutoCompleteTextView.setHint(paymentsLabelDTO.getPaymentState());
 
-        nextButton.setText(paymentsLabelDTO.getPaymentPayText());
+//        nextButton.setText(paymentsLabelDTO.getPaymentPayText());
 
-    }
+//    }
 
     private WorkflowServiceCallback addNewCreditCardCallback = new WorkflowServiceCallback() {
         @Override
@@ -269,7 +266,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
 
     @Override
     public void onAuthorizeCreditCardFailed() {
-        new LargeAlertDialog(getActivity(), paymentsLabelDTO.getPaymentFailedErrorMessage(), paymentsLabelDTO.getPaymentChangeMethodButton(), R.color.Feldgrau, R.drawable.icn_card_error, new LargeAlertDialog.LargeAlertInterface() {
+        new LargeAlertDialog(getActivity(), Label.getLabel("payment_failed_error"), Label.getLabel("payment_change_payment_label"), R.color.Feldgrau, R.drawable.icn_card_error, new LargeAlertDialog.LargeAlertInterface() {
             @Override
             public void onActionButton() {
                 getFragmentManager().popBackStackImmediate();

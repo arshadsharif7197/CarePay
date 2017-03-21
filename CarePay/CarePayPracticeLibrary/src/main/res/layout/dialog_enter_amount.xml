@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:breeze="http://schemas.carecloud.com/breeze"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_gravity="center"
@@ -60,7 +61,7 @@
                 android:paddingEnd="@dimen/dimen_25dp"
                 android:gravity="center_horizontal"
                 android:textColor="@color/white"
-                android:text="How much will you be paying today?"
+                breeze:textKey="payment_enter_amount"
                 app:customAssetFont="gotham_rounded_medium"/>
 
             <LinearLayout
@@ -276,7 +277,7 @@
                     android:background="@drawable/key_selector"
                     android:text="@string/entry_decimal"
                     android:gravity="center"
-                    android:textColor="@color/charcoal"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/button_pin_text_size" />
 
                 <View
@@ -333,6 +334,7 @@
                 android:textColor="@color/white"
                 android:layout_alignParentBottom="true"
                 android:layout_margin="@dimen/dimen_20dp"
+                breeze:textKey="payment_apply_amount"
                 app:customAssetFont="gotham_rounded_medium" />
 
         </FrameLayout>

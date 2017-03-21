@@ -1,6 +1,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
@@ -84,6 +85,7 @@
                         android:background="@drawable/blue_border_rounded_button_selector"
                         android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/text_size_13"
+                        breeze:textKey="payment_add_new_credit_card_button"
                         app:customAssetFont="gotham_rounded_medium" />
 
 
@@ -112,6 +114,7 @@
                 android:layout_margin="@dimen/dimen_10dp"
                 android:background="@drawable/blue_border_rounded_button_selector"
                 android:textColor="@color/colorPrimary"
+                breeze:textKey="payment_clover_swipe_now_button_label"
                 app:customAssetFont="gotham_rounded_medium"
                 android:visibility="gone"/>
 
@@ -123,6 +126,7 @@
                 android:layout_weight="1"
                 android:layout_margin="@dimen/dimen_10dp"
                 android:background="@drawable/green_rounded_button_selector"
+                breeze:textKey="demographics_pay_button_text"
                 app:customAssetFont="gotham_rounded_medium" />
 
 

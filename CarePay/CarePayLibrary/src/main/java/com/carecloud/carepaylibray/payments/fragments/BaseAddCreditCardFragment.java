@@ -129,7 +129,7 @@ public class BaseAddCreditCardFragment extends BaseDialogFragment implements Req
 
         setupTitleViews(addNewCreditCardView);
         initializeViews(addNewCreditCardView);
-        setTypefaces();
+//        setTypefaces();
         setTextWatchers();
         return addNewCreditCardView;
     }
@@ -494,33 +494,33 @@ public class BaseAddCreditCardFragment extends BaseDialogFragment implements Req
         }
     }
 
-    private void setTypefaces() {
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), creditCardNoEditText);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), verificationCodeEditText);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), nameOnCardEditText);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), expirationDateTextView);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), address1EditText);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), address2EditText);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), zipCodeEditText);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), cityEditText);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), stateAutoCompleteTextView);
+//    private void setTypefaces() {
+//        SystemUtil.setProximaNovaRegularTypeface(getActivity(), creditCardNoEditText);
+//        SystemUtil.setProximaNovaRegularTypeface(getActivity(), verificationCodeEditText);
+//        SystemUtil.setProximaNovaRegularTypeface(getActivity(), nameOnCardEditText);
+//        SystemUtil.setProximaNovaRegularTypeface(getActivity(), expirationDateTextView);
+//        SystemUtil.setProximaNovaRegularTypeface(getActivity(), address1EditText);
+//        SystemUtil.setProximaNovaRegularTypeface(getActivity(), address2EditText);
+//        SystemUtil.setProximaNovaRegularTypeface(getActivity(), zipCodeEditText);
+//        SystemUtil.setProximaNovaRegularTypeface(getActivity(), cityEditText);
+//        SystemUtil.setProximaNovaRegularTypeface(getActivity(), stateAutoCompleteTextView);
 
 
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), creditCardNoTextInput);
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), nameOnCardTextInputLayout);
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), verificationCodeTextInput);
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), address1TextInput);
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), address2TextInput);
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), zipCodeTextInput);
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), cityTextInput);
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), stateTextInput);
+//        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), creditCardNoTextInput);
+//        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), nameOnCardTextInputLayout);
+//        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), verificationCodeTextInput);
+//        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), address1TextInput);
+//        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), address2TextInput);
+//        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), zipCodeTextInput);
+//        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), cityTextInput);
+//        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), stateTextInput);
 
-        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), nextButton);
+//        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), nextButton);
 
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), saveCardOnFileCheckBox);
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), setAsDefaultCheckBox);
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), useProfileAddressCheckBox);
-    }
+//        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), saveCardOnFileCheckBox);
+//        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), setAsDefaultCheckBox);
+//        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), useProfileAddressCheckBox);
+//    }
 
     private void setChangeFocusListeners() {
         creditCardNoEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {

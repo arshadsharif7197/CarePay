@@ -24,11 +24,10 @@ import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.adapter.CreditCardsAdapter;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
-import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.CreditCardModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethodType;
@@ -58,7 +57,7 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
     protected PaymentsModel paymentsModel;
     private double amountToMakePayment;
 
-    private String titleLabel;
+    protected String titleLabel;
     private PaymentNavigationCallback callback;
 
     private List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = new ArrayList<>();
@@ -146,12 +145,6 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
 
         Button addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
         addNewCardButton.setOnClickListener(addNewCardButtonListener);
-
-        if (paymentsModel != null) {
-            PaymentsLabelDTO paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
-            nextButton.setText(paymentsLabel.getPaymentPayText());
-            addNewCardButton.setText(paymentsLabel.getPaymentAddNewCreditCardButton());
-        }
 
         creditCardsListView = (ListView) view.findViewById(R.id.list_credit_cards);
         final CreditCardsAdapter creditCardsAdapter = new CreditCardsAdapter(getContext(), creditCardList);

@@ -27,6 +27,14 @@ import java.util.List;
 public class PracticeChooseCreditCardFragment extends ChooseCreditCardFragment {
 
     @Override
+    public void onCreate(Bundle icicle){
+        super.onCreate(icicle);
+        String name = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getPersonalDetails().getFirstName();
+        String label = Label.getLabel("payment_user_credit_card_title");
+        titleLabel = name + label;
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle icicle){
         super.onViewCreated(view, icicle);
         boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
@@ -34,7 +42,6 @@ public class PracticeChooseCreditCardFragment extends ChooseCreditCardFragment {
         Button swipeCardButton = (Button) view.findViewById(R.id.swipeCreditCarNowButton);
         if(isCloverDevice) {
             swipeCardButton.setVisibility(View.VISIBLE);
-            swipeCardButton.setText(Label.getLabel("payment_clover_swipe_now_button_label"));
             swipeCardButton.setOnClickListener(swipeCreditCarNowButtonClickListener);
         }
     }

@@ -60,9 +60,6 @@ public class PaymentDistributionEntryFragment extends BaseDialogFragment impleme
             apply.setText(Label.getLabel("payment_add_item"));
             header.setText(chargeItem.getDescription());
             amountText.setText(String.valueOf(chargeItem.getAmount()));
-        }else {
-            apply.setText(Label.getLabel("payment_apply_amount"));
-            header.setText(Label.getLabel("payment_enter_amount"));
         }
 
         View close = view.findViewById(R.id.closeViewLayout);
