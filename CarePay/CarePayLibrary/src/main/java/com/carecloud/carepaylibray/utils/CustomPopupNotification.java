@@ -179,6 +179,7 @@ public class CustomPopupNotification extends PopupWindow {
                 }
                 callback.onSwipe(GESTURE_DIRECTION_LEFT);
             }
+
             public void onSwipeBottom() {
                 if(hasStatusBar){
                     setStatusBarColor(statusBarColor);

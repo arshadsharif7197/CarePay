@@ -54,10 +54,12 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     private String patientId;
     private static final String LOG_TAG = "BasePracticeAppointment";
+
     /**
      * Shows Confirmation after Appointment Created
      */
     public void showAppointmentConfirmation() {
+
         if (isVisible()) {
                 SystemUtil.showSuccessToast(getContext(), getLabels().getAppointmentRequestSuccessMessage());
             }
