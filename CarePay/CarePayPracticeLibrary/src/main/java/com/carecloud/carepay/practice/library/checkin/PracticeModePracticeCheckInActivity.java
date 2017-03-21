@@ -24,6 +24,7 @@ import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.customdialog.FilterDialog;
 import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountReceiptDialog;
+import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.fragments.NoAddChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
@@ -36,10 +37,12 @@ import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
@@ -48,8 +51,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PracticeModePracticeCheckInActivity extends BasePracticeActivity
-        implements FilterDialog.FilterDialogListener, PaymentNavigationCallback {
+public class PracticeModePracticeCheckInActivity extends BasePracticeActivity implements FilterDialog.FilterDialogListener, PaymentNavigationCallback, ResponsibilityFragmentDialog.PayResponsibilityCallback {
+
 
     private RecyclerView checkinginRecyclerView;
     private RecyclerView waitingRoomRecyclerView;
@@ -344,6 +347,7 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity
         AppointmentDetailDialog dialog = new AppointmentDetailDialog(getContext(),
                 checkInDTO, getPatientBalanceDTOs(appointmentPayloadDTO.getPatient().getPatientId()),
                 appointmentPayloadDTO, isWaitingRoom);
+        dialog.setOwnerActivity(this);
         dialog.show();
     }
 
@@ -399,5 +403,22 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity
     @Override
     public void showAddCard(double amount) {
 
+    }
+
+    @Override
+    public void onLeftActionTapped() {
+
+    }
+
+    @Override
+    public void onRightActionTapped(PaymentsModel paymentsModel, double amount) {
+        onPayButtonClicked(amount, paymentsModel);
+    }
+
+    @Override
+    public void onDetailItemClick(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem) {
+        PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(getContext(),
+                paymentsModel, paymentLineItem, this, null);
+        detailsDialog.show();
     }
 }

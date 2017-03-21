@@ -12,18 +12,21 @@ import android.view.View;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
+import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.google.gson.Gson;
 
 import java.util.List;
 
-public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment {
+public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
+        implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
 
     protected static final String LOG_TAG = ResponsibilityBaseFragment.class.getSimpleName();
     protected AppCompatActivity appCompatActivity;
@@ -45,11 +48,11 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment {
     protected PaymentNavigationCallback actionCallback;
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
         try {
             actionCallback = (PaymentNavigationCallback) context;
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Attached Context must implement ResponsibilityActionCallback");
         }
     }
@@ -60,12 +63,17 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment {
         appCompatActivity = (AppCompatActivity) getActivity();
     }
 
-    protected void fillDetailAdapter(View view, List<PendingBalanceDTO> paymentList){
+    @Override
+    public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
+        PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(getContext(),
+                paymentDTO, paymentLineItem, actionCallback, null);
+        detailsDialog.show();
+    }
+
+    protected void fillDetailAdapter(View view, List<PendingBalanceDTO> paymentList) {
         RecyclerView paymentDetailsListRecyclerView = ((RecyclerView) view.findViewById(R.id.responsibility_line_item_recycle_view));
         paymentDetailsListRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-
-        String detailsLabel = paymentDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentResponsibilityDetails();
-        PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(), paymentDTO, paymentList, actionCallback, detailsLabel, null);
+        PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(), paymentList, this);
         paymentDetailsListRecyclerView.setAdapter(adapter);
     }
 
@@ -75,8 +83,7 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment {
             Gson gson = new Gson();
             paymentInfo = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
             String paymentsDTOString = arguments.getString(CarePayConstants.INTAKE_BUNDLE);
-            try
-            {
+            try {
                 paymentDTO = gson.fromJson(paymentsDTOString, PaymentsModel.class);
             } catch (Exception e) {
                 Log.e("PAYMENT_ERROR", e.getMessage());

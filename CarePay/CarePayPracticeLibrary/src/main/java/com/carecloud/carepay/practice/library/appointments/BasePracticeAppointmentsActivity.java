@@ -185,7 +185,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         }
         ft.addToBackStack(null);
 
-        VisitTypeFragmentDialog dialog = VisitTypeFragmentDialog.newInstance(appointmentResourcesDTO, appointmentsResultModel, getLabels().getVisitTypeHeading());
+        VisitTypeFragmentDialog dialog = VisitTypeFragmentDialog.newInstance(appointmentResourcesDTO, appointmentsResultModel);
         dialog.show(ft, tag);
     }
 
