@@ -212,7 +212,7 @@ public class SettingsCreditCardDetailsFragment extends BaseFragment {
                 ((DemographicsSettingsActivity) getActivity()).onCreditCardOperation(demographicsSettingsDTO);
                 getActivity().onBackPressed();
 
-                SystemUtil.showSuccessToast(getActivity(), demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getLabels().getSettingsSavedSuccessMessage(), true);
+                SystemUtil.showSuccessToast(getActivity(), demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getLabels().getSettingsSavedSuccessMessage());
             } catch(Exception e) {
                 Log.e(TAG, "Credit Card onPostExecute" + e.getMessage());
             }

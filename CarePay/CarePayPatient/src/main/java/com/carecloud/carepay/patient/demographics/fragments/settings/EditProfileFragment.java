@@ -321,7 +321,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            SystemUtil.showSuccessToast(getContext(), demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getLabels().getSettingsSavedSuccessMessage(), true);
+            SystemUtil.showSuccessToast(getContext(), demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getLabels().getSettingsSavedSuccessMessage());
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
         }
 
