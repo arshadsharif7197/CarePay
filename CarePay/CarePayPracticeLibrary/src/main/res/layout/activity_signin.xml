@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@drawable/screen_background"
@@ -32,6 +34,7 @@
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_22sp"
+                breeze:textKey="go_back_label"
                 app:customAssetFont="gotham_rounded_medium" />
 
             <FrameLayout
@@ -78,6 +81,7 @@
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="@dimen/signin_title_textsize"
+            breeze:textKey="welcome_signin_text"
             app:customAssetFont="gotham_rounded_medium" />
     </LinearLayout>
 
@@ -104,6 +108,8 @@
                 style="@style/EditTextStyle"
                 android:imeOptions="actionNext"
                 android:inputType="textEmailAddress"
+                android:textColorHint="@color/lightSlateGray"
+                breeze:hintKey="email_label"
                 app:customAssetFont="proxima_nova_semi_bold"/>
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
@@ -124,6 +130,8 @@
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"
                     android:paddingEnd="@dimen/dimen_30dp"
+                    android:textColorHint="@color/lightSlateGray"
+                    breeze:hintKey="password_label"
                     app:customAssetFont="proxima_nova_semi_bold" />
 
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
@@ -148,6 +156,7 @@
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_22sp"
+            breeze:textKey="signin_button"
             app:customAssetFont="gotham_rounded_medium" />
 
     </LinearLayout>
@@ -179,6 +188,7 @@
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="@dimen/forgotpassword_textsize"
+            breeze:textKey="forgot_password"
             app:customAssetFont="gotham_rounded_medium" />
 
     </LinearLayout>
