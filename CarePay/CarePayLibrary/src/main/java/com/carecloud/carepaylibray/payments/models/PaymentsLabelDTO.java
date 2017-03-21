@@ -270,12 +270,6 @@ public class PaymentsLabelDTO {
     @SerializedName("practice_payments_filter_find_patient_by_name")
     @Expose
     private String practicePaymentsFilterFindPatientByName;
-    @SerializedName("practice_payments_filter_doctors")
-    @Expose
-    private String practicePaymentsFilterDoctors;
-    @SerializedName("practice_payments_filter_locations")
-    @Expose
-    private String practicePaymentsFilterLocations;
     @SerializedName("practice_payments_filter_clear_filters")
     @Expose
     private String practicePaymentsFilterClearFilters;
@@ -1817,38 +1811,6 @@ public class PaymentsLabelDTO {
      */
     public void setPracticePaymentsFilterFindPatientByName(String practicePaymentsFilterFindPatientByName) {
         this.practicePaymentsFilterFindPatientByName = practicePaymentsFilterFindPatientByName;
-    }
-
-    /**
-     *
-     * @return practicePaymentsFilterDoctors
-     */
-    public String getPracticePaymentsFilterDoctors() {
-        return StringUtil.getLabelForView(practicePaymentsFilterDoctors);
-    }
-
-    /**
-     *
-     * @param practicePaymentsFilterDoctors practicePaymentsFilterDoctors
-     */
-    public void setPracticePaymentsFilterDoctors(String practicePaymentsFilterDoctors) {
-        this.practicePaymentsFilterDoctors = practicePaymentsFilterDoctors;
-    }
-
-    /**
-     *
-     * @return practicePaymentsFilterLocations
-     */
-    public String getPracticePaymentsFilterLocations() {
-        return StringUtil.getLabelForView(practicePaymentsFilterLocations);
-    }
-
-    /**
-     *
-     * @param practicePaymentsFilterLocations practicePaymentsFilterLocations
-     */
-    public void setPracticePaymentsFilterLocations(String practicePaymentsFilterLocations) {
-        this.practicePaymentsFilterLocations = practicePaymentsFilterLocations;
     }
 
     /**
