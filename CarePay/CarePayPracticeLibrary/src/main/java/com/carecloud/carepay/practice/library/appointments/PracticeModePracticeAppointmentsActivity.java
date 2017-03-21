@@ -52,7 +52,7 @@ import java.util.Map;
  */
 
 public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppointmentsActivity
-        implements FilterDialog.FilterCallBack,
+        implements FilterDialog.FilterDialogListener,
         DateRangePickerDialog.DateRangePickerDialogListener,
         PracticeAppointmentDialog.PracticeAppointmentDialogListener,
         PaymentNavigationCallback {
@@ -152,7 +152,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             public void onClick(View view) {
                 FilterDialog filterDialog = new FilterDialog(getContext(),
                         findViewById(R.id.activity_practice_appointments), filter,
-                        checkInLabelDTO.getPracticeCheckinFilterDoctors(), checkInLabelDTO.getPracticeCheckinFilterLocations(),
                         checkInLabelDTO.getPracticeCheckinFilter(), checkInLabelDTO.getPracticeCheckinFilterFindPatientByName(),
                         checkInLabelDTO.getPracticeCheckinFilterClearFilters());
 
