@@ -189,13 +189,15 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
                 imageView.setVisibility(View.VISIBLE);
                 initializeProfilePhotoView();
 
-                int trueHeaderColor = getResources().getColor(headerColor);
-                headerView.setBackgroundColor(Color.argb(
-                        230,
-                        Color.red(trueHeaderColor),
-                        Color.green(trueHeaderColor),
-                        Color.blue(trueHeaderColor)
-                ));
+                if (isAdded()) {
+                    int trueHeaderColor = getResources().getColor(headerColor);
+                    headerView.setBackgroundColor(Color.argb(
+                            230,
+                            Color.red(trueHeaderColor),
+                            Color.green(trueHeaderColor),
+                            Color.blue(trueHeaderColor)
+                    ));
+                }
             }
 
             @Override

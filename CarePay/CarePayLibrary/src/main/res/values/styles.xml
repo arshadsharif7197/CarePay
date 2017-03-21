@@ -21,6 +21,8 @@
         </item> <!-- color of the underlying bar when no focus -->
         <item name="colorControlActivated">@color/light_gray
         </item> <!-- hint and underlying bar when focus -->
+
+        <item name="searchViewStyle">@style/SearchViewStyleDark</item>
     </style>
 
 
@@ -202,18 +204,13 @@
         <item name="android:editTextColor">@color/white</item>
         <item name="android:textColorHint">@color/white</item>
         <item name="android:textColor">@color/white</item>
-
     </style>
 
-
-    <style name="SearchViewStyleDark" parent="Widget.AppCompat.SearchView">
+    <style name="SearchViewStyleDark" parent="Widget.AppCompat.AutoCompleteTextView">
         <item name="android:editTextColor">@color/text_color</item>
         <item name="android:textColorHint">@color/text_color</item>
         <item name="android:textColor">@color/text_color</item>
-
     </style>
-
-
 
     <!-- Responsibility styles -->
 

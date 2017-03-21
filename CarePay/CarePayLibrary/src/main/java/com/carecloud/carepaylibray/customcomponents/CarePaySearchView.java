@@ -3,7 +3,6 @@ package com.carecloud.carepaylibray.customcomponents;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SearchView;
 import android.util.AttributeSet;
 import android.widget.TextView;
@@ -154,7 +153,6 @@ public class CarePaySearchView extends SearchView {
         }
 
         TextView searchText = (TextView) findViewById(android.support.v7.appcompat.R.id.search_src_text);
-        searchText.setTextColor(ContextCompat.getColor(context, R.color.text_color));
         Typeface tf = Typeface.createFromAsset(getContext().getAssets(), assetFontName);
         searchText.setTypeface(tf);
     }
