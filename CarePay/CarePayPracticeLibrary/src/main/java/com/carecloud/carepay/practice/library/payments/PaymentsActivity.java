@@ -52,14 +52,12 @@ import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 
-public class PaymentsActivity extends BasePracticeActivity implements FilterDialog.FilterCallBack, PracticePaymentNavigationCallback {
+public class PaymentsActivity extends BasePracticeActivity implements FilterDialog.FilterDialogListener, PracticePaymentNavigationCallback {
 
     private PaymentsLabelDTO paymentsLabel;
     private PaymentsModel paymentsModel;
     private FilterModel filter;
 
-    private String practiceCheckinFilterDoctorsLabel;
-    private String practiceCheckinFilterLocationsLabel;
     private String practicePaymentsFilter;
     private String practicePaymentsFilterFindPatientByName;
     private String practicePaymentsFilterClearFilters;
@@ -91,8 +89,6 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 setTextViewById(R.id.practice_payment_filter_label, paymentsLabel.getPracticePaymentsFilter());
                 setTextViewById(R.id.practice_payment_in_office_label, paymentsLabel.getPracticePaymentsInOffice());
 
-                practiceCheckinFilterDoctorsLabel = paymentsLabel.getPracticePaymentsFilterDoctors();
-                practiceCheckinFilterLocationsLabel = paymentsLabel.getPracticePaymentsFilterLocations();
                 practicePaymentsFilter = paymentsLabel.getPracticePaymentsFilter();
                 practicePaymentsFilterFindPatientByName = paymentsLabel.getPracticePaymentsFilterFindPatientByName();
                 practicePaymentsFilterClearFilters = paymentsLabel.getPracticePaymentsFilterClearFilters();
@@ -208,7 +204,6 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             public void onClick(View view) {
                 FilterDialog filterDialog = new FilterDialog(PaymentsActivity.this,
                         findViewById(R.id.activity_practice_payment), filter,
-                        practiceCheckinFilterDoctorsLabel, practiceCheckinFilterLocationsLabel,
                         practicePaymentsFilter, practicePaymentsFilterFindPatientByName,
                         practicePaymentsFilterClearFilters);
 
