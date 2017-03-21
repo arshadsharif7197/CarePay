@@ -75,6 +75,7 @@
     <color name="gray_white">#80ffffff</color>
     <color name="gray_divider">#3378909C</color>
 
+    <color name="cardview_header_bg">#253C48</color>
     <!--Android Pay-->
     <color name="android_pay_background_color">#78C257</color>
 </resources>

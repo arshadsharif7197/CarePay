@@ -29,7 +29,6 @@ import com.google.gson.Gson;
 /**
  * Created by jorge on 29/12/16.
  */
-
 public class PaymentBalanceHistoryFragment extends BaseFragment implements PaymentPatientInterface {
 
     private View noPaymentsLayout;
