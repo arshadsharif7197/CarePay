@@ -416,9 +416,9 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
         Log.e(context.getString(R.string.alert_title_server_error), exceptionMessage);
     }
 
-    public static void showSuccessToast(Context context, Boolean isPortraitMode) {
+    public static void showSuccessToast(Context context) {
 
-        showSuccessToast(context, null, isPortraitMode);
+        showSuccessToast(context, null);
     }
 
     /**
@@ -427,13 +427,13 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
      * @param context        the context
      * @param successMessage the success message
      */
-    public static void showSuccessToast(Context context, String successMessage, Boolean isPortraitMode) {
+    public static void showSuccessToast(Context context, String successMessage) {
 
         if (null == context) {
             return;
         }
 
-        new SuccessMessageToast(context, successMessage, isPortraitMode)
+        new SuccessMessageToast(context, successMessage)
                 .show();
 
     }

@@ -360,7 +360,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                     .getAppointmentRequestSuccessMessage();
         }
 
-        SystemUtil.showSuccessToast(getContext(), appointmentRequestSuccessMessage, true );
+        SystemUtil.showSuccessToast(getContext(), appointmentRequestSuccessMessage);
     }
 
     private WorkflowServiceCallback getMakeAppointmentCallback = new WorkflowServiceCallback() {

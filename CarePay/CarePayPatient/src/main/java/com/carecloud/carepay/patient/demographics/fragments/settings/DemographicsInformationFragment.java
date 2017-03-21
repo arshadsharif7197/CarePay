@@ -1046,7 +1046,7 @@ public class DemographicsInformationFragment extends BaseFragment {
             updateProfileButton.setEnabled(true);
             progressBar.setVisibility(View.GONE);
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
-            SystemUtil.showSuccessToast(getContext(), successMessageString, true);
+            SystemUtil.showSuccessToast(getContext(), successMessageString);
         }
 
         @Override

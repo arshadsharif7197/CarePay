@@ -57,7 +57,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
      */
     public void showAppointmentConfirmation() {
         if (isVisible()) {
-                SystemUtil.showSuccessToast(getContext(), getLabels().getAppointmentRequestSuccessMessage(), false);
+                SystemUtil.showSuccessToast(getContext(), getLabels().getAppointmentRequestSuccessMessage());
             }
 
             onAppointmentRequestSuccess();
