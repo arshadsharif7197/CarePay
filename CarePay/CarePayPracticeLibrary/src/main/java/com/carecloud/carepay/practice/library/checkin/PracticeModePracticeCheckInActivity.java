@@ -51,7 +51,7 @@ import java.util.List;
 import java.util.Map;
 
 public class PracticeModePracticeCheckInActivity extends BasePracticeActivity
-        implements FilterDialog.FilterCallBack, PaymentNavigationCallback {
+        implements FilterDialog.FilterDialogListener, PaymentNavigationCallback {
 
     private RecyclerView checkinginRecyclerView;
     private RecyclerView waitingRoomRecyclerView;
@@ -130,8 +130,6 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity
             public void onClick(View view) {
                 FilterDialog filterDialog = new FilterDialog(getContext(),
                         findViewById(R.id.activity_checked_in), filter,
-                        Label.getLabel("practice_checkin_filter_doctors"),
-                        Label.getLabel("practice_checkin_filter_locations"),
                         Label.getLabel("practice_checkin_filter"),
                         Label.getLabel("practice_checkin_filter_find_patient_by_name"),
                         Label.getLabel("practice_checkin_filter_clear_filters"));
