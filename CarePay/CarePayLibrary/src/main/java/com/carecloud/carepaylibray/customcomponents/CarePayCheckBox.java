@@ -81,7 +81,7 @@ public class CarePayCheckBox extends CheckBox {
     /**
      * get applied font
      *
-     * @return
+     * @return font attribute
      */
     public int getFontAttribute() {
         return fontAttribute;

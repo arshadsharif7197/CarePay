@@ -124,7 +124,7 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
         amountTextView.setFocusable(false);
         amountTextView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 callback.pickAmount(balanceItem);
             }
         });
