@@ -129,7 +129,7 @@
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
             <ImageView
-                android:layout_width="@dimen/dimen_30dp"
+                android:layout_width="@dimen/dimen_25dp"
                 android:layout_height="match_parent"
                 android:id="@+id/show_password_button"
                 android:layout_gravity="end|center_vertical"
