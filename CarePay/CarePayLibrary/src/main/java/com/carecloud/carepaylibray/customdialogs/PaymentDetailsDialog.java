@@ -76,16 +76,16 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
         payNowButton.setOnClickListener(this);
 
         if (paymentReceiptModel != null) {
-            String totalAmount = StringUtil.getFormattedBalanceAmount(paymentPayload.getAmount());
-            ((TextView) findViewById(R.id.payment_details_total_paid)).setText(totalAmount);
-            ((TextView) findViewById(R.id.payment_receipt_title)).setText(Label.getLabel("payment_receipt_title"));
-            ((TextView) findViewById(R.id.payment_receipt_total_label)).setText(Label.getLabel("payment_details_patient_balance_label"));
-            ((TextView) findViewById(R.id.payment_receipt_total_value)).setText(totalAmount);
-            ((TextView) findViewById(R.id.avTextView)).setText(StringUtil.getShortName(Label.getLabel("payment_receipt_title")));
+                String totalAmount = StringUtil.getFormattedBalanceAmount(paymentPayload.getAmount());
+                ((TextView) findViewById(R.id.payment_details_total_paid)).setText(totalAmount);
+                ((TextView) findViewById(R.id.payment_receipt_title)).setText(Label.getLabel("payment_receipt_title"));
+                ((TextView) findViewById(R.id.payment_receipt_total_label)).setText(Label.getLabel("payment_details_patient_balance_label"));
+                ((TextView) findViewById(R.id.payment_receipt_total_value)).setText(totalAmount);
+                ((TextView) findViewById(R.id.avTextView)).setText(StringUtil.getShortName(Label.getLabel("payment_receipt_title")));
 
-            payNowButton.setText(Label.getLabel("payment_details_pay_now"));
+                payNowButton.setText(Label.getLabel("payment_details_pay_now"));
 
-            ImageView dialogCloseHeader;
+                ImageView dialogCloseHeader;
 
             ApplicationMode.ApplicationType appMode = ((IApplicationSession) context).getApplicationMode().getApplicationType();
             if (appMode == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE || appMode == ApplicationMode.ApplicationType.PRACTICE) {

@@ -63,12 +63,12 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
         appCompatActivity = (AppCompatActivity) getActivity();
     }
 
-    @Override
-    public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
-        PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(getContext(),
-                paymentDTO, paymentLineItem, actionCallback, null);
-        detailsDialog.show();
-    }
+//    @Override
+//    public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
+//        PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(getContext(),
+//                paymentDTO, paymentLineItem, actionCallback, null);
+//        detailsDialog.show();
+//    }
 
     protected void fillDetailAdapter(View view, List<PendingBalanceDTO> paymentList) {
         RecyclerView paymentDetailsListRecyclerView = ((RecyclerView) view.findViewById(R.id.responsibility_line_item_recycle_view));

@@ -6,12 +6,15 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.patient.payment.interfaces.PaymentPatientInterface;
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.patient.payment.adapters.PaymentsSectionsPagerAdapter;
@@ -138,9 +141,17 @@ public class PaymentBalanceHistoryFragment extends BaseFragment implements Payme
 
     @Override
     public void loadPaymentAmountScreen(PendingBalancePayloadDTO model, PaymentsModel paymentDTO) {
-        PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(getContext(), paymentDTO,
-                model, callback, null);
-        detailsDialog.show();
+        String tag = PaymentDetailsFragmentDialog.class.getSimpleName();
+        FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+        Fragment prev = getChildFragmentManager().findFragmentByTag(tag);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
+                .newInstance(paymentDTO, model);
+        dialog.show(ft, tag);
     }
 
 }
