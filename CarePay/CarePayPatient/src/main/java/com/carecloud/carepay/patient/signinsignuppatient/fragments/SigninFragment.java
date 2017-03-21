@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
@@ -394,7 +395,7 @@ public class SigninFragment extends BaseFragment {
             hideProgressDialog();
             signInButton.setEnabled(true);
             getWorkflowServiceHelper().setAppAuthorizationHelper(null);
-            SystemUtil.showDefaultFailureDialog(getActivity());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -417,7 +418,7 @@ public class SigninFragment extends BaseFragment {
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             signInButton.setEnabled(true);
-            SystemUtil.showDefaultFailureDialog(getActivity());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -441,9 +442,7 @@ public class SigninFragment extends BaseFragment {
         @Override
         public void onLoginFailure(String exceptionMessage) {
             signInButton.setEnabled(true);
-            SystemUtil.showFailureDialogMessage(getContext(),
-                    "Sign-in failed",
-                    "Invalid user id or password");
+            showErrorNotification(CarePayConstants.INVALID_LOGIN_ERROR_MESSAGE);
 
         }
     };

@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,6 +74,7 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
     private SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
 
     private AppointmentNavigationCallback callback;
+    private static final String TAG = "AvailableHoursFragment";
 
     @Override
     public void onAttach(Context context) {
@@ -440,7 +442,8 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.doDefaultFailureBehavior(getActivity(), exceptionMessage);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            Log.e(TAG, exceptionMessage);
         }
     };
 

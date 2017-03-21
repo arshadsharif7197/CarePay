@@ -500,7 +500,7 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
             if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
                 getWorkflowServiceHelper().setAppAuthorizationHelper(null);
             }
-            SystemUtil.showDefaultFailureDialog(getContext());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -543,7 +543,7 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
             hideProgressDialog();
             getWorkflowServiceHelper().setAppAuthorizationHelper(null);
             signInButton.setClickable(true);
-            SystemUtil.showDefaultFailureDialog(getContext());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -567,7 +567,7 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
             hideProgressDialog();
             signInButton.setClickable(true);
             getWorkflowServiceHelper().setAppAuthorizationHelper(null);
-            SystemUtil.showDefaultFailureDialog(SigninActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -589,7 +589,7 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             signInButton.setClickable(true);
-            SystemUtil.showDefaultFailureDialog(SigninActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -623,7 +623,7 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             signInButton.setClickable(true);
-            SystemUtil.showDefaultFailureDialog(SigninActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -656,9 +656,10 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
         @Override
         public void onLoginFailure(String exceptionMessage) {
             signInButton.setClickable(true);
-            SystemUtil.showFailureDialogMessage(SigninActivity.this,
-                    "Sign-in failed",
-                    "Invalid user id or password");
+            showErrorNotification(CarePayConstants.INVALID_LOGIN_ERROR_MESSAGE);
+//            SystemUtil.showFailureDialogMessage(SigninActivity.this,
+//                    "Sign-in failed",
+//                    "Invalid user id or password");
 
         }
     };

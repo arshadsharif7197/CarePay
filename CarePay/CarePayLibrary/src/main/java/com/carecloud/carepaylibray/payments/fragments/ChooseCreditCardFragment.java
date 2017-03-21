@@ -300,7 +300,7 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(getContext());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             System.out.print(exceptionMessage);
         }
     };
