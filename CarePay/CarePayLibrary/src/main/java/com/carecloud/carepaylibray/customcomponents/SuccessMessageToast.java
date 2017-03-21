@@ -3,6 +3,8 @@ package com.carecloud.carepaylibray.customcomponents;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.os.Build;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +26,7 @@ public class SuccessMessageToast extends Toast {
      * @param context The context to use.  Usually your {@link Application}
      *                or {@link Activity} object.
      */
-    public SuccessMessageToast(Context context, String successMessage) {
+    public SuccessMessageToast(Context context, String successMessage, Boolean isPortraitMode) {
         super(context);
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -32,10 +34,18 @@ public class SuccessMessageToast extends Toast {
         if(!StringUtil.isNullOrEmpty(successMessage))
         {
             TextView successTextView = (TextView) layout.findViewById(R.id.success_message_toast_textview);
-            successTextView.setText(successMessage);
+            if (Build.VERSION.SDK_INT >= 24){
+                successTextView.setText(Html.fromHtml(successMessage, Html.FROM_HTML_MODE_LEGACY));
+            } else{
+                successTextView.setText(Html.fromHtml(successMessage));
+            }
         }
         setView(layout);
-        setGravity(Gravity.FILL_HORIZONTAL|Gravity.TOP, 0, 0);
+        if(isPortraitMode){
+            setGravity(Gravity.FILL_HORIZONTAL|Gravity.TOP, 0, 0);
+        }else {
+            setGravity(Gravity.TOP, 0, 0);
+        }
         setDuration(Toast.LENGTH_SHORT);
     }
 
