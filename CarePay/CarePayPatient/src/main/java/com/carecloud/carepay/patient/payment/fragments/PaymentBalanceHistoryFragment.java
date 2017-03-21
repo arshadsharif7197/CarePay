@@ -60,8 +60,6 @@ public class PaymentBalanceHistoryFragment extends BaseFragment implements Payme
 
         final View balanceHistoryView = inflater.inflate(R.layout.fragment_payment_balance_history, container, false);
         Bundle bundle = getArguments();
-        Gson gson = new Gson();
-        String paymentsDTOString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
 
         noPaymentsLayout = balanceHistoryView.findViewById(R.id.no_payment_layout);
         pagerLayout = balanceHistoryView.findViewById(R.id.payments_pager_layout);
@@ -71,6 +69,8 @@ public class PaymentBalanceHistoryFragment extends BaseFragment implements Payme
         noPaymentTitle.setText(Label.getLabel("no_payment_title"));
         noPaymentDesc.setText(Label.getLabel("no_payment_description"));
 
+        String paymentsDTOString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
+        Gson gson = new Gson();
         PaymentsModel paymentDTO = gson.fromJson(paymentsDTOString, PaymentsModel.class);
         setupViewPager(balanceHistoryView, paymentDTO);
         hideNoPaymentsLayout();
