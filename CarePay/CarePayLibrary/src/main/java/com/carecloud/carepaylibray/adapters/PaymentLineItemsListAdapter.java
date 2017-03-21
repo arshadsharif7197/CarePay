@@ -27,9 +27,11 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
      * @param context     context
      * @param detailsList details list
      */
-    public PaymentLineItemsListAdapter(Context context, List<PendingBalanceDTO> detailsList) {
+    public PaymentLineItemsListAdapter(Context context, List<PendingBalanceDTO> detailsList,
+                                       PaymentLineItemCallback callback) {
         this.context = context;
         this.detailsList = detailsList;
+        this.callback = callback;
     }
 
     @Override
@@ -85,9 +87,5 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
 
     public interface PaymentLineItemCallback {
         void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem);
-    }
-
-    public void setCallback(PaymentLineItemCallback callback) {
-        this.callback = callback;
     }
 }

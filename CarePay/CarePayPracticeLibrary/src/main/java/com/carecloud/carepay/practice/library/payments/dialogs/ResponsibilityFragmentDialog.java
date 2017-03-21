@@ -18,7 +18,6 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customdialogs.BaseDialogFragment;
-import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -70,10 +69,9 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
     }
 
     /**
-     *
      * @param paymentsModel the payment model
-     * @param leftLabel the label of the left bottom button
-     * @param rightLabel the label of the right bottom button
+     * @param leftLabel     the label of the left bottom button
+     * @param rightLabel    the label of the right bottom button
      * @return new instance of a ResponsibilityFragmentDialog
      */
     public static ResponsibilityFragmentDialog newInstance(PaymentsModel paymentsModel, String leftLabel, String rightLabel) {
@@ -194,8 +192,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
     private void initializePaymentLines(View view, List<PendingBalanceDTO> balances) {
         RecyclerView amountDetails = (RecyclerView) view.findViewById(R.id.payment_responsibility_balance_details);
         amountDetails.setLayoutManager(new LinearLayoutManager(getContext()));
-        PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(getContext(), balances);
-        adapter.setCallback(this);
+        PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(getContext(), balances, this);
         amountDetails.setAdapter(adapter);
     }
 
@@ -224,13 +221,6 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
                 StringUtil.getFormattedBalanceAmount(owedAmount);
         ((TextView) view.findViewById(R.id.payment_responsibility_balance)).setText(text);
     }
-
-//    private OnDismissListener dismissDetailsListener = new OnDismissListener() {
-//        @Override
-//        public void onDismiss(DialogInterface dialog) {
-//            ResponsibilityFragmentDialog.this.dismiss();
-//        }
-//    };
 
     private void initializeFooter(View view) {
         Button leftButton = (Button) view.findViewById(R.id.payment_plan_button);
