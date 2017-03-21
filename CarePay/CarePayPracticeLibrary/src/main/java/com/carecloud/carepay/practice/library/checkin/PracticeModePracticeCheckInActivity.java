@@ -51,7 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PracticeModePracticeCheckInActivity extends BasePracticeActivity implements FilterDialog.FilterCallBack, PaymentNavigationCallback, ResponsibilityFragmentDialog.PayResponsibilityCallback {
+public class PracticeModePracticeCheckInActivity extends BasePracticeActivity implements FilterDialog.FilterDialogListener, PaymentNavigationCallback, ResponsibilityFragmentDialog.PayResponsibilityCallback {
 
 
     private RecyclerView checkinginRecyclerView;
