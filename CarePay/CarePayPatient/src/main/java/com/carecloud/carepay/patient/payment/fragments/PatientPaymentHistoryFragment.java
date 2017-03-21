@@ -9,21 +9,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.payment.adapter.PaymentBalancesAdapter;
-import com.carecloud.carepay.patient.payment.adapter.PaymentHistoryAdapter;
+import com.carecloud.carepay.patient.payment.adapters.PaymentBalancesAdapter;
+import com.carecloud.carepay.patient.payment.adapters.PaymentHistoryAdapter;
+import com.carecloud.carepay.patient.payment.interfaces.PaymentPatientInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
-import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
-import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
-import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLinksDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -33,29 +31,22 @@ import java.util.Map;
 /**
  * Created by jorge on 02/01/17.
  */
-
-public class PaymentHistoryFragment extends BaseFragment implements PaymentBalancesAdapter.OnBalanceListItemClickListener{
+public class PatientPaymentHistoryFragment extends BaseFragment implements PaymentBalancesAdapter.OnBalanceListItemClickListener {
 
     public static final int SECTION_PENDING = 1;
     public static final int SECTION_HISTORY = 2;
 
 
-    private static final String LOG = PaymentHistoryFragment.class.getSimpleName();
+    private static final String LOG = PatientPaymentHistoryFragment.class.getSimpleName();
     private PaymentsModel paymentDTO;
-    private ProgressBar progressBar;
     private RecyclerView historyRecyclerView;
-    private double total;
-    private EmptyPaymentListCallback emptyPaymentListCallback;
     private int sectionNumber;
     private View noPaymentsLayout;
-    private TextView noPaymentTitle;
-    private TextView noPaymentDesc;
-
-    private PaymentNavigationCallback payNowClickListener;
+    private PaymentPatientInterface callback;
 
 
-    public static PaymentHistoryFragment newInstance(int sectionNumber, PaymentsModel paymentDTO) {
-        PaymentHistoryFragment fragment = new PaymentHistoryFragment();
+    public static PatientPaymentHistoryFragment newInstance(int sectionNumber, PaymentsModel paymentDTO) {
+        PatientPaymentHistoryFragment fragment = new PatientPaymentHistoryFragment();
         Gson gson = new Gson();
         Bundle args = new Bundle();
         args.putInt(CarePayConstants.TAB_SECTION_NUMBER, sectionNumber);
@@ -66,28 +57,31 @@ public class PaymentHistoryFragment extends BaseFragment implements PaymentBalan
     }
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
-        try{
-            payNowClickListener = (PaymentNavigationCallback) context;
-        }catch (ClassCastException cce){
-            throw new ClassCastException("Attached context must implement PayNowClickListener");
+        try {
+            callback = (PaymentPatientInterface) getTargetFragment();
+        } catch (ClassCastException cce) {
+            throw new ClassCastException("Attached context must implement PaymentPatientInterface");
         }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        callback = null;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_balance_history, container, false);
-        progressBar = (ProgressBar)rootView.findViewById(R.id.history_progress_bar);
+        View rootView = inflater.inflate(R.layout.fragment_patient_balance_history, container, false);
 
         Gson gson = new Gson();
         String paymentsDTOString = getArguments().getString(CarePayConstants.INTAKE_BUNDLE);
         paymentDTO = gson.fromJson(paymentsDTOString, PaymentsModel.class);
         historyRecyclerView = (RecyclerView) rootView.findViewById(R.id.history_recycler_view);
         noPaymentsLayout = rootView.findViewById(R.id.no_payment_layout);
-        noPaymentTitle = (TextView) rootView.findViewById(com.carecloud.carepaylibrary.R.id.no_payment_message_title);
-        noPaymentDesc = (TextView) rootView.findViewById(com.carecloud.carepaylibrary.R.id.no_payment_message_desc);
 
         hideNoPaymentsLayout();
         setUpRecyclerView();
@@ -100,40 +94,40 @@ public class PaymentHistoryFragment extends BaseFragment implements PaymentBalan
         Map<String, String> queryString = new HashMap<>();
         PaymentsLinksDTO paymentsLinks = paymentDTO.getPaymentsMetadata().getPaymentsLinks();
 
-        switch (sectionNumber){
-            case SECTION_PENDING:{
+        switch (sectionNumber) {
+            case SECTION_PENDING: {
                 //check if we have valid data
-                if(!paymentDTO.getPaymentPayload().getPatientBalances().isEmpty() &&
-                        paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).hasValidMetadata()){
+                if (!paymentDTO.getPaymentPayload().getPatientBalances().isEmpty() &&
+                        paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).hasValidMetadata()) {
                     PendingBalanceMetadataDTO metadata = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
 
-                    queryString.put("practice_id",  metadata.getPracticeId() );
+                    queryString.put("practice_id", metadata.getPracticeId());
                     queryString.put("practice_mgmt", metadata.getPracticeMgmt());
                     queryString.put("patient_id", metadata.getPatientId());
                     getWorkflowServiceHelper().execute(paymentsLinks.getPaymentsPatientBalances(), balancesCallback, queryString);
 
-                }else{
+                } else {
                     showNoPaymentsLayout();
-                    emptyPaymentListCallback.listIsEmpty(sectionNumber);
+                    callback.showNoPaymentsLayout(sectionNumber);
                 }
 
                 break;
             }
-            case SECTION_HISTORY:{
+            case SECTION_HISTORY: {
                 //check if we have valid data
-                if(paymentDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges().hasValidMetadata()){
+                if (paymentDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges().hasValidMetadata()) {
                     PendingBalanceMetadataDTO metadata = paymentDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges().getMetadata();
 
-                    queryString.put("practice_id",  metadata.getPracticeId() );
+                    queryString.put("practice_id", metadata.getPracticeId());
                     queryString.put("practice_mgmt", metadata.getPracticeMgmt());
                     queryString.put("patient_id", metadata.getPatientId());
                     queryString.put("start_date", "2015-01-01");
                     queryString.put("end_date", "2030-01-01");
                     getWorkflowServiceHelper().execute(paymentsLinks.getPaymentsHistory(), historyCallback, queryString);
 
-                }else{
+                } else {
                     showNoPaymentsLayout();
-                    emptyPaymentListCallback.listIsEmpty(sectionNumber);
+                    callback.showNoPaymentsLayout(sectionNumber);
                 }
 
                 break;
@@ -141,11 +135,11 @@ public class PaymentHistoryFragment extends BaseFragment implements PaymentBalan
         }
     }
 
-    private void showNoPaymentsLayout(){
+    private void showNoPaymentsLayout() {
         noPaymentsLayout.setVisibility(View.VISIBLE);
     }
 
-    private void hideNoPaymentsLayout(){
+    private void hideNoPaymentsLayout() {
         noPaymentsLayout.setVisibility(View.GONE);
     }
 
@@ -162,24 +156,18 @@ public class PaymentHistoryFragment extends BaseFragment implements PaymentBalan
             Gson gson = new Gson();
             try {
                 paymentDTO = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
-                noPaymentTitle.setText(paymentDTO.getPaymentsMetadata().getPaymentsLabel().getNoPaymentTitle());
-                noPaymentDesc.setText(paymentDTO.getPaymentsMetadata().getPaymentsLabel().getNoPendingPaymentDescription());
-
-
                 PaymentBalancesAdapter paymentBalancesAdapter = new PaymentBalancesAdapter(
-                        getActivity(), paymentDTO, PaymentHistoryFragment.this);
+                        getActivity(), paymentDTO, PatientPaymentHistoryFragment.this);
                 historyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 historyRecyclerView.setAdapter(paymentBalancesAdapter);
 
-                if(paymentBalancesAdapter.getItemCount()<1){
+                if (paymentBalancesAdapter.getItemCount() < 1) {
                     //show noPayment view
                     showNoPaymentsLayout();
-                    if(emptyPaymentListCallback!=null) {
-                        emptyPaymentListCallback.listIsEmpty(sectionNumber);
-                    }
+                    callback.showNoPaymentsLayout(sectionNumber);
                 }
 
-            } catch (Exception e){
+            } catch (Exception e) {
                 Log.e(LOG, e.getMessage());
                 SystemUtil.showDefaultFailureDialog(getActivity());
             }
@@ -205,22 +193,17 @@ public class PaymentHistoryFragment extends BaseFragment implements PaymentBalan
             Gson gson = new Gson();
             try {
                 paymentDTO = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
-                noPaymentTitle.setText(paymentDTO.getPaymentsMetadata().getPaymentsLabel().getNoPaymentTitle());
-                noPaymentDesc.setText(paymentDTO.getPaymentsMetadata().getPaymentsLabel().getNoPaymentHistoryDescription());
-
                 PaymentHistoryAdapter historyAdapter = new PaymentHistoryAdapter(getActivity(), paymentDTO);
                 historyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 historyRecyclerView.setAdapter(historyAdapter);
 
-                if(historyAdapter.getItemCount()<1){
+                if (historyAdapter.getItemCount() < 1) {
                     //show noPayment view
                     showNoPaymentsLayout();
-                    if(emptyPaymentListCallback!=null) {
-                        emptyPaymentListCallback.listIsEmpty(sectionNumber);
-                    }
+                    callback.showNoPaymentsLayout(sectionNumber);
                 }
 
-            } catch (Exception e){
+            } catch (Exception e) {
                 Log.e(LOG, e.getMessage());
                 SystemUtil.showDefaultFailureDialog(getActivity());
             }
@@ -235,24 +218,13 @@ public class PaymentHistoryFragment extends BaseFragment implements PaymentBalan
     };
 
     private void loadPaymentAmountScreen(PendingBalancePayloadDTO model) {
-        PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(getContext() , paymentDTO, model, payNowClickListener, null);
-        detailsDialog.show();
+        callback.loadPaymentAmountScreen(model, paymentDTO);
     }
 
     @Override
     public void onBalanceListItemClickListener(int position) {
         PendingBalancePayloadDTO model = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload().get(position);
-        total = model.getAmount();
         loadPaymentAmountScreen(model);
-    }
-
-
-    public void setEmptyPaymentListCallback(EmptyPaymentListCallback emptyPaymentListCallback) {
-        this.emptyPaymentListCallback = emptyPaymentListCallback;
-    }
-
-    public interface EmptyPaymentListCallback{
-        void listIsEmpty(int sectionNumber);
     }
 
 }

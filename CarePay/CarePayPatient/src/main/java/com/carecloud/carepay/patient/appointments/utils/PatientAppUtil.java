@@ -25,8 +25,8 @@ public class PatientAppUtil {
             return;
         }
 
-        new CustomPopupNotification(context, parentView, null, successMessage, 4, false, null)
-                .showPopWindow();
+       // new CustomPopupNotification(context, parentView, null, successMessage, 4, false, null)
+         //       .showPopWindow();
 
     }
 

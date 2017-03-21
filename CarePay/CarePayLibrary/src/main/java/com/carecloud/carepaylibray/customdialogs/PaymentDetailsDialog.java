@@ -15,13 +15,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.PaymentItemsListAdapter;
 import com.carecloud.carepaylibray.base.IApplicationSession;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 public class PaymentDetailsDialog extends Dialog implements View.OnClickListener {
@@ -62,7 +62,7 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
         onInitialization();
         setCancelable(false);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        if(size>0) {
+        if (size > 0) {
             WindowManager.LayoutParams params = getWindow().getAttributes();
             params.height = WindowManager.LayoutParams.WRAP_CONTENT;
             params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * size);
@@ -76,47 +76,38 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
         payNowButton.setOnClickListener(this);
 
         if (paymentReceiptModel != null) {
-            PaymentsLabelDTO paymentsLabel = paymentReceiptModel.getPaymentsMetadata().getPaymentsLabel();
-            if (paymentsLabel != null) {
-                String totalAmount = StringUtil.getFormattedBalanceAmount(paymentPayload.getAmount());
-                ((TextView) findViewById(R.id.payment_details_total_paid)).setText(totalAmount);
-                ((TextView) findViewById(R.id.payment_receipt_title)).setText(paymentsLabel.getPaymentReceiptTitle());
-                ((TextView) findViewById(R.id.payment_receipt_total_label)).setText(paymentsLabel.getPaymentDetailsPatientBalanceLabel());
-                ((TextView) findViewById(R.id.payment_receipt_total_value)).setText(totalAmount);
-                ((TextView) findViewById(R.id.avTextView)).setText(StringUtil.getShortName(paymentsLabel.getPaymentReceiptTitle()));
+            String totalAmount = StringUtil.getFormattedBalanceAmount(paymentPayload.getAmount());
+            ((TextView) findViewById(R.id.payment_details_total_paid)).setText(totalAmount);
+            ((TextView) findViewById(R.id.payment_receipt_title)).setText(Label.getLabel("payment_receipt_title"));
+            ((TextView) findViewById(R.id.payment_receipt_total_label)).setText(Label.getLabel("payment_details_patient_balance_label"));
+            ((TextView) findViewById(R.id.payment_receipt_total_value)).setText(totalAmount);
+            ((TextView) findViewById(R.id.avTextView)).setText(StringUtil.getShortName(Label.getLabel("payment_receipt_title")));
 
-                payNowButton.setText(paymentsLabel.getPaymentDetailsPayNow());
+            payNowButton.setText(Label.getLabel("payment_details_pay_now"));
 
-                ImageView dialogCloseHeader;
-                TextView closeLabel;
+            ImageView dialogCloseHeader;
 
-                ApplicationMode.ApplicationType appMode = ((IApplicationSession) context).getApplicationMode().getApplicationType();
-                if (appMode ==  ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE || appMode == ApplicationMode.ApplicationType.PRACTICE) {
+            ApplicationMode.ApplicationType appMode = ((IApplicationSession) context).getApplicationMode().getApplicationType();
+            if (appMode == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE || appMode == ApplicationMode.ApplicationType.PRACTICE) {
 
-                    dialogCloseHeader = (ImageView) findViewById(R.id.payment_close_button);
-                    if(dialogCloseHeader!=null) {
-                        dialogCloseHeader.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                dismiss();
-                            }
-                        });
+                dialogCloseHeader = (ImageView) findViewById(R.id.payment_close_button);
+                if (dialogCloseHeader != null) {
+                    dialogCloseHeader.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dismiss();
+                        }
+                    });
 
-                        findViewById(R.id.payment_close_Layout).setVisibility(View.VISIBLE);
-                    }
-                } else {
-                    dialogCloseHeader = (ImageView) findViewById(R.id.dialog_close_header);
-                    if(dialogCloseHeader!=null) {
-                        dialogCloseHeader.setVisibility(View.VISIBLE);
-                        dialogCloseHeader.setOnClickListener(this);
-                    }
-                    size = 0.90;
+                    findViewById(R.id.payment_close_Layout).setVisibility(View.VISIBLE);
                 }
-
-
-
-
-
+            } else {
+                dialogCloseHeader = (ImageView) findViewById(R.id.dialog_close_header);
+                if (dialogCloseHeader != null) {
+                    dialogCloseHeader.setVisibility(View.VISIBLE);
+                    dialogCloseHeader.setOnClickListener(this);
+                }
+                size = 0.90;
             }
         }
 
@@ -135,7 +126,7 @@ public class PaymentDetailsDialog extends Dialog implements View.OnClickListener
         } else if (viewId == R.id.payment_details_pay_now_button) {
             callback.onPayButtonClicked(paymentPayload.getAmount(), paymentReceiptModel);
             dismiss();
-            if(payDismissListener!=null){
+            if (payDismissListener != null) {
                 payDismissListener.onDismiss(this);
             }
         }

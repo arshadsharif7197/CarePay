@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.payment.adapter;
+package com.carecloud.carepay.patient.payment.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
