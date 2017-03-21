@@ -411,6 +411,9 @@ public class WorkflowServiceHelper {
         return (string == null || string.trim().equals(""));
     }
 
+    /**
+     * Stop all calls in progress
+     */
     public void interrupt(){
         while(!callStack.isEmpty()){
             Call<?> call = callStack.peek();

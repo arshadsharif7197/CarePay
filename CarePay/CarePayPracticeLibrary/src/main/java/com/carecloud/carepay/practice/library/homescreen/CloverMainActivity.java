@@ -328,23 +328,23 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
         Gson gson = new Gson();
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-            PracticeHomeScreenTransitionsDTO transitionsDTO = DtoHelper.getConvertedDTO(PracticeHomeScreenTransitionsDTO.class, transitionsAsJsonObject);
-            TransitionDTO transitionDTO = transitionsDTO.getPracticeAppointments();
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
             queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
 
+            PracticeHomeScreenTransitionsDTO transitionsDTO = DtoHelper.getConvertedDTO(PracticeHomeScreenTransitionsDTO.class, transitionsAsJsonObject);
+            TransitionDTO transitionDTO = transitionsDTO.getPracticeAppointments();
             getWorkflowServiceHelper().interrupt();
             getWorkflowServiceHelper().execute(transitionDTO, checkInCallback, queryMap);
 
         } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
             getApplicationPreferences().setNavigateToAppointments(true);
-            PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
-            TransitionDTO transitionDTO = transitionsDTO.getPatientAppointments();
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
             queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
 
+            PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
+            TransitionDTO transitionDTO = transitionsDTO.getPatientAppointments();
             getWorkflowServiceHelper().interrupt();
             getWorkflowServiceHelper().execute(transitionDTO, checkInCallback, queryMap);
         }
