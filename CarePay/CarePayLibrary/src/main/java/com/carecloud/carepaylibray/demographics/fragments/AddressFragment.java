@@ -37,12 +37,12 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.smartystreets.api.us_zipcode.City;
 
-import java.util.Arrays;
-
 import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
+
+import java.util.Arrays;
 
 /**
  * A simple {@link CheckInDemographicsBaseFragment} subclass.
@@ -619,7 +619,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
 
         setHeaderTitle(globalLabelsMetaDTO.getDemographicsAddressSection(), view);
-        initNextButton(globalLabelsMetaDTO.getDemographicsReviewNextButton(), null, view);
+        initNextButton(null, view);
 
 
         cityEditText = (EditText) view.findViewById(R.id.cityId);
