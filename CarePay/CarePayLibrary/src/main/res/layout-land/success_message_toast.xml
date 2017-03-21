@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="383dp"
+        android:layout_height="144dp"
+        android:orientation="horizontal"
+        android:background="@drawable/success_notification_background"
+        android:padding="@dimen/apt_popup_parent_padding"
+    >
+
+        <ImageView
+            android:id="@+id/success_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icn_notification_basic_white_check" />
+
+        <TextView
+            android:id="@+id/success_message_toast_textview"
+            style="@style/AppointmentPopupMessageText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Success"/>
+
+    </LinearLayout>
+
