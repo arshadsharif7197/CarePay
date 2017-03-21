@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -53,8 +54,8 @@ public class PaymentBalanceHistoryFragment  extends BaseFragment {
         noPaymentTitle = (TextView) balanceHistoryView.findViewById(R.id.no_payment_message_title);
         noPaymentDesc = (TextView) balanceHistoryView.findViewById(R.id.no_payment_message_desc);
 
-        noPaymentTitle.setText(paymentDTO.getPaymentsMetadata().getPaymentsLabel().getNoPaymentTitle());
-        noPaymentDesc.setText(paymentDTO.getPaymentsMetadata().getPaymentsLabel().getNoPaymentDescription());
+        noPaymentTitle.setText(Label.getLabel("no_payment_title"));
+        noPaymentDesc.setText(Label.getLabel("no_payment_description"));
 
         setupViewPager(balanceHistoryView, paymentDTO);
         hideNoPaymentsLayout();
@@ -84,8 +85,8 @@ public class PaymentBalanceHistoryFragment  extends BaseFragment {
         pendingPaymentsFragment.setEmptyPaymentListCallback(emptyPaymentListCallback);
         paymentHistoryFragment.setEmptyPaymentListCallback(emptyPaymentListCallback);
 
-        String pendingTabTitle = paymentDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPatientBalanceTab();
-        String historyTabTitle = paymentDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPatientHistoryTab();
+        String pendingTabTitle = Label.getLabel("payment_patient_balance_tab");
+        String historyTabTitle = Label.getLabel("payment_patient_history_tab");
 
         adapter.addFragment(pendingPaymentsFragment, StringUtil.isNullOrEmpty(pendingTabTitle)?
                 CarePayConstants.NOT_DEFINED : pendingTabTitle);
