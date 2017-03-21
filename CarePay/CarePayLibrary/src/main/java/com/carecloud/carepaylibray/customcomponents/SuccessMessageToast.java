@@ -3,6 +3,9 @@ package com.carecloud.carepaylibray.customcomponents;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.os.Build;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.qrcodescanner.DisplayUtils;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 /**
@@ -26,16 +30,24 @@ public class SuccessMessageToast extends Toast {
      */
     public SuccessMessageToast(Context context, String successMessage) {
         super(context);
-
+        int orientation = DisplayUtils.getScreenOrientation(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout = inflater.inflate(R.layout.success_message_toast, null);
         if(!StringUtil.isNullOrEmpty(successMessage))
         {
             TextView successTextView = (TextView) layout.findViewById(R.id.success_message_toast_textview);
-            successTextView.setText(successMessage);
+            if (Build.VERSION.SDK_INT >= 24){
+                successTextView.setText(Html.fromHtml(successMessage, Html.FROM_HTML_MODE_LEGACY));
+            } else{
+                successTextView.setText(Html.fromHtml(successMessage));
+            }
         }
         setView(layout);
-        setGravity(Gravity.FILL_HORIZONTAL|Gravity.TOP, 0, 0);
+        if(orientation == Configuration.ORIENTATION_PORTRAIT){
+            setGravity(Gravity.FILL_HORIZONTAL|Gravity.TOP, 0, 0);
+        }else {
+            setGravity(Gravity.TOP, 0, 0);
+        }
         setDuration(Toast.LENGTH_SHORT);
     }
 

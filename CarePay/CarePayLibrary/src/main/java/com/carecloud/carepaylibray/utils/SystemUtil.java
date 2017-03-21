@@ -33,6 +33,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.ISession;
+import com.carecloud.carepaylibray.customcomponents.SuccessMessageToast;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
@@ -413,5 +414,27 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
         }
 
         Log.e(context.getString(R.string.alert_title_server_error), exceptionMessage);
+    }
+
+    public static void showSuccessToast(Context context) {
+
+        showSuccessToast(context, null);
+    }
+
+    /**
+     * Show success toast.
+     *
+     * @param context        the context
+     * @param successMessage the success message
+     */
+    public static void showSuccessToast(Context context, String successMessage) {
+
+        if (null == context) {
+            return;
+        }
+
+        new SuccessMessageToast(context, successMessage)
+                .show();
+
     }
 }

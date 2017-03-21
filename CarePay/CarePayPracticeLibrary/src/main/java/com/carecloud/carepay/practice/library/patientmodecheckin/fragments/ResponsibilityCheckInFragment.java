@@ -29,7 +29,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
 
-public class ResponsibilityFragment extends ResponsibilityBaseFragment {
+public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
 
     private CheckinFlowCallback flowCallback;
 

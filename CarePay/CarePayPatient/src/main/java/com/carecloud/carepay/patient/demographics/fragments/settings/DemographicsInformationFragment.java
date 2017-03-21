@@ -27,7 +27,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.appointments.utils.PatientAppUtil;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -1047,7 +1046,7 @@ public class DemographicsInformationFragment extends BaseFragment {
             updateProfileButton.setEnabled(true);
             progressBar.setVisibility(View.GONE);
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
-            PatientAppUtil.showSuccessToast(getContext(), successMessageString);
+            SystemUtil.showSuccessToast(getContext(), successMessageString);
         }
 
         @Override
