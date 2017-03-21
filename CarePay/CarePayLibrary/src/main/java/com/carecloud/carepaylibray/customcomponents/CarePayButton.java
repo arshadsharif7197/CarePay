@@ -3,8 +3,8 @@ package com.carecloud.carepaylibray.customcomponents;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
-import android.widget.Button;
 
 import com.carecloud.carepaylibrary.R;
 
@@ -26,7 +26,7 @@ import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.PROXIMA
 /**
  * Created by arpit_jain1 on 10/27/2016.
  */
-public class CarePayButton extends Button {
+public class CarePayButton extends AppCompatButton {
 
     Context context;
     int fontAttribute;
@@ -112,7 +112,7 @@ public class CarePayButton extends Button {
         } catch (Exception exception) {
             fontAttribute = PROXIMA_NOVA_REGULAR;
         }
-
+        setFont();
     }
 
     private void setFont(){
