@@ -35,6 +35,7 @@ public abstract class BasePracticeActivity extends BaseActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
         setSystemUiVisibility();
     }
 

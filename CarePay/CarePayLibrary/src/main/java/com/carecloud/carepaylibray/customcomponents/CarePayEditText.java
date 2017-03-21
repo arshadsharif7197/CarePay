@@ -3,8 +3,8 @@ package com.carecloud.carepaylibray.customcomponents;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
-import android.widget.EditText;
 
 import com.carecloud.carepaylibrary.R;
 
@@ -31,7 +31,7 @@ import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.PROXIMA
  * This is a custom textview component that allow t set custom font from assets
  */
 
-public class CarePayEditText extends EditText {
+public class CarePayEditText extends AppCompatEditText {
     Context context;
     int fontAttribute;
 
