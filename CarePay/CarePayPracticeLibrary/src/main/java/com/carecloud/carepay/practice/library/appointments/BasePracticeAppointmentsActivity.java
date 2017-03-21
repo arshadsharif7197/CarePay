@@ -57,21 +57,10 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
      */
     public void showAppointmentConfirmation() {
         if (isVisible()) {
-            new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
-                    .setTitleText("")
-                    .setContentText(getLabels().getAppointmentRequestSuccessMessage())
-                    .setConfirmText(getString(R.string.alert_ok))
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog dialog) {
-                            dialog.dismissWithAnimation();
-                            onAppointmentRequestSuccess();
-                        }
-                    })
-                    .show();
-        } else {
+                SystemUtil.showSuccessToast(getContext(), getLabels().getAppointmentRequestSuccessMessage());
+            }
+
             onAppointmentRequestSuccess();
-        }
     }
 
     @Override
@@ -185,7 +174,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         }
         ft.addToBackStack(null);
 
-        VisitTypeFragmentDialog dialog = VisitTypeFragmentDialog.newInstance(appointmentResourcesDTO, appointmentsResultModel, getLabels().getVisitTypeHeading());
+        VisitTypeFragmentDialog dialog = VisitTypeFragmentDialog.newInstance(appointmentResourcesDTO, appointmentsResultModel);
         dialog.show(ft, tag);
     }
 

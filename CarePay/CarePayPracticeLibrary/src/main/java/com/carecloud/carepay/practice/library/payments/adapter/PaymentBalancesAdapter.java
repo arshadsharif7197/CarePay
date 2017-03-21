@@ -48,7 +48,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
         holder.payButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.onPayButtonClicked(patientBalanceDTO);
+                callback.onBalancePayButtonClicked(patientBalanceDTO);
             }
         });
         String photoUrl = userPractice.getPracticePhoto();
@@ -96,7 +96,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
     }
 
     public interface PaymentRecyclerViewCallback {
-        void onPayButtonClicked(PatientBalanceDTO patientBalanceDTO);
+        void onBalancePayButtonClicked(PatientBalanceDTO patientBalanceDTO);
     }
 
     /**

@@ -264,7 +264,7 @@
     <dimen name="apt_popup_parent_padding">14dp</dimen>
     <dimen name="apt_popup_icon_margin">8dp</dimen>
     <dimen name="apt_popup_message_margin">10dp</dimen>
-    <dimen name="apt_popup_message_text">15sp</dimen>
+    <dimen name="apt_popup_message_text">18sp</dimen>
     <dimen name="apt_popup_message_text_line_spacing">2sp</dimen>
     <dimen name="apt_popup_button_text">13sp</dimen>
     <dimen name="apt_popup_button_margin">6dp</dimen>

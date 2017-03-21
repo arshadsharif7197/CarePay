@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.payments;
 
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 
 /**
  * Created by lmenendez on 2/28/17.
