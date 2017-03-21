@@ -197,7 +197,7 @@ public class AppointmentLabelDTO implements Serializable {
     @SerializedName("add_appointment_max_date_range_message")
     @Expose
     private String addAppointmentMaxDateRangeMessage;
-    @SerializedName("appointment_request_success_message")
+    @SerializedName("appointment_request_success_message_HTML")
     @Expose
     private String appointmentRequestSuccessMessage;
     @SerializedName("appointment_request_failure_message")
@@ -246,7 +246,7 @@ public class AppointmentLabelDTO implements Serializable {
     @Expose
     private String appointmentsPreRegister;
 
-    @SerializedName("appointment_cancellation_success_message")
+    @SerializedName("appointment_cancellation_success_message_HTML")
     @Expose
     private String appointmentCancellationSuccessMessage;
 
