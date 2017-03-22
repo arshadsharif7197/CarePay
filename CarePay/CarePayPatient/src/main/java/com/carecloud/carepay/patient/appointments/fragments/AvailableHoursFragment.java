@@ -516,5 +516,4 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
     private boolean isLocationSelected(LocationDTO locationDTO){
         return selectedLocations.isEmpty() || selectedLocations.contains(locationDTO);
     }
-
 }

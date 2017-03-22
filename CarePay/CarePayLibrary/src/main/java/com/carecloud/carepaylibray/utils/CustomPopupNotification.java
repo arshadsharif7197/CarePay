@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.utils;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
@@ -11,13 +12,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.IApplicationSession;
+import com.carecloud.carepaylibray.qrcodescanner.DisplayUtils;
 
 /**
  * Created by sudhir_pingale on 9/22/2016.
@@ -41,51 +44,10 @@ public class CustomPopupNotification extends PopupWindow {
     public Context context ;
     public Window window ;
     private CustomPopupNotificationListener callback;
+    private Boolean hasStatusBar = true;
 
     public interface CustomPopupNotificationListener {
         void onSwipe(String swipeDirection);
-    }
-
-    /**
-     * @param context the context to inflate custom popup layout
-     * @param parentView a parent view to get the {@link android.view.View#getWindowToken()} token from
-     * @param positiveButtonCaption Sets the string value of the positive action button
-     * @param negativeButtonCaption Sets the string value of the positive action button
-     * @param popupMessageText Sets the string value of the TextView popup message
-     * @param positiveAction callback to be invoked when positive action button is clicked
-     * @param negativeAction callback to be invoked when negative action button is clicked
-     */
-    public CustomPopupNotification(Context context, View parentView, String positiveButtonCaption,
-                                   String negativeButtonCaption, String popupMessageText,
-                                   View.OnClickListener positiveAction, View.OnClickListener negativeAction) {
-
-        super(((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                        .inflate(R.layout.custom_popup_with_action, null),
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        this.parentView = parentView;
-
-        View popupWindowLayout = this.getContentView();
-        Button popupDismissButton = (Button) popupWindowLayout.findViewById(R.id.popup_dismiss_button);
-        Button popupCheckInButton = (Button) popupWindowLayout.findViewById(R.id.popup_checkin_button);
-        TextView popupMessageLabel = (TextView) popupWindowLayout.findViewById(R.id.popup_message_tv);
-        popupDismissButton.setText(negativeButtonCaption);
-        popupCheckInButton.setText(positiveButtonCaption);
-        if (Build.VERSION.SDK_INT >= 24)
-        {
-            popupMessageLabel.setText(Html.fromHtml(popupMessageText, Html.FROM_HTML_MODE_LEGACY));
-        } else
-        {
-            popupMessageLabel.setText(Html.fromHtml(popupMessageText));
-
-        }
-
-
-        SystemUtil.setTypefaceFromAssets(context, "fonts/proximanova_regular.otf", popupMessageLabel);
-        SystemUtil.setTypefaceFromAssets(context, "fonts/gotham_rounded_medium.otf", popupDismissButton);
-        SystemUtil.setTypefaceFromAssets(context, "fonts/gotham_rounded_medium.otf", popupCheckInButton);
-
-        popupDismissButton.setOnClickListener(negativeAction);
-        popupCheckInButton.setOnClickListener(positiveAction);
     }
 
     /**
@@ -97,8 +59,8 @@ public class CustomPopupNotification extends PopupWindow {
     public CustomPopupNotification(Context context, View parentView, Window window, String popupMessageText, int notificationType, CustomPopupNotificationListener callback) {
 
         super(((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                        .inflate(R.layout.custom_popup, null),
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        .inflate(R.layout.custom_popup, null));
+        this.context = context;
         this.parentView = parentView;
         this.callback = callback;
         this.window = window;
@@ -107,7 +69,9 @@ public class CustomPopupNotification extends PopupWindow {
         this.notificationType = notificationType;
         this.setAnimationStyle(R.style.notificationPopUpTopToBottomAnimation);
 
+        initializeDimensions();
         setOutsideTouchable(true);
+
         setSwipeListener();
         View popupWindowLayout = this.getContentView();
         ImageView popupIcon = (ImageView) popupWindowLayout.findViewById(R.id.popup_icon);
@@ -127,6 +91,11 @@ public class CustomPopupNotification extends PopupWindow {
             case TYPE_ERROR_NOTIFICATION:
                 popupWindowLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.remove_red));
                 popupMessageLabel.setTextColor(ContextCompat.getColor(context, R.color.white));
+                ApplicationMode.ApplicationType appMode = ((IApplicationSession) context).getApplicationMode().getApplicationType();
+                if (appMode !=  ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+                    this.hasStatusBar = false;
+                    popupWindowLayout.setBackground(ContextCompat.getDrawable(context, R.drawable.error_message_background));
+                }
                 popupIcon.setImageResource(R.drawable.icn_notification_error);
                 break;
             case AUTO_DISSMISS_SUCCESS_NOTIFICATION:
@@ -137,7 +106,6 @@ public class CustomPopupNotification extends PopupWindow {
             default:
         }
 
-        //popupMessageLabel.setText(popupMessageText);
         if (Build.VERSION.SDK_INT >= 24)
         {
             popupMessageLabel.setText(Html.fromHtml(popupMessageText, Html.FROM_HTML_MODE_LEGACY));
@@ -147,6 +115,16 @@ public class CustomPopupNotification extends PopupWindow {
         }
 
         SystemUtil.setTypefaceFromAssets(context, "fonts/proximanova_regular.otf", popupMessageLabel);
+    }
+
+    private void initializeDimensions() {
+        if(DisplayUtils.getScreenOrientation(context) == Configuration.ORIENTATION_PORTRAIT){
+            setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+        }else {
+            setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+
+        setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     /**
@@ -167,7 +145,10 @@ public class CustomPopupNotification extends PopupWindow {
             public void run() {
                 if (isShowing()) {
                     dismiss();
-                    setStatusBarColor(statusBarColor);
+                    if(hasStatusBar)
+                    {
+                        setStatusBarColor(statusBarColor);
+                    }
                 }
             }
 
@@ -179,22 +160,30 @@ public class CustomPopupNotification extends PopupWindow {
         getContentView().setOnTouchListener(new SwipeGuestureListener(context) {
 
             public void onSwipeTop() {
-                setStatusBarColor(statusBarColor);
+                if(hasStatusBar) {
+                    setStatusBarColor(statusBarColor);
+                }
                 callback.onSwipe(GESTURE_DIRECTION_TOP);
             }
 
             public void onSwipeRight() {
-                setStatusBarColor(statusBarColor);
+                if(hasStatusBar) {
+                    setStatusBarColor(statusBarColor);
+                }
                 callback.onSwipe(GESTURE_DIRECTION_RIGHT);
             }
 
             public void onSwipeLeft() {
+                if(hasStatusBar){
                     setStatusBarColor(statusBarColor);
+                }
                 callback.onSwipe(GESTURE_DIRECTION_LEFT);
             }
 
             public void onSwipeBottom() {
-                setStatusBarColor(statusBarColor);
+                if(hasStatusBar){
+                    setStatusBarColor(statusBarColor);
+                }
                 callback.onSwipe(GESTURE_DIRECTION_BOTTOM);
             }
 

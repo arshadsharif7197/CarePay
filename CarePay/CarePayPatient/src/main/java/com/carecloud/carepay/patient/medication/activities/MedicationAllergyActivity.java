@@ -95,7 +95,7 @@ public class MedicationAllergyActivity extends BasePatientActivity implements Me
 
     @Override
     public void medicationSubmitFail(String message) {
-        SystemUtil.showDefaultFailureDialog(getContext());
+        showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
         Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), message);
     }
 

@@ -18,6 +18,7 @@ import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLabels
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModePayloadDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeSplashDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.LanguageOptionDTO;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
@@ -169,7 +170,7 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             getStartedButton.setEnabled(true);
-            SystemUtil.showDefaultFailureDialog(PatientModeSplashActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

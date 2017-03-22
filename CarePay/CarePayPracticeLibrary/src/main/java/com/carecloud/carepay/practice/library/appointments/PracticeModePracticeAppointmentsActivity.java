@@ -71,6 +71,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     private TwoColumnPatientListView patientListView;
     private boolean needsToConfirmAppointmentCreation;
+    private static final String TAG = "AppointmentsActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -362,7 +363,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-
+            SystemUtil.showSuccessToast(getContext());
             DtoHelper.putExtra(getIntent(), workflowDTO);
             initializeCheckinDto();
             applyFilter();
@@ -371,7 +372,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(getContext());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -403,7 +404,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.doDefaultFailureBehavior(getContext(), exceptionMessage);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
         }
     };
 
@@ -474,9 +475,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-
             updateAppointment(workflowDTO);
-
+            SystemUtil.showSuccessToast(getContext(), checkInLabelDTO.getAppointmentRequestSuccessMessage());
             DtoHelper.putExtra(getIntent(), checkInDTO);
             initializeCheckinDto();
             applyFilter();
@@ -485,7 +485,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(getContext());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
 

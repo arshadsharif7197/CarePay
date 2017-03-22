@@ -147,7 +147,7 @@ public class PatientModePracticeCheckInActivity extends BasePracticeActivity imp
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             findViewById(R.id.logoutTextview).setEnabled(true);
-            SystemUtil.showDefaultFailureDialog(PatientModePracticeCheckInActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -231,7 +231,7 @@ public class PatientModePracticeCheckInActivity extends BasePracticeActivity imp
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             appointmentProgressBar.setVisibility(View.GONE);
-            SystemUtil.showDefaultFailureDialog(PatientModePracticeCheckInActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -291,7 +291,7 @@ public class PatientModePracticeCheckInActivity extends BasePracticeActivity imp
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(PatientModePracticeCheckInActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
