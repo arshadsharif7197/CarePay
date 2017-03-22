@@ -1,6 +1,5 @@
 package com.carecloud.carepaylibray.demographics.scanner;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -14,12 +13,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
-import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
@@ -44,14 +42,14 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
     private String recaptureCaption;
     private PatientModel demographicPersDetailsPayloadDTO;
     private DemographicLabelsDTO globalLabelsDTO;
-    private boolean isRevScreen;
+//    private boolean isRevScreen;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(getLayoutRes(), container, false);
-        Bundle bundle = getArguments();
-        isRevScreen = bundle.getBoolean(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE, false);
+//        Bundle bundle = getArguments();
+//        isRevScreen = bundle.getBoolean(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE, false);
         populateViewsFromModel(view);
 
         return view;
@@ -78,18 +76,14 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
     @Override
     public void populateViewsFromModel(View view) {
         // set label for capture button
-        Activity activity = getActivity();
-        DemographicLabelsDTO labelsMetaDTO = null;
-        if (activity instanceof DemographicsLabelsHolder) {
-            labelsMetaDTO = ((DemographicsLabelsHolder) getActivity()).getLabelsDTO();
-        }
+//        Activity activity = getActivity();
+//        DemographicLabelsDTO labelsMetaDTO = null;
+//        if (activity instanceof DemographicsLabelsHolder) {
+//            labelsMetaDTO = ((DemographicsLabelsHolder) getActivity()).getLabelsDTO();
+//        }
 
-        if (null == labelsMetaDTO) {
-            labelsMetaDTO = new DemographicLabelsDTO();
-        }
 
-        recaptureCaption = isRevScreen? labelsMetaDTO.getDemographicsTakeAnotherPictureButtonTitle():
-                labelsMetaDTO.getDemographicsProfileReCaptureCaption();
+        recaptureCaption = Label.getLabel("demographics_take_another_picture_button_title");
 
         ImageView imageViewDetailsImage = (ImageView) view.findViewById(R.id.DetailsProfileImage);
         imageCaptureHelper = new ImageCaptureHelper(getActivity(), imageViewDetailsImage, globalLabelsDTO);
@@ -101,9 +95,9 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
                 selectImage(imageCaptureHelper, ImageCaptureHelper.CameraType.DEFAULT_CAMERA);
             }
         });
-        String captureCaption = isRevScreen? labelsMetaDTO.getDemographicsTakePictureButtonTitle():
-                               labelsMetaDTO.getDemographicsProfileCaptureCaption();
-        buttonChangeCurrentPhoto.setText(captureCaption);
+//        String captureCaption = isRevScreen? labelsMetaDTO.getDemographicsTakePictureButtonTitle():
+//                               labelsMetaDTO.getDemographicsProfileCaptureCaption();
+//        buttonChangeCurrentPhoto.setText(captureCaption);
 
         demographicPersDetailsPayloadDTO = DtoHelper.getConvertedDTO(PatientModel.class, getArguments());
 

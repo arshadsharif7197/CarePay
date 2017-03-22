@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,7 +73,6 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
     private SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
 
     private AppointmentNavigationCallback callback;
-    private static final String TAG = "AvailableHoursFragment";
 
     @Override
     public void onAttach(Context context) {
@@ -442,44 +440,13 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
 
         @Override
         public void onFailure(String exceptionMessage) {
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            SystemUtil.doDefaultFailureBehavior(getActivity(), exceptionMessage);
         }
     };
 
     @Override
     public void onSelectAppointmentTimeSlot(AppointmentsSlotsDTO appointmentsSlotsDTO) {
-
-        AppointmentsPayloadDTO payloadDTO = new AppointmentsPayloadDTO();
-        payloadDTO.setStartTime(appointmentsSlotsDTO.getStartTime());
-        payloadDTO.setEndTime(appointmentsSlotsDTO.getEndTime());
-        payloadDTO.setProviderId(selectedResource.getProvider().getId().toString());
-        payloadDTO.setVisitReasonId(selectedVisitTypeDTO.getId());
-        payloadDTO.setResourceId(selectedResource.getId());
-        payloadDTO.setChiefComplaint(selectedVisitTypeDTO.getName());
-
-        PatientModel patientDTO = new PatientModel();
-        patientDTO.setPatientId(addAppointmentPatientId);
-        payloadDTO.setPatient(patientDTO);
-
-        ProviderDTO providersDTO;
-        providersDTO = selectedResource.getProvider();
-
-        LocationDTO locationDTO = availabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getLocation();
-        if(locationDTO == null){
-            locationDTO = new LocationDTO();
-            AppointmentAddressDTO addressDTO = new AppointmentAddressDTO();
-            locationDTO.setName(resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentsPlaceNameHeading());
-            locationDTO.setAddress(addressDTO);
-        }
-
-        payloadDTO.setLocation(locationDTO);
-        payloadDTO.setProvider(providersDTO);
-
-        AppointmentDTO appointmentDTO = new AppointmentDTO();
-        appointmentDTO.setPayload(payloadDTO);
-
-        final RequestAppointmentDialog requestAppointmentDialog =  new RequestAppointmentDialog(getActivity(),appointmentDTO,resourcesToScheduleDTO);
-        requestAppointmentDialog.show();
+        callback.confirmAppointment(appointmentsSlotsDTO.getStartTime(), appointmentsSlotsDTO.getEndTime(), availabilityDTO);
     }
 
     @Override
@@ -549,5 +516,4 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
     private boolean isLocationSelected(LocationDTO locationDTO){
         return selectedLocations.isEmpty() || selectedLocations.contains(locationDTO);
     }
-
 }

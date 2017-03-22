@@ -375,40 +375,42 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
     }
 
     private void setEditTexts() {
-        signInEmailTextInputLayout.setTag(emailLabel);
-        emailEditText.setTag(signInEmailTextInputLayout);
-
-        passwordTextInputLayout.setTag(passwordLabel);
-        passwordEditText.setTag(passwordTextInputLayout);
+//        signInEmailTextInputLayout.setTag(emailLabel);
+//        emailEditText.setTag(signInEmailTextInputLayout);
+//
+//        passwordTextInputLayout.setTag(passwordLabel);
+//        passwordEditText.setTag(passwordTextInputLayout);
 
         setTextListeners();
-        setChangeFocusListeners();
+        emailEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(signInEmailTextInputLayout, null));
+        passwordEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(passwordTextInputLayout, null));
+//        setChangeFocusListeners();
 
 
-        emailEditText.clearFocus();
-        passwordEditText.clearFocus();
+//        emailEditText.clearFocus();
+//        passwordEditText.clearFocus();
     }
 
-    private void setChangeFocusListeners() {
-        emailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(SigninActivity.this);
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
-        passwordEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(SigninActivity.this);
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
-    }
+//    private void setChangeFocusListeners() {
+//        emailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View view, boolean bool) {
+//                if (bool) {
+//                    SystemUtil.showSoftKeyboard(SigninActivity.this);
+//                }
+////                SystemUtil.handleHintChange(view, bool);
+//            }
+//        });
+//        passwordEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View view, boolean bool) {
+//                if (bool) {
+//                    SystemUtil.showSoftKeyboard(SigninActivity.this);
+//                }
+////                SystemUtil.handleHintChange(view, bool);
+//            }
+//        });
+//    }
 
     private void enableSigninButton() {
         boolean areAllNonEmpty = !(isEmptyEmail || isEmptyPassword);
