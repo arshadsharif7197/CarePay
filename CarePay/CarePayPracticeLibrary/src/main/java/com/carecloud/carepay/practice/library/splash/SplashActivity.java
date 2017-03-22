@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.splash;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
@@ -9,6 +10,8 @@ import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.platform.AndroidPlatform;
+import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class SplashActivity extends BasePracticeActivity {
@@ -22,6 +25,10 @@ public class SplashActivity extends BasePracticeActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash);
         getWorkflowServiceHelper().executeApplicationStartRequest(applicationStartCallback);
+
+        //clear old Labels from Preferences
+        SharedPreferences preferences = ((AndroidPlatform) Platform.get()).openSharedPreferences(AndroidPlatform.LABELS_FILE_NAME);
+        preferences.edit().clear().apply();
     }
 
     WorkflowServiceCallback applicationStartCallback=new WorkflowServiceCallback() {

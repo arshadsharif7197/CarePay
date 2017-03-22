@@ -26,12 +26,8 @@ import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.signin.dtos.LanguageOptionDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionResponseModel;
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionUserPractice;
-import com.carecloud.carepay.practice.library.signin.dtos.SignInModelDTO;
-import com.carecloud.carepay.practice.library.signin.dtos.SignInPatientModeModelDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninDTO;
-import com.carecloud.carepay.practice.library.signin.dtos.SigninLabelsDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeDTO;
-import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeLabelsDTO;
 import com.carecloud.carepay.practice.library.signin.fragments.PracticeSearchFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -40,6 +36,7 @@ import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
@@ -182,7 +179,9 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
             }
         }
 
-        initializeLabels(signInScreenMode);
+        if(signInScreenMode == SignInScreenMode.PATIENT_MODE_SIGNIN){
+            signinTitle.setText(Label.getLabel("carepay_signin_title"));
+        }
 
         // disable sign-in button
         setEnabledSigninButton(false);
@@ -205,41 +204,6 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
         });
     }
 
-    private void initializeLabels(SignInScreenMode signInScreenMode) {
-        if (signInScreenMode == SignInScreenMode.PRACTICE_MODE_SIGNIN && signinDTO != null) {
-            SigninLabelsDTO signinLabelsDTO = signinDTO.getMetadata().getLabels();
-            if (signinLabelsDTO != null) {
-                signInButton.setText(signinLabelsDTO.getSigninButton());
-                signinTitle.setText(signinLabelsDTO.getWelcomeSigninText());
-                forgotPasswordButton.setText(signinLabelsDTO.getForgotPassword());
-                gobackButton.setText(signinLabelsDTO.getGobackButton());
-
-                SignInModelDTO signInModelDTO = signinDTO.getMetadata().getDataModels().getSignin();
-                if (signInModelDTO != null) {
-                    emailLabel =signInModelDTO.getProperties().getEmail().getLabel();
-                    passwordLabel = signInModelDTO.getProperties().getPassword().getLabel();
-                }
-                passwordEditText.setHint(passwordLabel);
-                emailEditText.setHint(emailLabel);
-            }
-        } else if (signInScreenMode == SignInScreenMode.PATIENT_MODE_SIGNIN && signinPatientModeDTO != null) {
-            SigninPatientModeLabelsDTO labelsDTO = signinPatientModeDTO.getMetadata().getLabels();
-            if (labelsDTO != null) {
-                signInButton.setText(labelsDTO.getSigninButton());
-                signinTitle.setText(labelsDTO.getCarepaySigninTitle());
-                forgotPasswordButton.setText(labelsDTO.getForgotPassword());
-                gobackButton.setText(labelsDTO.getSiginHowCheckInGoBack());
-
-                SignInPatientModeModelDTO login = signinPatientModeDTO.getMetadata().getLoginDataModels().getLogin();
-                if (login != null) {
-                    emailLabel = login.getProperties().getEmail().getLabel();
-                    passwordLabel = login.getProperties().getPassword().getLabel();
-                }
-                passwordEditText.setHint(passwordLabel);
-                emailEditText.setHint(emailLabel);
-            }
-        }
-    }
 
     private void setEnabledSigninButton(boolean enabled) {
         if (!enabled) {
