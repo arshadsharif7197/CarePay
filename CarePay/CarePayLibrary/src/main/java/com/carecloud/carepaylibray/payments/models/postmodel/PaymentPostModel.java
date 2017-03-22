@@ -71,6 +71,7 @@ public class PaymentPostModel {
                     if(transactionResponse == null || !transactionResponse.isValid()){
                         return false;
                     }
+                    break;
                 }
                 default: {
                     //nothing
