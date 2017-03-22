@@ -11,9 +11,39 @@
     android:padding="0dp">
 
     <LinearLayout
+        android:id="@+id/health_insurance_list_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/available_health_insurance_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_70dp" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/health_insurance_add_another"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/dimen_25dp"
+            android:background="@drawable/round_border_button_bg"
+            android:paddingBottom="@dimen/dimen_10dp"
+            android:paddingEnd="@dimen/dimen_24dp"
+            android:paddingStart="@dimen/dimen_24dp"
+            android:paddingTop="@dimen/dimen_10dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_13"
+            app:customAssetFont="gotham_rounded_medium" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/no_health_insurance_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -246,62 +276,63 @@
                     app:customAssetFont="gotham_rounded_medium" />
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_1dp"
-        android:layout_marginTop="55dp"
-        android:background="@color/light_gray_dialog" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/dimen_15dp">
-
-        <com.carecloud.carepaylibray.customcomponents.CarePayButton
-            android:id="@+id/health_insurance_dont_have_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dimen_9dp"
-            android:layout_weight="1"
-            android:background="@drawable/round_border_button_bg"
-            android:gravity="center"
-            android:paddingBottom="@dimen/dimen_14dp"
-            android:paddingTop="@dimen/dimen_14dp"
-            android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/text_size_22"
-            app:customAssetFont="gotham_rounded_medium"
-            tools:ignore="ButtonStyle" />
-
-        <com.carecloud.carepaylibray.customcomponents.CarePayButton
-            android:id="@+id/health_insurance_add_new_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen_9dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_lite_gray_button"
-            android:gravity="center"
-            android:paddingBottom="@dimen/dimen_14dp"
-            android:paddingTop="@dimen/dimen_14dp"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_22"
-            app:customAssetFont="gotham_rounded_medium"
-            tools:ignore="ButtonStyle" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="0dp"
-        android:orientation="vertical"
-        android:padding="0dp">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/insurance_detail_list"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/dimen_10dp" />
+            android:layout_height="@dimen/dimen_1dp"
+            android:layout_marginTop="55dp"
+            android:background="@color/light_gray_dialog" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dimen_15dp">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/health_insurance_dont_have_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dimen_9dp"
+                android:layout_weight="1"
+                android:background="@drawable/round_border_button_bg"
+                android:gravity="center"
+                android:paddingBottom="@dimen/dimen_14dp"
+                android:paddingTop="@dimen/dimen_14dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_22"
+                app:customAssetFont="gotham_rounded_medium"
+                tools:ignore="ButtonStyle" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/health_insurance_add_new_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_9dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_lite_gray_button"
+                android:gravity="center"
+                android:paddingBottom="@dimen/dimen_14dp"
+                android:paddingTop="@dimen/dimen_14dp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_22"
+                app:customAssetFont="gotham_rounded_medium"
+                tools:ignore="ButtonStyle" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:orientation="vertical"
+            android:padding="0dp">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/insurance_detail_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/dimen_10dp" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout

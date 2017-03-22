@@ -9,34 +9,33 @@ import android.view.ViewGroup;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
 import java.util.List;
 
-public class InsuranceLineItemsListAdapter extends RecyclerView.Adapter<InsuranceLineItemsListAdapter.InsuranceDetailsListViewHolder> {
+public class InsuranceLineItemsListAdapter extends
+        RecyclerView.Adapter<InsuranceLineItemsListAdapter.InsuranceDetailsListViewHolder> {
 
     private Context context;
-    private List<DemographicInsurancePayloadDTO> detailsList;
     private DemographicDTO model;
-    private HealthInsuranceFragment.InsuranceDocumentScannerListener listener;
+    private List<DemographicInsurancePayloadDTO> detailsList;
 
     /**
      * Constructor
-     * @param context context
-     * @param model model
+     *
+     * @param context     context
+     * @param model       model
      * @param detailsList details list
-     * @param listener listener
      */
     public InsuranceLineItemsListAdapter(Context context, DemographicDTO model,
-                                         List<DemographicInsurancePayloadDTO> detailsList,
-                                         HealthInsuranceFragment.InsuranceDocumentScannerListener listener) {
+                                         List<DemographicInsurancePayloadDTO> detailsList) {
 
         this.context = context;
-        this.detailsList = detailsList;
-        this.listener = listener;
         this.model = model;
+        this.detailsList = detailsList;
     }
 
     @Override
@@ -53,38 +52,33 @@ public class InsuranceLineItemsListAdapter extends RecyclerView.Adapter<Insuranc
 
     class InsuranceDetailsListViewHolder extends RecyclerView.ViewHolder {
 
+        CarePayTextView name;
+        CarePayTextView type;
+        CarePayTextView edit;
+
         InsuranceDetailsListViewHolder(View itemView) {
             super(itemView);
+
+            name = (CarePayTextView) itemView.findViewById(R.id.health_insurance_name);
+            type = (CarePayTextView) itemView.findViewById(R.id.health_insurance_type);
+            edit = (CarePayTextView) itemView.findViewById(R.id.health_insurance_edit);
+
+            edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
+
+            DemographicLabelsDTO labels = model.getMetadata().getLabels();
+            edit.setText(labels.getPracticeCheckinEditClickableLabel());
         }
-
-        public CarePayTextView getLineItemNameLabel(){
-            return (CarePayTextView) itemView.findViewById(R.id.lineItemNameLabel);
-        }
-
-        public CarePayTextView getLineItemQueueLabel() {
-            return (CarePayTextView) itemView.findViewById(R.id.lineItemQueueLabel);
-        }
-
-        public CarePayTextView getLineItemNameLabelEdit() {
-            return (CarePayTextView) itemView.findViewById(R.id.lineItemNameLabelEdit);
-        }
-
-        }
-
-    @Override
-    public void onBindViewHolder(final InsuranceDetailsListViewHolder holder, final int position) {
-        final DemographicInsurancePayloadDTO lineItem = detailsList.get(position);
-        holder.getLineItemNameLabel().setText(lineItem.getInsurancePlan());
-        holder.getLineItemNameLabelEdit().setText(model.getMetadata().getLabels().getPracticeCheckinEditClickableLabel());
-        int index = position+1;
-        holder.getLineItemQueueLabel().setText(index + DateUtil.getInstance().getOrdinalSuffix(index));
-        holder.getLineItemNameLabelEdit().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                listener.navigateToInsuranceDocumentFragment(position, lineItem);
-            }
-        });
     }
 
+    @Override
+    public void onBindViewHolder(final InsuranceDetailsListViewHolder holder, int position) {
+        final DemographicInsurancePayloadDTO lineItem = detailsList.get(position);
+        holder.name.setText(lineItem.getInsurancePlan());
+        holder.type.setText(lineItem.getInsuranceType());
+    }
 }
