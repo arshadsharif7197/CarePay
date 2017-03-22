@@ -99,9 +99,7 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
     @Override
     public void onViewCreated(View view, Bundle icicle){
         activity = getActivity();
-
         setupTitleViews(view);
-
         initializeViews(view);
     }
 
