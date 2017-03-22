@@ -2,8 +2,6 @@ package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -13,11 +11,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
@@ -47,7 +45,12 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_review_demographic_base, container, false);
+        View view;
+        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            view = inflater.inflate(R.layout.fragment_review_demographic_base, container, false);
+        }else{
+            view = inflater.inflate(R.layout.fragment_review_demographic_base_patient, container, false);
+        }
         stepProgressBar = (StepProgressBar) view.findViewById(R.id.stepProgressBarCheckin);
         stepProgressBar.setCumulativeDots(true);
         stepProgressBar.setNumDots(5);
@@ -66,7 +69,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             return;
         }
         toolbar.setTitle("");
-        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.icn_nav_back));
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,6 +77,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                 checkInNavListener.setCurrentStep(checkInNavListener.getCurrentStep()-1);
             }
         });
+
 
 
     }
@@ -92,7 +96,9 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         TextView textView = (TextView) view.findViewById(R.id.checkinDemographicsHeaderLabel);
         textView.setText(title);
         SystemUtil.setGothamRoundedMediumTypeface(getContext(), textView);
-        (view.findViewById(R.id.toolbar_layout)).setVisibility(checkInNavListener.getCurrentStep()>1 ?View.VISIBLE:View.INVISIBLE);
+        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            (view.findViewById(R.id.toolbar_layout)).setVisibility(checkInNavListener.getCurrentStep()>1 ?View.VISIBLE:View.INVISIBLE);
+        }
         //stepProgressBar.setCurrentProgressDot(checkInNavListener.getCurrentStep()-1);
     }
 
@@ -119,9 +125,10 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         nextButton.setEnabled(isEnabled);
         nextButton.setClickable(isEnabled);
         Context context = getActivity();
-        if (context != null) {
+        if (context != null && getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             nextButton.setBackground(ContextCompat.getDrawable(context, isEnabled ? R.drawable.bg_green_overlay : R.drawable.bg_silver_overlay));
         }
+
     }
 
     protected abstract boolean passConstraints(View view);

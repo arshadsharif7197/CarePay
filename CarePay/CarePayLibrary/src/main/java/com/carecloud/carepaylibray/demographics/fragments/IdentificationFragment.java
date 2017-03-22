@@ -24,7 +24,6 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
         checkIfEnableButton(view);
-        (view.findViewById(R.id.toolbar_layout)).setVisibility(View.INVISIBLE);
         setHeaderTitle(demographicDTO.getMetadata().getLabels().getDemographicsReviewIdentification(), view);
         initNextButton(demographicDTO.getMetadata().getLabels().getDemographicsReviewNextButton(), null, view);
         stepProgressBar.setCurrentProgressDot(3);
