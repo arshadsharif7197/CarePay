@@ -395,7 +395,6 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
         if (idDocFragment == null) {
             idDocFragment = new DocScannerFragment();
             idDocFragment.setModel(demPayloadIdDocDTO.get(0)); // set the model
-            idDocFragment.setIdDocsMetaDTO(idDocsMetaDTO == null ? null : idDocsMetaDTO.properties.items.identityDocument);
         }
         //fix for random crashes
         if(idDocFragment.getArguments() !=null){
