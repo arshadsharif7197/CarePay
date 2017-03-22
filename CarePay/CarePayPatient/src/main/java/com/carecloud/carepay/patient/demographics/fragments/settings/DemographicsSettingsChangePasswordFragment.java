@@ -291,8 +291,8 @@ public class DemographicsSettingsChangePasswordFragment extends BaseFragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
-
-            SystemUtil.showDefaultFailureDialog(getActivity());
+            hideProgressDialog();
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

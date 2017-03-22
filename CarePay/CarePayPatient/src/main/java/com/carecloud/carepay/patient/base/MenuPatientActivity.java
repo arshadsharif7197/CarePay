@@ -164,7 +164,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            //SystemUtil.showDefaultFailureDialog(InTakeWebViewActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -185,7 +185,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showDefaultFailureDialog(MenuPatientActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
 
             hideProgressDialog();
 
@@ -208,7 +208,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(MenuPatientActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -230,7 +230,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(MenuPatientActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -251,7 +251,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(MenuPatientActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

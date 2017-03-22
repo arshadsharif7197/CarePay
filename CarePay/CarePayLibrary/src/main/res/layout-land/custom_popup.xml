@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/charcoal"
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/apt_popup_parent_padding"
+    android:paddingRight="14dp"
+    android:paddingBottom="50dp">
+
+    <ImageView
+        android:id="@+id/popup_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="72dp"
+        android:layout_margin="@dimen/apt_popup_icon_margin"
+        android:gravity="center_vertical"
+         android:src="@drawable/icn_notification_basic_green" />
+
+    <TextView
+        android:id="@+id/popup_message_tv"
+        style="@style/AppointmentPopupMessageText"
+        android:layout_width="wrap_content"
+        android:layout_height="72dp"
+        android:layout_margin="@dimen/apt_popup_message_margin"
+        android:gravity="center_vertical"
+        android:text="@string/apt_popup_message_text" />
+</LinearLayout>
