@@ -282,18 +282,14 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         Gson gson = new Gson();
         TransitionDTO transitionDTO;
 
-        if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-            PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
-            transitionDTO = transitionsDTO.getOfficeNews();
+        PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
+        transitionDTO = transitionsDTO.getOfficeNews();
 
-            Map<String, String> queryMap = new HashMap<>();
-            queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
-            queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
-            queryMap.put("publish_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
-            getWorkflowServiceHelper().execute(transitionDTO, getNewsCallback, queryMap);
-        } else {
-            // Add for patient mode once available from backend
-        }
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+        queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
+        queryMap.put("publish_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
+        getWorkflowServiceHelper().execute(transitionDTO, getNewsCallback, queryMap);
     }
 
     private void navigateToShop() {
@@ -307,6 +303,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
             transitionDTO = transitionsDTO.getShop();
         }
+
+        getWorkflowServiceHelper().interrupt();
         getWorkflowServiceHelper().execute(transitionDTO, commonTransitionCallback);
     }
 
@@ -321,6 +319,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
             transitionDTO = transitionsDTO.getPatientCheckout();
         }
+
+        getWorkflowServiceHelper().interrupt();
         getWorkflowServiceHelper().execute(transitionDTO, commonTransitionCallback);
     }
 
@@ -328,20 +328,24 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
         Gson gson = new Gson();
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-            PracticeHomeScreenTransitionsDTO transitionsDTO = DtoHelper.getConvertedDTO(PracticeHomeScreenTransitionsDTO.class, transitionsAsJsonObject);
-            TransitionDTO transitionDTO = transitionsDTO.getPracticeAppointments();
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
             queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
+
+            PracticeHomeScreenTransitionsDTO transitionsDTO = DtoHelper.getConvertedDTO(PracticeHomeScreenTransitionsDTO.class, transitionsAsJsonObject);
+            TransitionDTO transitionDTO = transitionsDTO.getPracticeAppointments();
+            getWorkflowServiceHelper().interrupt();
             getWorkflowServiceHelper().execute(transitionDTO, checkInCallback, queryMap);
 
         } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
             getApplicationPreferences().setNavigateToAppointments(true);
-            PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
-            TransitionDTO transitionDTO = transitionsDTO.getPatientAppointments();
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
             queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
+
+            PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
+            TransitionDTO transitionDTO = transitionsDTO.getPatientAppointments();
+            getWorkflowServiceHelper().interrupt();
             getWorkflowServiceHelper().execute(transitionDTO, checkInCallback, queryMap);
         }
     }
@@ -358,6 +362,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             PatientHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PatientHomeScreenTransitionsDTO.class);
             transitionDTO = transitionsDTO.getPatientPayments();
         }
+        getWorkflowServiceHelper().interrupt();
         getWorkflowServiceHelper().execute(transitionDTO, commonTransitionCallback);
     }
 
@@ -376,6 +381,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
         queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
+
+        getWorkflowServiceHelper().interrupt();
         getWorkflowServiceHelper().execute(transitionDTO, checkInCallback, queryMap);
 
     }
@@ -475,7 +482,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         @Override
         public void onPreExecute() {
-            showProgressDialog();
+//            showProgressDialog();
         }
 
         @Override
@@ -494,12 +501,12 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
                     officeNews, officeNewsClickedListener);
             newsList.setAdapter(adapter);
 
-            hideProgressDialog();
+//            hideProgressDialog();
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
+//            hideProgressDialog();
         }
     };
 
@@ -606,7 +613,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     @Override
     public void onBackPressed() {
 
-        // log out previous user from Cognito
         if(!HttpConstants.isUseUnifiedAuth()) {
             Log.v(this.getClass().getSimpleName(), "sign out Cognito");
             getAppAuthorizationHelper().getPool().getUser().signOut();
@@ -619,6 +625,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
             final PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
             logOut(transitionsDTO.getLogout());
+            getAppAuthorizationHelper().setUser(null);
+            getApplicationMode().setUserPracticeDTO(getAppAuthorizationHelper(),null);
         }
 
         super.onBackPressed();

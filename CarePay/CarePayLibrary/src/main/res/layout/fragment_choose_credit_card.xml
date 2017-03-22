@@ -1,4 +1,7 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -40,7 +43,7 @@
                 android:orientation="vertical" />
         </ScrollView>
 
-        <Button
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/addNewCardButton"
             style="@style/PaymentButtonStyle"
             android:layout_width="match_parent"
@@ -48,16 +51,20 @@
             android:layout_alignParentBottom="true"
             android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
             android:background="@drawable/button_blue_border"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimary"
+            breeze:textKey="payment_add_new_credit_card_button"
+            app:customAssetFont="gotham_rounded_medium"/>
 
-        <Button
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/nextButton"
             style="@style/PaymentButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/addNewCardButton"
             android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
-            android:background="@drawable/button_selector_green" />
+            android:background="@drawable/button_selector_green"
+            breeze:textKey="demographics_pay_button_text"
+            app:customAssetFont="gotham_rounded_medium"/>
     </RelativeLayout>
 
 </LinearLayout>

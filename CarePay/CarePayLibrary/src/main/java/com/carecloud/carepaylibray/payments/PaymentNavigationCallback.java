@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.payments;
 
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 
 /**
  * Created by lmenendez on 2/28/17.
@@ -40,6 +41,6 @@ public interface PaymentNavigationCallback {
      * Callback to add new card
      * @param amount amount to pay
      */
-    void showAddCard(double amount);
+    void showAddCard(double amount, PaymentsModel paymentsModel);
 
 }

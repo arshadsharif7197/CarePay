@@ -14,9 +14,10 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.adapter.AddPaymentItemAdapter;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.ResponsibilityType;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -30,13 +31,13 @@ import java.util.List;
 
 public class AddPaymentItemFragment extends BaseDialogFragment implements AddPaymentItemAdapter.AddPaymentItemCallback {
     public interface AddItemCallback{
-        void addChargeItem(BalanceItemDTO chargeItem);
+        void addChargeItem(SimpleChargeItem chargeItem);
     }
 
     private SearchView searchView;
     private RecyclerView searchRecycler;
-    private List<BalanceItemDTO> templateItems = new ArrayList<>();
-    private List<BalanceItemDTO> simpleChargeItems = new ArrayList<>();
+    private List<SimpleChargeItem> templateItems = new ArrayList<>();
+    private List<SimpleChargeItem> simpleChargeItems = new ArrayList<>();
 
     private AddItemCallback callback;
 
@@ -48,11 +49,11 @@ public class AddPaymentItemFragment extends BaseDialogFragment implements AddPay
         Gson gson = new Gson();
         if(args!=null){
             String payloadInfo = args.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
-            BalanceItemDTO[] balanceItemArray = gson.fromJson(payloadInfo, BalanceItemDTO[].class);
+            SimpleChargeItem[] balanceItemArray = gson.fromJson(payloadInfo, SimpleChargeItem[].class);
             simpleChargeItems = Arrays.asList(balanceItemArray);
         }
 
-        getBaseTemplateItems();
+        //getBaseTemplateItems();
     }
 
     @Override
@@ -86,11 +87,11 @@ public class AddPaymentItemFragment extends BaseDialogFragment implements AddPay
     private void setupToolbar(View view){
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.search_toolbar);
         TextView textView = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        textView.setText(Label.getLabelForView("payment_add_item_button"));
+        textView.setText(Label.getLabel("payment_add_item_button"));
 
     }
 
-    private void setAdapter(List<BalanceItemDTO> templateItems, List<BalanceItemDTO> simpleChargeItems){
+    private void setAdapter(List<SimpleChargeItem> templateItems, List<SimpleChargeItem> simpleChargeItems){
         if(searchRecycler.getAdapter()==null){
             AddPaymentItemAdapter adapter = new AddPaymentItemAdapter(getContext(), templateItems, simpleChargeItems, this);
             searchRecycler.setAdapter(adapter);
@@ -122,29 +123,29 @@ public class AddPaymentItemFragment extends BaseDialogFragment implements AddPay
     };
 
     private void getBaseTemplateItems(){
-        addTemplateItem(PendingBalancePayloadDTO.CO_PAY_TYPE, 0);
-        addTemplateItem(PendingBalancePayloadDTO.CO_INSURANCE_TYPE, 0);
-        addTemplateItem(PendingBalancePayloadDTO.DEDUCTIBLE_TYPE, 0);
+        addTemplateItem(PendingBalancePayloadDTO.CO_PAY_TYPE, 0, ResponsibilityType.co_pay);
+        addTemplateItem(PendingBalancePayloadDTO.CO_INSURANCE_TYPE, 0, ResponsibilityType.co_insurance);
+        addTemplateItem(PendingBalancePayloadDTO.DEDUCTIBLE_TYPE, 0, ResponsibilityType.deductable);
 
     }
 
-    private void addTemplateItem(String description, double amount){
-        BalanceItemDTO templateItem = new BalanceItemDTO();
+    private void addTemplateItem(String description, double amount, ResponsibilityType responsibilityType){
+        SimpleChargeItem templateItem = new SimpleChargeItem();
         templateItem.setDescription(description);
-        templateItem.setBalance(amount);
         templateItem.setAmount(amount);
+        templateItem.setResponsibilityType(responsibilityType);
         templateItems.add(templateItem);
     }
 
     private void searchItems(String searchText){
-        List<BalanceItemDTO> searchItems = new ArrayList<>();
-        for(BalanceItemDTO templateItem : templateItems){
+        List<SimpleChargeItem> searchItems = new ArrayList<>();
+        for(SimpleChargeItem templateItem : templateItems){
             if(templateItem.getDescription().toLowerCase().contains(searchText.toLowerCase())){
                 searchItems.add(templateItem);
             }
         }
 
-        for(BalanceItemDTO simpleChargeItem : simpleChargeItems){
+        for(SimpleChargeItem simpleChargeItem : simpleChargeItems){
             if(simpleChargeItem.getDescription().toLowerCase().contains(searchText.toLowerCase())){
                 searchItems.add(simpleChargeItem);
             }
@@ -159,9 +160,9 @@ public class AddPaymentItemFragment extends BaseDialogFragment implements AddPay
     }
 
     @Override
-    public void paymentItemSelected(BalanceItemDTO balanceItem) {
+    public void paymentItemSelected(SimpleChargeItem chargeItem) {
         if(callback!=null){
-            callback.addChargeItem(balanceItem);
+            callback.addChargeItem(chargeItem);
         }
         dismiss();
     }
