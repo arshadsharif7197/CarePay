@@ -112,7 +112,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/keypad_divider"
+                android:background="@color/light_gray"
                 android:orientation="horizontal">
 
                 <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
@@ -152,7 +152,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/keypad_divider"
+                android:background="@color/light_gray"
                 android:orientation="horizontal">
 
                 <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
@@ -194,7 +194,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/keypad_divider"
+                android:background="@color/light_gray"
                 android:orientation="horizontal">
 
                 <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
@@ -236,7 +236,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/keypad_divider"
+                android:background="@color/light_gray"
                 android:orientation="horizontal">
 
                 <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
