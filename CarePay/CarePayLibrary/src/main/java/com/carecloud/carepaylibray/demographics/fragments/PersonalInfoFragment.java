@@ -81,6 +81,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
     private void formatEditText(final View view) {
         final DemographicMetadataEntityAddressDTO addressMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.address;
         final DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.personalDetails;
+
         setTextListener(persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.firstName.validations.get(0).getErrorMessage(), R.id.reviewdemogrFirstNameTextInput, R.id.reviewdemogrFirstNameEdit, view);
         setTextFocusListener(R.id.reviewdemogrFirstNameEdit, R.id.reviewdemogrFirstNameTextInput, view);
 
@@ -237,6 +238,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
             if (datetime != null) {
                 String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).toStringWithFormatMmSlashDdSlashYyyy();
                 dobEditText.setText(dateOfBirthString);
+                dobEditText.getOnFocusChangeListener().onFocusChange(dobEditText, false);
             }
 
             String firstName = demographicPersDetailsPayloadDTO.getFirstName();
@@ -249,7 +251,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         EditText editText = (EditText) view.findViewById(textEditableId);
         if (SystemUtil.isNotEmptyString(value)) {
             editText.setText(value);
-
+            editText.getOnFocusChangeListener().onFocusChange(editText, true);
         }
     }
 
@@ -359,9 +361,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         String dateOfBirth = dobEditText.getText().toString();
         if (!StringUtil.isNullOrEmpty(dateOfBirth)) {
             // the date is DateUtil as
-            demographicPersDetailsPayloadDTO.setDateOfBirth(
-                    DateUtil.getInstance().setDateRaw(dateOfBirth).toStringWithFormatYyyyDashMmDashDd()
-            );
+            demographicPersDetailsPayloadDTO.setDateOfBirth(DateUtil.getInstance().setDateRaw(dateOfBirth).toStringWithFormatYyyyDashMmDashDd());
         }
 
         String profileImage = profilePicturelistener.getProfilePicture();

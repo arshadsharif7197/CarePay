@@ -317,18 +317,17 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         if (demographicAddressPayloadDTO != null) {
 
             if (SystemUtil.isNotEmptyString(demographicAddressPayloadDTO.getAddress1())) {
-
                 String adress1 = demographicAddressPayloadDTO.getAddress1();
                 initializeInputLayoutValue(adress1, R.id.addressEditTextId, view);
 
             }
 
             if (SystemUtil.isNotEmptyString(demographicAddressPayloadDTO.getAddress2())) {
-                ((EditText) view.findViewById(R.id.addressEditText2Id)).setText(demographicAddressPayloadDTO.getAddress2());
+                initializeInputLayoutValue(demographicAddressPayloadDTO.getAddress2(), R.id.addressEditText2Id, view);
             }
 
             if (SystemUtil.isNotEmptyString(demographicAddressPayloadDTO.getCity()) || !((EditText) view.findViewById(R.id.cityId)).getText().toString().isEmpty()) {
-                ((EditText) view.findViewById(R.id.cityId)).setText(demographicAddressPayloadDTO.getCity());
+                initializeInputLayoutValue(demographicAddressPayloadDTO.getCity(), R.id.cityId, view);
             }
 
 
@@ -340,7 +339,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
             }
 
             if (SystemUtil.isNotEmptyString(demographicAddressPayloadDTO.getZipcode())) {
-                ((EditText) view.findViewById(R.id.zipCodeId)).setText(demographicAddressPayloadDTO.getZipcode());
+                initializeInputLayoutValue(demographicAddressPayloadDTO.getZipcode(), R.id.zipCodeId, view);
             }
 
 
@@ -358,8 +357,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         EditText editText = (EditText) view.findViewById(textEditableId);
         if (SystemUtil.isNotEmptyString(value)) {
             editText.setText(value);
-//            editText.requestFocus();
-
+            editText.getOnFocusChangeListener().onFocusChange(editText, true);
         }
     }
 
