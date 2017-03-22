@@ -648,10 +648,10 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 //
 
 
-        ((EditText) view.findViewById(R.id.addressEditTextId)).setHint(addressMetaDTO.properties.address1.getLabel());
-        ((EditText) view.findViewById(R.id.addressEditText2Id)).setHint(addressMetaDTO.properties.address2.getLabel());
-        ((EditText) view.findViewById(R.id.cityId)).setHint(addressMetaDTO.properties.city.getLabel());
-        ((EditText) view.findViewById(R.id.zipCodeId)).setHint(addressMetaDTO.properties.zipcode.getLabel());
+//        ((EditText) view.findViewById(R.id.addressEditTextId)).setHint(addressMetaDTO.properties.address1.getLabel());
+//        ((EditText) view.findViewById(R.id.addressEditText2Id)).setHint(addressMetaDTO.properties.address2.getLabel());
+//        ((EditText) view.findViewById(R.id.cityId)).setHint(addressMetaDTO.properties.city.getLabel());
+//        ((EditText) view.findViewById(R.id.zipCodeId)).setHint(addressMetaDTO.properties.zipcode.getLabel());
 
         (view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView)).setOnClickListener(editStateListener);
 
