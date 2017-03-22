@@ -443,7 +443,6 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
         @Override
         public void onFailure(String exceptionMessage) {
             showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
-            Log.e(TAG, exceptionMessage);
         }
     };
 

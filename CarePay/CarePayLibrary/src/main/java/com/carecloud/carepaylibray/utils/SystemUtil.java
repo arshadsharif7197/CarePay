@@ -32,7 +32,6 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.base.BaseActivity;
-import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.SuccessMessageToast;
 
 import java.io.ByteArrayOutputStream;
@@ -208,19 +207,6 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
                 textInputLayout.setHint(hintCaps);
             }
         }
-    }
-
-    /**
-     * Shows a message success dialog
-     *
-     * @param context The context
-     * @param title   The title
-     * @param body    The message
-     */
-    public static void showSuccessDialogMessage(Context context, String title, String body) {
-
-        showSweetDialog(context, SweetAlertDialog.SUCCESS_TYPE, title, body);
-
     }
 
     /**
@@ -404,15 +390,9 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
      * @param context The context
      * @param exceptionMessage message to log
      */
-    public static void doDefaultFailureBehavior(Context context, String exceptionMessage) {
-        ((ISession) context).hideProgressDialog();
-
-        showFailureDialogMessage(context, "Connection issue", "There was a problem with your request. Please try again later.");
-
-        if (null == exceptionMessage || exceptionMessage.isEmpty()) {
-            exceptionMessage = "Exception message is null";
-        }
-
+    public static void doDefaultFailureBehavior(BaseActivity context, String exceptionMessage) {
+        context.hideProgressDialog();
+        context.showErrorNotification(exceptionMessage);
         Log.e(context.getString(R.string.alert_title_server_error), exceptionMessage);
     }
 

@@ -24,6 +24,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemD
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.LinksDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -147,8 +148,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
         @Override
         public void onFailure(String exceptionMessage) {
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
-            Log.e(LOG_TAG, exceptionMessage);
+            SystemUtil.doDefaultFailureBehavior((BaseActivity) getContext(), exceptionMessage);
         }
     };
 
@@ -260,8 +260,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
         @Override
         public void onFailure(String exceptionMessage) {
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
-            Log.e(LOG_TAG, exceptionMessage);
+            SystemUtil.doDefaultFailureBehavior((BaseActivity) getContext(), exceptionMessage);
         }
     };
 

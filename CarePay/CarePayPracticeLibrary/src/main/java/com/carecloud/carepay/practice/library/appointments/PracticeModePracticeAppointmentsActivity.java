@@ -362,7 +362,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-
+            SystemUtil.showSuccessToast(getContext());
             DtoHelper.putExtra(getIntent(), workflowDTO);
             initializeCheckinDto();
             applyFilter();
@@ -404,7 +404,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         @Override
         public void onFailure(String exceptionMessage) {
             showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
-            Log.e(TAG, exceptionMessage);
         }
     };
 
@@ -475,9 +474,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-
             updateAppointment(workflowDTO);
-
+            SystemUtil.showSuccessToast(getContext(), checkInLabelDTO.getAppointmentRequestSuccessMessage());
             DtoHelper.putExtra(getIntent(), checkInDTO);
             initializeCheckinDto();
             applyFilter();

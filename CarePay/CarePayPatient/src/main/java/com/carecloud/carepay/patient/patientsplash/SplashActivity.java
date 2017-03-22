@@ -42,7 +42,7 @@ public class SplashActivity extends BasePatientActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showDefaultFailureDialog(SplashActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
 
         }
@@ -75,7 +75,6 @@ public class SplashActivity extends BasePatientActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            //SystemUtil.showDefaultFailureDialog(SplashActivity.this);
             showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

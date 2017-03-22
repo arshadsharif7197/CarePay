@@ -20,6 +20,7 @@ import com.carecloud.carepay.practice.library.payments.adapter.PatientSearchResu
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.RecyclerViewWithDivider;
@@ -156,7 +157,7 @@ public class FindPatientDialog extends Dialog {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.doDefaultFailureBehavior(context, exceptionMessage);
+            SystemUtil.doDefaultFailureBehavior((BaseActivity) context, exceptionMessage);
         }
 
         private void sortPatients(List<PatientModel> patients) {
