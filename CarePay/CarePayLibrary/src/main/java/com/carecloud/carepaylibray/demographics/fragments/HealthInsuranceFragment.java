@@ -35,8 +35,6 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entitie
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.properties.DemographicMetadataPropertiesInsuranceDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPhotoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePhotoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
@@ -49,11 +47,11 @@ import com.carecloud.carepaylibray.utils.PermissionsUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 /**
  * Created by jorge on 07/02/17.
@@ -187,7 +185,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
      */
     public void initActiveSection(final View view) {
         setHeaderTitle(globalLabelsMetaDTO.getDemographicsInsuranceTitle(), view);
-        initNextButton(globalLabelsMetaDTO.getDemographicsReviewNextButton(), null, view);
+        initNextButton(null, view);
 
         selectedProvider = (CarePayTextView) view.findViewById(R.id.health_insurance_providers);
         selectedPlan = (CarePayTextView) view.findViewById(R.id.health_insurance_choose_plans);
