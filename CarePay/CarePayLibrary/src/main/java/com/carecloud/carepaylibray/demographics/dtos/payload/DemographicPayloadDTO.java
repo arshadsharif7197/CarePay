@@ -28,7 +28,6 @@ public class DemographicPayloadDTO {
     @Expose
     private DemographicAddressPayloadDTO address = new DemographicAddressPayloadDTO();
 
-
     /**
      * @return The address
      */
