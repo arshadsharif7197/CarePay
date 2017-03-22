@@ -104,6 +104,7 @@
     <!--<color name="darkblue">#176D9C</color>-->
     <color name="light_gray_dialog">#eceff1</color>
     <color name="overlay_green">#7ED321</color>
+    <color name="keypad_divider">@color/light_gray</color>
     <!--<color name="button_default">#329AD6</color>-->
     <!--<color name="blue_de_france">#35a5e1</color>-->
 </resources>
