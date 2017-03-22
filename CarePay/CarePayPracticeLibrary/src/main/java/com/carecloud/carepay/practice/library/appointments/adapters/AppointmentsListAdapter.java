@@ -1,13 +1,14 @@
 package com.carecloud.carepay.practice.library.appointments.adapters;
 
 import android.content.Context;
-import android.net.Uri;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -15,16 +16,16 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
+import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by harshal_patil on 10/19/2016.
@@ -58,78 +59,15 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
 
     @Override
     public void onBindViewHolder(final AppointmentsListViewHolder holder, int position) {
-        final AppointmentDTO selectedAppointment = appointmentsArrayList.get(position);
-        final AppointmentsPayloadDTO item = selectedAppointment.getPayload();
+        AppointmentsPayloadDTO payload = appointmentsArrayList.get(position).getPayload();
+        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(payload.getStartTime());
 
-        holder.doctorName.setText(item.getProvider().getName());
-        holder.doctorType.setText(item.getProvider().getSpecialty().getName());
+        holder.setProvider(payload.getProvider());
+        holder.setDateTime(dateUtil);
+        holder.setLocation(payload.getLocation());
+        holder.setStatus(payload, dateUtil.isToday());
 
-        DateUtil.getInstance().setDateRaw(item.getStartTime());
-        holder.appointmentDate.setText(DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal());
-
-        String strToday;
-        String startDay = StringUtils.substringBefore(DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal(), ",");
-        String endDay = DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal()
-                .substring(DateUtil.getInstance().getDateAsDayMonthDayOrdinal().indexOf(","));
-        boolean isToday = DateUtil.getInstance().isToday();
-        if (isToday) {
-            strToday = startDay.replace(startDay, Label.getLabel("appointments_web_today_heading") + endDay);
-        } else {
-            strToday = startDay + endDay;
-        }
-        holder.appointmentDate.setText(strToday);
-
-        holder.appointmentTime.setText(DateUtil.getInstance().getTime12Hour());
-
-        Date appointmentTime = DateUtil.getInstance().setDateRaw(item.getEndTime()).getDate();
-        // Get current date/time in required format
-        Date currentDate = DateUtil.getInstance().setToCurrent().getDate();
-        boolean isMissed = false;
-        long differenceInMilli = appointmentTime.getTime() - currentDate.getTime();
-        long differenceInMinutes = TimeUnit.MILLISECONDS.toMinutes(differenceInMilli);
-        if (differenceInMinutes < 0) {
-            isMissed = true;
-        }
-
-        boolean allowEarlyCheckin = appointmentsResultModel.getPayload().getAppointmentsSettings().get(0).getCheckin().getAllowEarlyCheckin();
-        String allowEarlyCheckinPeriodStr = appointmentsResultModel.getPayload().getAppointmentsSettings().get(0).getCheckin().getEarlyCheckinPeriod();
-        long allowEarlyCheckinPeriod = Long.parseLong(allowEarlyCheckinPeriodStr);
-        // Get current date/time in required format
-        boolean isPending = item.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.PENDING);
-
-        if (isPending && isToday && !isMissed) {
-            holder.startCheckIn.setClickable(true);
-            holder.startCheckIn.setEnabled(true);
-        } else if (isPending && !isMissed && allowEarlyCheckin && (differenceInMinutes < allowEarlyCheckinPeriod)) {
-            holder.startCheckIn.setClickable(true);
-            holder.startCheckIn.setEnabled(true);
-        } else {
-            holder.startCheckIn.setClickable(false);
-            holder.startCheckIn.setEnabled(false);
-        }
-
-        String photoUrl = item.getProvider().getPhoto();
-        if (TextUtils.isEmpty(photoUrl)) {
-            holder.shortName.setText(StringUtil.getShortName(item.getProvider().getName()));
-        } else {
-            Picasso.Builder builder = new Picasso.Builder(context);
-            builder.listener(new Picasso.Listener() {
-                @Override
-                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                    holder.shortName.setText(StringUtil.getShortName(item.getProvider().getName()));
-                }
-            });
-
-        }
-
-        holder.startCheckIn.setTag(position);
-        holder.startCheckIn.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                listener.onStartCheckIn(selectedAppointment);
-            }
-        });
+        holder.setCheckInButton(position);
     }
 
     public void setList(List<AppointmentDTO> appointmentsArrayList) {
@@ -143,6 +81,15 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
 
     class AppointmentsListViewHolder extends RecyclerView.ViewHolder {
 
+        private final View appointmentCardHeader;
+        private final View appointmentLocationView;
+        private final ImageView profileImage;
+        private final CarePayTextView appointmentStatusMissed;
+        private final CarePayTextView appointmentStatusCheckedIn;
+        private final CarePayTextView appointmentStatusRequested;
+        private final CarePayTextView appointmentStatusCanceled;
+        private final CarePayTextView appointmentPlaceName;
+        private final CarePayTextView appointmentPlaceAddress;
         private CarePayTextView shortName;
         private CarePayTextView doctorName;
         private CarePayTextView doctorType;
@@ -150,14 +97,142 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         private CarePayTextView appointmentTime;
         private Button startCheckIn;
 
-        AppointmentsListViewHolder(View itemView) {
-            super(itemView);
-            shortName = (CarePayTextView) itemView.findViewById(R.id.appointment_short_name);
-            doctorName = (CarePayTextView) itemView.findViewById(R.id.appointment_doctor_name);
-            doctorType = (CarePayTextView) itemView.findViewById(R.id.appointment_doctor_speciality);
-            startCheckIn = (Button) itemView.findViewById(R.id.appointment_check_in);
-            appointmentDate = (CarePayTextView) itemView.findViewById(R.id.appointment_start_day);
-            appointmentTime = (CarePayTextView) itemView.findViewById(R.id.appointment_start_time);
+        AppointmentsListViewHolder(View view) {
+            super(view);
+            startCheckIn = (Button) view.findViewById(R.id.appointment_check_in);
+            appointmentCardHeader = view.findViewById(R.id.appointment_card_header);
+            appointmentLocationView = view.findViewById(R.id.appointment_location_view);
+            shortName = (CarePayTextView) view.findViewById(R.id.appointment_short_name);
+            doctorName = (CarePayTextView) view.findViewById(R.id.appointment_doctor_name);
+            doctorType = (CarePayTextView) view.findViewById(R.id.appointment_doctor_speciality);
+            appointmentDate = (CarePayTextView) view.findViewById(R.id.appointment_start_day);
+            appointmentTime = (CarePayTextView) view.findViewById(R.id.appointment_start_time);
+            appointmentStatusMissed = (CarePayTextView) view.findViewById(R.id.appointment_status_missed);
+            appointmentStatusCheckedIn = (CarePayTextView) view.findViewById(R.id.appointment_status_checked_in);
+            appointmentStatusRequested = (CarePayTextView) view.findViewById(R.id.appointment_status_requested);
+            appointmentStatusCanceled = (CarePayTextView) view.findViewById(R.id.appointment_status_canceled);
+            appointmentPlaceName = (CarePayTextView) view.findViewById(R.id.appointment_place_name);
+            appointmentPlaceAddress = (CarePayTextView) view.findViewById(R.id.appointment_place_address);
+            profileImage = (ImageView) view.findViewById(R.id.appointment_picture_image_view);
+        }
+
+        void setStatus(AppointmentsPayloadDTO payloadDTO, boolean isToday) {
+
+            startCheckIn.setVisibility(View.GONE);
+            appointmentLocationView.setVisibility(View.GONE);
+            appointmentStatusMissed.setVisibility(View.GONE);
+            appointmentStatusCheckedIn.setVisibility(View.GONE);
+            appointmentStatusRequested.setVisibility(View.GONE);
+            appointmentStatusCanceled.setVisibility(View.GONE);
+
+            GradientDrawable headerBackground = (GradientDrawable) appointmentCardHeader.getBackground();
+
+            String statusCode = payloadDTO.getAppointmentStatusModel().getCode();
+
+            switch (statusCode) {
+                case CarePayConstants.CHECKED_IN:
+                    headerBackground.setColor(context.getResources().getColor(R.color.yellowGreen));
+                    appointmentStatusCheckedIn.setVisibility(View.VISIBLE);
+
+                    break;
+
+                case CarePayConstants.CANCELLED:
+                    headerBackground.setColor(context.getResources().getColor(R.color.harvard_crimson));
+                    appointmentStatusCanceled.setVisibility(View.VISIBLE);
+
+                    break;
+
+                case CarePayConstants.REQUESTED:
+                    headerBackground.setColor(context.getResources().getColor(R.color.colorPrimary));
+                    appointmentStatusRequested.setVisibility(View.VISIBLE);
+
+                    break;
+
+                default:
+
+                    // Missed Appointment
+                    if (payloadDTO.isAppointmentOver()) {
+
+                        headerBackground.setColor(context.getResources().getColor(R.color.lightningyellow));
+
+                        appointmentStatusMissed.setVisibility(View.VISIBLE);
+
+                    } else if (payloadDTO.canCheckInNow(appointmentsResultModel)) {
+
+                        headerBackground.setColor(context.getResources().getColor(R.color.colorPrimary));
+                        startCheckIn.setVisibility(View.VISIBLE);
+                        startCheckIn.setClickable(true);
+                        startCheckIn.setEnabled(true);
+
+                    } else if (isToday) {
+
+                        headerBackground.setColor(context.getResources().getColor(R.color.colorPrimary));
+                        startCheckIn.setVisibility(View.VISIBLE);
+                        startCheckIn.setClickable(false);
+                        startCheckIn.setEnabled(false);
+
+                    } else {
+
+                        headerBackground.setColor(context.getResources().getColor(R.color.textview_default_textcolor));
+                        appointmentLocationView.setVisibility(View.VISIBLE);
+                    }
+            }
+        }
+
+        private void setProvider(ProviderDTO provider) {
+            doctorName.setText(provider.getName());
+            doctorType.setText(provider.getSpecialty().getName());
+            shortName.setText(StringUtil.getShortName(provider.getName()));
+
+            String photoUrl = provider.getPhoto();
+            if (TextUtils.isEmpty(photoUrl)) {
+                setPhotoView(photoUrl);
+                System.out.println(provider.getName() + " - " + photoUrl);
+            }
+        }
+
+        private void setPhotoView(String photoUrl) {
+            Callback callback = new Callback() {
+                @Override
+                public void onSuccess() {
+                    profileImage.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onError() {
+                }
+            };
+
+            Picasso.with(context).
+                    load(photoUrl).
+                    transform(new CircleImageTransform()).
+                    resize(58, 58).
+                    into(profileImage, callback);
+        }
+
+        private void setCheckInButton(int position) {
+            startCheckIn.setTag(position);
+            startCheckIn.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+                    int position = (int) view.getTag();
+                    AppointmentDTO appointmentDTO = appointmentsArrayList.get(position);
+                    if (listener != null) {
+                        listener.onStartCheckIn(appointmentDTO);
+                    }
+                }
+            });
+        }
+
+        private void setDateTime(DateUtil dateUtil) {
+            appointmentDate.setText(dateUtil.getDateAsDayMonthDayOrdinalYear(Label.getLabel("appointments_web_today_heading")));
+            appointmentTime.setText(dateUtil.getTime12Hour());
+        }
+
+        void setLocation(LocationDTO location) {
+            appointmentPlaceName.setText(location.getName());
+            appointmentPlaceAddress.setText(location.getAddress().toString());
         }
     }
 
