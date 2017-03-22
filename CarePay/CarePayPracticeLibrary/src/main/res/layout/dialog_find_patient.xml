@@ -17,7 +17,7 @@
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_36sp"
         app:customAssetFont="gotham_rounded_medium"
-        breeze:textKey="practice_checkin_filter_find_patient_first" />
+        breeze:textKey="practice_filter_find_patient_first" />
 
     <LinearLayout
         android:id="@+id/contain_close"
@@ -56,7 +56,7 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_22"
                 app:customAssetFont="proxima_nova_regular"
-                breeze:hintKey="practice_checkin_filter_search_patient" />
+                breeze:hintKey="practice_filter_search_patient" />
 
             <com.carecloud.carepaylibray.customcomponents.RecyclerViewWithDivider
                 android:id="@+id/patient_searched_list"
