@@ -37,12 +37,9 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.smartystreets.api.us_zipcode.City;
 
-import java.util.Arrays;
-
 import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
+
+import java.util.Arrays;
 
 /**
  * A simple {@link CheckInDemographicsBaseFragment} subclass.
@@ -102,7 +99,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         View mainView  = super.onCreateView(inflater, container, savedInstanceState);
         initialiseUIFields(mainView);
         formatEditText(mainView);
-        setTypefaces(mainView);
+//        setTypefaces(mainView);
 
         initViewFromModels(mainView);
         stepProgressBar.setCurrentProgressDot(1);
@@ -133,22 +130,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
     }
 
 
-    protected void setChangeFocusListeners(View view) {
-
-        ((EditText) view.findViewById(R.id.zipCodeId)).setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, hasFocus);
-                if (!hasFocus) { // for SmartyStreets
-                    getCityAndState(view, ((EditText) view.findViewById(R.id.zipCodeId)).getText().toString());
-                }
-            }
-        });
-
-    }
 
     /**
      * Background task to call smarty streets zip code lookup.
@@ -186,72 +167,31 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
      * Format edit text
      */
     public void formatEditText(final View mainView){
+        TextInputLayout addressInputLayout = (TextInputLayout) mainView.findViewById(R.id.address1TextInputLayout);
+        EditText address = (EditText) mainView.findViewById(R.id.addressEditTextId);
+        address.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(addressInputLayout, null));
 
+        TextInputLayout address2InputLayout = (TextInputLayout) mainView.findViewById(R.id.address2TextInputLayout);
+        mainView.findViewById(R.id.addressEditText2Id).setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(address2InputLayout, null));
 
-        ((TextInputLayout) mainView.findViewById(R.id.address1TextInputLayout)).setTag(addressMetaDTO.properties.address1.getLabel());
-        ((EditText) mainView.findViewById(R.id.addressEditTextId)).setTag( ((TextInputLayout) mainView.findViewById(R.id.address1TextInputLayout)));
-
-
-        ((TextInputLayout) mainView.findViewById(R.id.address2TextInputLayout)).setTag(addressMetaDTO.properties.address2.getLabel());
-        ((EditText) mainView.findViewById(R.id.addressEditText2Id)).setTag(((TextInputLayout) mainView.findViewById(R.id.address2TextInputLayout)));
-
-
-        ((TextInputLayout) mainView.findViewById(R.id.zipCodeTextInputLayout)).setTag(addressMetaDTO.properties.zipcode.getLabel());
-        ((EditText) mainView.findViewById(R.id.zipCodeId)).setTag(((TextInputLayout) mainView.findViewById(R.id.zipCodeTextInputLayout)));
-
-
-        ((TextInputLayout) mainView.findViewById(R.id.cityTextInputLayout)).setTag(addressMetaDTO.properties.city.getLabel());
-        ((EditText) mainView.findViewById(R.id.cityId)).setTag(((TextInputLayout) mainView.findViewById(R.id.cityTextInputLayout)));
-
-        ((TextView) mainView.findViewById(R.id.stateTextInputLayout)).setText(addressMetaDTO.properties.state.getLabel().toUpperCase());
-
-        ((EditText) mainView.findViewById(R.id.addressEditTextId)).setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        TextInputLayout zipCodeInputLayout = (TextInputLayout) mainView.findViewById(R.id.zipCodeTextInputLayout);
+        EditText zipCode = (EditText) mainView.findViewById(R.id.zipCodeId);
+        zipCode.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeInputLayout, new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
-
-        ((EditText) mainView.findViewById(R.id.addressEditText2Id)).setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
-
-        ((EditText) mainView.findViewById(R.id.zipCodeId)).setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, bool);
-                if (!bool) { // for SmartyStreets
+            public void onFocusChange(View view, boolean hasFocus) {
+                if(!hasFocus){
                     getCityAndState(mainView, ((EditText) mainView.findViewById(R.id.zipCodeId)).getText().toString());
                 }
             }
-        });
+        }));
 
-        ((EditText) mainView.findViewById(R.id.cityId)).setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
+        TextInputLayout cityInputLayout = (TextInputLayout) mainView.findViewById(R.id.cityTextInputLayout);
+        EditText city = (EditText) mainView.findViewById(R.id.cityId);
+        city.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(cityInputLayout, null));
 
 
 
-
-        ((EditText) mainView.findViewById(R.id.addressEditTextId)).addTextChangedListener(new TextWatcher() {
+        address.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
 
@@ -284,7 +224,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
 
 
-        ((EditText) mainView.findViewById(R.id.zipCodeId)).addTextChangedListener(new TextWatcher() {
+        zipCode.addTextChangedListener(new TextWatcher() {
             int prevLen = 0;
 
             @Override
@@ -322,7 +262,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
 
 
-        ((EditText) mainView.findViewById(R.id.cityId)).addTextChangedListener(new TextWatcher() {
+        city.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
 
@@ -350,8 +290,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         });
 
 
-        setChangeFocusListeners(mainView);
-
     }
 
     /**
@@ -370,49 +308,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
     }
 
 
-    /**
-     * Set text listener
-     */
-    private void addTextListener(final String message, final int layOutTextLabel, final int textEditableId, final View view){
-        final TextInputLayout textLayout = (TextInputLayout) view.findViewById(layOutTextLabel);
-        final EditText editText = (EditText) view.findViewById(textEditableId);
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int count, int end) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                boolean isTextEmpty = checkTextEmptyValue(textEditableId, view);
-                if (!isTextEmpty) {
-                    textLayout.setError(null);
-                    textLayout.setErrorEnabled(false);
-                } else {;
-                    textLayout.setError(message);
-                    textLayout.setErrorEnabled(true);
-                }
-
-                checkIfEnableButton(view);
-            }
-        });
-
-    }
-
-    /**
-     * Set edit text
-     */
-    private void addEditTexts(View view) {
-
-        ((TextInputLayout) view.findViewById(R.id.address1TextInputLayout)).setTag(addressMetaDTO.properties.address1.getLabel());
-
-    }
-
 
     /**
      * init view from models
@@ -430,12 +325,10 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
             if (SystemUtil.isNotEmptyString(demographicAddressPayloadDTO.getAddress2())) {
                 ((EditText) view.findViewById(R.id.addressEditText2Id)).setText(demographicAddressPayloadDTO.getAddress2());
-                ((EditText) view.findViewById(R.id.addressEditText2Id)).requestFocus();
             }
 
             if (SystemUtil.isNotEmptyString(demographicAddressPayloadDTO.getCity()) || !((EditText) view.findViewById(R.id.cityId)).getText().toString().isEmpty()) {
                 ((EditText) view.findViewById(R.id.cityId)).setText(demographicAddressPayloadDTO.getCity());
-                ((EditText) view.findViewById(R.id.cityId)).requestFocus();
             }
 
 
@@ -448,7 +341,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
             if (SystemUtil.isNotEmptyString(demographicAddressPayloadDTO.getZipcode())) {
                 ((EditText) view.findViewById(R.id.zipCodeId)).setText(demographicAddressPayloadDTO.getZipcode());
-                ((EditText) view.findViewById(R.id.zipCodeId)).requestFocus();
             }
 
 
@@ -466,7 +358,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         EditText editText = (EditText) view.findViewById(textEditableId);
         if (SystemUtil.isNotEmptyString(value)) {
             editText.setText(value);
-            editText.requestFocus();
+//            editText.requestFocus();
 
         }
     }
@@ -550,66 +442,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
 
 
-    /**
-     * Set type faces
-     */
-    public void setTypefaces(View view) {
-
-        setLabelStyle( R.id.address1TextInputLayout, R.id.addressEditTextId, view);
-
-
-        if (!StringUtil.isNullOrEmpty(((EditText) view.findViewById(R.id.addressEditTextId)).getText().toString())) {
-            setProximaNovaExtraboldTypefaceInput(getActivity(), ((TextInputLayout) view.findViewById(R.id.address1TextInputLayout)));
-        } else {
-            setProximaNovaRegularTypefaceLayout(getActivity(), ((TextInputLayout) view.findViewById(R.id.address1TextInputLayout)));
-        }
-
-
-        if (!StringUtil.isNullOrEmpty(((EditText) view.findViewById(R.id.addressEditText2Id)).getText().toString())) {
-            setProximaNovaExtraboldTypefaceInput(getActivity(), ((TextInputLayout) view.findViewById(R.id.address2TextInputLayout)));
-        } else {
-            setProximaNovaRegularTypefaceLayout(getActivity(), ((TextInputLayout) view.findViewById(R.id.address2TextInputLayout)));
-        }
-        if (!StringUtil.isNullOrEmpty(((EditText) view.findViewById(R.id.zipCodeId)).getText().toString())) {
-            setProximaNovaExtraboldTypefaceInput(getActivity(), ((TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout)));
-        } else {
-            setProximaNovaRegularTypefaceLayout(getActivity(), ((TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout)));
-        }
-
-        if (!StringUtil.isNullOrEmpty(((EditText) view.findViewById(R.id.cityId)).getText().toString())) {
-            setProximaNovaExtraboldTypefaceInput(getActivity(), ((TextInputLayout) view.findViewById(R.id.cityTextInputLayout)));
-        } else {
-            setProximaNovaRegularTypefaceLayout(getActivity(), ((TextInputLayout) view.findViewById(R.id.cityTextInputLayout)));
-        }
-
-        setProximaNovaExtraboldTypeface(getActivity(), ((TextView) view.findViewById(R.id.stateTextInputLayout)));
-
-
-    }
-
-    /**
-     * Init text labels
-     */
-    private void initTextLabel(String label, int layOutTextLabel, int textEditableId, View view){
-        TextInputLayout textLayout = (TextInputLayout) view.findViewById(layOutTextLabel);
-        textLayout.setTag(label);
-        EditText editText = (EditText) view.findViewById(textEditableId);
-        editText.setTag(textLayout);
-        editText.setHint(label);
-    }
-
-    /**
-     * set label style
-     */
-    private void setLabelStyle(int layOutTextLabel, int textEditableId, View view) {
-        TextInputLayout textLayout = (TextInputLayout) view.findViewById(layOutTextLabel);
-        EditText editText = (EditText) view.findViewById(textEditableId);
-        if (!StringUtil.isNullOrEmpty(editText.getText().toString())) {
-            SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), textLayout);
-        } else {
-            SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), textLayout);
-        }
-    }
 
 
     /**
@@ -619,22 +451,12 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
 
         setHeaderTitle(globalLabelsMetaDTO.getDemographicsAddressSection(), view);
-        initNextButton(globalLabelsMetaDTO.getDemographicsReviewNextButton(), null, view);
+        initNextButton(null, view);
 
 
         cityEditText = (EditText) view.findViewById(R.id.cityId);
         stateEditText = (TextView) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView);
 
-
-        TextView optinalLabelTextView = (TextView) view.findViewById(R.id.demogrAddressOptionalLabel);
-        optinalLabelTextView.setText(globalLabelsMetaDTO.getDemographicsDetailsOptionalHint());
-
-
-
-        ((EditText) view.findViewById(R.id.addressEditTextId)).setHint(addressMetaDTO.properties.address1.getLabel());
-        ((EditText) view.findViewById(R.id.addressEditText2Id)).setHint(addressMetaDTO.properties.address2.getLabel());
-        ((EditText) view.findViewById(R.id.cityId)).setHint(addressMetaDTO.properties.city.getLabel());
-        ((EditText) view.findViewById(R.id.zipCodeId)).setHint(addressMetaDTO.properties.zipcode.getLabel());
 
         (view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView)).setOnClickListener(editStateListener);
 

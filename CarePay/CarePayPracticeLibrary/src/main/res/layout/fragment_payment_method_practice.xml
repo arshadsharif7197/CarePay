@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -14,7 +16,7 @@
 
         <include
             android:id="@+id/toolbar_layout"
-            layout="@layout/toolbar_no_title"/>
+            layout="@layout/toolbar_no_title" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/paymentMethodTitleLabel"
@@ -27,6 +29,7 @@
             app:customAssetFont="gotham_rounded_medium" />
 
     </FrameLayout>
+
     <ProgressBar
         android:id="@+id/paymentMethodFragmentProgressBar"
         style="?android:attr/progressBarStyleHorizontal"
@@ -58,10 +61,10 @@
             style="@style/PaymentButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen_100dp"
             android:layout_marginEnd="@dimen/dimen_100dp"
-            android:enabled="false"
+            android:layout_marginStart="@dimen/dimen_100dp"
             android:background="@drawable/emerald_rounded_button_selector"
+            android:enabled="false"
             app:customAssetFont="gotham_rounded_medium" />
 
 
@@ -90,9 +93,10 @@
                 android:layout_margin="@dimen/dimen_5dp"
                 android:gravity="center"
                 android:text="@string/swipeCreditCardSeparatorText"
-                android:textSize="@dimen/dimen_18dp"
                 android:textColor="@color/optionl_gray"
-                android:textStyle="bold" />
+                android:textSize="@dimen/dimen_18dp"
+                android:textStyle="bold"
+                breeze:textKey="payment_clover_swipe_now_separator_text" />
 
             <View
                 android:layout_width="0dp"
@@ -106,17 +110,16 @@
 
 
     <ListView
+        android:id="@+id/list_payment_types"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
-        android:layout_marginStart="@dimen/dimen_100dp"
-        android:layout_marginEnd="@dimen/dimen_100dp"
         android:layout_marginBottom="@dimen/dimen_20dp"
+        android:layout_marginEnd="@dimen/dimen_100dp"
+        android:layout_marginStart="@dimen/dimen_100dp"
+        android:layout_weight="3"
         android:elevation="17dp"
         android:padding="@dimen/payment_method_parent_layout_padding"
-        android:id="@+id/list_payment_types"
-        android:visibility="visible"/>
-
+        android:visibility="visible" />
 
 
     <ScrollView
@@ -200,8 +203,8 @@
             android:layout_margin="@dimen/dimen_5dp"
             android:layout_weight="1"
             android:background="@drawable/bg_yellow_overlay"
-            app:customAssetFont="gotham_rounded_medium"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            app:customAssetFont="gotham_rounded_medium" />
 
     </LinearLayout>
 

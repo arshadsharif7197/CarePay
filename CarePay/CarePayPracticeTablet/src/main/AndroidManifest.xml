@@ -79,7 +79,7 @@
             android:screenOrientation="sensorLandscape"/>
         <activity
             android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity"
-            android:windowSoftInputMode="adjustNothing"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="sensorLandscape"/>
         <activity
             android:name="com.carecloud.carepaylibray.qrcodescanner.ScannerActivity"
