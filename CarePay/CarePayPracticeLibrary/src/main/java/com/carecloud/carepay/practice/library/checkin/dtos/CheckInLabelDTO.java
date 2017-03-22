@@ -130,6 +130,14 @@ public class CheckInLabelDTO extends AppointmentLabelDTO {
     @Expose
     private String practiceCheckinFilterFindPatient;
 
+    @SerializedName("practice_checkin_filter_find_patient_first")
+    @Expose
+    private String practiceCheckinFilterFindPatientFirst;
+
+    @SerializedName("practice_checkin_filter_search_patient")
+    @Expose
+    private String practiceCheckinFilterSearchPatient;
+
     @SerializedName("practice_checkin_close_label")
     @Expose
     private String practiceCheckinCloseLabel;
@@ -452,6 +460,14 @@ public class CheckInLabelDTO extends AppointmentLabelDTO {
 
     public String getPracticeCheckinFilterFindPatient() {
         return StringUtil.getLabelForView(practiceCheckinFilterFindPatient);
+    }
+
+    public String getPracticeCheckinFilterFindPatientFirst() {
+        return practiceCheckinFilterFindPatientFirst;
+    }
+
+    public String getPracticeCheckinFilterSearchPatient() {
+        return practiceCheckinFilterSearchPatient;
     }
 
     public String getPracticeCheckinCloseLabel() {
