@@ -192,13 +192,13 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
 
 
     @Override
-    protected void handlePaymentButton(String type, double amount){
-        if(type == CarePayConstants.TYPE_ANDROID_PAY){
+    protected void handlePaymentButton(PaymentsMethodsDTO paymentMethod, double amount){
+        if(paymentMethod.getType() == CarePayConstants.TYPE_ANDROID_PAY){
             setLineItems(paymentList.get(0).getPayload());
 //            createAndAddWalletFragment(paymentsModel.getPaymentPayload().getPatientBalances().get(0).getPendingRepsonsibility());// getPayload().get(0).getTotal());
             createAndAddWalletFragment(String.valueOf(amount));
         }else{
-            super.handlePaymentButton(type, amount);
+            super.handlePaymentButton(paymentMethod, amount);
         }
     }
 
