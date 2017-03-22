@@ -295,7 +295,7 @@ public class WorkflowServiceHelper {
                 //TODO: this should change after the creation of the Label service
                 JsonObject labels = workflowDTO.getMetadata().getAsJsonObject("labels");
                 String state = workflowDTO.getState();
-                boolean contains = ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences().contains("labelFor" + state);
+                boolean contains = ((AndroidPlatform) Platform.get()).openSharedPreferences(AndroidPlatform.LABELS_FILE_NAME).contains("labelFor" + state);
                 if (labels != null && !contains) {
                     Set<Map.Entry<String, JsonElement>> set = labels.entrySet();
                     for (Map.Entry<String, JsonElement> entry : set) {

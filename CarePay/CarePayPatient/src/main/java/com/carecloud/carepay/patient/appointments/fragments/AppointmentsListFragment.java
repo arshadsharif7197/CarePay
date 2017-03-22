@@ -386,6 +386,7 @@ public class AppointmentsListFragment extends BaseFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
+            SystemUtil.showSuccessToast(getContext(), appointmentLabels.getAppointmentCancellationSuccessMessage());
         }
 
         @Override
