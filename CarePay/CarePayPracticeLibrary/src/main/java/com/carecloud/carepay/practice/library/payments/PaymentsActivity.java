@@ -267,7 +267,9 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
                 //need to add these as they do not return in this call
                 patientDetails.getPaymentPayload().setLocations(paymentsModel.getPaymentPayload().getLocations());
+                patientDetails.getPaymentPayload().setLocationIndex(paymentsModel.getPaymentPayload().getLocationIndex());
                 patientDetails.getPaymentPayload().setProviders(paymentsModel.getPaymentPayload().getProviders());
+                patientDetails.getPaymentPayload().setProviderIndex(paymentsModel.getPaymentPayload().getProviderIndex());
                 showPaymentDistributionDialog(patientDetails);
             }
 
