@@ -28,9 +28,6 @@ public class DemographicPayloadDTO {
     @Expose
     private DemographicAddressPayloadDTO address = new DemographicAddressPayloadDTO();
 
-    @SerializedName("updates")
-    @Expose
-    private List<DemographicPayloadUpdateDTO> updates = new ArrayList<>();
 
     /**
      * @return The address
@@ -91,11 +88,4 @@ public class DemographicPayloadDTO {
         this.insurances = insurances;
     }
 
-    public List<DemographicPayloadUpdateDTO> getUpdates() {
-        return updates;
-    }
-
-    public void setUpdates(List<DemographicPayloadUpdateDTO> updates) {
-        this.updates = updates;
-    }
 }
