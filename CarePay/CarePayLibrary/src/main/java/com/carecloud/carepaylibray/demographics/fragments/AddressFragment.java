@@ -38,9 +38,6 @@ import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.smartystreets.api.us_zipcode.City;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
 
 import java.util.Arrays;
 
@@ -102,7 +99,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         View mainView  = super.onCreateView(inflater, container, savedInstanceState);
         initialiseUIFields(mainView);
         formatEditText(mainView);
-        setTypefaces(mainView);
+//        setTypefaces(mainView);
 
         initViewFromModels(mainView);
         stepProgressBar.setCurrentProgressDot(1);
@@ -205,48 +202,48 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
         ((TextView) mainView.findViewById(R.id.stateTextInputLayout)).setText(addressMetaDTO.properties.state.getLabel().toUpperCase());
 
-        ((EditText) mainView.findViewById(R.id.addressEditTextId)).setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
+//        ((EditText) mainView.findViewById(R.id.addressEditTextId)).setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View view, boolean bool) {
+////                if (bool) {
+////                    SystemUtil.showSoftKeyboard(getActivity());
+////                }
+//                SystemUtil.handleHintChange(view, bool);
+//            }
+//        });
 
-        ((EditText) mainView.findViewById(R.id.addressEditText2Id)).setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
+//        ((EditText) mainView.findViewById(R.id.addressEditText2Id)).setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View view, boolean bool) {
+////                if (bool) {
+////                    SystemUtil.showSoftKeyboard(getActivity());
+////                }
+//                SystemUtil.handleHintChange(view, bool);
+//            }
+//        });
 
         ((EditText) mainView.findViewById(R.id.zipCodeId)).setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, bool);
+//                if (bool) {
+//                    SystemUtil.showSoftKeyboard(getActivity());
+//                }
+//                SystemUtil.handleHintChange(view, bool);
                 if (!bool) { // for SmartyStreets
                     getCityAndState(mainView, ((EditText) mainView.findViewById(R.id.zipCodeId)).getText().toString());
                 }
             }
         });
 
-        ((EditText) mainView.findViewById(R.id.cityId)).setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
+//        ((EditText) mainView.findViewById(R.id.cityId)).setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View view, boolean bool) {
+////                if (bool) {
+////                    SystemUtil.showSoftKeyboard(getActivity());
+////                }
+//                SystemUtil.handleHintChange(view, bool);
+//            }
+//        });
 
 
 
@@ -430,12 +427,12 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
             if (SystemUtil.isNotEmptyString(demographicAddressPayloadDTO.getAddress2())) {
                 ((EditText) view.findViewById(R.id.addressEditText2Id)).setText(demographicAddressPayloadDTO.getAddress2());
-                ((EditText) view.findViewById(R.id.addressEditText2Id)).requestFocus();
+//                ((EditText) view.findViewById(R.id.addressEditText2Id)).requestFocus();
             }
 
             if (SystemUtil.isNotEmptyString(demographicAddressPayloadDTO.getCity()) || !((EditText) view.findViewById(R.id.cityId)).getText().toString().isEmpty()) {
                 ((EditText) view.findViewById(R.id.cityId)).setText(demographicAddressPayloadDTO.getCity());
-                ((EditText) view.findViewById(R.id.cityId)).requestFocus();
+//                ((EditText) view.findViewById(R.id.cityId)).requestFocus();
             }
 
 
@@ -448,7 +445,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
             if (SystemUtil.isNotEmptyString(demographicAddressPayloadDTO.getZipcode())) {
                 ((EditText) view.findViewById(R.id.zipCodeId)).setText(demographicAddressPayloadDTO.getZipcode());
-                ((EditText) view.findViewById(R.id.zipCodeId)).requestFocus();
+//                ((EditText) view.findViewById(R.id.zipCodeId)).requestFocus();
             }
 
 
@@ -466,7 +463,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         EditText editText = (EditText) view.findViewById(textEditableId);
         if (SystemUtil.isNotEmptyString(value)) {
             editText.setText(value);
-            editText.requestFocus();
+//            editText.requestFocus();
 
         }
     }
@@ -550,66 +547,66 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
 
 
-    /**
-     * Set type faces
-     */
-    public void setTypefaces(View view) {
+//    /**
+//     * Set type faces
+//     */
+//    public void setTypefaces(View view) {
+//
+////        setLabelStyle( R.id.address1TextInputLayout, R.id.addressEditTextId, view);
+//
+//
+////        if (!StringUtil.isNullOrEmpty(((EditText) view.findViewById(R.id.addressEditTextId)).getText().toString())) {
+////            setProximaNovaExtraboldTypefaceInput(getActivity(), ((TextInputLayout) view.findViewById(R.id.address1TextInputLayout)));
+////        } else {
+////            setProximaNovaRegularTypefaceLayout(getActivity(), ((TextInputLayout) view.findViewById(R.id.address1TextInputLayout)));
+////        }
+//
+//
+////        if (!StringUtil.isNullOrEmpty(((EditText) view.findViewById(R.id.addressEditText2Id)).getText().toString())) {
+////            setProximaNovaExtraboldTypefaceInput(getActivity(), ((TextInputLayout) view.findViewById(R.id.address2TextInputLayout)));
+////        } else {
+////            setProximaNovaRegularTypefaceLayout(getActivity(), ((TextInputLayout) view.findViewById(R.id.address2TextInputLayout)));
+////        }
+////        if (!StringUtil.isNullOrEmpty(((EditText) view.findViewById(R.id.zipCodeId)).getText().toString())) {
+////            setProximaNovaExtraboldTypefaceInput(getActivity(), ((TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout)));
+////        } else {
+////            setProximaNovaRegularTypefaceLayout(getActivity(), ((TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout)));
+////        }
+//
+////        if (!StringUtil.isNullOrEmpty(((EditText) view.findViewById(R.id.cityId)).getText().toString())) {
+////            setProximaNovaExtraboldTypefaceInput(getActivity(), ((TextInputLayout) view.findViewById(R.id.cityTextInputLayout)));
+////        } else {
+////            setProximaNovaRegularTypefaceLayout(getActivity(), ((TextInputLayout) view.findViewById(R.id.cityTextInputLayout)));
+////        }
+//
+////        setProximaNovaExtraboldTypeface(getActivity(), ((TextView) view.findViewById(R.id.stateTextInputLayout)));
+//
+//
+//    }
 
-        setLabelStyle( R.id.address1TextInputLayout, R.id.addressEditTextId, view);
-
-
-        if (!StringUtil.isNullOrEmpty(((EditText) view.findViewById(R.id.addressEditTextId)).getText().toString())) {
-            setProximaNovaExtraboldTypefaceInput(getActivity(), ((TextInputLayout) view.findViewById(R.id.address1TextInputLayout)));
-        } else {
-            setProximaNovaRegularTypefaceLayout(getActivity(), ((TextInputLayout) view.findViewById(R.id.address1TextInputLayout)));
-        }
-
-
-        if (!StringUtil.isNullOrEmpty(((EditText) view.findViewById(R.id.addressEditText2Id)).getText().toString())) {
-            setProximaNovaExtraboldTypefaceInput(getActivity(), ((TextInputLayout) view.findViewById(R.id.address2TextInputLayout)));
-        } else {
-            setProximaNovaRegularTypefaceLayout(getActivity(), ((TextInputLayout) view.findViewById(R.id.address2TextInputLayout)));
-        }
-        if (!StringUtil.isNullOrEmpty(((EditText) view.findViewById(R.id.zipCodeId)).getText().toString())) {
-            setProximaNovaExtraboldTypefaceInput(getActivity(), ((TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout)));
-        } else {
-            setProximaNovaRegularTypefaceLayout(getActivity(), ((TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout)));
-        }
-
-        if (!StringUtil.isNullOrEmpty(((EditText) view.findViewById(R.id.cityId)).getText().toString())) {
-            setProximaNovaExtraboldTypefaceInput(getActivity(), ((TextInputLayout) view.findViewById(R.id.cityTextInputLayout)));
-        } else {
-            setProximaNovaRegularTypefaceLayout(getActivity(), ((TextInputLayout) view.findViewById(R.id.cityTextInputLayout)));
-        }
-
-        setProximaNovaExtraboldTypeface(getActivity(), ((TextView) view.findViewById(R.id.stateTextInputLayout)));
-
-
-    }
-
-    /**
-     * Init text labels
-     */
-    private void initTextLabel(String label, int layOutTextLabel, int textEditableId, View view){
-        TextInputLayout textLayout = (TextInputLayout) view.findViewById(layOutTextLabel);
-        textLayout.setTag(label);
-        EditText editText = (EditText) view.findViewById(textEditableId);
-        editText.setTag(textLayout);
-        editText.setHint(label);
-    }
+//    /**
+//     * Init text labels
+//     */
+//    private void initTextLabel(String label, int layOutTextLabel, int textEditableId, View view){
+//        TextInputLayout textLayout = (TextInputLayout) view.findViewById(layOutTextLabel);
+//        textLayout.setTag(label);
+//        EditText editText = (EditText) view.findViewById(textEditableId);
+//        editText.setTag(textLayout);
+//        editText.setHint(label);
+//    }
 
     /**
      * set label style
      */
-    private void setLabelStyle(int layOutTextLabel, int textEditableId, View view) {
-        TextInputLayout textLayout = (TextInputLayout) view.findViewById(layOutTextLabel);
-        EditText editText = (EditText) view.findViewById(textEditableId);
-        if (!StringUtil.isNullOrEmpty(editText.getText().toString())) {
-            SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), textLayout);
-        } else {
-            SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), textLayout);
-        }
-    }
+//    private void setLabelStyle(int layOutTextLabel, int textEditableId, View view) {
+//        TextInputLayout textLayout = (TextInputLayout) view.findViewById(layOutTextLabel);
+//        EditText editText = (EditText) view.findViewById(textEditableId);
+//        if (!StringUtil.isNullOrEmpty(editText.getText().toString())) {
+//            SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), textLayout);
+//        } else {
+//            SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), textLayout);
+//        }
+//    }
 
 
     /**
@@ -626,9 +623,9 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         stateEditText = (TextView) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView);
 
 
-        TextView optinalLabelTextView = (TextView) view.findViewById(R.id.demogrAddressOptionalLabel);
-        optinalLabelTextView.setText(globalLabelsMetaDTO.getDemographicsDetailsOptionalHint());
-
+//        TextView optinalLabelTextView = (TextView) view.findViewById(R.id.demogrAddressOptionalLabel);
+//        optinalLabelTextView.setText(globalLabelsMetaDTO.getDemographicsDetailsOptionalHint());
+//
 
 
         ((EditText) view.findViewById(R.id.addressEditTextId)).setHint(addressMetaDTO.properties.address1.getLabel());

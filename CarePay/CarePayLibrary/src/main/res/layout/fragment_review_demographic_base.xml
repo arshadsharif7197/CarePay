@@ -52,6 +52,11 @@
         android:layout_marginTop="0dp"
         />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/demo_view_height"
+        android:background="@color/light_gray"/>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -84,12 +89,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/demo_view_height"
-        android:layout_marginBottom="@dimen/divider_margin_bottom"
-        android:layout_marginTop="@dimen/divider_margin_top"
-        android:background="@color/light_gray"/>
 
 
     <!--LinearLayout
@@ -105,8 +104,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/demo_view_height"
-        android:layout_marginBottom="@dimen/divider_margin_bottom"
-        android:layout_marginTop="@dimen/divider_margin_top"
         android:background="@color/light_gray"/>
 
     <com.carecloud.carepaylibray.customcomponents.CarePayButton
@@ -117,6 +114,7 @@
         android:layout_margin="@dimen/dimen_10dp"
         android:gravity="center"
         android:textColor="@color/white"
+        android:textSize="@dimen/text_size_22"
         android:enabled="false"
         breeze:textKey="demographics_review_next_button"
         app:customAssetFont="gotham_rounded_medium"/>
