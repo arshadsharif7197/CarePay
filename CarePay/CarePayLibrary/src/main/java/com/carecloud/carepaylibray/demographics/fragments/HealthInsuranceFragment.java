@@ -105,9 +105,9 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
 //        model = DtoHelper.getConvertedDTO(DemographicIdDocPayloadDTO.class, getArguments());
 
         initDTOs();
-        initializePhotos();
         initActiveSection(view);
         initLabels(view);
+        initializePhotos();
 
         checkIfEnableButton(view);
         SystemUtil.hideSoftKeyboard(getActivity());
