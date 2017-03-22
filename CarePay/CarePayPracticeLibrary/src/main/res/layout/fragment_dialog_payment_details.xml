@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="@dimen/dialog_width"
-    android:layout_height="@dimen/dialog_height"
-    android:background="@drawable/payment_receipt_bg">
+    android:layout_height="@dimen/dialog_height">
 
     <RelativeLayout
         android:id="@+id/profile_image_layout"
@@ -92,6 +91,7 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/payment_receipt_details_view"
+        android:background="@drawable/payment_receipt_bg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/payment_details_pay_now_button"
