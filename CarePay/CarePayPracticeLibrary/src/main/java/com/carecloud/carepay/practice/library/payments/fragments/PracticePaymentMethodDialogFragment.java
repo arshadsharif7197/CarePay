@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,8 +33,8 @@ public class PracticePaymentMethodDialogFragment extends PracticePaymentMethodFr
     }
 
     @Override
-    protected void handlePaymentButton(String type, double amount){
-        super.handlePaymentButton(type, amount);
+    protected void handlePaymentButton(PaymentsMethodsDTO paymentMethod, double amount){
+        super.handlePaymentButton(paymentMethod, amount);
         dismiss();
     }
 
