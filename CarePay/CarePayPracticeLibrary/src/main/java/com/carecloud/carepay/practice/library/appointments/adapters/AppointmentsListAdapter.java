@@ -203,11 +203,8 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
                 }
             };
 
-            Picasso.with(context).
-                    load(photoUrl).
-                    transform(new CircleImageTransform()).
-                    resize(58, 58).
-                    into(profileImage, callback);
+            Picasso.with(context).load(photoUrl).transform(new CircleImageTransform())
+                    .resize(58, 58).into(profileImage, callback);
         }
 
         private void setCheckInButton(int position) {
