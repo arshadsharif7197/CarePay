@@ -210,16 +210,20 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
         }
     }
 
+    /**
+     * Focus listener for handling CAPS on EditTexts that have attached TextInputLayout
+     * @param textInputLayout TextInputLayout that will handle the hint
+     * @param optionalListener Set if the view needs to do additional work on focus change
+     * @return focus change listener
+     */
     public static View.OnFocusChangeListener getHintFocusChangeListener(final TextInputLayout textInputLayout, final View.OnFocusChangeListener optionalListener){
         return new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 String[] tags = (String[]) view.getTag();
-                if(tags == null ){
-                    if(textInputLayout.getHint()!=null) {
-                        tags = new String[]{textInputLayout.getHint().toString().toUpperCase(), textInputLayout.getHint().toString()};
-                        view.setTag(tags);
-                    }
+                if(tags == null && textInputLayout.getHint()!=null){
+                    tags = new String[]{textInputLayout.getHint().toString().toUpperCase(), textInputLayout.getHint().toString()};
+                    view.setTag(tags);
                 }
 
                 if(tags!=null){

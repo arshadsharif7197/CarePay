@@ -178,7 +178,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         EditText zipCode = (EditText) mainView.findViewById(R.id.zipCodeId);
         zipCode.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeInputLayout, new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
+            public void onFocusChange(View view, boolean hasFocus) {
                 if(!hasFocus){
                     getCityAndState(mainView, ((EditText) mainView.findViewById(R.id.zipCodeId)).getText().toString());
                 }
