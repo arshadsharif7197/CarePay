@@ -17,6 +17,9 @@ public class PaymentPostModel {
     @SerializedName("payments")
     private List<PaymentObject> paymentObjects = new ArrayList<>();
 
+    @SerializedName("transaction_response")
+    private TransactionResponse transactionResponse;
+
     public double getAmount() {
         return amount;
     }
@@ -32,6 +35,15 @@ public class PaymentPostModel {
     public void setPaymentObjects(List<PaymentObject> paymentObjects) {
         this.paymentObjects = paymentObjects;
     }
+
+    public TransactionResponse getTransactionResponse() {
+        return transactionResponse;
+    }
+
+    public void setTransactionResponse(TransactionResponse transactionResponse) {
+        this.transactionResponse = transactionResponse;
+    }
+
 
     public void addPaymentMethod(PaymentObject paymentObject){
         paymentObjects.add(paymentObject);
@@ -51,7 +63,20 @@ public class PaymentPostModel {
             if(!paymentObject.isPaymentMethodValid()){
                 return false;
             }
-        }
+            PaymentExecution execution = paymentObject.getExecution();
+            switch (execution) {
+                case android_pay:
+                case apple_pay:
+                case clover: {
+                    if(transactionResponse == null || !transactionResponse.isValid()){
+                        return false;
+                    }
+                }
+                default: {
+                    //nothing
+                }
+            }
+            }
         return payAmount == amount;
     }
 }

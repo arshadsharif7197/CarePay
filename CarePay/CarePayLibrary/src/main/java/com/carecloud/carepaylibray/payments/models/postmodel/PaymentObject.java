@@ -29,9 +29,6 @@ public class PaymentObject {
     @SerializedName("credit_card")
     private CreditCardModel creditCard;
 
-    @SerializedName("transaction_response")
-    private TransactionResponse transactionResponse;
-
     @SerializedName("bank_account_token")
     private String bankAccountToken;
 
@@ -77,14 +74,6 @@ public class PaymentObject {
 
     public void setCreditCard(CreditCardModel creditCard) {
         this.creditCard = creditCard;
-    }
-
-    public TransactionResponse getTransactionResponse() {
-        return transactionResponse;
-    }
-
-    public void setTransactionResponse(TransactionResponse transactionResponse) {
-        this.transactionResponse = transactionResponse;
     }
 
     public String getBankAccountToken() {
@@ -157,19 +146,7 @@ public class PaymentObject {
         if(execution == null){
             return false;
         }
-
-        switch (execution){
-            case android_pay:
-            case apple_pay:
-            case clover: {
-                return hasValidPaymentOption() &&
-                        transactionResponse != null &&
-                        transactionResponse.isValid();
-            }
-            default:{
-                return hasValidPaymentOption();
-            }
-        }
+            return hasValidPaymentOption();
     }
 
     private boolean hasValidPaymentOption(){
