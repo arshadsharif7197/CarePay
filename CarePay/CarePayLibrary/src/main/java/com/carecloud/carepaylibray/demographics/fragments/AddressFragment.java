@@ -130,22 +130,22 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
     }
 
 
-    protected void setChangeFocusListeners(View view) {
-
-        ((EditText) view.findViewById(R.id.zipCodeId)).setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, hasFocus);
-                if (!hasFocus) { // for SmartyStreets
-                    getCityAndState(view, ((EditText) view.findViewById(R.id.zipCodeId)).getText().toString());
-                }
-            }
-        });
-
-    }
+//    protected void setChangeFocusListeners(View view) {
+//
+//        ((EditText) view.findViewById(R.id.zipCodeId)).setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View view, boolean hasFocus) {
+//                if (hasFocus) {
+//                    SystemUtil.showSoftKeyboard(getActivity());
+//                }
+//                SystemUtil.handleHintChange(view, hasFocus);
+//                if (!hasFocus) { // for SmartyStreets
+//                    getCityAndState(view, ((EditText) view.findViewById(R.id.zipCodeId)).getText().toString());
+//                }
+//            }
+//        });
+//
+//    }
 
     /**
      * Background task to call smarty streets zip code lookup.
@@ -183,24 +183,44 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
      * Format edit text
      */
     public void formatEditText(final View mainView){
+        TextInputLayout addressInputLayout = (TextInputLayout) mainView.findViewById(R.id.address1TextInputLayout);
+        EditText address = (EditText) mainView.findViewById(R.id.addressEditTextId);
+        address.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(addressInputLayout, null));
+
+        TextInputLayout address2InputLayout = (TextInputLayout) mainView.findViewById(R.id.address2TextInputLayout);
+        mainView.findViewById(R.id.addressEditText2Id).setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(address2InputLayout, null));
+
+        TextInputLayout zipCodeInputLayout = (TextInputLayout) mainView.findViewById(R.id.zipCodeTextInputLayout);
+        EditText zipCode = (EditText) mainView.findViewById(R.id.zipCodeId);
+        zipCode.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeInputLayout, new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus){
+                    getCityAndState(mainView, ((EditText) mainView.findViewById(R.id.zipCodeId)).getText().toString());
+                }
+            }
+        }));
+
+        TextInputLayout cityInputLayout = (TextInputLayout) mainView.findViewById(R.id.cityTextInputLayout);
+        EditText city = (EditText) mainView.findViewById(R.id.cityId);
+        city.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(cityInputLayout, null));
+
+//        ((TextInputLayout) mainView.findViewById(R.id.address1TextInputLayout)).setTag(addressMetaDTO.properties.address1.getLabel());
+//        ((EditText) mainView.findViewById(R.id.addressEditTextId)).setTag( ((TextInputLayout) mainView.findViewById(R.id.address1TextInputLayout)));
 
 
-        ((TextInputLayout) mainView.findViewById(R.id.address1TextInputLayout)).setTag(addressMetaDTO.properties.address1.getLabel());
-        ((EditText) mainView.findViewById(R.id.addressEditTextId)).setTag( ((TextInputLayout) mainView.findViewById(R.id.address1TextInputLayout)));
+//        ((TextInputLayout) mainView.findViewById(R.id.address2TextInputLayout)).setTag(addressMetaDTO.properties.address2.getLabel());
+//        ((EditText) mainView.findViewById(R.id.addressEditText2Id)).setTag(((TextInputLayout) mainView.findViewById(R.id.address2TextInputLayout)));
 
 
-        ((TextInputLayout) mainView.findViewById(R.id.address2TextInputLayout)).setTag(addressMetaDTO.properties.address2.getLabel());
-        ((EditText) mainView.findViewById(R.id.addressEditText2Id)).setTag(((TextInputLayout) mainView.findViewById(R.id.address2TextInputLayout)));
+//        ((TextInputLayout) mainView.findViewById(R.id.zipCodeTextInputLayout)).setTag(addressMetaDTO.properties.zipcode.getLabel());
+//        ((EditText) mainView.findViewById(R.id.zipCodeId)).setTag(((TextInputLayout) mainView.findViewById(R.id.zipCodeTextInputLayout)));
 
 
-        ((TextInputLayout) mainView.findViewById(R.id.zipCodeTextInputLayout)).setTag(addressMetaDTO.properties.zipcode.getLabel());
-        ((EditText) mainView.findViewById(R.id.zipCodeId)).setTag(((TextInputLayout) mainView.findViewById(R.id.zipCodeTextInputLayout)));
+//        ((TextInputLayout) mainView.findViewById(R.id.cityTextInputLayout)).setTag(addressMetaDTO.properties.city.getLabel());
+//        ((EditText) mainView.findViewById(R.id.cityId)).setTag(((TextInputLayout) mainView.findViewById(R.id.cityTextInputLayout)));
 
-
-        ((TextInputLayout) mainView.findViewById(R.id.cityTextInputLayout)).setTag(addressMetaDTO.properties.city.getLabel());
-        ((EditText) mainView.findViewById(R.id.cityId)).setTag(((TextInputLayout) mainView.findViewById(R.id.cityTextInputLayout)));
-
-        ((TextView) mainView.findViewById(R.id.stateTextInputLayout)).setText(addressMetaDTO.properties.state.getLabel().toUpperCase());
+//        ((TextView) mainView.findViewById(R.id.stateTextInputLayout)).setText(addressMetaDTO.properties.state.getLabel().toUpperCase());
 
 //        ((EditText) mainView.findViewById(R.id.addressEditTextId)).setOnFocusChangeListener(new View.OnFocusChangeListener() {
 //            @Override
@@ -222,18 +242,18 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 //            }
 //        });
 
-        ((EditText) mainView.findViewById(R.id.zipCodeId)).setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-//                if (bool) {
-//                    SystemUtil.showSoftKeyboard(getActivity());
+//        ((EditText) mainView.findViewById(R.id.zipCodeId)).setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View view, boolean bool) {
+////                if (bool) {
+////                    SystemUtil.showSoftKeyboard(getActivity());
+////                }
+////                SystemUtil.handleHintChange(view, bool);
+//                if (!bool) { // for SmartyStreets
+//                    getCityAndState(mainView, ((EditText) mainView.findViewById(R.id.zipCodeId)).getText().toString());
 //                }
-//                SystemUtil.handleHintChange(view, bool);
-                if (!bool) { // for SmartyStreets
-                    getCityAndState(mainView, ((EditText) mainView.findViewById(R.id.zipCodeId)).getText().toString());
-                }
-            }
-        });
+//            }
+//        });
 
 //        ((EditText) mainView.findViewById(R.id.cityId)).setOnFocusChangeListener(new View.OnFocusChangeListener() {
 //            @Override
@@ -248,7 +268,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
 
 
-        ((EditText) mainView.findViewById(R.id.addressEditTextId)).addTextChangedListener(new TextWatcher() {
+        address.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
 
@@ -281,7 +301,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
 
 
-        ((EditText) mainView.findViewById(R.id.zipCodeId)).addTextChangedListener(new TextWatcher() {
+        zipCode.addTextChangedListener(new TextWatcher() {
             int prevLen = 0;
 
             @Override
@@ -319,7 +339,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
 
 
-        ((EditText) mainView.findViewById(R.id.cityId)).addTextChangedListener(new TextWatcher() {
+        city.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
 
@@ -347,7 +367,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         });
 
 
-        setChangeFocusListeners(mainView);
+//        setChangeFocusListeners(mainView);
 
     }
 

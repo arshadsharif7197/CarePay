@@ -83,12 +83,11 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
     private void formatEditText(final View view) {
         final DemographicMetadataEntityAddressDTO addressMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.address;
         final DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.personalDetails;
-        setTextListener(persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.firstName.validations.get(0).getErrorMessage(),
-                R.id.reviewdemogrFirstNameTextInput, R.id.reviewdemogrFirstNameEdit, view);
-//        setTextFocusListener(R.id.reviewdemogrFirstNameEdit,view);
-        setTextListener(persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.lastName.validations.get(0).getErrorMessage(),
-                R.id.reviewdemogrLastNameTextInput, R.id.reviewdemogrLastNameEdit, view);
-//        setTextFocusListener(R.id.reviewdemogrLastNameEdit,view);
+        setTextListener(persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.firstName.validations.get(0).getErrorMessage(), R.id.reviewdemogrFirstNameTextInput, R.id.reviewdemogrFirstNameEdit, view);
+        setTextFocusListener(R.id.reviewdemogrFirstNameEdit, R.id.reviewdemogrFirstNameTextInput, view);
+
+        setTextListener(persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.lastName.validations.get(0).getErrorMessage(), R.id.reviewdemogrLastNameTextInput, R.id.reviewdemogrLastNameEdit, view);
+        setTextFocusListener(R.id.reviewdemogrLastNameEdit, R.id.reviewdemogrLastNameTextInput, view);
 
         final TextInputLayout doblabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
         final EditText dobEditText = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
@@ -123,6 +122,8 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
                 checkIfEnableButton(view);
             }
         });
+
+
 //        dobEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 //            @Override
 //            public void onFocusChange(View view, boolean bool) {
@@ -132,11 +133,11 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
 ////                SystemUtil.handleHintChange(view, bool);
 //            }
 //        });
-//        setTextFocusListener(R.id.revewidemogrDOBEdit,view);
+        setTextFocusListener(R.id.revewidemogrDOBEdit, R.id.reviewdemogrDOBTextInput, view);
 
         final TextInputLayout phoneNumberLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
         final EditText phoneNumberEditText = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
-//        setTextFocusListener(R.id.reviewgrdemoPhoneNumberEdit,view);
+        setTextFocusListener(R.id.reviewgrdemoPhoneNumberEdit, R.id.reviewdemogrPhoneNumberTextInput, view);
 
 //        dobEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 //            @Override
@@ -192,7 +193,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         });
 
 
-//        setTextFocusListener(R.id.reviewdemogrMiddleNameEdit,view);
+        setTextFocusListener(R.id.reviewdemogrMiddleNameEdit, R.id.reviewdemogrMiddleNameTextInputLayout, view);
 
     }
 
@@ -226,20 +227,11 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
 
     }
 
-//    private void setTextFocusListener(final int textEditableId, final View view){
-//        final EditText editText = (EditText) view.findViewById(textEditableId);
-//        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View view, boolean hasFocus) {
-//                if (hasFocus) {
-////                    Rect rect = new Rect();
-////                    view.getGlobalVisibleRect(rect);
-////                    scrollToPosition(0, rect.bottom);
-//                }
-////                SystemUtil.handleHintChange(view, hasFocus);
-//            }
-//        });
-//    }
+    private void setTextFocusListener(int textEditableId, int inputLayoutId, View view){
+        View editText = view.findViewById(textEditableId);
+        TextInputLayout inputLayout = (TextInputLayout) view.findViewById(inputLayoutId);
+        editText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(inputLayout, null));
+    }
 //
 
 //    private void setTypefaces(View view) {

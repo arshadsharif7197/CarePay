@@ -210,6 +210,29 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
         }
     }
 
+    public static View.OnFocusChangeListener getHintFocusChangeListener(final TextInputLayout textInputLayout, final View.OnFocusChangeListener optionalListener){
+        return new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                String[] tags = (String[]) view.getTag();
+                if(tags == null ){
+                    if(textInputLayout.getHint()!=null) {
+                        tags = new String[]{textInputLayout.getHint().toString().toUpperCase(), textInputLayout.getHint().toString()};
+                        view.setTag(tags);
+                    }
+                }
+
+                if(tags!=null){
+                    textInputLayout.setHint(hasFocus?tags[0]:tags[1]);
+                }
+
+                if(optionalListener!=null){
+                    optionalListener.onFocusChange(view, hasFocus);
+                }
+            }
+        };
+    }
+
     /**
      * Shows a message success dialog
      *
@@ -292,11 +315,11 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
     }
 
 
-        /**
-         * Convert the image capture place holder into a base64
-         * @param context The context
-         * @return The base64 string
-         */
+    /**
+     * Convert the image capture place holder into a base64
+     * @param context The context
+     * @return The base64 string
+     */
     public static String getPlaceholderAsBase64(Context context) {
         Bitmap placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.icn_camera);
         return SystemUtil.encodeToBase64(placeholder, Bitmap.CompressFormat.JPEG, 90);
@@ -357,8 +380,8 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
 
         // create dialog layout
         View customView = LayoutInflater.from(activity).inflate(R.layout.alert_list_layout,
-                                                                (ViewGroup) activity.getWindow().getDecorView().getRootView(),
-                                                                false);
+                (ViewGroup) activity.getWindow().getDecorView().getRootView(),
+                false);
         ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
         // create the adapter
         CustomAlertAdapter customAlertAdapter = new CustomAlertAdapter(activity, Arrays.asList(options));
