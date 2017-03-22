@@ -377,7 +377,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             balanceItemDTO.setLocation(defaultLocation);
         }
         balanceItems.add(balanceItemDTO);
-        paymentAmount+=chargeItem.getAmount();
+        paymentAmount+=amount;
         setCurrency(paymentTotal, paymentAmount);
         setAdapter();
     }
