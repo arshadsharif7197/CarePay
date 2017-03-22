@@ -162,4 +162,12 @@ public class PaymentObject {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public PaymentNewCharge getPaymentNewCharge() {
+        return paymentNewCharge;
+    }
+
+    public void setPaymentNewCharge(PaymentNewCharge paymentNewCharge) {
+        this.paymentNewCharge = paymentNewCharge;
+    }
 }

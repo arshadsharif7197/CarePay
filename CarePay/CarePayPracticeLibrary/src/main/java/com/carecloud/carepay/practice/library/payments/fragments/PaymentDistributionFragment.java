@@ -426,6 +426,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
                 PaymentNewCharge paymentNewCharge = new PaymentNewCharge();
                 paymentNewCharge.setChargeType(balanceItem.getId());
                 paymentNewCharge.setAmount(balanceItem.getAmount());
+                paymentObject.setPaymentNewCharge(paymentNewCharge);
             }else if(balanceItem.getId()!=null){
                 PaymentApplication paymentApplication = new PaymentApplication();
                 paymentApplication.setDebitTransactionID(balanceItem.getId());
