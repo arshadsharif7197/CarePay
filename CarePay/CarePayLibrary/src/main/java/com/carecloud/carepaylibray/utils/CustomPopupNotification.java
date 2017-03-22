@@ -92,9 +92,12 @@ public class CustomPopupNotification extends PopupWindow {
                 popupWindowLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.remove_red));
                 popupMessageLabel.setTextColor(ContextCompat.getColor(context, R.color.white));
                 ApplicationMode.ApplicationType appMode = ((IApplicationSession) context).getApplicationMode().getApplicationType();
-                if (appMode !=  ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+                if (appMode !=  ApplicationMode.ApplicationType.PATIENT) {
                     this.hasStatusBar = false;
                     popupWindowLayout.setBackground(ContextCompat.getDrawable(context, R.drawable.error_message_background));
+                }
+                else{
+                    this.hasStatusBar = true;
                 }
                 popupIcon.setImageResource(R.drawable.icn_notification_error);
                 break;
@@ -135,9 +138,9 @@ public class CustomPopupNotification extends PopupWindow {
 
         if(notificationType == TYPE_ERROR_NOTIFICATION)
         {
+
             setStatusBarColor(errorColor);
         }
-
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
 
