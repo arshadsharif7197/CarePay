@@ -9,10 +9,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepay.practice.library.R;
@@ -23,6 +23,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.customcomponents.CarePayEditText;
 import com.carecloud.carepaylibray.customcomponents.RecyclerViewWithDivider;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -76,8 +77,7 @@ public class FindPatientDialog extends Dialog {
     }
 
     private void initializeView() {
-        EditText findPatientEditBox = (EditText) findViewById(R.id.find_patient_edit_box);
-        findPatientEditBox.setHint(hintLabel);
+        CarePayEditText findPatientEditBox = (CarePayEditText) findViewById(R.id.find_patient_edit_box);
         findPatientEditBox.addTextChangedListener(getTextChangedListener());
         findPatientEditBox.setOnKeyListener(getKeyListener());
 
@@ -103,7 +103,7 @@ public class FindPatientDialog extends Dialog {
                     queryMap.put("practice_mgmt", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
                     queryMap.put("practice_id", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeId());
 
-                    query = ((EditText) view).getText().toString().toUpperCase();
+                    query = ((CarePayEditText) view).getText().toString().toUpperCase();
                     JsonArray postModel = new JsonArray();
                     postModel.add(query);
                     String postBody = postModel.toString();
@@ -188,6 +188,13 @@ public class FindPatientDialog extends Dialog {
         
         RecyclerViewWithDivider searchedList = (RecyclerViewWithDivider) findViewById(R.id.patient_searched_list);
         searchedList.setLayoutManager(new LinearLayoutManager(context));
+        ViewGroup.LayoutParams params = searchedList.getLayoutParams();
+        if(patients!=null && patients.size()>4){
+            params.height = getContext().getResources().getDimensionPixelSize(R.dimen.dimen_175dp);
+        } else {
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        }
+        searchedList.setLayoutParams(params);
         searchedList.setAdapter(adapter);
         searchedList.setVisibility(View.VISIBLE);
     }

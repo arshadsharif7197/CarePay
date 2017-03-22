@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.payment.adapter;
+package com.carecloud.carepay.patient.payment.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +26,12 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
     OnBalanceListItemClickListener listener;
     PaymentsModel paymentDTO;
 
+    /**
+     *
+     * @param context The context
+     * @param paymentDTO    The payment DTO
+     * @param listener the listener
+     */
     public PaymentBalancesAdapter(Context context, PaymentsModel paymentDTO, OnBalanceListItemClickListener listener) {
         this.paymentDTO = paymentDTO;
         this.context = context;

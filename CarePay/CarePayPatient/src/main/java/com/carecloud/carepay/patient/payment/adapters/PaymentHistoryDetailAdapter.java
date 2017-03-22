@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.payment.adapter;
+package com.carecloud.carepay.patient.payment.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -37,12 +37,14 @@ public class PaymentHistoryDetailAdapter extends RecyclerView.Adapter<PaymentHis
     @Override
     public void onBindViewHolder(final PaymentHistoryDetailAdapter.PaymentHistoryDetailViewHolder holder, int position) {
         final PendingBalanceDTO charge = detail.get(position);
-            String locationName = CarePayConstants.NOT_DEFINED;
-            holder.description.setText(locationName);
-            //mock model not final
-            if(charge.getPayload().size() >0 )// getSummaryBalance().size()>0)
-               holder.amount.setText(StringUtil.getFormattedBalanceAmount(Double.parseDouble(
-                       charge.getPayload().get(0).getAmount().toString())));//    getSummaryBalance().get(0).getTotal())));
+        String locationName = CarePayConstants.NOT_DEFINED;
+        holder.description.setText(locationName);
+        //mock model not final
+        if (charge.getPayload().size() > 0) {// getSummaryBalance().size()>0)
+            holder.amount.setText(StringUtil.getFormattedBalanceAmount(Double.parseDouble(
+                    charge.getPayload().get(0).getAmount().toString())));//    getSummaryBalance().get(0).getTotal())));
+        }
+
     }
 
     @Override
