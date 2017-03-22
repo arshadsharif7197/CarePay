@@ -322,8 +322,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         balanceItemDTO.setBalance(amount);
         balanceItemDTO.setResponsibilityType(chargeItem.getResponsibilityType());
         balanceItems.add(balanceItemDTO);
-        balanceAmount+=chargeItem.getAmount();
-        setCurrency(paymentTotal, balanceAmount);
+        paymentAmount+=chargeItem.getAmount();
+        setCurrency(paymentTotal, paymentAmount);
         setAdapter();
     }
 
@@ -426,6 +426,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
                 PaymentNewCharge paymentNewCharge = new PaymentNewCharge();
                 paymentNewCharge.setChargeType(balanceItem.getId());
                 paymentNewCharge.setAmount(balanceItem.getAmount());
+                paymentObject.setPaymentNewCharge(paymentNewCharge);
             }else if(balanceItem.getId()!=null){
                 PaymentApplication paymentApplication = new PaymentApplication();
                 paymentApplication.setDebitTransactionID(balanceItem.getId());
@@ -433,11 +434,11 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             }
 
             if(balanceItem.getLocation()!=null){
-                paymentObject.setLocationID(balanceItem.getLocation().getId().toString());
+                paymentObject.setLocationID(balanceItem.getLocation().getGuid());
             }
 
             if(balanceItem.getProvider()!=null){
-                paymentObject.setProviderID(balanceItem.getProvider().getId().toString());
+                paymentObject.setProviderID(balanceItem.getProvider().getGuid());
             }
 
             postModel.addPaymentMethod(paymentObject);

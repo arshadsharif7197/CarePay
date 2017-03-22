@@ -116,7 +116,7 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(getActivity());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -137,7 +137,7 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
 
     @Override
     public void onAuthorizeCreditCardFailed() {
-        SystemUtil.showDefaultFailureDialog(getActivity());
+        showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
         hideProgressDialog();
     }
 }

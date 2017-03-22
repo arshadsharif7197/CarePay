@@ -105,7 +105,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         try {
             if (null == errorNotification) {
 
-                errorNotification = new CustomPopupNotification(getContext(), getCurrentFocus(), getWindow(), errorMessage, CustomPopupNotification.TYPE_ERROR_NOTIFICATION, getCancelReasonAppointmentDialogListener());
+                errorNotification = new CustomPopupNotification(getContext(), getCurrentFocus(), getWindow(), errorMessage, CustomPopupNotification.TYPE_ERROR_NOTIFICATION, errorNotificationSwipeListener());
             }
             errorNotification.showPopWindow();
         } catch (Exception e) {
@@ -118,7 +118,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
      *
      * @return the cancel reason appointment dialog listener
      */
-    public CustomPopupNotification.CustomPopupNotificationListener getCancelReasonAppointmentDialogListener() {
+    public CustomPopupNotification.CustomPopupNotificationListener errorNotificationSwipeListener() {
         return new CustomPopupNotification.CustomPopupNotificationListener() {
             @Override
             public void onSwipe(String swipeDirection) {

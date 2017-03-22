@@ -15,6 +15,9 @@ public class LocationDTO {
     @SerializedName("id")
     @Expose
     private Integer id;
+    @SerializedName("guid")
+    @Expose
+    private String guid;
     @SerializedName("name")
     @Expose
     private String name;
@@ -105,4 +108,11 @@ public class LocationDTO {
         this.error = hasError;
     }
 
+    public String getGuid() {
+        return guid;
+    }
+
+    public void setGuid(String guid) {
+        this.guid = guid;
+    }
 }
