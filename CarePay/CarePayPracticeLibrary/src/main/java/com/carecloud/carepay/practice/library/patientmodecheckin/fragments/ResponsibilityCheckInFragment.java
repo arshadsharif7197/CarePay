@@ -6,6 +6,8 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckinFlowCallback;
+import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
@@ -153,5 +156,20 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
         super.onStart();
 //        ((PatientModeCheckinActivity) getActivity()).updateSection(flowStateInfo);
         flowCallback.setCheckinFlow(CheckinFlowState.PAYMENT, 0, 0);
+    }
+
+    @Override
+    public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
+        String tag = PaymentDetailsFragmentDialog.class.getSimpleName();
+        FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+        Fragment prev = getChildFragmentManager().findFragmentByTag(tag);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
+                .newInstance(paymentDTO, paymentLineItem);
+        dialog.show(ft, tag);
     }
 }
