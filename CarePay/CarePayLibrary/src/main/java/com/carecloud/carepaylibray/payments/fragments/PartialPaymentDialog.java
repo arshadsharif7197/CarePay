@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
@@ -26,7 +28,6 @@ import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.List;
 
@@ -44,16 +45,11 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     private Button payPartialButton;
     //changes are needed when model will come
     private double fullAmount = 0.00;
-    protected String pendingAmountLabel;
     private String amountSymbol = "$";
     private PaymentsModel paymentsDTO;
-    private PaymentsLabelDTO paymentsLabelsDTO;
-    private PaymentsMetadataModel paymentsMetadataDTO;
-    protected String paymentTitle;
-    protected String paymentPartialButtonLabel;
 
-    protected double insuranceCopay;
-    protected double patientBalance;
+    private double insuranceCopay;
+    private double patientBalance;
     private boolean amountChangeFlag = true;
     private String balanceBeforeTextChange;
 
@@ -89,7 +85,8 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
         params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.90);
         getWindow().setAttributes(params);
-        getPartialPaymentLabels();
+        //onSetListener();
+
         initViews();
     }
 
@@ -102,13 +99,13 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         enterPartialAmountEditText.addTextChangedListener(this);
         partialPaymentTotalAmountTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
         partialPaymentTotalAmountTitle.setTextColor(context.getResources().getColor(R.color.payne_gray));
-        payPartialButton.setText(paymentPartialButtonLabel);
         payPartialButton.setOnClickListener(this);
         payPartialButton.setEnabled(false);
         amountSymbolTextView.setText(CarePayConstants.DOLLAR);
         amountSymbolTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 60);
         amountSymbolTextView.setTextColor(context.getResources().getColor(R.color.white_transparent));
-        partialPaymentPayingToday.setText(paymentTitle);
+        LinearLayout closeLinearLayout = (LinearLayout) findViewById(com.carecloud.carepaylibrary.R.id.closeViewLayout);
+        closeLinearLayout.setOnClickListener(this);
         partialPaymentPayingToday.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         partialPaymentPayingToday.setTextColor(context.getResources().getColor(R.color.glitter));
         calculateFullAmount(partialPaymentTotalAmountTitle);
@@ -117,11 +114,17 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     @Override
     public void onClick(View view) {
         int viewId = view.getId();
-        if (viewId == R.id.dialogCloseImageView) {
+        if (viewId == R.id.closeViewLayout) {
             cancel();
-        } else if (viewId == R.id.payPartialButton) {
+        } else if(viewId == R.id.key_clear) {
+            onEnterNumberClear();
+
+        }else if (viewId == R.id.payPartialButton) {
             onPaymentClick(enterPartialAmountEditText, paymentsDTO);
 
+        }else {
+            String buttonValue = ((Button) view).getText().toString();
+            onEnterNumber(buttonValue);
         }
     }
 
@@ -131,7 +134,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
 
     @Override
     public void beforeTextChanged(CharSequence str, int start, int count, int after) {
-        amountSymbolTextView.setTextColor(context.getResources().getColor(R.color.white));
+        //amountSymbolTextView.setTextColor(context.getResources().getColor(R.color.white));
         balanceBeforeTextChange = str.toString();
     }
 
@@ -188,7 +191,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         onPendingAmountValidation(amountEditText, payPartialButton, partialPaymentTotalAmountTitle, amountSymbolTextView);
     }
 
-    protected void onPendingAmountValidation(String amountEditText, Button payPartialButton, TextView partialPaymentTotalAmountTitle,TextView amountSymbolTextView) {
+    private void onPendingAmountValidation(String amountEditText, Button payPartialButton, TextView partialPaymentTotalAmountTitle,TextView amountSymbolTextView) {
         if (amountEditText != null && amountEditText.length() > 0) {
             if (amountEditText.length() == 1 && amountEditText.equalsIgnoreCase(".")) {
                 amountEditText = "0.";
@@ -199,30 +202,15 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
             } else {
                 payPartialButton.setEnabled(false);
             }
-            partialPaymentTotalAmountTitle.setText(pendingAmountLabel + " " + StringUtil.getFormattedBalanceAmount((double) Math.round((fullAmount - amountPay) * 100) / 100));
+            partialPaymentTotalAmountTitle.setText(Label.getLabel("payment_pending_text") + " " + StringUtil.getFormattedBalanceAmount((double) Math.round((fullAmount - amountPay) * 100) / 100));
         } else {
-            amountSymbolTextView.setTextColor(context.getResources().getColor(R.color.white_transparent));
+            //amountSymbolTextView.setTextColor(context.getResources().getColor(R.color.white_transparent));
             payPartialButton.setEnabled(false);
-            partialPaymentTotalAmountTitle.setText(pendingAmountLabel + " " + StringUtil.getFormattedBalanceAmount(fullAmount));
+            partialPaymentTotalAmountTitle.setText(Label.getLabel("payment_pending_text") + " " + StringUtil.getFormattedBalanceAmount(fullAmount));
         }
     }
 
-    protected void getPartialPaymentLabels() {
-        if (paymentsDTO != null) {
-            paymentsMetadataDTO = paymentsDTO.getPaymentsMetadata();
-            if (paymentsMetadataDTO != null) {
-                paymentsLabelsDTO = paymentsMetadataDTO.getPaymentsLabel();
-                if (paymentsLabelsDTO != null) {
-                    paymentTitle = paymentsLabelsDTO.getPaymentPartialAmountTitle();
-                    paymentPartialButtonLabel = paymentsLabelsDTO.getPaymentPartialAmountButton();
-                    pendingAmountLabel = paymentsLabelsDTO.getPaymentPendingText();
-
-                }
-            }
-        }
-    }
-
-    protected void onPaymentClick(EditText enterPartialAmountEditText, PaymentsModel paymentsDTO) {
+    private void onPaymentClick(EditText enterPartialAmountEditText, PaymentsModel paymentsDTO) {
         try {
             payNowClickListener.onPayButtonClicked(Double.parseDouble(enterPartialAmountEditText.getText().toString()), paymentsDTO);
             cancel();
@@ -232,7 +220,21 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         }
     }
 
-    protected void calculateFullAmount(TextView partialPaymentTotalAmountTitle){
+    private void onEnterNumber(String numberStr) {
+        String actualValue = enterPartialAmountEditText.getText().toString();
+        numberStr = actualValue + numberStr;
+        enterPartialAmountEditText.setText(numberStr);
+    }
+
+    private void onEnterNumberClear() {
+        String actualValue = enterPartialAmountEditText.getText().toString();
+        if (actualValue.length() > 0) {
+            actualValue = actualValue.substring(0, actualValue.length() - 1);
+            enterPartialAmountEditText.setText(actualValue);
+        }
+    }
+
+    private void calculateFullAmount(TextView partialPaymentTotalAmountTitle){
         if (paymentsDTO != null && !paymentsDTO.getPaymentPayload().getPatientBalances().isEmpty()) {
             List<PendingBalancePayloadDTO> paymentList = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
 
@@ -246,10 +248,9 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
                 }
 
                 fullAmount = patientBalance + insuranceCopay;
-                partialPaymentTotalAmountTitle.setText(pendingAmountLabel + " " + StringUtil.getFormattedBalanceAmount(fullAmount));
+                partialPaymentTotalAmountTitle.setText(Label.getLabel("payment_pending_text") + " " + StringUtil.getFormattedBalanceAmount(fullAmount));
             }
         }
     }
-
 
 }
