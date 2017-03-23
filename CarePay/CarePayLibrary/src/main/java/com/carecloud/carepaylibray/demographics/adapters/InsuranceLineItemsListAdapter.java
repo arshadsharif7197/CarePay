@@ -11,8 +11,6 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
-import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
-import com.carecloud.carepaylibray.utils.DateUtil;
 
 import java.util.List;
 
@@ -22,6 +20,7 @@ public class InsuranceLineItemsListAdapter extends
     private Context context;
     private DemographicDTO model;
     private List<DemographicInsurancePayloadDTO> detailsList;
+    private OnInsuranceEditClickListener listener;
 
     /**
      * Constructor
@@ -31,11 +30,13 @@ public class InsuranceLineItemsListAdapter extends
      * @param detailsList details list
      */
     public InsuranceLineItemsListAdapter(Context context, DemographicDTO model,
-                                         List<DemographicInsurancePayloadDTO> detailsList) {
+                                         List<DemographicInsurancePayloadDTO> detailsList,
+                                         OnInsuranceEditClickListener listener) {
 
         this.context = context;
         this.model = model;
         this.detailsList = detailsList;
+        this.listener = listener;
     }
 
     @Override
@@ -66,7 +67,7 @@ public class InsuranceLineItemsListAdapter extends
             edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    listener.onEditInsuranceClicked(detailsList.get(getAdapterPosition()));
                 }
             });
 
@@ -80,5 +81,9 @@ public class InsuranceLineItemsListAdapter extends
         final DemographicInsurancePayloadDTO lineItem = detailsList.get(position);
         holder.name.setText(lineItem.getInsurancePlan());
         holder.type.setText(lineItem.getInsuranceType());
+    }
+
+    public interface OnInsuranceEditClickListener {
+        void onEditInsuranceClicked(DemographicInsurancePayloadDTO lineItem);
     }
 }

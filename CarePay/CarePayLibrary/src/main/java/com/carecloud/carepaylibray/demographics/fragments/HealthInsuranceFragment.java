@@ -25,10 +25,12 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.adapters.InsuranceLineItemsListAdapter;
+import com.carecloud.carepaylibray.demographics.dialog.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
@@ -55,7 +57,7 @@ import java.util.List;
 /**
  * Created by jorge on 07/02/17.
  */
-public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
+public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment implements InsuranceLineItemsListAdapter.OnInsuranceEditClickListener {
 
     private List<DemographicInsurancePayloadDTO> insurancePayloadDTOs;
     private DemographicDTO demographicDTO;
@@ -156,29 +158,27 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
 
     private void initLabels(View view) {
         // Set Labels
-        if (globalLabelsMetaDTO != null) {
-            ((TextView) view.findViewById(R.id.health_insurance_provider_label)).setText(
-                    globalLabelsMetaDTO.getDemographicsTitleSelectProvider());
-            ((TextView) view.findViewById(R.id.health_insurance_plan_label)).setText(
-                    globalLabelsMetaDTO.getDemographicsTitleSelectPlan());
-            ((TextView) view.findViewById(R.id.health_insurance_type_label)).setText(
-                    globalLabelsMetaDTO.getDemographicsInsuranceTypeLabel());
-            ((TextView) view.findViewById(R.id.health_insurance_plans)).setText(
-                    globalLabelsMetaDTO.getDemographicsDocumentsChoosePlanLabel());
+        ((TextView) view.findViewById(R.id.health_insurance_provider_label)).setText(
+                Label.getLabel("demographics_documents_title_select_provider"));
+        ((TextView) view.findViewById(R.id.health_insurance_plan_label)).setText(
+                Label.getLabel("demographics_documents_title_select_plan"));
+        ((TextView) view.findViewById(R.id.health_insurance_type_label)).setText(
+                Label.getLabel("demographics_insurance_type_label"));
+        ((TextView) view.findViewById(R.id.health_insurance_plans)).setText(
+                Label.getLabel("demographics_documents_choose_plan"));
 
-            selectedProvider.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
-            selectedPlan.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
-            selectedType.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
+        selectedProvider.setText(Label.getLabel("demographics_choose"));
+        selectedPlan.setText(Label.getLabel("demographics_choose"));
+        selectedType.setText(Label.getLabel("demographics_choose"));
 
-            scanFrontButton.setText(globalLabelsMetaDTO.getDemographicsInsuranceTakeFrontPhotoLabel());
-            scanBackButton.setText(globalLabelsMetaDTO.getDemographicsInsuranceTakeBackPhotoLabel());
-            addAnotherButton.setText(globalLabelsMetaDTO.getPracticeCheckinDemogrInsAddAnother());
+        scanFrontButton.setText(Label.getLabel("demographics_insurance_take_front_photo"));
+        scanBackButton.setText(Label.getLabel("demographics_insurance_take_back_photo"));
+        addAnotherButton.setText(Label.getLabel("practice_checkin_demogr_ins_add_another"));
 
-            ((Button) view.findViewById(R.id.health_insurance_dont_have_button)).setText(
-                    globalLabelsMetaDTO.getPracticeCheckinDemogrInsDontHaveOneButtonLabel());
-            ((Button) view.findViewById(R.id.health_insurance_add_new_button)).setText(
-                    globalLabelsMetaDTO.getPracticeCheckinDemogrInsAddNewButtonLabel());
-        }
+        ((Button) view.findViewById(R.id.health_insurance_dont_have_button)).setText(
+                Label.getLabel("practice_checkin_demogr_ins_dont_have_one_button_label"));
+        ((Button) view.findViewById(R.id.health_insurance_add_new_button)).setText(
+                Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));
     }
 
     /**
@@ -200,7 +200,8 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
         addAnotherButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View addAnotherButton) {
-
+                InsuranceEditDialog dialog = new InsuranceEditDialog(getActivity(), null, demographicDTO, false);
+                dialog.show();
             }
         });
 
@@ -211,7 +212,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
         cardNumberInput = (TextInputLayout) view.findViewById(R.id.health_insurance_card_number_layout);
         cardNumber = (EditText) view.findViewById(R.id.health_insurance_card_number);
 
-        String cardNumberHint = globalLabelsMetaDTO.getDemographicsInsuranceCardNumber();
+        String cardNumberHint = Label.getLabel("demographics_insurance_card_number");
         cardNumberInput.setTag(cardNumberHint);
         cardNumber.setHint(cardNumberHint);
         cardNumber.setTag(cardNumberInput);
@@ -219,7 +220,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
         groupNumberInput = (TextInputLayout) view.findViewById(R.id.health_insurance_group_number_layout);
         groupNumber = (EditText) view.findViewById(R.id.health_insurance_group_number);
 
-        String groupNumberHint = globalLabelsMetaDTO.getDemographicsInsuranceGroupNumber();
+        String groupNumberHint = Label.getLabel("demographics_insurance_group_number");
         groupNumberInput.setTag(groupNumberHint);
         groupNumber.setHint(groupNumberHint);
         groupNumber.setTag(groupNumberInput);
@@ -304,8 +305,11 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
         cardNumber.clearFocus();
         groupNumber.clearFocus();
 
-        setHeaderTitle(globalLabelsMetaDTO.getDemographicsInsuranceTitle(), view);
-        initNextButton(globalLabelsMetaDTO.getDemographicsReviewGoToConsent(), null, view, visibility);
+        setHeaderTitle(Label.getLabel("demographics_insurance_label"), view);
+        initNextButton(null, view, visibility);
+
+        Button nextButton = (Button) view.findViewById(R.id.checkinDemographicsNextButton);
+        nextButton.setText(Label.getLabel("demographics_review_go_to_consent"));
     }
 
     private void selectImage(final ImageCaptureHelper imageCaptureHelper, final ImageCaptureHelper.CameraType cameraType) {
@@ -392,14 +396,14 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
         if (bitmap != null && insurances != null) {
             if (scanner == scannerFront) {
                 // change button caption to 'rescan'
-                scanFrontButton.setText(globalLabelsMetaDTO.getDemographicsInsuranceRetakeFrontPhoto());
+                scanFrontButton.setText(Label.getLabel("demographics_insurance_retake_front_photo"));
                 // save from image
                 String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
                 DemographicInsurancePhotoDTO frontDTO = insurances.get(0).getInsurancePhotos().get(0);
                 frontDTO.setInsurancePhoto(imageAsBase64); // create the image dto
             } else if (scanner == scannerBack) {
                 // change button caption to 'rescan'
-                scanBackButton.setText(globalLabelsMetaDTO.getDemographicsInsuranceRetakeBackPhoto());
+                scanBackButton.setText(Label.getLabel("demographics_insurance_retake_back_photo"));
                 String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
                 DemographicInsurancePhotoDTO backDTO = insurances.get(0).getInsurancePhotos().get(1);
                 backDTO.setInsurancePhoto(imageAsBase64); // create the image dto
@@ -590,22 +594,6 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
         });
     }
 
-//    private void initAddButton(View view) {
-//        Button addButton = (Button) view.findViewById(R.id.health_insurance_add_new_button);
-//        addButton.setText(globalLabelsMetaDTO.getPracticeCheckinDemogrInsAddNewButtonLabel());
-//        addButton.setOnClickListener(addNewElementListener);
-//
-//        if (insurancePayloadDTOs.size() >= CarePayConstants.MAX_INSURANCE_DOC) {
-//            addButton.setEnabled(false);
-//        }
-//    }
-//
-//    private void initAddOtherButton(View view) {
-//        Button addButton = (Button) view.findViewById(R.id.health_insurance_add_new_button);
-//        addButton.setText(globalLabelsMetaDTO.getPracticeCheckinDemogrInsAddNewButtonLabel());
-//        addButton.setOnClickListener(addNewElementListener);
-//    }
-
     protected void fillDetailAdapter(View view) {
         view.findViewById(R.id.health_insurance_list_view).setVisibility(View.VISIBLE);
         view.findViewById(R.id.no_health_insurance_view).setVisibility(View.GONE);
@@ -614,8 +602,14 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
         detailsListRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
         InsuranceLineItemsListAdapter adapter = new InsuranceLineItemsListAdapter(this.getContext(),
-                demographicDTO, insurancePayloadDTOs);
+                demographicDTO, insurancePayloadDTOs, this);
         detailsListRecyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onEditInsuranceClicked(DemographicInsurancePayloadDTO lineItem) {
+        InsuranceEditDialog dialog = new InsuranceEditDialog(getActivity(), lineItem, demographicDTO, true);
+        dialog.show();
     }
 
 //    private void initSwitch(View view) {

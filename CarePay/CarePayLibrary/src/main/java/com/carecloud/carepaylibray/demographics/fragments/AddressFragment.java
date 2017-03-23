@@ -20,11 +20,11 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
@@ -37,9 +37,9 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.smartystreets.api.us_zipcode.City;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
-
 import java.util.Arrays;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 
 /**
  * A simple {@link CheckInDemographicsBaseFragment} subclass.
@@ -51,12 +51,9 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
     private DemographicDTO demographicDTO;
     private DemographicMetadataEntityAddressDTO addressMetaDTO;
     private DemographicAddressPayloadDTO demographicAddressPayloadDTO;
-    private DemographicLabelsDTO globalLabelsMetaDTO;
-
 
     private City smartyStreetsResponse;
     private String stateAbbr = null;
-    private boolean isPractice;
 
     private boolean isAddressEmpty;
     private boolean isCityEmpty;
@@ -64,16 +61,15 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
     private EditText cityEditText;
     private TextView stateEditText;
-    private View.OnClickListener editStateListener = new View.OnClickListener(){
+
+    private View.OnClickListener editStateListener = new View.OnClickListener() {
 
         @Override
         public void onClick(View view) {
-
-            showDialogState(AddressUtil.states, globalLabelsMetaDTO.getDemographicsTitleSelectState(), globalLabelsMetaDTO.getDemographicsCancelLabel());
-
+            showDialogState(AddressUtil.states, Label.getLabel("demographics_documents_title_select_state"),
+                    Label.getLabel("demographics_cancel_label"));
         }
     };
-
 
     public AddressFragment() {
         // Required empty public constructor
@@ -88,14 +84,14 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        isPractice = getApplicationMode().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
+        boolean isPractice = getApplicationMode().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
 
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
         addressMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.address;
-        globalLabelsMetaDTO = demographicDTO.getMetadata().getLabels();
         if (demographicDTO.getPayload().getDemographics() != null) {
             demographicAddressPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getAddress();
         }
+
         View mainView  = super.onCreateView(inflater, container, savedInstanceState);
         initialiseUIFields(mainView);
         formatEditText(mainView);
@@ -105,7 +101,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         stepProgressBar.setCurrentProgressDot(1);
         checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 2);
         return mainView;
-
     }
 
     @Override
@@ -113,23 +108,16 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         hideSoftKeyboard(getActivity());
     }
 
-
-
-
-
     private boolean checkFormatedFields(View view) {
 
         boolean isZipValid = isZipCodeValid(view);
         if (!isZipValid) {
-            ((EditText) view.findViewById(R.id.zipCodeId)).requestFocus();
+            view.findViewById(R.id.zipCodeId).requestFocus();
             return false;
         }
 
-
         return true;
     }
-
-
 
     /**
      * Background task to call smarty streets zip code lookup.
@@ -159,7 +147,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
                 }
             }
 
-
         }.execute(zipcode);
     }
 
@@ -188,8 +175,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         TextInputLayout cityInputLayout = (TextInputLayout) mainView.findViewById(R.id.cityTextInputLayout);
         EditText city = (EditText) mainView.findViewById(R.id.cityId);
         city.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(cityInputLayout, null));
-
-
 
         address.addTextChangedListener(new TextWatcher() {
             @Override
@@ -221,8 +206,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
                 checkIfEnableButton(mainView);
             }
         });
-
-
 
         zipCode.addTextChangedListener(new TextWatcher() {
             int prevLen = 0;
@@ -260,8 +243,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
             }
         });
 
-
-
         city.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
@@ -288,8 +269,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
                 checkIfEnableButton(mainView);
             }
         });
-
-
     }
 
     /**
@@ -307,8 +286,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
                 null);
     }
 
-
-
     /**
      * init view from models
      */
@@ -319,7 +296,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
             if (SystemUtil.isNotEmptyString(demographicAddressPayloadDTO.getAddress1())) {
                 String adress1 = demographicAddressPayloadDTO.getAddress1();
                 initializeInputLayoutValue(adress1, R.id.addressEditTextId, view);
-
             }
 
             if (SystemUtil.isNotEmptyString(demographicAddressPayloadDTO.getAddress2())) {
@@ -330,25 +306,21 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
                 initializeInputLayoutValue(demographicAddressPayloadDTO.getCity(), R.id.cityId, view);
             }
 
-
             String state = demographicAddressPayloadDTO.getState();
             if (SystemUtil.isNotEmptyString(state) || !((TextView) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView)).getText().toString().isEmpty()) {
                 ((TextView) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView)).setText(state);
             } else {
-                ((TextView) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView)).setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
+                ((TextView) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView)).setText(
+                        Label.getLabel("demographics_choose"));
             }
 
             if (SystemUtil.isNotEmptyString(demographicAddressPayloadDTO.getZipcode())) {
                 initializeInputLayoutValue(demographicAddressPayloadDTO.getZipcode(), R.id.zipCodeId, view);
             }
-
-
         } else {
             Log.v(TAG, "Demographic adress is empty ");
         }
-
     }
-
 
     /**
      * Init text input layout
@@ -361,20 +333,15 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         }
     }
 
-
-
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
     }
-
 
     /**
      * Show dialog state
@@ -395,7 +362,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
                     }
                 });
     }
-
 
     /**
      * Show alert dialog
@@ -437,32 +403,18 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         });
     }
 
-
-
-
-
-
     /**
      * Initialize ui fields
      */
     private void initialiseUIFields(View view) {
-
-
-        setHeaderTitle(globalLabelsMetaDTO.getDemographicsAddressSection(), view);
-        initNextButton(globalLabelsMetaDTO.getDemographicsReviewNextButton(), null, view, View.VISIBLE);
-
+        setHeaderTitle(Label.getLabel("demographics_address_section"), view);
+        initNextButton(null, view, View.VISIBLE);
 
         cityEditText = (EditText) view.findViewById(R.id.cityId);
         stateEditText = (TextView) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView);
 
-
         (view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView)).setOnClickListener(editStateListener);
-
-
     }
-
-
-
 
     @Override
     protected DemographicDTO updateDemographicDTO(View view) {
@@ -471,7 +423,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         updatableDemographicDTO.setPayload(new DemographicPayloadResponseDTO());
         updatableDemographicDTO.getPayload().setDemographics(new DemographicPayloadInfoDTO());
         updatableDemographicDTO.getPayload().getDemographics().setPayload(new DemographicPayloadDTO());
-
 
         String address1 = ((EditText) view.findViewById(R.id.addressEditTextId)).getText().toString();
         if (!StringUtil.isNullOrEmpty(address1)) {
@@ -502,12 +453,11 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         updatableDemographicDTO.setMetadata(demographicDTO.getMetadata());
         updatableDemographicDTO.getPayload().setAppointmentpayloaddto(demographicDTO.getPayload().getAppointmentpayloaddto());
         return updatableDemographicDTO;
-
     }
 
     @Override
     protected boolean passConstraints(View view) {
-        boolean isStateValid = ! globalLabelsMetaDTO.getDemographicsChooseLabel().equals(((TextView) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView)).getText().toString());
+        boolean isStateValid = ! Label.getLabel("demographics_choose").equals(((TextView) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView)).getText().toString());
         return !isZipEmpty && !isAddressEmpty && !isCityEmpty && isStateValid && checkFormatedFields(view);
     }
 
@@ -515,7 +465,4 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
     protected int getContentId() {
         return R.layout.fragment_review_demographic_address;
     }
-
-
-
 }

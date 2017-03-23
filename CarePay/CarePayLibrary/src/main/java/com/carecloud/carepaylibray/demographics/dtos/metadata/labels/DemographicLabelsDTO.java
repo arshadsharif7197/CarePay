@@ -370,7 +370,7 @@ public class DemographicLabelsDTO {
     @Expose
     private String demographicsState;
 
-    @SerializedName("demographics_save_changes_button")
+        @SerializedName("demographics_save_changes_button")
     @Expose
     private String demographicsSaveChangesButton;
 
@@ -459,6 +459,17 @@ public class DemographicLabelsDTO {
     @SerializedName("demographics_review_go_to_consent")
     @Expose
     private String demographicsReviewGoToConsent;
+    @SerializedName("demographics_review_edit_insurance_close")
+    @Expose
+    private String demographicsReviewEditInsuranceClose;
+
+    public String getDemographicsReviewEditInsuranceClose() {
+        return StringUtil.getLabelForView(demographicsReviewEditInsuranceClose);
+    }
+
+    public void setDemographicsReviewEditInsuranceClose(String demographicsReviewEditInsuranceClose) {
+        this.demographicsReviewEditInsuranceClose = demographicsReviewEditInsuranceClose;
+    }
 
     public String getDemographicsReviewGoToConsent() {
         return StringUtil.getLabelForView(demographicsReviewGoToConsent);

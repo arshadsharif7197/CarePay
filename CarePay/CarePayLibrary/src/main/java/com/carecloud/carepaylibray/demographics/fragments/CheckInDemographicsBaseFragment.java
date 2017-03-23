@@ -93,13 +93,10 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         //stepProgressBar.setCurrentProgressDot(checkInNavListener.getCurrentStep()-1);
     }
 
-
-    protected void initNextButton(String label, View.OnClickListener listener, final View view, int visibility) {
+    protected void initNextButton(View.OnClickListener listener, final View view, int visibility) {
         Button nextButton = (Button) view.findViewById(R.id.checkinDemographicsNextButton);
-        nextButton.setText(label);
-
-        if (listener == null){
-            listener =  new View.OnClickListener() {
+        if (listener == null) {
+            listener = new View.OnClickListener() {
                 @Override
                 public void onClick(View buttonView) {
                     if (passConstraints(view)) {
