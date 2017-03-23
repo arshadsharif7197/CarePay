@@ -108,8 +108,9 @@
             />
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/demographicsTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="left|center_vertical"
             android:layout_marginLeft="@dimen/dimen_10dp"
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/textview_default_textsize"
@@ -142,8 +143,9 @@
             />
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/documentsTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="left|center_vertical"
             android:layout_marginLeft="@dimen/dimen_10dp"
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/textview_default_textsize"
@@ -176,8 +178,9 @@
             />
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/creditCardsTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="left|center_vertical"
             android:layout_marginLeft="@dimen/dimen_10dp"
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/textview_default_textsize"
@@ -211,8 +214,9 @@
             />
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/messagesTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="left|center_vertical"
             android:layout_marginLeft="@dimen/dimen_10dp"
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/textview_default_textsize"
