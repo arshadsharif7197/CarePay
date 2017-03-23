@@ -73,7 +73,6 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_practice_payment);
-        setNavigationBarVisibility();
 
         filter = new FilterModel();
         paymentsModel = getConvertedDTO(PaymentsModel.class);
