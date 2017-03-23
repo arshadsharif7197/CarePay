@@ -41,9 +41,8 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
     @Override
     public void onBindViewHolder(final PaymentBalancesAdapter.ViewHolder holder, int position) {
         final PatientBalanceDTO patientBalanceDTO = balances.get(position);
-        Integer responsibility = Integer.valueOf(patientBalanceDTO.getPendingRepsonsibility());
-        Integer unappliedCredit = Integer.valueOf(patientBalanceDTO.getUnappliedCredit());
-        holder.paymentAmountTextView.setText(StringUtil.getFormattedBalanceAmount(responsibility - unappliedCredit));
+        Double responsibility = Double.valueOf(patientBalanceDTO.getPendingRepsonsibility());
+        holder.paymentAmountTextView.setText(StringUtil.getFormattedBalanceAmount(responsibility));
         holder.placeNameTextView.setText(userPractice.getPracticeName());
         holder.payButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,9 +100,10 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
 
     /**
      * Sets the callback that will manage the events on the item views
+     *
      * @param callback to manage item views events
      */
-    public void setCallback(PaymentRecyclerViewCallback callback){
-        this.callback= callback;
+    public void setCallback(PaymentRecyclerViewCallback callback) {
+        this.callback = callback;
     }
 }

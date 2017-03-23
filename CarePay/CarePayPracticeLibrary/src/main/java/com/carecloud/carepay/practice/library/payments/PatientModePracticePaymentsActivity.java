@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
+import com.carecloud.carepay.practice.library.models.ResponsibilityHeaderModel;
 import com.carecloud.carepay.practice.library.payments.adapter.PaymentBalancesAdapter;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFragmentDialog;
@@ -48,7 +49,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         if (hasNoPayments()) {
             showNoPaymentsImage();
         } else {
-            showPaymentsRecyclerView(paymentResultModel);
+            showPayments(paymentResultModel);
         }
         findViewById(R.id.btnHome).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,7 +82,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         return hasNoPayments;
     }
 
-    private void showPaymentsRecyclerView(PaymentsModel paymentsModel) {
+    private void showPayments(PaymentsModel paymentsModel) {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.appointmentsRecyclerView);
         recyclerView.setVisibility(View.VISIBLE);
         findViewById(R.id.emptyPaymentsImageView).setVisibility(View.GONE);
@@ -113,9 +114,10 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         }
         ft.addToBackStack(null);
 
+        ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newClinicHeader(paymentResultModel);
         ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
                 .newInstance(paymentResultModel, Label.getLabel("payment_partial_label"),
-                        Label.getLabel("payment_pay_total_amount_button"));
+                        Label.getLabel("payment_pay_total_amount_button"), headerModel);
         dialog.show(ft, tag);
     }
 
