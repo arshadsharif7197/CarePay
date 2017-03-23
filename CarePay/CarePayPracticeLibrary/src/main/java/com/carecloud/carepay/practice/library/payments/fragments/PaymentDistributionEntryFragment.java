@@ -144,8 +144,10 @@ public class PaymentDistributionEntryFragment extends BaseDialogFragment impleme
         public void afterTextChanged(Editable str) {
             if(str.length()>0) {
                 amountSymbol.setTextColor(getResources().getColor(R.color.white));
+                amountText.setHint(null);
             }else{
                 amountSymbol.setTextColor(getResources().getColor(R.color.white_transparent));
+                amountText.setHint("0.00");
             }
         }
 
