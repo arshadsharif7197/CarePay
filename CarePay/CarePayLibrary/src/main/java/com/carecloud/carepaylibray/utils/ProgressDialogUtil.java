@@ -10,26 +10,27 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibrary.R;
 
 public class ProgressDialogUtil extends Dialog {
 
-    private int theme;
     private static final int FULLSCREEN_VALUE = 0x10000000;
-    public boolean isPracticeAppPatientMode;
+    private final boolean isPracticeAppPatientMode;
+    private final int theme;
 
-    public ProgressDialogUtil(Context context, Boolean isPracticeAppPatientMode) {
-        this(context, R.style.ProgressDialogFullscreenWithTitlebar);
-        this.isPracticeAppPatientMode = isPracticeAppPatientMode;
+    public ProgressDialogUtil(boolean isPracticeAppPatientMode, Context context) {
+        this(isPracticeAppPatientMode, context, R.style.ProgressDialogFullscreenWithTitlebar);
     }
 
-    private ProgressDialogUtil(Context context, int themeResId){
+    private ProgressDialogUtil(boolean isPracticeAppPatientMode, Context context, int themeResId) {
         super(context, themeResId);
+        this.isPracticeAppPatientMode = isPracticeAppPatientMode;
         this.theme = themeResId;
     }
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_progress);
@@ -39,18 +40,17 @@ public class ProgressDialogUtil extends Dialog {
         boolean keepStatusBar = typedArray.getBoolean(0, false);
         typedArray.recycle();
 
-        if(keepStatusBar){
+        if (keepStatusBar) {
             adjustForStatusBar();
-        }else if(isPracticeAppPatientMode){
+        } else if (isPracticeAppPatientMode) {
             setNavigationBarVisibility();
         }
-
     }
 
     /**
      * Updates layout so in clover and devices with navigation bar is on screen don't hide content
-     * */
-    public void setNavigationBarVisibility(){
+     */
+    private void setNavigationBarVisibility() {
 
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
@@ -61,7 +61,7 @@ public class ProgressDialogUtil extends Dialog {
     }
 
 
-    private void adjustForStatusBar(){
+    private void adjustForStatusBar() {
         WindowManager.LayoutParams attrs = getWindow().getAttributes();
         attrs.flags &= ~WindowManager.LayoutParams.FLAG_FULLSCREEN;
         getWindow().setAttributes(attrs);
@@ -69,7 +69,7 @@ public class ProgressDialogUtil extends Dialog {
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void setStatusBarColor(){
+    private void setStatusBarColor() {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         getWindow().setStatusBarColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
     }

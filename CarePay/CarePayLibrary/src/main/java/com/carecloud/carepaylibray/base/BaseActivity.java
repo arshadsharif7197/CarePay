@@ -81,7 +81,8 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         }
 
         if (null == progressDialog) {
-            progressDialog = new ProgressDialogUtil(this, isPracticeAppPatientMode());
+            boolean isPracticeAppPatientMode = getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE;
+            progressDialog = new ProgressDialogUtil(isPracticeAppPatientMode, this);
         }
 
         progressDialog.setCancelable(false);
@@ -139,9 +140,5 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             errorNotification.dismiss();
             errorNotification = null;
         }
-    }
-
-    public boolean isPracticeAppPatientMode() {
-        return getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ;
     }
 }
