@@ -43,6 +43,11 @@ public class PurchaseActivity extends MenuPatientActivity {
         transaction.commit();
 
         inflateDrawer();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_PURCHASE).setChecked(true);
 
         ActionBar actionBar = getSupportActionBar();

@@ -88,8 +88,12 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         //include fragment
         fm.beginTransaction().replace(R.id.add_balance_history_frag_holder, paymentBalanceHistoryFragment,
                 PaymentBalanceHistoryFragment.class.getSimpleName()).commit();
-        navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_PAYMENTS).setChecked(true);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_PAYMENTS).setChecked(true);
     }
 
     /**
