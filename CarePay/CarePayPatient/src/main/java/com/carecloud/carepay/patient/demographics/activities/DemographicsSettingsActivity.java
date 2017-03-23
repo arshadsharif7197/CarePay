@@ -167,7 +167,7 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     /**
      *
      * @param capString The capString
-     * @return
+     * @return modified String
      */
     public String capitalize(String capString){
         StringBuffer capBuffer = new StringBuffer();
