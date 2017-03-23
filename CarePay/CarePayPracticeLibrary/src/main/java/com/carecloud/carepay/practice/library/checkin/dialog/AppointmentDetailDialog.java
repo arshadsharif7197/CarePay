@@ -541,35 +541,4 @@ public class AppointmentDetailDialog extends Dialog {
                         Label.getLabel("practice_payments_detail_dialog_pay"), headerModel);
         dialog.show(ft, tag);
     }
-
-    private PatientModel getPatientModel(PatientBalanceDTO patientBalance) {
-        return patientBalance.getDemographics().getPayload().getPersonalDetails();
-    }
-
-    private String initializePatientProvider(PaymentsModel paymentsModel) {
-        List<PendingBalanceDTO> balances = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances();
-        String provider;
-        List<PendingBalancePayloadDTO> pendingBalancePayloadDTOList = balances.get(0).getPayload();
-        if (!pendingBalancePayloadDTOList.isEmpty() && !pendingBalancePayloadDTOList.get(0).getDetails().isEmpty()) {
-            provider = pendingBalancePayloadDTOList.get(0).getDetails().get(0).getProvider().getName();
-        } else {
-            provider = getProviderName(paymentsModel, balances.get(0).getMetadata().getPatientId());
-        }
-        return provider;
-    }
-
-    private String getProviderName(PaymentsModel paymentsModel, String patientId) {
-        if (!StringUtil.isNullOrEmpty(patientId)) {
-            List<ProviderIndexDTO> providerIndex = paymentsModel.getPaymentPayload().getProviderIndex();
-            for (ProviderIndexDTO providerIndexDTO : providerIndex) {
-                List<String> patientIds = providerIndexDTO.getPatientIds();
-                for (String id : patientIds) {
-                    if (id.equalsIgnoreCase(patientId)) {
-                        return providerIndexDTO.getName();
-                    }
-                }
-            }
-        }
-        return "";
-    }
 }
