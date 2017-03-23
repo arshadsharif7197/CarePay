@@ -91,11 +91,11 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/payment_receipt_details_view"
-        android:background="@drawable/payment_receipt_bg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/payment_details_pay_now_button"
-        android:layout_below="@id/payment_details_total_paid" />
+        android:layout_below="@id/payment_details_total_paid"
+        android:background="@color/white" />
 
 
 </RelativeLayout>

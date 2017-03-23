@@ -30,6 +30,7 @@ import com.carecloud.carepay.practice.library.checkin.dtos.CheckInStatusPayloadD
 import com.carecloud.carepay.practice.library.checkin.dtos.QueryStrings;
 import com.carecloud.carepay.practice.library.checkin.dtos.QueueDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.QueueStatusPayloadDTO;
+import com.carecloud.carepay.practice.library.models.ResponsibilityHeaderModel;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFragmentDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -37,12 +38,14 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.ISession;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -253,7 +256,7 @@ public class AppointmentDetailDialog extends Dialog {
             profilePhoto.setVisibility(View.VISIBLE);
             bgImage.setScaleX(5);
             bgImage.setScaleY(5);
-        }else{
+        } else {
             shortName.setText(appointmentPayloadDTO.getPatient().getShortName());
         }
 
@@ -289,12 +292,6 @@ public class AppointmentDetailDialog extends Dialog {
 
         }
     };
-
-
-    private void getPatientBalances() {
-        TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getPatientBalances();
-
-    }
 
     /**
      * Method to get checkin status API
@@ -538,9 +535,10 @@ public class AppointmentDetailDialog extends Dialog {
         }
         ft.addToBackStack(null);
 
+        ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newPatientHeader(paymentsModel);
         ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
                 .newInstance(paymentsModel, Label.getLabel("practice_payments_detail_dialog_payment_plan"),
-                        Label.getLabel("practice_payments_detail_dialog_pay"));
+                        Label.getLabel("practice_payments_detail_dialog_pay"), headerModel);
         dialog.show(ft, tag);
     }
 }
