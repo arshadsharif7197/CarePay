@@ -88,7 +88,7 @@
         android:background="@color/white"
         android:padding="@dimen/dimen_10dp">
 
-        <Button
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/payment_details_pay_now_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
