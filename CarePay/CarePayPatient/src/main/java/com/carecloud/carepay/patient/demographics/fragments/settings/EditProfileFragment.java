@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.utils.PatientAppUtil;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -117,9 +118,8 @@ public class EditProfileFragment extends DocumentScannerFragment {
 
         userId = getAppAuthorizationHelper().getCurrUser();
 
-
         CarePayTextView patientNameValue = (CarePayTextView) view.findViewById(R.id.patientNameTextView);
-        patientNameValue.setText(firstNameValString + " " + middleNameValString+" " + lastNameValString);
+        patientNameValue.setText(((DemographicsSettingsActivity) getActivity()).capitalize(firstNameValString + " " + middleNameValString+" " + lastNameValString));
 
         CarePayTextView patientEmailValue = (CarePayTextView) view.findViewById(R.id.patientEmailTextView);
         patientEmailValue.setText(userId);
