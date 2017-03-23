@@ -16,9 +16,9 @@ import com.carecloud.carepay.practice.library.models.ResponsibilityHeaderModel;
 import com.carecloud.carepay.practice.library.payments.adapter.PaymentBalancesAdapter;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
-import com.carecloud.carepay.practice.library.payments.dialogs.PracticePartialPaymentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticePartialPaymentDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
@@ -126,8 +126,12 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
     }
 
     @Override
-    public void startPartialPayment() {
-
+    public void startPartialPayment(double owedAmount) {
+        String tag = PracticePartialPaymentDialogFragment.class.getSimpleName();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        PracticePartialPaymentDialogFragment dialog = PracticePartialPaymentDialogFragment
+                .newInstance(paymentResultModel, owedAmount);
+        dialog.show(ft, tag);
     }
 
     @Override
@@ -179,8 +183,8 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
     }
 
     @Override
-    public void onLeftActionTapped(PaymentsModel paymentsModel) {
-        new PracticePartialPaymentDialog(this, paymentsModel).show();
+    public void onLeftActionTapped(PaymentsModel paymentsModel, double owedAmount) {
+        startPartialPayment(owedAmount);
     }
 
     @Override

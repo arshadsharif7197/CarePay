@@ -46,7 +46,6 @@ import com.carecloud.carepaylibray.payments.models.updatebalance.PaymentUpdateBa
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -385,7 +384,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 //    }
 
     @Override
-    public void startPartialPayment() {
+    public void startPartialPayment(double owedAmount) {
 
     }
 

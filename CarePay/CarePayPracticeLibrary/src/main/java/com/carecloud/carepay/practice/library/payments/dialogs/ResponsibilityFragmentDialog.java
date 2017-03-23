@@ -209,7 +209,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
                 @Override
                 public void onClick(View view) {
                     if (null != callback) {
-                        callback.onLeftActionTapped(paymentsModel);
+                        callback.onLeftActionTapped(paymentsModel, owedAmount);
                     }
                     dismiss();
                 }
@@ -237,7 +237,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
 
     public interface PayResponsibilityCallback {
 
-        void onLeftActionTapped(PaymentsModel paymentsModel);
+        void onLeftActionTapped(PaymentsModel paymentsModel, double owedAmount);
 
         void onRightActionTapped(PaymentsModel paymentsModel, double amount);
 

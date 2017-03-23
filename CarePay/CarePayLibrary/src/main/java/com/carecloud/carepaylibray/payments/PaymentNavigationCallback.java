@@ -11,8 +11,9 @@ import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 public interface PaymentNavigationCallback {
     /**
      * Callback to launch the partial payment view
+     * @param owedAmount
      */
-    void startPartialPayment();
+    void startPartialPayment(double owedAmount);
 
     /**
      * Callback to launch the payment method selector
