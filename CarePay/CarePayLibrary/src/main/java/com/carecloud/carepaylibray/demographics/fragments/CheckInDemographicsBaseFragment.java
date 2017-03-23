@@ -18,6 +18,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterface;
@@ -94,10 +95,13 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     protected void setHeaderTitle(String title, View view){
         TextView textView = (TextView) view.findViewById(R.id.checkinDemographicsHeaderLabel);
-        textView.setText(title);
+
         SystemUtil.setGothamRoundedMediumTypeface(getContext(), textView);
         if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             (view.findViewById(R.id.toolbar_layout)).setVisibility(checkInNavListener.getCurrentStep()>1 ?View.VISIBLE:View.INVISIBLE);
+            textView.setText(title);
+        }else{
+            textView.setText(String.format(Label.getLabel("demographics_heading"), checkInNavListener.getCurrentStep() + 1, 5));
         }
         //stepProgressBar.setCurrentProgressDot(checkInNavListener.getCurrentStep()-1);
     }
