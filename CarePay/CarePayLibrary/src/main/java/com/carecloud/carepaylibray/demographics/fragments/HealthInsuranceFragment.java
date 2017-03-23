@@ -244,8 +244,8 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
             }
         });
 
-        Button iDoNotHaveOne = (Button) view.findViewById(R.id.health_insurance_dont_have_button);
-        iDoNotHaveOne.setOnClickListener(new View.OnClickListener() {
+        Button doNotHaveOne = (Button) view.findViewById(R.id.health_insurance_dont_have_button);
+        doNotHaveOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
                 DemographicDTO demographicDTO = updateDemographicDTO(view);
