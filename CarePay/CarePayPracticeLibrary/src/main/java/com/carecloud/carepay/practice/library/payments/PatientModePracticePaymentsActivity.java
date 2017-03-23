@@ -47,7 +47,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
     }
 
     private void setUpUI() {
-        if (paymentResultModel.getPaymentPayload().getPatientBalances().isEmpty()) {
+        if (hasNoPayments()) {
             showNoPaymentsImage();
         } else {
             showPayments(paymentResultModel);
