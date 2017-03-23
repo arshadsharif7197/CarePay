@@ -27,14 +27,21 @@ import java.util.List;
  */
 public class PracticeChooseCreditCardFragment extends ChooseCreditCardFragment {
 
+    /**
+     *
+     * @param paymentsDTO the payment model
+     * @param selectedPaymentMethodLabel the selected payment method label
+     * @param amount the amount
+     * @return an instance of PracticeChooseCreditCardFragment
+     */
     public static PracticeChooseCreditCardFragment newInstance(PaymentsModel paymentsDTO,
                                                                String selectedPaymentMethodLabel,
                                                                double amount) {
-        PracticeChooseCreditCardFragment chooseCreditCardFragment = new PracticeChooseCreditCardFragment();
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsDTO);
         args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethodLabel);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+        PracticeChooseCreditCardFragment chooseCreditCardFragment = new PracticeChooseCreditCardFragment();
         chooseCreditCardFragment.setArguments(args);
         return chooseCreditCardFragment;
     }

@@ -63,12 +63,19 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
 
     private List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = new ArrayList<>();
 
+    /**
+     *
+     * @param paymentsDTO the payment model
+     * @param selectedPaymentMethodLabel the selected payment method label
+     * @param amount the amount
+     * @return an instance of PracticeChooseCreditCardFragment
+     */
     public static ChooseCreditCardFragment newInstance(PaymentsModel paymentsDTO, String selectedPaymentMethodLabel, double amount) {
-        ChooseCreditCardFragment chooseCreditCardFragment = new ChooseCreditCardFragment();
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsDTO);
         args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethodLabel);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+        ChooseCreditCardFragment chooseCreditCardFragment = new ChooseCreditCardFragment();
         chooseCreditCardFragment.setArguments(args);
         return chooseCreditCardFragment;
     }
