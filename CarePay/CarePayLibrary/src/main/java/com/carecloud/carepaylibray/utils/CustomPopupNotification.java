@@ -136,26 +136,27 @@ public class CustomPopupNotification extends PopupWindow {
     public void showPopWindow() {
         showAtLocation(parentView, Gravity.TOP, 0, 0);
 
-        if(notificationType == TYPE_ERROR_NOTIFICATION)
-        {
+        if(notificationType == TYPE_ERROR_NOTIFICATION) {
+            if(hasStatusBar)
+            {
+                setStatusBarColor(errorColor);
+            }
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
 
-            setStatusBarColor(errorColor);
-        }
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                if (isShowing()) {
-                    dismiss();
-                    if(hasStatusBar)
-                    {
-                        setStatusBarColor(statusBarColor);
+                @Override
+                public void run() {
+                    if (isShowing()) {
+                        dismiss();
+                        if(hasStatusBar)
+                        {
+                            setStatusBarColor(statusBarColor);
+                        }
                     }
                 }
-            }
 
-        }, CarePayConstants.CUSTOM_POPUP_AUTO_DISMISS_DURATION);
+            }, CarePayConstants.CUSTOM_POPUP_AUTO_DISMISS_DURATION);
+        }
     }
 
     private void setSwipeListener()
