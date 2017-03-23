@@ -30,7 +30,7 @@ import com.carecloud.carepay.practice.library.checkin.dtos.CheckInStatusPayloadD
 import com.carecloud.carepay.practice.library.checkin.dtos.QueryStrings;
 import com.carecloud.carepay.practice.library.checkin.dtos.QueueDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.QueueStatusPayloadDTO;
-import com.carecloud.carepay.practice.library.models.HeaderModel;
+import com.carecloud.carepay.practice.library.models.ResponsibilityHeaderModel;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFragmentDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -41,7 +41,6 @@ import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -257,7 +256,7 @@ public class AppointmentDetailDialog extends Dialog {
             profilePhoto.setVisibility(View.VISIBLE);
             bgImage.setScaleX(5);
             bgImage.setScaleY(5);
-        }else{
+        } else {
             shortName.setText(appointmentPayloadDTO.getPatient().getShortName());
         }
 
@@ -536,13 +535,7 @@ public class AppointmentDetailDialog extends Dialog {
         }
         ft.addToBackStack(null);
 
-        PatientModel patientModel = getPatientModel(paymentsModel.getPaymentPayload().getPatientBalances().get(0));
-        HeaderModel headerModel = new HeaderModel();
-        headerModel.setHeaderFullTitle(patientModel.getFullName());
-        headerModel.setHeaderShortTitle(patientModel.getShortName());
-        headerModel.setHeaderPhotoUrl(patientModel.getProfilePhoto());
-        headerModel.setHeaderSubtitle(initializePatientProvider(paymentsModel));
-
+        ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newPatientHeader(paymentsModel);
         ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
                 .newInstance(paymentsModel, Label.getLabel("practice_payments_detail_dialog_payment_plan"),
                         Label.getLabel("practice_payments_detail_dialog_pay"), headerModel);

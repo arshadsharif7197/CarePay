@@ -13,16 +13,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.models.HeaderModel;
+import com.carecloud.carepay.practice.library.models.ResponsibilityHeaderModel;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
-import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customdialogs.BaseDialogFragment;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
-import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -42,7 +40,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
     private PatientBalanceDTO patientBalance;
     private PayResponsibilityCallback callback;
     private double owedAmount = 0;
-    private HeaderModel headerModel;
+    private ResponsibilityHeaderModel headerModel;
 
     @Override
     protected String getCancelString() {
@@ -77,7 +75,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
      */
     public static ResponsibilityFragmentDialog newInstance(PaymentsModel paymentsModel,
                                                            String leftLabel, String rightLabel,
-                                                           HeaderModel headerModel) {
+                                                           ResponsibilityHeaderModel headerModel) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
@@ -96,7 +94,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
         paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
-        headerModel = DtoHelper.getConvertedDTO(HeaderModel.class, arguments);
+        headerModel = DtoHelper.getConvertedDTO(ResponsibilityHeaderModel.class, arguments);
         patientBalance = paymentsModel.getPaymentPayload().getPatientBalances().get(0);
         leftLabel = arguments.getString("leftLabel");
         rightLabel = arguments.getString("rightLabel");

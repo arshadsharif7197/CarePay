@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
-import com.carecloud.carepay.practice.library.models.HeaderModel;
+import com.carecloud.carepay.practice.library.models.ResponsibilityHeaderModel;
 import com.carecloud.carepay.practice.library.payments.adapter.PaymentBalancesAdapter;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFragmentDialog;
@@ -26,7 +26,6 @@ import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
-import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
 /**
@@ -69,6 +68,20 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         logoutTextview.setText("Log Out");
     }
 
+    private boolean hasNoPayments() {
+        boolean hasNoPayments = true;
+        if (paymentResultModel.getPaymentPayload().getPatientBalances().isEmpty()) {
+            return true;
+        }
+        for (PatientBalanceDTO patientBalanceDTO : paymentResultModel.getPaymentPayload().getPatientBalances()) {
+            if (Double.parseDouble(patientBalanceDTO.getPendingRepsonsibility()) > 0) {
+                hasNoPayments = false;
+                break;
+            }
+        }
+        return hasNoPayments;
+    }
+
     private void showPayments(PaymentsModel paymentsModel) {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.appointmentsRecyclerView);
         recyclerView.setVisibility(View.VISIBLE);
@@ -101,11 +114,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         }
         ft.addToBackStack(null);
 
-        HeaderModel headerModel = new HeaderModel();
-        headerModel.setHeaderFullTitle(paymentResultModel.getPaymentPayload().getUserPractices().get(0).getPracticeName());
-        headerModel.setHeaderShortTitle(StringUtil.getShortName(headerModel.getHeaderFullTitle()));
-        headerModel.setHeaderPhotoUrl(paymentResultModel.getPaymentPayload().getUserPractices().get(0).getPracticePhoto());
-
+        ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newClinicHeader(paymentResultModel);
         ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
                 .newInstance(paymentResultModel, Label.getLabel("payment_partial_label"),
                         Label.getLabel("payment_pay_total_amount_button"), headerModel);
