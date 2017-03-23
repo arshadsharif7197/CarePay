@@ -379,7 +379,7 @@ public class SigninFragment extends BaseFragment {
             String signInResponseString = gson.toJson(workflowDTO);
             UnifiedSignInResponse signInResponse = gson.fromJson(signInResponseString, UnifiedSignInResponse.class);
             if (signInResponse != null) {
-                UnifiedAuthenticationTokens authTokens = signInResponse.getPayload().getPatientAppAuth().getCognito().getAuthenticationTokens();
+                UnifiedAuthenticationTokens authTokens = signInResponse.getPayload().getAuthorizationModel().getCognito().getAuthenticationTokens();
                 getAppAuthorizationHelper().setAuthorizationTokens(authTokens);
                 getAppAuthorizationHelper().setRefreshTransition(signInSignUpDTO.getMetadata().getTransitions().getRefresh());
                 getWorkflowServiceHelper().setAppAuthorizationHelper(getAppAuthorizationHelper());

@@ -470,7 +470,7 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
             String signInResponseString = gson.toJson(workflowDTO);
             UnifiedSignInResponse signInResponse = gson.fromJson(signInResponseString, UnifiedSignInResponse.class);
             if(signInResponse != null) {
-                UnifiedAuthenticationTokens authTokens = signInResponse.getPayload().getPracticeModeAuth().getCognito().getAuthenticationTokens();
+                UnifiedAuthenticationTokens authTokens = signInResponse.getPayload().getAuthorizationModel().getCognito().getAuthenticationTokens();
                 getAppAuthorizationHelper().setAuthorizationTokens(authTokens);
                 if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
                     getAppAuthorizationHelper().setRefreshTransition(signinDTO.getMetadata().getTransitions().getRefresh());
