@@ -133,6 +133,7 @@
                     android:layout_width="wrap_content"
                     android:includeFontPadding="false"
                     android:layout_height="@dimen/dimen_9dp"
+                    android:textAllCaps="true"
                     breeze:textKey="demographics_state"
                     app:customAssetFont="proxima_nova_semi_bold"/>
 

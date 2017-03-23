@@ -15,10 +15,10 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
-import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinConsentForm1Fragment;
-import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinIntakeForm1Fragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinMedicationsAllergyFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.IFragmentCallback;
+import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.IntakeFormsFragment;
+import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.PracticeFormsFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckInFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckinFlowCallback;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountReceiptDialog;
@@ -64,7 +64,6 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.practice.FlowStateInfo;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -303,20 +302,18 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         if (requestCode == CarePayConstants.SIGNATURE_REQ_CODE) {
             if (PracticeAppSignatureActivity.isBackButtonClicked) {
                 PracticeAppSignatureActivity.isBackButtonClicked = false;
-            } else {
-                Fragment nextConsentForm = getNextConsentForm();
-                if (nextConsentForm != null) {
-                    navigateToFragment(nextConsentForm, true);
-                }
             }
+//            else {
+//                Fragment nextConsentForm = getNextConsentForm();
+//                if (nextConsentForm != null) {
+//                    navigateToFragment(nextConsentForm, true);
+//                }
+//            }
 
         }
     }
 
 
-    ////////////////////////////
-    // Consent form framework //
-    ////////////////////////////
 
     /**
      * Consent form navigation
@@ -324,38 +321,38 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
      * @param workflowJson consent DTO
      */
     public void getConsentFormInformation(String workflowJson) {
-        consentFormDTO = getConvertedDTO(ConsentFormDTO.class, workflowJson);
-        if (consentFormDTO != null) {
-            Fragment consentForm = getConsentForm(workflowJson);
-            navigateToFragment(consentForm, true);
+        Bundle bundle = new Bundle();
+        bundle.putString(CarePayConstants.INTAKE_BUNDLE, workflowJson);
 
-            Log.d(this.getClass().getSimpleName(), "consent form information");
-        }
+        PracticeFormsFragment fragment = new PracticeFormsFragment();
+        fragment.setArguments(bundle);
+
+        navigateToFragment(fragment, true);
     }
 
-    private Fragment getNextConsentForm() {
-        showingForm = showingForm.next();
-        if (showingForm != FormId.NONE) {
-            return getConsentForm("");
-        }
-        return null;
-    }
+//    private Fragment getNextConsentForm() {
+//        showingForm = showingForm.next();
+//        if (showingForm != FormId.NONE) {
+//            return getConsentForm("");
+//        }
+//        return null;
+//    }
 
-    private Fragment getConsentForm(String jsonResponse) {
-
-        if (showingForm == FormId.FORM1) {
-            Bundle bundle = new Bundle();
-            bundle.putString(CarePayConstants.INTAKE_BUNDLE, jsonResponse);
-            CheckinConsentForm1Fragment consentForm1Fragment = new CheckinConsentForm1Fragment();
-            consentForm1Fragment.setArguments(bundle);
-            return consentForm1Fragment;
-        } else {
-            Bundle bundle = new Bundle();
-            CheckinConsentForm1Fragment consentForm1Fragment = new CheckinConsentForm1Fragment();
-            consentForm1Fragment.setArguments(bundle);
-            return consentForm1Fragment;
-        }
-    }
+//    private Fragment getConsentForm(String jsonResponse) {
+//
+//        if (showingForm == FormId.FORM1) {
+//            Bundle bundle = new Bundle();
+//            bundle.putString(CarePayConstants.INTAKE_BUNDLE, jsonResponse);
+//            BaseWebFormFragment consentForm1Fragment = new BaseWebFormFragment();
+//            consentForm1Fragment.setArguments(bundle);
+//            return consentForm1Fragment;
+//        } else {
+//            Bundle bundle = new Bundle();
+//            BaseWebFormFragment consentForm1Fragment = new BaseWebFormFragment();
+//            consentForm1Fragment.setArguments(bundle);
+//            return consentForm1Fragment;
+//        }
+//    }
 
 
     /**
@@ -642,13 +639,14 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
     public void startIntakeForms(String workflowJson) {
         intakeResponseModel = getConvertedDTO(IntakeResponseModel.class, workflowJson);
 
-        CheckinIntakeForm1Fragment checkinIntakeForm1Fragment = new CheckinIntakeForm1Fragment();
         Gson gson = new Gson();
         String intakeFormDTO = gson.toJson(intakeResponseModel);
         Bundle bundle = new Bundle();
         bundle.putString(CarePayConstants.INTAKE_BUNDLE, intakeFormDTO);
-        checkinIntakeForm1Fragment.setArguments(bundle);
-        navigateToFragment(checkinIntakeForm1Fragment, true);
+
+        IntakeFormsFragment fragment = new IntakeFormsFragment();
+        fragment.setArguments(bundle);
+        navigateToFragment(fragment, true);
     }
 
     /*

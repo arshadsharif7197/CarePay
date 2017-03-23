@@ -29,12 +29,11 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
-import com.carecloud.carepaylibray.intake.models.IntakeFormPayloadModel;
+import com.carecloud.carepaylibray.intake.models.IntakeForm;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
 import com.carecloud.carepaylibray.intake.models.LabelModel;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -257,7 +256,7 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
                     }
                 }
             });
-            List<IntakeFormPayloadModel> myPaylod = inTakeForm.getPayload().getIntakeForms();
+            List<IntakeForm> myPaylod = inTakeForm.getPayload().getIntakeForms();
             return new Gson().toJson(myPaylod);
         }
 
@@ -267,7 +266,8 @@ public class CheckinIntakeForm1Fragment extends BaseCheckinFragment {
          */
         @JavascriptInterface
         public String getAnswers() {
-            return inTakeForm.getPayload().getFindings().getPayload().getFindings();
+            return null;
+//            return inTakeForm.getPayload().getFindings().getPayload().getFindings();
         }
 
 

@@ -19,6 +19,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:orientation="vertical">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -28,22 +30,23 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_30sp"
                 android:gravity="center"
-                android:text="Consent Forms"
                 app:customAssetFont="gotham_rounded_medium"/>
-
-            <RatingBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/progress_indicator"
-                style="@style/RatingBarCircleIndicator"
-                android:layout_margin="@dimen/dimen_10dp"
-                android:layout_gravity="center"
-                android:numStars="5"
-                android:rating="2"
-                android:isIndicator="true"/>
 
         </LinearLayout>
     </FrameLayout>
+
+    <com.marcok.stepprogressbar.StepProgressBar
+        android:id="@+id/progress_indicator"
+        style="@style/InTakeDottedProgressBarStyle"
+        app:activeDotIndex="-1"
+        app:activeDotColor="@color/colorPrimary"
+        app:inactiveDotColor="@color/colorPrimary"
+        app:activeDotIcon="@drawable/circle_indicator_blue"
+        app:inactiveDotIcon="@drawable/circle_indicator_gray"
+        app:numberDots="5"
+        app:dotSize="10dp"
+        app:spacing="12dp"
+        android:layout_marginTop="0dp"/>
 
 
     <View
