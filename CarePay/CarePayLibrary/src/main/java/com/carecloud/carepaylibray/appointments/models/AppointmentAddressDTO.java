@@ -216,6 +216,7 @@ public class AppointmentAddressDTO {
 
     @Override
     public String toString() {
+        // Example: 2645 SW 37th Ave Suite 502
         String firstAddressHalf = "";
 
         if (!StringUtil.isNullOrEmpty(line1)) {
@@ -230,6 +231,7 @@ public class AppointmentAddressDTO {
             firstAddressHalf = (firstAddressHalf + " " + line3.trim()).trim();
         }
 
+        // Example: Miami, FL 33133, USA
         String secondAddressHalf = "";
 
         if (!StringUtil.isNullOrEmpty(city)) {

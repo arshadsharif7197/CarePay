@@ -16,6 +16,7 @@ import java.util.Date;
 public class AppointmentsPayloadDTO {
 
     private static final int ANYTIME_PERIOD = 0;
+    private static final String NEVER_PERIOD = "never";
 
     @SerializedName("id")
     @Expose
@@ -730,5 +731,31 @@ public class AppointmentsPayloadDTO {
         long differenceInMinutes = DateUtil.getMinutesElapsed(startDate.getDate(), new Date());
 
         return differenceInMinutes < earlyCheckInPeriod;
+    }
+
+    /**
+     * @return true if appointment can be canceled
+     */
+    public boolean isAppointmentCancellable(AppointmentsResultModel appointmentInfo) {
+        if (hasAppointmentStarted()) {
+            return false;
+        }
+
+        AppointmentsCheckinDTO checkin = appointmentInfo.getPayload().getAppointmentsSettings().get(0).getCheckin();
+
+        String cancellationNoticePeriodStr = checkin.getCancellationNoticePeriod();
+        if (cancellationNoticePeriodStr.equalsIgnoreCase(NEVER_PERIOD)) {
+            return false;
+        }
+
+        long cancellationNoticePeriod = Long.parseLong(cancellationNoticePeriodStr);
+        if (ANYTIME_PERIOD == cancellationNoticePeriod) {
+            return true;
+        }
+
+        DateUtil startDate = DateUtil.getInstance().setDateRaw(startTime);
+        long differenceInMinutes = DateUtil.getMinutesElapsed(startDate.getDate(), new Date());
+
+        return differenceInMinutes < cancellationNoticePeriod;
     }
 }
