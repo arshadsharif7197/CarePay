@@ -291,7 +291,7 @@ public class DemographicsInformationFragment extends BaseFragment {
             stateEditText.setText(stateValString);
             stateEditText.requestFocus();
         }
-        rootview.requestFocus();
+        dobEditText.requestFocus();
 
         SystemUtil.hideSoftKeyboard(getActivity());
         selectGender.setText(genderValString);
