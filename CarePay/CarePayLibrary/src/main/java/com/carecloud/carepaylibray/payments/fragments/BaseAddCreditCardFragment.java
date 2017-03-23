@@ -492,7 +492,7 @@ public class BaseAddCreditCardFragment extends BaseDialogFragment implements Req
         address2EditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(address2TextInput, null));
         zipCodeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeTextInput, new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
+            public void onFocusChange(View view, boolean hasFocus) {
                 if (!hasFocus) { // for SmartyStreets
                     getCityAndState(zipCodeEditText.getText().toString());
                 }
