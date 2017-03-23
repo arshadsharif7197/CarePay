@@ -370,7 +370,7 @@ public class DemographicLabelsDTO {
     @Expose
     private String demographicsState;
 
-        @SerializedName("demographics_save_changes_button")
+    @SerializedName("demographics_save_changes_button")
     @Expose
     private String demographicsSaveChangesButton;
 
