@@ -164,6 +164,11 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         navigateToFragment(fragment,true);
     }
 
+    /**
+     *
+     * @param capString The capString
+     * @return
+     */
     public String capitalize(String capString){
         StringBuffer capBuffer = new StringBuffer();
         Matcher capMatcher = Pattern.compile("([a-z])([a-z]*)", Pattern.CASE_INSENSITIVE).matcher(capString);
