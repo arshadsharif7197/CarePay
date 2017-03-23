@@ -161,7 +161,7 @@
                 android:textSize="@dimen/text_size_18sp"
                 android:visibility="gone"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="appointments_request_pending_heading"/>
+                breeze:textKey="request_pending_label"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/appointment_status_canceled"
