@@ -10,61 +10,43 @@
     android:orientation="vertical"
     android:id="@+id/scanIdRootLayout">
 
+
+
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="@dimen/dimen_60dp"
-        android:gravity="center_horizontal">
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
+        style="@style/DemographicsDocsImageButtonContainerStyle">
+
+        <ImageView
+            android:id="@+id/demogrDocsFrontScanImage"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/demogr_details_container_top"
-            android:layout_marginTop="@dimen/demogr_details_container_top"
-            android:orientation="vertical"
-            android:gravity="center_horizontal">
+            android:contentDescription="@string/scanned_id_doc"
+            android:src="@drawable/icn_camera"/>
 
-            <ImageView
-                android:id="@+id/demogrDocsFrontScanImage"
-                android:layout_width="@dimen/dimen_230dp"
-                android:layout_height="@dimen/dimen_138dp"
-                android:contentDescription="@string/scanned_id_doc"
-                android:src="@drawable/icn_placeholder_document"/>
-
-            <Button
-                android:id="@+id/demogrDocsFrontScanButton"
-                style="@style/DemographicsDocsButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_13dp"/>
-
-        </LinearLayout>
-
-        <LinearLayout
+        <Button
+            android:id="@+id/demogrDocsFrontScanButton"
+            style="@style/DemographicsDocsButtonStyle"
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/DemographicsDocsImageButtonContainerStyle"
+        android:layout_marginBottom="@dimen/demogr_details_container_top"
+        android:layout_marginTop="@dimen/demogr_details_container_top">
+
+        <ImageView
+            android:id="@+id/demogrDocsBackScanImage"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/demogr_details_container_top"
-            android:layout_marginTop="@dimen/demogr_details_container_top"
-            android:orientation="vertical"
-            android:gravity="center_horizontal">
+            android:contentDescription="@string/scanned_id_doc"
+            android:src="@drawable/icn_camera"/>
 
-            <ImageView
-                android:id="@+id/demogrDocsBackScanImage"
-                android:layout_width="@dimen/dimen_230dp"
-                android:layout_height="@dimen/dimen_138dp"
-                android:contentDescription="@string/scanned_id_doc"
-                android:src="@drawable/icn_placeholder_document"/>
-
-            <Button
-                android:id="@+id/demogrDocsBackScanButton"
-                style="@style/DemographicsDocsButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_13dp"/>
-
-        </LinearLayout>
+        <Button
+            android:id="@+id/demogrDocsBackScanButton"
+            style="@style/DemographicsDocsButtonStyle"
+            android:layout_width="0dp"
+            android:layout_weight="1"/>
 
     </LinearLayout>
 </LinearLayout>

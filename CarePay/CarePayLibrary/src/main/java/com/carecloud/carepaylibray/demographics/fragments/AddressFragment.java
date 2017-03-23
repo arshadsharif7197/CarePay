@@ -127,8 +127,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
             ((EditText) view.findViewById(R.id.zipCodeId)).requestFocus();
             return false;
         }
-
-
         return true;
     }
 

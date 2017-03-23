@@ -46,12 +46,9 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view;
-        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
-            view = inflater.inflate(R.layout.fragment_review_demographic_base, container, false);
-        }else{
-            view = inflater.inflate(R.layout.fragment_review_demographic_base_patient, container, false);
-        }
+
+
+        View   view = inflater.inflate(R.layout.fragment_review_demographic_base, container, false);
         stepProgressBar = (StepProgressBar) view.findViewById(R.id.stepProgressBarCheckin);
         stepProgressBar.setCumulativeDots(true);
         stepProgressBar.setNumDots(5);
@@ -101,7 +98,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             (view.findViewById(R.id.toolbar_layout)).setVisibility(checkInNavListener.getCurrentStep()>1 ?View.VISIBLE:View.INVISIBLE);
             textView.setText(title);
         }else{
-            textView.setText(String.format(Label.getLabel("demographics_heading"), checkInNavListener.getCurrentStep() + 1, 5));
+            textView.setText(String.format(Label.getLabel("demographics_heading"), checkInNavListener.getCurrentStep(), 5));
         }
         //stepProgressBar.setCurrentProgressDot(checkInNavListener.getCurrentStep()-1);
     }
