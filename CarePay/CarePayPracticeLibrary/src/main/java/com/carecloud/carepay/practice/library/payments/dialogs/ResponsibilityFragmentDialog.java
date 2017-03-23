@@ -7,22 +7,20 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.models.ResponsibilityHeaderModel;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
-import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customdialogs.BaseDialogFragment;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
-import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -42,6 +40,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
     private PatientBalanceDTO patientBalance;
     private PayResponsibilityCallback callback;
     private double owedAmount = 0;
+    private ResponsibilityHeaderModel headerModel;
 
     @Override
     protected String getCancelString() {
@@ -74,10 +73,13 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
      * @param rightLabel    the label of the right bottom button
      * @return new instance of a ResponsibilityFragmentDialog
      */
-    public static ResponsibilityFragmentDialog newInstance(PaymentsModel paymentsModel, String leftLabel, String rightLabel) {
+    public static ResponsibilityFragmentDialog newInstance(PaymentsModel paymentsModel,
+                                                           String leftLabel, String rightLabel,
+                                                           ResponsibilityHeaderModel headerModel) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
+        DtoHelper.bundleDto(args, headerModel);
         args.putString("leftLabel", leftLabel);
         args.putString("rightLabel", rightLabel);
 
@@ -92,6 +94,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
         paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
+        headerModel = DtoHelper.getConvertedDTO(ResponsibilityHeaderModel.class, arguments);
         patientBalance = paymentsModel.getPaymentPayload().getPatientBalances().get(0);
         leftLabel = arguments.getString("leftLabel");
         rightLabel = arguments.getString("rightLabel");
@@ -133,25 +136,18 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
     }
 
     private void initializeHeader(View view) {
-        final PatientModel patientModel = getPatientModel();
-        if (null == patientModel) {
-            Log.e(TAG, "Patient not found");
-            return;
-        }
-
-        ((TextView) view.findViewById(R.id.patient_full_name)).setText(patientModel.getFullName());
-
+        ((TextView) view.findViewById(R.id.patient_full_name)).setText(headerModel.getHeaderFullTitle());
         ImageView profilePhoto = (ImageView) view.findViewById(R.id.patient_profile_photo);
         final TextView shortName = (TextView) view.findViewById(R.id.patient_profile_short_name);
-        shortName.setText(patientModel.getShortName());
+        shortName.setText(headerModel.getHeaderShortTitle());
 
-        String photoUrl = patientModel.getProfilePhoto();
+        String photoUrl = headerModel.getHeaderPhotoUrl();
         if (!TextUtils.isEmpty(photoUrl)) {
             Picasso.Builder builder = new Picasso.Builder(getContext());
             builder.listener(new Picasso.Listener() {
                 @Override
                 public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                    shortName.setText(patientModel.getShortName());
+                    shortName.setText(headerModel.getHeaderShortTitle());
                 }
             });
 
@@ -163,18 +159,8 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
 
             profilePhoto.setVisibility(View.VISIBLE);
         }
-    }
-
-    private PatientModel getPatientModel() {
-        if (patientBalance != null) {
-            return patientBalance.getDemographics().getPayload().getPersonalDetails();
-        }
-
-        if (!paymentsModel.getPaymentPayload().getPatients().isEmpty()) {
-            return paymentsModel.getPaymentPayload().getPatients().get(0);
-        }
-
-        return null;
+        TextView patientProviderNameTextView = (TextView) view.findViewById(R.id.patient_provider_name);
+        patientProviderNameTextView.setText(headerModel.getHeaderSubtitle());
     }
 
     private void initializeBody(View view) {
@@ -184,7 +170,6 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
             if (owedAmount > 0) {
                 initializePaymentLines(view, balances);
             }
-            initializePatientProvider(view, balances);
         }
         initializeOwedAmountTextView(view);
     }
@@ -194,18 +179,6 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
         amountDetails.setLayoutManager(new LinearLayoutManager(getContext()));
         PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(getContext(), balances, this);
         amountDetails.setAdapter(adapter);
-    }
-
-    private void initializePatientProvider(View view, List<PendingBalanceDTO> balances) {
-        String provider;
-        List<PendingBalancePayloadDTO> pendingBalancePayloadDTOList = balances.get(0).getPayload();
-        if (!pendingBalancePayloadDTOList.isEmpty() && !pendingBalancePayloadDTOList.get(0).getDetails().isEmpty()) {
-            provider = pendingBalancePayloadDTOList.get(0).getDetails().get(0).getProvider().getName();
-        } else {
-            provider = getProviderName(balances.get(0).getMetadata().getPatientId());
-        }
-        TextView patientProviderNameTextView = (TextView) view.findViewById(R.id.patient_provider_name);
-        patientProviderNameTextView.setText(provider);
     }
 
     private void initializeOwedAmount(List<PendingBalanceDTO> balances) {
@@ -256,22 +229,6 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
                 dismiss();
             }
         });
-    }
-
-    private String getProviderName(String patientId) {
-        if (!StringUtil.isNullOrEmpty(patientId)) {
-            List<ProviderIndexDTO> providerIndex = paymentsModel.getPaymentPayload().getProviderIndex();
-            for (ProviderIndexDTO providerIndexDTO : providerIndex) {
-                List<String> patientIds = providerIndexDTO.getPatientIds();
-
-                for (String id : patientIds) {
-                    if (id.equalsIgnoreCase(patientId)) {
-                        return providerIndexDTO.getName();
-                    }
-                }
-            }
-        }
-        return "";
     }
 
     public interface PayResponsibilityCallback {

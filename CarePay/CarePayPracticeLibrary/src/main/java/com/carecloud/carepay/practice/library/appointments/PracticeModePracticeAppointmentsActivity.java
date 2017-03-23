@@ -21,6 +21,7 @@ import com.carecloud.carepay.practice.library.customcomponent.TwoColumnPatientLi
 import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
 import com.carecloud.carepay.practice.library.customdialog.FilterDialog;
 import com.carecloud.carepay.practice.library.models.FilterModel;
+import com.carecloud.carepay.practice.library.models.ResponsibilityHeaderModel;
 import com.carecloud.carepay.practice.library.payments.dialogs.FindPatientDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFragmentDialog;
@@ -396,8 +397,10 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             }
             ft.addToBackStack(null);
 
+            ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newPatientHeader(patientDetails);
             ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
-                    .newInstance(patientDetails, null, Label.getLabel("create_appointment_label"));
+                    .newInstance(patientDetails, null, Label.getLabel("create_appointment_label"),
+                            headerModel);
             dialog.show(ft, tag);
         }
 

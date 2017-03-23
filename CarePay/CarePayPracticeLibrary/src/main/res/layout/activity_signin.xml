@@ -187,7 +187,8 @@
             android:textColor="@color/white"
             android:textSize="@dimen/forgotpassword_textsize"
             breeze:textKey="forgot_password"
-            app:customAssetFont="gotham_rounded_medium" />
+            app:customAssetFont="gotham_rounded_medium"
+            android:visibility="gone"/>
 
     </LinearLayout>
 

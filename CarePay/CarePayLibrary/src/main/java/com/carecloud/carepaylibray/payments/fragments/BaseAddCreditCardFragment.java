@@ -274,7 +274,6 @@ public class BaseAddCreditCardFragment extends BaseDialogFragment implements Req
         Toolbar toolbar = (Toolbar) view.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
         if(toolbar!=null) {
             title = (TextView) toolbar.findViewById(com.carecloud.carepaylibrary.R.id.respons_toolbar_title);
-            SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
             toolbar.setTitle("");
             if(getDialog()==null) {
                 toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), com.carecloud.carepaylibrary.R.drawable.icn_nav_back));
@@ -294,6 +293,9 @@ public class BaseAddCreditCardFragment extends BaseDialogFragment implements Req
                         }
                     });
                 }
+                ViewGroup.LayoutParams layoutParams = title.getLayoutParams();
+                layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                title.setLayoutParams(layoutParams);
                 title.setGravity(Gravity.CENTER_HORIZONTAL);
             }
 
@@ -304,17 +306,14 @@ public class BaseAddCreditCardFragment extends BaseDialogFragment implements Req
     private void initializeViews(View view) {
         creditCardNoTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.creditCardNoTextInputLayout);
         creditCardNoEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.creditCardNoEditText);
-        creditCardNoEditText.setTag(creditCardNoTextInput);
 
         cardTypeTextView = (CarePayTextView) view.findViewById(R.id.cardTypeTextView);
 
         nameOnCardTextInputLayout = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.nameOnCardTextInputLayout);
         nameOnCardEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.nameOnCardEditText);
-        nameOnCardEditText.setTag(nameOnCardTextInputLayout);
 
         verificationCodeTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.verificationCodeTextInputLayout);
         verificationCodeEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.verificationCodeEditText);
-        verificationCodeEditText.setTag(verificationCodeTextInput);
 
         expirationDateTextView = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.expirationDateTextView);
         pickDateTextView = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.pickDateTextView);
@@ -339,23 +338,19 @@ public class BaseAddCreditCardFragment extends BaseDialogFragment implements Req
 
         address1TextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.address1TextInputLayout);
         address1EditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.addressEditTextId);
-        address1EditText.setTag(address1TextInput);
 
         address2TextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.address2TextInputLayout);
         address2EditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.addressEditText2Id);
-        address2EditText.setTag(address2TextInput);
 
         zipCodeTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.zipCodeTextInputLayout);
         zipCodeEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.zipCodeId);
-        zipCodeEditText.setTag(zipCodeTextInput);
 
         cityTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.cityTextInputLayout);
         cityEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.cityId);
-        cityEditText.setTag(cityTextInput);
 
         stateTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.stateTextInputLayout);
         stateAutoCompleteTextView = (AutoCompleteTextView) view.findViewById(R.id.addNewCredidCardStateAutoCompleteTextView);
-        stateAutoCompleteTextView.setTag(stateTextInput);
+
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
                 R.layout.autocomplete_state_item,
                 R.id.text1,
@@ -375,27 +370,15 @@ public class BaseAddCreditCardFragment extends BaseDialogFragment implements Req
         setChangeFocusListeners();
         setActionListeners();
 
-        creditCardNoEditText.clearFocus();
-        nameOnCardEditText.clearFocus();
-        verificationCodeEditText.clearFocus();
-
-        address1EditText.clearFocus();
-        address2EditText.clearFocus();
-        zipCodeEditText.clearFocus();
-        cityEditText.clearFocus();
-        stateAutoCompleteTextView.clearFocus();
-
         saveCardOnFileCheckBox.setChecked(false);
         setAsDefaultCheckBox.setChecked(false);
 
         useProfileAddressCheckBox.setChecked(true);
-        setAddressFiledsEnabled(false);
         nextButton.setEnabled(false);
         nextButton.setClickable(false);
 
-        //billingAddressLayout.setVisibility(View.GONE); SHMRK-1077
         useProfileAddressCheckBox.setChecked(true);
-        setAddressFiledsEnabled(false);
+        setAddressFieldsEnabled(false);
         setDefaultBillingAddressTexts();
 
         View scrollView = view.findViewById(R.id.scroll_card_info);
@@ -482,122 +465,41 @@ public class BaseAddCreditCardFragment extends BaseDialogFragment implements Req
     }
 
     private void setDefaultBillingAddressTexts() {
-        try {
+        if(addressPayloadDTO!=null) {
             address1EditText.setText(addressPayloadDTO.getAddress1());
-            address2EditText.setText(addressPayloadDTO.getAddress2());
-            zipCodeEditText.setText(addressPayloadDTO.getZipcode());
-            cityEditText.setText(addressPayloadDTO.getCity());
-            stateAutoCompleteTextView.setText(addressPayloadDTO.getState());
+            address1EditText.getOnFocusChangeListener().onFocusChange(address1EditText, !StringUtil.isNullOrEmpty(addressPayloadDTO.getAddress1()));
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            address2EditText.setText(addressPayloadDTO.getAddress2());
+            address2EditText.getOnFocusChangeListener().onFocusChange(address2EditText, !StringUtil.isNullOrEmpty(addressPayloadDTO.getAddress2()));
+
+            zipCodeEditText.setText(addressPayloadDTO.getZipcode());
+            zipCodeEditText.getOnFocusChangeListener().onFocusChange(zipCodeEditText, !StringUtil.isNullOrEmpty(addressPayloadDTO.getZipcode()));
+
+            cityEditText.setText(addressPayloadDTO.getCity());
+            cityEditText.getOnFocusChangeListener().onFocusChange(cityEditText, !StringUtil.isNullOrEmpty(addressPayloadDTO.getCity()));
+
+            stateAutoCompleteTextView.setText(addressPayloadDTO.getState());
+            stateAutoCompleteTextView.getOnFocusChangeListener().onFocusChange(stateAutoCompleteTextView, !StringUtil.isNullOrEmpty(addressPayloadDTO.getState()));
         }
     }
 
-//    private void setTypefaces() {
-//        SystemUtil.setProximaNovaRegularTypeface(getActivity(), creditCardNoEditText);
-//        SystemUtil.setProximaNovaRegularTypeface(getActivity(), verificationCodeEditText);
-//        SystemUtil.setProximaNovaRegularTypeface(getActivity(), nameOnCardEditText);
-//        SystemUtil.setProximaNovaRegularTypeface(getActivity(), expirationDateTextView);
-//        SystemUtil.setProximaNovaRegularTypeface(getActivity(), address1EditText);
-//        SystemUtil.setProximaNovaRegularTypeface(getActivity(), address2EditText);
-//        SystemUtil.setProximaNovaRegularTypeface(getActivity(), zipCodeEditText);
-//        SystemUtil.setProximaNovaRegularTypeface(getActivity(), cityEditText);
-//        SystemUtil.setProximaNovaRegularTypeface(getActivity(), stateAutoCompleteTextView);
-
-
-//        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), creditCardNoTextInput);
-//        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), nameOnCardTextInputLayout);
-//        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), verificationCodeTextInput);
-//        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), address1TextInput);
-//        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), address2TextInput);
-//        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), zipCodeTextInput);
-//        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), cityTextInput);
-//        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), stateTextInput);
-
-//        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), nextButton);
-
-//        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), saveCardOnFileCheckBox);
-//        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), setAsDefaultCheckBox);
-//        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), useProfileAddressCheckBox);
-//    }
 
     private void setChangeFocusListeners() {
-        creditCardNoEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        creditCardNoEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(creditCardNoTextInput, null));
+        nameOnCardEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(nameOnCardTextInputLayout, null));
+        verificationCodeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(verificationCodeTextInput, null));
+        address1EditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(address1TextInput, null));
+        address2EditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(address2TextInput, null));
+        zipCodeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeTextInput, new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View view, boolean flag) {
-                if (flag) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, flag);
-            }
-        });
-        nameOnCardEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean flag) {
-                if (flag) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, flag);
-            }
-        });
-        verificationCodeEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean flag) {
-                if (flag) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, flag);
-            }
-        });
-        address1EditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean flag) {
-                if (flag) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, flag);
-            }
-        });
-        address2EditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean flag) {
-                if (flag) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, flag);
-            }
-        });
-        zipCodeEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean flag) {
-                if (flag) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, flag);
-                if (!flag) { // for SmartyStreets
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus) { // for SmartyStreets
                     getCityAndState(zipCodeEditText.getText().toString());
                 }
             }
-        });
-        cityEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean flag) {
-                if (flag) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, flag);
-            }
-        });
-        stateAutoCompleteTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean flag) {
-                if (flag) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, flag);
-            }
-        });
+        }));
+        cityEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(cityTextInput, null));
+        stateAutoCompleteTextView.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(stateTextInput, null));
     }
 
     private void setActionListeners() {
@@ -640,29 +542,25 @@ public class BaseAddCreditCardFragment extends BaseDialogFragment implements Req
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             validateCreditCardDetails();
             if (isChecked) {
-                setAddressFiledsEnabled(false);
+                setAddressFieldsEnabled(false);
                 setDefaultBillingAddressTexts();
             } else {
-                setAddressFiledsEnabled(true);
-                address1EditText.setText("");
-                address2EditText.setText("");
-                zipCodeEditText.setText("");
-                cityEditText.setText("");
-                stateAutoCompleteTextView.setText("");
+                setAddressFieldsEnabled(true);
+                address1EditText.setText(null);
+                address2EditText.setText(null);
+                zipCodeEditText.setText(null);
+                cityEditText.setText(null);
+                stateAutoCompleteTextView.setText(null);
             }
         }
     };
 
-    private void setAddressFiledsEnabled(boolean isEnabled) {
-        address1EditText.setEnabled(isEnabled);
-        address1EditText.setClickable(isEnabled);
-        address2EditText.setEnabled(isEnabled);
-        address2EditText.setClickable(isEnabled);
-        zipCodeEditText.setEnabled(isEnabled);
-        zipCodeEditText.setClickable(isEnabled);
-        cityEditText.setEnabled(isEnabled);
-        cityEditText.setClickable(isEnabled);
-        stateAutoCompleteTextView.setEnabled(isEnabled);
+    private void setAddressFieldsEnabled(boolean isEnabled) {
+        address1EditText.setFocusable(isEnabled);
+        address2EditText.setFocusable(isEnabled);
+        zipCodeEditText.setFocusable(isEnabled);
+        cityEditText.setFocusable(isEnabled);
+        stateAutoCompleteTextView.setFocusable(isEnabled);
         stateAutoCompleteTextView.setClickable(isEnabled);
     }
 
