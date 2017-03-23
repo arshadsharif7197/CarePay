@@ -83,6 +83,7 @@ public class FindPatientDialog extends Dialog {
         findViewById(R.id.find_patient_close_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ((ISession) context).getWorkflowServiceHelper().interrupt();
                 dismiss();
             }
         });
@@ -130,6 +131,20 @@ public class FindPatientDialog extends Dialog {
             public void afterTextChanged(Editable charSequence) {
                 if (charSequence.length() == 0) {
                     findViewById(R.id.patient_searched_list).setVisibility(View.GONE);
+                } else if (charSequence.length() > 3){
+                    ((ISession) context).getWorkflowServiceHelper().interrupt();
+                    //InputMethodManager manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    //manager.hideSoftInputFromWindow(findPatientEditBox.getWindowToken(), 0);
+
+                    Map<String, String> queryMap = new HashMap<>();
+                    queryMap.put("practice_mgmt", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+                    queryMap.put("practice_id", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeId());
+
+                    query = charSequence.toString().toUpperCase();
+                    JsonArray postModel = new JsonArray();
+                    postModel.add(query);
+                    String postBody = postModel.toString();
+                    ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, findPatientCallback, postBody, queryMap);
                 }
             }
         };
@@ -139,24 +154,27 @@ public class FindPatientDialog extends Dialog {
 
         @Override
         public void onPreExecute() {
-            ((ISession) context).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ((ISession) context).hideProgressDialog();
-
             PaymentsModel searchResult = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
             if (searchResult != null) {
+                findViewById(R.id.patient_searched_list).setVisibility(View.VISIBLE);
+                findViewById(R.id.patient_not_found_text).setVisibility(View.GONE);
                 List<PatientModel> patients = searchResult.getPaymentPayload().getPatients();
                 sortPatients(patients);
                 showSearchResultList(patients);
+            } else {
+                findViewById(R.id.patient_searched_list).setVisibility(View.GONE);
+                findViewById(R.id.patient_not_found_text).setVisibility(View.VISIBLE);
             }
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.doDefaultFailureBehavior(context, exceptionMessage);
+            findViewById(R.id.patient_searched_list).setVisibility(View.GONE);
+            findViewById(R.id.patient_not_found_text).setVisibility(View.VISIBLE);
         }
 
         private void sortPatients(List<PatientModel> patients) {
@@ -195,7 +213,6 @@ public class FindPatientDialog extends Dialog {
         }
         searchedList.setLayoutParams(params);
         searchedList.setAdapter(adapter);
-        searchedList.setVisibility(View.VISIBLE);
     }
 
     private void setOnItemClickedListener(PatientSearchResultAdapter adapter) {
