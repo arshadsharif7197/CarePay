@@ -64,7 +64,6 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.practice.FlowStateInfo;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -792,7 +791,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
 
     @Override
     public void navigateToConsentFlow(WorkflowDTO workflowDTO) {
-
         PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
     }
 

@@ -33,7 +33,6 @@ import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
@@ -42,6 +41,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 
 
 /**
@@ -173,11 +173,11 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
         settings.setJavaScriptEnabled(true);
 
         //speed webview loading
-        if (Build.VERSION.SDK_INT >= 19) {
-            webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        } else {
-            webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        }
+//        if (Build.VERSION.SDK_INT >= 19) {
+//            webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+//        } else {
+//            webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+//        }
 //        webView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
 
 
@@ -208,7 +208,7 @@ public class CheckinConsentForm1Fragment extends BaseCheckinFragment {
     public void displayNextForm() {
         if (displayedFormsIndex < totalForms) {
             PracticeForm practiceForm = consentFormList.get(displayedFormsIndex);
-            String payload = practiceForm.getPayload().toString();//.replaceAll("\'", Matcher.quoteReplacement("\\\'"));
+            String payload = practiceForm.getPayload().toString().replaceAll("\'", Matcher.quoteReplacement("\\\'"));
             webView.loadUrl("javascript:angular.element(document.getElementsByClassName('forms')).scope().load_form(JSON.parse('" + payload + "'))");
             nextButton.setEnabled(true);
             header.setText(practiceForm.getPayload().get("title").getAsString());
