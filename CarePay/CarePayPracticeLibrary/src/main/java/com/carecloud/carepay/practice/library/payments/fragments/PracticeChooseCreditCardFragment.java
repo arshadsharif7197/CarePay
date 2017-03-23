@@ -10,11 +10,13 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItemMetadata;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -24,6 +26,15 @@ import java.util.List;
  * Created by lmenendez on 3/8/17.
  */
 public class PracticeChooseCreditCardFragment extends ChooseCreditCardFragment {
+
+    public static PracticeChooseCreditCardFragment newInstance(PaymentsModel paymentsDTO, String selectedPaymentMethodLabel, double amount) {
+        PracticeChooseCreditCardFragment chooseCreditCardFragment = new PracticeChooseCreditCardFragment();
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, paymentsDTO);
+        args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethodLabel);
+        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+        return chooseCreditCardFragment;
+    }
 
     @Override
     public void onCreate(Bundle icicle){
