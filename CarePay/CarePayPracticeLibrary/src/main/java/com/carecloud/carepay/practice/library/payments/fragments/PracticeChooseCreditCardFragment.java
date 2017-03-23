@@ -27,17 +27,20 @@ import java.util.List;
  */
 public class PracticeChooseCreditCardFragment extends ChooseCreditCardFragment {
 
-    public static PracticeChooseCreditCardFragment newInstance(PaymentsModel paymentsDTO, String selectedPaymentMethodLabel, double amount) {
+    public static PracticeChooseCreditCardFragment newInstance(PaymentsModel paymentsDTO,
+                                                               String selectedPaymentMethodLabel,
+                                                               double amount) {
         PracticeChooseCreditCardFragment chooseCreditCardFragment = new PracticeChooseCreditCardFragment();
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsDTO);
         args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethodLabel);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+        chooseCreditCardFragment.setArguments(args);
         return chooseCreditCardFragment;
     }
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         String name = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getPersonalDetails().getFirstName();
         String label = Label.getLabel("payment_user_credit_card_title");
@@ -45,11 +48,11 @@ public class PracticeChooseCreditCardFragment extends ChooseCreditCardFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
         Button swipeCardButton = (Button) view.findViewById(R.id.swipeCreditCarNowButton);
-        if(isCloverDevice) {
+        if (isCloverDevice) {
             swipeCardButton.setVisibility(View.VISIBLE);
             swipeCardButton.setOnClickListener(swipeCreditCarNowButtonClickListener);
         }
@@ -59,13 +62,13 @@ public class PracticeChooseCreditCardFragment extends ChooseCreditCardFragment {
         @Override
         public void onClick(View view) {
             setCloverPayment(paymentsModel.getPaymentPayload());
-            if(getDialog()!=null){
+            if (getDialog() != null) {
                 dismiss();
             }
         }
     };
 
-    private void setCloverPayment(PaymentsPayloadDTO paymentsPayloadDTO){
+    private void setCloverPayment(PaymentsPayloadDTO paymentsPayloadDTO) {
         PaymentPostModel postModel = paymentsPayloadDTO.getPaymentPostModel();
 
         Intent intent = new Intent();
@@ -78,13 +81,13 @@ public class PracticeChooseCreditCardFragment extends ChooseCreditCardFragment {
         String paymentTransitionString = gson.toJson(paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment());
         intent.putExtra(CarePayConstants.CLOVER_PAYMENT_TRANSITION, paymentTransitionString);
 
-        if(postModel!=null && postModel.getAmount()>0) {
+        if (postModel != null && postModel.getAmount() > 0) {
             String paymentPostModelString = gson.toJson(postModel);
             intent.putExtra(CarePayConstants.CLOVER_PAYMENT_POST_MODEL, paymentPostModelString);
         }
 
         List<PaymentLineItem> paymentLineItems = new ArrayList<>();
-        for(PaymentObject paymentObject : postModel.getPaymentObjects()){
+        for (PaymentObject paymentObject : postModel.getPaymentObjects()) {
             PaymentLineItem paymentLineItem = new PaymentLineItem();
             paymentLineItem.setAmount(paymentObject.getAmount());
             paymentLineItem.setDescription(paymentObject.getDescription());

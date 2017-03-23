@@ -69,6 +69,7 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
         DtoHelper.bundleDto(args, paymentsDTO);
         args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethodLabel);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+        chooseCreditCardFragment.setArguments(args);
         return chooseCreditCardFragment;
     }
 
@@ -88,7 +89,6 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
 
         Bundle arguments = getArguments();
         if (arguments != null) {
-            Gson gson = new Gson();
             titleLabel = arguments.getString(CarePayConstants.PAYMENT_METHOD_BUNDLE);
             paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
             amountToMakePayment = arguments.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
