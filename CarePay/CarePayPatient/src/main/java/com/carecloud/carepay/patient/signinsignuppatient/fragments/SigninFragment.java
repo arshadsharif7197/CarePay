@@ -381,6 +381,7 @@ public class SigninFragment extends BaseFragment {
             if (signInResponse != null) {
                 UnifiedAuthenticationTokens authTokens = signInResponse.getPayload().getPatientAppAuth().getCognito().getAuthenticationTokens();
                 getAppAuthorizationHelper().setAuthorizationTokens(authTokens);
+                getAppAuthorizationHelper().setRefreshTransition(signInSignUpDTO.getMetadata().getTransitions().getRefresh());
                 getWorkflowServiceHelper().setAppAuthorizationHelper(getAppAuthorizationHelper());
             }
 
