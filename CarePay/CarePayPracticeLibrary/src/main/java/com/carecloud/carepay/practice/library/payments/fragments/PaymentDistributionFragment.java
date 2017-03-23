@@ -27,10 +27,12 @@ import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.payments.models.LocationIndexDTO;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
 import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentApplication;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentNewCharge;
@@ -70,6 +72,11 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     private NumberFormat currencyFormatter;
 
     private View lastSwipeView = null;
+
+    private List<LocationDTO> locations;
+    private List<ProviderDTO> providers;
+    private LocationDTO defaultLocation;
+    private ProviderDTO defaultProvider;
 
     @Override
     public void onAttach(Context context){
@@ -119,6 +126,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         setInitialValues();
         setAdapter();
         setupPickerWindows();
+        setDefaultProviderLocation();
+
     }
 
     private void setupToolbar(View view){
@@ -201,12 +210,12 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
     private void setupPickerWindows(){
         locationPickerWindow = new PopupPickerWindow(getContext());
-        List<LocationDTO> locations = paymentsModel.getPaymentPayload().getLocations();
+        locations = paymentsModel.getPaymentPayload().getLocations();
         PopupPickLocationAdapter locationAdapter = new PopupPickLocationAdapter(getContext(), locations, this);
         locationPickerWindow.setAdapter(locationAdapter);
 
         providerPickerWindow = new PopupPickerWindow(getContext());
-        List<ProviderDTO> providers = paymentsModel.getPaymentPayload().getProviders();
+        providers = paymentsModel.getPaymentPayload().getProviders();
         PopupPickProviderAdapter providerAdapter = new PopupPickProviderAdapter(getContext(), providers, this);
         providerPickerWindow.setAdapter(providerAdapter);
     }
@@ -235,6 +244,46 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             }
         }
         return total;
+    }
+
+    private void setDefaultProviderLocation(){
+        String patientID = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getPatientId();
+        String locationID = null;
+        String providerID = null;
+        for(LocationIndexDTO locationIndex : paymentsModel.getPaymentPayload().getLocationIndex()){
+            for(String locationPatientID : locationIndex.getPatientIds()){
+                if(locationPatientID.equals(patientID)){
+                    locationID = locationIndex.getId();
+                    break;
+                }
+            }
+        }
+        for(ProviderIndexDTO providerIndex : paymentsModel.getPaymentPayload().getProviderIndex()){
+            for(String providerPatientID : providerIndex.getPatientIds()){
+                if(providerPatientID.equals(patientID)){
+                    providerID = providerIndex.getId();
+                    break;
+                }
+            }
+        }
+
+        if(locationID!=null){
+            for(LocationDTO location : locations){
+                if(locationID.equals(location.getId().toString())){
+                    defaultLocation = location;
+                    break;
+                }
+            }
+        }
+
+        if(providerID!=null){
+            for(ProviderDTO provider : providers){
+                if(providerID.equals(provider.getId().toString())){
+                    defaultProvider = provider;
+                    break;
+                }
+            }
+        }
     }
 
     private void modifyLineItem(BalanceItemDTO updateBalanceItem, ProviderDTO updateProvider, LocationDTO updateLocation, Double updateAmount){
@@ -321,8 +370,14 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         balanceItemDTO.setAmount(amount);
         balanceItemDTO.setBalance(amount);
         balanceItemDTO.setResponsibilityType(chargeItem.getResponsibilityType());
+        if(defaultProvider!=null){
+            balanceItemDTO.setProvider(defaultProvider);
+        }
+        if(defaultLocation!=null){
+            balanceItemDTO.setLocation(defaultLocation);
+        }
         balanceItems.add(balanceItemDTO);
-        paymentAmount+=chargeItem.getAmount();
+        paymentAmount+=amount;
         setCurrency(paymentTotal, paymentAmount);
         setAdapter();
     }

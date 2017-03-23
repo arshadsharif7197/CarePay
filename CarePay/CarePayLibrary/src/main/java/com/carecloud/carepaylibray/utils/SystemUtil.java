@@ -219,6 +219,7 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
         return new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
+                TextView textView = (TextView) view;
                 String[] tags = (String[]) view.getTag();
                 if(tags == null && textInputLayout.getHint()!=null){
                     tags = new String[]{textInputLayout.getHint().toString().toUpperCase(), textInputLayout.getHint().toString()};
@@ -226,7 +227,11 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
                 }
 
                 if(tags!=null){
-                    textInputLayout.setHint(hasFocus?tags[0]:tags[1]);
+                    if(hasFocus || !StringUtil.isNullOrEmpty(textView.getText().toString())){
+                        textInputLayout.setHint(tags[0]);
+                    }else{
+                        textInputLayout.setHint(tags[1]);
+                    }
                 }
 
                 if(optionalListener!=null){
