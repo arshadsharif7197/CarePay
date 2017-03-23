@@ -12,7 +12,9 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
+import com.carecloud.carepay.practice.library.models.ResponsibilityHeaderModel;
 import com.carecloud.carepay.practice.library.payments.adapter.PaymentBalancesAdapter;
+import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
@@ -21,6 +23,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -48,7 +51,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         if (hasNoPayments()) {
             showNoPaymentsImage();
         } else {
-            showPaymentsRecyclerView(paymentResultModel);
+            showPayments(paymentResultModel);
         }
         findViewById(R.id.btnHome).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,7 +84,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         return hasNoPayments;
     }
 
-    private void showPaymentsRecyclerView(PaymentsModel paymentsModel) {
+    private void showPayments(PaymentsModel paymentsModel) {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.appointmentsRecyclerView);
         recyclerView.setVisibility(View.VISIBLE);
         findViewById(R.id.emptyPaymentsImageView).setVisibility(View.GONE);
@@ -113,9 +116,10 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         }
         ft.addToBackStack(null);
 
+        ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newClinicHeader(paymentResultModel);
         ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
                 .newInstance(paymentResultModel, Label.getLabel("payment_partial_label"),
-                        Label.getLabel("payment_pay_total_amount_button"));
+                        Label.getLabel("payment_pay_total_amount_button"), headerModel);
         dialog.show(ft, tag);
     }
 
@@ -142,15 +146,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
         boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
         if (!isCloverDevice && paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
-            Gson gson = new Gson();
-            Bundle args = new Bundle();
-            String paymentsDTOString = gson.toJson(paymentsModel);
-            args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod.getLabel());
-            args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
-            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-
-            DialogFragment fragment = new PracticeChooseCreditCardFragment();
-            fragment.setArguments(args);
+            DialogFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel, selectedPaymentMethod.getLabel(), amount);
             fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
         } else {
             showAddCard(amount, paymentsModel);
@@ -164,12 +160,20 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
 
     @Override
     public void showReceipt(PaymentsModel paymentsModel) {
-
+        PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(this, paymentsModel, paymentsModel);
+        receiptDialog.show();
     }
 
     @Override
     public void showAddCard(double amount, PaymentsModel paymentsModel) {
-
+        Gson gson = new Gson();
+        Bundle args = new Bundle();
+        String paymentsDTOString = gson.toJson(paymentsModel);
+        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
+        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+        DialogFragment fragment = new AddNewCreditCardFragment();
+        fragment.setArguments(args);
+        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
     }
 
     @Override

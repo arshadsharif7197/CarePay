@@ -48,8 +48,9 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
 
-        initNextButton(null, view);
+        initNextButton(null, view, View.VISIBLE);
         setHeaderTitle(Label.getLabel("demographics_review_peronsonalinfo_section"), view);
+
         formatEditText(view);
         initViewFromModels(view);
         checkIfEnableButton(view);
@@ -195,7 +196,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
                 if (!isTextEmpty) {
                     textLayout.setError(null);
                     textLayout.setErrorEnabled(false);
-                } else {;
+                } else {
                     textLayout.setError(message);
                     textLayout.setErrorEnabled(true);
                 }

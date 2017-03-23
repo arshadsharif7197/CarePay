@@ -62,8 +62,6 @@ public class HowToCheckInActivity extends BasePracticeActivity {
         signinPatientModeDTO = getConvertedDTO(SigninPatientModeDTO.class);
 
         setContentView(R.layout.activity_how_to_check_in);
-        setNavigationBarVisibility();
-
 
         /*Initialise views*/
         initViews();

@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepay.patient.appointments.adapters.ProviderAdapter;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -48,7 +49,6 @@ public class ChooseProviderFragment extends BaseFragment implements ProviderAdap
 
     private ChooseProviderFragment chooseProviderFragment;
     private List<AppointmentResourcesDTO> resources;
-    private AppointmentResourcesDTO selectedResource;
 
     private AppointmentNavigationCallback callback;
 
@@ -92,25 +92,6 @@ public class ChooseProviderFragment extends BaseFragment implements ProviderAdap
         titleView.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
         toolbar.setTitle("");
 
-        TextView otherView = (TextView) toolbar.findViewById(R.id.add_appointment_toolbar_other);
-        otherView.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
-        otherView.setVisibility(View.GONE);
-        otherView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//                OtherProviderFragment otherProviderFragment = (OtherProviderFragment)
-//                        fragmentManager.findFragmentByTag(AvailableHoursFragment.class.getSimpleName());
-//
-//                if (otherProviderFragment == null) {
-//                    otherProviderFragment = new OtherProviderFragment();
-//                }
-//
-//                fragmentManager.beginTransaction().replace(R.id.add_appointments_frag_holder, otherProviderFragment,
-//                        AvailableHoursFragment.class.getSimpleName()).commit();
-            }
-        });
-
         Drawable closeIcon = ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back);
         toolbar.setNavigationIcon(closeIcon);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -133,10 +114,10 @@ public class ChooseProviderFragment extends BaseFragment implements ProviderAdap
 
     private void getResourcesInformation() {
         Map<String, String> queryMap = new HashMap<>();
+        // TODO Find the correct way once multiple practice starts working
+        queryMap.put("practice_mgmt", getApplicationPreferences().getPracticeManagement());
         //TODO this will need to be updated once multiple practice support has been implemented
-        queryMap.put("practice_mgmt", appointmentsResultModel.getPayload().getAppointmentsSettings().get(0).getPracticeManagement());
         queryMap.put("practice_id", appointmentsResultModel.getPayload().getAppointmentsSettings().get(0).getPracticeId());
-
 
         TransitionDTO resourcesToSchedule = appointmentsResultModel.getMetadata().getLinks().getResourcesToSchedule();
         getWorkflowServiceHelper().execute(resourcesToSchedule, scheduleResourcesCallback, queryMap);
@@ -196,13 +177,10 @@ public class ChooseProviderFragment extends BaseFragment implements ProviderAdap
         List<Object> resourcesListWithHeader = new ArrayList<>();
         if (resources != null && resources.size() > 0) {
             AppointmentSectionHeaderModel appointmentSectionHeaderModel = new AppointmentSectionHeaderModel();
-            appointmentSectionHeaderModel.setAppointmentHeader(
-                    appointmentsResultModel.getMetadata().getLabel().getChooseProviderAllHeader());
+            appointmentSectionHeaderModel.setAppointmentHeader(Label.getLabel("choose_provider_all_header"));
             resourcesListWithHeader.add(appointmentSectionHeaderModel);
 
-            for (AppointmentResourcesDTO resourcesScheduleItem : resources) {
-                resourcesListWithHeader.add(resourcesScheduleItem);
-            }
+            resourcesListWithHeader.addAll(resources);
         }
 
         return resourcesListWithHeader;
@@ -210,15 +188,7 @@ public class ChooseProviderFragment extends BaseFragment implements ProviderAdap
 
     @Override
     public void onProviderListItemClickListener(int position) {
-        selectedResource = resources.get(position - 1);
+        AppointmentResourcesDTO selectedResource = resources.get(position - 1);
         callback.selectVisitType(selectedResource, resourcesToScheduleModel);
-    }
-
-    /**
-     * what to do with the selected visit type and provider
-     * @param selectedVisitType selected visit type from dialog
-     */
-    public void onDialogListItemClickListener(VisitTypeDTO selectedVisitType) {
-
     }
 }
