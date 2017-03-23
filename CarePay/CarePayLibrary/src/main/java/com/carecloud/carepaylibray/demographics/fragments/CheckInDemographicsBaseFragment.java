@@ -2,8 +2,6 @@ package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -13,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -96,11 +93,13 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         //stepProgressBar.setCurrentProgressDot(checkInNavListener.getCurrentStep()-1);
     }
 
+
     protected void initNextButton(String label, View.OnClickListener listener, final View view, int visibility) {
         Button nextButton = (Button) view.findViewById(R.id.checkinDemographicsNextButton);
         nextButton.setText(label);
-        if (listener == null) {
-            listener = new View.OnClickListener() {
+
+        if (listener == null){
+            listener =  new View.OnClickListener() {
                 @Override
                 public void onClick(View buttonView) {
                     if (passConstraints(view)) {
@@ -197,7 +196,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(getActivity());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getActivity().getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };

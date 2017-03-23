@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/keypad_width"
+    android:layout_height="@dimen/keypad_height"
+    android:layout_gravity="center"
+    android:layout_marginRight="@dimen/dimen_26dp"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/closeViewLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/dimen_26dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/button_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/dialog_button_bg" />
+
+            <ImageView
+                android:id="@+id/cancel_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/icn_close" />
+        </RelativeLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/white"
+        android:gravity="center_horizontal"
+        android:paddingBottom="@dimen/apt_dl_margin"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/dimen_200dp"
+            android:layout_gravity="center"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:orientation="vertical">
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                app:customAssetFont="gotham_rounded_book"
+                android:id="@+id/partialPaymentPayingToday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:textColor="@color/glitter"
+                android:text="How much will you be paying today?" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_height="wrap_content">
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    app:customAssetFont="gotham_rounded_medium"
+                    android:id="@+id/amountSymbolTextView"
+                    android:layout_width="wrap_content"
+                    android:textSize="@dimen/payment_header_amount_size"
+                    android:background="@android:color/transparent"
+                    android:textColor="@color/white_transparent"
+                    android:layout_height="wrap_content" />
+                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                    android:layout_width="wrap_content"
+                    android:hint="0.00"
+                    android:textSize="@dimen/payment_header_amount_size"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white_transparent"
+                    android:inputType="numberDecimal"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:id="@+id/enterPartialAmountEditText"
+                    app:customAssetFont="gotham_rounded_medium"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/payment_side_margin"
+            android:layout_marginRight="@dimen/payment_side_margin"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                app:customAssetFont="proxima_nova_semi_bold"
+                android:id="@+id/partialPaymentTotalAmountTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:textColor="@color/payne_gray"
+                android:layout_marginTop="@dimen/dimen_30dp"
+                android:layout_marginBottom="@dimen/dimen_30dp"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/light_gray"
+                android:orientation="horizontal">
+
+                <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
+                    android:id="@+id/key_one"
+                    android:layout_width="@dimen/button_height"
+                    android:layout_height="@dimen/button_width"
+                    android:layout_marginEnd="@dimen/key_border_width"
+                    android:background="@drawable/key_selector"
+                    android:text="1"
+                    android:gravity="center"
+                    android:textColor="@color/charcoal"
+                    android:textSize="@dimen/button_pin_text_size" />
+
+                <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
+                    android:id="@+id/key_two"
+                    android:layout_width="@dimen/button_height"
+                    android:layout_height="@dimen/button_width"
+                    android:layout_marginBottom="@dimen/key_border_width"
+                    android:layout_marginEnd="@dimen/key_border_width"
+                    android:background="@drawable/key_selector"
+                    android:gravity="center"
+                    android:text="2"
+                    android:textColor="@color/charcoal"
+                    android:textSize="@dimen/button_pin_text_size" />
+
+                <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
+                    android:id="@+id/key_three"
+                    android:layout_width="@dimen/button_height"
+                    android:layout_height="@dimen/button_width"
+                    android:layout_marginBottom="@dimen/key_border_width"
+                    android:background="@drawable/key_selector"
+                    android:text="3"
+                    android:gravity="center"
+                    android:textColor="@color/charcoal"
+                    android:textSize="@dimen/button_pin_text_size" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/light_gray"
+                android:orientation="horizontal">
+
+                <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
+                    android:id="@+id/key_four"
+                    android:layout_width="@dimen/button_height"
+                    android:layout_height="@dimen/button_width"
+                    android:layout_marginBottom="@dimen/key_border_width"
+                    android:layout_marginEnd="@dimen/key_border_width"
+                    android:background="@drawable/key_selector"
+                    android:gravity="center"
+                    android:text="4"
+                    android:textColor="@color/charcoal"
+                    android:textSize="@dimen/button_pin_text_size" />
+
+                <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
+                    android:id="@+id/key_five"
+                    android:layout_width="@dimen/button_height"
+                    android:layout_height="@dimen/button_width"
+                    android:layout_marginBottom="@dimen/key_border_width"
+                    android:layout_marginEnd="@dimen/key_border_width"
+                    android:background="@drawable/key_selector"
+                    android:text="5"
+                    android:gravity="center"
+                    android:textColor="@color/charcoal"
+                    android:textSize="@dimen/button_pin_text_size" />
+
+                <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
+                    android:id="@+id/key_six"
+                    android:layout_width="@dimen/button_height"
+                    android:layout_height="@dimen/button_width"
+                    android:layout_marginBottom="@dimen/key_border_width"
+                    android:background="@drawable/key_selector"
+                    android:text="6"
+                    android:gravity="center"
+                    android:textColor="@color/charcoal"
+                    android:textSize="@dimen/button_pin_text_size" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/light_gray"
+                android:orientation="horizontal">
+
+                <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
+                    android:id="@+id/key_seven"
+                    android:layout_width="@dimen/button_height"
+                    android:layout_height="@dimen/button_width"
+                    android:layout_marginBottom="@dimen/key_border_width"
+                    android:layout_marginEnd="@dimen/key_border_width"
+                    android:background="@drawable/key_selector"
+                    android:text="7"
+                    android:gravity="center"
+                    android:textColor="@color/charcoal"
+                    android:textSize="@dimen/button_pin_text_size" />
+
+                <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
+                    android:id="@+id/key_eighth"
+                    android:layout_width="@dimen/button_height"
+                    android:layout_height="@dimen/button_width"
+                    android:layout_marginBottom="@dimen/key_border_width"
+                    android:layout_marginEnd="@dimen/key_border_width"
+                    android:background="@drawable/key_selector"
+                    android:text="8"
+                    android:gravity="center"
+                    android:textColor="@color/charcoal"
+                    android:textSize="@dimen/button_pin_text_size" />
+
+                <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
+                    android:id="@+id/key_nine"
+                    android:layout_width="@dimen/button_height"
+                    android:layout_height="@dimen/button_width"
+                    android:layout_marginBottom="@dimen/key_border_width"
+                    android:background="@drawable/key_selector"
+                    android:text="9"
+                    android:gravity="center"
+                    android:textColor="@color/charcoal"
+                    android:textSize="@dimen/button_pin_text_size" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/light_gray"
+                android:orientation="horizontal">
+
+                <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
+                    android:id="@+id/key_blank"
+                    android:layout_width="@dimen/button_height"
+                    android:layout_height="@dimen/button_width"
+                    android:layout_marginEnd="@dimen/key_border_width"
+                    android:background="@drawable/key_selector"
+                    android:text=""
+                    android:gravity="center"
+                    android:textColor="@color/charcoal"
+                    android:textSize="@dimen/button_pin_text_size" />
+
+                <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
+                    android:id="@+id/key_zero"
+                    android:layout_width="@dimen/button_height"
+                    android:layout_height="@dimen/button_width"
+                    android:layout_marginEnd="@dimen/key_border_width"
+                    android:background="@drawable/key_selector"
+                    android:text="0"
+                    android:gravity="center"
+                    android:textColor="@color/charcoal"
+                    android:textSize="@dimen/button_pin_text_size" />
+
+                <LinearLayout
+                    android:layout_width="@dimen/button_height"
+                    android:layout_height="@dimen/button_width"
+                    android:layout_gravity="center"
+                    android:background="@drawable/key_selector"
+                    android:gravity="center">
+
+                    <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
+                        android:id="@+id/key_clear"
+                        android:layout_width="@dimen/button_delete_key_width"
+                        android:layout_height="@dimen/button_delete_key_height"
+                        android:layout_gravity="center"
+                        android:background="@drawable/ic_keyboard_delete"
+                        android:gravity="center"
+                        android:text=""
+                        android:textColor="@color/colorPrimary" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/bottom_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/payPartialButton"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_48dp"
+                android:background="@drawable/bg_yellow_overlay"
+                android:textColor="@color/white"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="@dimen/dimen_30dp"
+                app:customAssetFont="gotham_rounded_medium" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

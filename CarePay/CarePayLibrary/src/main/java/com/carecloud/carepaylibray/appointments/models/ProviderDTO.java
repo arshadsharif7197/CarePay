@@ -14,6 +14,9 @@ public class ProviderDTO {
     @SerializedName("id")
     @Expose
     private Integer id;
+    @SerializedName("guid")
+    @Expose
+    private String guid;
     @SerializedName("npi")
     @Expose
     private String npi;
@@ -143,4 +146,11 @@ public class ProviderDTO {
     }
 
 
+    public String getGuid() {
+        return guid;
+    }
+
+    public void setGuid(String guid) {
+        this.guid = guid;
+    }
 }

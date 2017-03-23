@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.library.appointments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAvailableHoursDialog;
@@ -10,6 +11,7 @@ import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeChoos
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeRequestAppointmentDialog;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -22,6 +24,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemD
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.LinksDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -51,11 +54,13 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     private VisitTypeDTO visitTypeDTO;
 
     private String patientId;
+    private static final String LOG_TAG = "BasePracticeAppointment";
 
     /**
      * Shows Confirmation after Appointment Created
      */
     public void showAppointmentConfirmation() {
+
         if (isVisible()) {
                 SystemUtil.showSuccessToast(getContext(), getLabels().getAppointmentRequestSuccessMessage());
             }
@@ -143,7 +148,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.doDefaultFailureBehavior(getContext(), exceptionMessage);
+            SystemUtil.doDefaultFailureBehavior((BaseActivity) getContext(), exceptionMessage);
         }
     };
 
@@ -255,7 +260,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.doDefaultFailureBehavior(getContext(), exceptionMessage);
+            SystemUtil.doDefaultFailureBehavior((BaseActivity) getContext(), exceptionMessage);
         }
     };
 

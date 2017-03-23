@@ -215,28 +215,6 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         profileImage.setVisibility(View.VISIBLE);
     }
 
-    @NonNull
-    private Target getHeaderTarget() {
-        return new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                headerView.setBackground(new BitmapDrawable(getResources(), bitmap));
-
-                initializeProfilePhotoView();
-            }
-
-            @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
-                headerView.setBackgroundResource(headerColor);
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-            }
-        };
-    }
-
     private void initializeButtons() {
         initializeButton(R.id.button_left_action, leftAction, new View.OnClickListener() {
             @Override

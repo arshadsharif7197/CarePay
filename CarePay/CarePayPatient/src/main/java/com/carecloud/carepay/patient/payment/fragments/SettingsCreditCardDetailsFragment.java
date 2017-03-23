@@ -202,8 +202,8 @@ public class SettingsCreditCardDetailsFragment extends BaseFragment {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
             try {
-                hideProgressDialog();
                 Gson gson = new Gson();
                 DemographicsSettingsDTO removeCreditCardResponseDTO = gson.fromJson(workflowDTO.toString(),
                         DemographicsSettingsDTO.class);
@@ -215,6 +215,7 @@ public class SettingsCreditCardDetailsFragment extends BaseFragment {
                 SystemUtil.showSuccessToast(getActivity(), demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getLabels().getSettingsSavedSuccessMessage());
             } catch(Exception e) {
                 Log.e(TAG, "Credit Card onPostExecute" + e.getMessage());
+                showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             }
 
         }
@@ -222,8 +223,8 @@ public class SettingsCreditCardDetailsFragment extends BaseFragment {
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            System.out.print(exceptionMessage);
-            SystemUtil.showDefaultFailureDialog(getActivity());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            Log.e(TAG, "Credit Card onFailure" + exceptionMessage);
         }
     };
 

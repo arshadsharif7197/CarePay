@@ -7,22 +7,19 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
@@ -44,12 +41,16 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
     private DemographicDTO demographicDTO;
     private UpdateProfilePictureListener profilePicturelistener;
 
+    private ScrollView scrollView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
-        initialiseUIFields(view);
-        setTypefaces(view);
+
+        initNextButton(Label.getLabel("demographics_review_next_button"), null, view, View.VISIBLE);
+        setHeaderTitle(Label.getLabel("demographics_review_peronsonalinfo_section"), view);
+
         formatEditText(view);
         initViewFromModels(view);
         checkIfEnableButton(view);
@@ -62,13 +63,8 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         profilePicturelistener.loadPictureFragment();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                SystemUtil.hideSoftKeyboard(getActivity());
-                ((ScrollView)view.findViewById(R.id.reviewdemographicsPersonalContainer)).smoothScrollTo(0,0);
-            }
-        }, 300);
+        scrollView = (ScrollView) view.findViewById(R.id.reviewdemographicsPersonalContainer);
+        scrollToPosition(0,0);
     }
 
     @Override
@@ -86,12 +82,12 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
     private void formatEditText(final View view) {
         final DemographicMetadataEntityAddressDTO addressMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.address;
         final DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.personalDetails;
-        setTextListener(persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.firstName.validations.get(0).getErrorMessage(),
-                R.id.reviewdemogrFirstNameTextInput, R.id.reviewdemogrFirstNameEdit, view);
-        setTextFocusListener(R.id.reviewdemogrFirstNameEdit,view);
-        setTextListener(persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.lastName.validations.get(0).getErrorMessage(),
-                R.id.reviewdemogrLastNameTextInput, R.id.reviewdemogrLastNameEdit, view);
-        setTextFocusListener(R.id.reviewdemogrLastNameEdit,view);
+
+        setTextListener(persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.firstName.validations.get(0).getErrorMessage(), R.id.reviewdemogrFirstNameTextInput, R.id.reviewdemogrFirstNameEdit, view);
+        setTextFocusListener(R.id.reviewdemogrFirstNameEdit, R.id.reviewdemogrFirstNameTextInput, view);
+
+        setTextListener(persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.lastName.validations.get(0).getErrorMessage(), R.id.reviewdemogrLastNameTextInput, R.id.reviewdemogrLastNameEdit, view);
+        setTextFocusListener(R.id.reviewdemogrLastNameEdit, R.id.reviewdemogrLastNameTextInput, view);
 
         final TextInputLayout doblabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
         final EditText dobEditText = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
@@ -126,33 +122,14 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
                 checkIfEnableButton(view);
             }
         });
-        dobEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
-        setTextFocusListener(R.id.revewidemogrDOBEdit,view);
+
+
+        setTextFocusListener(R.id.revewidemogrDOBEdit, R.id.reviewdemogrDOBTextInput, view);
 
         final TextInputLayout phoneNumberLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
         final EditText phoneNumberEditText = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
-        setTextFocusListener(R.id.reviewgrdemoPhoneNumberEdit,view);
+        setTextFocusListener(R.id.reviewgrdemoPhoneNumberEdit, R.id.reviewdemogrPhoneNumberTextInput, view);
 
-        dobEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int inputType, KeyEvent keyEvent) {
-                if (inputType == EditorInfo.IME_ACTION_NEXT || inputType == EditorInfo.IME_ACTION_DONE) {
-                    SystemUtil.hideSoftKeyboard(getActivity());
-                    dobEditText.clearFocus();
-                    phoneNumberEditText.requestFocus();
-                    return true;
-                }
-                return false;
-            }
-        });
 
 
 
@@ -195,7 +172,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         });
 
 
-        setTextFocusListener(R.id.reviewdemogrMiddleNameEdit,view);
+        setTextFocusListener(R.id.reviewdemogrMiddleNameEdit, R.id.reviewdemogrMiddleNameTextInputLayout, view);
 
     }
 
@@ -219,7 +196,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
                 if (!isTextEmpty) {
                     textLayout.setError(null);
                     textLayout.setErrorEnabled(false);
-                } else {;
+                } else {
                     textLayout.setError(message);
                     textLayout.setErrorEnabled(true);
                 }
@@ -229,79 +206,10 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
 
     }
 
-    private void setTextFocusListener(final int textEditableId, final View view){
-        final EditText editText = (EditText) view.findViewById(textEditableId);
-        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
-    }
-
-
-    private void setTypefaces(View view) {
-
-        setLabelStyle( R.id.reviewdemogrFirstNameTextInput, R.id.reviewdemogrFirstNameEdit, view);
-
-        setLabelStyle( R.id.reviewdemogrMiddleNameTextInputLayout, R.id.reviewdemogrMiddleNameEdit, view);
-
-        setLabelStyle( R.id.reviewdemogrLastNameTextInput, R.id.reviewdemogrLastNameEdit, view);
-
-        setLabelStyle( R.id.reviewdemogrDOBTextInput, R.id.revewidemogrDOBEdit, view);
-
-        setLabelStyle(R.id.reviewdemogrPhoneNumberTextInput, R.id.reviewgrdemoPhoneNumberEdit, view);
-    }
-
-    private void initialiseUIFields(View view){
-        DemographicLabelsDTO globalLabelsMetaDTO = demographicDTO.getMetadata().getLabels();
-        DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.personalDetails;
-        setHeaderTitle(globalLabelsMetaDTO.getDemographicsReviewPeronsonalinfoSection(), view);
-
-        String label = persDetailsMetaDTO.properties.firstName.getLabel();
-        initTextLabel(label, R.id.reviewdemogrFirstNameTextInput, R.id.reviewdemogrFirstNameEdit, view);
-
-        label = persDetailsMetaDTO.properties.middleName.getLabel();
-        initTextLabel(label, R.id.reviewdemogrMiddleNameTextInputLayout, R.id.reviewdemogrMiddleNameEdit, view);
-
-        label = persDetailsMetaDTO.properties.lastName.getLabel();
-        initTextLabel(label, R.id.reviewdemogrLastNameTextInput, R.id.reviewdemogrLastNameEdit, view);
-
-        label = persDetailsMetaDTO.properties.lastName.getLabel();
-        initTextLabel(label, R.id.reviewdemogrDOBTextInput, R.id.revewidemogrDOBEdit, view);
-
-        DemographicMetadataEntityAddressDTO addressMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.address;
-        label = addressMetaDTO.properties.phone.getLabel();
-        initTextLabel(label, R.id.reviewdemogrPhoneNumberTextInput, R.id.reviewgrdemoPhoneNumberEdit, view);
-
-        TextView optinalLabelTextView = (TextView) view.findViewById(R.id.reviewdemogrMiddleNameOptionalLabel);
-        optinalLabelTextView.setText(globalLabelsMetaDTO.getDemographicsDetailsOptionalHint());
-
-        TextView dateformatLabelTextView = (TextView) view.findViewById(R.id.dobformatlabel);
-        dateformatLabelTextView.setText(globalLabelsMetaDTO.getDemographicsDetailsDobHint());
-
-        initNextButton(globalLabelsMetaDTO.getDemographicsReviewNextButton(), null, view, View.VISIBLE);
-    }
-
-    private void setLabelStyle(int layOutTextLabel, int textEditableId, View view) {
-        TextInputLayout textLayout = (TextInputLayout) view.findViewById(layOutTextLabel);
-        EditText editText = (EditText) view.findViewById(textEditableId);
-        if (!StringUtil.isNullOrEmpty(editText.getText().toString())) {
-            SystemUtil.setProximaNovaExtraboldTypefaceInput(getActivity(), textLayout);
-        } else {
-            SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), textLayout);
-        }
-    }
-
-    private void initTextLabel(String label, int layOutTextLabel, int textEditableId, View view){
-        TextInputLayout textLayout = (TextInputLayout) view.findViewById(layOutTextLabel);
-        textLayout.setTag(label);
-        EditText editText = (EditText) view.findViewById(textEditableId);
-        editText.setTag(textLayout);
-        editText.setHint(label);
+    private void setTextFocusListener(int textEditableId, int inputLayoutId, View view){
+        View editText = view.findViewById(textEditableId);
+        TextInputLayout inputLayout = (TextInputLayout) view.findViewById(inputLayoutId);
+        editText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(inputLayout, null));
     }
 
     private void initViewFromModels(View view) {
@@ -331,7 +239,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
             if (datetime != null) {
                 String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).toStringWithFormatMmSlashDdSlashYyyy();
                 dobEditText.setText(dateOfBirthString);
-                dobEditText.requestFocus();
+                dobEditText.getOnFocusChangeListener().onFocusChange(dobEditText, false);
             }
 
             String firstName = demographicPersDetailsPayloadDTO.getFirstName();
@@ -344,8 +252,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         EditText editText = (EditText) view.findViewById(textEditableId);
         if (SystemUtil.isNotEmptyString(value)) {
             editText.setText(value);
-            editText.requestFocus();
-
+            editText.getOnFocusChangeListener().onFocusChange(editText, true);
         }
     }
 
@@ -356,15 +263,14 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         final String phoneValidation = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : ((String) addressMetaDTO.properties.phone.validations.get(0).value);
 
         String phone = phoneNumberEditText.getText().toString();
-            if (!StringUtil.isNullOrEmpty(phone)
-                    && !ValidationHelper.isValidString(phone.trim(), phoneValidation)) {
-                phoneNumberLabel.setErrorEnabled(true);
-                phoneNumberLabel.setError(phoneError);
-                //phoneNumberEditText.requestFocus();
-                return false;
-            }
-         phoneNumberLabel.setError(null);
-         phoneNumberLabel.setErrorEnabled(false);
+        if (!StringUtil.isNullOrEmpty(phone)
+                && !ValidationHelper.isValidString(phone.trim(), phoneValidation)) {
+            phoneNumberLabel.setErrorEnabled(true);
+            phoneNumberLabel.setError(phoneError);
+            return false;
+        }
+        phoneNumberLabel.setError(null);
+        phoneNumberLabel.setErrorEnabled(false);
 
         return true;
     }
@@ -387,17 +293,25 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         EditText phoneNumberEditText = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
         boolean isPhoneValid = isPhoneNumberValid(phoneNumberLabel, phoneNumberEditText);
         if (!isPhoneValid) {
-            //phoneNumberEditText.requestFocus();
             return false;
         }
         TextInputLayout doblabel = (TextInputLayout) view.findViewById( R.id.reviewdemogrDOBTextInput);
         EditText dobEditText = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
         boolean isdobValid = isDateOfBirthValid(doblabel, dobEditText);
         if (!isdobValid) {
-            //dobEditText.requestFocus();
             return false;
         }
         return true;
+    }
+
+    private void scrollToPosition(final int positionX, final int positionY){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                scrollView.scrollTo(positionX, positionY);
+            }
+        }, 30);
+
     }
 
     @Override
@@ -448,9 +362,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         String dateOfBirth = dobEditText.getText().toString();
         if (!StringUtil.isNullOrEmpty(dateOfBirth)) {
             // the date is DateUtil as
-            demographicPersDetailsPayloadDTO.setDateOfBirth(
-                    DateUtil.getInstance().setDateRaw(dateOfBirth).toStringWithFormatYyyyDashMmDashDd()
-            );
+            demographicPersDetailsPayloadDTO.setDateOfBirth(DateUtil.getInstance().setDateRaw(dateOfBirth).toStringWithFormatYyyyDashMmDashDd());
         }
 
         String profileImage = profilePicturelistener.getProfilePicture();
