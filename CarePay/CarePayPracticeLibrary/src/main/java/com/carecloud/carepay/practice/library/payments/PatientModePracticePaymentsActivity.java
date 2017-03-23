@@ -12,19 +12,21 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
+import com.carecloud.carepay.practice.library.models.HeaderModel;
 import com.carecloud.carepay.practice.library.payments.adapter.PaymentBalancesAdapter;
+import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
 /**
@@ -48,7 +50,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         if (paymentResultModel.getPaymentPayload().getPatientBalances().isEmpty()) {
             showNoPaymentsImage();
         } else {
-            showPaymentsRecyclerView(paymentResultModel);
+            showPayments(paymentResultModel);
         }
         findViewById(R.id.btnHome).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,7 +69,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         logoutTextview.setText("Log Out");
     }
 
-    private void showPaymentsRecyclerView(PaymentsModel paymentsModel) {
+    private void showPayments(PaymentsModel paymentsModel) {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.appointmentsRecyclerView);
         recyclerView.setVisibility(View.VISIBLE);
         findViewById(R.id.emptyPaymentsImageView).setVisibility(View.GONE);
@@ -99,9 +101,14 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         }
         ft.addToBackStack(null);
 
+        HeaderModel headerModel = new HeaderModel();
+        headerModel.setHeaderFullTitle(paymentResultModel.getPaymentPayload().getUserPractices().get(0).getPracticeName());
+        headerModel.setHeaderShortTitle(StringUtil.getShortName(headerModel.getHeaderFullTitle()));
+        headerModel.setHeaderPhotoUrl(paymentResultModel.getPaymentPayload().getUserPractices().get(0).getPracticePhoto());
+
         ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
                 .newInstance(paymentResultModel, Label.getLabel("payment_partial_label"),
-                        Label.getLabel("payment_pay_total_amount_button"));
+                        Label.getLabel("payment_pay_total_amount_button"), headerModel);
         dialog.show(ft, tag);
     }
 

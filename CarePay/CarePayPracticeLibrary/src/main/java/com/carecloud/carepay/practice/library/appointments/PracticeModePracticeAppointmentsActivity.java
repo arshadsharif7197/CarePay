@@ -21,6 +21,7 @@ import com.carecloud.carepay.practice.library.customcomponent.TwoColumnPatientLi
 import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
 import com.carecloud.carepay.practice.library.customdialog.FilterDialog;
 import com.carecloud.carepay.practice.library.models.FilterModel;
+import com.carecloud.carepay.practice.library.models.HeaderModel;
 import com.carecloud.carepay.practice.library.payments.dialogs.FindPatientDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFragmentDialog;
@@ -36,9 +37,12 @@ import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -397,8 +401,16 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             }
             ft.addToBackStack(null);
 
+            PatientModel patientModel = getPatientModel(patientDetails.getPaymentPayload().getPatientBalances().get(0));
+            HeaderModel headerModel = new HeaderModel();
+            headerModel.setHeaderFullTitle(patientModel.getFullName());
+            headerModel.setHeaderShortTitle(patientModel.getShortName());
+            headerModel.setHeaderPhotoUrl(patientModel.getProfilePhoto());
+            headerModel.setHeaderSubtitle(initializePatientProvider(patientDetails));
+
             ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
-                    .newInstance(patientDetails, null, Label.getLabel("create_appointment_label"));
+                    .newInstance(patientDetails, null, Label.getLabel("create_appointment_label"),
+                            headerModel);
             dialog.show(ft, tag);
         }
 
@@ -407,6 +419,37 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
         }
     };
+
+    private PatientModel getPatientModel(PatientBalanceDTO patientBalance) {
+        return patientBalance.getDemographics().getPayload().getPersonalDetails();
+    }
+
+    private String initializePatientProvider(PaymentsModel paymentsModel) {
+        List<PendingBalanceDTO> balances = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances();
+        String provider;
+        List<PendingBalancePayloadDTO> pendingBalancePayloadDTOList = balances.get(0).getPayload();
+        if (!pendingBalancePayloadDTOList.isEmpty() && !pendingBalancePayloadDTOList.get(0).getDetails().isEmpty()) {
+            provider = pendingBalancePayloadDTOList.get(0).getDetails().get(0).getProvider().getName();
+        } else {
+            provider = getProviderName(paymentsModel, balances.get(0).getMetadata().getPatientId());
+        }
+        return provider;
+    }
+
+    private String getProviderName(PaymentsModel paymentsModel, String patientId) {
+        if (!StringUtil.isNullOrEmpty(patientId)) {
+            List<ProviderIndexDTO> providerIndex = paymentsModel.getPaymentPayload().getProviderIndex();
+            for (ProviderIndexDTO providerIndexDTO : providerIndex) {
+                List<String> patientIds = providerIndexDTO.getPatientIds();
+                for (String id : patientIds) {
+                    if (id.equalsIgnoreCase(patientId)) {
+                        return providerIndexDTO.getName();
+                    }
+                }
+            }
+        }
+        return "";
+    }
 
     private void showPracticeAppointmentDialog(AppointmentDTO appointmentDTO) {
         int headerColor = R.color.colorPrimary;
