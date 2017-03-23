@@ -67,6 +67,22 @@
                 android:paddingLeft="@dimen/dimen_11dp"
                 android:paddingRight="@dimen/dimen_11dp"
                 android:visibility="gone" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/patient_not_found_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimen_18dp"
+                android:paddingTop="@dimen/dimen_11dp"
+                android:paddingBottom="@dimen/dimen_11dp"
+                android:background="@drawable/layout_white_background"
+                android:textColor="@color/textview_default_textcolor"
+                android:textSize="15sp"
+                app:customAssetFont="proxima_nova_regular"
+                breeze:textKey="practice_filter_patient_not_found"
+                android:visibility="gone" />
         </LinearLayout>
 
     </LinearLayout>

@@ -243,7 +243,7 @@ public class AppointmentsListFragment extends BaseFragment {
 
                     new CheckInOfficeNowAppointmentDialog(getContext(), appointmentDTO, appointmentInfo, getCheckInOfficeNowAppointmentDialogListener()).show();
 
-                } else if (isAppointmentCancellable(appointmentDTO)) {
+                } else if (payloadDTO.isAppointmentCancellable(appointmentInfo)) {
 
                     new CancelAppointmentDialog(getContext(), appointmentDTO, appointmentInfo,
                             AppointmentType.CANCEL,
@@ -405,27 +405,6 @@ public class AppointmentsListFragment extends BaseFragment {
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
-
-    private boolean isAppointmentCancellable(AppointmentDTO item) {
-        // Get appointment date/time in required format
-        String appointmentTimeStr = item.getPayload().getStartTime();
-        Date appointmentTime = DateUtil.getInstance().setDateRaw(appointmentTimeStr).getDate();
-
-        // Get current date/time in required format
-        Date currentDate = DateUtil.getInstance().setToCurrent().getDate();
-        String cancellationNoticePeriodStr = appointmentInfo.getPayload().getAppointmentsSettings().get(0).getCheckin().getCancellationNoticePeriod();
-
-        if (appointmentTime != null && currentDate != null) {
-            long differenceInMinutes = DateUtil.getMinutesElapsed(appointmentTime, currentDate);
-            long cancellationNoticePeriod = Long.parseLong(cancellationNoticePeriodStr);
-
-            if (differenceInMinutes > cancellationNoticePeriod) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 
     private void showNoAppointmentScreen() {
         noAppointmentView.setVisibility(View.VISIBLE);

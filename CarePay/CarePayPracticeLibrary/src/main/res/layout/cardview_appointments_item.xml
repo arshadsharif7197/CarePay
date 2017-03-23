@@ -109,7 +109,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_22sp"
                 android:visibility="visible"
-                app:customAssetFont="proxima_nova_semi_bold"
+                app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="practice_app_check_in_text" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -124,9 +124,9 @@
                 android:gravity="center"
                 android:paddingTop="@dimen/checked_in_card_status_top_margin"
                 android:textColor="@color/lightningyellow"
-                android:textSize="@dimen/text_size_22sp"
+                android:textSize="@dimen/text_size_18sp"
                 android:visibility="gone"
-                app:customAssetFont="proxima_nova_semi_bold"
+                app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="appointments_missed_heading"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -141,9 +141,9 @@
                 android:gravity="center"
                 android:paddingTop="@dimen/checked_in_card_status_top_margin"
                 android:textColor="@color/yellowGreen"
-                android:textSize="@dimen/text_size_22sp"
+                android:textSize="@dimen/text_size_18sp"
                 android:visibility="gone"
-                app:customAssetFont="proxima_nova_semi_bold"
+                app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="appointments_checked_in_label"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -158,9 +158,9 @@
                 android:gravity="center"
                 android:paddingTop="@dimen/checked_in_card_status_top_margin"
                 android:textColor="@color/lightningyellow"
-                android:textSize="@dimen/text_size_22sp"
+                android:textSize="@dimen/text_size_18sp"
                 android:visibility="gone"
-                app:customAssetFont="proxima_nova_semi_bold"
+                app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="appointments_request_pending_heading"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -175,9 +175,9 @@
                 android:gravity="center"
                 android:paddingTop="@dimen/checked_in_card_status_top_margin"
                 android:textColor="@color/harvard_crimson"
-                android:textSize="@dimen/text_size_22sp"
+                android:textSize="@dimen/text_size_18sp"
                 android:visibility="gone"
-                app:customAssetFont="proxima_nova_semi_bold"
+                app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="appointments_canceled_heading"/>
 
             <LinearLayout
