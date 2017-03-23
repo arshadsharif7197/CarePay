@@ -23,7 +23,6 @@ import java.util.List;
 /**
  * Created by lmenendez on 3/8/17.
  */
-
 public class PracticeChooseCreditCardFragment extends ChooseCreditCardFragment {
 
     @Override

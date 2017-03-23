@@ -33,7 +33,6 @@ import java.util.Map;
 /**
  * Created by lmenendez on 3/1/17.
  */
-
 public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implements BaseAddCreditCardFragment.IAuthoriseCreditCardResponse{
     private PaymentsModel paymentsModel;
 

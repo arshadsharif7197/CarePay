@@ -54,7 +54,6 @@ import java.util.Map;
 /**
  * Created by cocampo on 2/10/17.
  */
-
 public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppointmentsActivity
         implements FilterDialog.FilterDialogListener,
         DateRangePickerDialog.DateRangePickerDialogListener,

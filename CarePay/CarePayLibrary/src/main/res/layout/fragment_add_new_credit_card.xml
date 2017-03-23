@@ -19,10 +19,11 @@
         android:textAllCaps="true"
         android:textColor="@color/white"
         android:textSize="@dimen/respons_button_text_size"
+        breeze:textKey="demographics_pay_button_text"
+        app:customAssetFont="gotham_rounded_medium"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        breeze:textKey="demographics_pay_button_text"
-        app:customAssetFont="gotham_rounded_medium"/>
+        android:layout_marginBottom="15dp" />
 
     <ScrollView
         android:layout_width="match_parent"

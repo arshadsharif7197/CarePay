@@ -177,9 +177,6 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
                     processPayment();
                 }
             }
-
-
-
         }
     };
 
