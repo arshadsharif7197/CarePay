@@ -41,8 +41,7 @@ public class ProgressDialogUtil extends Dialog {
 
         if(keepStatusBar){
             adjustForStatusBar();
-        }
-        else if(isPracticeAppPatientMode){
+        }else if(isPracticeAppPatientMode){
             setNavigationBarVisibility();
         }
 
