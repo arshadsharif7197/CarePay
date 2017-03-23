@@ -119,7 +119,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
         userId = getAppAuthorizationHelper().getCurrUser();
 
         CarePayTextView patientNameValue = (CarePayTextView) view.findViewById(R.id.patientNameTextView);
-        patientNameValue.setText(((DemographicsSettingsActivity) getActivity()).capitalize(firstNameValString + " " + middleNameValString+" " + lastNameValString));
+        patientNameValue.setText(StringUtil.capitalize(firstNameValString + " " + middleNameValString+" " + lastNameValString));
 
         CarePayTextView patientEmailValue = (CarePayTextView) view.findViewById(R.id.patientEmailTextView);
         patientEmailValue.setText(userId);

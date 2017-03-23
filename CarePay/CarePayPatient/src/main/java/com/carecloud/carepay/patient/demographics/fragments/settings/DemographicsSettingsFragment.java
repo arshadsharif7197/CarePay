@@ -310,7 +310,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
                 String firstName = demographicsPersonalDetails.getFirstName();
                 String lastName = demographicsPersonalDetails.getLastName();
                 String userName = firstName + " " + lastName;
-                return ((DemographicsSettingsActivity) getActivity()).capitalize(userName);
+                return (StringUtil.capitalize(userName));
 
             }
         }catch(Exception e){
