@@ -12,6 +12,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.customdialog.IConfirmPracticeAppPin;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
@@ -31,12 +32,18 @@ import org.apache.commons.lang3.NotImplementedException;
 public abstract class BasePracticeActivity extends BaseActivity
         implements IConfirmPracticeAppPin {
 
+    private static final int FULLSCREEN_VALUE = 0x10000000;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         setSystemUiVisibility();
+        if(getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)
+        {
+            setNavigationBarVisibility();
+        }
     }
 
     /**
@@ -76,16 +83,18 @@ public abstract class BasePracticeActivity extends BaseActivity
      * Show/Hide system ui like status bar or navigation bar.
      */
     public void setSystemUiVisibility() {
-        getWindow().getDecorView().setSystemUiVisibility(
-                          View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE
-        );
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE
+            );
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
     }
 
     @Override
@@ -102,7 +111,8 @@ public abstract class BasePracticeActivity extends BaseActivity
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_IMMERSIVE;
+                | View.SYSTEM_UI_FLAG_IMMERSIVE
+                | FULLSCREEN_VALUE;
         decorView.setSystemUiVisibility(uiOptions);
     }
 

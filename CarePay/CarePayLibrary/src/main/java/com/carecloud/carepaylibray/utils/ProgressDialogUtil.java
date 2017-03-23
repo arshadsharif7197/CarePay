@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -14,9 +15,12 @@ import com.carecloud.carepaylibrary.R;
 public class ProgressDialogUtil extends Dialog {
 
     private int theme;
+    private static final int FULLSCREEN_VALUE = 0x10000000;
+    public boolean isPracticeAppPatientMode;
 
-    public ProgressDialogUtil(Context context) {
+    public ProgressDialogUtil(Context context, Boolean isPracticeAppPatientMode) {
         this(context, R.style.ProgressDialogFullscreenWithTitlebar);
+        this.isPracticeAppPatientMode = isPracticeAppPatientMode;
     }
 
     private ProgressDialogUtil(Context context, int themeResId){
@@ -34,10 +38,29 @@ public class ProgressDialogUtil extends Dialog {
         TypedArray typedArray = getContext().obtainStyledAttributes(theme, attributes);
         boolean keepStatusBar = typedArray.getBoolean(0, false);
         typedArray.recycle();
+
         if(keepStatusBar){
             adjustForStatusBar();
         }
+        else if(isPracticeAppPatientMode){
+            setNavigationBarVisibility();
+        }
+
     }
+
+    /**
+     * Updates layout so in clover and devices with navigation bar is on screen don't hide content
+     * */
+    public void setNavigationBarVisibility(){
+
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_IMMERSIVE
+                | FULLSCREEN_VALUE;
+        decorView.setSystemUiVisibility(uiOptions);
+    }
+
 
     private void adjustForStatusBar(){
         WindowManager.LayoutParams attrs = getWindow().getAttributes();

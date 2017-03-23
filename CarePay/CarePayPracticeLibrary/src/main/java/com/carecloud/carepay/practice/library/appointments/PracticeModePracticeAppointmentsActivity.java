@@ -80,7 +80,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setNavigationBarVisibility();
 
         setContentView(R.layout.activity_practice_appointments);
 

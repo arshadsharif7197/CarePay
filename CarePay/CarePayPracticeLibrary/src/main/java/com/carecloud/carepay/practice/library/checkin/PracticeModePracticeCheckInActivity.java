@@ -82,7 +82,6 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_check_in);
         filter = new FilterModel();
-        setNavigationBarVisibility();
         initializationView();
         populateLists();
         setAdapter();

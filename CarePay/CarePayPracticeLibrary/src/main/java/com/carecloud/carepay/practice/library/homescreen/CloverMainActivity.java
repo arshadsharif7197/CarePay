@@ -127,6 +127,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             homeAlertLinearLl.setVisibility(View.GONE);
             modeSwitchImageView.setVisibility(View.GONE);
             homeLockImageView.setVisibility(View.VISIBLE);
+            setNavigationBarVisibility();
         } else {
             homeCheckinLl.setVisibility(View.VISIBLE);
             homeAlertLinearLl.setVisibility(View.VISIBLE);

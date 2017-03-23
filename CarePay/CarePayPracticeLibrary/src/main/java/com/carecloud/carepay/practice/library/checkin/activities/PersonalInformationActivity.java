@@ -61,7 +61,6 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         signinPatientModeDTO = getConvertedDTO(SigninPatientModeDTO.class);
         labelsDTO = signinPatientModeDTO.getMetadata().getLabels();
         setContentView(R.layout.activity_personal_information);
-        setNavigationBarVisibility();
         /*Initialise views*/
         initViews();
     }
