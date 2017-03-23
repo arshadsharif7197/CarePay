@@ -189,7 +189,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
     private void initialiseUIFields(View view) {
 
         setHeaderTitle(globalLabelsMetaDTO.getDemographicsReviewDemographics(), view);
-        initNextButton(globalLabelsMetaDTO.getDemographicsReviewNextButton(), null, view);
+        initNextButton(globalLabelsMetaDTO.getDemographicsReviewNextButton(), null, view, View.VISIBLE);
 
         ((TextView) view.findViewById(R.id.raceListDataTextView)).setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
         ((TextView) view.findViewById(R.id.raceDataTextView)).setText(persDetailsMetaDTO.properties.primaryRace.getLabel());

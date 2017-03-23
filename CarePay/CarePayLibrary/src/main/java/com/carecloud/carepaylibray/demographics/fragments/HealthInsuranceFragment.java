@@ -186,15 +186,12 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
      * @param view main view
      */
     public void initActiveSection(final View view) {
-        setHeaderTitle(globalLabelsMetaDTO.getDemographicsInsuranceTitle(), view);
-        initNextButton(globalLabelsMetaDTO.getDemographicsReviewGoToConsent(), null, view);
-
+        int visibility;
         if (insurancePayloadDTOs != null && !insurancePayloadDTOs.isEmpty()) {
-            view.findViewById(R.id.health_insurance_list_view).setVisibility(View.VISIBLE);
-            view.findViewById(R.id.no_health_insurance_view).setVisibility(View.GONE);
-
+            visibility = View.VISIBLE;
             fillDetailAdapter(view);
         } else {
+            visibility = View.GONE;
             view.findViewById(R.id.health_insurance_list_view).setVisibility(View.GONE);
             view.findViewById(R.id.no_health_insurance_view).setVisibility(View.VISIBLE);
         }
@@ -244,6 +241,15 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
             @Override
             public void onClick(View backButtonView) {
                 selectImage(scannerBack, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
+            }
+        });
+
+        Button iDoNotHaveOne = (Button) view.findViewById(R.id.health_insurance_dont_have_button);
+        iDoNotHaveOne.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View button) {
+                DemographicDTO demographicDTO = updateDemographicDTO(view);
+                openNextFragment(demographicDTO, true);
             }
         });
 
@@ -298,35 +304,8 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
         cardNumber.clearFocus();
         groupNumber.clearFocus();
 
-//        boolean loadResources = insurancePayloadDTOs.size() > 0;
-//        boolean isSetup = !isPractice && !loadResources;
-//        boolean isRatio = isPractice && !loadResources;
-//        view.findViewById(R.id.setupContainer).setVisibility( isSetup ? View.VISIBLE : View.GONE );
-//        view.findViewById(R.id.setupInsurancePracticeContainer).setVisibility( isRatio ? View.VISIBLE : View.GONE );
-//        view.findViewById(R.id.existingContainer).setVisibility(loadResources? View.VISIBLE : View.GONE);
-//        if (loadResources) {
-//            fillDetailAdapter(view);
-//            initAddButton(view);
-//        } else if (!isPractice) {
-//            ((TextView)view.findViewById(R.id.setupInsuranceLabel)).setText(globalLabelsMetaDTO.getDemographicsSetupInsuranceTitle());
-//            TextView setup = (TextView)view.findViewById(R.id.setupLabel);
-//            setup.setText(globalLabelsMetaDTO.getDemographicsSetupInsuranceLabel());
-//            setup.setOnClickListener(addNewElementListener);
-//        } else {
-//            initAddOtherButton(view);
-//            RadioButton dontHaveInsurance = (RadioButton)view.findViewById(R.id.dontHaveInsurance);
-//            dontHaveInsurance.setText(globalLabelsMetaDTO.getDemographicsDontHaveHealthInsuranceLabel());
-//            RadioButton haveInsurance = (RadioButton)view.findViewById(R.id.haveInsurance);
-//            haveInsurance.setText(globalLabelsMetaDTO.getDemographicsHaveHealthInsuranceLabel());
-//            final Button addButton = (Button)view.findViewById(R.id.addNewButton);
-//            haveInsurance.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//                @Override
-//                public void onCheckedChanged(CompoundButton compoundButton, boolean on) {
-//                    addButton.setEnabled(on);
-//                    documentCallback.disableMainButton(on);
-//                }
-//            });
-//        }
+        setHeaderTitle(globalLabelsMetaDTO.getDemographicsInsuranceTitle(), view);
+        initNextButton(globalLabelsMetaDTO.getDemographicsReviewGoToConsent(), null, view, visibility);
     }
 
     private void selectImage(final ImageCaptureHelper imageCaptureHelper, final ImageCaptureHelper.CameraType cameraType) {
@@ -628,6 +607,9 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment {
 //    }
 
     protected void fillDetailAdapter(View view) {
+        view.findViewById(R.id.health_insurance_list_view).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.no_health_insurance_view).setVisibility(View.GONE);
+
         RecyclerView detailsListRecyclerView = ((RecyclerView) view.findViewById(R.id.available_health_insurance_list));
         detailsListRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 

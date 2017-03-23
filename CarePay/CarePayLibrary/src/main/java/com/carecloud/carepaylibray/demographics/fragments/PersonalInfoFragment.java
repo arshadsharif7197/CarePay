@@ -283,7 +283,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         TextView dateformatLabelTextView = (TextView) view.findViewById(R.id.dobformatlabel);
         dateformatLabelTextView.setText(globalLabelsMetaDTO.getDemographicsDetailsDobHint());
 
-        initNextButton(globalLabelsMetaDTO.getDemographicsReviewNextButton(), null, view);
+        initNextButton(globalLabelsMetaDTO.getDemographicsReviewNextButton(), null, view, View.VISIBLE);
     }
 
     private void setLabelStyle(int layOutTextLabel, int textEditableId, View view) {

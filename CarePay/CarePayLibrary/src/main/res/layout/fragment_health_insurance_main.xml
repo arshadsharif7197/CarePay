@@ -43,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -142,6 +142,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/dimen_10dp"
                 android:layout_weight="1"
+                android:divider="@color/transparent_apt"
                 app:customAssetFont="proxima_nova_semi_bold"
                 app:hintTextAppearance="@style/FloatingLabelStyle">
 
@@ -160,6 +161,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_10dp"
                 android:layout_weight="1"
+                android:divider="@color/transparent_apt"
                 app:customAssetFont="proxima_nova_semi_bold"
                 app:hintTextAppearance="@style/FloatingLabelStyle">
 
@@ -310,7 +312,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_9dp"
                 android:layout_weight="1"
-                android:background="@drawable/bg_lite_gray_button"
+                android:background="@drawable/button_rounded_gray_selector"
                 android:gravity="center"
                 android:paddingBottom="@dimen/dimen_14dp"
                 android:paddingTop="@dimen/dimen_14dp"

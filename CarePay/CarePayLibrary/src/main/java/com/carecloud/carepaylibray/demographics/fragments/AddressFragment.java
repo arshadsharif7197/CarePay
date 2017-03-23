@@ -619,7 +619,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
 
         setHeaderTitle(globalLabelsMetaDTO.getDemographicsAddressSection(), view);
-        initNextButton(globalLabelsMetaDTO.getDemographicsReviewNextButton(), null, view);
+        initNextButton(globalLabelsMetaDTO.getDemographicsReviewNextButton(), null, view, View.VISIBLE);
 
 
         cityEditText = (EditText) view.findViewById(R.id.cityId);
