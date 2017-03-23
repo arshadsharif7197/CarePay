@@ -35,6 +35,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentType;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -62,12 +63,21 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
 
     private List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = new ArrayList<>();
 
+    public static ChooseCreditCardFragment newInstance(PaymentsModel paymentsDTO, String selectedPaymentMethodLabel, double amount) {
+        ChooseCreditCardFragment chooseCreditCardFragment = new ChooseCreditCardFragment();
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, paymentsDTO);
+        args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethodLabel);
+        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+        return chooseCreditCardFragment;
+    }
+
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
-        try{
+        try {
             callback = (PaymentNavigationCallback) context;
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("attached context must implement PaymentNavigationCallback");
         }
     }
@@ -80,11 +90,10 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
         if (arguments != null) {
             Gson gson = new Gson();
             titleLabel = arguments.getString(CarePayConstants.PAYMENT_METHOD_BUNDLE);
-            String paymentDTOString = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
-            paymentsModel = gson.fromJson(paymentDTOString, PaymentsModel.class);
+            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
             amountToMakePayment = arguments.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
 
-            if(paymentsModel!=null){
+            if (paymentsModel != null) {
                 creditCardList = paymentsModel.getPaymentPayload().getPatientCreditCards();
             }
         }
@@ -97,20 +106,20 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         activity = getActivity();
         setupTitleViews(view);
         initializeViews(view);
     }
 
-    private void setupTitleViews(View view){
+    private void setupTitleViews(View view) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
-        if(toolbar!=null) {
+        if (toolbar != null) {
             TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
             title.setText(titleLabel);
             SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
             toolbar.setTitle("");
-            if(getDialog()==null) {
+            if (getDialog() == null) {
                 toolbar.setNavigationIcon(ContextCompat.getDrawable(activity, R.drawable.icn_nav_back));
                 toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                     @Override
@@ -118,9 +127,9 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
                         activity.onBackPressed();
                     }
                 });
-            }else{
+            } else {
                 View close = view.findViewById(R.id.closeViewLayout);
-                if(close!=null){
+                if (close != null) {
                     close.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -157,9 +166,9 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
             }
         });
 
-        if(getDialog()!=null){
+        if (getDialog() != null) {
             //limit width of listview
-            ViewGroup.LayoutParams layoutParams =  creditCardsListView.getLayoutParams();
+            ViewGroup.LayoutParams layoutParams = creditCardsListView.getLayoutParams();
             layoutParams.width = (int) (getResources().getDisplayMetrics().widthPixels * .5);
             creditCardsListView.setLayoutParams(layoutParams);
         }
@@ -169,27 +178,27 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
     private View.OnClickListener nextButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if(selectedCreditCard>-1){
+            if (selectedCreditCard > -1) {
                 PaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
-                if(postModel!=null && postModel.getAmount() > 0){
+                if (postModel != null && postModel.getAmount() > 0) {
                     processPayment(postModel);
-                }else {
+                } else {
                     processPayment();
                 }
             }
         }
     };
 
-    private void processPayment(){
+    private void processPayment() {
         PaymentObject paymentObject = new PaymentObject();
         paymentObject.setType(PaymentType.credit_card);
         paymentObject.setExecution(PaymentExecution.papi);
         paymentObject.setAmount(amountToMakePayment);
 
         PapiPaymentMethod papiPaymentMethod = getPapiPaymentMethod();
-        if(papiPaymentMethod != null) {
+        if (papiPaymentMethod != null) {
             paymentObject.setPapiPaymentMethod(papiPaymentMethod);
-        }else {
+        } else {
             paymentObject.setCreditCard(getCreditCardModel());
         }
 
@@ -198,37 +207,37 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
         paymentPostModel.addPaymentMethod(paymentObject);
 
         Gson gson = new Gson();
-        if(paymentPostModel.isPaymentModelValid()){
+        if (paymentPostModel.isPaymentModelValid()) {
             postPayment(gson.toJson(paymentPostModel));
-        }else{
+        } else {
             Toast.makeText(getContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void processPayment(PaymentPostModel postModel){
+    private void processPayment(PaymentPostModel postModel) {
         PapiPaymentMethod papiPaymentMethod = getPapiPaymentMethod();
         CreditCardModel creditCardModel = getCreditCardModel();
 
-        for(PaymentObject paymentObject : postModel.getPaymentObjects()){
+        for (PaymentObject paymentObject : postModel.getPaymentObjects()) {
             paymentObject.setType(PaymentType.credit_card);
             paymentObject.setExecution(PaymentExecution.papi);
 
-            if(papiPaymentMethod!=null){
+            if (papiPaymentMethod != null) {
                 paymentObject.setPapiPaymentMethod(papiPaymentMethod);
-            }else {
+            } else {
                 paymentObject.setCreditCard(creditCardModel);
             }
         }
 
         Gson gson = new Gson();
-        if(postModel.isPaymentModelValid()){
+        if (postModel.isPaymentModelValid()) {
             postPayment(gson.toJson(postModel));
-        }else{
+        } else {
             Toast.makeText(getContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void postPayment(String paymentModelJson){
+    private void postPayment(String paymentModelJson) {
         PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
         Map<String, String> queries = new HashMap<>();
         queries.put("practice_mgmt", metadata.getPracticeMgmt());
@@ -244,13 +253,13 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
 
     }
 
-    private CreditCardModel getCreditCardModel(){
+    private CreditCardModel getCreditCardModel() {
         PaymentCreditCardsPayloadDTO creditCardPayload = creditCardList.get(selectedCreditCard).getPayload();
 
         CreditCardModel creditCardModel = new CreditCardModel();
         creditCardModel.setCardType(creditCardPayload.getCardType());
         creditCardModel.setCardNumber(creditCardPayload.getCardNumber());
-        creditCardModel.setExpiryDate(creditCardPayload.getExpireDt().replaceAll("/",""));
+        creditCardModel.setExpiryDate(creditCardPayload.getExpireDt().replaceAll("/", ""));
         creditCardModel.setNameOnCard(creditCardPayload.getNameOnCard());
         creditCardModel.setToken(creditCardPayload.getToken());
         creditCardModel.setCvv(creditCardPayload.getCvv());
@@ -262,9 +271,9 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
         return creditCardModel;
     }
 
-    private PapiPaymentMethod getPapiPaymentMethod(){
+    private PapiPaymentMethod getPapiPaymentMethod() {
         PaymentCreditCardsPayloadDTO creditCardPayload = creditCardList.get(selectedCreditCard).getPayload();
-        if(creditCardPayload.getCreditCardsId() == null) {
+        if (creditCardPayload.getCreditCardsId() == null) {
             return null;
         }
 
@@ -287,7 +296,7 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
             hideProgressDialog();
             Gson gson = new Gson();
             callback.showReceipt(gson.fromJson(workflowDTO.toString(), PaymentsModel.class));
-            if(getDialog()!=null){
+            if (getDialog() != null) {
                 dismiss();
             }
         }
@@ -304,7 +313,7 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
         @Override
         public void onClick(View view) {
             callback.showAddCard(amountToMakePayment, paymentsModel);
-            if(getDialog()!=null){
+            if (getDialog() != null) {
                 dismiss();
             }
         }
