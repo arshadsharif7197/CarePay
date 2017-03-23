@@ -13,13 +13,13 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.payments.adapter.PaymentBalancesAdapter;
+import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
@@ -45,7 +45,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
     }
 
     private void setUpUI() {
-        if (paymentResultModel.getPaymentPayload().getPatientBalances().isEmpty()) {
+        if (hasNoPayments()) {
             showNoPaymentsImage();
         } else {
             showPaymentsRecyclerView(paymentResultModel);
@@ -65,6 +65,20 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         });
         //TODO: this should be replaced by the proper key
         logoutTextview.setText("Log Out");
+    }
+
+    private boolean hasNoPayments() {
+        boolean hasNoPayments = true;
+        if (paymentResultModel.getPaymentPayload().getPatientBalances().isEmpty()) {
+            return true;
+        }
+        for (PatientBalanceDTO patientBalanceDTO : paymentResultModel.getPaymentPayload().getPatientBalances()) {
+            if (Double.parseDouble(patientBalanceDTO.getPendingRepsonsibility()) > 0) {
+                hasNoPayments = false;
+                break;
+            }
+        }
+        return hasNoPayments;
     }
 
     private void showPaymentsRecyclerView(PaymentsModel paymentsModel) {
