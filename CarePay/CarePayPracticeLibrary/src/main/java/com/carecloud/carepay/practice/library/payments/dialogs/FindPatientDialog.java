@@ -26,7 +26,6 @@ import com.carecloud.carepaylibray.customcomponents.CarePayEditText;
 import com.carecloud.carepaylibray.customcomponents.RecyclerViewWithDivider;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.JsonArray;
 
 import java.util.Collections;
@@ -131,7 +130,7 @@ public class FindPatientDialog extends Dialog {
             public void afterTextChanged(Editable charSequence) {
                 if (charSequence.length() == 0) {
                     findViewById(R.id.patient_searched_list).setVisibility(View.GONE);
-                } else if (charSequence.length() > 3){
+                } else if (charSequence.length() > 3) {
                     ((ISession) context).getWorkflowServiceHelper().interrupt();
                     //InputMethodManager manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
                     //manager.hideSoftInputFromWindow(findPatientEditBox.getWindowToken(), 0);
@@ -202,11 +201,11 @@ public class FindPatientDialog extends Dialog {
     private void showSearchResultList(List<PatientModel> patients) {
         PatientSearchResultAdapter adapter = new PatientSearchResultAdapter(context, patients);
         setOnItemClickedListener(adapter);
-        
+
         RecyclerViewWithDivider searchedList = (RecyclerViewWithDivider) findViewById(R.id.patient_searched_list);
         searchedList.setLayoutManager(new LinearLayoutManager(context));
         ViewGroup.LayoutParams params = searchedList.getLayoutParams();
-        if(patients!=null && patients.size()>4){
+        if (patients != null && patients.size() > 4) {
             params.height = getContext().getResources().getDimensionPixelSize(R.dimen.dimen_175dp);
         } else {
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;

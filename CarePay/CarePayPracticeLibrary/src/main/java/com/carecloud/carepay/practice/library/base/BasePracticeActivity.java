@@ -204,7 +204,7 @@ public abstract class BasePracticeActivity extends BaseActivity
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             findViewById(R.id.btnHome).setEnabled(false);
-            SystemUtil.showDefaultFailureDialog(BasePracticeActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

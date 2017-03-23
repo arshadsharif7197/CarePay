@@ -99,9 +99,7 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
     @Override
     public void onViewCreated(View view, Bundle icicle){
         activity = getActivity();
-
         setupTitleViews(view);
-
         initializeViews(view);
     }
 
@@ -300,7 +298,7 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(getContext());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             System.out.print(exceptionMessage);
         }
     };

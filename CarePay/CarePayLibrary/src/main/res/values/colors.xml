@@ -79,4 +79,6 @@
     <color name="cardview_header_bg">#253C48</color>
     <!--Android Pay-->
     <color name="android_pay_background_color">#78C257</color>
+
+    <color name="manatee_lite">#4Dd7d7d7</color>
 </resources>

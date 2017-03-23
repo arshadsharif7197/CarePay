@@ -353,15 +353,16 @@ public class CloverPaymentActivity extends BaseActivity {
         paymentObject.setAmount(amountDouble);
         paymentObject.setCreditCard(getCreditCardModel(transactionInfo));
 
-        TransactionResponse transactionResponse = new TransactionResponse();
-        transactionResponse.setTransactionID(cloverPayment.getId());
-        transactionResponse.setResponse(payment.getJSONObject());
-        paymentObject.setTransactionResponse(transactionResponse);
 //        paymentObject.setBankAccountToken(paymentTransition.getMetadata());//TODO
 
         PaymentPostModel paymentPostModel = new PaymentPostModel();
         paymentPostModel.setAmount(amountDouble);
         paymentPostModel.addPaymentMethod(paymentObject);
+
+        TransactionResponse transactionResponse = new TransactionResponse();
+        transactionResponse.setTransactionID(cloverPayment.getId());
+        transactionResponse.setResponse(payment.getJSONObject());
+        paymentPostModel.setTransactionResponse(transactionResponse);
 
         if(paymentPostModel.isPaymentModelValid()){
             postPayment(gson.toJson(paymentPostModel));
@@ -381,13 +382,14 @@ public class CloverPaymentActivity extends BaseActivity {
         TransactionResponse transactionResponse = new TransactionResponse();
         transactionResponse.setTransactionID(cloverPayment.getId());
         transactionResponse.setResponse(payment.getJSONObject());
+        postModel.setTransactionResponse(transactionResponse);
 
         for(PaymentObject paymentObject : postModel.getPaymentObjects()){
             paymentObject.setType(PaymentType.credit_card);
             paymentObject.setExecution(PaymentExecution.clover);
             paymentObject.setCreditCard(creditCardModel);
-            paymentObject.setTransactionResponse(transactionResponse);
         }
+
 
         if(postModel.isPaymentModelValid()){
             postPayment(gson.toJson(postModel));
@@ -445,14 +447,15 @@ public class CloverPaymentActivity extends BaseActivity {
         paymentObject.setAmount(5.00);
         paymentObject.setCreditCard(creditCardModel);
 
-        TransactionResponse transactionResponse = new TransactionResponse();
-        transactionResponse.setTransactionID(String.valueOf(System.currentTimeMillis()));
-        transactionResponse.setResponse(new JSONObject());
-        paymentObject.setTransactionResponse(transactionResponse);
 
         PaymentPostModel paymentPostModel = new PaymentPostModel();
         paymentPostModel.setAmount(5.00);
         paymentPostModel.addPaymentMethod(paymentObject);
+
+        TransactionResponse transactionResponse = new TransactionResponse();
+        transactionResponse.setTransactionID(String.valueOf(System.currentTimeMillis()));
+        transactionResponse.setResponse(new JSONObject());
+        paymentPostModel.setTransactionResponse(transactionResponse);
 
         Gson gson = new Gson();
         if(paymentPostModel.isPaymentModelValid()){

@@ -38,7 +38,6 @@ public class PracticeChooseCreditCardFragment extends ChooseCreditCardFragment {
     public void onViewCreated(View view, Bundle icicle){
         super.onViewCreated(view, icicle);
         boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
-
         Button swipeCardButton = (Button) view.findViewById(R.id.swipeCreditCarNowButton);
         if(isCloverDevice) {
             swipeCardButton.setVisibility(View.VISIBLE);

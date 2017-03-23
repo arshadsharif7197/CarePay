@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,8 +15,8 @@
         android:layout_height="wrap_content"
         android:foregroundGravity="center_horizontal">
 
-    <include layout="@layout/toolbar_no_title"
-        android:id="@+id/toolbar_layout"/>
+        <include layout="@layout/toolbar_no_title"
+                 android:id="@+id/toolbar_layout"/>
         <LinearLayout
             android:id="@+id/checkinDemographicsHeaderLayout"
             android:layout_width="match_parent"
@@ -33,7 +35,7 @@
                 android:textSize="@dimen/text_size_30"
                 app:customAssetFont="gotham_rounded_medium" />
         </LinearLayout>
-   </FrameLayout>
+    </FrameLayout>
 
 
     <com.marcok.stepprogressbar.StepProgressBar
@@ -53,28 +55,42 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/demo_view_height"
-        android:layout_marginBottom="@dimen/divider_margin_bottom"
-        android:layout_marginTop="@dimen/divider_margin_top"
         android:background="@color/light_gray"/>
 
-
-
     <ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="1"
-    android:padding="0dp">
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="0dp"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".20"/>
+
             <FrameLayout
                 android:id="@+id/checkinDemographicsContentLayout"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"/>
 
-                android:layout_marginLeft="@dimen/dimen_130dp"
-                android:layout_marginRight="@dimen/dimen_130dp"
-                android:orientation="vertical">
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".20"/>
 
-    </FrameLayout>
+        </LinearLayout>
     </ScrollView>
+
+
+
     <!--LinearLayout
             android:id="@+id/footer_layout"
             android:layout_width="match_parent"
@@ -88,11 +104,9 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/demo_view_height"
-        android:layout_marginBottom="@dimen/divider_margin_bottom"
-        android:layout_marginTop="@dimen/divider_margin_top"
         android:background="@color/light_gray"/>
 
-    <Button
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
         android:id="@+id/checkinDemographicsNextButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_48dp"
@@ -100,7 +114,10 @@
         android:layout_margin="@dimen/dimen_10dp"
         android:gravity="center"
         android:textColor="@color/white"
-        android:enabled="false"/>
+        android:textSize="@dimen/text_size_22"
+        android:enabled="false"
+        breeze:textKey="demographics_review_next_button"
+        app:customAssetFont="gotham_rounded_medium"/>
 
 
 

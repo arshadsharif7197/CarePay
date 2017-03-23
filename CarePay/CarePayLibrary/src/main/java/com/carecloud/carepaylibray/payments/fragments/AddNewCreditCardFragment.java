@@ -133,7 +133,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             nextButton.setEnabled(true);
-            SystemUtil.showDefaultFailureDialog(getActivity());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -160,7 +160,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             nextButton.setEnabled(true);
-            SystemUtil.showDefaultFailureDialog(getActivity());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
