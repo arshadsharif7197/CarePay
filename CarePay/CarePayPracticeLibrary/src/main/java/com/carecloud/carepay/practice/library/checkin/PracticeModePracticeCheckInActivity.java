@@ -413,7 +413,7 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
     }
 
     @Override
-    public void onLeftActionTapped() {
+    public void onLeftActionTapped(PaymentsModel paymentsModel) {
 
     }
 

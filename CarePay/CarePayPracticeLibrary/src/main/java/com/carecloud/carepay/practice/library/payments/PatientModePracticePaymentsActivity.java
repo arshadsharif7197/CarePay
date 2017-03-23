@@ -16,6 +16,7 @@ import com.carecloud.carepay.practice.library.models.ResponsibilityHeaderModel;
 import com.carecloud.carepay.practice.library.payments.adapter.PaymentBalancesAdapter;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
+import com.carecloud.carepay.practice.library.payments.dialogs.PracticePartialPaymentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
@@ -120,6 +121,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
                 .newInstance(paymentResultModel, Label.getLabel("payment_partial_label"),
                         Label.getLabel("payment_pay_total_amount_button"), headerModel);
+        dialog.setLeftButtonEnabled(true);
         dialog.show(ft, tag);
     }
 
@@ -177,8 +179,8 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
     }
 
     @Override
-    public void onLeftActionTapped() {
-
+    public void onLeftActionTapped(PaymentsModel paymentsModel) {
+        new PracticePartialPaymentDialog(this, paymentsModel).show();
     }
 
     @Override

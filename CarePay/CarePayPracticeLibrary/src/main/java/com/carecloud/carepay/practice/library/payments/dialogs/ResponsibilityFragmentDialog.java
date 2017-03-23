@@ -41,6 +41,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
     private PayResponsibilityCallback callback;
     private double owedAmount = 0;
     private ResponsibilityHeaderModel headerModel;
+    private boolean isLeftButtonEnabled;
 
     @Override
     protected String getCancelString() {
@@ -203,14 +204,13 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
         } else {
             leftButton.setText(leftLabel);
             SystemUtil.setGothamRoundedMediumTypeface(getContext(), leftButton);
-            leftButton.setEnabled(paymentsModel.getPaymentsMetadata().hasPaymentPlan());
+            leftButton.setEnabled(isLeftButtonEnabled);
             leftButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (null != callback) {
-                        callback.onLeftActionTapped();
+                        callback.onLeftActionTapped(paymentsModel);
                     }
-
                     dismiss();
                 }
             });
@@ -231,9 +231,13 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
         });
     }
 
+    public void setLeftButtonEnabled(boolean enabled) {
+        isLeftButtonEnabled = true;
+    }
+
     public interface PayResponsibilityCallback {
 
-        void onLeftActionTapped();
+        void onLeftActionTapped(PaymentsModel paymentsModel);
 
         void onRightActionTapped(PaymentsModel paymentsModel, double amount);
 

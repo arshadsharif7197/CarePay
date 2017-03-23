@@ -467,9 +467,6 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void showAmountEntry(PaymentDistributionEntryFragment.PaymentDistributionAmountCallback callback, BalanceItemDTO balanceItem, SimpleChargeItem chargeItem) {
-        Gson gson = new Gson();
-        Bundle args = new Bundle();
-
         PaymentDistributionEntryFragment entryFragment = new PaymentDistributionEntryFragment();
         if (balanceItem != null) {
             entryFragment.setBalanceItem(balanceItem);
