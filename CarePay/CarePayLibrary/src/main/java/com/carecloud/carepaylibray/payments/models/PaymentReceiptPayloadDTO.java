@@ -9,6 +9,10 @@ public class PaymentReceiptPayloadDTO {
     @SerializedName("metadata")
     @Expose
     private PendingBalanceMetadataDTO metadata = new PendingBalanceMetadataDTO();
+    @SerializedName("payload")
+    @Expose
+    private PatientPaymentPayload payload = new PatientPaymentPayload();
+
 
     public PendingBalanceMetadataDTO getMetadata() {
         return metadata;
@@ -16,5 +20,13 @@ public class PaymentReceiptPayloadDTO {
 
     public void setMetadata(PendingBalanceMetadataDTO metadata) {
         this.metadata = metadata;
+    }
+
+    public PatientPaymentPayload getPayload() {
+        return payload;
+    }
+
+    public void setPayload(PatientPaymentPayload payload) {
+        this.payload = payload;
     }
 }
