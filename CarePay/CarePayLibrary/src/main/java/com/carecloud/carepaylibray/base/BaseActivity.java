@@ -2,8 +2,10 @@ package com.carecloud.carepaylibray.base;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +14,7 @@ import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 
@@ -78,7 +81,8 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         }
 
         if (null == progressDialog) {
-            progressDialog = new ProgressDialogUtil(this);
+            boolean isPracticeAppPatientMode = getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE;
+            progressDialog = new ProgressDialogUtil(isPracticeAppPatientMode, this);
         }
 
         progressDialog.setCancelable(false);
@@ -105,7 +109,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         try {
             if (null == errorNotification) {
 
-                errorNotification = new CustomPopupNotification(getContext(), getCurrentFocus(), getWindow(), errorMessage, CustomPopupNotification.TYPE_ERROR_NOTIFICATION, getCancelReasonAppointmentDialogListener());
+                errorNotification = new CustomPopupNotification(getContext(), getCurrentFocus(), getWindow(), errorMessage, CustomPopupNotification.TYPE_ERROR_NOTIFICATION, errorNotificationSwipeListener());
             }
             errorNotification.showPopWindow();
         } catch (Exception e) {
@@ -118,11 +122,14 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
      *
      * @return the cancel reason appointment dialog listener
      */
-    public CustomPopupNotification.CustomPopupNotificationListener getCancelReasonAppointmentDialogListener() {
+    public CustomPopupNotification.CustomPopupNotificationListener errorNotificationSwipeListener() {
         return new CustomPopupNotification.CustomPopupNotificationListener() {
             @Override
             public void onSwipe(String swipeDirection) {
                 hideErrorNotification();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getWindow().setStatusBarColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
+                }
             }
         };
     }

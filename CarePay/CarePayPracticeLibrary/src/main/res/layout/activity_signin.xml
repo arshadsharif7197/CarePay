@@ -108,7 +108,6 @@
                 style="@style/EditTextStyle"
                 android:imeOptions="actionNext"
                 android:inputType="textEmailAddress"
-                android:textColorHint="@color/lightSlateGray"
                 breeze:hintKey="email_label"
                 app:customAssetFont="proxima_nova_semi_bold"/>
 
@@ -130,7 +129,6 @@
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"
                     android:paddingEnd="@dimen/dimen_30dp"
-                    android:textColorHint="@color/lightSlateGray"
                     breeze:hintKey="password_label"
                     app:customAssetFont="proxima_nova_semi_bold" />
 
@@ -189,7 +187,8 @@
             android:textColor="@color/white"
             android:textSize="@dimen/forgotpassword_textsize"
             breeze:textKey="forgot_password"
-            app:customAssetFont="gotham_rounded_medium" />
+            app:customAssetFont="gotham_rounded_medium"
+            android:visibility="gone"/>
 
     </LinearLayout>
 

@@ -375,40 +375,42 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
     }
 
     private void setEditTexts() {
-        signInEmailTextInputLayout.setTag(emailLabel);
-        emailEditText.setTag(signInEmailTextInputLayout);
-
-        passwordTextInputLayout.setTag(passwordLabel);
-        passwordEditText.setTag(passwordTextInputLayout);
+//        signInEmailTextInputLayout.setTag(emailLabel);
+//        emailEditText.setTag(signInEmailTextInputLayout);
+//
+//        passwordTextInputLayout.setTag(passwordLabel);
+//        passwordEditText.setTag(passwordTextInputLayout);
 
         setTextListeners();
-        setChangeFocusListeners();
+        emailEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(signInEmailTextInputLayout, null));
+        passwordEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(passwordTextInputLayout, null));
+//        setChangeFocusListeners();
 
 
-        emailEditText.clearFocus();
-        passwordEditText.clearFocus();
+//        emailEditText.clearFocus();
+//        passwordEditText.clearFocus();
     }
 
-    private void setChangeFocusListeners() {
-        emailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(SigninActivity.this);
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
-        passwordEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(SigninActivity.this);
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
-    }
+//    private void setChangeFocusListeners() {
+//        emailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View view, boolean bool) {
+//                if (bool) {
+//                    SystemUtil.showSoftKeyboard(SigninActivity.this);
+//                }
+////                SystemUtil.handleHintChange(view, bool);
+//            }
+//        });
+//        passwordEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View view, boolean bool) {
+//                if (bool) {
+//                    SystemUtil.showSoftKeyboard(SigninActivity.this);
+//                }
+////                SystemUtil.handleHintChange(view, bool);
+//            }
+//        });
+//    }
 
     private void enableSigninButton() {
         boolean areAllNonEmpty = !(isEmptyEmail || isEmptyPassword);
@@ -468,7 +470,7 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
             String signInResponseString = gson.toJson(workflowDTO);
             UnifiedSignInResponse signInResponse = gson.fromJson(signInResponseString, UnifiedSignInResponse.class);
             if(signInResponse != null) {
-                UnifiedAuthenticationTokens authTokens = signInResponse.getPayload().getPracticeModeAuth().getCognito().getAuthenticationTokens();
+                UnifiedAuthenticationTokens authTokens = signInResponse.getPayload().getAuthorizationModel().getCognito().getAuthenticationTokens();
                 getAppAuthorizationHelper().setAuthorizationTokens(authTokens);
                 if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
                     getAppAuthorizationHelper().setRefreshTransition(signinDTO.getMetadata().getTransitions().getRefresh());
@@ -500,7 +502,7 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
             if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
                 getWorkflowServiceHelper().setAppAuthorizationHelper(null);
             }
-            SystemUtil.showDefaultFailureDialog(getContext());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -543,7 +545,7 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
             hideProgressDialog();
             getWorkflowServiceHelper().setAppAuthorizationHelper(null);
             signInButton.setClickable(true);
-            SystemUtil.showDefaultFailureDialog(getContext());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -567,7 +569,7 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
             hideProgressDialog();
             signInButton.setClickable(true);
             getWorkflowServiceHelper().setAppAuthorizationHelper(null);
-            SystemUtil.showDefaultFailureDialog(SigninActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -589,7 +591,7 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             signInButton.setClickable(true);
-            SystemUtil.showDefaultFailureDialog(SigninActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -623,7 +625,7 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             signInButton.setClickable(true);
-            SystemUtil.showDefaultFailureDialog(SigninActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -656,9 +658,10 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
         @Override
         public void onLoginFailure(String exceptionMessage) {
             signInButton.setClickable(true);
-            SystemUtil.showFailureDialogMessage(SigninActivity.this,
-                    "Sign-in failed",
-                    "Invalid user id or password");
+            showErrorNotification(CarePayConstants.INVALID_LOGIN_ERROR_MESSAGE);
+//            SystemUtil.showFailureDialogMessage(SigninActivity.this,
+//                    "Sign-in failed",
+//                    "Invalid user id or password");
 
         }
     };

@@ -37,6 +37,7 @@ import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.ResourcesPracticeDTO;
 import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
@@ -106,8 +107,13 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         setTransitionAppointments(appointmentsResultModel.getMetadata().getLinks().getAppointments());
 
         inflateDrawer();
-        navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_APPOINTMENTS).setChecked(true);
         gotoAppointmentFragment();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_APPOINTMENTS).setChecked(true);
     }
 
     private void gotoAppointmentFragment() {
@@ -377,7 +383,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.doDefaultFailureBehavior(getContext(), exceptionMessage);
+            SystemUtil.doDefaultFailureBehavior((BaseActivity) getContext(), exceptionMessage);
             onAppointmentUnconfirmed();
         }
     };

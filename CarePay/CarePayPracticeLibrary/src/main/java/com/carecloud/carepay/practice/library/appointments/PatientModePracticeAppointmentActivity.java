@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.adapters.ProvidersListAdapter;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -20,6 +21,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.LinksDTO;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -108,7 +110,7 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(PatientModePracticeAppointmentActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -188,7 +190,7 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.doDefaultFailureBehavior(getContext(), exceptionMessage);
+           SystemUtil.doDefaultFailureBehavior((BaseActivity) getContext(), exceptionMessage);
         }
     };
 

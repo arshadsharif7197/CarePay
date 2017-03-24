@@ -19,6 +19,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
+import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.gms.wallet.MaskedWallet;
@@ -172,7 +173,7 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
     }
 
     @Override
-    public void startPartialPayment() {
+    public void startPartialPayment(double owedAmount) {
 
     }
 
@@ -189,17 +190,9 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
     }
 
     @Override
-    public void onPaymentMethodAction(String selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
-        if(paymentsDTO.getPaymentPayload().getPatientCreditCards()!=null && !paymentsDTO.getPaymentPayload().getPatientCreditCards().isEmpty()){
-            Gson gson = new Gson();
-            Bundle args = new Bundle();
-            String paymentsDTOString = gson.toJson(paymentsDTO);
-            args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
-            args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
-            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-            Fragment fragment = new ChooseCreditCardFragment();
-            fragment.setArguments(args);
-
+    public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
+        if (paymentsDTO.getPaymentPayload().getPatientCreditCards() != null && !paymentsDTO.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            Fragment fragment = ChooseCreditCardFragment.newInstance(paymentsDTO, selectedPaymentMethod.getLabel(), amount);
             navigateToFragment(fragment, true);
         } else {
             showAddCard(amount, paymentsModel);
@@ -212,7 +205,7 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
         Bundle args = new Bundle();
         String paymentsDTOString = gson.toJson(paymentsDTO);
         args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
-        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE,  amount);
+        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
         Fragment fragment = new AddNewCreditCardFragment();
         fragment.setArguments(args);
         navigateToFragment(fragment, true);

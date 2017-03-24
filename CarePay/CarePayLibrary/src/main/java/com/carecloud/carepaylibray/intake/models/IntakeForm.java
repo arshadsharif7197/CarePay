@@ -2,18 +2,20 @@
 package com.carecloud.carepaylibray.intake.models;
 
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 
-public class IntakeFormPayloadModel {
+public class IntakeForm {
 
     @SerializedName("metadata")
     @Expose
     private MetadataIntakeFormModel metadata = new MetadataIntakeFormModel();
     @SerializedName("payload")
     @Expose
-    private PayloadIntakeFormModel payload = new PayloadIntakeFormModel();
+//    private PayloadIntakeFormModel payload = new PayloadIntakeFormModel();
+    private JsonObject payload;
 
     /**
      * 
@@ -33,22 +35,30 @@ public class IntakeFormPayloadModel {
         this.metadata = metadata;
     }
 
-    /**
-     * 
-     * @return
-     *     The payload
-     */
-    public PayloadIntakeFormModel getPayload() {
+    public JsonObject getPayload() {
         return payload;
     }
 
-    /**
-     * 
-     * @param payload
-     *     The payload
-     */
-    public void setPayload(PayloadIntakeFormModel payload) {
+    public void setPayload(JsonObject payload) {
         this.payload = payload;
     }
+
+//    /**
+//     *
+//     * @return
+//     *     The payload
+//     */
+//    public PayloadIntakeFormModel getPayload() {
+//        return payload;
+//    }
+//
+//    /**
+//     *
+//     * @param payload
+//     *     The payload
+//     */
+//    public void setPayload(PayloadIntakeFormModel payload) {
+//        this.payload = payload;
+//    }
 
 }

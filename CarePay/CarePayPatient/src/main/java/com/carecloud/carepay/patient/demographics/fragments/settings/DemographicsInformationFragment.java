@@ -291,7 +291,7 @@ public class DemographicsInformationFragment extends BaseFragment {
             stateEditText.setText(stateValString);
             stateEditText.requestFocus();
         }
-        rootview.requestFocus();
+        dobEditText.requestFocus();
 
         SystemUtil.hideSoftKeyboard(getActivity());
         selectGender.setText(genderValString);
@@ -1055,7 +1055,7 @@ public class DemographicsInformationFragment extends BaseFragment {
             updateProfileButton.setEnabled(true);
             progressBar.setVisibility(View.GONE);
 
-            SystemUtil.showDefaultFailureDialog(getActivity());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

@@ -446,7 +446,7 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
             hideProgressDialog();
             updateProfileButton.setEnabled(true);
 
-            SystemUtil.showDefaultFailureDialog(getActivity());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

@@ -18,7 +18,7 @@ public class AppointmentAddressDTO {
     private String line2;
     @SerializedName("line3")
     @Expose
-    private Object line3;
+    private String line3;
     @SerializedName("city")
     @Expose
     private String city;
@@ -27,7 +27,7 @@ public class AppointmentAddressDTO {
     private String zipCode;
     @SerializedName("county_name")
     @Expose
-    private Object countyName;
+    private String countyName;
     @SerializedName("latitude")
     @Expose
     private Double latitude;
@@ -88,7 +88,7 @@ public class AppointmentAddressDTO {
      * @param line3
      *     The line3
      */
-    public void setLine3(Object line3) {
+    public void setLine3(String line3) {
         this.line3 = line3;
     }
 
@@ -142,7 +142,7 @@ public class AppointmentAddressDTO {
      * @param countyName
      *     The county_name
      */
-    public void setCountyName(Object countyName) {
+    public void setCountyName(String countyName) {
         this.countyName = countyName;
     }
 
@@ -212,5 +212,60 @@ public class AppointmentAddressDTO {
                 + (StringUtil.isNullOrEmpty(stateName) ? "" : stateName + " ")
                 + (StringUtil.isNullOrEmpty(zipCode) ? "" : zipCode + " ")
                 + (countyName == null ? "" : countyName);
+    }
+
+    @Override
+    public String toString() {
+        // Example: 2645 SW 37th Ave Suite 502
+        String firstAddressHalf = "";
+
+        if (!StringUtil.isNullOrEmpty(line1)) {
+            firstAddressHalf = (firstAddressHalf + line1.trim()).trim();
+        }
+
+        if (!StringUtil.isNullOrEmpty(line2)) {
+            firstAddressHalf = (firstAddressHalf + " " + line2.trim()).trim();
+        }
+
+        if (!StringUtil.isNullOrEmpty(line3)) {
+            firstAddressHalf = (firstAddressHalf + " " + line3.trim()).trim();
+        }
+
+        // Example: Miami, FL 33133, USA
+        String secondAddressHalf = "";
+
+        if (!StringUtil.isNullOrEmpty(city)) {
+            secondAddressHalf = (secondAddressHalf + city.trim()).trim();
+        }
+
+        if (!StringUtil.isNullOrEmpty(stateName)) {
+            if (!StringUtil.isNullOrEmpty(secondAddressHalf)) {
+                secondAddressHalf += ",";
+            }
+
+            secondAddressHalf = (secondAddressHalf + " " + stateName.trim()).trim();
+        }
+
+        if (!StringUtil.isNullOrEmpty(zipCode)) {
+            secondAddressHalf = (secondAddressHalf + " " + zipCode.trim()).trim();
+        }
+
+        if (!StringUtil.isNullOrEmpty(countyName)) {
+            if (!StringUtil.isNullOrEmpty(secondAddressHalf)) {
+                secondAddressHalf += ",";
+            }
+
+            secondAddressHalf = (secondAddressHalf + " " + countyName.trim()).trim();
+        }
+
+        if (StringUtil.isNullOrEmpty(firstAddressHalf)) {
+            return secondAddressHalf;
+        }
+
+        if (StringUtil.isNullOrEmpty(secondAddressHalf)) {
+            return firstAddressHalf;
+        }
+
+        return firstAddressHalf.trim() + ",\n" + secondAddressHalf.trim();
     }
 }

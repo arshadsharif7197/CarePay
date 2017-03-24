@@ -34,6 +34,7 @@ import com.carecloud.carepay.practice.library.homescreen.dtos.PatientHomeScreenT
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenPayloadDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenTransitionsDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLinksDTO;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
@@ -126,6 +127,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             homeAlertLinearLl.setVisibility(View.GONE);
             modeSwitchImageView.setVisibility(View.GONE);
             homeLockImageView.setVisibility(View.VISIBLE);
+            setNavigationBarVisibility();
         } else {
             homeCheckinLl.setVisibility(View.VISIBLE);
             homeAlertLinearLl.setVisibility(View.VISIBLE);
@@ -447,7 +449,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(CloverMainActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -473,7 +475,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(CloverMainActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -571,7 +573,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             disableUnavailableItems();
-            SystemUtil.showDefaultFailureDialog(CloverMainActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -604,7 +606,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(CloverMainActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

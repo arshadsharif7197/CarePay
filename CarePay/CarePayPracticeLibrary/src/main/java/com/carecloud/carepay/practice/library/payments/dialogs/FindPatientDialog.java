@@ -9,10 +9,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepay.practice.library.R;
@@ -22,10 +22,10 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.customcomponents.CarePayEditText;
 import com.carecloud.carepaylibray.customcomponents.RecyclerViewWithDivider;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.JsonArray;
 
 import java.util.Collections;
@@ -75,14 +75,14 @@ public class FindPatientDialog extends Dialog {
     }
 
     private void initializeView() {
-        EditText findPatientEditBox = (EditText) findViewById(R.id.find_patient_edit_box);
-        findPatientEditBox.setHint(hintLabel);
+        CarePayEditText findPatientEditBox = (CarePayEditText) findViewById(R.id.find_patient_edit_box);
         findPatientEditBox.addTextChangedListener(getTextChangedListener());
         findPatientEditBox.setOnKeyListener(getKeyListener());
 
         findViewById(R.id.find_patient_close_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ((ISession) context).getWorkflowServiceHelper().interrupt();
                 dismiss();
             }
         });
@@ -102,7 +102,7 @@ public class FindPatientDialog extends Dialog {
                     queryMap.put("practice_mgmt", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
                     queryMap.put("practice_id", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeId());
 
-                    query = ((EditText) view).getText().toString().toUpperCase();
+                    query = ((CarePayEditText) view).getText().toString().toUpperCase();
                     JsonArray postModel = new JsonArray();
                     postModel.add(query);
                     String postBody = postModel.toString();
@@ -130,6 +130,20 @@ public class FindPatientDialog extends Dialog {
             public void afterTextChanged(Editable charSequence) {
                 if (charSequence.length() == 0) {
                     findViewById(R.id.patient_searched_list).setVisibility(View.GONE);
+                } else if (charSequence.length() > 3) {
+                    ((ISession) context).getWorkflowServiceHelper().interrupt();
+                    //InputMethodManager manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    //manager.hideSoftInputFromWindow(findPatientEditBox.getWindowToken(), 0);
+
+                    Map<String, String> queryMap = new HashMap<>();
+                    queryMap.put("practice_mgmt", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+                    queryMap.put("practice_id", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeId());
+
+                    query = charSequence.toString().toUpperCase();
+                    JsonArray postModel = new JsonArray();
+                    postModel.add(query);
+                    String postBody = postModel.toString();
+                    ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, findPatientCallback, postBody, queryMap);
                 }
             }
         };
@@ -139,24 +153,27 @@ public class FindPatientDialog extends Dialog {
 
         @Override
         public void onPreExecute() {
-            ((ISession) context).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ((ISession) context).hideProgressDialog();
-
             PaymentsModel searchResult = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
             if (searchResult != null) {
+                findViewById(R.id.patient_searched_list).setVisibility(View.VISIBLE);
+                findViewById(R.id.patient_not_found_text).setVisibility(View.GONE);
                 List<PatientModel> patients = searchResult.getPaymentPayload().getPatients();
                 sortPatients(patients);
                 showSearchResultList(patients);
+            } else {
+                findViewById(R.id.patient_searched_list).setVisibility(View.GONE);
+                findViewById(R.id.patient_not_found_text).setVisibility(View.VISIBLE);
             }
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.doDefaultFailureBehavior(context, exceptionMessage);
+            findViewById(R.id.patient_searched_list).setVisibility(View.GONE);
+            findViewById(R.id.patient_not_found_text).setVisibility(View.VISIBLE);
         }
 
         private void sortPatients(List<PatientModel> patients) {
@@ -184,11 +201,17 @@ public class FindPatientDialog extends Dialog {
     private void showSearchResultList(List<PatientModel> patients) {
         PatientSearchResultAdapter adapter = new PatientSearchResultAdapter(context, patients);
         setOnItemClickedListener(adapter);
-        
+
         RecyclerViewWithDivider searchedList = (RecyclerViewWithDivider) findViewById(R.id.patient_searched_list);
         searchedList.setLayoutManager(new LinearLayoutManager(context));
+        ViewGroup.LayoutParams params = searchedList.getLayoutParams();
+        if (patients != null && patients.size() > 4) {
+            params.height = getContext().getResources().getDimensionPixelSize(R.dimen.dimen_175dp);
+        } else {
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        }
+        searchedList.setLayoutParams(params);
         searchedList.setAdapter(adapter);
-        searchedList.setVisibility(View.VISIBLE);
     }
 
     private void setOnItemClickedListener(PatientSearchResultAdapter adapter) {

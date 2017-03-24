@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
-import com.carecloud.carepay.patient.payment.adapter.PaymentDetailsListAdapter;
+import com.carecloud.carepay.patient.payment.adapters.PaymentDetailsListAdapter;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;

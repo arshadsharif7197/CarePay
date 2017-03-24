@@ -24,7 +24,6 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentType;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -33,11 +32,10 @@ import java.util.Map;
 /**
  * Created by lmenendez on 3/1/17.
  */
-
 public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implements BaseAddCreditCardFragment.IAuthoriseCreditCardResponse{
     private PaymentsModel paymentsModel;
 
-    PaymentNavigationCallback callback;
+    private PaymentNavigationCallback callback;
 
     @Override
     public void onAttach(Context context){
@@ -69,7 +67,6 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
     @Override
     public void onViewCreated(View view, Bundle icicle){
         title.setText(Label.getLabel("payment_new_credit_card"));
-//        initilizeViews();
     }
 
     @Override
@@ -77,43 +74,6 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         super.onResume();
     }
 
-//    private void initilizeViews() {
-//        creditCardNoTextInput.setTag(paymentsLabelDTO.getPaymentCreditCardNumber());
-//        creditCardNoEditText.setHint(paymentsLabelDTO.getPaymentCreditCardNumber());
-
-//        nameOnCardTextInputLayout.setTag(paymentsLabelDTO.getPaymentNameOnCardText());
-//        nameOnCardEditText.setHint(paymentsLabelDTO.getPaymentNameOnCardText());
-
-//        verificationCodeTextInput.setTag(paymentsLabelDTO.getPaymentVerificationNumber());
-//        verificationCodeEditText.setHint(paymentsLabelDTO.getPaymentVerificationNumber());
-
-//        expirationDateTextView.setText(paymentsLabelDTO.getPaymentExpirationDate());
-//        pickDateTextView.setText(paymentsLabelDTO.getPaymentPickDate());
-
-//        saveCardOnFileCheckBox.setText(paymentsLabelDTO.getPaymentSaveCardOnFile());
-//        setAsDefaultCheckBox.setText(paymentsLabelDTO.getPaymentSetAsDefaultCreditCard());
-
-//        billingAddressTextView.setText(paymentsLabelDTO.getPaymentBillingAddressText());
-//        useProfileAddressCheckBox.setText(paymentsLabelDTO.getPaymentUseProfileAddress());
-
-//        address1TextInput.setTag(paymentsLabelDTO.getPaymentAddressLine1Text());
-//        address1EditText.setHint(paymentsLabelDTO.getPaymentAddressLine1Text());
-
-//        address2TextInput.setTag(paymentsLabelDTO.getPaymentAddressLine2Text());
-//        address2EditText.setHint(paymentsLabelDTO.getPaymentAddressLine2Text());
-
-//        zipCodeTextInput.setTag(paymentsLabelDTO.getPaymentZipcode());
-//        zipCodeEditText.setHint(paymentsLabelDTO.getPaymentZipcode());
-
-//        cityTextInput.setTag(paymentsLabelDTO.getPaymentCity());
-//        cityEditText.setHint(paymentsLabelDTO.getPaymentCity());
-
-//        stateTextInput.setTag(paymentsLabelDTO.getPaymentState());
-//        stateAutoCompleteTextView.setHint(paymentsLabelDTO.getPaymentState());
-
-//        nextButton.setText(paymentsLabelDTO.getPaymentPayText());
-
-//    }
 
     private WorkflowServiceCallback addNewCreditCardCallback = new WorkflowServiceCallback() {
         @Override
@@ -133,7 +93,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             nextButton.setEnabled(true);
-            SystemUtil.showDefaultFailureDialog(getActivity());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -160,7 +120,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             nextButton.setEnabled(true);
-            SystemUtil.showDefaultFailureDialog(getActivity());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

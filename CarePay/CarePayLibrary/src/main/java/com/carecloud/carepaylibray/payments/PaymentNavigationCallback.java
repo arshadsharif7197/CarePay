@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.payments;
 
+import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 
@@ -10,8 +11,9 @@ import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 public interface PaymentNavigationCallback {
     /**
      * Callback to launch the partial payment view
+     * @param owedAmount the owed amount
      */
-    void startPartialPayment();
+    void startPartialPayment(double owedAmount);
 
     /**
      * Callback to launch the payment method selector
@@ -21,10 +23,10 @@ public interface PaymentNavigationCallback {
 
     /**
      * Callback to proceed to select card view once payment method is selected
-     * @param selectedPaymentMethod payment method type
+     * @param selectedPaymentMethod Selected Payment Method
      * @param amount amount to pay
      */
-    void onPaymentMethodAction(String selectedPaymentMethod, double amount, PaymentsModel paymentsModel);
+    void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel);
 
     /**
      * Callback to start payment plan workflow

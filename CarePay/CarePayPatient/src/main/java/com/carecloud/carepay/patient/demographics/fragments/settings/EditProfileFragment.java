@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -116,9 +117,8 @@ public class EditProfileFragment extends DocumentScannerFragment {
 
         userId = getAppAuthorizationHelper().getCurrUser();
 
-
         CarePayTextView patientNameValue = (CarePayTextView) view.findViewById(R.id.patientNameTextView);
-        patientNameValue.setText(firstNameValString + " " + middleNameValString+" " + lastNameValString);
+        patientNameValue.setText(StringUtil.capitalize(firstNameValString + " " + middleNameValString+" " + lastNameValString));
 
         CarePayTextView patientEmailValue = (CarePayTextView) view.findViewById(R.id.patientEmailTextView);
         patientEmailValue.setText(userId);
@@ -328,7 +328,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(getActivity());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
 
         }

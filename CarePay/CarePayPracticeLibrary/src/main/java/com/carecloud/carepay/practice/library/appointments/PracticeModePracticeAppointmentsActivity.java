@@ -21,7 +21,9 @@ import com.carecloud.carepay.practice.library.customcomponent.TwoColumnPatientLi
 import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
 import com.carecloud.carepay.practice.library.customdialog.FilterDialog;
 import com.carecloud.carepay.practice.library.models.FilterModel;
+import com.carecloud.carepay.practice.library.models.ResponsibilityHeaderModel;
 import com.carecloud.carepay.practice.library.payments.dialogs.FindPatientDialog;
+import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFragmentDialog;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -34,8 +36,8 @@ import com.carecloud.carepaylibray.appointments.models.LinksDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
-import com.carecloud.carepaylibray.customdialogs.PaymentDetailsDialog;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -53,7 +55,6 @@ import java.util.Map;
 /**
  * Created by cocampo on 2/10/17.
  */
-
 public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppointmentsActivity
         implements FilterDialog.FilterDialogListener,
         DateRangePickerDialog.DateRangePickerDialogListener,
@@ -70,6 +71,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     private TwoColumnPatientListView patientListView;
     private boolean needsToConfirmAppointmentCreation;
+    private static final String TAG = "AppointmentsActivity";
+    private String confirmationMessageText ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +80,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setNavigationBarVisibility();
 
         setContentView(R.layout.activity_practice_appointments);
 
@@ -361,7 +363,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-
+            SystemUtil.showSuccessToast(getContext(), Label.getLabel(confirmationMessageText));
             DtoHelper.putExtra(getIntent(), workflowDTO);
             initializeCheckinDto();
             applyFilter();
@@ -370,7 +372,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(getContext());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -395,14 +397,16 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             }
             ft.addToBackStack(null);
 
+            ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newPatientHeader(patientDetails);
             ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
-                    .newInstance(patientDetails, null, Label.getLabel("create_appointment_label"));
+                    .newInstance(patientDetails, null, Label.getLabel("create_appointment_label"),
+                            headerModel);
             dialog.show(ft, tag);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.doDefaultFailureBehavior(getContext(), exceptionMessage);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
         }
     };
 
@@ -449,11 +453,13 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     private void confirmAppointment(AppointmentDTO appointmentDTO) {
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getConfirmAppointment();
+        confirmationMessageText = "appointment_request_success_message_HTML";
         transitionAppointment(transitionDTO, appointmentDTO);
     }
 
     private void cancelAppointment(AppointmentDTO appointmentDTO) {
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getCancelAppointment();
+        confirmationMessageText = "appointment_cancellation_success_message_HTML";
         transitionAppointment(transitionDTO, appointmentDTO);
     }
 
@@ -473,9 +479,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-
             updateAppointment(workflowDTO);
-
+            SystemUtil.showSuccessToast(getContext(), Label.getLabel(confirmationMessageText));
             DtoHelper.putExtra(getIntent(), checkInDTO);
             initializeCheckinDto();
             applyFilter();
@@ -484,7 +489,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(getContext());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
 
@@ -515,7 +520,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     };
 
     @Override
-    public void startPartialPayment() {
+    public void startPartialPayment(double owedAmount) {
 
     }
 
@@ -525,7 +530,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     @Override
-    public void onPaymentMethodAction(String selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
+    public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
 
     }
 
@@ -551,7 +556,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("start_date", getFormattedDate(startDate));
         queryMap.put("end_date", getFormattedDate(endDate));
-
         getWorkflowServiceHelper().execute(transitionDTO, allAppointmentsServiceCallback, queryMap);
     }
 
@@ -583,7 +587,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     @Override
-    public void onLeftActionTapped() {
+    public void onLeftActionTapped(PaymentsModel paymentsModel, double owedAmount) {
 
     }
 
@@ -606,8 +610,16 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void onDetailItemClick(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem) {
-        PaymentDetailsDialog detailsDialog = new PaymentDetailsDialog(getContext(),
-                paymentsModel, paymentLineItem, this, null);
-        detailsDialog.show();
+        String tag = PaymentDetailsFragmentDialog.class.getSimpleName();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
+                .newInstance(paymentsModel, paymentLineItem);
+        dialog.show(ft, tag);
     }
 }

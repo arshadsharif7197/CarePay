@@ -27,6 +27,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemD
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -305,7 +306,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.doDefaultFailureBehavior(context, exceptionMessage);
+            SystemUtil.doDefaultFailureBehavior((BaseActivity) context, exceptionMessage);
         }
     };
 

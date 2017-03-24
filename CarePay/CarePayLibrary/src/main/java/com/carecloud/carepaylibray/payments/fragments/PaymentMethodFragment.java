@@ -20,12 +20,12 @@ import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.adapter.PaymentMethodAdapter;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -49,7 +49,6 @@ public abstract class PaymentMethodFragment extends BaseDialogFragment {
     protected PaymentsModel paymentsModel;
     protected List<PatientBalanceDTO> paymentList = new ArrayList<>();
     protected List<PaymentsMethodsDTO> paymentMethodsList = new ArrayList<>();
-    protected String selectedPaymentMethod;
     protected HashMap<String, Integer> paymentTypeMap;
 
     private String dialogTitle;
@@ -99,11 +98,8 @@ public abstract class PaymentMethodFragment extends BaseDialogFragment {
     @Override
     public void onViewCreated(View view, Bundle icicle){
         activity = getActivity();
-
         setupTitleViews(view);
-
         initializeViews(view);
-
     }
 
     protected void setupTitleViews(View view){
@@ -112,13 +108,6 @@ public abstract class PaymentMethodFragment extends BaseDialogFragment {
             TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
             title.setText(titlePaymentMethodString);
             toolbar.setTitle("");
-            toolbar.setNavigationIcon(ContextCompat.getDrawable(activity, R.drawable.icn_nav_back));
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    activity.onBackPressed();
-                }
-            });
         }
     }
 
@@ -143,12 +132,11 @@ public abstract class PaymentMethodFragment extends BaseDialogFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 PaymentsMethodsDTO paymentMethod = paymentMethodsList.get(position);
-                selectedPaymentMethod = paymentMethod.getLabel();
                 paymentMethodAdapter.setSelectedItem(position);
                 paymentMethodAdapter.notifyDataSetChanged();
 
                 paymentChoiceButton.setText(paymentMethod.getButtonLabel());
-                paymentChoiceButton.setTag(paymentMethod.getType());
+                paymentChoiceButton.setTag(paymentMethod);
                 paymentChoiceButton.setEnabled(true);
 
             }
@@ -188,8 +176,8 @@ public abstract class PaymentMethodFragment extends BaseDialogFragment {
     }
 
 
-    protected void handlePaymentButton(String type, double amount){
-        switch (type) {
+    protected void handlePaymentButton(PaymentsMethodsDTO paymentMethod, double amount){
+        switch (paymentMethod.getType()) {
             case CarePayConstants.TYPE_CASH:
                 new LargeAlertDialog(getActivity(), dialogTitle, dialogText, R.color.lightningyellow, R.drawable.icn_notification_basic, new LargeAlertDialog.LargeAlertInterface() {
                     @Override
@@ -199,7 +187,7 @@ public abstract class PaymentMethodFragment extends BaseDialogFragment {
                 break;
 
             case CarePayConstants.TYPE_CREDIT_CARD:
-                callback.onPaymentMethodAction(selectedPaymentMethod, amount, paymentsModel);
+                callback.onPaymentMethodAction(paymentMethod, amount, paymentsModel);
                 break;
 
             default:
@@ -234,11 +222,11 @@ public abstract class PaymentMethodFragment extends BaseDialogFragment {
     private View.OnClickListener paymentChoiceButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            String type = (String) view.getTag();
+            PaymentsMethodsDTO paymentMethod = (PaymentsMethodsDTO) view.getTag();
             Bundle args = getArguments();
             double amount = args.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
 
-            handlePaymentButton(type, amount);
+            handlePaymentButton(paymentMethod, amount);
         }
     };
 
