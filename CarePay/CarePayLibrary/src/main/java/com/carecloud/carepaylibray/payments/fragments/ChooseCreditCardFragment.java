@@ -56,7 +56,7 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
 
     private int selectedCreditCard = -1;
     protected PaymentsModel paymentsModel;
-    private double amountToMakePayment;
+    protected double amountToMakePayment;
 
     protected String titleLabel;
     private PaymentNavigationCallback callback;

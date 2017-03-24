@@ -57,7 +57,9 @@ import java.util.List;
 /**
  * Created by jorge on 07/02/17.
  */
-public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment implements InsuranceLineItemsListAdapter.OnInsuranceEditClickListener {
+public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment implements
+        InsuranceLineItemsListAdapter.OnInsuranceEditClickListener,
+        InsuranceEditDialog.OnSaveChangesListener {
 
     private List<DemographicInsurancePayloadDTO> insurancePayloadDTOs;
     private DemographicDTO demographicDTO;
@@ -200,7 +202,8 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
         addAnotherButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View addAnotherButton) {
-                InsuranceEditDialog dialog = new InsuranceEditDialog(getActivity(), null, demographicDTO, false);
+                InsuranceEditDialog dialog = new InsuranceEditDialog(getActivity(), null, demographicDTO,
+                        false, HealthInsuranceFragment.this);
                 dialog.show();
             }
         });
@@ -608,7 +611,8 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
 
     @Override
     public void onEditInsuranceClicked(DemographicInsurancePayloadDTO lineItem) {
-        InsuranceEditDialog dialog = new InsuranceEditDialog(getActivity(), lineItem, demographicDTO, true);
+        InsuranceEditDialog dialog = new InsuranceEditDialog(getActivity(), lineItem, demographicDTO,
+                true, HealthInsuranceFragment.this);
         dialog.show();
     }
 
@@ -656,6 +660,11 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
 //            throw new ClassCastException(context.toString()
 //                    + " must implement InsuranceDocumentScannerListener");
 //        }
+    }
+
+    @Override
+    public void onSaveChangesClicked(DemographicDTO newRecord) {
+        openNextFragment(newRecord, false);
     }
 
     public interface InsuranceDocumentScannerListener {

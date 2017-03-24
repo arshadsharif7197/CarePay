@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingEnd="@dimen/dimen_14dp"
-    android:paddingStart="@dimen/dimen_14dp">
+    android:layout_marginEnd="@dimen/list_apt_padding_right"
+    android:layout_marginStart="@dimen/list_apt_padding_right">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/dimen_15dp"
-        android:paddingTop="@dimen/dimen_15dp">
+        android:padding="@dimen/dimen_14dp">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/payment_details_label"

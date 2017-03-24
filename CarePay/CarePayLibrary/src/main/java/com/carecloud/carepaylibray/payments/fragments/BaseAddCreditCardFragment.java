@@ -50,7 +50,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class BaseAddCreditCardFragment extends BaseDialogFragment implements RequestTask.AuthorizeCreditCardCallback, SimpleDatePickerDialog.OnDateSetListener {
+public abstract class BaseAddCreditCardFragment extends BaseDialogFragment implements RequestTask.AuthorizeCreditCardCallback, SimpleDatePickerDialog.OnDateSetListener {
 
     public interface IAuthoriseCreditCardResponse {
         void onAuthorizeCreditCardSuccess();

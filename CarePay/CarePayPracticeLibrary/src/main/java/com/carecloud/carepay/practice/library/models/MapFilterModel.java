@@ -2,8 +2,8 @@ package com.carecloud.carepay.practice.library.models;
 
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -45,7 +45,7 @@ public class MapFilterModel {
         patients = new HashMap<>();
     }
 
-    private Map<String, FilterDataDTO> map(ArrayList<FilterDataDTO> list) {
+    private Map<String, FilterDataDTO> map(List<FilterDataDTO> list) {
         Map<String, FilterDataDTO> map = new HashMap<>();
 
         for(FilterDataDTO dto: list) {
