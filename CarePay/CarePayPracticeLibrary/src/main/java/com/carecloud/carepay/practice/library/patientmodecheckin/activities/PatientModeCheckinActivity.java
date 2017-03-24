@@ -146,7 +146,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
         setContentView(R.layout.activity_patient_mode_checkin);
         demographicDTO = getConvertedDTO(DemographicDTO.class);
 
-        setNavigationBarVisibility();
         instantiateViewsRefs();
         initializeViews();
 

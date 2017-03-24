@@ -392,7 +392,7 @@ public class WorkflowServiceHelper {
                 String signInResponseString = gson.toJson(workflowDTO);
                 UnifiedSignInResponse signInResponse = gson.fromJson(signInResponseString, UnifiedSignInResponse.class);
                 if (signInResponse != null) {
-                    UnifiedAuthenticationTokens authTokens = signInResponse.getPayload().getPracticeModeAuth().getCognito().getAuthenticationTokens();
+                    UnifiedAuthenticationTokens authTokens = signInResponse.getPayload().getAuthorizationModel().getCognito().getAuthenticationTokens();
                     appAuthorizationHelper.setAuthorizationTokens(authTokens);
                 }
 

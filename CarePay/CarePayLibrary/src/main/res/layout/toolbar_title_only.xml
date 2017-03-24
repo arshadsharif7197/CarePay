@@ -9,7 +9,6 @@
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/toolbar_title"
         style="@style/ResponsibilityToolbarTextStyle"
-        android:text="@string/additional_info"
         app:customAssetFont="gotham_rounded_medium"/>
 
 </android.support.v7.widget.Toolbar>

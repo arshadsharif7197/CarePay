@@ -167,9 +167,6 @@ public class AppointmentLabelDTO implements Serializable {
     @SerializedName("cancel_appointment_other_reason_hint")
     @Expose
     private String cancelAppointmentOtherReasonHint;
-    @SerializedName("choose_provider_all_header")
-    @Expose
-    private String chooseProviderAllHeader;
     @SerializedName("choose_provider_recent_header")
     @Expose
     private String chooseProviderRecentHeader;
@@ -1070,46 +1067,6 @@ public class AppointmentLabelDTO implements Serializable {
      */
     public String getCancelAppointmentOtherReasonHint() {
         return StringUtil.getLabelForView(cancelAppointmentOtherReasonHint);
-    }
-
-    /**
-     *
-     * @param cancelAppointmentOtherReasonHint The cancel_appointment_other_reason_hint
-     */
-    public void setCancelAppointmentOtherReasonHint(String cancelAppointmentOtherReasonHint) {
-        this.cancelAppointmentOtherReasonHint = cancelAppointmentOtherReasonHint;
-    }
-
-    /**
-     *
-     * @return chooseProviderAllHeader
-     */
-    public String getChooseProviderAllHeader() {
-        return StringUtil.getLabelForView(chooseProviderAllHeader);
-    }
-
-    /**
-     *
-     * @param chooseProviderAllHeader chooseProviderAllHeader
-     */
-    public void setChooseProviderAllHeader(String chooseProviderAllHeader) {
-        this.chooseProviderAllHeader = chooseProviderAllHeader;
-    }
-
-    /**
-     *
-     * @return chooseProviderRecentHeader
-     */
-    public String getChooseProviderRecentHeader() {
-        return StringUtil.getLabelForView(chooseProviderRecentHeader);
-    }
-
-    /**
-     *
-     * @param chooseProviderRecentHeader chooseProviderRecentHeader
-     */
-    public void setChooseProviderRecentHeader(String chooseProviderRecentHeader) {
-        this.chooseProviderRecentHeader = chooseProviderRecentHeader;
     }
 
     /**

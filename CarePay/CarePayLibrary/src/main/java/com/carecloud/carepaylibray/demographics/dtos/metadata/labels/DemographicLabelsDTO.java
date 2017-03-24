@@ -456,6 +456,28 @@ public class DemographicLabelsDTO {
     @SerializedName("demographics_insurance_retake_back_photo")
     @Expose
     private String demographicsInsuranceRetakeBackPhoto;
+    @SerializedName("demographics_review_go_to_consent")
+    @Expose
+    private String demographicsReviewGoToConsent;
+    @SerializedName("demographics_review_edit_insurance_close")
+    @Expose
+    private String demographicsReviewEditInsuranceClose;
+
+    public String getDemographicsReviewEditInsuranceClose() {
+        return StringUtil.getLabelForView(demographicsReviewEditInsuranceClose);
+    }
+
+    public void setDemographicsReviewEditInsuranceClose(String demographicsReviewEditInsuranceClose) {
+        this.demographicsReviewEditInsuranceClose = demographicsReviewEditInsuranceClose;
+    }
+
+    public String getDemographicsReviewGoToConsent() {
+        return StringUtil.getLabelForView(demographicsReviewGoToConsent);
+    }
+
+    public void setDemographicsReviewGoToConsent(String demographicsReviewGoToConsent) {
+        this.demographicsReviewGoToConsent = demographicsReviewGoToConsent;
+    }
 
     public String getDemographicsInsuranceRetakeFrontPhoto() {
         return StringUtil.getLabelForView(demographicsInsuranceRetakeFrontPhoto);

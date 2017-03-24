@@ -93,19 +93,20 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         //stepProgressBar.setCurrentProgressDot(checkInNavListener.getCurrentStep()-1);
     }
 
-    protected void initNextButton(View.OnClickListener listener, final View view){
+    protected void initNextButton(View.OnClickListener listener, final View view, int visibility) {
         Button nextButton = (Button) view.findViewById(R.id.checkinDemographicsNextButton);
-        if (listener == null){
-            listener =  new View.OnClickListener() {
+        if (listener == null) {
+            listener = new View.OnClickListener() {
                 @Override
                 public void onClick(View buttonView) {
-                    if(passConstraints(view)) {
+                    if (passConstraints(view)) {
                         DemographicDTO demographicDTO = updateDemographicDTO(view);
-                        openNextFragment(demographicDTO, (checkInNavListener.getCurrentStep() + 1)>5);
+                        openNextFragment(demographicDTO, (checkInNavListener.getCurrentStep() + 1) > 5);
                     }
                 }
             };
         }
+        nextButton.setVisibility(visibility);
         nextButton.setOnClickListener(listener);
     }
 
@@ -153,7 +154,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
 
 
-    private void openNextFragment( DemographicDTO demographicDTO, boolean transition){
+    protected void openNextFragment( DemographicDTO demographicDTO, boolean transition){
         Map<String, String> queries = new HashMap<>();
         queries.put("practice_mgmt", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
         queries.put("practice_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
