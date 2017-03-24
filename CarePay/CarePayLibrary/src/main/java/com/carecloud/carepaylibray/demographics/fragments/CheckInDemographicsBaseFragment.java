@@ -19,7 +19,6 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterface;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -89,7 +88,10 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         TextView textView = (TextView) view.findViewById(R.id.checkinDemographicsHeaderLabel);
         textView.setText(title);
         SystemUtil.setGothamRoundedMediumTypeface(getContext(), textView);
-        (view.findViewById(R.id.toolbar_layout)).setVisibility(checkInNavListener.getCurrentStep()>1 ?View.VISIBLE:View.INVISIBLE);
+        (view.findViewById(R.id.toolbar_layout)).setVisibility(View.VISIBLE);
+
+
+//        (view.findViewById(R.id.toolbar_layout)).setVisibility(checkInNavListener.getCurrentStep()>1 ?View.VISIBLE:View.INVISIBLE);
         //stepProgressBar.setCurrentProgressDot(checkInNavListener.getCurrentStep()-1);
     }
 
@@ -149,6 +151,8 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         public void setCurrentStep(Integer step);
 
         void setCheckinFlow(CheckinFlowState flowState, int totalPages, int currentPage);
+
+        void navigateToConsentFlow(WorkflowDTO workflowDTO);
     }
 
 
@@ -183,7 +187,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             DemographicDTO demographicDTO = new Gson().fromJson(workflowDTO.toString(), DemographicDTO.class);
 
             if(checkInNavListener.getCurrentStep() ==5){
-                ((CheckinDemographicsInterface)getActivity()).navigateToConsentFlow(workflowDTO);
+                checkInNavListener.navigateToConsentFlow(workflowDTO);
             }else{
                 checkInNavListener.applyChangesAndNavTo(demographicDTO, checkInNavListener.getCurrentStep() + 1);
             }
