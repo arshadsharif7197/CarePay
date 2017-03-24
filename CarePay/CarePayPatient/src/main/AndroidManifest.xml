@@ -85,7 +85,7 @@
         <activity
             android:name=".demographics.activities.DemographicsSettingsActivity"
             android:label=""
-            android:windowSoftInputMode="stateVisible|adjustPan"
+            android:windowSoftInputMode="stateHidden"
             android:parentActivityName=".appointments.activities.AppointmentsActivity"
             android:screenOrientation="sensorPortrait">
             <meta-data

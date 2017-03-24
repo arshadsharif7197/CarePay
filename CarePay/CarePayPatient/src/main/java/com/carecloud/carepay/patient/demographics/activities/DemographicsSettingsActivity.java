@@ -19,6 +19,8 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Main activity for Settings workflow
@@ -161,4 +163,5 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
 
         navigateToFragment(fragment,true);
     }
+
 }
