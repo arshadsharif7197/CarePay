@@ -47,20 +47,10 @@
 
             <include
                 android:id="@+id/toolbar_layout"
-                layout="@layout/toolbar_no_title"/>
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/paymentMethodTitleLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Payment Methods"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:textSize="@dimen/respons_toolbar_title_text_size"
-                app:customAssetFont="gotham_rounded_medium" />
+                layout="@layout/toolbar_responsibility" />
 
         </FrameLayout>
+
         <ProgressBar
             android:id="@+id/paymentMethodFragmentProgressBar"
             style="?android:attr/progressBarStyleHorizontal"
