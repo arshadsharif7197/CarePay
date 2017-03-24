@@ -120,6 +120,9 @@ public class PracticeAvailableLocationsAdapter extends RecyclerView.Adapter<Prac
         filterDataDTO.setChecked(isSelected);
     }
 
+    /**
+     * @param items to be shown in list
+     */
     public void setItems(List<FilterDataDTO> items){
         FilterDataDTO all = new FilterDataDTO("all", Label.getLabel("appointment_all_locations_item"), FilterDataDTO.FilterDataType.HEADER);
         all.setChecked(true);
