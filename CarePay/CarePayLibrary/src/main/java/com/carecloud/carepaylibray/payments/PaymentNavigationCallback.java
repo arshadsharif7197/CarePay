@@ -47,7 +47,7 @@ public interface PaymentNavigationCallback {
 
     /**
      * Callback when payment process is finished... This is where any cleanup of screens and fragments should occur
-     * @param updatePatientBalancesDTO
+     * @param updatePatientBalancesDTO updated balance
      */
     void completePaymentProcess(UpdatePatientBalancesDTO updatePatientBalancesDTO);
 
