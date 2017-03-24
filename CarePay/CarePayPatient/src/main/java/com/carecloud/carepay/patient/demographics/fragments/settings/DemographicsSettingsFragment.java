@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
@@ -36,6 +37,9 @@ import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
@@ -306,7 +310,8 @@ public class DemographicsSettingsFragment extends BaseFragment {
                 String firstName = demographicsPersonalDetails.getFirstName();
                 String lastName = demographicsPersonalDetails.getLastName();
                 String userName = firstName + " " + lastName;
-                return userName;
+                return (StringUtil.capitalize(userName));
+
             }
         }catch(Exception e){
             e.printStackTrace();

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:breeze="http://schemas.carecloud.com/breeze"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_gravity="center"
-              android:orientation="horizontal">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/closeViewLayout"
@@ -38,11 +38,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginStart="@dimen/dimen_26dp"
         android:layout_marginEnd="@dimen/dimen_26dp"
+        android:layout_marginStart="@dimen/dimen_26dp"
         android:gravity="center_horizontal"
-        android:paddingBottom="@dimen/apt_dl_margin"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/apt_dl_margin">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -56,45 +56,45 @@
                 android:id="@+id/enter_amount_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/dimen_25dp"
-                android:paddingStart="@dimen/dimen_25dp"
-                android:paddingEnd="@dimen/dimen_25dp"
                 android:gravity="center_horizontal"
+                android:paddingEnd="@dimen/dimen_25dp"
+                android:paddingStart="@dimen/dimen_25dp"
+                android:paddingTop="@dimen/dimen_25dp"
                 android:textColor="@color/white"
-                breeze:textKey="payment_enter_amount"
-                app:customAssetFont="gotham_rounded_medium"/>
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="payment_enter_amount" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_gravity="center"
+                android:layout_margin="@dimen/dimen_15dp"
                 android:gravity="center"
-                android:layout_margin="@dimen/dimen_15dp">
+                android:orientation="horizontal">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/amountSymbolTextView"
                     android:layout_width="wrap_content"
-                    android:textSize="@dimen/calculator_entry_text"
-                    android:background="@android:color/transparent"
-                    android:textColor="@color/white_transparent"
                     android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
                     android:text="$"
-                    app:customAssetFont="gotham_rounded_medium"/>
+                    android:textColor="@color/white_transparent"
+                    android:textSize="@dimen/calculator_entry_text"
+                    app:customAssetFont="gotham_rounded_medium" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                     android:id="@+id/enter_amount_text"
-                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:textSize="@dimen/calculator_entry_text"
+                    android:hint="0.00"
+                    android:inputType="numberDecimal"
                     android:textColor="@color/white"
                     android:textColorHint="@color/white_transparent"
-                    android:inputType="numberDecimal"
-                    android:background="@android:color/transparent"
-                    android:hint="0.00"
-                    app:customAssetFont="gotham_rounded_medium"/>
+                    android:textSize="@dimen/calculator_entry_text"
+                    app:customAssetFont="gotham_rounded_medium" />
             </LinearLayout>
         </LinearLayout>
 
@@ -102,13 +102,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:background="@color/white"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:background="@color/white"
-            android:paddingTop="@dimen/dimen_10dp"
             android:paddingBottom="@dimen/dimen_10dp"
+            android:paddingEnd="@dimen/dimen_100dp"
             android:paddingStart="@dimen/dimen_100dp"
-            android:paddingEnd="@dimen/dimen_100dp">
+            android:paddingTop="@dimen/dimen_10dp">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/pendingAmountTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/grayRound"
+                android:textSize="@dimen/text_size_18sp"
+                android:visibility="gone"
+                app:customAssetFont="proxima_nova_regular" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -120,15 +132,15 @@
                     android:layout_width="@dimen/button_height"
                     android:layout_height="@dimen/button_width"
                     android:background="@drawable/key_selector"
-                    android:text="@string/entry_1"
                     android:gravity="center"
+                    android:text="@string/entry_1"
                     android:textColor="@color/charcoal"
                     android:textSize="@dimen/button_pin_text_size" />
 
                 <View
                     android:layout_width="@dimen/key_border_width"
                     android:layout_height="match_parent"
-                    android:background="@color/light_gray"/>
+                    android:background="@color/light_gray" />
 
                 <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
                     android:id="@+id/key_two"
@@ -143,15 +155,15 @@
                 <View
                     android:layout_width="@dimen/key_border_width"
                     android:layout_height="match_parent"
-                    android:background="@color/light_gray"/>
+                    android:background="@color/light_gray" />
 
                 <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
                     android:id="@+id/key_three"
                     android:layout_width="@dimen/button_height"
                     android:layout_height="@dimen/button_width"
                     android:background="@drawable/key_selector"
-                    android:text="@string/entry_3"
                     android:gravity="center"
+                    android:text="@string/entry_3"
                     android:textColor="@color/charcoal"
                     android:textSize="@dimen/button_pin_text_size" />
 
@@ -160,7 +172,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/key_border_width"
-                android:background="@color/light_gray"/>
+                android:background="@color/light_gray" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -180,30 +192,30 @@
                 <View
                     android:layout_width="@dimen/key_border_width"
                     android:layout_height="match_parent"
-                    android:background="@color/light_gray"/>
+                    android:background="@color/light_gray" />
 
                 <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
                     android:id="@+id/key_five"
                     android:layout_width="@dimen/button_height"
                     android:layout_height="@dimen/button_width"
                     android:background="@drawable/key_selector"
-                    android:text="@string/entry_5"
                     android:gravity="center"
+                    android:text="@string/entry_5"
                     android:textColor="@color/charcoal"
                     android:textSize="@dimen/button_pin_text_size" />
 
                 <View
                     android:layout_width="@dimen/key_border_width"
                     android:layout_height="match_parent"
-                    android:background="@color/light_gray"/>
+                    android:background="@color/light_gray" />
 
                 <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
                     android:id="@+id/key_six"
                     android:layout_width="@dimen/button_height"
                     android:layout_height="@dimen/button_width"
                     android:background="@drawable/key_selector"
-                    android:text="@string/entry_6"
                     android:gravity="center"
+                    android:text="@string/entry_6"
                     android:textColor="@color/charcoal"
                     android:textSize="@dimen/button_pin_text_size" />
             </LinearLayout>
@@ -211,7 +223,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/key_border_width"
-                android:background="@color/light_gray"/>
+                android:background="@color/light_gray" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -223,38 +235,38 @@
                     android:layout_width="@dimen/button_height"
                     android:layout_height="@dimen/button_width"
                     android:background="@drawable/key_selector"
-                    android:text="@string/entry_7"
                     android:gravity="center"
+                    android:text="@string/entry_7"
                     android:textColor="@color/charcoal"
                     android:textSize="@dimen/button_pin_text_size" />
 
                 <View
                     android:layout_width="@dimen/key_border_width"
                     android:layout_height="match_parent"
-                    android:background="@color/light_gray"/>
+                    android:background="@color/light_gray" />
 
                 <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
                     android:id="@+id/key_eighth"
                     android:layout_width="@dimen/button_height"
                     android:layout_height="@dimen/button_width"
                     android:background="@drawable/key_selector"
-                    android:text="@string/entry_8"
                     android:gravity="center"
+                    android:text="@string/entry_8"
                     android:textColor="@color/charcoal"
                     android:textSize="@dimen/button_pin_text_size" />
 
                 <View
                     android:layout_width="@dimen/key_border_width"
                     android:layout_height="match_parent"
-                    android:background="@color/light_gray"/>
+                    android:background="@color/light_gray" />
 
                 <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
                     android:id="@+id/key_nine"
                     android:layout_width="@dimen/button_height"
                     android:layout_height="@dimen/button_width"
                     android:background="@drawable/key_selector"
-                    android:text="@string/entry_9"
                     android:gravity="center"
+                    android:text="@string/entry_9"
                     android:textColor="@color/charcoal"
                     android:textSize="@dimen/button_pin_text_size" />
 
@@ -263,7 +275,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/key_border_width"
-                android:background="@color/light_gray"/>
+                android:background="@color/light_gray" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -275,30 +287,30 @@
                     android:layout_width="@dimen/button_height"
                     android:layout_height="@dimen/button_width"
                     android:background="@drawable/key_selector"
-                    android:text="@string/entry_decimal"
                     android:gravity="center"
+                    android:text="@string/entry_decimal"
                     android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/button_pin_text_size" />
 
                 <View
                     android:layout_width="@dimen/key_border_width"
                     android:layout_height="match_parent"
-                    android:background="@color/light_gray"/>
+                    android:background="@color/light_gray" />
 
                 <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
                     android:id="@+id/key_zero"
                     android:layout_width="@dimen/button_height"
                     android:layout_height="@dimen/button_width"
                     android:background="@drawable/key_selector"
-                    android:text="@string/entry_0"
                     android:gravity="center"
+                    android:text="@string/entry_0"
                     android:textColor="@color/charcoal"
                     android:textSize="@dimen/button_pin_text_size" />
 
                 <View
                     android:layout_width="@dimen/key_border_width"
                     android:layout_height="match_parent"
-                    android:background="@color/light_gray"/>
+                    android:background="@color/light_gray" />
 
                 <LinearLayout
                     android:id="@+id/key_clear"
@@ -312,8 +324,8 @@
                         android:layout_width="@dimen/button_delete_key_width"
                         android:layout_height="@dimen/button_delete_key_height"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_keyboard_delete"
-                        android:gravity="center"/>
+                        android:gravity="center"
+                        android:src="@drawable/ic_keyboard_delete" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -322,20 +334,20 @@
             android:id="@+id/bottom_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/patient_mode_dialog_body_bg">
+            android:background="@drawable/patient_mode_dialog_body_bg"
+            android:orientation="vertical">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/enter_amount_button"
+                style="@style/PaymentButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/PaymentButtonStyle"
-                android:background="@drawable/bg_yellow_overlay"
-                android:textColor="@color/white"
                 android:layout_alignParentBottom="true"
                 android:layout_margin="@dimen/dimen_20dp"
-                breeze:textKey="payment_apply_amount"
-                app:customAssetFont="gotham_rounded_medium" />
+                android:background="@drawable/bg_yellow_overlay"
+                android:textColor="@color/white"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="payment_apply_amount" />
 
         </FrameLayout>
     </LinearLayout>
@@ -343,8 +355,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_toRightOf="@+id/search_content"
+        android:orientation="vertical"
         android:visibility="invisible">
 
 

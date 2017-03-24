@@ -535,7 +535,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     };
 
     @Override
-    public void startPartialPayment() {
+    public void startPartialPayment(double owedAmount) {
 
     }
 
@@ -603,7 +603,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     @Override
-    public void onLeftActionTapped() {
+    public void onLeftActionTapped(PaymentsModel paymentsModel, double owedAmount) {
 
     }
 
