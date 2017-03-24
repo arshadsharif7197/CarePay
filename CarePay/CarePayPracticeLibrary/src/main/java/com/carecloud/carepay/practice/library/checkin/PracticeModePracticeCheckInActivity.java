@@ -362,15 +362,8 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
-        Bundle bundle = new Bundle();
-        Gson gson = new Gson();
-        String paymentsDTOString = gson.toJson(paymentsModel);
-        bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
-        bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
-        bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-
-        PracticePaymentMethodDialogFragment fragment = new PracticePaymentMethodDialogFragment();
-        fragment.setArguments(bundle);
+        PracticePaymentMethodDialogFragment fragment = PracticePaymentMethodDialogFragment
+                .newInstance(paymentsModel, amount);
         fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
     }
 
