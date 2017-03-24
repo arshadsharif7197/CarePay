@@ -226,7 +226,8 @@ public class InTakeWebViewActivity extends BasePatientActivity {
         // return answers XML received from backend i.e. payload.findings.payload.findings
         @JavascriptInterface
         public String getAnswers() {
-            return inTakeForm.getPayload().getFindings().getPayload().getFindings();
+            return null;
+//            return inTakeForm.getPayload().getFindings().getPayload().getFindings();
         }
 
 
