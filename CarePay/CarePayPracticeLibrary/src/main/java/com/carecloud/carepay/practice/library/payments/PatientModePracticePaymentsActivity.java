@@ -181,43 +181,6 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         receiptDialog.show();
     }
 
-    private void refreshBalance() {
-        Map<String, String> queryMap = createQueryMap();
-        TransitionDTO transitionDTO = paymentResultModel.getPaymentsMetadata().getPaymentsLinks().getPaymentsPatientBalances();
-        getWorkflowServiceHelper().execute(transitionDTO, patientBalancesCallback, queryMap);
-    }
-
-    @NonNull
-    private Map<String, String> createQueryMap() {
-        PendingBalanceDTO patientBalanceDTO = paymentResultModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);
-
-        Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("patient_id", patientBalanceDTO.getMetadata().getPatientId());
-        queryMap.put("practice_mgmt", patientBalanceDTO.getMetadata().getPracticeMgmt());
-        queryMap.put("practice_id", patientBalanceDTO.getMetadata().getPracticeId());
-        return queryMap;
-    }
-
-    private WorkflowServiceCallback patientBalancesCallback = new WorkflowServiceCallback() {
-
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            showPayments(DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString()));
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
-        }
-    };
-
     @Override
     public void showAddCard(double amount, PaymentsModel paymentsModel) {
         Gson gson = new Gson();
@@ -254,4 +217,41 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
                 .newInstance(paymentsModel, paymentLineItem);
         dialog.show(ft, tag);
     }
+
+    private void refreshBalance() {
+        Map<String, String> queryMap = createQueryMap();
+        TransitionDTO transitionDTO = paymentResultModel.getPaymentsMetadata().getPaymentsLinks().getPaymentsPatientBalances();
+        getWorkflowServiceHelper().execute(transitionDTO, patientBalancesCallback, queryMap);
+    }
+
+    @NonNull
+    private Map<String, String> createQueryMap() {
+        PendingBalanceDTO patientBalanceDTO = paymentResultModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);
+
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("patient_id", patientBalanceDTO.getMetadata().getPatientId());
+        queryMap.put("practice_mgmt", patientBalanceDTO.getMetadata().getPracticeMgmt());
+        queryMap.put("practice_id", patientBalanceDTO.getMetadata().getPracticeId());
+        return queryMap;
+    }
+
+    private WorkflowServiceCallback patientBalancesCallback = new WorkflowServiceCallback() {
+
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            showPayments(DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString()));
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+        }
+    };
 }
