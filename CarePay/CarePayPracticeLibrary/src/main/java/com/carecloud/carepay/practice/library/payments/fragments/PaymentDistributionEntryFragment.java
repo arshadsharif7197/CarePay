@@ -80,7 +80,7 @@ public class PaymentDistributionEntryFragment extends PartialPaymentBaseDialogFr
 
     /**
      * sets the balance item
-     * @param balanceItem
+     * @param balanceItem the balance item
      */
     public void setBalanceItem(BalanceItemDTO balanceItem) {
         this.balanceItem = balanceItem;
