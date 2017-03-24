@@ -63,11 +63,10 @@
 
             <com.carecloud.carepaylibray.customcomponents.CarePaySearchView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/search_entry_view"
                 android:background="@drawable/search_rounded_border"
                 app:iconifiedByDefault="false"
-                android:theme="@style/SearchViewStyleDark"
                 app:customAssetFont="proxima_nova_regular"/>
 
         </FrameLayout>

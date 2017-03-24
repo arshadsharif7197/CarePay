@@ -72,6 +72,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     private TwoColumnPatientListView patientListView;
     private boolean needsToConfirmAppointmentCreation;
     private static final String TAG = "AppointmentsActivity";
+    private String confirmationMessageText ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -362,7 +363,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            SystemUtil.showSuccessToast(getContext());
+            SystemUtil.showSuccessToast(getContext(), Label.getLabel(confirmationMessageText));
             DtoHelper.putExtra(getIntent(), workflowDTO);
             initializeCheckinDto();
             applyFilter();
@@ -452,11 +453,13 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     private void confirmAppointment(AppointmentDTO appointmentDTO) {
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getConfirmAppointment();
+        confirmationMessageText = "appointment_request_success_message_HTML";
         transitionAppointment(transitionDTO, appointmentDTO);
     }
 
     private void cancelAppointment(AppointmentDTO appointmentDTO) {
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getCancelAppointment();
+        confirmationMessageText = "appointment_cancellation_success_message_HTML";
         transitionAppointment(transitionDTO, appointmentDTO);
     }
 
@@ -477,7 +480,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             updateAppointment(workflowDTO);
-            SystemUtil.showSuccessToast(getContext(), checkInLabelDTO.getAppointmentRequestSuccessMessage());
+            SystemUtil.showSuccessToast(getContext(), Label.getLabel(confirmationMessageText));
             DtoHelper.putExtra(getIntent(), checkInDTO);
             initializeCheckinDto();
             applyFilter();
@@ -553,7 +556,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("start_date", getFormattedDate(startDate));
         queryMap.put("end_date", getFormattedDate(endDate));
-
         getWorkflowServiceHelper().execute(transitionDTO, allAppointmentsServiceCallback, queryMap);
     }
 
