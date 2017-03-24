@@ -50,6 +50,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
                 SystemUtil.hideSoftKeyboard(BaseActivity.this);
             }
         });
+        rootView.setSoundEffectsEnabled(false); 
     }
 
     public boolean isVisible() {
