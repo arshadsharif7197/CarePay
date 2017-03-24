@@ -30,6 +30,12 @@ import java.util.List;
  */
 public class PracticePaymentMethodFragment extends PaymentMethodFragment {
 
+    /**
+     *
+     * @param paymentsModel the payments model
+     * @param amount the amount
+     * @return an instance of PracticePaymentMethodFragment
+     */
     public static PracticePaymentMethodFragment newInstance(PaymentsModel paymentsModel, double amount) {
         Bundle args = new Bundle();
 

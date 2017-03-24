@@ -20,6 +20,12 @@ import com.google.gson.Gson;
  */
 public class PracticePaymentMethodDialogFragment extends PracticePaymentMethodFragment {
 
+    /**
+     *
+     * @param paymentsModel the payments model
+     * @param amount the amount
+     * @return an instance of PracticePaymentMethodDialogFragment
+     */
     public static PracticePaymentMethodDialogFragment newInstance(PaymentsModel paymentsModel, double amount) {
         Bundle args = new Bundle();
 
