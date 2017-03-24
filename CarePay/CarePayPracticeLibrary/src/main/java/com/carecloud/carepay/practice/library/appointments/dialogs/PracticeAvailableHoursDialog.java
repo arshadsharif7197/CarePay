@@ -199,7 +199,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     private void setPracticeAvailableHoursAdapter() {
         availableHoursAdapter = (PracticeAvailableHoursAdapter) availableHoursRecycleView.getAdapter();
         if (availableHoursAdapter == null) {
-            availableHoursAdapter = new PracticeAvailableHoursAdapter(context, this);
+            availableHoursAdapter = new PracticeAvailableHoursAdapter(this);
             availableHoursRecycleView.setAdapter(availableHoursAdapter);
         }
 

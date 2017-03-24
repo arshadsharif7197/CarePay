@@ -1,6 +1,5 @@
 package com.carecloud.carepay.practice.library.appointments.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,10 +8,10 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.models.MapFilterModel;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPayloadDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentAvailableHoursDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -31,27 +30,29 @@ public class PracticeAvailableHoursAdapter extends RecyclerView.Adapter<Recycler
 
     private static final int CELL_HEADER = 0;
     private static final int CELL_CARD = 1;
+    private final String today;
+    private final String tomorrow;
+
+    private MapFilterModel filterModel;
+    private List<AppointmentsSlotsDTO> allTimeSlots;
+
+    // The items to display in your RecyclerView
+    private List<AppointmentsSlotsDTO> filteredTimeSlots;
+
+    private PracticeAvailableHoursAdapterListener callback;
 
     public interface PracticeAvailableHoursAdapterListener {
         void onSelectAppointmentTimeSlot(AppointmentsSlotsDTO appointmentsSlotsDTO);
     }
 
-    // The items to display in your RecyclerView
-    private Context context;
-    private PracticeAvailableHoursAdapterListener callback;
-    private MapFilterModel filterModel;
-
-    private List<AppointmentsSlotsDTO> allTimeSlots;
-    private List<AppointmentsSlotsDTO> filteredTimeSlots;
-
     /**
      * Constructor.
-     * @param context context
      * @param callback callback on select time slot
      */
-    public PracticeAvailableHoursAdapter(Context context, PracticeAvailableHoursAdapterListener callback) {
-        this.context = context;
+    public PracticeAvailableHoursAdapter(PracticeAvailableHoursAdapterListener callback) {
         this.callback = callback;
+        today = Label.getLabel("today_label");
+        tomorrow = Label.getLabel("add_appointment_tomorrow");
     }
 
     private void loadAvailableHours(AppointmentAvailabilityDTO availabilityDTO) {
@@ -79,34 +80,6 @@ public class PracticeAvailableHoursAdapter extends RecyclerView.Adapter<Recycler
 
         sortListByDate();
     }
-
-    //    private String getSectionHeaderTitle(String timeSlotRawDate) {
-//        // Current date
-//        String currentDate = DateUtil.getInstance().setToCurrent().toStringWithFormatMmDashDdDashYyyy();
-//        final Date currentConvertedDate = DateUtil.getInstance().setDateRaw(currentDate).getDate();
-//
-//        // day after tomorrow date
-//        String dayAfterTomorrowDate = DateUtil.getInstance().setToDayAfterTomorrow().toStringWithFormatMmDashDdDashYyyy();
-//        final Date dayAfterTomorrowConvertedDate = DateUtil.getInstance().setDateRaw(dayAfterTomorrowDate).getDate();
-//
-//        // Appointment time slot date
-//        String appointmentDate = DateUtil.getInstance().setDateRaw(timeSlotRawDate).toStringWithFormatMmDashDdDashYyyy();
-//        final Date convertedAppointmentDate = DateUtil.getInstance().setDateRaw(appointmentDate).getDate();
-//
-//        String headerText;
-//        if (convertedAppointmentDate.after(dayAfterTomorrowConvertedDate) ||
-//                appointmentDate.equalsIgnoreCase(dayAfterTomorrowDate)) {
-//            headerText = DateUtil.getInstance().getDateAsDayMonthDayOrdinal();
-//        } else if (convertedAppointmentDate.after(currentConvertedDate) && convertedAppointmentDate.before(dayAfterTomorrowConvertedDate)
-//                && !appointmentDate.equalsIgnoreCase(currentDate)) {
-//            headerText = availabilityDTO.getMetadata().getLabel().getAddAppointmentTomorrow();
-//        } else if (convertedAppointmentDate.before(currentConvertedDate)) {
-//            headerText = availabilityDTO.getMetadata().getLabel().getTodayAppointmentsHeading();
-//        } else {
-//            headerText = availabilityDTO.getMetadata().getLabel().getTodayAppointmentsHeading();
-//        }
-//        return headerText;
-//    }
 
     private void sortListByDate() {
         Collections.sort(allTimeSlots, new Comparator<AppointmentsSlotsDTO>() {
@@ -137,7 +110,7 @@ public class PracticeAvailableHoursAdapter extends RecyclerView.Adapter<Recycler
     public int getItemViewType(int position) {
         final AppointmentsSlotsDTO slot = filteredTimeSlots.get(position);
 
-        if (null == slot.getLocationName()) {
+        if (null == slot.getLocationId()) {
             return CELL_HEADER;
         }
 
@@ -163,36 +136,40 @@ public class PracticeAvailableHoursAdapter extends RecyclerView.Adapter<Recycler
 
         if (viewHolder.getItemViewType() == CELL_HEADER) {
             ViewHolderSectionHeader vhSectionHeader = (ViewHolderSectionHeader) viewHolder;
-//            vhSectionHeader.getTextView().setText(appointmentSlotItem.toString());
+            vhSectionHeader.setTimeView(slot);
         } else {
-            ViewHolderTimeSlot vhTimeSlot = (ViewHolderTimeSlot) viewHolder;
-            try {
-                String upcomingStartTime = slot.getStartTime();
-                DateUtil.getInstance().setDateRaw(upcomingStartTime);
-                String time12Hour = DateUtil.getInstance().getTime12Hour();
-                vhTimeSlot.getTextView().setText(time12Hour);
+            bindViewHolderTimeSlot(viewHolder, slot);
+        }
+    }
 
-                String location = slot.getLocationName();
-                if (StringUtil.isNullOrEmpty(location)) {
-                    vhTimeSlot.textViewLocation.setVisibility(View.GONE);
-                } else {
-                    vhTimeSlot.textViewLocation.setText(location);
-                    vhTimeSlot.textViewLocation.setVisibility(View.VISIBLE);
-                }
+    private void bindViewHolderTimeSlot(RecyclerView.ViewHolder viewHolder, final AppointmentsSlotsDTO slot) {
+        ViewHolderTimeSlot vhTimeSlot = (ViewHolderTimeSlot) viewHolder;
+        try {
+            String upcomingStartTime = slot.getStartTime();
+            DateUtil.getInstance().setDateRaw(upcomingStartTime);
+            String time12Hour = DateUtil.getInstance().getTime12Hour();
+            vhTimeSlot.getTextView().setText(time12Hour);
 
-                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        // Restricted the appointment list item click if it is appointment header type.
-                        if (null != slot.getLocationName()) {
-                            callback.onSelectAppointmentTimeSlot(slot);
-                        }
-                    }
-                });
-            }catch (Exception ex){
-                ex.printStackTrace();
+            String location = slot.getLocationName();
+            if (StringUtil.isNullOrEmpty(location)) {
+                vhTimeSlot.textViewLocation.setVisibility(View.GONE);
+            } else {
+                vhTimeSlot.textViewLocation.setText(location);
+                vhTimeSlot.textViewLocation.setVisibility(View.VISIBLE);
             }
+
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    // Restricted the appointment list item click if it is appointment header type.
+                    if (null != slot.getLocationName()) {
+                        callback.onSelectAppointmentTimeSlot(slot);
+                    }
+                }
+            });
+        }catch (Exception ex){
+            ex.printStackTrace();
         }
     }
 
@@ -221,13 +198,30 @@ public class PracticeAvailableHoursAdapter extends RecyclerView.Adapter<Recycler
 
         Map<String, FilterDataDTO> locations = filterModel.getLocations();
 
+        Date dateTime = new Date(0);
+        int countDifferentDates = 0;
+        AppointmentsSlotsDTO header = null;
         for (AppointmentsSlotsDTO slot: allTimeSlots) {
             // Check filter by location
             if (filterModel.isFilteringByLocations() && !locations.containsKey(slot.getLocationId())) {
                 continue;
             }
 
+            Date startTime = DateUtil.getInstance().setDateRaw(slot.getStartTime()).getDate();
+            if (null != startTime && !DateUtil.isSameDay(dateTime, startTime)) {
+                dateTime = startTime;
+
+                header = new AppointmentsSlotsDTO();
+                header.setStartTime(slot.getStartTime());
+                filteredTimeSlots.add(header);
+                countDifferentDates++;
+            }
+
             filteredTimeSlots.add(slot);
+        }
+
+        if (1 == countDifferentDates) {
+            filteredTimeSlots.remove(0);
         }
 
         notifyDataSetChanged();
@@ -263,12 +257,14 @@ public class PracticeAvailableHoursAdapter extends RecyclerView.Adapter<Recycler
             SystemUtil.setProximaNovaSemiboldTypeface(view.getContext(), textViewSectionHeader);
         }
 
-        TextView getTextView() {
-            return textViewSectionHeader;
-        }
+        void setTimeView(AppointmentsSlotsDTO slot) {
+            String text = "";
+            if (null != slot.getStartTime()) {
+                Date date = DateUtil.getInstance().setDateRaw(slot.getStartTime()).getDate();
+                text = DateUtil.getFormattedDate(date, today, tomorrow);
+            }
 
-        public void setTextView(TextView textViewSectionHeader) {
-            this.textViewSectionHeader = textViewSectionHeader;
+            textViewSectionHeader.setText(text);
         }
     }
 }
