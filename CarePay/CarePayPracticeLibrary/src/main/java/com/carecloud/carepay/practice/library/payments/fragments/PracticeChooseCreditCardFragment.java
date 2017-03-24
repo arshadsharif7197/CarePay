@@ -104,6 +104,9 @@ public class PracticeChooseCreditCardFragment extends ChooseCreditCardFragment {
         String paymentTransitionString = gson.toJson(paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment());
         intent.putExtra(CarePayConstants.CLOVER_PAYMENT_TRANSITION, paymentTransitionString);
 
+        String paymentMetadata = gson.toJson(paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata());
+        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_METADATA, paymentMetadata);
+
         if (postModel.getAmount() > 0) {
             String paymentPostModelString = gson.toJson(postModel);
             intent.putExtra(CarePayConstants.CLOVER_PAYMENT_POST_MODEL, paymentPostModelString);
