@@ -396,7 +396,7 @@ public class SigninFragment extends BaseFragment {
             hideProgressDialog();
             signInButton.setEnabled(true);
             getWorkflowServiceHelper().setAppAuthorizationHelper(null);
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(CarePayConstants.INVALID_LOGIN_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
