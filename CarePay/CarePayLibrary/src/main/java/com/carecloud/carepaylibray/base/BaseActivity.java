@@ -46,7 +46,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
        final View rootView = findViewById(android.R.id.content);
         rootView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 SystemUtil.hideSoftKeyboard(BaseActivity.this);
             }
         });
