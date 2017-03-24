@@ -76,7 +76,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
     public void onViewCreated(View view, Bundle icicle){
         inflateToolbarViews(view);
 
-        flowCallback.setCheckinFlow(CheckinFlowState.CONSENT, totalForms, displayedFormsIndex);
+        flowCallback.setCheckinFlow(getCheckinFlowState(), totalForms, displayedFormsIndex);
 
         nextButton = (Button) view.findViewById(com.carecloud.carepaylibrary.R.id.consentButtonNext);
         nextButton.setOnClickListener(new View.OnClickListener() {
@@ -177,6 +177,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
 
         //named interface that receive calls from javascript
         webView.addJavascriptInterface(new WebViewJavaScriptInterface(getActivity()), "FormInterface");
+        webView.addJavascriptInterface(new WebViewJavaScriptInterface(getActivity()), "IntakeInterface");
         webView.loadUrl(getBaseUrl());
     }
 
@@ -194,13 +195,15 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
 
     protected abstract void validateForm();
 
+    protected abstract CheckinFlowState getCheckinFlowState();
+
 
     protected void loadFormUrl(String formString, String function){
         webView.loadUrl("javascript:window."+function+"('"+formString+"')");
         nextButton.setEnabled(true);
         progressIndicator.setCurrentProgressDot(displayedFormsIndex);
 
-        flowCallback.setCheckinFlow(CheckinFlowState.CONSENT, totalForms, displayedFormsIndex+1);//adjust for zero index
+        flowCallback.setCheckinFlow(getCheckinFlowState(), totalForms, displayedFormsIndex+1);//adjust for zero index
     }
 
     /**
@@ -208,7 +211,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
      */
     public void validateForm(String function) {
 
-        webView.loadUrl("javascript:angular.element(document.getElementsByClassName('forms')).scope()."+function+"()");
+        webView.loadUrl("javascript:window."+function+"()");
 
 
     }

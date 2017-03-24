@@ -6,6 +6,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
+import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -98,6 +99,11 @@ public class PracticeFormsFragment extends BaseWebFormFragment {
     @Override
     protected void validateForm() {
         validateForm("save_form");
+    }
+
+    @Override
+    protected CheckinFlowState getCheckinFlowState() {
+        return CheckinFlowState.CONSENT;
     }
 
 

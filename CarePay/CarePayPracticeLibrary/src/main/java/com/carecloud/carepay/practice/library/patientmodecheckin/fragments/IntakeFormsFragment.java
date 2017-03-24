@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.intake.models.IntakeFindings;
 import com.carecloud.carepaylibray.intake.models.IntakeForm;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
@@ -54,12 +55,15 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
 
             JsonObject form = new JsonObject();
             form.add("formData", payload);
-            if(displayedFormsIndex == 0){//only send this the first time
+            if(userResponse == null && displayedFormsIndex == 0){//only send this the first time
                 form.add("userData", intakeFindings.getPayload());
             }else {
-//                form.add("userData", userResponse);
+                form.add("userData", userResponse);
             }
-            String formString = form.toString().replaceAll("\'", Matcher.quoteReplacement("\\\'"));
+            String formString = form.toString()
+                    .replaceAll("\'", Matcher.quoteReplacement("\\\'"))
+                    .replaceAll("\"", Matcher.quoteReplacement("\\\""))
+                    .replace("\\n", "");
 
             loadFormUrl(formString, "load_intake");
             setHeader(intakeForm.getPayload().get("title").getAsString());
@@ -105,5 +109,10 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
     @Override
     protected void validateForm() {
         validateForm("save_intake");
+    }
+
+    @Override
+    protected CheckinFlowState getCheckinFlowState() {
+        return CheckinFlowState.INTAKE;
     }
 }
