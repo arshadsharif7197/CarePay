@@ -191,7 +191,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
     }
 
     private void initializeOwedAmountTextView(View view) {
-        String text = Label.getLabel("practice_payments_detail_dialog_balance") + ": " +
+        String text = Label.getLabel("payment_balance_owed_label") + ": " +
                 StringUtil.getFormattedBalanceAmount(owedAmount);
         ((TextView) view.findViewById(R.id.payment_responsibility_balance)).setText(text);
     }

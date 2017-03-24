@@ -98,11 +98,8 @@ public abstract class PaymentMethodFragment extends BaseDialogFragment {
     @Override
     public void onViewCreated(View view, Bundle icicle){
         activity = getActivity();
-
         setupTitleViews(view);
-
         initializeViews(view);
-
     }
 
     protected void setupTitleViews(View view){
@@ -111,13 +108,6 @@ public abstract class PaymentMethodFragment extends BaseDialogFragment {
             TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
             title.setText(titlePaymentMethodString);
             toolbar.setTitle("");
-            toolbar.setNavigationIcon(ContextCompat.getDrawable(activity, R.drawable.icn_nav_back));
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    activity.onBackPressed();
-                }
-            });
         }
     }
 
