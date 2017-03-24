@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibrary.R;
 
 public class ProgressDialogUtil extends Dialog {
@@ -42,7 +41,9 @@ public class ProgressDialogUtil extends Dialog {
 
         if (keepStatusBar) {
             adjustForStatusBar();
-        } else if (isPracticeAppPatientMode) {
+        }
+
+        if (isPracticeAppPatientMode) {
             setNavigationBarVisibility();
         }
     }
