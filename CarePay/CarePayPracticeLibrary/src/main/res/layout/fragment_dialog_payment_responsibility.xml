@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="@dimen/dialog_width"
-    android:layout_height="@dimen/dialog_height">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/profile_image_layout"
@@ -88,8 +88,6 @@
         android:layout_above="@+id/payment_responsibility_footer"
         android:layout_below="@id/payment_responsibility_balance"
         android:background="@color/white"
-        android:paddingEnd="@dimen/dimen_24dp"
-        android:paddingStart="@dimen/dimen_24dp"
         android:paddingTop="@dimen/dimen_30dp" />
 
     <View
@@ -116,8 +114,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:enabled="false"
-            android:background="@drawable/blue_border_rounded_button_selector" />
+            android:background="@drawable/blue_border_rounded_button_selector"
+            android:enabled="false" />
 
         <Button
             android:id="@+id/payment_pay_button"

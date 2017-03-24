@@ -393,7 +393,6 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         Gson gson = new Gson();
         String paymentsDTOString = gson.toJson(paymentsModel);
         bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
-//        bundle.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(patientPayments));
         bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
         bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
 

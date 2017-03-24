@@ -2,9 +2,11 @@ package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
@@ -30,6 +32,11 @@ public class PracticePaymentMethodDialogFragment extends PracticePaymentMethodFr
                 dismiss();
             }
         });
+        TextView title = (TextView) view.findViewById(R.id.respons_toolbar_title);
+        ViewGroup.LayoutParams layoutParams = title.getLayoutParams();
+        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        title.setLayoutParams(layoutParams);
+        title.setGravity(Gravity.CENTER_HORIZONTAL);
     }
 
     @Override

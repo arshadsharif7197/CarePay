@@ -14,12 +14,10 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -35,6 +33,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsuranc
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,6 +43,7 @@ public class InsuranceEditDialog extends Dialog {
     private DemographicDTO demographicDTO;
     private DemographicInsurancePayloadDTO lineItem;
     private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
+    private OnSaveChangesListener saveChangesListener;
 
     private TextInputLayout cardNumberInput;
     private TextInputLayout groupNumberInput;
@@ -65,21 +65,23 @@ public class InsuranceEditDialog extends Dialog {
      */
     @SuppressWarnings("ConstantConditions")
     public InsuranceEditDialog(Context context, DemographicInsurancePayloadDTO lineItem,
-                               DemographicDTO demographicDTO, boolean isInEditMode) {
+                               DemographicDTO demographicDTO, boolean isInEditMode,
+                               OnSaveChangesListener saveChangesListener) {
         super(context);
         this.context = context;
         this.lineItem = lineItem;
         this.demographicDTO = demographicDTO;
         this.isInEditMode = isInEditMode;
+        this.saveChangesListener = saveChangesListener;
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_add_edit_insurance);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
-        WindowManager.LayoutParams params = getWindow().getAttributes();
-        params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.40);
-        getWindow().setAttributes(params);
+//        WindowManager.LayoutParams params = getWindow().getAttributes();
+//        params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+//        params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.55);
+//        getWindow().setAttributes(params);
 
         initViews();
         initLabels();
@@ -104,9 +106,9 @@ public class InsuranceEditDialog extends Dialog {
             selectedType.setText(lineItem.getInsuranceType());
 
             cardNumber.setText(lineItem.getInsuranceMemberId());
-            cardNumber.getOnFocusChangeListener().onFocusChange(cardNumber, true);
+            cardNumber.getOnFocusChangeListener().onFocusChange(cardNumber, false);
             groupNumber.setText(lineItem.getInsuranceGroupId());
-            groupNumber.getOnFocusChangeListener().onFocusChange(groupNumber, true);
+            groupNumber.getOnFocusChangeListener().onFocusChange(groupNumber, false);
 
             findViewById(R.id.remove_insurance_entry).setVisibility(View.VISIBLE);
             ((Button) findViewById(R.id.remove_insurance_entry)).setText(
@@ -171,7 +173,25 @@ public class InsuranceEditDialog extends Dialog {
         findViewById(R.id.save_insurance_changes).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View saveChanges) {
+                List<DemographicInsurancePayloadDTO> insuranceList = demographicDTO.getPayload()
+                        .getDemographics().getPayload().getInsurances();
 
+                if (insuranceList.isEmpty()) {
+                    insuranceList = new ArrayList<>();
+                }
+
+                DemographicInsurancePayloadDTO insuranceDTO = new DemographicInsurancePayloadDTO();
+                insuranceDTO.setInsuranceProvider(selectedProvider.getText().toString());
+                insuranceDTO.setInsurancePlan(selectedPlan.getText().toString());
+                insuranceDTO.setInsuranceType(selectedType.getText().toString());
+                insuranceDTO.setInsuranceMemberId(cardNumber.getText().toString());
+                insuranceDTO.setInsuranceGroupId(groupNumber.getText().toString());
+                insuranceList.add(insuranceDTO);
+
+                DemographicDTO newRecord = new DemographicDTO();
+                newRecord.getPayload().getDemographics().getPayload().setInsurances(insuranceList);
+                saveChangesListener.onSaveChangesClicked(newRecord);
+                dismiss();
             }
         });
 
@@ -360,5 +380,9 @@ public class InsuranceEditDialog extends Dialog {
                 return false;
             }
         });
+    }
+
+    public interface OnSaveChangesListener {
+        void onSaveChangesClicked(DemographicDTO newRecord);
     }
 }
