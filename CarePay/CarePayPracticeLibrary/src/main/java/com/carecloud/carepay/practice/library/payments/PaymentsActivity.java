@@ -46,7 +46,6 @@ import com.carecloud.carepaylibray.payments.models.updatebalance.PaymentUpdateBa
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -73,7 +72,6 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_practice_payment);
-        setNavigationBarVisibility();
 
         filter = new FilterModel();
         paymentsModel = getConvertedDTO(PaymentsModel.class);
@@ -385,7 +383,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 //    }
 
     @Override
-    public void startPartialPayment() {
+    public void startPartialPayment(double owedAmount) {
 
     }
 
@@ -409,15 +407,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
         boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
         if (!isCloverDevice && paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
-            Gson gson = new Gson();
-            Bundle args = new Bundle();
-            String paymentsDTOString = gson.toJson(paymentsModel);
-            args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod.getLabel());
-            args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
-            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-
-            DialogFragment fragment = new PracticeChooseCreditCardFragment();
-            fragment.setArguments(args);
+            DialogFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel, selectedPaymentMethod.getLabel(), amount);
             fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
         } else {
             showAddCard(amount, paymentsModel);
@@ -475,9 +465,6 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void showAmountEntry(PaymentDistributionEntryFragment.PaymentDistributionAmountCallback callback, BalanceItemDTO balanceItem, SimpleChargeItem chargeItem) {
-        Gson gson = new Gson();
-        Bundle args = new Bundle();
-
         PaymentDistributionEntryFragment entryFragment = new PaymentDistributionEntryFragment();
         if (balanceItem != null) {
             entryFragment.setBalanceItem(balanceItem);

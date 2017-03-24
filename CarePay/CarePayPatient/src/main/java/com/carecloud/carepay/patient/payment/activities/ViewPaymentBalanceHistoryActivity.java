@@ -88,8 +88,12 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         //include fragment
         fm.beginTransaction().replace(R.id.add_balance_history_frag_holder, paymentBalanceHistoryFragment,
                 PaymentBalanceHistoryFragment.class.getSimpleName()).commit();
-        navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_PAYMENTS).setChecked(true);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_PAYMENTS).setChecked(true);
     }
 
     /**
@@ -187,7 +191,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void startPartialPayment() {
+    public void startPartialPayment(double owedAmount) {
 
     }
 
@@ -218,14 +222,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
         if (paymentsDTO.getPaymentPayload().getPatientCreditCards() != null && !paymentsDTO.getPaymentPayload().getPatientCreditCards().isEmpty()) {
-            Gson gson = new Gson();
-            Bundle args = new Bundle();
-            String paymentsDTOString = gson.toJson(paymentsDTO);
-            args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod.getLabel());
-            args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
-            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-            Fragment fragment = new ChooseCreditCardFragment();
-            fragment.setArguments(args);
+            Fragment fragment = ChooseCreditCardFragment.newInstance(paymentsDTO, selectedPaymentMethod.getLabel(), amount);
+            navigateToFragment(fragment, true);
             navigateToFragment(fragment, true);
         } else {
             showAddCard(amount, paymentsModel);

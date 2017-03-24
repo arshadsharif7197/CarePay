@@ -19,7 +19,6 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterface;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -89,23 +88,27 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         TextView textView = (TextView) view.findViewById(R.id.checkinDemographicsHeaderLabel);
         textView.setText(title);
         SystemUtil.setGothamRoundedMediumTypeface(getContext(), textView);
-        (view.findViewById(R.id.toolbar_layout)).setVisibility(checkInNavListener.getCurrentStep()>1 ?View.VISIBLE:View.INVISIBLE);
+        (view.findViewById(R.id.toolbar_layout)).setVisibility(View.VISIBLE);
+
+
+//        (view.findViewById(R.id.toolbar_layout)).setVisibility(checkInNavListener.getCurrentStep()>1 ?View.VISIBLE:View.INVISIBLE);
         //stepProgressBar.setCurrentProgressDot(checkInNavListener.getCurrentStep()-1);
     }
 
-    protected void initNextButton(View.OnClickListener listener, final View view){
+    protected void initNextButton(View.OnClickListener listener, final View view, int visibility) {
         Button nextButton = (Button) view.findViewById(R.id.checkinDemographicsNextButton);
-        if (listener == null){
-            listener =  new View.OnClickListener() {
+        if (listener == null) {
+            listener = new View.OnClickListener() {
                 @Override
                 public void onClick(View buttonView) {
-                    if(passConstraints(view)) {
+                    if (passConstraints(view)) {
                         DemographicDTO demographicDTO = updateDemographicDTO(view);
-                        openNextFragment(demographicDTO, (checkInNavListener.getCurrentStep() + 1)>5);
+                        openNextFragment(demographicDTO, (checkInNavListener.getCurrentStep() + 1) > 5);
                     }
                 }
             };
         }
+        nextButton.setVisibility(visibility);
         nextButton.setOnClickListener(listener);
     }
 
@@ -148,12 +151,14 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         public void setCurrentStep(Integer step);
 
         void setCheckinFlow(CheckinFlowState flowState, int totalPages, int currentPage);
+
+        void navigateToConsentFlow(WorkflowDTO workflowDTO);
     }
 
 
 
 
-    private void openNextFragment( DemographicDTO demographicDTO, boolean transition){
+    protected void openNextFragment( DemographicDTO demographicDTO, boolean transition){
         Map<String, String> queries = new HashMap<>();
         queries.put("practice_mgmt", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
         queries.put("practice_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
@@ -182,7 +187,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             DemographicDTO demographicDTO = new Gson().fromJson(workflowDTO.toString(), DemographicDTO.class);
 
             if(checkInNavListener.getCurrentStep() ==5){
-                ((CheckinDemographicsInterface)getActivity()).navigateToConsentFlow(workflowDTO);
+                checkInNavListener.navigateToConsentFlow(workflowDTO);
             }else{
                 checkInNavListener.applyChangesAndNavTo(demographicDTO, checkInNavListener.getCurrentStep() + 1);
             }

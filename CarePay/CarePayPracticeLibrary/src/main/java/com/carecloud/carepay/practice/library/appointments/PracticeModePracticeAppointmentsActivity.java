@@ -55,7 +55,6 @@ import java.util.Map;
 /**
  * Created by cocampo on 2/10/17.
  */
-
 public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppointmentsActivity
         implements FilterDialog.FilterDialogListener,
         DateRangePickerDialog.DateRangePickerDialogListener,
@@ -80,7 +79,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setNavigationBarVisibility();
 
         setContentView(R.layout.activity_practice_appointments);
 
@@ -519,7 +517,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     };
 
     @Override
-    public void startPartialPayment() {
+    public void startPartialPayment(double owedAmount) {
 
     }
 
@@ -587,7 +585,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     @Override
-    public void onLeftActionTapped() {
+    public void onLeftActionTapped(PaymentsModel paymentsModel, double owedAmount) {
 
     }
 

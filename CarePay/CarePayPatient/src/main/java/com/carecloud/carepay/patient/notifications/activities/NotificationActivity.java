@@ -44,13 +44,16 @@ public class NotificationActivity extends MenuPatientActivity {
         transaction.commit();
 
         inflateDrawer();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_NOTIFICATION).setChecked(true);
 
         ActionBar actionBar = getSupportActionBar();
         if(actionBar!=null){
             actionBar.setTitle(navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_NOTIFICATION).getTitle());
         }
-
     }
-
 }

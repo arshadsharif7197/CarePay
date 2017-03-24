@@ -111,7 +111,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_48dp"
         android:background="@drawable/bg_green_overlay"
-        android:layout_margin="@dimen/dimen_10dp"
+        android:layout_margin="@dimen/dimen_20dp"
         android:gravity="center"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_22"

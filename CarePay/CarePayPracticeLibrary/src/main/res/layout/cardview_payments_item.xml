@@ -7,28 +7,27 @@
     android:layout_height="wrap_content"
     android:layout_marginEnd="@dimen/dimen_20dp"
     android:layout_marginStart="@dimen/dimen_20dp"
-    app:cardCornerRadius="@dimen/dimen_20dp"
-    app:cardElevation="@dimen/dimen_10dp"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardElevation="@dimen/dimen_3dp"
     tools:ignore="MissingPrefix">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="400dp"
-        android:background="@color/white"
         android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp">
+            android:layout_height="200dp"
+            android:background="@drawable/background_top_rounded_white_border">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/paymentAmountTextView"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:background="@color/lightning_yellow"
+                android:background="@drawable/background_top_rounded_yellow_border"
                 android:gravity="center_horizontal"
                 android:paddingTop="@dimen/dimen_28dp"
-                android:text="$108.00"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_40sp"
                 android:textStyle="bold"
@@ -49,13 +48,13 @@
             android:layout_height="200dp"
             android:layout_alignParentBottom="true"
             android:layout_gravity="bottom"
-
+            android:background="@drawable/background_bottom_rounded_white_border"
             android:gravity="bottom"
             android:paddingBottom="@dimen/dimen_20dp"
             android:paddingLeft="@dimen/dimen_20dp"
             android:paddingRight="@dimen/dimen_20dp">
 
-            <Button
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/payButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -66,7 +65,6 @@
                 android:gravity="center"
                 android:paddingBottom="@dimen/dimen_10dp"
                 android:paddingTop="@dimen/dimen_10dp"
-                android:text="Pay"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_22sp"
                 breeze:textKey="payment_pay_button" />

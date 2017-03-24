@@ -82,7 +82,6 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_check_in);
         filter = new FilterModel();
-        setNavigationBarVisibility();
         initializationView();
         populateLists();
         setAdapter();
@@ -357,7 +356,7 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
     }
 
     @Override
-    public void startPartialPayment() {
+    public void startPartialPayment(double owedAmount) {
 
     }
 
@@ -379,15 +378,8 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
         boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
         if (!isCloverDevice && paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
-            Gson gson = new Gson();
-            Bundle args = new Bundle();
-            String paymentsDTOString = gson.toJson(paymentsModel);
-            args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod.getLabel());
-            args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
-            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-
-            DialogFragment fragment = new PracticeChooseCreditCardFragment();
-            fragment.setArguments(args);
+            DialogFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel,
+                    selectedPaymentMethod.getLabel(), amount);
             fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
         } else {
             showAddCard(amount, paymentsModel);
@@ -420,7 +412,7 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
     }
 
     @Override
-    public void onLeftActionTapped() {
+    public void onLeftActionTapped(PaymentsModel paymentsModel, double owedAmount) {
 
     }
 
