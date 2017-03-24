@@ -173,7 +173,6 @@ public class InsuranceEditDialog extends Dialog {
         findViewById(R.id.save_insurance_changes).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View saveChanges) {
-                DemographicDTO newRecord = new DemographicDTO();
                 List<DemographicInsurancePayloadDTO> insuranceList = demographicDTO.getPayload()
                         .getDemographics().getPayload().getInsurances();
 
@@ -187,10 +186,10 @@ public class InsuranceEditDialog extends Dialog {
                 insuranceDTO.setInsuranceType(selectedType.getText().toString());
                 insuranceDTO.setInsuranceMemberId(cardNumber.getText().toString());
                 insuranceDTO.setInsuranceGroupId(groupNumber.getText().toString());
-
                 insuranceList.add(insuranceDTO);
-                newRecord.getPayload().getDemographics().getPayload().setInsurances(insuranceList);
 
+                DemographicDTO newRecord = new DemographicDTO();
+                newRecord.getPayload().getDemographics().getPayload().setInsurances(insuranceList);
                 saveChangesListener.onSaveChangesClicked(newRecord);
                 dismiss();
             }
