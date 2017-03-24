@@ -7,10 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -30,22 +27,16 @@ import com.carecloud.carepay.practice.library.checkin.dtos.CheckInStatusPayloadD
 import com.carecloud.carepay.practice.library.checkin.dtos.QueryStrings;
 import com.carecloud.carepay.practice.library.checkin.dtos.QueueDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.QueueStatusPayloadDTO;
-import com.carecloud.carepay.practice.library.models.ResponsibilityHeaderModel;
-import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFragmentDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.ISession;
-import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
-import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -67,6 +58,10 @@ import java.util.Vector;
  * Created by sudhir_pingale on 10/26/2016.
  */
 public class AppointmentDetailDialog extends Dialog {
+
+    public interface AppointmentDialogCallback {
+        void showPaymentDistributionDialog(PaymentsModel paymentsModel);
+    }
 
     private Context context;
     private CheckInDTO checkInDTO;
@@ -95,7 +90,8 @@ public class AppointmentDetailDialog extends Dialog {
     private Vector<CheckBox> checkBoxes = new Vector<>();
 
     private ISession sessionHandler;
-    private PaymentsModel paymentsModel;
+
+    private AppointmentDialogCallback callback;
 
     /**
      * Constructor.
@@ -103,13 +99,14 @@ public class AppointmentDetailDialog extends Dialog {
      * @param context context
      */
     public AppointmentDetailDialog(Context context, CheckInDTO checkInDTO, PendingBalanceDTO pendingBalanceDTO,
-                                   AppointmentPayloadDTO payloadDTO, boolean isWaitingRoom) {
+                                   AppointmentPayloadDTO payloadDTO, boolean isWaitingRoom, AppointmentDialogCallback callback) {
         super(context);
         this.context = context;
         this.checkInDTO = checkInDTO;
         this.pendingBalanceDTO = pendingBalanceDTO;
         this.appointmentPayloadDTO = payloadDTO;
         this.isWaitingRoom = isWaitingRoom;
+        this.callback = callback;
 
         setHandlersAndListeners();
     }
@@ -510,7 +507,11 @@ public class AppointmentDetailDialog extends Dialog {
                 if (patientBalanceDTO.getBalances().get(0).getPayload().isEmpty()) {
                     Toast.makeText(getContext(), "Patient has no balance", Toast.LENGTH_LONG).show();
                 } else {
-                    showResponsibilityDialog(patientDetails);
+                    patientDetails.getPaymentPayload().setLocations(checkInDTO.getPayload().getLocations());
+                    patientDetails.getPaymentPayload().setLocationIndex(checkInDTO.getPayload().getLocationIndex());
+                    patientDetails.getPaymentPayload().setProviders(checkInDTO.getPayload().getProviders());
+                    patientDetails.getPaymentPayload().setProviderIndex(checkInDTO.getPayload().getProviderIndex());
+                    callback.showPaymentDistributionDialog(patientDetails);
                     cancel();
                 }
             } else {
@@ -525,20 +526,20 @@ public class AppointmentDetailDialog extends Dialog {
         }
     };
 
-    private void showResponsibilityDialog(PaymentsModel paymentsModel) {
-        this.paymentsModel = paymentsModel;
-        String tag = ResponsibilityFragmentDialog.class.getSimpleName();
-        FragmentTransaction ft = ((AppCompatActivity) getOwnerActivity()).getSupportFragmentManager().beginTransaction();
-        Fragment prev = ((AppCompatActivity) getOwnerActivity()).getSupportFragmentManager().findFragmentByTag(tag);
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
 
-        ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newPatientHeader(paymentsModel);
-        ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
-                .newInstance(paymentsModel, Label.getLabel("practice_payments_detail_dialog_payment_plan"),
-                        Label.getLabel("practice_payments_detail_dialog_pay"), headerModel);
-        dialog.show(ft, tag);
+    private void showResponsibilityDialog(PaymentsModel paymentsModel) {
+//        String tag = ResponsibilityFragmentDialog.class.getSimpleName();
+//        FragmentTransaction ft = ((AppCompatActivity) getOwnerActivity()).getSupportFragmentManager().beginTransaction();
+//        Fragment prev = ((AppCompatActivity) getOwnerActivity()).getSupportFragmentManager().findFragmentByTag(tag);
+//        if (prev != null) {
+//            ft.remove(prev);
+//        }
+//        ft.addToBackStack(null);
+//
+//        ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newPatientHeader(paymentsModel);
+//        ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
+//                .newInstance(paymentsModel, Label.getLabel("practice_payments_detail_dialog_payment_plan"),
+//                        Label.getLabel("practice_payments_detail_dialog_pay"), headerModel);
+//        dialog.show(ft, tag);
     }
 }

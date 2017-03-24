@@ -34,6 +34,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
@@ -167,7 +168,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
     }
 
     @Override
-    public void showReceipt(PaymentsModel paymentsModel) {
+    public void showPaymentConfirmation(PaymentsModel paymentsModel) {
         refreshBalance();
         PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(this, paymentsModel, paymentsModel);
         receiptDialog.show();
@@ -183,6 +184,11 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         DialogFragment fragment = new AddNewCreditCardFragment();
         fragment.setArguments(args);
         fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+    }
+
+    @Override
+    public void completePaymentProcess(UpdatePatientBalancesDTO updatePatientBalancesDTO) {
+
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.carecloud.carepaylibray.payments;
 
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 
 /**
  * Created by lmenendez on 2/28/17.
@@ -37,12 +37,18 @@ public interface PaymentNavigationCallback {
      * Callback to display receipt
      * @param paymentsModel receipt model
      */
-    void showReceipt(PaymentsModel paymentsModel);
+    void showPaymentConfirmation(PaymentsModel paymentsModel);
 
     /**
      * Callback to add new card
      * @param amount amount to pay
      */
     void showAddCard(double amount, PaymentsModel paymentsModel);
+
+    /**
+     * Callback when payment process is finished... This is where any cleanup of screens and fragments should occur
+     * @param updatePatientBalancesDTO updated balance
+     */
+    void completePaymentProcess(UpdatePatientBalancesDTO updatePatientBalancesDTO);
 
 }
