@@ -59,11 +59,6 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
     @Override
     protected void setupTitleViews(View view) {
         super.setupTitleViews(view);
-        TextView title = (TextView) view.findViewById(R.id.respons_toolbar_title);
-        if (title != null) {
-            title.setText(getTitlePaymentMethodString());
-        }
-
     }
 
 
