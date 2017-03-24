@@ -70,14 +70,26 @@ public class PaymentDistributionEntryFragment extends PartialPaymentBaseDialogFr
 
     }
 
+    /**
+     * sets the callback
+     * @param callback the callback
+     */
     public void setCallback(PaymentDistributionAmountCallback callback) {
         this.callback = callback;
     }
 
+    /**
+     * sets the balance item
+     * @param balanceItem
+     */
     public void setBalanceItem(BalanceItemDTO balanceItem) {
         this.balanceItem = balanceItem;
     }
 
+    /**
+     * sets the charge item
+     * @param chargeItem charge item
+     */
     public void setChargeItem(SimpleChargeItem chargeItem) {
         this.chargeItem = chargeItem;
     }

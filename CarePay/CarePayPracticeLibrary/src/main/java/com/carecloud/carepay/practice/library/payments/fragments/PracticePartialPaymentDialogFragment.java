@@ -22,6 +22,11 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
     private double amount;
     private PaymentNavigationCallback callback;
 
+    /**
+     * @param paymentResultModel the payment model
+     * @param owedAmount         amount owed
+     * @return an instance of PracticePartialPaymentDialogFragment
+     */
     public static PracticePartialPaymentDialogFragment newInstance(PaymentsModel paymentResultModel, double owedAmount) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentResultModel);
@@ -62,6 +67,7 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
         super.onClick(view);
         if (view.getId() == R.id.enter_amount_button) {
             callback.onPayButtonClicked(Double.parseDouble(amountText.getText().toString()), paymentsModel);
+            dismiss();
         }
     }
 }
