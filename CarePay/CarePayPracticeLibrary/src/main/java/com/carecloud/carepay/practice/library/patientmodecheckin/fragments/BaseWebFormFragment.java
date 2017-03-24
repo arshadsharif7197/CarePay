@@ -193,10 +193,16 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
 
     protected abstract void submitAllForms();
 
-    protected abstract void validateForm();
-
     protected abstract CheckinFlowState getCheckinFlowState();
 
+    protected abstract void validateForm();
+
+    protected void validateForm(String function) {
+
+        webView.loadUrl("javascript:window."+function+"()");
+
+
+    }
 
     protected void loadFormUrl(String formString, String function){
         webView.loadUrl("javascript:window."+function+"('"+formString+"')");
@@ -204,14 +210,6 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         progressIndicator.setCurrentProgressDot(displayedFormsIndex);
 
         flowCallback.setCheckinFlow(getCheckinFlowState(), totalForms, displayedFormsIndex+1);//adjust for zero index
-    }
-
-
-    protected void validateForm(String function) {
-
-        webView.loadUrl("javascript:window."+function+"()");
-
-
     }
 
     public void setTotalForms(int totalForms) {
