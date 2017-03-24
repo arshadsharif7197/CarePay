@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -17,6 +18,7 @@ import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public abstract class BaseActivity extends AppCompatActivity implements ISession {
 
@@ -41,6 +43,15 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
     protected void onResume() {
         super.onResume();
         isVisible = true;
+       final View rootView = findViewById(android.R.id.content);
+        rootView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SystemUtil.hideSoftKeyboard(BaseActivity.this);
+                rootView.setSoundEffectsEnabled(false);
+            }
+        });
+
     }
 
     public boolean isVisible() {

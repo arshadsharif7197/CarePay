@@ -34,6 +34,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
@@ -145,22 +146,15 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
-        Bundle bundle = new Bundle();
-        Gson gson = new Gson();
-        String paymentsDTOString = gson.toJson(paymentsModel);
-        bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
-        bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
-        bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-
-        PracticePaymentMethodDialogFragment fragment = new PracticePaymentMethodDialogFragment();
-        fragment.setArguments(bundle);
+        PracticePaymentMethodDialogFragment fragment = PracticePaymentMethodDialogFragment
+                .newInstance(paymentsModel, amount);
         fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
     }
 
     @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
         boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
-        if (!isCloverDevice && paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+        if (isCloverDevice || paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             PracticeChooseCreditCardFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel, selectedPaymentMethod.getLabel(), amount);
             fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
         } else {
@@ -174,7 +168,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
     }
 
     @Override
-    public void showReceipt(PaymentsModel paymentsModel) {
+    public void showPaymentConfirmation(PaymentsModel paymentsModel) {
         refreshBalance();
         PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(this, paymentsModel, paymentsModel);
         receiptDialog.show();
@@ -190,6 +184,11 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         DialogFragment fragment = new AddNewCreditCardFragment();
         fragment.setArguments(args);
         fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+    }
+
+    @Override
+    public void completePaymentProcess(UpdatePatientBalancesDTO updatePatientBalancesDTO) {
+
     }
 
     @Override
@@ -244,7 +243,11 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            showPayments(DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString()));
+            if (hasNoPayments()) {
+                showNoPaymentsImage();
+            } else {
+                showPayments(DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString()));
+            }
         }
 
         @Override

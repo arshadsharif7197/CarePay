@@ -1,5 +1,8 @@
 package com.carecloud.carepay.practice.library.checkin.dtos;
 
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
+import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
+import com.carecloud.carepaylibray.payments.models.LocationIndexDTO;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
 import com.google.gson.annotations.Expose;
@@ -28,6 +31,12 @@ public class CheckInPayloadDTO {
     @SerializedName("appointment_counts")
     @Expose
     private AppointmentCountsDTO appointmentCounts = new AppointmentCountsDTO();
+    @SerializedName("providers")
+    @Expose
+    private List<ProviderDTO> providers = new ArrayList<>();
+    @SerializedName("locations")
+    @Expose
+    private List<LocationDTO> locations = new ArrayList<>();
 
     /**
      *
@@ -117,5 +126,21 @@ public class CheckInPayloadDTO {
      */
     public void setAppointmentCounts(AppointmentCountsDTO appointmentCounts) {
         this.appointmentCounts = appointmentCounts;
+    }
+
+    public List<ProviderDTO> getProviders() {
+        return providers;
+    }
+
+    public void setProviders(List<ProviderDTO> providers) {
+        this.providers = providers;
+    }
+
+    public List<LocationDTO> getLocations() {
+        return locations;
+    }
+
+    public void setLocations(List<LocationDTO> locations) {
+        this.locations = locations;
     }
 }

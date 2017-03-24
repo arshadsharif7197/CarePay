@@ -22,7 +22,7 @@ import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.google.gson.Gson;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,18 +62,13 @@ public abstract class PaymentMethodFragment extends BaseDialogFragment {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-
         Bundle bundle = getArguments();
-        if (bundle != null) {
-            Gson gson = new Gson();
-            String paymentInfo = bundle.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
-            paymentsModel = gson.fromJson(paymentInfo, PaymentsModel.class);
-            if (!paymentsModel.getPaymentPayload().getPaymentSettings().isEmpty()) {
-                paymentMethodsList = paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getRegularPayments().getPaymentMethods();//todo need to lookup appropriate settings for prctice id on selected balance
-            }
-            paymentList = paymentsModel.getPaymentPayload().getPatientBalances();
-        }
 
+        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, bundle);
+        if (!paymentsModel.getPaymentPayload().getPaymentSettings().isEmpty()) {
+            paymentMethodsList = paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getRegularPayments().getPaymentMethods();//todo need to lookup appropriate settings for prctice id on selected balance
+        }
+        paymentList = paymentsModel.getPaymentPayload().getPatientBalances();
         initPaymentTypeMap();
     }
 
@@ -142,7 +137,8 @@ public abstract class PaymentMethodFragment extends BaseDialogFragment {
         switch (paymentMethod.getType()) {
             case CarePayConstants.TYPE_CASH:
                 new LargeAlertDialog(getActivity(), Label.getLabel("payment_see_front_desk_button"),
-                        Label.getLabel("payment_back_button"), R.color.lightningyellow, R.drawable.icn_notification_basic, new LargeAlertDialog.LargeAlertInterface() {
+                        Label.getLabel("payment_back_button"),
+                        R.color.lightningyellow, R.drawable.icn_notification_basic, new LargeAlertDialog.LargeAlertInterface() {
                     @Override
                     public void onActionButton() {
                     }
@@ -186,8 +182,8 @@ public abstract class PaymentMethodFragment extends BaseDialogFragment {
         @Override
         public void onClick(View view) {
             PaymentsMethodsDTO paymentMethod = (PaymentsMethodsDTO) view.getTag();
-            Bundle args = getArguments();
-            double amount = args.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
+            Bundle bundle = getArguments();
+            double amount = bundle.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
 
             handlePaymentButton(paymentMethod, amount);
         }

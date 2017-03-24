@@ -1,37 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/payment_method_layout_checkbox_margin"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
 
     <ImageView
+        android:id="@+id/payment_method_image"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:id="@+id/payment_method_image"
-        android:src="@drawable/payment_cash_button_selector"
+        android:adjustViewBounds="true"
         android:padding="@dimen/payment_method_layout_checkbox_margin"
-        android:adjustViewBounds="true"/>
+        android:src="@drawable/payment_cash_button_selector" />
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/payment_method_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:id="@+id/payment_method_text"
         android:gravity="start"
-        android:textSize="@dimen/payment_method_layout_label_text_size"
-        android:textColor="@color/radio_button_selector"
         android:padding="@dimen/payment_method_layout_checkbox_margin"
-        app:customAssetFont="proxima_nova_regular"/>
+        android:textColor="@color/radio_button_selector"
+        android:textSize="@dimen/payment_method_layout_label_text_size"
+        app:customAssetFont="proxima_nova_regular" />
 
     <ImageView
+        android:id="@+id/payment_method_check"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/payment_method_check"
-        android:src="@drawable/check_box_intake"
-        android:padding="@dimen/payment_method_layout_checkbox_margin"/>
+        android:padding="@dimen/payment_method_layout_checkbox_margin"
+        android:src="@drawable/check_box_intake" />
 
 </LinearLayout>

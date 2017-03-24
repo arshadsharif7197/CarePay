@@ -32,17 +32,17 @@ import java.util.Map;
 /**
  * Created by lmenendez on 3/1/17.
  */
-public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implements BaseAddCreditCardFragment.IAuthoriseCreditCardResponse{
+public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implements BaseAddCreditCardFragment.IAuthoriseCreditCardResponse {
     private PaymentsModel paymentsModel;
 
     private PaymentNavigationCallback callback;
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
-        try{
+        try {
             callback = (PaymentNavigationCallback) context;
-        }catch(ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement PaymentNavigationCallback");
         }
     }
@@ -65,13 +65,9 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         title.setText(Label.getLabel("payment_new_credit_card"));
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
+        nextButton.setText(Label.getLabel("payment_next_button"));
     }
 
 
@@ -110,7 +106,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             nextButton.setEnabled(true);
             Log.d("makePaymentCallback", "=========================>\nworkflowDTO=" + workflowDTO.toString());
             Gson gson = new Gson();
-            callback.showReceipt(gson.fromJson(workflowDTO.toString(), PaymentsModel.class));
+            callback.showPaymentConfirmation(gson.fromJson(workflowDTO.toString(), PaymentsModel.class));
             if(getDialog()!=null){
                 dismiss();
             }
@@ -134,19 +130,19 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
 
 
     private void makePaymentCall() {
-        if(amountToMakePayment == 0){
+        if (amountToMakePayment == 0) {
             return;//TODO something else needs to happen here...
         }
 
         PaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
-        if(postModel!=null && postModel.getAmount() > 0){
+        if (postModel != null && postModel.getAmount() > 0) {
             processPayment(postModel);
-        }else {
+        } else {
             processPayment();
         }
     }
 
-    private void processPayment(){
+    private void processPayment() {
 
         PaymentObject paymentObject = new PaymentObject();
         paymentObject.setType(PaymentType.credit_card);
@@ -159,31 +155,31 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         paymentPostModel.addPaymentMethod(paymentObject);
 
         Gson gson = new Gson();
-        if(paymentPostModel.isPaymentModelValid()){
+        if (paymentPostModel.isPaymentModelValid()) {
             postPayment(gson.toJson(paymentPostModel));
-        }else{
+        } else {
             Toast.makeText(getContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
         }
 
     }
 
-    private void processPayment(PaymentPostModel postModel){
+    private void processPayment(PaymentPostModel postModel) {
         CreditCardModel creditCardModel = getCreditCardModel();
-        for(PaymentObject paymentObject : postModel.getPaymentObjects()){
+        for (PaymentObject paymentObject : postModel.getPaymentObjects()) {
             paymentObject.setType(PaymentType.credit_card);
             paymentObject.setExecution(PaymentExecution.papi);
             paymentObject.setCreditCard(creditCardModel);
         }
 
         Gson gson = new Gson();
-        if(postModel.isPaymentModelValid()){
+        if (postModel.isPaymentModelValid()) {
             postPayment(gson.toJson(postModel));
-        }else{
+        } else {
             Toast.makeText(getContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void postPayment(String paymentModelJson){
+    private void postPayment(String paymentModelJson) {
         PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
         Map<String, String> queries = new HashMap<>();
         queries.put("practice_mgmt", metadata.getPracticeMgmt());
@@ -199,11 +195,11 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
 
     }
 
-    private CreditCardModel getCreditCardModel(){
+    private CreditCardModel getCreditCardModel() {
         CreditCardModel creditCardModel = new CreditCardModel();
         creditCardModel.setCardType(creditCardsPayloadDTO.getCardType());
         creditCardModel.setCardNumber(creditCardsPayloadDTO.getCardNumber());
-        creditCardModel.setExpiryDate(creditCardsPayloadDTO.getExpireDt().replaceAll("/",""));
+        creditCardModel.setExpiryDate(creditCardsPayloadDTO.getExpireDt().replaceAll("/", ""));
         creditCardModel.setNameOnCard(creditCardsPayloadDTO.getNameOnCard());
         creditCardModel.setToken(creditCardsPayloadDTO.getToken());
         creditCardModel.setCvv(creditCardsPayloadDTO.getCvv());
