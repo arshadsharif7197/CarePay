@@ -78,7 +78,7 @@ public class InsuranceEditDialog extends Dialog {
 
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.40);
+        params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.55);
         getWindow().setAttributes(params);
 
         initViews();
@@ -104,9 +104,9 @@ public class InsuranceEditDialog extends Dialog {
             selectedType.setText(lineItem.getInsuranceType());
 
             cardNumber.setText(lineItem.getInsuranceMemberId());
-            cardNumber.getOnFocusChangeListener().onFocusChange(cardNumber, true);
+            cardNumber.getOnFocusChangeListener().onFocusChange(cardNumber, false);
             groupNumber.setText(lineItem.getInsuranceGroupId());
-            groupNumber.getOnFocusChangeListener().onFocusChange(groupNumber, true);
+            groupNumber.getOnFocusChangeListener().onFocusChange(groupNumber, false);
 
             findViewById(R.id.remove_insurance_entry).setVisibility(View.VISIBLE);
             ((Button) findViewById(R.id.remove_insurance_entry)).setText(
