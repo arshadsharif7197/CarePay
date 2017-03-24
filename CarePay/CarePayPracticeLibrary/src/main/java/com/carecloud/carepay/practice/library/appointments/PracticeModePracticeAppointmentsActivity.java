@@ -72,8 +72,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     private TwoColumnPatientListView patientListView;
     private boolean needsToConfirmAppointmentCreation;
     private static final String TAG = "AppointmentsActivity";
-    private boolean isAppointmentRequested ;
-    private boolean isAppointmentCancelled;
+    private String confirmationMessageText ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -364,14 +363,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            if(isAppointmentRequested){
-                SystemUtil.showSuccessToast(getContext(), checkInLabelDTO.getAppointmentRequestSuccessMessage());
-            }else if(isAppointmentCancelled){
-                SystemUtil.showSuccessToast(getContext(), checkInLabelDTO.getAppointmentCancellationSuccessMessage());
-            }
-
-            isAppointmentRequested = false;
-            isAppointmentCancelled = false;
+            SystemUtil.showSuccessToast(getContext(), Label.getLabel(confirmationMessageText));
             DtoHelper.putExtra(getIntent(), workflowDTO);
             initializeCheckinDto();
             applyFilter();
@@ -461,13 +453,13 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     private void confirmAppointment(AppointmentDTO appointmentDTO) {
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getConfirmAppointment();
-        isAppointmentRequested = true;
+        confirmationMessageText = "appointment_request_success_message_HTML";
         transitionAppointment(transitionDTO, appointmentDTO);
     }
 
     private void cancelAppointment(AppointmentDTO appointmentDTO) {
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getCancelAppointment();
-        isAppointmentCancelled = true;
+        confirmationMessageText = "appointment_cancellation_success_message_HTML";
         transitionAppointment(transitionDTO, appointmentDTO);
     }
 
@@ -488,14 +480,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             updateAppointment(workflowDTO);
-            if(isAppointmentRequested){
-                SystemUtil.showSuccessToast(getContext(), checkInLabelDTO.getAppointmentRequestSuccessMessage());
-            }else if(isAppointmentCancelled){
-                SystemUtil.showSuccessToast(getContext(), checkInLabelDTO.getAppointmentCancellationSuccessMessage());
-            }
-
-            isAppointmentRequested = false;
-            isAppointmentCancelled = false;
+            SystemUtil.showSuccessToast(getContext(), Label.getLabel(confirmationMessageText));
             DtoHelper.putExtra(getIntent(), checkInDTO);
             initializeCheckinDto();
             applyFilter();
@@ -571,7 +556,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("start_date", getFormattedDate(startDate));
         queryMap.put("end_date", getFormattedDate(endDate));
-        isAppointmentRequested = true;
         getWorkflowServiceHelper().execute(transitionDTO, allAppointmentsServiceCallback, queryMap);
     }
 
