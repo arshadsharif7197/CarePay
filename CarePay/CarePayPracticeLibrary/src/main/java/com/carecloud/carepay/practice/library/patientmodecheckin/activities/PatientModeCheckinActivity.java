@@ -420,7 +420,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements 
 
 
     @Override
-    public void startPartialPayment() {
+    public void startPartialPayment(double owedAmount) {
         new PracticePartialPaymentDialog(this, paymentDTO).show();
     }
 
