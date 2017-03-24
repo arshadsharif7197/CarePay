@@ -71,7 +71,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     private TwoColumnPatientListView patientListView;
     private boolean needsToConfirmAppointmentCreation;
-    private static final String TAG = "AppointmentsActivity";
+    private boolean wasCalledFromThisClass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -286,7 +286,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                 DateRangePickerDialog dialog = DateRangePickerDialog.newInstance(
                         checkInLabelDTO.getDateRangePickerDialogTitle(),
                         checkInLabelDTO.getDateRangePickerDialogClose(),
-                        checkInLabelDTO.getTodayLabel(),
                         true,
                         startDate,
                         endDate,
@@ -295,21 +294,33 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                         PracticeModePracticeAppointmentsActivity.this
                 );
                 dialog.show(ft, tag);
+
+                wasCalledFromThisClass = true;
             }
         });
     }
 
     @Override
     public void onRangeSelected(Date start, Date end) {
-        this.startDate = start;
-        this.endDate = end;
+        if (!wasCalledFromThisClass) {
+            super.onRangeSelected(start, end);
+        } else {
+            this.startDate = start;
+            this.endDate = end;
 
-        onAppointmentRequestSuccess();
+            onAppointmentRequestSuccess();
+
+            wasCalledFromThisClass = false;
+        }
     }
 
     @Override
     public void onDateRangeCancelled() {
-
+        if (!wasCalledFromThisClass) {
+            super.onDateRangeCancelled();
+        } else {
+            wasCalledFromThisClass = false;
+        }
     }
 
     private View.OnClickListener getFindPatientListener(final boolean needsConfirmation) {

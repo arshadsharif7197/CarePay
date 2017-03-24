@@ -7,44 +7,46 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PracticeAvailableLocationsAdapter extends RecyclerView.Adapter<PracticeAvailableLocationsAdapter.ViewHolderLocation> {
 
-    public interface SelectLocationCallback{
-        void onSelectLocation(LocationDTO locationDTO);
-    }
+    private final SelectLocationCallback callback;
+    private final Context context;
 
     // The items to display in your RecyclerView
-    private List<LocationDTO> items;
-    private Context context;
-    private SelectLocationCallback selectLocationCallback;
-    private String allButtonText;
-    private List<LocationDTO> selectedLocations = new LinkedList<>();
+    private List<FilterDataDTO> locations;
+    private int totalSelected;
+
+    public interface SelectLocationCallback {
+        void onLocationSelected();
+    }
 
     /**
      * Constructor.
-     * @param context context
-     * @param items list of occurrence
+     *
+     * @param context  context
      * @param callback callback on select time slot
      */
-    public PracticeAvailableLocationsAdapter(Context context, List<LocationDTO> items, SelectLocationCallback callback, String allButtonText) {
+    public PracticeAvailableLocationsAdapter(Context context, SelectLocationCallback callback) {
         this.context = context;
-        this.items = items;
-        this.selectLocationCallback = callback;
-        this.allButtonText = allButtonText;
+        this.callback = callback;
     }
 
     // Return the size of your data set (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return this.items.size()+1;//need to account for the All
-    }
+        if (locations == null) {
+            return 0;
+        }
 
+        return locations.size();
+    }
 
     @Override
     public ViewHolderLocation onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -57,56 +59,87 @@ public class PracticeAvailableLocationsAdapter extends RecyclerView.Adapter<Prac
 
     @Override
     public void onBindViewHolder(ViewHolderLocation viewHolder, final int position) {
-        final LocationDTO appointmentLocations = position>0?items.get(position-1):null;
-        TextView locationTextView = viewHolder.getLocationTextView();
-        if(position == 0) {
-            locationTextView.setText(allButtonText);
-            locationTextView.setSelected(selectedLocations.isEmpty());
+        FilterDataDTO filterDataDTO = locations.get(position);
 
-        }else{
-            locationTextView.setText(appointmentLocations.getName());
-            locationTextView.setSelected(selectedLocations.contains(appointmentLocations));
-        }
+        TextView locationTextView = viewHolder.getLocationTextView();
+        locationTextView.setText(filterDataDTO.getDisplayText());
+        locationTextView.setSelected(filterDataDTO.isChecked());
+        locationTextView.setTag(position);
 
         locationTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(selectLocationCallback!=null) {
-                    selectLocationCallback.onSelectLocation(appointmentLocations);
+                boolean isSelected = view.isSelected();
+                int position = (int) view.getTag();
+
+                if (position == 0) {
+                    selectAllLocations(!isSelected);
+                } else {
+                    FilterDataDTO all = locations.get(0);
+                    if (all.isChecked()) {
+                        selectAllLocations(false);
+                        selectLocation(position, true);
+                        totalSelected = 1;
+                    } else {
+                        selectLocation(position, !isSelected);
+
+                        if (isSelected) {
+                            totalSelected--;
+                        } else {
+                            totalSelected++;
+                        }
+
+                        if (totalSelected == locations.size() - 1) {
+                            all.setChecked(true);
+                        }
+                    }
                 }
-                view.setSelected(!view.isSelected());//toggle selection status
+
+                if (callback != null) {
+                    callback.onLocationSelected();
+                }
+
+                notifyDataSetChanged();
             }
         });
     }
 
-    /**
-     * Refresh locations and reset selections if required
-     * @param clearAll true to cause reset of all selections
-     */
-    public void resetLocationsSelected(boolean clearAll){
-        if(clearAll) {
-            selectedLocations.clear();
+    private void selectAllLocations(boolean isSelected) {
+        for (FilterDataDTO filterDataDTO: locations) {
+            filterDataDTO.setChecked(isSelected);
         }
-        notifyDataSetChanged();
+
+        totalSelected = isSelected ? locations.size() : 0;
     }
 
-    public void updateSelectedLocations(List<LocationDTO> selectedLocations){
-        this.selectedLocations = selectedLocations;
+    private void selectLocation(int position, boolean isSelected) {
+        FilterDataDTO filterDataDTO = locations.get(0);
+        filterDataDTO.setChecked(false);
+
+        filterDataDTO = locations.get(position);
+        filterDataDTO.setChecked(isSelected);
     }
 
-    public void setItems(List<LocationDTO> items){
-        this.items = items;
+    public void setItems(List<FilterDataDTO> items){
+        FilterDataDTO all = new FilterDataDTO("all", Label.getLabel("appointment_all_locations_item"), FilterDataDTO.FilterDataType.HEADER);
+        all.setChecked(true);
+
+        totalSelected = items.size() + 1;
+
+        locations = new ArrayList<>(totalSelected);
+        locations.add(all);
+        locations.addAll(items);
     }
 
-    public static class ViewHolderLocation extends RecyclerView.ViewHolder{
+    static class ViewHolderLocation extends RecyclerView.ViewHolder {
         private TextView locationTextView;
 
-        public ViewHolderLocation(View itemView) {
+        ViewHolderLocation(View itemView) {
             super(itemView);
             locationTextView = (TextView) itemView.findViewById(R.id.available_location);
         }
 
-        public TextView getLocationTextView() {
+        TextView getLocationTextView() {
             return locationTextView;
         }
     }

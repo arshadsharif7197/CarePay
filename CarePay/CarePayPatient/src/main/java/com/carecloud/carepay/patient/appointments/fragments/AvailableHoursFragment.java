@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepay.patient.appointments.adapters.AvailableHoursAdapter;
 import com.carecloud.carepay.patient.appointments.adapters.AvailableLocationsAdapter;
@@ -233,7 +234,7 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
                 availableLocationsRecycleView.setVisibility(View.VISIBLE);
                 singleLocation.setVisibility(View.GONE);
                 if (availableLocationsRecycleView.getAdapter() == null) {
-                    String all = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentAllLocationsItem();
+                    String all = Label.getLabel("appointment_all_locations_item");
                     availableLocationsRecycleView.setAdapter(new AvailableLocationsAdapter(getContext(), locations, this, all));
                 } else {
                     AvailableLocationsAdapter availableLocationsAdapter = (AvailableLocationsAdapter) availableLocationsRecycleView.getAdapter();
@@ -483,12 +484,14 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
 
     private List<AppointmentsSlotsDTO> groupAllLocatonSlotsByTime(List<AppointmentAvailabilityPayloadDTO> appointmentAvailabilityPayloadDTOs){
         List<AppointmentsSlotsDTO> appointmentsSlots = new LinkedList<>();
-        String locationName = null;
         for(AppointmentAvailabilityPayloadDTO availabilityPayloadDTO : appointmentAvailabilityPayloadDTOs){
-            if(isLocationSelected(availabilityPayloadDTO.getLocation())) {
-                locationName = availabilityPayloadDTO.getLocation().getName();
+            LocationDTO location = availabilityPayloadDTO.getLocation();
+            if(isLocationSelected(location)) {
+                String locationName = location.getName();
+                String locationId = location.getId().toString();
                 for (AppointmentsSlotsDTO slotsDTO : availabilityPayloadDTO.getSlots()) {
                     slotsDTO.setLocationName(locationName);
+                    slotsDTO.setLocationId(locationId);
                     appointmentsSlots.add(slotsDTO);
                 }
             }
