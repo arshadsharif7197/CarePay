@@ -258,7 +258,7 @@
     <dimen name="intake_radio_option_text_size">14sp</dimen>
 
     <!--Available hours-->
-    <dimen name="apt_available_hours_list_header_text">16sp</dimen>
+    <dimen name="apt_available_hours_list_header_text">22sp</dimen>
     <dimen name="apt_available_hours_list_row_text">17sp</dimen>
     <dimen name="apt_available_locations_list_row_text">15sp</dimen>
 

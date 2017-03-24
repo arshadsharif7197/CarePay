@@ -31,7 +31,7 @@
             android:layout_weight="0.7"
             android:gravity="end|center_vertical"
             android:textColor="@color/textview_default_textcolor"
-            android:textSize="@dimen/apt_available_hours_list_header_text"
+            android:textSize="16sp"
             app:customAssetFont="proxima_nova_regular" />
     </LinearLayout>
 
