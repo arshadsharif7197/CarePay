@@ -145,22 +145,15 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
-        Bundle bundle = new Bundle();
-        Gson gson = new Gson();
-        String paymentsDTOString = gson.toJson(paymentsModel);
-        bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
-        bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
-        bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-
-        PracticePaymentMethodDialogFragment fragment = new PracticePaymentMethodDialogFragment();
-        fragment.setArguments(bundle);
+        PracticePaymentMethodDialogFragment fragment = PracticePaymentMethodDialogFragment
+                .newInstance(paymentsModel, amount);
         fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
     }
 
     @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
         boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
-        if (!isCloverDevice && paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+        if (isCloverDevice || paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             PracticeChooseCreditCardFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel, selectedPaymentMethod.getLabel(), amount);
             fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
         } else {
@@ -244,7 +237,11 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            showPayments(DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString()));
+            if (hasNoPayments()) {
+                showNoPaymentsImage();
+            } else {
+                showPayments(DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString()));
+            }
         }
 
         @Override

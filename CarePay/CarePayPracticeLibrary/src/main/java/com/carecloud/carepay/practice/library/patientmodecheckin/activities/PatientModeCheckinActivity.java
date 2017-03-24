@@ -24,6 +24,7 @@ import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountRece
 import com.carecloud.carepay.practice.library.payments.dialogs.PracticePartialPaymentDialog;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentPlanFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
@@ -369,22 +370,15 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
-        Bundle bundle = new Bundle();
-        Gson gson = new Gson();
-        String paymentsDTOString = gson.toJson(paymentDTO);
-        bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
-        bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
-        bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-
-        PracticePaymentMethodFragment fragment = new PracticePaymentMethodFragment();
-        fragment.setArguments(bundle);
+        PracticePaymentMethodFragment fragment = PracticePaymentMethodFragment
+                .newInstance(paymentDTO, amount);
         navigateToFragment(fragment, true);
     }
 
     @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
         boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
-        if (!isCloverDevice && paymentDTO.getPaymentPayload().getPatientCreditCards() != null && !paymentDTO.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+        if (isCloverDevice || paymentDTO.getPaymentPayload().getPatientCreditCards() != null && !paymentDTO.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             DialogFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel,
                     selectedPaymentMethod.getLabel(), amount);
             fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
