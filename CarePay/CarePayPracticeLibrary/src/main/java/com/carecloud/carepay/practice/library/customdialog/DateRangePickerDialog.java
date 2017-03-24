@@ -38,7 +38,6 @@ public class DateRangePickerDialog extends BaseDialogFragment {
     private Date maxDate;
 
     private String dialogTitle;
-    private String todayLabel;
     private String cancelString;
     private boolean isCancelable;
 
@@ -67,14 +66,13 @@ public class DateRangePickerDialog extends BaseDialogFragment {
     /**
      * @param dialogTitle title to be shown at the top of the dialog
      * @param closeText label below the close icon
-     * @param todayLabel today in current language
      * @param startDate current start date
      * @param endDate current end date
      * @param minDate minimum date to be picked
      * @param maxDate maximum date to be picked
      * @return new instance of DateRangePickerDialog 
      */
-    public static DateRangePickerDialog newInstance(String dialogTitle, String closeText, String todayLabel,
+    public static DateRangePickerDialog newInstance(String dialogTitle, String closeText,
                                                     boolean isCancelable, Date startDate, Date endDate, Date minDate, Date maxDate,
                                                     DateRangePickerDialogListener callback) {
         // Supply inputs as an argument
@@ -82,7 +80,6 @@ public class DateRangePickerDialog extends BaseDialogFragment {
         args.putBoolean("isCancelable", isCancelable);
         args.putString("cancelString", closeText);
         args.putString("dialogTitle", dialogTitle);
-        args.putString("todayLabel", todayLabel.toUpperCase(Locale.getDefault()));
         args.putSerializable("startDate", startDate);
         args.putSerializable("endDate", endDate);
         args.putSerializable("minDate", minDate);
@@ -102,7 +99,6 @@ public class DateRangePickerDialog extends BaseDialogFragment {
         Bundle arguments = getArguments();
         this.cancelString = arguments.getString("cancelString");
         this.dialogTitle = arguments.getString("dialogTitle");
-        this.todayLabel = arguments.getString("todayLabel");
         this.startDate = (Date) arguments.getSerializable("startDate");
         this.endDate = (Date) arguments.getSerializable("endDate");
         this.minDate = (Date) arguments.getSerializable("minDate");
@@ -155,7 +151,6 @@ public class DateRangePickerDialog extends BaseDialogFragment {
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), dialogTitleTextView);
 
         Button todayButton = (Button) view.findViewById(R.id.dialog_date_range_picker_today_button);
-        todayButton.setText(todayLabel);
         todayButton.setOnClickListener(todayButtonClickListener);
     }
 
