@@ -270,8 +270,8 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
 
         String today = Label.getLabel("today_label");
         String tomorrow = Label.getLabel("add_appointment_tomorrow");
-        String thisMonth = Label.getLabel("appointment_this_month_title");
-        String nextDay = Label.getLabel("appointment_next_days_title");
+        String thisMonth = Label.getLabel("this_month_label");
+        String nextDay = Label.getLabel("next_days_label");
 
         String formattedDate = DateUtil.getFormattedDate(startDate, endDate, today, tomorrow, thisMonth, nextDay);
         setDialogTitle(formattedDate);
