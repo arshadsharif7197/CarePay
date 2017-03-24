@@ -206,10 +206,8 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         flowCallback.setCheckinFlow(getCheckinFlowState(), totalForms, displayedFormsIndex+1);//adjust for zero index
     }
 
-    /**
-     * Call java script functions to validate consent form on screen
-     */
-    public void validateForm(String function) {
+
+    protected void validateForm(String function) {
 
         webView.loadUrl("javascript:window."+function+"()");
 
@@ -219,6 +217,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
     public void setTotalForms(int totalForms) {
         this.totalForms = totalForms;
     }
+
     public int getTotalForms() {
         return totalForms;
     }
