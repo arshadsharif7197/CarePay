@@ -259,10 +259,10 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
             startDate = Calendar.getInstance().getTime();//today
             endDate = startDate;
         }
-        String today = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentsTodayHeadingSmall();
-        String tomorrow = resourcesToScheduleDTO.getMetadata().getLabel().getAddAppointmentTomorrow();
-        String thisMonth = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentThisMonthTitle();
-        String nextDay = resourcesToScheduleDTO.getMetadata().getLabel().getAppointmentNextDaysTitle();
+        String today = Label.getLabel("today_label");
+        String tomorrow = Label.getLabel("add_appointment_tomorrow");
+        String thisMonth = Label.getLabel("this_month_label");
+        String nextDay = Label.getLabel("next_days_label");
 
         String formattedDate = DateUtil.getFormattedDate(startDate, endDate, today, tomorrow, thisMonth, nextDay);
         titleView.setText(formattedDate);
