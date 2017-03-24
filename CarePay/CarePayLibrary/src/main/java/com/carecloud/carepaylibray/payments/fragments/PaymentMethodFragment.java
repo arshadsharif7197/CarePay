@@ -63,6 +63,7 @@ public abstract class PaymentMethodFragment extends BaseDialogFragment {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle bundle = getArguments();
+
         paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, bundle);
         if (!paymentsModel.getPaymentPayload().getPaymentSettings().isEmpty()) {
             paymentMethodsList = paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getRegularPayments().getPaymentMethods();//todo need to lookup appropriate settings for prctice id on selected balance
