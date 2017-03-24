@@ -76,10 +76,10 @@ public class InsuranceEditDialog extends Dialog {
         setContentView(R.layout.dialog_add_edit_insurance);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
-        WindowManager.LayoutParams params = getWindow().getAttributes();
-        params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.55);
-        getWindow().setAttributes(params);
+//        WindowManager.LayoutParams params = getWindow().getAttributes();
+//        params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+//        params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.55);
+//        getWindow().setAttributes(params);
 
         initViews();
         initLabels();
