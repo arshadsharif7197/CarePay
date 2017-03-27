@@ -48,6 +48,7 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
     public interface ConfirmationPinDialogListener {
         void onError(String errorMessage);
     }
+
     /**
      * Constructor calling from  Patient screen for Switching to Practice Mode.
      *

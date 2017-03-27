@@ -40,7 +40,9 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
 
     public interface CheckInOfficeNowAppointmentDialogListener {
         void onPreRegisterTapped(AppointmentDTO appointmentDTO, AppointmentsResultModel appointmentInfo);
+
         void onCheckInAtOfficeButtonClicked(AppointmentDTO appointmentDTO);
+
         void onDemographicsVerifyCallbackError(String errorMessage);
     }
 

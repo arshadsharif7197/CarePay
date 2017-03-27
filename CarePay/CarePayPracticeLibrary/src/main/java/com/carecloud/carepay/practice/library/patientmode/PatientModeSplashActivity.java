@@ -143,11 +143,17 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
         });
     }
 
+    /**
+     * Get confirmation pin dialog call bac k confirmation pin dialog . confirmation pin dialog listener.
+     *
+     * @return the confirmation pin dialog . confirmation pin dialog listener
+     */
     public ConfirmationPinDialog.ConfirmationPinDialogListener getConfirmationPinDialogCallBacK(){
         return new ConfirmationPinDialog.ConfirmationPinDialogListener() {
 
             @Override
             public void onError(String errorMessage) {
+
                 showErrorNotification(null);
             }
         };

@@ -278,15 +278,22 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         confirmationPinDialog.show();
     }
 
+    /**
+     * Get confirmation pin dialog call bac k confirmation pin dialog . confirmation pin dialog listener.
+     *
+     * @return the confirmation pin dialog . confirmation pin dialog listener
+     */
     public ConfirmationPinDialog.ConfirmationPinDialogListener getConfirmationPinDialogCallBacK(){
         return new ConfirmationPinDialog.ConfirmationPinDialogListener() {
 
             @Override
             public void onError(String errorMessage) {
+
                 showErrorNotification(null);
             }
         };
     }
+
     private void getNews() {
         JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getLinks();
         Gson gson = new Gson();

@@ -290,11 +290,17 @@ public class AppointmentsListFragment extends BaseFragment {
         };
     }
 
+    /**
+     * Qr code view dialog listener qr code view dialog . qr code view dialog listener.
+     *
+     * @return the qr code view dialog . qr code view dialog listener
+     */
     public QrCodeViewDialog.QRCodeViewDialogListener qrCodeViewDialogListener() {
         return new QrCodeViewDialog.QRCodeViewDialogListener(){
 
             @Override
             public void onGenerateQRCodeError(String errorMessage) {
+
                 showErrorNotification(null); //Shows Default connection issue when passed null.
             }
         };
