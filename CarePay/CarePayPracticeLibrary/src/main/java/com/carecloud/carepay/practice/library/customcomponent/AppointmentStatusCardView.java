@@ -4,14 +4,10 @@ package com.carecloud.carepay.practice.library.customcomponent;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Point;
-import android.net.Uri;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.view.DragEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -20,11 +16,7 @@ import android.widget.LinearLayout;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
-import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Picasso;
-
-import static com.carecloud.carepay.practice.library.R.styleable.AppointmentStatusCartViewAttrs;
-import static com.carecloud.carepay.practice.library.R.styleable.AppointmentStatusCartViewAttrs_appointmentListType;
 
 import org.joda.time.DateTime;
 

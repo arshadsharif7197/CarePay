@@ -1,19 +1,15 @@
 package com.carecloud.carepay.practice.library.appointments.adapters;
 
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentStatusDTO;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.models.LocationIndexDTO;
-import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.text.NumberFormat;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * Created by cocampo on 3/17/17.
