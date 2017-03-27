@@ -216,7 +216,10 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
     View.OnDragListener onCheckingInListDragListener = new View.OnDragListener() {
         @Override
         public boolean onDrag(View view, DragEvent dragEvent) {
-            String patientId = dragEvent.getClipDescription().getLabel().toString();
+            String patientId = "";
+            if(dragEvent.getClipDescription()!=null) {
+                patientId = dragEvent.getClipDescription().getLabel().toString();
+            }
             switch (dragEvent.getAction()) {
                 //signal for the start of a drag and drop operation.
                 case DragEvent.ACTION_DRAG_STARTED:
@@ -457,6 +460,11 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
         PaymentDistributionFragment fragment = new PaymentDistributionFragment();
         fragment.setArguments(args);
         fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+    }
+
+    @Override
+    public void onFailure(String errorMessage) {
+        showErrorNotification(null); // Show default error
     }
 
     @Override

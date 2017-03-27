@@ -22,7 +22,6 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -44,18 +43,24 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
     private PatientModeSwitchPinDTO patientModeSwitchPinDTO;
     private boolean isDynamicLabels ;
     private TransitionDTO transitionDTOPinLink;
+    private ConfirmationPinDialogListener callBack;
+
+    public interface ConfirmationPinDialogListener {
+        void onError(String errorMessage);
+    }
 
     /**
      * Constructor calling from  Patient screen for Switching to Practice Mode.
      *
      * @param context context
      */
-    public ConfirmationPinDialog(Context context, TransitionDTO transitionDTOPinLink, PatientModeSwitchPinDTO patientModeSwitchPinDTO, boolean isDynamicLabels) {
+    public ConfirmationPinDialog(Context context, TransitionDTO transitionDTOPinLink, PatientModeSwitchPinDTO patientModeSwitchPinDTO, boolean isDynamicLabels, ConfirmationPinDialogListener callBack) {
         super(context);
         this.context = context;
         this.transitionDTOPinLink = transitionDTOPinLink;
         this.patientModeSwitchPinDTO = patientModeSwitchPinDTO;
         this.isDynamicLabels = isDynamicLabels;
+        this.callBack = callBack;
     }
 
     /**
@@ -208,7 +213,7 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
         @Override
         public void onFailure(String exceptionMessage) {
             ((ISession) context).hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(context);
+            callBack.onError(exceptionMessage);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

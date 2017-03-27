@@ -37,8 +37,6 @@ import com.carecloud.carepaylibray.customcomponents.SuccessMessageToast;
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
-
 public class SystemUtil implements Thread.UncaughtExceptionHandler{
 
     private static final String LOG_TAG = SystemUtil.class.getSimpleName();
@@ -241,57 +239,6 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
         };
     }
 
-    /**
-     * Shows a message success dialog
-     *
-     * @param context The context
-     * @param title   The title
-     * @param body    The message
-     */
-    public static void showSuccessDialogMessage(Context context, String title, String body) {
-
-        showSweetDialog(context, SweetAlertDialog.SUCCESS_TYPE, title, body);
-
-    }
-
-    /**
-     * Shows a message failure dialog
-     *
-     * @param context The context
-     * @param title   The title
-     * @param body    The message
-     */
-    public static void showFailureDialogMessage(Context context, String title, String body) {
-
-        showSweetDialog(context, SweetAlertDialog.ERROR_TYPE, title, body);
-
-    }
-
-    /**
-     * Shows a default error message dialog
-     *
-     * @param context The context
-     */
-    public static void showDefaultFailureDialog(Context context) {
-
-        showFailureDialogMessage(context, "Connection issue", "There was a problem with your request. Please try again later.");
-
-    }
-
-    private static void showSweetDialog(Context context, int alertType, String title, String body) {
-        // Skip if activity is in the background
-        if (null == context || (context instanceof BaseActivity &&
-                !((BaseActivity) context).isVisible())) {
-            return;
-        }
-
-        new SweetAlertDialog(context, alertType)
-                .setTitleText(title)
-                .setContentText(body)
-                .setConfirmText(context.getString(R.string.alert_ok))
-                .show();
-    }
-
     public static boolean isNotEmptyString(String string) {
         return string != null && !string.isEmpty() && !string.equals("null");
     }
@@ -439,11 +386,6 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
         context.hideProgressDialog();
         context.showErrorNotification(exceptionMessage);
         Log.e(context.getString(R.string.alert_title_server_error), exceptionMessage);
-    }
-
-    public static void showSuccessToast(Context context) {
-
-        showSuccessToast(context, null);
     }
 
     /**
