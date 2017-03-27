@@ -176,7 +176,10 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
      * Init ui fields
      */
     private void initialiseUIFields(View view) {
-        setHeaderTitle(Label.getLabel("demographics_review_demographics"), view);
+        setHeaderTitle(Label.getLabel("demographics_review_demographics"),
+                Label.getLabel("demographics_demographics_heading"),
+                Label.getLabel("demographics_demographics_subheading"),
+                view);
         initNextButton(null, view, View.VISIBLE);
 
         ((TextView) view.findViewById(R.id.raceListDataTextView)).setText(Label.getLabel("demographics_choose"));

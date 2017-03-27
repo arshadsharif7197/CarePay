@@ -35,6 +35,9 @@ import com.marcok.stepprogressbar.StepProgressBar;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+
 
 /**
  * Created by jorge on 27/02/17.
@@ -93,8 +96,10 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         ((FrameLayout)view.findViewById(R.id.checkinDemographicsContentLayout)).addView(childview);
     }
 
-    protected void setHeaderTitle(String title, View view){
+    protected void setHeaderTitle(String title, String heading, String subHeading, View view){
         TextView textView = (TextView) view.findViewById(R.id.checkinDemographicsHeaderLabel);
+
+
 
         SystemUtil.setGothamRoundedMediumTypeface(getContext(), textView);
         if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
@@ -102,7 +107,15 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             (view.findViewById(R.id.toolbar_layout)).setVisibility(View.VISIBLE);
             textView.setText(title);
         }else{
+            TextView mainHeadingTextView = (TextView) view.findViewById(R.id.demographicsMainHeading);
+            TextView subHeadingTextView = (TextView)  view.findViewById(R.id.demographicsSubHeading);
+            setGothamRoundedMediumTypeface(getActivity(), mainHeadingTextView);
+            setProximaNovaRegularTypeface(getActivity(), subHeadingTextView);
             textView.setText(String.format(Label.getLabel("demographics_heading"), checkInNavListener.getCurrentStep(), 5));
+            mainHeadingTextView.setText(heading);
+            subHeadingTextView.setText(subHeading);
+            //"Donec ullamcorper nulla non metus auctor fringilla. Aenean eu leo quam."
+
         }
         //stepProgressBar.setCurrentProgressDot(checkInNavListener.getCurrentStep()-1);
     }

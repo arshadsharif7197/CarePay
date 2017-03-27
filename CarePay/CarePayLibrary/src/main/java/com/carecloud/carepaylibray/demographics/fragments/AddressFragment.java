@@ -407,7 +407,10 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
      * Initialize ui fields
      */
     private void initialiseUIFields(View view) {
-        setHeaderTitle(Label.getLabel("demographics_address_section"), view);
+        setHeaderTitle(Label.getLabel("demographics_address_section"),
+                Label.getLabel("demographics_personal_info_heading"),
+                Label.getLabel("demographics_personal_info_subheading"),
+                view);
         initNextButton(null, view, View.VISIBLE);
 
         cityEditText = (EditText) view.findViewById(R.id.cityId);

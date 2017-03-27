@@ -3,11 +3,15 @@ package com.carecloud.carepaylibray.demographics.dialog;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -37,7 +41,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+
 public class InsuranceEditDialog extends Dialog {
+
 
     private Context context;
     private DemographicDTO demographicDTO;
@@ -58,6 +65,7 @@ public class InsuranceEditDialog extends Dialog {
     private boolean isCardNumberEmpty;
     private boolean isGroupNumberEmpty;
 
+
     /**
      * Constructor
      * @param context context
@@ -67,6 +75,7 @@ public class InsuranceEditDialog extends Dialog {
     public InsuranceEditDialog(Context context, DemographicInsurancePayloadDTO lineItem,
                                DemographicDTO demographicDTO, boolean isInEditMode,
                                OnSaveChangesListener saveChangesListener) {
+
         super(context);
         this.context = context;
         this.lineItem = lineItem;
@@ -74,9 +83,9 @@ public class InsuranceEditDialog extends Dialog {
         this.isInEditMode = isInEditMode;
         this.saveChangesListener = saveChangesListener;
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_add_edit_insurance);
-        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        //getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
 //        WindowManager.LayoutParams params = getWindow().getAttributes();
 //        params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -88,8 +97,10 @@ public class InsuranceEditDialog extends Dialog {
     }
 
     private void initLabels() {
-        ((CarePayTextView) findViewById(R.id.edit_insurance_cancel_label)).setText(
+        /*((CarePayTextView) findViewById(R.id.edit_insurance_cancel_label)).setText(
                 Label.getLabel("demographics_review_edit_insurance_close"));
+        */
+
         ((CarePayTextView) findViewById(R.id.health_insurance_provider_label)).setText(
                 Label.getLabel("demographics_documents_title_select_provider"));
         ((CarePayTextView) findViewById(R.id.health_insurance_plan_label)).setText(
@@ -119,8 +130,12 @@ public class InsuranceEditDialog extends Dialog {
                     Label.getLabel("demographics_insurance_retake_back_photo"));
         } else {
             findViewById(R.id.remove_insurance_entry).setVisibility(View.GONE);
+
+/*
             ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(
                     Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));
+*/
+
             ((Button) findViewById(R.id.take_front_photo_button)).setText(
                     Label.getLabel("demographics_insurance_take_front_photo"));
             ((Button) findViewById(R.id.take_back_photo_button)).setText(
@@ -136,12 +151,23 @@ public class InsuranceEditDialog extends Dialog {
     }
 
     private void initViews() {
+
+/*
         findViewById(R.id.edit_insurance_close_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View closeButton) {
                 dismiss();
             }
         });
+*/
+
+
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.settings_toolbar);
+        TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
+        setGothamRoundedMediumTypeface(getContext(), title);
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(getContext(), R.drawable.icn_patient_mode_nav_close));
+        //((AppCompatActivity)getContext()).setSupportActionBar(toolbar);
+
 
         selectedProvider = (CarePayTextView) findViewById(R.id.health_insurance_providers);
         selectedPlan = (CarePayTextView) findViewById(R.id.health_insurance_choose_plans);

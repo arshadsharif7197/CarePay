@@ -308,7 +308,11 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
         cardNumber.clearFocus();
         groupNumber.clearFocus();
 
-        setHeaderTitle(Label.getLabel("demographics_insurance_label"), view);
+        setHeaderTitle(Label.getLabel("demographics_insurance_label"),
+                Label.getLabel("demographics_health_insurance_heading"),
+                Label.getLabel("demographics_health_insurance_subheading"),
+                view);
+
         initNextButton(null, view, visibility);
 
         Button nextButton = (Button) view.findViewById(R.id.checkinDemographicsNextButton);

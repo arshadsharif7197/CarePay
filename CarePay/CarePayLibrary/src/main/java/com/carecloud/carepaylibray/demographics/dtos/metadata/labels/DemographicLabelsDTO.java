@@ -462,6 +462,38 @@ public class DemographicLabelsDTO {
     @SerializedName("demographics_review_edit_insurance_close")
     @Expose
     private String demographicsReviewEditInsuranceClose;
+    @SerializedName("demographics_personal_info_heading")
+    @Expose
+    private String demographicsPersonalInfoHeading;
+    @SerializedName("demographics_personal_info_subheading")
+    @Expose
+    private String demographicsPersonalInfoSubheading;
+    @SerializedName("demographics_address_heading")
+    @Expose
+    private String demographicsAddressHeading;
+    @SerializedName("demographics_address_subheading")
+    @Expose
+    private String demographicsAddressSubheading;
+    @SerializedName("demographics_demographics_heading")
+    @Expose
+    private String demographicsDemographicsHeading;
+    @SerializedName("demographics_demographics_subheading")
+    @Expose
+    private String demographicsDemographicsSubheading;
+    @SerializedName("demographics_identity_heading")
+    @Expose
+    private String demographicsIdentityHeading;
+    @SerializedName("demographics_identity_subheading")
+    @Expose
+    private String demographicsIdentitySubheading;
+    @SerializedName("demographics_health_insurance_heading")
+    @Expose
+    private String demographicsHealthInsuranceHeading;
+    @SerializedName("demographics_health_insurance_subheading")
+    @Expose
+    private String demographicsHealthInsuranceSubheading;
+
+
 
     public String getDemographicsReviewEditInsuranceClose() {
         return StringUtil.getLabelForView(demographicsReviewEditInsuranceClose);
@@ -1949,5 +1981,13 @@ public class DemographicLabelsDTO {
 
     public void setDemographicsReviewDemographics(String demographicsReviewDemographics) {
         this.demographicsReviewDemographics = demographicsReviewDemographics;
+    }
+
+    public String getDemographicsPersonalInfoHeading() {
+        return demographicsPersonalInfoHeading;
+    }
+
+    public void setDemographicsPersonalInfoHeading(String demographicsPersonalInfoHeading) {
+        this.demographicsPersonalInfoHeading = demographicsPersonalInfoHeading;
     }
 }
