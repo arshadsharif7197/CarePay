@@ -23,6 +23,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookButton;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
@@ -237,9 +238,8 @@ public class HowToCheckInActivity extends BasePracticeActivity {
                 String scanResult = intent.getStringExtra("SCAN_RESULT");
                 processScannedQRCOde(scanResult);
             } catch (JsonSyntaxException ex) {
-                SystemUtil.showFailureDialogMessage(this,
-                        signinPatientModeDTO.getMetadata().getLabels().getInvalidQRCodeTitle(),
-                        signinPatientModeDTO.getMetadata().getLabels().getInvalidQRCodeMessage());
+                String errorMessage = signinPatientModeDTO.getMetadata().getLabels().getInvalidQRCodeTitle()+", "+ signinPatientModeDTO.getMetadata().getLabels().getInvalidQRCodeMessage();
+                SystemUtil.doDefaultFailureBehavior((BaseActivity) getContext(), errorMessage);
                 dismissDialog();
             }
         }
@@ -269,7 +269,8 @@ public class HowToCheckInActivity extends BasePracticeActivity {
                             .getTransitions().getAction(), appointmentCallBack, queryMap);
 
         }else{
-            SystemUtil.showFailureDialogMessage(this,"Invalid QR Code","This QR code is not valid for this practice.");
+            String errorMessage = signinPatientModeDTO.getMetadata().getLabels().getInvalidQRCodeTitle()+", "+ signinPatientModeDTO.getMetadata().getLabels().getInvalidQRCodeMessage();
+            SystemUtil.doDefaultFailureBehavior((BaseActivity) getContext(), errorMessage);
         }
     }
 

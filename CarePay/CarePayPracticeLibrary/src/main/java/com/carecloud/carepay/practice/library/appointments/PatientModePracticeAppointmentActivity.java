@@ -64,8 +64,7 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
             scheduleResourcesModel = getConvertedDTO(AppointmentsResultModel.class);
             populateWithLabels();
         } catch (JsonSyntaxException ex) {
-            SystemUtil.showFailureDialogMessage(this, getString(R.string.alert_title_server_error),
-                    getString(R.string.alert_title_server_error));
+            showErrorNotification(null);
             ex.printStackTrace();
         }
 

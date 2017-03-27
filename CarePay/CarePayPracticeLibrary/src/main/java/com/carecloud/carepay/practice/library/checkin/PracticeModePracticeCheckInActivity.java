@@ -463,6 +463,11 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
     }
 
     @Override
+    public void onFailure(String errorMessage) {
+        showErrorNotification(null); // Show default error
+    }
+
+    @Override
     public void lookupChargeItem(List<SimpleChargeItem> simpleChargeItems, AddPaymentItemFragment.AddItemCallback callback) {
 
         Bundle args = new Bundle();
