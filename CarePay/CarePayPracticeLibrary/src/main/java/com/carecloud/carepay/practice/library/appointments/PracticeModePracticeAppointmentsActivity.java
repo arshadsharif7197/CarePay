@@ -76,6 +76,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     private boolean needsToConfirmAppointmentCreation;
     private boolean wasCalledFromThisClass;
     private String confirmationMessageText ;
+    private boolean updateOnSuccess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -468,16 +469,24 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     private void confirmAppointment(AppointmentDTO appointmentDTO) {
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getConfirmAppointment();
         confirmationMessageText = "appointment_request_success_message_HTML";
-        transitionAppointment(transitionDTO, appointmentDTO);
+        transitionAppointment(transitionDTO, appointmentDTO, true);
     }
 
     private void cancelAppointment(AppointmentDTO appointmentDTO) {
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getCancelAppointment();
         confirmationMessageText = "appointment_cancellation_success_message_HTML";
-        transitionAppointment(transitionDTO, appointmentDTO);
+        transitionAppointment(transitionDTO, appointmentDTO, false);
     }
 
-    private void transitionAppointment(TransitionDTO transitionDTO, AppointmentDTO appointmentDTO) {
+    private void rejectAppointment(AppointmentDTO appointmentDTO) {
+        TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getDismissAppointment();
+        confirmationMessageText = "appointment_rejection_success_message_HTML";
+        transitionAppointment(transitionDTO, appointmentDTO, false);
+    }
+
+    private void transitionAppointment(TransitionDTO transitionDTO, AppointmentDTO appointmentDTO, boolean updateOnSuccess) {
+        this.updateOnSuccess = updateOnSuccess;
+
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("appointment_id", appointmentDTO.getPayload().getId());
 
@@ -498,13 +507,17 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             DtoHelper.putExtra(getIntent(), checkInDTO);
             initializeCheckinDto();
             applyFilter();
+
+            updateOnSuccess = false;
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(null);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+
+            updateOnSuccess = false;
         }
 
         private void updateAppointment(WorkflowDTO workflowDTO) {
@@ -523,7 +536,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
                     appointments.remove(i);
 
-                    if (!newAppointmentDTO.getPayload().getAppointmentStatus().getCode().equals(CarePayConstants.CANCELLED)) {
+                    if (updateOnSuccess) {
                         appointments.add(newAppointmentDTO);
                     }
 
@@ -620,7 +633,15 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void onLeftActionTapped(AppointmentDTO appointmentDTO) {
-        cancelAppointment(appointmentDTO);
+        AppointmentPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
+
+        if (appointmentPayloadDTO.getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
+            rejectAppointment(appointmentDTO);
+        } else if (appointmentPayloadDTO.isAppointmentOver()) {
+            //TODO Add future logic
+        } else {
+            cancelAppointment(appointmentDTO);
+        }
     }
 
     @Override
