@@ -23,7 +23,6 @@ import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.Chec
 import com.carecloud.carepay.practice.library.payments.dialogs.PracticePartialPaymentDialog;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentPlanFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
@@ -34,7 +33,6 @@ import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
@@ -66,13 +64,7 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.Map;
 
-
-/**
- * Created by lsoco_user on 11/16/2016.
- * Main activity for patient check in flow
- */
 public class PatientModeCheckinActivity extends BasePracticeActivity implements
-//        IFragmentCallback,
         DemographicsReviewLabelsHolder, DemographicsLabelsHolder,
         HealthInsuranceFragment.InsuranceDocumentScannerListener, MedicationsAllergyFragment.MedicationAllergyCallback,
         CheckinDemographicsInterface, MedicationAllergySearchFragment.MedicationAllergySearchCallback,
@@ -97,10 +89,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     private ImageView logoImageView;
     private ImageView homeClickable;
 
-    private View[] sectionTitleTextViews;
-//    private TextView consentCounterTextView;
-//    private TextView intakeCounterTextView;
-
     // Using for consent form
     // TODO : Will be create separate fragment in next sprint
 //    private ConsentFormLabelsDTO consentFormLabelsDTO;
@@ -112,17 +100,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
     private PaymentsModel paymentDTO;
 
-    // Intake Form
-    private IntakeResponseModel intakeResponseModel;
-    /**
-     * IntakeForm Navigation
-     */
-
-//    private FlowStateInfo currentFlowStateInfo;
-
-
     private View[] checkinFlowViews;
-    private String[] checkinFlowLabels;
     private View checkinDemographics;
     private View checkinConsent;
     private View checkinMedications;
@@ -168,15 +146,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         backButton = (CarePayTextView) findViewById(R.id.checkinBack);
         logoImageView = (ImageView) findViewById(R.id.checkinLogo);
         homeClickable = (ImageView) findViewById(R.id.checkinHomeClickable);
-
-        sectionTitleTextViews = new View[NUM_OF_SUBFLOWS];
-        sectionTitleTextViews[SUBFLOW_DEMOGRAPHICS_INS] = findViewById(R.id.checkinSectionDemogrInsTitle);
-        sectionTitleTextViews[SUBFLOW_CONSENT] = findViewById(R.id.checkinSectionConsentFormsTitle);
-        sectionTitleTextViews[SUBFLOW_INTAKE] = findViewById(R.id.checkinSectionIntakeFormsTitle);
-        sectionTitleTextViews[SUBFLOW_PAYMENTS] = findViewById(R.id.checkinSectionPaymentsTitle);
-
-//        consentCounterTextView = (TextView) findViewById(R.id.checkinConsentFormCounterTextView);
-//        intakeCounterTextView = (TextView) findViewById(R.id.checkinIntakeFormCounterTextView);
     }
 
     private void initializeViews() {
@@ -192,7 +161,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         homeClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //PatientModeCheckinActivity.this.finish();
                 setResult(CarePayConstants.HOME_PRESSED);
                 finish();
             }
@@ -207,8 +175,13 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         checkinPayment = findViewById(R.id.checkin_flow_payment);
 
         checkinFlowViews = new View[]{checkinDemographics, checkinConsent, checkinMedications, checkinIntake, checkinPayment};
-        checkinFlowLabels = new String[]{demographicDTO.getMetadata().getLabels().getDemographicsPatientInformationTitle(),
-                Label.getLabel("demographics_consent_forms_title"), Label.getLabel("demographics_meds_allergies_title"), Label.getLabel("practice_chekin_section_intake_forms"), Label.getLabel("demographics_payment_title")};
+        String[] checkinFlowLabels = new String[]{
+                Label.getLabel("demographics_patient_information_title"),
+                Label.getLabel("demographics_consent_forms_title"),
+                Label.getLabel("demographics_meds_allergies_title"),
+                Label.getLabel("practice_chekin_section_intake_forms"),
+                Label.getLabel("demographics_payment_title")
+        };
         for (int i = 0; i < checkinFlowViews.length; i++) {
             View view = checkinFlowViews[i];
             TextView textView = (TextView) view.findViewById(R.id.checkin_flow_title);
@@ -254,36 +227,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     public DemographicLabelsDTO getLabelsDTO() {
         return demographicDTO.getMetadata().getLabels();
     }
-
-//    /**
-//     * Consent form
-//     */
-//    @Override
-//    public void signButtonClicked() {
-//        Intent intent = new Intent(this, PracticeAppSignatureActivity.class);
-//
-//        intent.putExtra("consentFormLabelsDTO", consentFormLabelsDTO);
-//        intent.putExtra("consentform", showingForm);
-//        if (PracticeAppSignatureActivity.numOfLaunches == 2) {
-//            // pass the whole DTO
-//            Gson gson = new Gson();
-//            String consentformDTO = gson.toJson(consentFormDTO);
-//            intent.putExtra("consentform_model", consentformDTO);
-//        }
-//        if (showingForm == FormId.FORM1) {
-//            intent.putExtra("Header_Title", consentFormLabelsDTO.getSignConsentForMedicareTitle());
-//            intent.putExtra("Subtitle", consentFormLabelsDTO.getConsentReadCarefullyWarning());
-//        } else if (showingForm == FormId.FORM2) {
-//            intent.putExtra("Header_Title", consentFormLabelsDTO.getSignAuthorizationFormTitle());
-//            intent.putExtra("Subtitle", consentFormLabelsDTO.getBeforeSignatureWarningText());
-//        } else {
-//            intent.putExtra("Header_Title", consentFormLabelsDTO.getSignHipaaAgreementTitle());
-//            intent.putExtra("Subtitle", consentFormLabelsDTO.getBeforeSignatureWarningText());
-//        }
-//        startActivityForResult(intent, CarePayConstants.SIGNATURE_REQ_CODE);
-//    }
-//
-
 
     /**
      * Consent form navigation
@@ -397,7 +340,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
         DialogFragment fragment = new AddNewCreditCardFragment();
         fragment.setArguments(args);
-//        navigateToFragment(fragment, true);
         fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
     }
 
@@ -450,39 +392,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     public void disableMainButton(boolean isDisabled) {
 
     }
-
-
-//    /**
-//     * Enum to identify the forms
-//     */
-//    public enum FormId {
-//        FORM1, FORM2, FORM3, NONE;
-//
-//        /**
-//         * Go to next
-//         */
-//        public FormId next() {
-//            if (this.equals(FORM1)) {
-//                return FORM2;
-//            } else if (this.equals(FORM2)) {
-//                return FORM3;
-//            }
-//            return NONE;
-//        }
-//
-//        /**
-//         * Go to prev
-//         */
-//        public FormId prev() {
-//            if (this.equals(FORM3)) {
-//                return FORM2;
-//            } else if (this.equals(FORM2)) {
-//                return FORM1;
-//            }
-//            return NONE;
-//        }
-//    }
-
 
     /**
      * Toogle visible the back button (and hides/shows accordingly the logo)
@@ -565,22 +474,13 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         }
     }
 
-//    private void popFragStack() {
-//        if (getFragmentManager().getBackStackEntryCount() > 1) {
-//            getFragmentManager().popBackStack();
-//            return;
-//        }
-//        super.onBackPressed();
-//    }
-
-
     /**
      * Launch intake forms
      *
      * @param workflowJson workflowJson
      */
     public void startIntakeForms(String workflowJson) {
-        intakeResponseModel = getConvertedDTO(IntakeResponseModel.class, workflowJson);
+        IntakeResponseModel intakeResponseModel = getConvertedDTO(IntakeResponseModel.class, workflowJson);
 
         Gson gson = new Gson();
         String intakeFormDTO = gson.toJson(intakeResponseModel);
@@ -592,25 +492,10 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         navigateToFragment(fragment, true);
     }
 
-
     @Override
     public void navigateToConsentFlow(WorkflowDTO workflowDTO) {
         PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
     }
-
-    private DemographicIdDocPayloadDTO getDemographicIdDocPayloadDTO() {
-        DemographicIdDocPayloadDTO demographicIdDocPayloadDTO = new DemographicIdDocPayloadDTO();
-
-        if (demographicDTO.getPayload().getDemographics() != null) {
-            int size = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().size();
-            for (int i = 0; i < size; i++) {
-                demographicIdDocPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(i);
-            }
-        }
-
-        return demographicIdDocPayloadDTO;
-    }
-
 
     @Override
     protected void processExternalPayment(PaymentExecution execution, Intent data) {
@@ -711,6 +596,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         DtoHelper.bundleDto(args, demographicDTO);
         fragment.setArguments(args);
 
-        navigateToFragment(fragment, currentDemographicStep == 1 ? false : true);
+        navigateToFragment(fragment, currentDemographicStep != 1);
     }
 }
