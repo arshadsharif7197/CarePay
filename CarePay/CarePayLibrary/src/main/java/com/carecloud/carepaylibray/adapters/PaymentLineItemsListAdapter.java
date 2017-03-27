@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,6 +83,7 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
             paymentDetailLabel = (CarePayTextView) itemView.findViewById(R.id.lineItemNameLabel);
             paymentDetailAmount = (CarePayTextView) itemView.findViewById(R.id.lineItemAmountLabel);
             lineItemNameLabelDetails = (CarePayTextView) itemView.findViewById(R.id.lineItemNameLabelDetails);
+            lineItemNameLabelDetails.setGravity(Gravity.CENTER_HORIZONTAL);
         }
     }
 

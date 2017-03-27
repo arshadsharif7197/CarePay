@@ -20,9 +20,9 @@ import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.Intak
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.PracticeFormsFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckInFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckinFlowCallback;
-import com.carecloud.carepay.practice.library.payments.dialogs.PracticePartialPaymentDialog;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentPlanFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticePartialPaymentDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
@@ -309,7 +309,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void startPartialPayment(double owedAmount) {
-        new PracticePartialPaymentDialog(this, paymentDTO).show();
+        String tag = PracticePartialPaymentDialogFragment.class.getSimpleName();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        PracticePartialPaymentDialogFragment dialog = PracticePartialPaymentDialogFragment
+                .newInstance(paymentDTO, owedAmount);
+        dialog.show(ft, tag);
     }
 
     @Override

@@ -32,8 +32,6 @@ import java.util.List;
 
 public class ResponsibilityFragmentDialog extends BaseDialogFragment implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
 
-    private static final String TAG = "ResponsibilityDialog";
-
     private String leftLabel;
     private String rightLabel;
     private PaymentsModel paymentsModel;
