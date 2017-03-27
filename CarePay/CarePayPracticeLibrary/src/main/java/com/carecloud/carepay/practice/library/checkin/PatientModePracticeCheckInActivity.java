@@ -58,8 +58,7 @@ public class PatientModePracticeCheckInActivity extends BasePracticeActivity imp
             appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
             getAppointmentList();
         } catch (JsonSyntaxException ex) {
-            SystemUtil.showFailureDialogMessage(this, getString(R.string.alert_title_server_error),
-                    getString(R.string.alert_title_server_error));
+            showErrorNotification(null);
             ex.printStackTrace();
         }
     }

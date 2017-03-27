@@ -50,6 +50,7 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
  */
 public class SignupFragment extends BaseFragment {
 
+    private static final String TAG = "SignupFragment";
     private SignInSignUpDTO signInSignUpDTO;
     private SignInLablesDTO signInLablesDTO;
     private LinearLayout    parentLayout;
@@ -84,12 +85,13 @@ public class SignupFragment extends BaseFragment {
 
         @Override
         public void onFailure(Exception exception) {
-            progressBar.setVisibility(View.INVISIBLE);
+            hideProgressDialog();
             String errorMsg = getAppAuthorizationHelper().formatException(exception);
-
-            SystemUtil.showFailureDialogMessage(getActivity(),
-                                         "Sign up failed!",//TODO this should not be hardcoded string
-                                         errorMsg);
+            showErrorNotification(errorMsg);
+            Log.e(TAG, exception.getMessage());
+//            SystemUtil.showFailureDialogMessage(getActivity(),
+//                                         "Sign up failed!",//TODO this should not be hardcoded string
+//                                         errorMsg);
         }
     };
     private WorkflowServiceCallback signUpWorkflowCallback = new WorkflowServiceCallback() {
@@ -126,9 +128,12 @@ public class SignupFragment extends BaseFragment {
 
         @Override
         public void onLoginFailure(String exceptionMessage) {
-            SystemUtil.showFailureDialogMessage(getContext(),
-                                         "Sign-in failed",
-                                         exceptionMessage);
+            hideProgressDialog();
+            showErrorNotification(null);
+            Log.e(TAG, exceptionMessage);
+//            SystemUtil.showFailureDialogMessage(getContext(),
+//                                         "Sign-in failed",
+//                                         exceptionMessage);
 
         }
     };
