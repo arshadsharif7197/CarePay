@@ -2,6 +2,7 @@ package com.carecloud.carepay.service.library;
 
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
@@ -274,7 +275,8 @@ public class WorkflowServiceHelper {
 
                     }
                 } catch (Exception exception) {
-                    onFailure(call, exception);
+                    callback.onFailure(exception.getMessage());
+                    Log.e("WorkflowServiceHelper", exception.getMessage(), exception);
                 }
             }
 
@@ -282,7 +284,7 @@ public class WorkflowServiceHelper {
                 WorkflowDTO workflowDTO = response.body();
                 // This is temporary. We should use an exclusive service for labels
                 // in order to retrieve them and save them only once.
-                // TODO: errase this code when that service exists
+                // TODO: erase this code when that service exists
                 saveLabels(workflowDTO);
                 if (workflowDTO != null && !isNullOrEmpty(workflowDTO.getState())) {
                     callback.onPostExecute(response.body());
