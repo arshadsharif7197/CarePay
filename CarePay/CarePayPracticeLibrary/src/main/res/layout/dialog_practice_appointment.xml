@@ -119,7 +119,9 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
-        android:orientation="horizontal">
+        android:background="@drawable/grey_bottom_border"
+        android:orientation="horizontal"
+        android:paddingBottom="20dp">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/appointment_visit_type_label"
@@ -145,12 +147,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="40dp"
         android:background="@drawable/grey_top_border"
         android:orientation="horizontal"
         android:paddingEnd="24dp"
         android:paddingStart="24dp"
-        android:paddingTop="10dp">
+        android:paddingTop="15dp">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/button_left_action"
