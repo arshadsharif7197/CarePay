@@ -38,6 +38,7 @@ import com.carecloud.carepaylibray.appointments.models.QueryStrings;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog.AppointmentType;
+import com.carecloud.carepaylibray.customdialogs.QrCodeViewDialog;
 import com.carecloud.carepaylibray.customdialogs.QueueAppointmentDialog;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -274,8 +275,31 @@ public class AppointmentsListFragment extends BaseFragment {
                 TransitionDTO transitionDTO = appointmentInfo.getMetadata().getTransitions().getCheckingIn();
                 getWorkflowServiceHelper().execute(transitionDTO, preRegisterCallback, queries, header);
             }
+
+            @Override
+            public void onCheckInAtOfficeButtonClicked(AppointmentDTO appointmentDTO) {
+                new QrCodeViewDialog(getContext(), appointmentDTO, appointmentInfo.getMetadata(), qrCodeViewDialogListener()).show();
+            }
+
+            @Override
+            public void onDemographicsVerifyCallbackError(String errorMessage) {
+                showErrorNotification(null);
+            }
+
+
         };
     }
+
+    public QrCodeViewDialog.QRCodeViewDialogListener qrCodeViewDialogListener() {
+        return new QrCodeViewDialog.QRCodeViewDialogListener(){
+
+            @Override
+            public void onGenerateQRCodeError(String errorMessage) {
+                showErrorNotification(null); //Shows Default connection issue when passed null.
+            }
+        };
+    }
+
 
     /**
      * Gets cancel appointment dialog listener.
@@ -470,7 +494,7 @@ public class AppointmentsListFragment extends BaseFragment {
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             appointmentProgressBar.setVisibility(View.GONE);
-            SystemUtil.showDefaultFailureDialog(getActivity());
+            showErrorNotification(null);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -580,7 +604,8 @@ public class AppointmentsListFragment extends BaseFragment {
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(getContext());
+            showErrorNotification(null);
+            //SystemUtil.showDefaultFailureDialog(getContext());
             Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

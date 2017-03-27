@@ -20,9 +20,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog;
-import com.carecloud.carepaylibray.customdialogs.QrCodeViewDialog;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -42,6 +40,8 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
 
     public interface CheckInOfficeNowAppointmentDialogListener {
         void onPreRegisterTapped(AppointmentDTO appointmentDTO, AppointmentsResultModel appointmentInfo);
+        void onCheckInAtOfficeButtonClicked(AppointmentDTO appointmentDTO);
+        void onDemographicsVerifyCallbackError(String errorMessage);
     }
 
     /**
@@ -101,7 +101,7 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         int viewId = view.getId();
         if (viewId == R.id.checkInAtOfficeButton) {
             checkInAtOfficeButton.setEnabled(false);
-            new QrCodeViewDialog(context, appointmentDTO, appointmentInfo.getMetadata()).show();
+            callback.onCheckInAtOfficeButtonClicked(appointmentDTO);
             checkInAtOfficeButton.setEnabled(true);
             cancel();
         } else if (viewId == R.id.checkInNowButton) {
@@ -173,7 +173,8 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         public void onFailure(String exceptionMessage) {
             ((ISession) context).hideProgressDialog();
             checkInNowButton.setEnabled(true);
-            SystemUtil.showDefaultFailureDialog(getContext());
+            callback.onDemographicsVerifyCallbackError(exceptionMessage);
+            //SystemUtil.showDefaultFailureDialog(getContext());
             Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
