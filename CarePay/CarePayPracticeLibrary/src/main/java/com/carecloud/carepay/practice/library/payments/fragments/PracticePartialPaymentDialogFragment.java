@@ -66,8 +66,10 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
     public void onClick(View view) {
         super.onClick(view);
         if (view.getId() == R.id.enter_amount_button) {
-            callback.onPayButtonClicked(Double.parseDouble(amountText.getText().toString()), paymentsModel);
-            dismiss();
+            if (!amountText.getText().toString().isEmpty()) {
+                callback.onPayButtonClicked(Double.parseDouble(amountText.getText().toString()), paymentsModel);
+                dismiss();
+            }
         }
     }
 }
