@@ -40,7 +40,6 @@ import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
@@ -58,8 +57,12 @@ import java.util.Vector;
  */
 public class AppointmentDetailDialog extends Dialog {
 
+    private static final String TAG = "AppointmentDetailDialog";
+
     public interface AppointmentDialogCallback {
         void showPaymentDistributionDialog(PaymentsModel paymentsModel);
+
+        void onFailure(String errorMessage);
     }
 
     private Context context;
@@ -374,7 +377,7 @@ public class AppointmentDetailDialog extends Dialog {
 
         @Override
         public void onFailure(String exceptionMessage) {
-//            SystemUtil.showDefaultFailureDialog(context);
+            callback.onFailure(exceptionMessage);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -391,7 +394,7 @@ public class AppointmentDetailDialog extends Dialog {
 
         @Override
         public void onFailure(String exceptionMessage) {
-//            SystemUtil.showDefaultFailureDialog(context);
+            callback.onFailure(exceptionMessage);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -545,7 +548,7 @@ public class AppointmentDetailDialog extends Dialog {
                         .equalsIgnoreCase(CarePayConstants.APPOINTMENTS_STATUS_COMPLETED));
             }
         } catch (Exception ex) {
-            SystemUtil.showDefaultFailureDialog(context);
+            callback.onFailure(ex.getMessage());
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), ex.getMessage());
         }
     }
@@ -632,7 +635,9 @@ public class AppointmentDetailDialog extends Dialog {
         @Override
         public void onFailure(String exceptionMessage) {
             sessionHandler.hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(context);
+            callback.onFailure(exceptionMessage);
+            Log.e(TAG, exceptionMessage);
+
         }
     };
 
