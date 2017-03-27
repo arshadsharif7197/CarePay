@@ -2,7 +2,6 @@ package com.carecloud.carepay.practice.library.checkin.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
@@ -21,7 +20,6 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInLabelDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.CheckInMetadataDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInStatusDataPayloadValueDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInStatusPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.QueryStrings;
@@ -31,6 +29,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
@@ -85,9 +84,13 @@ public class AppointmentDetailDialog extends Dialog {
     private ImageView profilePhoto;
     private ImageView bgImage;
     private TextView shortName;
+    private View checkboxLayout;
+    private View queueTextLayout;
+    private TextView queueText;
 
     private boolean isWaitingRoom;
     private Vector<CheckBox> checkBoxes = new Vector<>();
+    private Vector<View> spacers = new Vector<>();
 
     private ISession sessionHandler;
 
@@ -172,6 +175,17 @@ public class AppointmentDetailDialog extends Dialog {
         profilePhoto = (ImageView) findViewById(R.id.patient_profile_photo);
         bgImage = (ImageView) findViewById(R.id.profile_bg_image);
         shortName = (TextView) findViewById(R.id.patientNameLabelShort);
+
+        checkboxLayout = findViewById(R.id.checkbox_layout);
+        queueTextLayout = findViewById(R.id.queue_text_layout);
+        queueText = (TextView) findViewById(R.id.queue_text);
+
+        View spacer = findViewById(R.id.spacer_one);
+        spacers.add(spacer);
+        spacer = findViewById(R.id.spacer_two);
+        spacers.add(spacer);
+        spacer = findViewById(R.id.spacer_three);
+        spacers.add(spacer);
     }
 
     /**
@@ -360,7 +374,7 @@ public class AppointmentDetailDialog extends Dialog {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showDefaultFailureDialog(context);
+//            SystemUtil.showDefaultFailureDialog(context);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -377,7 +391,7 @@ public class AppointmentDetailDialog extends Dialog {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showDefaultFailureDialog(context);
+//            SystemUtil.showDefaultFailureDialog(context);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -386,42 +400,126 @@ public class AppointmentDetailDialog extends Dialog {
      * @param workflowDTO workflow model returned by server.
      */
     private void updateQueueStatus(WorkflowDTO workflowDTO) {
-        JsonObject jsonObject = workflowDTO.getPayload();
-
         Gson gson = new Gson();
-        try {
-            QueueStatusPayloadDTO queueStatusPayloadDTO = gson.fromJson(jsonObject, QueueStatusPayloadDTO.class);
-            Log.d(this.getClass().getSimpleName(), "queue size: " + queueStatusPayloadDTO.getQueueStatus().getQueueStatusInnerPayload().getQueueList().size());
+        QueueStatusPayloadDTO queueStatusPayloadDTO = gson.fromJson(workflowDTO.getPayload(), QueueStatusPayloadDTO.class);
+        List<QueueDTO> queueList = queueStatusPayloadDTO.getQueueStatus().getQueueStatusInnerPayload().getQueueList();
 
-            CheckInMetadataDTO metadata = checkInDTO.getMetadata();
-            List<QueueDTO> queueList = queueStatusPayloadDTO.getQueueStatus().getQueueStatusInnerPayload().getQueueList();
+        Map<Integer, QueueDTO> queueMap = new HashMap<>();
+        QueueDTO placeInQueue = findPlaceInQueue(queueList, appointmentPayloadDTO.getId(), queueMap);
 
-            int maxIndex = queueList.size() - 1;
-            int index = maxIndex;
-            QueueDTO queue;
-            CheckBox checkBox;
+        String[] sufixes = getOrdinalSufix();
+        if(placeInQueue!=null){
+            String place = ordinal(placeInQueue.getRank(), sufixes)+" "+Label.getLabel("practice_checkin_detail_dialog_in_queue");
+            int rank = placeInQueue.getRank();
+            switch (rank){
+                case 1:
+                {
+                    //show single place in queue
+                    queueTextLayout.setVisibility(View.VISIBLE);
+                    checkboxLayout.setVisibility(View.GONE);
+                    queueText.setText(place);
+                    break;
+                }
+                case 2:{
+                    queueTextLayout.setVisibility(View.GONE);
+                    checkboxLayout.setVisibility(View.VISIBLE);
 
-            String[] sufixes = getOrdinalSufix(metadata.getLabel());
-            for (int checkIndex = Math.min(index, 3); checkIndex >= 0; checkIndex--) {
-                queue = queueList.get(index);
-                checkBox = checkBoxes.get(checkIndex);
-                if (index == maxIndex) {
+                    //current user
+                    CheckBox checkBox =  checkBoxes.get(3);
                     checkBox.setChecked(true);
-                    checkBox.setText(ordinal(queue.getRank(), sufixes) + " " + metadata.getLabel().getPracticeCheckinDetailDialogQueue());
+                    checkBox.setText(place);
                     checkBox.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
-                    checkBox.setTypeface(checkBox.getTypeface(), Typeface.BOLD);
-                } else {
-                    checkBox.setText(ordinal(queue.getRank(), sufixes) + " " + queue.getFirstName());
+
+                    //first user
+                    checkBox = checkBoxes.get(0);
+                    placeInQueue = queueMap.get(1);
+                    place = ordinal(1, sufixes)+"\n"+placeInQueue.getFirstName();
+                    checkBox.setText(place);
+
+                    //hide other checkboxes
+                    checkBoxes.get(1).setVisibility(View.GONE);
+                    checkBoxes.get(2).setVisibility(View.GONE);
+                    spacers.get(1).setVisibility(View.GONE);
+                    spacers.get(2).setVisibility(View.GONE);
+                    break;
+                }
+                case 3:
+                {
+                    queueTextLayout.setVisibility(View.GONE);
+                    checkboxLayout.setVisibility(View.VISIBLE);
+
+                    //current user
+                    CheckBox checkBox =  checkBoxes.get(3);
+                    checkBox.setChecked(true);
+                    checkBox.setText(place);
+                    checkBox.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+
+                    //first user
+                    checkBox = checkBoxes.get(0);
+                    placeInQueue = queueMap.get(1);
+                    place = ordinal(1, sufixes)+"\n"+placeInQueue.getFirstName();
+                    checkBox.setText(place);
+
+                    //second user
+                    checkBox = checkBoxes.get(1);
+                    placeInQueue = queueMap.get(2);
+                    place = ordinal(2, sufixes)+"\n"+placeInQueue.getFirstName();
+                    checkBox.setText(place);
+
+
+                    //hide other checkboxes
+                    checkBoxes.get(2).setVisibility(View.GONE);
+                    spacers.get(2).setVisibility(View.GONE);
+
+                    break;
                 }
 
-                Log.d(this.getClass().getSimpleName(), "queue practice id: " + queue.getFirstName());
-                index--;
+                default:
+                {
+                    //show checkbox bar
+                    queueTextLayout.setVisibility(View.GONE);
+                    checkboxLayout.setVisibility(View.VISIBLE);
+                    int counter = 3;
+                    CheckBox checkBox =  checkBoxes.get(counter);
+                    checkBox.setChecked(true);
+                    checkBox.setText(place);
+                    checkBox.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+
+                    counter--;
+                    rank--;
+                    while (counter > -1){
+                        placeInQueue = queueMap.get(rank);
+                        place = ordinal(rank, sufixes)+"\n"+placeInQueue.getFirstName();
+                        checkBox = checkBoxes.get(counter);
+                        checkBox.setText(place);
+
+                        counter--;
+                        rank--;
+                    }
+                }
             }
-        } catch (Exception ex) {
-            SystemUtil.showDefaultFailureDialog(context);
-            Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), ex.getMessage());
-            ex.printStackTrace();
         }
+
+//            int maxIndex = queueList.size() - 1;
+//            int index = maxIndex;
+//            QueueDTO queue;
+//            CheckBox checkBox;
+//
+//            for (int checkIndex = Math.min(index, 3); checkIndex >= 0; checkIndex--) {
+//                queue = queueList.get(index);
+//                checkBox = checkBoxes.get(checkIndex);
+//                if (index == maxIndex) {
+//                    checkBox.setChecked(true);
+//                    checkBox.setText(ordinal(queue.getRank(), sufixes) + " " + metadata.getLabel().getPracticeCheckinDetailDialogQueue());
+//                    checkBox.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+//                    checkBox.setTypeface(checkBox.getTypeface(), Typeface.BOLD);
+//                } else {
+//                    checkBox.setText(ordinal(queue.getRank(), sufixes) + " " + queue.getFirstName());
+//                }
+//
+//                Log.d(this.getClass().getSimpleName(), "queue practice id: " + queue.getFirstName());
+//                index--;
+//            }
     }
 
     /**
@@ -460,13 +558,25 @@ public class AppointmentDetailDialog extends Dialog {
         return 0;
     }
 
-    private String[] getOrdinalSufix(CheckInLabelDTO labels) {
-        String th = labels.getPracticeCheckinDetailDialogOrdinalTh();
-        String st = labels.getPracticeCheckinDetailDialogOrdinalSt();
-        String nd = labels.getPracticeCheckinDetailDialogOrdinalNd();
-        String rd = labels.getPracticeCheckinDetailDialogOrdinalRd();
+    private String[] getOrdinalSufix() {
+        String th = Label.getLabel("practice_checkin_detail_dialog_ordinal_th");
+        String st = Label.getLabel("practice_checkin_detail_dialog_ordinal_st");
+        String nd = Label.getLabel("practice_checkin_detail_dialog_ordinal_nd");
+        String rd = Label.getLabel("practice_checkin_detail_dialog_ordinal_rd");
         return new String[]{th, st, nd, rd, th, th, th, th, th, th};
     }
+
+    private QueueDTO findPlaceInQueue(List<QueueDTO> queueDTOList, String appointmentId, Map<Integer, QueueDTO> placeMap){
+        QueueDTO patientQueueDTO = null;
+        for(QueueDTO queueDTO: queueDTOList){
+            placeMap.put(queueDTO.getRank(), queueDTO);
+            if(queueDTO.getAppointmentId().equals(appointmentId)){
+                 patientQueueDTO = queueDTO;
+            }
+        }
+        return patientQueueDTO;
+    }
+
 
     private String ordinal(int number, String[] sufixes) {
         switch (number % 100) {

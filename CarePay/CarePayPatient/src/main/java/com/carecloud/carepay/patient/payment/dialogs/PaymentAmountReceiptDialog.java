@@ -127,7 +127,7 @@ public class PaymentAmountReceiptDialog extends Dialog implements View.OnClickLi
 
     private void showPaymentHistory() {
         PendingBalanceMetadataDTO metadata = paymentReceiptModel.getPaymentPayload()
-                .getPatientPayments().getPayload().get(0).getMetadata();
+                .getPatientBalances().get(0).getBalances().get(0).getMetadata();
         Map<String, String> queryString = new HashMap<>();
         queryString.put("practice_id", metadata.getPracticeId());
         queryString.put("practice_mgmt", metadata.getPracticeMgmt());

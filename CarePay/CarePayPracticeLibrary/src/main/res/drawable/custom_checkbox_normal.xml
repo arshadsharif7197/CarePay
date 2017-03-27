@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/white" />
+            <size android:height="@dimen/custom_appointment_dialog_checkbox_normal_size"
+                  android:width="@dimen/custom_appointment_dialog_checkbox_normal_size"/>
+        </shape>
+    </item>
     <item
         android:width="@dimen/custom_appointment_dialog_checkbox_normal_size"
         android:height="@dimen/custom_appointment_dialog_checkbox_normal_size"
