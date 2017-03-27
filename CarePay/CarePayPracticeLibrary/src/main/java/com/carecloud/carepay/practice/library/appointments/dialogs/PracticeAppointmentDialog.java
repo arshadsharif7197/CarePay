@@ -1,12 +1,8 @@
 package com.carecloud.carepay.practice.library.appointments.dialogs;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
@@ -27,7 +23,6 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import org.apache.commons.lang3.StringUtils;
 
