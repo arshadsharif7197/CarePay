@@ -36,9 +36,11 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/dialog_checkin_main"
         android:layout_width="@dimen/appointment_detail_dialog_width"
         android:layout_height="@dimen/appointment_detail_dialog_height"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:soundEffectsEnabled="false">
 
         <RelativeLayout
             android:id="@+id/profile_image_layout"

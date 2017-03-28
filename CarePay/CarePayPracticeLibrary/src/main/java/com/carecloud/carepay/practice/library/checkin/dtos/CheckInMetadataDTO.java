@@ -78,16 +78,10 @@ public class CheckInMetadataDTO {
         this.transitions = transitions;
     }
 
-    public Boolean hasPaymentEnabled(){
-        return true ;
-    }
 
     public Boolean hasAssistEnabled(){
         return false ;
     }
 
-    public Boolean hasPageEnabled(){
-        return false ;
-    }
 
 }

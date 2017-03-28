@@ -3,7 +3,6 @@ package com.carecloud.carepay.practice.library.checkin.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -196,35 +195,23 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         spacers.add(spacer);
 
         pickerWindow = new PopupPickerWindow(context);
+        pickerWindow.flipPopup(true);
         pickerWindow.setAdapter(new PagePickerAdapter(context, checkInDTO.getPayload().getPageMessages(), this));
 
         if(!canSendPage()){
             pageButton.setEnabled(false);
+        }else{
+            View mainView = findViewById(R.id.dialog_checkin_main);
+            mainView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    pickerWindow.dismiss();
+                }
+            });
         }
 
     }
 
-    /**
-     * for setting  UI Component Style .
-     */
-    private void onSettingStyle() {
-        checkingInLabel.setTextColor(ContextCompat.getColor(context, R.color.charcoal_78));
-        checkingInLabel.setTextColor(ContextCompat.getColor(context, R.color.white));
-
-        GradientDrawable bgShapeAssistButton = (GradientDrawable) assistButton.getBackground();
-        if (checkInDTO.getMetadata().hasAssistEnabled()) {
-            bgShapeAssistButton.setColor(ContextCompat.getColor(context, R.color.colorPrimary));
-        } else {
-            bgShapeAssistButton.setColor(ContextCompat.getColor(context, R.color.light_gray));
-        }
-
-        GradientDrawable bgShapePageButton = (GradientDrawable) pageButton.getBackground();
-        if (checkInDTO.getMetadata().hasPageEnabled()) {
-            bgShapePageButton.setColor(ContextCompat.getColor(context, R.color.rose_madder));
-        } else {
-            bgShapePageButton.setColor(ContextCompat.getColor(context, R.color.light_gray));
-        }
-    }
 
     /**
      * for setting values to UI Component from DTO .
@@ -294,14 +281,13 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
     }
 
     private void enableActionItems() {
-        paymentButton.setEnabled(checkInDTO.getMetadata().hasPaymentEnabled());
         assistButton.setEnabled(checkInDTO.getMetadata().hasAssistEnabled());
-        pageButton.setEnabled(checkInDTO.getMetadata().hasPageEnabled());
     }
 
     private View.OnClickListener paymentActionListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            pickerWindow.dismiss();
             getPatientBalanceDetails();
         }
     };
@@ -620,10 +606,10 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         String userId = pendingBalanceDTO.getMetadata().getUserId();
         String checkUserId;
         for(PatientBalanceDTO patientBalanceDTO : checkInDTO.getPayload().getPatientBalances()){
-            checkUserId = patientBalanceDTO.getDemographics().getPayload().getNotificationSettings().getMetadata().getUserId();
+            checkUserId = patientBalanceDTO.getDemographics().getMetadata().getUserId();
             if(userId.equals(checkUserId)){
                 pushUserId = checkUserId;
-                return patientBalanceDTO.getDemographics().getPayload().getNotificationSettings().getPayload().hasPushNotification();
+                return patientBalanceDTO.getDemographics().getPayload().getNotificationOptions().hasPushNotification();
             }
         }
         return false;
@@ -689,7 +675,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            SystemUtil.showSuccessToast(getContext(), Label.getLabel("push_notification_sent"));
+            SystemUtil.showSuccessToast(context, Label.getLabel("push_notification_sent"));
         }
 
         @Override

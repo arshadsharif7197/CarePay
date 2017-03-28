@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by lmenendez on 3/28/17.
  */
 
-public class NotificationSettingsPayload {
+public class NotificationOptions {
 
     @SerializedName("push")
     @Expose
