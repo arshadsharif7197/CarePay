@@ -10,6 +10,7 @@ import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.models.MapFilterModel;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.models.AppointmentAddressDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
@@ -71,9 +72,11 @@ public class PracticeAvailableHoursAdapter extends RecyclerView.Adapter<Recycler
             LocationDTO location = availabilityPayloadDTO.getLocation();
             String locationName = location.getName();
             String locationId = location.getId().toString();
+            AppointmentAddressDTO locationAddress = location.getAddress();
             for (AppointmentsSlotsDTO slot : availabilityPayloadDTO.getSlots()) {
                 slot.setLocationName(locationName);
                 slot.setLocationId(locationId);
+                slot.setLocationAddress(locationAddress);
                 allTimeSlots.add(slot);
             }
         }

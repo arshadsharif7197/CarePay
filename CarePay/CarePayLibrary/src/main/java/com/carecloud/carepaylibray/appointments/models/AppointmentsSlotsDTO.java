@@ -24,6 +24,9 @@ public class AppointmentsSlotsDTO implements Serializable {
     @Expose(serialize = false)
     private String locationId;
 
+    @Expose(serialize = false)
+    private AppointmentAddressDTO locationAddress;
+
     /**
      * Gets start time.
      *
@@ -74,5 +77,13 @@ public class AppointmentsSlotsDTO implements Serializable {
 
     public void setLocationId(String locationId) {
         this.locationId = locationId;
+    }
+
+    public void setLocationAddress(AppointmentAddressDTO locationAddress) {
+        this.locationAddress = locationAddress;
+    }
+
+    public AppointmentAddressDTO getLocationAddress() {
+        return locationAddress;
     }
 }

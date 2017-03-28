@@ -489,9 +489,11 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
             if(isLocationSelected(location)) {
                 String locationName = location.getName();
                 String locationId = location.getId().toString();
+                AppointmentAddressDTO locationAddress = location.getAddress();
                 for (AppointmentsSlotsDTO slotsDTO : availabilityPayloadDTO.getSlots()) {
                     slotsDTO.setLocationName(locationName);
                     slotsDTO.setLocationId(locationId);
+                    slotsDTO.setLocationAddress(locationAddress);
                     appointmentsSlots.add(slotsDTO);
                 }
             }

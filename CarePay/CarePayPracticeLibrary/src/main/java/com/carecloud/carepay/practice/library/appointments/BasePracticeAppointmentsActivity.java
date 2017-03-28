@@ -12,6 +12,7 @@ import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -68,14 +69,12 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     public void confirmAppointment(AppointmentsSlotsDTO appointmentsSlot, AppointmentAvailabilityDTO availabilityDTO) {
         this.availabilityDTO = availabilityDTO;
         // Call Request appointment Summary dialog from here
-        String cancelString = getLabels().getAvailableHoursBack();
+        String cancelString = Label.getLabel("available_hours_back");
         new PracticeRequestAppointmentDialog(
                 this,
                 cancelString,
-                appointmentsSlot.getStartTime(),
-                appointmentsSlot.getEndTime(),
+                appointmentsSlot,
                 appointmentResourcesDTO,
-                availabilityDTO,
                 visitTypeDTO,
                 this
         ).show();
