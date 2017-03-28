@@ -10,7 +10,6 @@ import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.models.MapFilterModel;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.AppointmentAddressDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
@@ -48,6 +47,7 @@ public class PracticeAvailableHoursAdapter extends RecyclerView.Adapter<Recycler
 
     /**
      * Constructor.
+     *
      * @param callback callback on select time slot
      */
     public PracticeAvailableHoursAdapter(PracticeAvailableHoursAdapterListener callback) {
@@ -70,13 +70,8 @@ public class PracticeAvailableHoursAdapter extends RecyclerView.Adapter<Recycler
 
         for (AppointmentAvailabilityPayloadDTO availabilityPayloadDTO : payload) {
             LocationDTO location = availabilityPayloadDTO.getLocation();
-            String locationName = location.getName();
-            String locationId = location.getId().toString();
-            AppointmentAddressDTO locationAddress = location.getAddress();
             for (AppointmentsSlotsDTO slot : availabilityPayloadDTO.getSlots()) {
-                slot.setLocationName(locationName);
-                slot.setLocationId(locationId);
-                slot.setLocationAddress(locationAddress);
+                slot.setLocation(location);
                 allTimeSlots.add(slot);
             }
         }
@@ -113,7 +108,7 @@ public class PracticeAvailableHoursAdapter extends RecyclerView.Adapter<Recycler
     public int getItemViewType(int position) {
         final AppointmentsSlotsDTO slot = filteredTimeSlots.get(position);
 
-        if (null == slot.getLocationId()) {
+        if (null == slot.getLocation().getId()) {
             return CELL_HEADER;
         }
 
@@ -153,7 +148,7 @@ public class PracticeAvailableHoursAdapter extends RecyclerView.Adapter<Recycler
             String time12Hour = DateUtil.getInstance().getTime12Hour();
             vhTimeSlot.getTextView().setText(time12Hour);
 
-            String location = slot.getLocationName();
+            String location = slot.getLocation().getName();
             if (StringUtil.isNullOrEmpty(location)) {
                 vhTimeSlot.textViewLocation.setVisibility(View.GONE);
             } else {
@@ -166,12 +161,12 @@ public class PracticeAvailableHoursAdapter extends RecyclerView.Adapter<Recycler
                 public void onClick(View view) {
 
                     // Restricted the appointment list item click if it is appointment header type.
-                    if (null != slot.getLocationName()) {
+                    if (null != slot.getLocation().getName()) {
                         callback.onSelectAppointmentTimeSlot(slot);
                     }
                 }
             });
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
@@ -179,7 +174,7 @@ public class PracticeAvailableHoursAdapter extends RecyclerView.Adapter<Recycler
     /**
      * @param availabilityDTO Appointment Availability DTO
      */
-    public void setAppointmentAvailability(AppointmentAvailabilityDTO availabilityDTO){
+    public void setAppointmentAvailability(AppointmentAvailabilityDTO availabilityDTO) {
         loadAvailableHours(availabilityDTO);
         applyFilter();
     }
@@ -204,9 +199,9 @@ public class PracticeAvailableHoursAdapter extends RecyclerView.Adapter<Recycler
         Date dateTime = new Date(0);
         int countDifferentDates = 0;
         AppointmentsSlotsDTO header = null;
-        for (AppointmentsSlotsDTO slot: allTimeSlots) {
+        for (AppointmentsSlotsDTO slot : allTimeSlots) {
             // Check filter by location
-            if (filterModel.isFilteringByLocations() && !locations.containsKey(slot.getLocationId())) {
+            if (filterModel.isFilteringByLocations() && !locations.containsKey(slot.getLocation().getId().toString())) {
                 continue;
             }
 

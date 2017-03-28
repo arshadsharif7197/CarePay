@@ -103,10 +103,10 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         appointmentDoctorSpecialityTextView.setText(appointmentResourcesDTO.getResource().getProvider().getSpecialty().getName());
 
         CarePayTextView appointmentPlaceNameTextView = (CarePayTextView) view.findViewById(R.id.provider_place_name);
-        appointmentPlaceNameTextView.setText(appointmentSlot.getLocationName());
+        appointmentPlaceNameTextView.setText(appointmentSlot.getLocation().getName());
         SystemUtil.setProximaNovaExtraboldTypeface(context, appointmentPlaceNameTextView);
         CarePayTextView appointmentAddressTextView = (CarePayTextView) view.findViewById(R.id.provider_place_address);
-        appointmentAddressTextView.setText(appointmentSlot.getLocationAddress().getPlaceAddressString());
+        appointmentAddressTextView.setText(appointmentSlot.getLocation().getAddress().getPlaceAddressString());
         CarePayTextView visitTypeLabel = (CarePayTextView) view.findViewById(R.id.visitTypeLabel);
         visitTypeLabel.setText(Label.getLabel("visit_type_heading"));
 

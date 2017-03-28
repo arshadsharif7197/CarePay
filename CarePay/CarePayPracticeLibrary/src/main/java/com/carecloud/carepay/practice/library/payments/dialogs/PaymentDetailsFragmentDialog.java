@@ -62,7 +62,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
             String lastname = paymentReceiptModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getPersonalDetails().getLastName();
 
             ((TextView) view.findViewById(R.id.patient_full_name)).setText(name + " " + lastname);
-            ((TextView) view.findViewById(R.id.payment_details_total_paid)).setText(amountBalanceLabel + " " + totalAmount);
+            ((TextView) view.findViewById(R.id.payment_details_total_paid)).setText(amountBalanceLabel + ": " + totalAmount);
             ((TextView) view.findViewById(R.id.avTextView)).setText(StringUtil.getShortName(name + " " + lastname));
 
             payNowButton.setText(Label.getLabel("payment_details_pay_now"));
