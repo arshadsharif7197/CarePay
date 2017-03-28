@@ -58,6 +58,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         formatEditText(view);
         initViewFromModels(view);
         checkIfEnableButton(view);
+        //(view.findViewById(R.id.toolbar_layout)).setVisibility(View.INVISIBLE);
         stepProgressBar.setCurrentProgressDot(0);
         checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 1);
         return view;

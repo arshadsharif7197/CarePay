@@ -285,6 +285,38 @@ public class DemographicLabelsDTO {
     @Expose
     private String demographicsReviewIdentification;
 
+    @SerializedName("demographics_personal_info_heading")
+    @Expose
+    private String demographicsPersonalInfoHeading;
+    @SerializedName("demographics_personal_info_subheading")
+    @Expose
+    private String demographicsPersonalInfoSubheading;
+    @SerializedName("demographics_address_heading")
+    @Expose
+    private String demographicsAddressHeading;
+    @SerializedName("demographics_address_subheading")
+    @Expose
+    private String demographicsAddressSubheading;
+    @SerializedName("demographics_demographics_heading")
+    @Expose
+    private String demographicsDemographicsHeading;
+    @SerializedName("demographics_demographics_subheading")
+    @Expose
+    private String demographicsDemographicsSubheading;
+    @SerializedName("demographics_identity_heading")
+    @Expose
+    private String demographicsIdentityHeading;
+    @SerializedName("demographics_identity_subheading")
+    @Expose
+    private String demographicsIdentitySubheading;
+    @SerializedName("demographics_health_insurance_heading")
+    @Expose
+    private String demographicsHealthInsuranceHeading;
+    @SerializedName("demographics_health_insurance_subheading")
+    @Expose
+    private String demographicsHealthInsuranceSubheading;
+
+
     /**
      * @return The demographicsAddressSection
      */
@@ -678,5 +710,46 @@ public class DemographicLabelsDTO {
 
     public String getDemographicsReviewIdentification() {
         return StringUtil.getLabelForView(demographicsReviewIdentification);
+    }
+
+
+    public String getDemographicsPersonalInfoHeading() {
+        return StringUtil.getLabelForView(demographicsPersonalInfoHeading);
+    }
+
+    public String getDemographicsPersonalInfoSubheading() {
+        return StringUtil.getLabelForView(demographicsPersonalInfoSubheading);
+    }
+
+    public String getDemographicsAddressHeading() {
+        return StringUtil.getLabelForView(demographicsAddressHeading);
+    }
+
+    public String getDemographicsAddressSubheading() {
+        return StringUtil.getLabelForView(demographicsAddressSubheading);
+    }
+
+    public String getDemographicsDemographicsHeading() {
+        return StringUtil.getLabelForView(demographicsDemographicsHeading);
+    }
+
+    public String getDemographicsDemographicsSubheading() {
+        return StringUtil.getLabelForView(demographicsDemographicsSubheading);
+    }
+
+    public String getDemographicsIdentityHeading() {
+        return StringUtil.getLabelForView(demographicsIdentityHeading);
+    }
+
+    public String getDemographicsIdentitySubheading() {
+        return StringUtil.getLabelForView(demographicsIdentitySubheading);
+    }
+
+    public String getDemographicsHealthInsuranceHeading() {
+        return StringUtil.getLabelForView(demographicsHealthInsuranceHeading);
+    }
+
+    public String getDemographicsHealthInsuranceSubheading() {
+        return StringUtil.getLabelForView(demographicsHealthInsuranceSubheading);
     }
 }

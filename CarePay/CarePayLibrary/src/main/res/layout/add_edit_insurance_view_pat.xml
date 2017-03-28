@@ -92,8 +92,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:baselineAligned="false"
-        android:paddingBottom="@dimen/dimen_15dp"
-        android:paddingTop="@dimen/dimen_25dp">
+        >
+        <!--android:paddingBottom="@dimen/dimen_15dp"
+        android:paddingTop="@dimen/dimen_25dp"-->
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/health_insurance_card_number_layout"
@@ -118,8 +119,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:baselineAligned="false"
-        android:paddingBottom="@dimen/dimen_15dp"
-        android:paddingTop="@dimen/dimen_25dp">
+
+        >
+
+        <!--android:paddingBottom="@dimen/dimen_15dp"
+        android:paddingTop="@dimen/dimen_25dp"-->
+
+
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/health_insurance_group_number_layout"
             style="@style/TextInputLayoutStyle"

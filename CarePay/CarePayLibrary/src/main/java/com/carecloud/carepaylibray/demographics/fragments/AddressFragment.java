@@ -408,8 +408,8 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
      */
     private void initialiseUIFields(View view) {
         setHeaderTitle(Label.getLabel("demographics_address_section"),
-                Label.getLabel("demographics_personal_info_heading"),
-                Label.getLabel("demographics_personal_info_subheading"),
+                Label.getLabel("demographics_address_heading"),
+                Label.getLabel("demographics_address_subheading"),
                 view);
         initNextButton(null, view, View.VISIBLE);
 

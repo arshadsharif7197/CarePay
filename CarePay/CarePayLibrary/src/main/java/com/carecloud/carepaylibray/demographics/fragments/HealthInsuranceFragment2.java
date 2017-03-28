@@ -105,17 +105,17 @@ public class HealthInsuranceFragment2 extends CheckInDemographicsBaseFragment {
             fillDetailAdapter(view);
             initAddButton(view);
         } else if(!isPractice){
-            ((TextView)view.findViewById(R.id.setupInsuranceLabel)).setText(globalLabelsMetaDTO.getDemographicsSetupInsuranceTitle());
+            //((TextView)view.findViewById(R.id.setupInsuranceLabel)).setText(globalLabelsMetaDTO.getDemographicsSetupInsuranceTitle());
             TextView setup = (TextView)view.findViewById(R.id.setupLabel);
-            setup.setText(globalLabelsMetaDTO.getDemographicsSetupInsuranceLabel());
+            //setup.setText(globalLabelsMetaDTO.getDemographicsSetupInsuranceLabel());
             setup.setOnClickListener(addNewElementListener);
 
         } else {
             initAddOtherButton(view);
             RadioButton dontHaveInsurance = (RadioButton)view.findViewById(R.id.dontHaveInsurance);
-            dontHaveInsurance.setText(globalLabelsMetaDTO.getDemographicsDontHaveHealthInsuranceLabel());
+            //dontHaveInsurance.setText(globalLabelsMetaDTO.getDemographicsDontHaveHealthInsuranceLabel());
             RadioButton haveInsurance = (RadioButton)view.findViewById(R.id.haveInsurance);
-            haveInsurance.setText(globalLabelsMetaDTO.getDemographicsHaveHealthInsuranceLabel());
+            //haveInsurance.setText(globalLabelsMetaDTO.getDemographicsHaveHealthInsuranceLabel());
             final Button addButton = (Button)view.findViewById(R.id.addNewButton);
             haveInsurance.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -130,7 +130,7 @@ public class HealthInsuranceFragment2 extends CheckInDemographicsBaseFragment {
 
     private void initAddButton(View view){
         Button addButton = (Button)view.findViewById(R.id.addInsuranceButton);
-        addButton.setText(globalLabelsMetaDTO.getPracticeCheckinDemogrInsAddAnother());
+        //addButton.setText(globalLabelsMetaDTO.getPracticeCheckinDemogrInsAddAnother());
         addButton.setOnClickListener(addNewElementListener);
         if(insurancePayloadDTOs.size() >= CarePayConstants.MAX_INSURANCE_DOC){
             addButton.setEnabled(false);
@@ -139,7 +139,7 @@ public class HealthInsuranceFragment2 extends CheckInDemographicsBaseFragment {
 
     private void initAddOtherButton(View view){
         Button addButton = (Button)view.findViewById(R.id.addNewButton);
-        addButton.setText(globalLabelsMetaDTO.getDemographicsAddHealthInsuranceButtonTitle());
+        //addButton.setText(globalLabelsMetaDTO.getDemographicsAddHealthInsuranceButtonTitle());
         addButton.setOnClickListener(addNewElementListener);
     }
 

@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
@@ -181,7 +182,9 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
             @Override
             public void onClick(View addAnotherButton) {
                 InsuranceEditDialog dialog = new InsuranceEditDialog(getActivity(), null, demographicDTO,
-                        false, HealthInsuranceFragment.this);
+                        false, HealthInsuranceFragment.this,
+                        getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE
+                        );
                 dialog.show();
             }
         });
@@ -594,7 +597,9 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     @Override
     public void onEditInsuranceClicked(DemographicInsurancePayloadDTO lineItem) {
         InsuranceEditDialog dialog = new InsuranceEditDialog(getActivity(), lineItem, demographicDTO,
-                true, HealthInsuranceFragment.this);
+                true, HealthInsuranceFragment.this,
+                getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE
+                );
         dialog.show();
     }
 

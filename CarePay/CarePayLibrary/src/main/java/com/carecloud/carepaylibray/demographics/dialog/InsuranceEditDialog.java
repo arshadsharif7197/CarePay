@@ -18,6 +18,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -25,6 +26,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
@@ -63,6 +65,8 @@ public class InsuranceEditDialog extends Dialog {
     private boolean isInEditMode;
     private boolean isCardNumberEmpty;
     private boolean isGroupNumberEmpty;
+    private boolean isInPatientMode;
+
 
 
     /**
@@ -73,18 +77,29 @@ public class InsuranceEditDialog extends Dialog {
     @SuppressWarnings("ConstantConditions")
     public InsuranceEditDialog(Context context, DemographicInsurancePayloadDTO lineItem,
                                DemographicDTO demographicDTO, boolean isInEditMode,
-                               OnSaveChangesListener saveChangesListener) {
+                               OnSaveChangesListener saveChangesListener, boolean isInPatientMode) {
 
-        super(context);
+        super(isInPatientMode?context:context,R.style.health_insurance_screen);
+
         this.context = context;
         this.lineItem = lineItem;
         this.demographicDTO = demographicDTO;
         this.isInEditMode = isInEditMode;
         this.saveChangesListener = saveChangesListener;
+        this.isInPatientMode = isInPatientMode;
 
-        //requestWindowFeature(Window.FEATURE_NO_TITLE);
+        if(isInPatientMode){
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        }else{
+            getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.MATCH_PARENT);
+        }
+
+
         setContentView(R.layout.dialog_add_edit_insurance);
-        //getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+
 
 //        WindowManager.LayoutParams params = getWindow().getAttributes();
 //        params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -96,9 +111,13 @@ public class InsuranceEditDialog extends Dialog {
     }
 
     private void initLabels() {
-        /*((CarePayTextView) findViewById(R.id.edit_insurance_cancel_label)).setText(
-                Label.getLabel("demographics_review_edit_insurance_close"));
-        */
+
+        if(isInPatientMode){
+            ((CarePayTextView) findViewById(R.id.edit_insurance_cancel_label)).setText(
+                    Label.getLabel("demographics_review_edit_insurance_close"));
+
+        }
+
 
         ((CarePayTextView) findViewById(R.id.health_insurance_provider_label)).setText(
                 Label.getLabel("demographics_documents_title_select_provider"));
@@ -110,7 +129,10 @@ public class InsuranceEditDialog extends Dialog {
                 Label.getLabel("demographics_documents_choose_plan"));
 
         if (lineItem != null && isInEditMode) {
-            ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(lineItem.getInsurancePlan());
+
+            if(isInPatientMode) {
+                ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(lineItem.getInsurancePlan());
+            }
             selectedProvider.setText(lineItem.getInsuranceProvider());
             selectedPlan.setText(lineItem.getInsurancePlan());
             selectedType.setText(lineItem.getInsuranceType());
@@ -130,10 +152,11 @@ public class InsuranceEditDialog extends Dialog {
         } else {
             findViewById(R.id.remove_insurance_entry).setVisibility(View.GONE);
 
-/*
-            ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(
-                    Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));
-*/
+
+            if(isInPatientMode) {
+                ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(
+                        Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));
+            }
 
             ((Button) findViewById(R.id.take_front_photo_button)).setText(
                     Label.getLabel("demographics_insurance_take_front_photo"));
@@ -151,21 +174,29 @@ public class InsuranceEditDialog extends Dialog {
 
     private void initViews() {
 
-/*
-        findViewById(R.id.edit_insurance_close_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View closeButton) {
-                dismiss();
-            }
-        });
-*/
+
+        if (isInPatientMode) {
+            findViewById(R.id.edit_insurance_close_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View closeButton) {
+                    dismiss();
+                }
+            });
 
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.settings_toolbar);
-        TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
-        setGothamRoundedMediumTypeface(getContext(), title);
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getContext(), R.drawable.icn_patient_mode_nav_close));
-        //((AppCompatActivity)getContext()).setSupportActionBar(toolbar);
+        }else{
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.settings_toolbar);
+            TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
+            setGothamRoundedMediumTypeface(getContext(), title);
+            toolbar.setNavigationIcon(ContextCompat.getDrawable(getContext(), R.drawable.icn_patient_mode_nav_close));
+            title.setText(Label.getLabel("demographics_insurance_setup_health_insurance"));
+            findViewById(R.id.settings_toolbar).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View closeButton) {
+                    dismiss();
+                }
+            });
+        }
 
 
         selectedProvider = (CarePayTextView) findViewById(R.id.health_insurance_providers);
