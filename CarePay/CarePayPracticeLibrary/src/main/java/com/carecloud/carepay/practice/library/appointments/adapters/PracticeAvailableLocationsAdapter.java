@@ -79,7 +79,7 @@ public class PracticeAvailableLocationsAdapter extends RecyclerView.Adapter<Prac
                         selectLocation(position, true);
                         totalSelected = 1;
                     } else {
-                        if (!isSelected || (isSelected && totalSelected > 1)) {
+                        if (!isSelected || totalSelected > 1) {
                             selectLocation(position, !isSelected);
                             if (isSelected) {
                                 totalSelected--;
