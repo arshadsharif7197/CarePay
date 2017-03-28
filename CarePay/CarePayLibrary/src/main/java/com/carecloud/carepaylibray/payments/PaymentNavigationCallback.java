@@ -10,6 +10,12 @@ import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBa
 
 public interface PaymentNavigationCallback {
     /**
+     * Start payment process.. This is where we should init the initial dialog to show responsibility and details
+     * @param paymentsModel payment model dto
+     */
+    void startPaymentProcess(PaymentsModel paymentsModel);
+
+    /**
      * Callback to launch the partial payment view
      * @param owedAmount the owed amount
      */
@@ -51,4 +57,10 @@ public interface PaymentNavigationCallback {
      */
     void completePaymentProcess(UpdatePatientBalancesDTO updatePatientBalancesDTO);
 
+
+    /**
+     * Callback when payment process is canceled... This is where any cleanup of screens or resetting views should occur
+     * @param paymentsModel payment model
+     */
+    void cancelPaymentProcess(PaymentsModel paymentsModel);
 }

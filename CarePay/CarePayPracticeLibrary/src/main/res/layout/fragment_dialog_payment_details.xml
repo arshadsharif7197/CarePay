@@ -85,7 +85,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/white"
+        android:background="@drawable/patient_mode_dialog_body_bg"
         android:padding="@dimen/dimen_10dp">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton

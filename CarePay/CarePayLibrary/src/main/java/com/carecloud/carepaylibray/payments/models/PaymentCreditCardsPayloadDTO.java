@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.payments.models;
 
+import com.carecloud.carepaylibray.payments.models.postmodel.TokenizationService;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -36,6 +37,9 @@ public class PaymentCreditCardsPayloadDTO {
     @SerializedName("billing_information")
     @Expose
     private PaymentsCreditCardBillingInformationDTO billingInformation = new PaymentsCreditCardBillingInformationDTO();
+    @SerializedName("tokenization_service")
+    @Expose
+    private TokenizationService tokenizationService;
 
     /**
      * @return The cardType
@@ -155,5 +159,13 @@ public class PaymentCreditCardsPayloadDTO {
 
     public void setDefault(boolean isDefault) {
         this.isDefault = isDefault;
+    }
+
+    public TokenizationService getTokenizationService() {
+        return tokenizationService;
+    }
+
+    public void setTokenizationService(TokenizationService tokenizationService) {
+        this.tokenizationService = tokenizationService;
     }
 }

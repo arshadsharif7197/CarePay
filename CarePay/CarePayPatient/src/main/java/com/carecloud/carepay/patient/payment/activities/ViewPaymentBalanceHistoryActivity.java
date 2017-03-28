@@ -192,6 +192,11 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
+    public void startPaymentProcess(PaymentsModel paymentsModel) {
+
+    }
+
+    @Override
     public void startPartialPayment(double owedAmount) {
 
     }
@@ -248,6 +253,11 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void completePaymentProcess(UpdatePatientBalancesDTO updatePatientBalancesDTO) {
+
+    }
+
+    @Override
+    public void cancelPaymentProcess(PaymentsModel paymentsModel) {
 
     }
 

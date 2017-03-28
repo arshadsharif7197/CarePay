@@ -49,6 +49,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
@@ -362,6 +363,17 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
     }
 
     @Override
+    public void startPaymentProcess(PaymentsModel paymentsModel) {
+        Bundle args = new Bundle();
+        Gson gson = new Gson();
+        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(paymentsModel));
+
+        PaymentDistributionFragment fragment = new PaymentDistributionFragment();
+        fragment.setArguments(args);
+        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+    }
+
+    @Override
     public void startPartialPayment(double owedAmount) {
 
     }
@@ -426,40 +438,19 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
         updatePatientBalance(updatePatientBalancesDTO);
     }
 
-//    @Override
-//    public void onLeftActionTapped(PaymentsModel paymentsModel, double owedAmount) {
-//
-//    }
-//
-//    @Override
-//    public void onRightActionTapped(PaymentsModel paymentsModel, double amount) {
-//        onPayButtonClicked(amount, paymentsModel);
-//    }
-//
-//    @Override
-//    public void onDetailItemClick(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem) {
-//        String tag = PaymentDetailsFragmentDialog.class.getSimpleName();
-//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
-//        if (prev != null) {
-//            ft.remove(prev);
-//        }
-//        ft.addToBackStack(null);
-//
-//        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
-//                .newInstance(paymentsModel, paymentLineItem);
-//        dialog.show(ft, tag);
-//    }
+    @Override
+    public void cancelPaymentProcess(PaymentsModel paymentsModel) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
+        if(fragment!=null) {
+            fragment.showDialog();
+        }
+    }
+
 
     @Override
     public void showPaymentDistributionDialog(PaymentsModel paymentsModel) {
-        Bundle args = new Bundle();
-        Gson gson = new Gson();
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(paymentsModel));
-
-        PaymentDistributionFragment fragment = new PaymentDistributionFragment();
-        fragment.setArguments(args);
-        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+        startPaymentProcess(paymentsModel);
     }
 
     @Override
@@ -496,6 +487,30 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
         entryFragment.setCallback(callback);
         entryFragment.show(getSupportFragmentManager(), entryFragment.getClass().getSimpleName());
     }
+
+
+    @Override
+    protected void processExternalPayment(PaymentExecution execution, Intent data) {
+        switch (execution) {
+            case clover: {
+                String jsonPayload = data.getStringExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA);
+                if (jsonPayload != null) {
+                    Gson gson = new Gson();
+//                    PaymentUpdateBalanceDTO updateBalanceDTO = gson.fromJson(jsonPayload, PaymentUpdateBalanceDTO.class);
+//                    updatePatientBalance(updateBalanceDTO.getUpdatePatientBalancesDTO().get(0));
+                    PaymentsModel paymentsModel = gson.fromJson(jsonPayload, PaymentsModel.class);
+                    showPaymentConfirmation(paymentsModel);
+
+
+                }
+                break;
+            }
+            default:
+                //nothing
+                return;
+        }
+    }
+
 
     private void updatePatientBalance(UpdatePatientBalancesDTO updateBalance) {
         ListIterator<PatientBalanceDTO> iterator = checkInDTO.getPayload().getPatientBalances().listIterator();
