@@ -68,6 +68,10 @@ public class PopupPickerWindow extends PopupWindow {
         ((PopupPickerAdapter) popupRecycler.getAdapter()).setSelectedBalanceItem(balanceItemDTO);
     }
 
+    /**
+     * Set the background to top view if necessary
+     * @param showOnTop true to show above th anchor view
+     */
     public void flipPopup(boolean showOnTop){
         if(showOnTop){
             popupBackgroundView.setBackgroundResource(R.drawable.popup_picker_bg_top);

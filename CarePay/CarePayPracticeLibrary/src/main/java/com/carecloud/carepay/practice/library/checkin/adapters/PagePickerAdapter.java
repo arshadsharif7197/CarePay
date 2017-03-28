@@ -22,6 +22,12 @@ public class PagePickerAdapter extends PopupPickerAdapter {
     private List<String> messageList = new ArrayList<>();
     private PagePickerCallback callback;
 
+    /**
+     * Constructor
+     * @param context context
+     * @param messageList list of page message strings
+     * @param callback callback to send page
+     */
     public PagePickerAdapter(Context context, List<String> messageList, PagePickerCallback callback){
         super(context);
         this.messageList = messageList;
