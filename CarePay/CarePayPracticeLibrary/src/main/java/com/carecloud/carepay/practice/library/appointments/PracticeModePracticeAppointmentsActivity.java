@@ -25,9 +25,12 @@ import com.carecloud.carepay.practice.library.models.ResponsibilityHeaderModel;
 import com.carecloud.carepay.practice.library.payments.dialogs.FindPatientDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFragmentDialog;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -404,19 +407,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             hideProgressDialog();
             PaymentsModel patientDetails = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
 
-            String tag = ResponsibilityFragmentDialog.class.getSimpleName();
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
-            if (prev != null) {
-                ft.remove(prev);
-            }
-            ft.addToBackStack(null);
-
-            ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newPatientHeader(patientDetails);
-            ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
-                    .newInstance(patientDetails, null, Label.getLabel("create_appointment_label"),
-                            headerModel);
-            dialog.show(ft, tag);
+            startPaymentProcess(patientDetails);
         }
 
         @Override
@@ -548,7 +539,12 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void startPaymentProcess(PaymentsModel paymentsModel) {
-
+        String tag = ResponsibilityFragmentDialog.class.getSimpleName();
+        ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newPatientHeader(paymentsModel);
+        ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
+                .newInstance(paymentsModel, null, Label.getLabel("create_appointment_label"),
+                        headerModel);
+        dialog.show(getSupportFragmentManager(), tag);
     }
 
     @Override
@@ -558,12 +554,20 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
-
+        PracticePaymentMethodDialogFragment fragment = PracticePaymentMethodDialogFragment
+                .newInstance(paymentsModel, amount);
+        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
     }
 
     @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
-
+        boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
+        if (isCloverDevice || paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            PracticeChooseCreditCardFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel, selectedPaymentMethod.getLabel(), amount);
+            fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+        } else {
+            showAddCard(amount, paymentsModel);
+        }
     }
 
     @Override

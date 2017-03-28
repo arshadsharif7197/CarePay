@@ -15,7 +15,6 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.models.ResponsibilityHeaderModel;
 import com.carecloud.carepay.practice.library.payments.adapter.PaymentBalancesAdapter;
-import com.carecloud.carepay.practice.library.payments.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
@@ -29,6 +28,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -168,9 +168,14 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
 
     @Override
     public void showPaymentConfirmation(PaymentsModel paymentsModel) {
-        refreshBalance();
-        PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(this, paymentsModel, paymentsModel);
-        receiptDialog.show();
+        Gson gson = new Gson();
+        Bundle args = new Bundle();
+        String paymentsDTOString = gson.toJson(paymentsModel);
+        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
+
+        PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
+        confirmationFragment.setArguments(args);
+        confirmationFragment.show(getSupportFragmentManager(), confirmationFragment.getClass().getSimpleName());
     }
 
     @Override
@@ -187,7 +192,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
 
     @Override
     public void completePaymentProcess(UpdatePatientBalancesDTO updatePatientBalancesDTO) {
-
+        refreshBalance();
     }
 
     @Override
