@@ -463,6 +463,10 @@ public class InsuranceEditDialog extends Dialog {
         });
     }
 
+    /**
+     * @param bitmap scanned insurance
+     * @param isFront true if front part of insurance card
+     */
     public void updateModelAndViewsAfterScan(Bitmap bitmap, boolean isFront) {
         String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
         ImageView target;
