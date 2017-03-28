@@ -182,15 +182,13 @@ public class InsuranceEditDialog extends Dialog {
                     dismiss();
                 }
             });
-
-
         }else{
-            final Toolbar toolbar = (Toolbar) findViewById(R.id.settings_toolbar);
-            TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.demographics_toolbar);
+            TextView title = (TextView) toolbar.findViewById(R.id.demographics_toolbar_title);
             setGothamRoundedMediumTypeface(getContext(), title);
             toolbar.setNavigationIcon(ContextCompat.getDrawable(getContext(), R.drawable.icn_patient_mode_nav_close));
             title.setText(Label.getLabel("demographics_insurance_setup_health_insurance"));
-            findViewById(R.id.settings_toolbar).setOnClickListener(new View.OnClickListener() {
+            findViewById(R.id.demographics_toolbar).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View closeButton) {
                     dismiss();
