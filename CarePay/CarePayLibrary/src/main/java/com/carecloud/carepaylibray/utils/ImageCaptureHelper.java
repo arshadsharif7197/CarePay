@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
@@ -21,11 +23,9 @@ import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 
-import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraActivity;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
 
 import static com.carecloud.carepaylibray.utils.ImageCaptureHelper.ImageShape.RECTANGULAR;
 
@@ -65,45 +65,20 @@ public class ImageCaptureHelper {
      * C-Tor
      * @param activity The activity using the helper
      * @param targetImageView The target view where the captured image will be placed
-     * @param demographicLabelsDTO The label from remote
      */
-    public ImageCaptureHelper(Activity activity, ImageView targetImageView, DemographicLabelsDTO demographicLabelsDTO) {
+    public ImageCaptureHelper(Activity activity, ImageView targetImageView) {
         this.context = activity;
         this.imageViewTarget = targetImageView;
         // dialog options 1. Capture, 2.Library, 3. Cancel
-        chooseActionDlOptions[0] = StringUtil.captialize(demographicLabelsDTO != null ? demographicLabelsDTO.getDemographicsTakePhotoOption() : CarePayConstants.NOT_DEFINED);
-        chooseActionDlOptions[1] = StringUtil.captialize(demographicLabelsDTO != null ? demographicLabelsDTO.getDemographicsChooseFromLibraryOption() : CarePayConstants.NOT_DEFINED);
-        chooseActionDlOptions[2] = StringUtil.captialize(demographicLabelsDTO != null ? demographicLabelsDTO.getDemographicsCancelLabel() : CarePayConstants.NOT_DEFINED);
+        chooseActionDlOptions[0] = StringUtil.captialize(Label.getLabel("demographics_take_pic_option"));
+        chooseActionDlOptions[1] = StringUtil.captialize(Label.getLabel("demographics_select_gallery_option"));
+        chooseActionDlOptions[2] = StringUtil.captialize(Label.getLabel("demographics_cancel_label"));
 
         // dialog options 1. Capture, 2. Cancel
-        chooseActionDocumentDlOptions[0] = StringUtil.captialize(demographicLabelsDTO != null ? demographicLabelsDTO.getDemographicsTakePhotoOption() : CarePayConstants.NOT_DEFINED);
-        chooseActionDocumentDlOptions[1] = StringUtil.captialize(demographicLabelsDTO != null ? demographicLabelsDTO.getDemographicsCancelLabel() : CarePayConstants.NOT_DEFINED);
+        chooseActionDocumentDlOptions[0] = StringUtil.captialize(Label.getLabel("demographics_take_pic_option"));
+        chooseActionDocumentDlOptions[1] = StringUtil.captialize(Label.getLabel("demographics_cancel_label"));
 
-        chooseActionDlgTitle = StringUtil.captialize(demographicLabelsDTO != null ? demographicLabelsDTO.getDemographicsCaptureOptionsTitle() : CarePayConstants.NOT_DEFINED);
-
-        imgWidth = (int) context.getResources().getDimension(R.dimen.demographics_docs_thumbnail_width);
-        imgHeight = (int) context.getResources().getDimension(R.dimen.demographics_docs_thumbnail_height);
-        resetTargetView();
-    }
-
-    /**
-     * C-Tor
-     * @param activity The activity using the helper
-     * @param targetImageView The target view where the captured image will be placed
-     */
-    public ImageCaptureHelper(Activity activity, ImageView targetImageView, DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO) {
-        this.context = activity;
-        this.imageViewTarget = targetImageView;
-        // dialog options 1. Capture, 2.Library, 3. Cancel
-        chooseActionDlOptions[0] = demographicsSettingsLabelsDTO.getDemographicsTakePhotoOption();
-        chooseActionDlOptions[1] = demographicsSettingsLabelsDTO.getDemographicsChooseFromLibraryOption();
-        chooseActionDlOptions[2] = demographicsSettingsLabelsDTO.getDemographicsCancelLabel();
-
-        // dialog options 1. Capture, 2. Cancel
-        chooseActionDocumentDlOptions[0] = demographicsSettingsLabelsDTO.getDemographicsTakePhotoOption();
-        chooseActionDocumentDlOptions[1] = demographicsSettingsLabelsDTO.getDemographicsCancelLabel();
-
-        chooseActionDlgTitle = demographicsSettingsLabelsDTO.getDemographicsCaptureOptionsTitle();
+        chooseActionDlgTitle = StringUtil.captialize(Label.getLabel("demographics_select_capture_option_title"));
 
         imgWidth = (int) context.getResources().getDimension(R.dimen.demographics_docs_thumbnail_width);
         imgHeight = (int) context.getResources().getDimension(R.dimen.demographics_docs_thumbnail_height);
@@ -157,7 +132,7 @@ public class ImageCaptureHelper {
      * @param orientation device orientation
      * @return estimated degree value
      */
-    public int orientationToQuadrantDegrees(int orientation) {
+    private static int orientationToQuadrantDegrees(int orientation) {
         int degrees = 0;
 
         if (orientation < 140 & orientation > 30) {
@@ -197,31 +172,7 @@ public class ImageCaptureHelper {
             thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream);
         }
 
-        return setCapturedImageToTargetView(thumbnail, shape);
-    }
-
-    /**
-     * Callback method to be used upon returning from Camera activity
-     *
-     * @param shape The intended shape of the captured image
-     * @return The bitmap
-     */
-    public Bitmap onCaptureImageResult(ImageShape shape) {
-        if (imageBitmap == null) {
-            return null;
-        }
-        int degrees = orientationToQuadrantDegrees(orientation);
-        if (degrees > 0) {
-            imageBitmap = rotateBitmap(imageBitmap, degrees);
-        }
-        Bitmap thumbnail = imageBitmap;
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        if (thumbnail != null) {
-            // compress
-            thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream);
-        }
-
-        return setCapturedImageToTargetView(thumbnail, shape);
+        return setCapturedImageToTargetView(context, imageViewTarget, thumbnail, cameraType, shape);
     }
 
     /**
@@ -238,7 +189,7 @@ public class ImageCaptureHelper {
             // compress
             thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
             thumbnail = rotateImageIfRequired(context, thumbnail, data.getData());
-            return setCapturedImageToTargetView(thumbnail, shape);
+            return setCapturedImageToTargetView(context, imageViewTarget, thumbnail, cameraType, shape);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -291,7 +242,7 @@ public class ImageCaptureHelper {
      * @param finalBitmap The original bitmap
      * @return The scaled bitmap
      */
-    private Bitmap getSquareCroppedBitmap(Bitmap finalBitmap) {
+    private static Bitmap getSquareCroppedBitmap(Context context, Bitmap finalBitmap) {
         Bitmap output = Bitmap.createBitmap(finalBitmap.getWidth(),
                 finalBitmap.getHeight(),
                 Bitmap.Config.ARGB_8888);
@@ -319,7 +270,7 @@ public class ImageCaptureHelper {
      * @param input The original bitmap
      * @return The scaled bitmap
      */
-    private Bitmap getRoundedCroppedBitmap(Bitmap input, int outSize) {
+    private static Bitmap getRoundedCroppedBitmap(Context context, Bitmap input, int outSize) {
         Bitmap output = Bitmap.createBitmap(outSize, outSize, Bitmap.Config.ARGB_8888);
 
         Canvas canvas = new Canvas(output); 
@@ -354,10 +305,14 @@ public class ImageCaptureHelper {
      * @param image The bitmap
      * @param shape     The shape
      */
-    private Bitmap setCapturedImageToTargetView(Bitmap image, ImageShape shape) {
+    public static Bitmap setCapturedImageToTargetView(Context context, ImageView imageViewTarget, Bitmap image, CameraType cameraType, ImageShape shape) {
+        Resources resources = context.getResources();
+        int imgWidth = (int) resources.getDimension(R.dimen.demographics_docs_thumbnail_width);
+        int imgHeight = (int) resources.getDimension(R.dimen.demographics_docs_thumbnail_height);
+
         switch (shape) {
             case CIRCULAR:
-                image = getRoundedCroppedBitmap(image, imgWidth);
+                image = getRoundedCroppedBitmap(context, image, imgWidth);
                 break;
             case RECTANGULAR:
                 // calculate crop
@@ -389,11 +344,11 @@ public class ImageCaptureHelper {
                 // compress
                 if (cameraType == CameraType.CUSTOM_CAMERA && !SystemUtil.isTablet(context)) {
                     if (shape == RECTANGULAR) {
-                        image = getSquareCroppedBitmap(Bitmap.createScaledBitmap(image, imgWidth, imgHeight, true));
+                        image = getSquareCroppedBitmap(context, Bitmap.createScaledBitmap(image, imgWidth, imgHeight, true));
                     }
                 } else {
                     if (shape == RECTANGULAR) {
-                        image = getSquareCroppedBitmap(Bitmap.createScaledBitmap(croppedBitmap, imgWidth, imgHeight, true));
+                        image = getSquareCroppedBitmap(context, Bitmap.createScaledBitmap(croppedBitmap, imgWidth, imgHeight, true));
                     }
                 }
 

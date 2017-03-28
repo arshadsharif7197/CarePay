@@ -77,10 +77,10 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         initializePhotos();
 
         ImageView imageFront = (ImageView) view.findViewById(R.id.demogrDocsFrontScanImage);
-        scannerFront = new ImageCaptureHelper(getActivity(), imageFront, globalLabelsDTO);
+        scannerFront = new ImageCaptureHelper(getActivity(), imageFront);
 
         ImageView imageBack = (ImageView) view.findViewById(R.id.demogrDocsBackScanImage);
-        scannerBack = new ImageCaptureHelper(getActivity(), imageBack, globalLabelsDTO);
+        scannerBack = new ImageCaptureHelper(getActivity(), imageBack);
 
         // init views (labels and logic)
         String label;
@@ -125,7 +125,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                 // change button caption to 'rescan'
                 scanFrontButton.setText(R.string.demogr_docs_rescan_front);
                 // save from image
-                String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
+                String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
                 DemographicIdDocPhotoDTO frontDTO = model.getIdDocPhothos().get(0);
                 frontDTO.setIdDocPhoto(imageAsBase64); // create the image dto
                 frontDTO.setPage(1);
@@ -133,7 +133,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
             } else if (scanner == scannerBack) {
                 // change button caption to 'rescan'
                 scanBackButton.setText(R.string.demogr_docs_rescan_back);
-                String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
+                String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
                 DemographicIdDocPhotoDTO backDTO = model.getIdDocPhothos().get(1);
                 backDTO.setIdDocPhoto(imageAsBase64); // create the image dto
                 backDTO.setPage(2);

@@ -381,23 +381,6 @@ public class DemographicsActivity extends BasePatientActivity
     }
 
     @Override
-    public void navigateToInsuranceDocumentFragment(int index, DemographicInsurancePayloadDTO model) {
-        Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, modelGet.getMetadata().getLabels());
-        DtoHelper.bundleDto(args, modelGet.getMetadata().getDataModels().demographic.insurances.properties.items.insurance);
-        DtoHelper.bundleDto(args, model);
-        DtoHelper.bundleDto(args, index);
-        InsuranceDocumentScannerFragment fragment = new InsuranceDocumentScannerFragment();
-        fragment.setArguments(args);
-
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.insurance_item_holder, fragment, fragment.getClass().getSimpleName());
-        transaction.commit();
-        hideShowComponents(false);
-    }
-
-    @Override
     public void navigateToParentFragment() {
         hideShowComponents(true);
         //setCurrentItem(2, true);
@@ -427,7 +410,7 @@ public class DemographicsActivity extends BasePatientActivity
     }
 
     @Override
-    public void disableMainButton(boolean isDisabled) {
+    public void captureImage() {
 
     }
 

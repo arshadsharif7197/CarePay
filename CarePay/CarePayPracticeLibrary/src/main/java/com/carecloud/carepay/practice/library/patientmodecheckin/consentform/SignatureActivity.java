@@ -226,7 +226,7 @@ public class SignatureActivity extends BaseActivity {
             @Override
             public void onSigned() {
                 clearButton.setVisibility(View.VISIBLE);
-                signatureAsBase64 = SystemUtil.encodeToBase64(signaturePad.getSignatureBitmap(), Bitmap.CompressFormat.JPEG, 90);
+                signatureAsBase64 = SystemUtil.convertBitmapToString(signaturePad.getSignatureBitmap(), Bitmap.CompressFormat.JPEG, 90);
                 agreeButton.setEnabled(true);
             }
 

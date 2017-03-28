@@ -27,15 +27,13 @@ public class InsuranceLineItemsListAdapter extends
      *
      * @param context     context
      * @param model       model
-     * @param detailsList details list
      */
     public InsuranceLineItemsListAdapter(Context context, DemographicDTO model,
-                                         List<DemographicInsurancePayloadDTO> detailsList,
                                          OnInsuranceEditClickListener listener) {
 
         this.context = context;
         this.model = model;
-        this.detailsList = detailsList;
+        this.detailsList = model.getPayload().getDemographics().getPayload().getInsurances();
         this.listener = listener;
     }
 

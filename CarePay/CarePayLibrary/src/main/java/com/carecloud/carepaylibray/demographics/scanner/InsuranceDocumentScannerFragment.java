@@ -160,7 +160,7 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
         insuranceGroupNumEditText.setHint(label);
 
         ImageView frontInsuranceImageView = (ImageView) view.findViewById(R.id.demogr_insurance_frontimage);
-        insuranceFrontScanHelper = new ImageCaptureHelper(getActivity(), frontInsuranceImageView, globalLabelsDTO);
+        insuranceFrontScanHelper = new ImageCaptureHelper(getActivity(), frontInsuranceImageView);
 
         Button btnScanFrontInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_frontbtn);
         label = globalLabelsDTO.getDemographicsInsurancePhotoOfCardFront();
@@ -173,7 +173,7 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
         });
 
         ImageView backInsuranceImageView = (ImageView) view.findViewById(R.id.demogr_insurance_backimage);
-        insuranceBackScanHelper = new ImageCaptureHelper(getActivity(), backInsuranceImageView, globalLabelsDTO);
+        insuranceBackScanHelper = new ImageCaptureHelper(getActivity(), backInsuranceImageView);
         Button btnScanBackInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_backbtn);
         label = globalLabelsDTO.getDemographicsInsurancePhotoOfCardBack();
         btnScanBackInsurance.setText(label);
@@ -310,13 +310,13 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
                 // change button caption to 'rescan'
                 btnScanFrontInsurance.setText(globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED:globalLabelsDTO.getDemographicsDocumentsRescanFrontLabel());
                 // save from image
-                String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
+                String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
                 DemographicInsurancePhotoDTO frontDTO = insuranceDTO.getInsurancePhotos().get(0);
                 frontDTO.setInsurancePhoto(imageAsBase64); // create the image dto
             } else if (scanner == insuranceBackScanHelper) {
                 // change button caption to 'rescan'
                 btnScanBackInsurance.setText(globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED:globalLabelsDTO.getDemographicsDocumentsRescanBackLabel());
-                String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
+                String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
                 DemographicInsurancePhotoDTO backDTO = insuranceDTO.getInsurancePhotos().get(1);
                 backDTO.setInsurancePhoto(imageAsBase64); // create the image dto
             }
@@ -354,7 +354,7 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
                         btnScanFrontInsurance.setText(label);
                     } catch (MalformedURLException e) {
                         Bitmap bitmap;
-                        if (!StringUtil.isNullOrEmpty(photoFrontURL) && (bitmap = SystemUtil.base64ToBitmap(photoFrontURL)) != null) {
+                        if (!StringUtil.isNullOrEmpty(photoFrontURL) && (bitmap = SystemUtil.convertStringToBitmap(photoFrontURL)) != null) {
                             Log.v(LOG_TAG, "load as base64");
                             frontInsuranceImageView.setImageBitmap(bitmap);
                         } else {
@@ -378,7 +378,7 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
                         btnScanBackInsurance.setText(label1);
                     } catch (MalformedURLException e) {
                         Bitmap bitmap;
-                        if (!StringUtil.isNullOrEmpty(photoBackURL) && (bitmap = SystemUtil.base64ToBitmap(photoBackURL)) != null) {
+                        if (!StringUtil.isNullOrEmpty(photoBackURL) && (bitmap = SystemUtil.convertStringToBitmap(photoBackURL)) != null) {
                             Log.v(LOG_TAG, "load as base64");
                             backInsuranceImageView.setImageBitmap(bitmap);
                         } else {
