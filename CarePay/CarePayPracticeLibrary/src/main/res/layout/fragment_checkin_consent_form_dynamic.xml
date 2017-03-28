@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -85,7 +86,7 @@
         android:background="@drawable/green_rounded_button_selector"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_22"
-        android:text="Load Form"
+        breeze:textKey="demographics_review_next_button"
         app:customAssetFont="gotham_rounded_medium"/>
 
 

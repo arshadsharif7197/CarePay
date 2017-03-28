@@ -49,7 +49,6 @@ public class InsuranceEditDialog extends Dialog {
     private Context context;
     private DemographicDTO demographicDTO;
     private DemographicInsurancePayloadDTO lineItem;
-    private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
     private OnSaveChangesListener saveChangesListener;
 
     private TextInputLayout cardNumberInput;
@@ -227,7 +226,7 @@ public class InsuranceEditDialog extends Dialog {
     }
 
     private void setValues() {
-        insurancesMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.insurances;
+        DemographicMetadataEntityInsurancesDTO insurancesMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.insurances;
         if (insurancesMetaDTO != null) {
             DemographicMetadataPropertiesInsuranceDTO properties = insurancesMetaDTO.properties.items.insurance.properties;
 

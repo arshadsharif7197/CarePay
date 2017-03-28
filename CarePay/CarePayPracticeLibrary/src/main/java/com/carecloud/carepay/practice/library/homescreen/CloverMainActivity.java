@@ -42,7 +42,6 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -275,8 +274,24 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private void unlockPracticeMode() {
         Gson gson = new Gson();
         PatientModeLinksDTO pinPadObject = gson.fromJson(homeScreenDTO.getMetadata().getLinks(), PatientModeLinksDTO.class);
-        ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this, pinPadObject.getPinpad(), homeScreenDTO.getMetadata().getLabels(), false);
+        ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this, pinPadObject.getPinpad(), homeScreenDTO.getMetadata().getLabels(), false, getConfirmationPinDialogCallBacK());
         confirmationPinDialog.show();
+    }
+
+    /**
+     * Get confirmation pin dialog call bac k confirmation pin dialog . confirmation pin dialog listener.
+     *
+     * @return the confirmation pin dialog . confirmation pin dialog listener
+     */
+    public ConfirmationPinDialog.ConfirmationPinDialogListener getConfirmationPinDialogCallBacK(){
+        return new ConfirmationPinDialog.ConfirmationPinDialogListener() {
+
+            @Override
+            public void onError(String errorMessage) {
+
+                showErrorNotification(null);
+            }
+        };
     }
 
     private void getNews() {
@@ -633,4 +648,5 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         super.onBackPressed();
     }
+
 }

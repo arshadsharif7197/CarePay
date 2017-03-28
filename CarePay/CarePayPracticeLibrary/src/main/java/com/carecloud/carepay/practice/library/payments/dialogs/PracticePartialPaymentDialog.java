@@ -2,17 +2,13 @@ package com.carecloud.carepay.practice.library.payments.dialogs;
 
 import android.content.Context;
 import android.os.Bundle;
-
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 

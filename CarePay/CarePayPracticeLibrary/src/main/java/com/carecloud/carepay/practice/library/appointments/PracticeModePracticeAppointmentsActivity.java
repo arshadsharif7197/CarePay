@@ -25,9 +25,12 @@ import com.carecloud.carepay.practice.library.models.ResponsibilityHeaderModel;
 import com.carecloud.carepay.practice.library.payments.dialogs.FindPatientDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFragmentDialog;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -76,6 +79,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     private boolean needsToConfirmAppointmentCreation;
     private boolean wasCalledFromThisClass;
     private String confirmationMessageText ;
+    private boolean updateOnSuccess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -377,7 +381,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            SystemUtil.showSuccessToast(getContext(), Label.getLabel(confirmationMessageText));
             DtoHelper.putExtra(getIntent(), workflowDTO);
             initializeCheckinDto();
             applyFilter();
@@ -403,19 +406,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             hideProgressDialog();
             PaymentsModel patientDetails = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
 
-            String tag = ResponsibilityFragmentDialog.class.getSimpleName();
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
-            if (prev != null) {
-                ft.remove(prev);
-            }
-            ft.addToBackStack(null);
-
-            ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newPatientHeader(patientDetails);
-            ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
-                    .newInstance(patientDetails, null, Label.getLabel("create_appointment_label"),
-                            headerModel);
-            dialog.show(ft, tag);
+            startPaymentProcess(patientDetails);
         }
 
         @Override
@@ -468,16 +459,24 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     private void confirmAppointment(AppointmentDTO appointmentDTO) {
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getConfirmAppointment();
         confirmationMessageText = "appointment_request_success_message_HTML";
-        transitionAppointment(transitionDTO, appointmentDTO);
+        transitionAppointment(transitionDTO, appointmentDTO, true);
     }
 
     private void cancelAppointment(AppointmentDTO appointmentDTO) {
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getCancelAppointment();
         confirmationMessageText = "appointment_cancellation_success_message_HTML";
-        transitionAppointment(transitionDTO, appointmentDTO);
+        transitionAppointment(transitionDTO, appointmentDTO, false);
     }
 
-    private void transitionAppointment(TransitionDTO transitionDTO, AppointmentDTO appointmentDTO) {
+    private void rejectAppointment(AppointmentDTO appointmentDTO) {
+        TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getDismissAppointment();
+        confirmationMessageText = "appointment_rejection_success_message_HTML";
+        transitionAppointment(transitionDTO, appointmentDTO, false);
+    }
+
+    private void transitionAppointment(TransitionDTO transitionDTO, AppointmentDTO appointmentDTO, boolean updateOnSuccess) {
+        this.updateOnSuccess = updateOnSuccess;
+
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("appointment_id", appointmentDTO.getPayload().getId());
 
@@ -498,13 +497,17 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             DtoHelper.putExtra(getIntent(), checkInDTO);
             initializeCheckinDto();
             applyFilter();
+
+            updateOnSuccess = false;
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            showErrorNotification(null);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+
+            updateOnSuccess = false;
         }
 
         private void updateAppointment(WorkflowDTO workflowDTO) {
@@ -523,7 +526,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
                     appointments.remove(i);
 
-                    if (!newAppointmentDTO.getPayload().getAppointmentStatus().getCode().equals(CarePayConstants.CANCELLED)) {
+                    if (updateOnSuccess) {
                         appointments.add(newAppointmentDTO);
                     }
 
@@ -534,18 +537,36 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     };
 
     @Override
+    public void startPaymentProcess(PaymentsModel paymentsModel) {
+        String tag = ResponsibilityFragmentDialog.class.getSimpleName();
+        ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newPatientHeader(paymentsModel);
+        ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
+                .newInstance(paymentsModel, null, Label.getLabel("create_appointment_label"),
+                        headerModel);
+        dialog.show(getSupportFragmentManager(), tag);
+    }
+
+    @Override
     public void startPartialPayment(double owedAmount) {
 
     }
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
-
+        PracticePaymentMethodDialogFragment fragment = PracticePaymentMethodDialogFragment
+                .newInstance(paymentsModel, amount);
+        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
     }
 
     @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
-
+        boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
+        if (isCloverDevice || paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            PracticeChooseCreditCardFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel, selectedPaymentMethod.getLabel(), amount);
+            fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+        } else {
+            showAddCard(amount, paymentsModel);
+        }
     }
 
     @Override
@@ -572,6 +593,11 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void completePaymentProcess(UpdatePatientBalancesDTO updatePatientBalancesDTO) {
+
+    }
+
+    @Override
+    public void cancelPaymentProcess(PaymentsModel paymentsModel) {
 
     }
 
@@ -620,7 +646,15 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void onLeftActionTapped(AppointmentDTO appointmentDTO) {
-        cancelAppointment(appointmentDTO);
+        AppointmentPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
+
+        if (appointmentPayloadDTO.getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
+            rejectAppointment(appointmentDTO);
+        } else if (appointmentPayloadDTO.isAppointmentOver()) {
+            //TODO Add future logic
+        } else {
+            cancelAppointment(appointmentDTO);
+        }
     }
 
     @Override

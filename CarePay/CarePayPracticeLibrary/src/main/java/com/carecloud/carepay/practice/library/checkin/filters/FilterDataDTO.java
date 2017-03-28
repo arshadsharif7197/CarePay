@@ -1,8 +1,5 @@
 package com.carecloud.carepay.practice.library.checkin.filters;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by sudhir_pingale on 10/19/2016.
  * This class use for filtering the checkin screen

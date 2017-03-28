@@ -65,9 +65,6 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     private DemographicDTO demographicDTO;
     private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
     private DemographicLabelsDTO globalLabelsMetaDTO;
-//    private DemographicIdDocPayloadDTO model;
-//    private InsuranceDocumentScannerListener documentCallback;
-//    private boolean isPractice;
 
     private CarePayTextView selectedProvider;
     private CarePayTextView selectedPlan;
@@ -89,24 +86,11 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
 
     private boolean isCardNumberEmpty;
     private boolean isGroupNumberEmpty;
-//    private boolean hasImageChanged;
-
-//    private View.OnClickListener addNewElementListener = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View view) {
-//            DemographicInsurancePayloadDTO insurance = new DemographicInsurancePayloadDTO();
-//            insurance.getInsurancePhotos().add(new DemographicInsurancePhotoDTO());
-//            insurance.getInsurancePhotos().add(new DemographicInsurancePhotoDTO());
-//            documentCallback.navigateToInsuranceDocumentFragment(CarePayConstants.NO_INDEX, insurance);
-//        }
-//    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-//        isPractice = getApplicationMode().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
-//        model = DtoHelper.getConvertedDTO(DemographicIdDocPayloadDTO.class, getArguments());
 
         initDTOs();
         initActiveSection(view);
@@ -151,12 +135,6 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
         demographicDTO.getPayload().getDemographics().getPayload().setInsurances(insuranceList);
         return demographicDTO;
     }
-
-//    private void initTitle(View view){
-//        TextView healthInsuranceTitleTextView = (TextView) view.findViewById(R.id.insurancesTitleLabel);
-//        healthInsuranceTitleTextView.setText(globalLabelsMetaDTO.getDemographicsUpdateInsuranceToolbarTitle().toUpperCase());
-//        SystemUtil.setProximaNovaSemiboldTypeface(getContext(), healthInsuranceTitleTextView);
-//    }
 
     private void initLabels(View view) {
         // Set Labels

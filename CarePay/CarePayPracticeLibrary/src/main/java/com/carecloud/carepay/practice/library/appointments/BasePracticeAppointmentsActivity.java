@@ -3,15 +3,12 @@ package com.carecloud.carepay.practice.library.appointments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 
-import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAvailableHoursDialog;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeChooseProviderDialog;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeRequestAppointmentDialog;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -34,8 +31,6 @@ import com.google.gson.JsonObject;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * Created by cocampo on 3/13/17.
@@ -193,13 +188,13 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         this.visitTypeDTO = visitTypeDTO;
 
         String cancelString = getLabels().getAvailableHoursBack();
-        new PracticeAvailableHoursDialog(getContext(), cancelString, getLabels(), appointmentResourcesDTO.getResource(), appointmentsResultModel, visitTypeDTO, getLinks().getAppointmentAvailability(), this).show();
+        new PracticeAvailableHoursDialog(getContext(), cancelString, appointmentResourcesDTO.getResource(), appointmentsResultModel, visitTypeDTO, getLinks().getAppointmentAvailability(), this).show();
     }
 
     @Override
     public void selectTime(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource, AppointmentsResultModel appointmentsResultModel) {
         String cancelString = getLabels().getAvailableHoursBack();
-        new PracticeAvailableHoursDialog(getContext(), cancelString, getLabels(), appointmentResource, appointmentsResultModel, visitTypeDTO, getLinks().getAppointmentAvailability(), this, startDate, endDate).show();
+        new PracticeAvailableHoursDialog(getContext(), cancelString, appointmentResource, appointmentsResultModel, visitTypeDTO, getLinks().getAppointmentAvailability(), this, startDate, endDate).show();
     }
 
     @Override

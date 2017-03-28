@@ -13,6 +13,7 @@
         android:layout_height="match_parent"
         android:id="@+id/credit_card_image"
         android:src="@drawable/payment_credit_card_button_selector"
+        android:scaleType="centerCrop"
         android:padding="@dimen/payment_method_layout_checkbox_margin"
         android:adjustViewBounds="true"/>
 
@@ -22,7 +23,7 @@
         android:layout_weight="1"
         android:id="@+id/credit_card_text"
         android:gravity="start"
-        android:textSize="@dimen/payment_method_layout_label_text_size"
+        android:textSize="@dimen/text_size_22"
         android:textColor="@color/radio_button_selector"
         android:padding="@dimen/payment_method_layout_checkbox_margin"
         app:customAssetFont="proxima_nova_regular"/>

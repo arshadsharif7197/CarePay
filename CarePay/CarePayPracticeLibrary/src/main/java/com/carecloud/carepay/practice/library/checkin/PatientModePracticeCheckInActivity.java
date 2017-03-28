@@ -23,7 +23,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.updatebalance.PaymentUpdateBalanceDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -58,8 +57,7 @@ public class PatientModePracticeCheckInActivity extends BasePracticeActivity imp
             appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
             getAppointmentList();
         } catch (JsonSyntaxException ex) {
-            SystemUtil.showFailureDialogMessage(this, getString(R.string.alert_title_server_error),
-                    getString(R.string.alert_title_server_error));
+            showErrorNotification(null);
             ex.printStackTrace();
         }
     }

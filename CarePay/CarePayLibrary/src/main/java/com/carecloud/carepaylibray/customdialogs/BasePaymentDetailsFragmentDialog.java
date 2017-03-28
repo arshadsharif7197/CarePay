@@ -3,23 +3,12 @@ package com.carecloud.carepaylibray.customdialogs;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.carecloud.carepay.service.library.constants.ApplicationMode;
-import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.adapters.PaymentItemsListAdapter;
-import com.carecloud.carepaylibray.base.IApplicationSession;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.StringUtil;
 
 public abstract class BasePaymentDetailsFragmentDialog extends BaseDialogFragment implements View.OnClickListener {
 
@@ -68,4 +57,9 @@ public abstract class BasePaymentDetailsFragmentDialog extends BaseDialogFragmen
         return false;
     }
 
+    @Override
+    protected void onDialogCancel(){
+        dismiss();
+        callback.startPaymentProcess(paymentReceiptModel);
+    }
 }

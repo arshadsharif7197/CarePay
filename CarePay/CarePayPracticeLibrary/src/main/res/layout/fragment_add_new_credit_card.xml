@@ -28,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:src="@drawable/icn_close" />
+                android:src="@drawable/icn_arrow_left" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -500,7 +500,7 @@
 
                                 <com.carecloud.carepaylibray.customcomponents.CarePayAutoCompleteTextView
                                     android:id="@+id/addNewCredidCardStateAutoCompleteTextView"
-                                    style="@style/EditTextStyle"
+                                    style="@style/PaymentEditTextStyle"
                                     android:digits="@string/restrict_letters"
                                     android:imeOptions="actionDone"
                                     android:inputType="textAutoComplete"

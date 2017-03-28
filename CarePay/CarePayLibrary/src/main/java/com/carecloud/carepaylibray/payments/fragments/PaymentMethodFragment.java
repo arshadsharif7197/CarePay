@@ -44,7 +44,7 @@ public abstract class PaymentMethodFragment extends BaseDialogFragment {
     protected List<PaymentsMethodsDTO> paymentMethodsList = new ArrayList<>();
     protected HashMap<String, Integer> paymentTypeMap;
 
-    private PaymentNavigationCallback callback;
+    protected PaymentNavigationCallback callback;
 
     public abstract View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle);//make sure all implementations create a proper view
 

@@ -48,7 +48,7 @@
     <FrameLayout
         android:id="@+id/base_dialog_content_layout"
         android:layout_width="@dimen/dialog_width"
-        android:layout_height="@dimen/dialog_height"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginStart="26dp"
         android:layout_marginEnd="26dp"

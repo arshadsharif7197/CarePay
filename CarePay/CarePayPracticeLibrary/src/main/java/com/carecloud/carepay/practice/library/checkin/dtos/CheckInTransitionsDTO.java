@@ -27,6 +27,28 @@ public class CheckInTransitionsDTO {
     @Expose
     private TransitionDTO makeAppointment = new TransitionDTO();
 
+    @SerializedName("dismiss_appointment")
+    @Expose
+    private TransitionDTO dismissAppointment = new TransitionDTO();
+
+    /**
+     * Gets dismiss appointment.
+     *
+     * @return the dismiss appointment
+     */
+    public TransitionDTO getDismissAppointment() {
+        return dismissAppointment;
+    }
+
+    /**
+     * Sets dismiss appointment.
+     *
+     * @param dismissAppointment the dismiss appointment
+     */
+    public void setDismissAppointment(TransitionDTO dismissAppointment) {
+        this.dismissAppointment = dismissAppointment;
+    }
+
     /**
      *
      * @return
