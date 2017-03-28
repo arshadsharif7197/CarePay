@@ -188,13 +188,13 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         this.visitTypeDTO = visitTypeDTO;
 
         String cancelString = getLabels().getAvailableHoursBack();
-        new PracticeAvailableHoursDialog(getContext(), cancelString, getLabels(), appointmentResourcesDTO.getResource(), appointmentsResultModel, visitTypeDTO, getLinks().getAppointmentAvailability(), this).show();
+        new PracticeAvailableHoursDialog(getContext(), cancelString, appointmentResourcesDTO.getResource(), appointmentsResultModel, visitTypeDTO, getLinks().getAppointmentAvailability(), this).show();
     }
 
     @Override
     public void selectTime(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource, AppointmentsResultModel appointmentsResultModel) {
         String cancelString = getLabels().getAvailableHoursBack();
-        new PracticeAvailableHoursDialog(getContext(), cancelString, getLabels(), appointmentResource, appointmentsResultModel, visitTypeDTO, getLinks().getAppointmentAvailability(), this, startDate, endDate).show();
+        new PracticeAvailableHoursDialog(getContext(), cancelString, appointmentResource, appointmentsResultModel, visitTypeDTO, getLinks().getAppointmentAvailability(), this, startDate, endDate).show();
     }
 
     @Override
