@@ -127,6 +127,7 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
                 closeButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        SystemUtil.hideSoftKeyboard(getContext(), view);
                         dismiss();
                     }
                 });

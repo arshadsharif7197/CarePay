@@ -1,9 +1,11 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
@@ -38,6 +40,12 @@ public class PracticeFormsFragment extends BaseWebFormFragment {
         setTotalForms(consentFormList.size());
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle icicle){
+        super.onViewCreated(view, icicle);
+        setHeader(Label.getLabel("demographics_consent_forms_title"));
+    }
+
 
     @Override
     protected void displayNextForm() {
@@ -55,7 +63,6 @@ public class PracticeFormsFragment extends BaseWebFormFragment {
             String formString = form.toString().replaceAll("\'", Matcher.quoteReplacement("\\\'"));
 
             loadFormUrl(formString, "load_form");
-            setHeader(practiceForm.getPayload().get("title").getAsString());
 
         }
     }

@@ -369,7 +369,7 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
         } else {
             homeButton.setVisibility(View.GONE);
             gobackButton.setVisibility(View.GONE);
-            langSpinner.setVisibility(View.VISIBLE);
+            langSpinner.setVisibility(View.GONE);
 
         }
     }
