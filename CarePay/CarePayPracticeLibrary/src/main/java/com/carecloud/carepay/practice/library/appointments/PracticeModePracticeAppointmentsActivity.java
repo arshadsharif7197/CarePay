@@ -589,6 +589,11 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     @Override
+    public void cancelPaymentProcess(PaymentsModel paymentsModel) {
+
+    }
+
+    @Override
     public void onAppointmentRequestSuccess() {
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getPracticeAppointments();
 

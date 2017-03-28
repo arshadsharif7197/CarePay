@@ -43,7 +43,6 @@ import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItemMetadata;
-import com.carecloud.carepaylibray.payments.models.updatebalance.PaymentUpdateBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -295,8 +294,12 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 String jsonPayload = data.getStringExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA);
                 if (jsonPayload != null) {
                     Gson gson = new Gson();
-                    PaymentUpdateBalanceDTO updateBalanceDTO = gson.fromJson(jsonPayload, PaymentUpdateBalanceDTO.class);
-                    updatePatientBalance(updateBalanceDTO.getUpdatePatientBalancesDTO().get(0));
+//                    PaymentUpdateBalanceDTO updateBalanceDTO = gson.fromJson(jsonPayload, PaymentUpdateBalanceDTO.class);
+//                    updatePatientBalance(updateBalanceDTO.getUpdatePatientBalancesDTO().get(0));
+                    PaymentsModel paymentsModel = gson.fromJson(jsonPayload, PaymentsModel.class);
+                    showPaymentConfirmation(paymentsModel);
+
+
                 }
                 break;
             }
@@ -453,6 +456,15 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             fragment.dismiss();
         }
         updatePatientBalance(updatePatientBalancesDTO);
+    }
+
+    @Override
+    public void cancelPaymentProcess(PaymentsModel paymentsModel) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
+        if(fragment!=null) {
+            fragment.showDialog();
+        }
     }
 
     @Override

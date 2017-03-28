@@ -170,6 +170,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
                 if(validateBalanceItems()) {
                     generatePaymentsModel();
                     callback.onPayButtonClicked(paymentAmount, paymentsModel);
+                    hideDialog();
                 }
             }
         });

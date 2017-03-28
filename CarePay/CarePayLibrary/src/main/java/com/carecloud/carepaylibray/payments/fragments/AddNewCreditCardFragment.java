@@ -33,9 +33,6 @@ import java.util.Map;
  * Created by lmenendez on 3/1/17.
  */
 public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implements BaseAddCreditCardFragment.IAuthoriseCreditCardResponse {
-    private PaymentsModel paymentsModel;
-
-    private PaymentNavigationCallback callback;
 
     @Override
     public void onAttach(Context context) {
@@ -67,7 +64,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
     @Override
     public void onViewCreated(View view, Bundle icicle) {
         title.setText(Label.getLabel("payment_new_credit_card"));
-        nextButton.setText(Label.getLabel("payment_next_button"));
+        nextButton.setText(Label.getLabel("payment_details_pay_now"));
     }
 
 
@@ -205,6 +202,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         creditCardModel.setCvv(creditCardsPayloadDTO.getCvv());
         creditCardModel.setSaveCard(saveCardOnFileCheckBox.isChecked());
         creditCardModel.setDefault(setAsDefaultCheckBox.isChecked());
+        creditCardModel.setTokenizationService(creditCardsPayloadDTO.getTokenizationService());
 
         creditCardModel.setBillingInformation(billingInformationDTO);
         return creditCardModel;

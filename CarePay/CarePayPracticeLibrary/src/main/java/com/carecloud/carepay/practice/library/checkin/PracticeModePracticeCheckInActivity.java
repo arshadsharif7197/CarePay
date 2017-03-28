@@ -49,6 +49,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
@@ -426,6 +427,15 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
         updatePatientBalance(updatePatientBalancesDTO);
     }
 
+    @Override
+    public void cancelPaymentProcess(PaymentsModel paymentsModel) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager.findFragmentByTag(PaymentDistributionFragment.class.getSimpleName());
+        if(fragment!=null) {
+            fragment.showDialog();
+        }
+    }
+
 //    @Override
 //    public void onLeftActionTapped(PaymentsModel paymentsModel, double owedAmount) {
 //
@@ -496,6 +506,30 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
         entryFragment.setCallback(callback);
         entryFragment.show(getSupportFragmentManager(), entryFragment.getClass().getSimpleName());
     }
+
+
+    @Override
+    protected void processExternalPayment(PaymentExecution execution, Intent data) {
+        switch (execution) {
+            case clover: {
+                String jsonPayload = data.getStringExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA);
+                if (jsonPayload != null) {
+                    Gson gson = new Gson();
+//                    PaymentUpdateBalanceDTO updateBalanceDTO = gson.fromJson(jsonPayload, PaymentUpdateBalanceDTO.class);
+//                    updatePatientBalance(updateBalanceDTO.getUpdatePatientBalancesDTO().get(0));
+                    PaymentsModel paymentsModel = gson.fromJson(jsonPayload, PaymentsModel.class);
+                    showPaymentConfirmation(paymentsModel);
+
+
+                }
+                break;
+            }
+            default:
+                //nothing
+                return;
+        }
+    }
+
 
     private void updatePatientBalance(UpdatePatientBalancesDTO updateBalance) {
         ListIterator<PatientBalanceDTO> iterator = checkInDTO.getPayload().getPatientBalances().listIterator();

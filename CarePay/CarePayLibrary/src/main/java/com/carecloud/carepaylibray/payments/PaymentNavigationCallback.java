@@ -51,4 +51,10 @@ public interface PaymentNavigationCallback {
      */
     void completePaymentProcess(UpdatePatientBalancesDTO updatePatientBalancesDTO);
 
+
+    /**
+     * Callback when payment process is canceled... This is where any cleanup of screens or resetting views should occur
+     * @param paymentsModel payment model
+     */
+    void cancelPaymentProcess(PaymentsModel paymentsModel);
 }

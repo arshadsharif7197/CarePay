@@ -173,4 +173,17 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
                 actionBar.show();
             }
         }
+
+
+        public void showDialog(){
+            if(getDialog()!=null){
+                getDialog().show();
+            }
+        }
+
+        public void hideDialog(){
+            if(getDialog()!=null){
+                getDialog().hide();
+            }
+        }
 }

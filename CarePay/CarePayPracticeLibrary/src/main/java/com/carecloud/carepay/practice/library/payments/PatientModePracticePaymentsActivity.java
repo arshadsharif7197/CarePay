@@ -192,6 +192,11 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
     }
 
     @Override
+    public void cancelPaymentProcess(PaymentsModel paymentsModel) {
+
+    }
+
+    @Override
     public void onLeftActionTapped(PaymentsModel paymentsModel, double owedAmount) {
         startPartialPayment(owedAmount);
     }
