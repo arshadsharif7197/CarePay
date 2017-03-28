@@ -448,7 +448,7 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
 
     @Override
     public void onSelectAppointmentTimeSlot(AppointmentsSlotsDTO appointmentsSlotsDTO) {
-        callback.confirmAppointment(appointmentsSlotsDTO.getStartTime(), appointmentsSlotsDTO.getEndTime(), availabilityDTO);
+        callback.confirmAppointment(appointmentsSlotsDTO, availabilityDTO);
     }
 
     @Override

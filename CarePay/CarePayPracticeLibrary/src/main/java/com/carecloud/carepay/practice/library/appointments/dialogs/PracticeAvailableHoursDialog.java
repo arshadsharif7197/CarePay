@@ -327,7 +327,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     @Override
     public void onSelectAppointmentTimeSlot(AppointmentsSlotsDTO appointmentsSlotsDTO) {
         if (null != callback) {
-            callback.confirmAppointment(appointmentsSlotsDTO.getStartTime(), appointmentsSlotsDTO.getEndTime(), availabilityDTO);
+            callback.confirmAppointment(appointmentsSlotsDTO, availabilityDTO);
         }
 
         dismiss();

@@ -19,6 +19,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LinksDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
@@ -57,23 +58,22 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     public void showAppointmentConfirmation() {
 
         if (isVisible()) {
-                SystemUtil.showSuccessToast(getContext(), getLabels().getAppointmentRequestSuccessMessage());
-            }
+            SystemUtil.showSuccessToast(getContext(), getLabels().getAppointmentRequestSuccessMessage());
+        }
 
-            onAppointmentRequestSuccess();
+        onAppointmentRequestSuccess();
     }
 
     @Override
-    public void confirmAppointment(String startTime, String endTime, AppointmentAvailabilityDTO availabilityDTO) {
+    public void confirmAppointment(AppointmentsSlotsDTO appointmentsSlot, AppointmentAvailabilityDTO availabilityDTO) {
         this.availabilityDTO = availabilityDTO;
         // Call Request appointment Summary dialog from here
         String cancelString = getLabels().getAvailableHoursBack();
         new PracticeRequestAppointmentDialog(
                 this,
                 cancelString,
-                getLabels(),
-                startTime,
-                endTime,
+                appointmentsSlot.getStartTime(),
+                appointmentsSlot.getEndTime(),
                 appointmentResourcesDTO,
                 availabilityDTO,
                 visitTypeDTO,

@@ -29,13 +29,14 @@ public abstract class BasePracticeDialog extends Dialog implements View.OnClickL
 
     /**
      * Constructor.
+     *
      * @param context context
      */
     public BasePracticeDialog(Context context, String cancelString, boolean isFooterVisible) {
         super(context);
-        this.context =context;
+        this.context = context;
         this.cancelString = cancelString;
-        this.isFooterVisible =isFooterVisible;
+        this.isFooterVisible = isFooterVisible;
     }
 
     @Override
@@ -55,47 +56,48 @@ public abstract class BasePracticeDialog extends Dialog implements View.OnClickL
         setDialogCancelText(cancelString);
     }
 
-    private void onInitialization(){
-        ((LinearLayout) findViewById(R.id.closeViewLayout)).setOnClickListener(this);
-        ((LinearLayout) findViewById(R.id.footer_layout)).setVisibility(isFooterVisible?View.VISIBLE:View.GONE);
+    private void onInitialization() {
+        (findViewById(R.id.closeViewLayout)).setOnClickListener(this);
+        (findViewById(R.id.footer_layout)).setVisibility(isFooterVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override
     public void onClick(View view) {
         int viewId = view.getId();
 
-        if(viewId == R.id.closeViewLayout){
+        if (viewId == R.id.closeViewLayout) {
             onDialogCancel();
         }
     }
 
-    protected void setDialogTitle(String title){
+    protected void setDialogTitle(String title) {
         ((CarePayTextView) findViewById(R.id.content_view_header_title)).setText(title);
     }
 
-    protected void removeHeader(){
+    protected void removeHeader() {
         CarePayTextView carePayTextView = (CarePayTextView) findViewById(R.id.content_view_header_title);
         ((ViewGroup) carePayTextView.getParent()).removeView(carePayTextView);
     }
 
 
-    protected void setCancelImage(int resourceId){
+    protected void setCancelImage(int resourceId) {
         ((ImageView) findViewById(R.id.cancel_img)).setImageResource(resourceId);
     }
 
-    private void setDialogCancelText(String title){
+    private void setDialogCancelText(String title) {
         ((CarePayTextView) findViewById(R.id.closeTextView)).setText(title);
     }
 
     // if caller want to change on cancel then override this method in extended class
-    protected  void onDialogCancel(){
+    protected void onDialogCancel() {
         dismiss();
     }
 
-    protected abstract  void onAddContentView(LayoutInflater inflater);
+    protected abstract void onAddContentView(LayoutInflater inflater);
 
     /**
      * inflate the footer view by default visibility gone if have footer then override this method in extended class
+     *
      * @param inflater inflater
      */
     protected abstract void onAddFooterView(LayoutInflater inflater);
