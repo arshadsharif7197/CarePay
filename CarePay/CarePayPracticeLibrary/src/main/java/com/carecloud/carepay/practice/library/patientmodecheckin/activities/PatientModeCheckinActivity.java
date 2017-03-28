@@ -308,6 +308,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
 
     @Override
+    public void startPaymentProcess(PaymentsModel paymentsModel) {
+        //nothing to do here
+    }
+
+    @Override
     public void startPartialPayment(double owedAmount) {
         String tag = PracticePartialPaymentDialogFragment.class.getSimpleName();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

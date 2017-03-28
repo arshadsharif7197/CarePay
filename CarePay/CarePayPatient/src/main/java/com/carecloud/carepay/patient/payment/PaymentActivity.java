@@ -174,6 +174,11 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
     }
 
     @Override
+    public void startPaymentProcess(PaymentsModel paymentsModel) {
+
+    }
+
+    @Override
     public void startPartialPayment(double owedAmount) {
 
     }
@@ -214,6 +219,11 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
 
     @Override
     public void completePaymentProcess(UpdatePatientBalancesDTO updatePatientBalancesDTO) {
+
+    }
+
+    @Override
+    public void cancelPaymentProcess(PaymentsModel paymentsModel) {
 
     }
 

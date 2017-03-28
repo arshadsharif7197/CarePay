@@ -363,6 +363,17 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
     }
 
     @Override
+    public void startPaymentProcess(PaymentsModel paymentsModel) {
+        Bundle args = new Bundle();
+        Gson gson = new Gson();
+        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(paymentsModel));
+
+        PaymentDistributionFragment fragment = new PaymentDistributionFragment();
+        fragment.setArguments(args);
+        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+    }
+
+    @Override
     public void startPartialPayment(double owedAmount) {
 
     }
@@ -436,40 +447,10 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
         }
     }
 
-//    @Override
-//    public void onLeftActionTapped(PaymentsModel paymentsModel, double owedAmount) {
-//
-//    }
-//
-//    @Override
-//    public void onRightActionTapped(PaymentsModel paymentsModel, double amount) {
-//        onPayButtonClicked(amount, paymentsModel);
-//    }
-//
-//    @Override
-//    public void onDetailItemClick(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem) {
-//        String tag = PaymentDetailsFragmentDialog.class.getSimpleName();
-//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
-//        if (prev != null) {
-//            ft.remove(prev);
-//        }
-//        ft.addToBackStack(null);
-//
-//        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
-//                .newInstance(paymentsModel, paymentLineItem);
-//        dialog.show(ft, tag);
-//    }
 
     @Override
     public void showPaymentDistributionDialog(PaymentsModel paymentsModel) {
-        Bundle args = new Bundle();
-        Gson gson = new Gson();
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(paymentsModel));
-
-        PaymentDistributionFragment fragment = new PaymentDistributionFragment();
-        fragment.setArguments(args);
-        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+        startPaymentProcess(paymentsModel);
     }
 
     @Override

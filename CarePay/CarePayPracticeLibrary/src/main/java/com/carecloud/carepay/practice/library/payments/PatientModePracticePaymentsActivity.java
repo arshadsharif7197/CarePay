@@ -119,20 +119,19 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
 
     @Override
     public void onBalancePayButtonClicked(PatientBalanceDTO patientBalanceDTO) {
-        String tag = ResponsibilityFragmentDialog.class.getSimpleName();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
+        startPaymentProcess(paymentResultModel);
+    }
 
-        ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newClinicHeader(paymentResultModel);
+    @Override
+    public void startPaymentProcess(PaymentsModel paymentsModel) {
+        String tag = ResponsibilityFragmentDialog.class.getSimpleName();
+        ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newClinicHeader(paymentsModel);
         ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
-                .newInstance(paymentResultModel, Label.getLabel("payment_partial_label"),
-                        Label.getLabel("payment_pay_total_amount_button"), headerModel);
+                .newInstance(paymentsModel, Label.getLabel("payment_partial_payment_text"),
+                        Label.getLabel("payment_details_pay_now"), headerModel);
         dialog.setLeftButtonEnabled(true);
-        dialog.show(ft, tag);
+        dialog.show(getSupportFragmentManager(), tag);
+
     }
 
     @Override

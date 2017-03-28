@@ -547,6 +547,11 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     };
 
     @Override
+    public void startPaymentProcess(PaymentsModel paymentsModel) {
+
+    }
+
+    @Override
     public void startPartialPayment(double owedAmount) {
 
     }
