@@ -28,6 +28,10 @@ public class DemographicPayloadDTO {
     @Expose
     private DemographicAddressPayloadDTO address = new DemographicAddressPayloadDTO();
 
+    @SerializedName("notifications")
+    @Expose
+    private NotificationSettings notificationSettings = new NotificationSettings();
+
     /**
      * @return The address
      */
@@ -87,4 +91,11 @@ public class DemographicPayloadDTO {
         this.insurances = insurances;
     }
 
+    public NotificationSettings getNotificationSettings() {
+        return notificationSettings;
+    }
+
+    public void setNotificationSettings(NotificationSettings notificationSettings) {
+        this.notificationSettings = notificationSettings;
+    }
 }
