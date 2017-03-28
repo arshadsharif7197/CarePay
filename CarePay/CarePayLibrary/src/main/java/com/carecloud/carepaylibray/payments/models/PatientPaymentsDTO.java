@@ -11,13 +11,13 @@ public class PatientPaymentsDTO {
 
     @SerializedName("payload")
     @Expose
-    private List<PaymentReceiptPayloadDTO> payload = new ArrayList<>();
+    private List<PatientPaymentPayload> payload = new ArrayList<>();
 
-    public List<PaymentReceiptPayloadDTO> getPayload() {
+    public List<PatientPaymentPayload> getPayload() {
         return payload;
     }
 
-    public void setPayload(List<PaymentReceiptPayloadDTO> payload) {
+    public void setPayload(List<PatientPaymentPayload> payload) {
         this.payload = payload;
     }
 

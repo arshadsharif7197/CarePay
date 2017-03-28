@@ -37,13 +37,16 @@ import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -71,7 +74,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     private TwoColumnPatientListView patientListView;
     private boolean needsToConfirmAppointmentCreation;
-    private static final String TAG = "AppointmentsActivity";
+    private boolean wasCalledFromThisClass;
     private String confirmationMessageText ;
 
     @Override
@@ -287,7 +290,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                 DateRangePickerDialog dialog = DateRangePickerDialog.newInstance(
                         checkInLabelDTO.getDateRangePickerDialogTitle(),
                         checkInLabelDTO.getDateRangePickerDialogClose(),
-                        checkInLabelDTO.getTodayLabel(),
                         true,
                         startDate,
                         endDate,
@@ -296,21 +298,33 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                         PracticeModePracticeAppointmentsActivity.this
                 );
                 dialog.show(ft, tag);
+
+                wasCalledFromThisClass = true;
             }
         });
     }
 
     @Override
     public void onRangeSelected(Date start, Date end) {
-        this.startDate = start;
-        this.endDate = end;
+        if (!wasCalledFromThisClass) {
+            super.onRangeSelected(start, end);
+        } else {
+            this.startDate = start;
+            this.endDate = end;
 
-        onAppointmentRequestSuccess();
+            onAppointmentRequestSuccess();
+
+            wasCalledFromThisClass = false;
+        }
     }
 
     @Override
     public void onDateRangeCancelled() {
-
+        if (!wasCalledFromThisClass) {
+            super.onDateRangeCancelled();
+        } else {
+            wasCalledFromThisClass = false;
+        }
     }
 
     private View.OnClickListener getFindPatientListener(final boolean needsConfirmation) {
@@ -540,12 +554,24 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     @Override
-    public void showReceipt(PaymentsModel paymentsModel) {
+    public void showPaymentConfirmation(PaymentsModel paymentsModel) {
+        Gson gson = new Gson();
+        Bundle args = new Bundle();
+        String paymentsDTOString = gson.toJson(paymentsModel);
+        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
 
+        PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
+        confirmationFragment.setArguments(args);
+        confirmationFragment.show(getSupportFragmentManager(), confirmationFragment.getClass().getSimpleName());
     }
 
     @Override
     public void showAddCard(double amount, PaymentsModel paymentsModel) {
+
+    }
+
+    @Override
+    public void completePaymentProcess(UpdatePatientBalancesDTO updatePatientBalancesDTO) {
 
     }
 
@@ -556,6 +582,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("start_date", getFormattedDate(startDate));
         queryMap.put("end_date", getFormattedDate(endDate));
+
         getWorkflowServiceHelper().execute(transitionDTO, allAppointmentsServiceCallback, queryMap);
     }
 

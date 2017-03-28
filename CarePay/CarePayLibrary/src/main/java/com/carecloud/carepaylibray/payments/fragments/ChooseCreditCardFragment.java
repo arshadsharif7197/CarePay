@@ -56,7 +56,7 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
 
     private int selectedCreditCard = -1;
     protected PaymentsModel paymentsModel;
-    private double amountToMakePayment;
+    protected double amountToMakePayment;
 
     protected String titleLabel;
     private PaymentNavigationCallback callback;
@@ -302,7 +302,7 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             Gson gson = new Gson();
-            callback.showReceipt(gson.fromJson(workflowDTO.toString(), PaymentsModel.class));
+            callback.showPaymentConfirmation(gson.fromJson(workflowDTO.toString(), PaymentsModel.class));
             if (getDialog() != null) {
                 dismiss();
             }

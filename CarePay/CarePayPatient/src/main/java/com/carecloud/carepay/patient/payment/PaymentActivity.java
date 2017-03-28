@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.payment.androidpay.ConfirmationActivity;
-import com.carecloud.carepay.patient.payment.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -19,8 +18,10 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.gms.wallet.MaskedWallet;
 import com.google.android.gms.wallet.WalletConstants;
@@ -212,6 +213,11 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
     }
 
     @Override
+    public void completePaymentProcess(UpdatePatientBalancesDTO updatePatientBalancesDTO) {
+
+    }
+
+    @Override
     public void onPaymentPlanAction() {
         PaymentPlanFragment fragment = new PaymentPlanFragment();
 
@@ -225,9 +231,14 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
     }
 
     @Override
-    public void showReceipt(PaymentsModel paymentsModel) {
-        PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(this, paymentsModel);
-        receiptDialog.show();
+    public void showPaymentConfirmation(PaymentsModel paymentsModel) {
+        Gson gson = new Gson();
+        Bundle args = new Bundle();
+        String paymentsDTOString = gson.toJson(paymentsModel);
+        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
 
+        PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
+        confirmationFragment.setArguments(args);
+        confirmationFragment.show(getSupportFragmentManager(), confirmationFragment.getClass().getSimpleName());
     }
 }

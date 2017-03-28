@@ -26,6 +26,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentType;
+import com.carecloud.carepaylibray.payments.models.postmodel.TokenizationService;
 import com.carecloud.carepaylibray.payments.models.postmodel.TransactionResponse;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.util.CloverAuth;
@@ -421,6 +422,7 @@ public class CloverPaymentActivity extends BaseActivity {
         creditCardModel.setExpiryDate(transactionInfo.getVaultedCard().getExpirationDate());
         creditCardModel.setNameOnCard(transactionInfo.getVaultedCard().getCardholderName());
         creditCardModel.setToken(transactionInfo.getToken());
+        creditCardModel.setTokenizationService(TokenizationService.clover);
 
         PaymentsCreditCardBillingInformationDTO billingInformation = new PaymentsCreditCardBillingInformationDTO();
         billingInformation.setSameAsPatient(true);

@@ -220,7 +220,6 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         DateRangePickerDialog dialog = DateRangePickerDialog.newInstance(
                 getLabels().getPickDateHeading(),
                 getLabels().getDatepickerCancelOption(),
-                getLabels().getTodayDateOption(),
                 false,
                 startDate,
                 endDate,

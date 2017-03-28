@@ -5,6 +5,7 @@ import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * Created by cocampo on 2/13/17.
@@ -13,7 +14,7 @@ import java.util.Comparator;
 public class FilterModel {
 
     private ArrayList<FilterDataDTO> doctors = new ArrayList<>();
-    private ArrayList<FilterDataDTO> locations = new ArrayList<>();
+    private List<FilterDataDTO> locations = new ArrayList<>();
     private ArrayList<FilterDataDTO> patients = new ArrayList<>();
 
     private boolean filteringByPending;
@@ -30,7 +31,7 @@ public class FilterModel {
     /**
      * @param newList new list of locations
      */
-    public void setLocations(ArrayList<FilterDataDTO> newList) {
+    public void setLocations(List<FilterDataDTO> newList) {
         sortListByName(newList);
         checkPreviouslyChecked(this.locations, newList);
         this.locations = newList;
@@ -45,7 +46,7 @@ public class FilterModel {
         this.patients = newList;
     }
 
-    private void sortListByName(ArrayList<FilterDataDTO> filterableList) {
+    private void sortListByName(List<FilterDataDTO> filterableList) {
         Collections.sort(filterableList, new Comparator<FilterDataDTO>() {
             //@TargetApi(Build.VERSION_CODES.KITKAT)
             @Override
@@ -58,7 +59,7 @@ public class FilterModel {
         });
     }
 
-    private void checkPreviouslyChecked(ArrayList<FilterDataDTO> oldList, ArrayList<FilterDataDTO> newList) {
+    private void checkPreviouslyChecked(List<FilterDataDTO> oldList, List<FilterDataDTO> newList) {
         int oldIndex = 0;
         int newIndex = 0;
 
@@ -94,7 +95,7 @@ public class FilterModel {
         clear(patients);
     }
 
-    private void clear(ArrayList<FilterDataDTO> list) {
+    private void clear(List<FilterDataDTO> list) {
         for (FilterDataDTO dto : list) {
             dto.setChecked(false);
         }
@@ -104,7 +105,7 @@ public class FilterModel {
         return doctors;
     }
 
-    public ArrayList<FilterDataDTO> getLocations() {
+    public List<FilterDataDTO> getLocations() {
         return locations;
     }
 
