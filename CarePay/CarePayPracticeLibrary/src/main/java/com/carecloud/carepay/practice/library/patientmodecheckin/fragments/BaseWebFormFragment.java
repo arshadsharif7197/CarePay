@@ -26,10 +26,8 @@ import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.Chec
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
-import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.marcok.stepprogressbar.StepProgressBar;
@@ -85,7 +83,6 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
                 validateForm();
             }
         });
-        setNextButton();
         nextButton.setEnabled(false);
 
         progressIndicator = (StepProgressBar) view.findViewById(R.id.progress_indicator);
@@ -103,17 +100,6 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
 
     }
 
-    protected void setNextButton(){
-        String text;
-        if (getDisplayedFormsIndex() < (getTotalForms() - 1)) {
-            text = Label.getLabel("next_form_button_text");
-        } else {
-            text = Label.getLabel("finish_form_button_text");
-        }
-
-        nextButton.setText(StringUtil.getLabelForView(text));
-
-    }
 
     protected void setHeader(String text){
         header.setText(text);
@@ -312,8 +298,6 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         if (displayedFormsIndex < totalForms-1) {
             ++displayedFormsIndex;
 
-            setNextButton();
-
             displayNextForm();
 
         } else {
@@ -327,7 +311,6 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
     public boolean navigateBack(){
         if(totalForms>1 && displayedFormsIndex > 0){
             --displayedFormsIndex;
-            setNextButton();
             displayNextForm();
             return true;
         }

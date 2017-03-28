@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.models.PatientModel;
@@ -95,6 +97,12 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
                 selectImage(imageCaptureHelper, ImageCaptureHelper.CameraType.DEFAULT_CAMERA);
             }
         });
+
+        boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
+        if(isCloverDevice){
+            buttonChangeCurrentPhoto.setVisibility(View.INVISIBLE);
+        }
+
 //        String captureCaption = isRevScreen? labelsMetaDTO.getDemographicsTakePictureButtonTitle():
 //                               labelsMetaDTO.getDemographicsProfileCaptureCaption();
 //        buttonChangeCurrentPhoto.setText(captureCaption);

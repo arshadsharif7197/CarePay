@@ -161,7 +161,7 @@ public class MedicationsAllergyFragment extends BaseFragment implements Medicati
 
 
         Button continueButton = (Button) view.findViewById(R.id.medication_allergies_continue_button);
-        continueButton.setText(StringUtil.getLabelForView(labels.getMedicationAllergiesContinueButton()));
+//        continueButton.setText(StringUtil.getLabelForView(labels.getMedicationAllergiesContinueButton()));
         continueButton.setOnClickListener(continueClickListener);
 
         unlistedAllergies = (EditText) view.findViewById(R.id.allergy_none_placeholder_text);
