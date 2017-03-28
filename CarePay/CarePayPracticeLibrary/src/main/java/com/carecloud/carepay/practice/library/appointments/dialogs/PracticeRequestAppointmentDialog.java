@@ -12,11 +12,11 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.customdialog.BasePracticeDialog;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
-import com.carecloud.carepaylibray.appointments.models.LocationDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -25,42 +25,32 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
 
+    private final AppointmentsSlotsDTO appointmentSlot;
     private Context context;
-    private LayoutInflater inflater;
-    private AppointmentLabelDTO labelDTO;
-    private final String startTime;
-    private final String endTime;
+    private final LayoutInflater inflater;
     private final AppointmentResourcesDTO appointmentResourcesDTO;
-    private AppointmentAvailabilityDTO appointmentAvailabilityDTO;
     private VisitTypeDTO visitTypeDTO;
     private final AppointmentNavigationCallback callback;
     private TextView visitTypeTextView;
 
     /**
      * Constructor.
-     * @param context activity context
-     * @param cancelString String
-     * @param startTime start time
-     * @param endTime end time
-     * @param labelDTO labels for dialog
-     * @param callback for dialog actions
+     *
+     * @param context         activity context
+     * @param cancelString    String
+     * @param appointmentSlot The appointment data
+     * @param callback        for dialog actions
      */
     public PracticeRequestAppointmentDialog(Context context, String cancelString,
-                                            AppointmentLabelDTO labelDTO,
-                                            String startTime,
-                                            String endTime,
+                                            AppointmentsSlotsDTO appointmentSlot,
                                             AppointmentResourcesDTO appointmentResourcesDTO,
-                                            AppointmentAvailabilityDTO appointmentAvailabilityDTO,
                                             VisitTypeDTO visitTypeDTO,
                                             AppointmentNavigationCallback callback) {
 
         super(context, cancelString, false);
         this.context = context;
-        this.labelDTO = labelDTO;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.appointmentSlot = appointmentSlot;
         this.appointmentResourcesDTO = appointmentResourcesDTO;
-        this.appointmentAvailabilityDTO = appointmentAvailabilityDTO;
         this.visitTypeDTO = visitTypeDTO;
         this.callback = callback;
 
@@ -80,7 +70,7 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
     @Override
     protected void onAddContentView(LayoutInflater inflater) {
         View view = inflater.inflate(R.layout.dialog_request_appointment_summary, null);
-        ((FrameLayout)findViewById(com.carecloud.carepay.practice.library.R.id.base_dialog_content_layout)).addView(view);
+        ((FrameLayout) findViewById(com.carecloud.carepay.practice.library.R.id.base_dialog_content_layout)).addView(view);
         inflateUIComponents(view);
     }
 
@@ -89,39 +79,36 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
 
     }
 
-    private void inflateUIComponents(View view){
+    private void inflateUIComponents(View view) {
         Button requestAppointmentButton = (Button)
                 view.findViewById(R.id.requestAppointmentButton);
-        requestAppointmentButton.setText(labelDTO.getAppointmentsRequestHeading());
+        requestAppointmentButton.setText(Label.getLabel("appointments_request_heading"));
         requestAppointmentButton.setOnClickListener(requestAppointmentClickListener);
         requestAppointmentButton.requestFocus();
-        SystemUtil.setGothamRoundedBookTypeface(context,requestAppointmentButton);
+        SystemUtil.setGothamRoundedBookTypeface(context, requestAppointmentButton);
 
-        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(startTime);
+        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentSlot.getStartTime());
 
-        setDialogTitle(dateUtil.getDateAsDayMonthDayOrdinalYear(labelDTO.getAppointmentsTodayHeadingSmall()));
+        setDialogTitle(dateUtil.getDateAsDayMonthDayOrdinalYear(Label.getLabel("appointments_web_today_heading")));
 
-        CarePayTextView appointmentTimeTextView = (CarePayTextView)view.findViewById(R.id.appointment_time);
+        CarePayTextView appointmentTimeTextView = (CarePayTextView) view.findViewById(R.id.appointment_time);
         appointmentTimeTextView.setText(dateUtil.getTime12Hour());
-        SystemUtil.setGothamRoundedBoldTypeface(context,appointmentTimeTextView);
+        SystemUtil.setGothamRoundedBoldTypeface(context, appointmentTimeTextView);
 
-        CarePayTextView providerImageTextView = (CarePayTextView)view.findViewById(R.id.provider_short_name);
+        CarePayTextView providerImageTextView = (CarePayTextView) view.findViewById(R.id.provider_short_name);
         providerImageTextView.setText(StringUtil.getShortName(appointmentResourcesDTO.getResource().getProvider().getName()));
-        CarePayTextView appointmentDoctorNameTextView = (CarePayTextView)view.findViewById(R.id.provider_doctor_name);
+        CarePayTextView appointmentDoctorNameTextView = (CarePayTextView) view.findViewById(R.id.provider_doctor_name);
         appointmentDoctorNameTextView.setText(appointmentResourcesDTO.getResource().getProvider().getName());
-        CarePayTextView appointmentDoctorSpecialityTextView = (CarePayTextView)view.findViewById(R.id.provider_doctor_speciality);
+        CarePayTextView appointmentDoctorSpecialityTextView = (CarePayTextView) view.findViewById(R.id.provider_doctor_speciality);
         appointmentDoctorSpecialityTextView.setText(appointmentResourcesDTO.getResource().getProvider().getSpecialty().getName());
 
-        //Endpoint not support location for individual resource,
-        //Hence used 0th item from location array
-        LocationDTO location = appointmentAvailabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getLocation();
-        CarePayTextView appointmentPlaceNameTextView = (CarePayTextView)view.findViewById(R.id.provider_place_name);
-        appointmentPlaceNameTextView.setText(location.getName());
-        SystemUtil.setProximaNovaExtraboldTypeface(context,appointmentPlaceNameTextView);
-        CarePayTextView appointmentAddressTextView = (CarePayTextView)view.findViewById(R.id.provider_place_address);
-        appointmentAddressTextView.setText(location.getAddress().getPlaceAddressString());
-        CarePayTextView visitTypeLabel = (CarePayTextView)view.findViewById(R.id.visitTypeLabel);
-        visitTypeLabel.setText(labelDTO.getVisitTypeHeading());
+        CarePayTextView appointmentPlaceNameTextView = (CarePayTextView) view.findViewById(R.id.provider_place_name);
+        appointmentPlaceNameTextView.setText(appointmentSlot.getLocation().getName());
+        SystemUtil.setProximaNovaExtraboldTypeface(context, appointmentPlaceNameTextView);
+        CarePayTextView appointmentAddressTextView = (CarePayTextView) view.findViewById(R.id.provider_place_address);
+        appointmentAddressTextView.setText(appointmentSlot.getLocation().getAddress().getPlaceAddressString());
+        CarePayTextView visitTypeLabel = (CarePayTextView) view.findViewById(R.id.visitTypeLabel);
+        visitTypeLabel.setText(Label.getLabel("visit_type_heading"));
 
         initializeVisitTypeTextView(view);
 
@@ -130,7 +117,7 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
     }
 
     private void initializeVisitTypeTextView(View view) {
-        visitTypeTextView = (TextView)view.findViewById(R.id.reasonTextView);
+        visitTypeTextView = (TextView) view.findViewById(R.id.reasonTextView);
 
         if (null == visitTypeDTO) {
             dismiss();
@@ -144,13 +131,14 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
     }
 
     /**
-     *Click listener for request appointment button
+     * Click listener for request appointment button
      */
     private View.OnClickListener requestAppointmentClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             if (null != callback) {
-                callback.requestAppointment(startTime, endTime, visitTypeTextView.getText().toString().trim());
+                callback.requestAppointment(appointmentSlot.getStartTime(), appointmentSlot.getEndTime(),
+                        visitTypeTextView.getText().toString().trim());
             }
 
             dismiss();

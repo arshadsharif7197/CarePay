@@ -27,7 +27,7 @@ public interface AppointmentNavigationCallback {
 
     void selectDateRange(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource, AppointmentsResultModel appointmentsResultModel);
 
-    void confirmAppointment(String startTime, String endTime, AppointmentAvailabilityDTO availabilityDTO);
+    void confirmAppointment(AppointmentsSlotsDTO appointmentsSlot, AppointmentAvailabilityDTO availabilityDTO);
 
     void requestAppointment(String startTime, String endTime, String comments);
 
