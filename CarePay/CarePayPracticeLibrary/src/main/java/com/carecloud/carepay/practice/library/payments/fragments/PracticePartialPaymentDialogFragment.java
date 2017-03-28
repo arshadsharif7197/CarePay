@@ -60,7 +60,7 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
         super.onViewCreated(view, icicle);
         TextView pendingAmountTextView = (TextView) view.findViewById(R.id.pendingAmountTextView);
         pendingAmountTextView.setVisibility(View.VISIBLE);
-        pendingAmountTextView.setText(Label.getLabel("payment_pending_text") + " " + amount);
+        pendingAmountTextView.setText(Label.getLabel("payment_pending_text") + " " + StringUtil.getFormattedBalanceAmount(amount));
     }
 
     @Override
