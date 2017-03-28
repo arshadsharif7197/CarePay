@@ -378,7 +378,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            SystemUtil.showSuccessToast(getContext(), Label.getLabel(confirmationMessageText));
             DtoHelper.putExtra(getIntent(), workflowDTO);
             initializeCheckinDto();
             applyFilter();
