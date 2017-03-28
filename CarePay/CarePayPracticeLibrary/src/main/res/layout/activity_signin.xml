@@ -13,8 +13,8 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/home_main_margin_end"
-        android:layout_marginStart="@dimen/home_main_margin_start">
+        android:paddingEnd="@dimen/home_main_margin_end"
+        android:paddingStart="@dimen/home_main_margin_start">
 
         <LinearLayout
             android:layout_width="match_parent"

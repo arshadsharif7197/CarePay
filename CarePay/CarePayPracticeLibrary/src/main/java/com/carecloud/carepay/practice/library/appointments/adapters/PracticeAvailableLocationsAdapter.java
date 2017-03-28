@@ -41,11 +41,7 @@ public class PracticeAvailableLocationsAdapter extends RecyclerView.Adapter<Prac
     // Return the size of your data set (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        if (locations == null) {
-            return 0;
-        }
-
-        return locations.size();
+        return locations == null ? 0 : locations.size();
     }
 
     @Override
@@ -73,7 +69,9 @@ public class PracticeAvailableLocationsAdapter extends RecyclerView.Adapter<Prac
                 int position = (int) view.getTag();
 
                 if (position == 0) {
-                    selectAllLocations(!isSelected);
+                    if (!isSelected) {
+                        selectAllLocations(!isSelected);
+                    }
                 } else {
                     FilterDataDTO all = locations.get(0);
                     if (all.isChecked()) {
@@ -81,16 +79,16 @@ public class PracticeAvailableLocationsAdapter extends RecyclerView.Adapter<Prac
                         selectLocation(position, true);
                         totalSelected = 1;
                     } else {
-                        selectLocation(position, !isSelected);
-
-                        if (isSelected) {
-                            totalSelected--;
-                        } else {
-                            totalSelected++;
-                        }
-
-                        if (totalSelected == locations.size() - 1) {
-                            all.setChecked(true);
+                        if (!isSelected || totalSelected > 1) {
+                            selectLocation(position, !isSelected);
+                            if (isSelected) {
+                                totalSelected--;
+                            } else {
+                                totalSelected++;
+                            }
+                            if (totalSelected == locations.size() - 1) {
+                                all.setChecked(true);
+                            }
                         }
                     }
                 }
@@ -105,7 +103,7 @@ public class PracticeAvailableLocationsAdapter extends RecyclerView.Adapter<Prac
     }
 
     private void selectAllLocations(boolean isSelected) {
-        for (FilterDataDTO filterDataDTO: locations) {
+        for (FilterDataDTO filterDataDTO : locations) {
             filterDataDTO.setChecked(isSelected);
         }
 
@@ -123,7 +121,7 @@ public class PracticeAvailableLocationsAdapter extends RecyclerView.Adapter<Prac
     /**
      * @param items to be shown in list
      */
-    public void setItems(List<FilterDataDTO> items){
+    public void setItems(List<FilterDataDTO> items) {
         FilterDataDTO all = new FilterDataDTO("all", Label.getLabel("appointment_all_locations_item"), FilterDataDTO.FilterDataType.HEADER);
         all.setChecked(true);
 

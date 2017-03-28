@@ -1,9 +1,11 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.intake.models.IntakeFindings;
 import com.carecloud.carepaylibray.intake.models.IntakeForm;
@@ -41,6 +43,12 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
         setTotalForms(intakeFormList.size());
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle icicle){
+        super.onViewCreated(view, icicle);
+        setHeader(Label.getLabel("practice_chekin_section_intake_forms"));
+    }
+
 
     @Override
     protected void displayNextForm() {
@@ -66,8 +74,6 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
                     .replace("\\n", "");
 
             loadFormUrl(formString, "load_intake");
-            setHeader(intakeForm.getPayload().get("title").getAsString());
-
         }
     }
 

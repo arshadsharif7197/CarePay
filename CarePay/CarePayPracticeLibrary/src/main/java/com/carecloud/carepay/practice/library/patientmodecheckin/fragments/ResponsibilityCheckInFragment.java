@@ -1,8 +1,6 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -102,16 +100,17 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
 
                     try {
                         if (total > 0) {
-                            payTotalButton.setClickable(true);
                             payTotalButton.setEnabled(true);
+                            payTotalButton.setClickable(true);
+
                             payPartialButton.setEnabled(true);
                             payPartialButton.setClickable(true);
 
-                            payTotalButton.setTextColor(Color.WHITE);
-                            payPartialButton.setTextColor(getResources().getColor(R.color.colorPrimary));
-                            GradientDrawable border = new GradientDrawable();
-                            border.setColor(Color.WHITE);
-                            border.setStroke(1, getResources().getColor(R.color.colorPrimary));
+//                            payTotalButton.setTextColor(Color.WHITE);
+//                            payPartialButton.setTextColor(getResources().getColor(R.color.colorPrimary));
+//                            GradientDrawable border = new GradientDrawable();
+//                            border.setColor(Color.WHITE);
+//                            border.setStroke(1, getResources().getColor(R.color.colorPrimary));
                         }
 
                         NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
@@ -123,8 +122,6 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
                 }
 
                 totalResponsibility.setText(totalResponsibilityString);
-                payTotalButton.setText(payTotalAmountString);
-                payPartialButton.setText(payPartialAmountString);
             } catch (Exception e) {
                 e.printStackTrace();
             }
