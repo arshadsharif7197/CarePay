@@ -244,12 +244,12 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
     }
 
     /**
-     * Utility to dencode a bitmapinto a base64
+     * Utility to encode a bitmapinto a base64
      *
      * @param image The encoding as bytes
      * @return The bitmap
      */
-    public static String encodeToBase64(Bitmap image, Bitmap.CompressFormat compressFormat, int quality) {
+    public static String convertBitmapToString(Bitmap image, Bitmap.CompressFormat compressFormat, int quality) {
         ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
         image.compress(compressFormat, quality, byteArrayOS);
         return Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT);
@@ -260,7 +260,7 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
      * @param bitmapString The bitmap as base64
      * @return The bitmap
      */
-    public static Bitmap base64ToBitmap(String bitmapString) {
+    public static Bitmap convertStringToBitmap(String bitmapString) {
         try {
             byte[] decodedString = Base64.decode(bitmapString, Base64.DEFAULT);
             return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
@@ -277,7 +277,7 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
      */
     public static String getPlaceholderAsBase64(Context context) {
         Bitmap placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.icn_camera);
-        return SystemUtil.encodeToBase64(placeholder, Bitmap.CompressFormat.JPEG, 90);
+        return SystemUtil.convertBitmapToString(placeholder, Bitmap.CompressFormat.JPEG, 90);
     }
 
     /**

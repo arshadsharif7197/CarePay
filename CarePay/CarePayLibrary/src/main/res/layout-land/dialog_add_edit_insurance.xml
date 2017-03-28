@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -83,8 +84,8 @@
                 android:paddingTop="@dimen/dimen_14dp"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_22"
-                android:visibility="gone"
-                app:customAssetFont="gotham_rounded_medium" />
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="demographics_documents_remove"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/save_insurance_changes"
@@ -99,7 +100,8 @@
                 android:paddingTop="@dimen/dimen_14dp"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_22"
-                app:customAssetFont="gotham_rounded_medium" />
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="demographics_save_changes_button"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

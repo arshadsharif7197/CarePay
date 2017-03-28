@@ -1,7 +1,9 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -29,6 +31,8 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraFragment;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
@@ -70,7 +74,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         CheckinDemographicsInterface, MedicationAllergySearchFragment.MedicationAllergySearchCallback,
         PaymentNavigationCallback, CheckinFlowCallback,
         CheckInDemographicsBaseFragment.CheckInNavListener,
-        PersonalInfoFragment.UpdateProfilePictureListener {
+        PersonalInfoFragment.UpdateProfilePictureListener,
+        CarePayCameraCallback {
 
 
     public final static int SUBFLOW_DEMOGRAPHICS_INS = 0;
@@ -91,7 +96,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     // Using for consent form
     // TODO : Will be create separate fragment in next sprint
-//    private ConsentFormLabelsDTO consentFormLabelsDTO;
 //
 //    private AppointmentsPayloadDTO appointmentsPayloadDTO;
 //
@@ -127,7 +131,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
         navigateToDemographicFragment(1);
     }
-
 
     @Override
     protected void onPause() {
@@ -243,7 +246,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         navigateToFragment(fragment, true);
     }
 
-
     /**
      * Consent form navigation
      *
@@ -265,7 +267,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             }
         }).start();
     }
-
 
     @Override
     public void showMedicationSearch() {
@@ -305,7 +306,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         MedicationsAllergyFragment medicationsAllergyFragment = (MedicationsAllergyFragment) getSupportFragmentManager().findFragmentById(R.id.checkInContentHolderId);
         medicationsAllergyFragment.addItem(item);
     }
-
 
     @Override
     public void startPartialPayment(double owedAmount) {
@@ -374,11 +374,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void navigateToInsuranceDocumentFragment(int index, DemographicInsurancePayloadDTO model) {
-
-    }
-
-    @Override
     public void navigateToParentFragment() {
 
     }
@@ -389,8 +384,16 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void disableMainButton(boolean isDisabled) {
+    public void captureImage() {
+        String tag = CarePayCameraFragment.class.getSimpleName();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
+        if (prev != null) {
+            ft.remove(prev);
+        }
 
+        CarePayCameraFragment dialog = new CarePayCameraFragment();
+        dialog.show(ft, tag);
     }
 
     /**
@@ -407,7 +410,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             logoImageView.setVisibility(View.VISIBLE);
         }
     }
-
 
     @Override
     public void setCheckinFlow(CheckinFlowState flowState, int totalPages, int currentPage) {
@@ -597,5 +599,15 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         fragment.setArguments(args);
 
         navigateToFragment(fragment, currentDemographicStep != 1);
+    }
+
+    @Override
+    public void onCapturedSuccess(Bitmap bitmap) {
+        // Send image to current demographic fragment
+        FragmentManager fm = getSupportFragmentManager();
+        CheckInDemographicsBaseFragment fragment = (CheckInDemographicsBaseFragment) fm.findFragmentById(R.id.checkInContentHolderId);
+        if (fragment != null) {
+            fragment.imageCaptured(bitmap);
+        }
     }
 }

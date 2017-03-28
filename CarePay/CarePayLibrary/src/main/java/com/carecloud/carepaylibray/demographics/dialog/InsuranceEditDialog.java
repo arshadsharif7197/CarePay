@@ -5,7 +5,9 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -18,6 +20,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -30,19 +33,22 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entitie
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.properties.DemographicMetadataPropertiesInsuranceDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePhotoDTO;
+import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class InsuranceEditDialog extends Dialog {
 
+    private static final ImageCaptureHelper.CameraType CAMERA_TYPE = ImageCaptureHelper.CameraType.CUSTOM_CAMERA;
+    private static final ImageCaptureHelper.ImageShape IMAGE_SHAPE = ImageCaptureHelper.ImageShape.RECTANGULAR;
+
     private Context context;
     private DemographicDTO demographicDTO;
     private DemographicInsurancePayloadDTO lineItem;
-    private OnSaveChangesListener saveChangesListener;
 
     private TextInputLayout cardNumberInput;
     private TextInputLayout groupNumberInput;
@@ -53,34 +59,46 @@ public class InsuranceEditDialog extends Dialog {
     private CarePayTextView selectedPlan;
     private CarePayTextView selectedType;
 
-    private boolean isInEditMode;
+    private ImageView healthInsuranceFrontPhotoView;
+    private ImageView healthInsuranceBackPhotoView;
+
     private boolean isCardNumberEmpty;
     private boolean isGroupNumberEmpty;
 
+    private String frontImageAsBase64;
+    private String backImageAsBase64;
+
+    private Button saveInsuranceButton;
+
+    private InsuranceEditDialogListener callback;
+
+    public interface InsuranceEditDialogListener {
+        void onInsuranceEdited();
+
+        void captureInsuranceFrontImage();
+
+        void captureInsuranceBackImage();
+    }
+
     /**
      * Constructor
-     * @param context context
+     *
+     * @param context  context
      * @param lineItem Insurance item
      */
     @SuppressWarnings("ConstantConditions")
     public InsuranceEditDialog(Context context, DemographicInsurancePayloadDTO lineItem,
-                               DemographicDTO demographicDTO, boolean isInEditMode,
-                               OnSaveChangesListener saveChangesListener) {
+                               DemographicDTO demographicDTO,
+                               InsuranceEditDialogListener callback) {
         super(context);
         this.context = context;
         this.lineItem = lineItem;
         this.demographicDTO = demographicDTO;
-        this.isInEditMode = isInEditMode;
-        this.saveChangesListener = saveChangesListener;
+        this.callback = callback;
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_add_edit_insurance);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-
-//        WindowManager.LayoutParams params = getWindow().getAttributes();
-//        params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-//        params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.55);
-//        getWindow().setAttributes(params);
 
         initViews();
         initLabels();
@@ -98,7 +116,7 @@ public class InsuranceEditDialog extends Dialog {
         ((CarePayTextView) findViewById(R.id.health_insurance_plans)).setText(
                 Label.getLabel("demographics_documents_choose_plan"));
 
-        if (lineItem != null && isInEditMode) {
+        if (lineItem != null) {
             ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(lineItem.getInsurancePlan());
             selectedProvider.setText(lineItem.getInsuranceProvider());
             selectedPlan.setText(lineItem.getInsurancePlan());
@@ -109,15 +127,9 @@ public class InsuranceEditDialog extends Dialog {
             groupNumber.setText(lineItem.getInsuranceGroupId());
             groupNumber.getOnFocusChangeListener().onFocusChange(groupNumber, false);
 
-            findViewById(R.id.remove_insurance_entry).setVisibility(View.VISIBLE);
-            ((Button) findViewById(R.id.remove_insurance_entry)).setText(
-                    Label.getLabel("demographics_documents_remove"));
-            ((Button) findViewById(R.id.take_front_photo_button)).setText(
-                    Label.getLabel("demographics_insurance_retake_front_photo"));
-            ((Button) findViewById(R.id.take_back_photo_button)).setText(
-                    Label.getLabel("demographics_insurance_retake_back_photo"));
         } else {
             findViewById(R.id.remove_insurance_entry).setVisibility(View.GONE);
+
             ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(
                     Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));
             ((Button) findViewById(R.id.take_front_photo_button)).setText(
@@ -129,15 +141,16 @@ public class InsuranceEditDialog extends Dialog {
             selectedPlan.setText(Label.getLabel("demographics_choose"));
             selectedType.setText(Label.getLabel("demographics_choose"));
         }
-
-        ((Button) findViewById(R.id.save_insurance_changes)).setText(
-                Label.getLabel("demographics_save_changes_button"));
     }
 
     private void initViews() {
         findViewById(R.id.edit_insurance_close_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View closeButton) {
+                if (callback != null) {
+                    callback.onInsuranceEdited();
+                }
+
                 dismiss();
             }
         });
@@ -169,33 +182,102 @@ public class InsuranceEditDialog extends Dialog {
         cardNumber.clearFocus();
         groupNumber.clearFocus();
 
-        findViewById(R.id.save_insurance_changes).setOnClickListener(new View.OnClickListener() {
+        initializeScanArea();
+
+        saveInsuranceButton = (Button) findViewById(R.id.save_insurance_changes);
+        saveInsuranceButton.setOnClickListener(getSaveListener());
+        // TO-DO: Need to know what fields are required
+        saveInsuranceButton.setEnabled(true);
+
+        setValues();
+    }
+
+    @NonNull
+    private View.OnClickListener getSaveListener() {
+        return new View.OnClickListener() {
             @Override
             public void onClick(View saveChanges) {
-                List<DemographicInsurancePayloadDTO> insuranceList = demographicDTO.getPayload()
-                        .getDemographics().getPayload().getInsurances();
-
-                if (insuranceList.isEmpty()) {
-                    insuranceList = new ArrayList<>();
+                if (lineItem == null) {
+                    lineItem = new DemographicInsurancePayloadDTO();
+                    demographicDTO.getPayload().getDemographics().getPayload().getInsurances().add(lineItem);
                 }
 
-                DemographicInsurancePayloadDTO insuranceDTO = new DemographicInsurancePayloadDTO();
-                insuranceDTO.setInsuranceProvider(selectedProvider.getText().toString());
-                insuranceDTO.setInsurancePlan(selectedPlan.getText().toString());
-                insuranceDTO.setInsuranceType(selectedType.getText().toString());
-                insuranceDTO.setInsuranceMemberId(cardNumber.getText().toString());
-                insuranceDTO.setInsuranceGroupId(groupNumber.getText().toString());
-                insuranceList.add(insuranceDTO);
+                List<DemographicInsurancePhotoDTO> photos = lineItem.getInsurancePhotos();
+                if (photos.isEmpty()) {
+                    photos.add(new DemographicInsurancePhotoDTO());
+                }
 
-                DemographicDTO newRecord = new DemographicDTO();
-                newRecord.getPayload().getDemographics().getPayload().setInsurances(insuranceList);
-                saveChangesListener.onSaveChangesClicked(newRecord);
+                if (photos.size() == 1) {
+                    photos.add(new DemographicInsurancePhotoDTO());
+                }
+
+                lineItem.setInsuranceProvider(selectedProvider.getText().toString());
+                lineItem.setInsurancePlan(selectedPlan.getText().toString());
+                lineItem.setInsuranceType(selectedType.getText().toString());
+                lineItem.setInsuranceMemberId(cardNumber.getText().toString());
+                lineItem.setInsuranceGroupId(groupNumber.getText().toString());
+
+                photos = lineItem.getInsurancePhotos();
+                if (frontImageAsBase64 != null) {
+                    photos.get(0).setInsurancePhoto(frontImageAsBase64);
+                }
+
+                if (backImageAsBase64 != null) {
+                    photos.get(1).setInsurancePhoto(backImageAsBase64);
+                }
+
+                callback.onInsuranceEdited();
+
                 dismiss();
+            }
+        };
+    }
+
+    private void initializeScanArea() {
+        healthInsuranceFrontPhotoView = (ImageView) findViewById(R.id.health_insurance_front_photo);
+        healthInsuranceBackPhotoView = (ImageView) findViewById(R.id.health_insurance_back_photo);
+
+        if (lineItem != null) {
+            List<DemographicInsurancePhotoDTO> photos = lineItem.getInsurancePhotos();
+            if (!photos.isEmpty()) {
+                setInsurancePhoto(healthInsuranceFrontPhotoView, photos.get(0));
+
+                if (photos.size() > 1) {
+                    setInsurancePhoto(healthInsuranceBackPhotoView, photos.get(1));
+                }
+            }
+        }
+
+        Button scanFrontButton = (Button) findViewById(R.id.take_front_photo_button);
+        scanFrontButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View frontButtonView) {
+                if (callback != null) {
+                    callback.captureInsuranceFrontImage();
+                }
             }
         });
 
-        if (!isInEditMode) {
-            setValues();
+        Button scanBackButton = (Button) findViewById(R.id.take_back_photo_button);
+        scanBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View frontButtonView) {
+                if (callback != null) {
+                    callback.captureInsuranceBackImage();
+                }
+            }
+        });
+    }
+
+    private void setInsurancePhoto(ImageView imageView, DemographicInsurancePhotoDTO photoDTO) {
+        if (photoDTO == null) {
+            return;
+        }
+
+        String photo = photoDTO.getInsurancePhoto();
+        if (photo != null) {
+            // TO-DO Check if url instead base64
+            imageView.setImageBitmap(SystemUtil.convertStringToBitmap(photo));
         }
     }
 
@@ -381,7 +463,18 @@ public class InsuranceEditDialog extends Dialog {
         });
     }
 
-    public interface OnSaveChangesListener {
-        void onSaveChangesClicked(DemographicDTO newRecord);
+    public void updateModelAndViewsAfterScan(Bitmap bitmap, boolean isFront) {
+        String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
+        ImageView target;
+
+        if (isFront) {
+            frontImageAsBase64 = imageAsBase64;
+            target = healthInsuranceFrontPhotoView;
+        } else {
+            backImageAsBase64 = imageAsBase64;
+            target = healthInsuranceBackPhotoView;
+        }
+
+        ImageCaptureHelper.setCapturedImageToTargetView(context, target, bitmap, CAMERA_TYPE, IMAGE_SHAPE);
     }
 }

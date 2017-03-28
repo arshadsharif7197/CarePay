@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -35,7 +36,8 @@
             android:paddingTop="@dimen/dimen_10dp"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_13"
-            app:customAssetFont="gotham_rounded_medium" />
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="practice_checkin_demogr_ins_add_another"/>
     </LinearLayout>
 
     <LinearLayout
@@ -66,6 +68,7 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_22"
                 app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="practice_checkin_demogr_ins_dont_have_one_button_label"
                 tools:ignore="ButtonStyle" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
@@ -82,6 +85,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_22"
                 app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="practice_checkin_demogr_ins_add_new_button_label"
                 tools:ignore="ButtonStyle" />
         </LinearLayout>
 

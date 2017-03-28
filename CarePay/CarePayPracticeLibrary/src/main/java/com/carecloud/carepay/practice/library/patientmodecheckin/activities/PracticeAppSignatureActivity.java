@@ -164,12 +164,12 @@ public class PracticeAppSignatureActivity extends BaseActivity {
                 if (switchButton.isChecked()) {
                     clearButton.setVisibility(View.VISIBLE);
                  //   agreeButton.setBackground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.signatureview_rounded_border));
-                    signatureAsBase64 = SystemUtil.encodeToBase64(signaturePad.getSignatureBitmap(), Bitmap.CompressFormat.JPEG, 90);
+                    signatureAsBase64 = SystemUtil.convertBitmapToString(signaturePad.getSignatureBitmap(), Bitmap.CompressFormat.JPEG, 90);
                     isSignatureEmpty = false;
                     enableAgreeButton();
                 } else {
                     clearButton.setVisibility(View.VISIBLE);
-                    signatureAsBase64 = SystemUtil.encodeToBase64(signaturePad.getSignatureBitmap(), Bitmap.CompressFormat.JPEG, 90);
+                    signatureAsBase64 = SystemUtil.convertBitmapToString(signaturePad.getSignatureBitmap(), Bitmap.CompressFormat.JPEG, 90);
                     agreeButton.setEnabled(true);
                     agreeButton.setBackground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.bg_green_overlay));
                 }

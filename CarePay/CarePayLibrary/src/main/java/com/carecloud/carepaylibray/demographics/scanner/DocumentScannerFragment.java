@@ -152,8 +152,8 @@ public abstract class DocumentScannerFragment extends BaseCheckinFragment {
                 bitmap = imageCaptureHelper.onSelectFromGalleryResult(data, getImageShape());
             } else if (requestCode == ImageCaptureHelper.REQUEST_CAMERA) {
                 if (cameraType == ImageCaptureHelper.CameraType.CUSTOM_CAMERA) {
-                    bitmap = imageCaptureHelper.onCaptureImageResult(getImageShape());
-                    Log.v(LOG_TAG, "Orientation camera to: " + imageCaptureHelper.getOrientation());
+//                    bitmap = imageCaptureHelper.onCaptureImageResult(getImageShape());
+//                    Log.v(LOG_TAG, "Orientation camera to: " + imageCaptureHelper.getOrientation());
                 } else {
                     bitmap = imageCaptureHelper.onCaptureImageResult(data, getImageShape());
                 }

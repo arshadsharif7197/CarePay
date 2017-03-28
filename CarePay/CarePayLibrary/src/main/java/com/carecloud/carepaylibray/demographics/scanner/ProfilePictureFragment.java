@@ -68,7 +68,7 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
     protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner, Bitmap bitmap) {
         // save the image as base64 in the model
         if (bitmap != null) {
-            String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
+            String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
             demographicPersDetailsPayloadDTO.setProfilePhoto(imageAsBase64);
         }
     }
@@ -86,7 +86,7 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
         recaptureCaption = Label.getLabel("demographics_take_another_picture_button_title");
 
         ImageView imageViewDetailsImage = (ImageView) view.findViewById(R.id.DetailsProfileImage);
-        imageCaptureHelper = new ImageCaptureHelper(getActivity(), imageViewDetailsImage, globalLabelsDTO);
+        imageCaptureHelper = new ImageCaptureHelper(getActivity(), imageViewDetailsImage);
 
         Button buttonChangeCurrentPhoto = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
         buttonChangeCurrentPhoto.setOnClickListener(new View.OnClickListener() {
