@@ -18,8 +18,8 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
-import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.CreditCardModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItem;
@@ -41,6 +41,8 @@ import com.clover.sdk.v3.payments.Result;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -64,9 +66,9 @@ public class CloverPaymentActivity extends BaseActivity {
     private Long amountLong = 0L;
     private double amountDouble;
     private String paymentTransitionString ;
-    private String patientPaymentMetaDataString;
     private CloverAuth.AuthResult authResult = null;
     private PaymentPostModel postModel;
+    private PatientBalanceDTO patientBalance;
 
     private PaymentLineItem[] paymentLineItems;
 
@@ -88,7 +90,9 @@ public class CloverPaymentActivity extends BaseActivity {
 
             }
             if (intent.hasExtra(CarePayConstants.CLOVER_PAYMENT_METADATA)) {
-                patientPaymentMetaDataString = intent.getStringExtra(CarePayConstants.CLOVER_PAYMENT_METADATA);
+                Gson gson = new Gson();
+                String patientPaymentMetaDataString = intent.getStringExtra(CarePayConstants.CLOVER_PAYMENT_METADATA);
+                patientBalance = gson.fromJson(patientPaymentMetaDataString, PatientBalanceDTO.class);
 
             }
             Gson gson = new Gson();
@@ -402,9 +406,8 @@ public class CloverPaymentActivity extends BaseActivity {
 
     private void postPayment(String paymentModelJson){
         Gson gson = new Gson();
-        PendingBalanceMetadataDTO metadataDTO = gson.fromJson(patientPaymentMetaDataString, PendingBalanceMetadataDTO.class);
         Map<String, String> queries = new HashMap<>();
-        queries.put("patient_id", metadataDTO.getPatientId());
+        queries.put("patient_id", patientBalance.getBalances().get(0).getMetadata().getPatientId());
 
         Map<String, String> header = new HashMap<>();
         header.put("transition", "true");
@@ -418,10 +421,14 @@ public class CloverPaymentActivity extends BaseActivity {
         CreditCardModel creditCardModel = new CreditCardModel();
         creditCardModel.setCardType(transactionInfo.getCardType());
         creditCardModel.setCardNumber(transactionInfo.getLast4());
-        creditCardModel.setExpiryDate(transactionInfo.getVaultedCard().getExpirationDate());
-        creditCardModel.setNameOnCard(transactionInfo.getVaultedCard().getCardholderName());
         creditCardModel.setToken(transactionInfo.getToken());
         creditCardModel.setTokenizationService(TokenizationService.clover);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, 1);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMyy");
+        creditCardModel.setExpiryDate(transactionInfo.getVaultedCard().getExpirationDate(dateFormat.format(calendar.getTime())));
+        creditCardModel.setNameOnCard(transactionInfo.getVaultedCard().getCardholderName(patientBalance.getDemographics().getPayload().getPersonalDetails().getFullName()));
 
         PaymentsCreditCardBillingInformationDTO billingInformation = new PaymentsCreditCardBillingInformationDTO();
         billingInformation.setSameAsPatient(true);
