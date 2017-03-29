@@ -32,7 +32,7 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="@dimen/dialog_width"
         android:layout_height="@dimen/dialog_height"
         android:layout_marginEnd="@dimen/dimen_26dp"
@@ -43,7 +43,6 @@
             android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:background="@drawable/patient_mode_dialog_header_bg"
             android:focusable="true"
             android:focusableInTouchMode="true"
@@ -55,41 +54,11 @@
 
         </FrameLayout>
 
-        <FrameLayout
-            android:id="@+id/footer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/patient_mode_dialog_body_bg">
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                android:id="@+id/nextButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_margin="@dimen/dimen_20dp"
-                android:background="@drawable/green_rounded_button_selector"
-                android:gravity="center"
-                android:textAllCaps="true"
-                android:textColor="@color/white"
-                android:textSize="@dimen/respons_button_text_size"
-                app:customAssetFont="gotham_rounded_medium" />
-
-        </FrameLayout>
-
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_1dp"
-            android:layout_above="@id/footer"
-            android:background="@color/light_gray" />
-
         <ScrollView
             android:id="@+id/scroll_card_info"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/divider"
-            android:layout_below="@id/header"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:background="@color/white">
 
             <LinearLayout
@@ -523,8 +492,49 @@
             </LinearLayout>
         </ScrollView>
 
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_1dp"
+            android:background="@color/light_gray" />
 
-    </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/dimen_10dp"
+            android:background="@drawable/patient_mode_dialog_body_bg">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/swipeCreditCarNowButton"
+                style="@style/PaymentButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="@dimen/dimen_10dp"
+                android:background="@drawable/blue_border_rounded_button_selector"
+                android:textColor="@color/colorPrimary"
+                breeze:textKey="payment_clover_swipe_now_button_label"
+                app:customAssetFont="gotham_rounded_medium"
+                android:visibility="gone"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/nextButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="@dimen/dimen_10dp"
+                android:background="@drawable/green_rounded_button_selector"
+                android:gravity="center"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/respons_button_text_size"
+                app:customAssetFont="gotham_rounded_medium" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"

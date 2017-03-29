@@ -70,4 +70,10 @@ public class PracticePaymentMethodDialogFragment extends PracticePaymentMethodFr
         dismiss();
     }
 
+    @Override
+    protected void handleSwipeCard(){
+        super.handleSwipeCard();
+        dismiss();
+    }
+
 }

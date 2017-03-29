@@ -3,7 +3,6 @@ package com.carecloud.carepay.practice.library.patientmodecheckin.activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,11 +22,11 @@ import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.Pract
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckInFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckinFlowCallback;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentPlanFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePartialPaymentDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.models.PatientModel;
@@ -55,7 +54,6 @@ import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragm
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -331,8 +329,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
-        boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
-        if (isCloverDevice || paymentDTO.getPaymentPayload().getPatientCreditCards() != null && !paymentDTO.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+//        boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
+        if (paymentDTO.getPaymentPayload().getPatientCreditCards() != null && !paymentDTO.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             DialogFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel,
                     selectedPaymentMethod.getLabel(), amount);
             fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
@@ -348,7 +346,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         String paymentsDTOString = gson.toJson(paymentDTO);
         args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-        DialogFragment fragment = new AddNewCreditCardFragment();
+        DialogFragment fragment = new PracticeAddNewCreditCardFragment();
         fragment.setArguments(args);
         fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
     }

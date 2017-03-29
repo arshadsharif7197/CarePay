@@ -68,7 +68,7 @@ public class CloverCardTransactionInfo {
     }
 
     public String getToken() {
-        return token;
+        return token!=null?token:"NO-TOKEN";
     }
 
     public void setToken(String token) {

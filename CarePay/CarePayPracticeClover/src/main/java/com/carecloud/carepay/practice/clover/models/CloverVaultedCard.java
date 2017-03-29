@@ -29,6 +29,15 @@ public class CloverVaultedCard {
         return cardholderName;
     }
 
+    /**
+     * Overload to get a default value in case cardholder name is null
+     * @param defValue default value
+     * @return cardholder name or default value
+     */
+    public String getCardholderName(String defValue){
+        return cardholderName!=null?cardholderName:defValue;
+    }
+
     public void setCardholderName(String cardholderName) {
         this.cardholderName = cardholderName;
     }
@@ -43,6 +52,15 @@ public class CloverVaultedCard {
 
     public String getExpirationDate() {
         return expirationDate;
+    }
+
+    /**
+     * Overload to get a default value in case expiration date is null
+     * @param defValue default value
+     * @return expiration date or default value
+     */
+    public String getExpirationDate(String defValue){
+        return expirationDate!=null?expirationDate:defValue;
     }
 
     public void setExpirationDate(String expirationDate) {
@@ -64,4 +82,6 @@ public class CloverVaultedCard {
     public void setToken(String token) {
         this.token = token;
     }
+
+
 }
