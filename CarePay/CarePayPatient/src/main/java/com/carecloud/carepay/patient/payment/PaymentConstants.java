@@ -28,6 +28,7 @@ public class PaymentConstants {
     // values to use with KEY_DESCRIPTION
     public static final String DESCRIPTION_LINE_ITEM_SHIPPING = "Shipping";
     public static final String DESCRIPTION_LINE_ITEM_TAX = "Tax";
+    public static final String ANDROID_PAY_SPENDING_LIMIT_EXCEEDED = "Spending Limit Exceeded";
 
     //  Request Codes
     public static final int REQUEST_CODE_MASKED_WALLET = 1001;

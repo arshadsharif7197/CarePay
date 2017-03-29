@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.payment.androidpay.ConfirmationActivity;
@@ -139,7 +138,7 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
     protected void handleError(int errorCode) {
         switch (errorCode) {
             case WalletConstants.ERROR_CODE_SPENDING_LIMIT_EXCEEDED:
-                Toast.makeText(this, "Insufficient Balance", Toast.LENGTH_LONG).show();
+                showErrorNotification(PaymentConstants.ANDROID_PAY_SPENDING_LIMIT_EXCEEDED);
                 break;
             case WalletConstants.ERROR_CODE_INVALID_PARAMETERS:
             case WalletConstants.ERROR_CODE_AUTHENTICATION_FAILURE:
@@ -150,9 +149,9 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
             case WalletConstants.ERROR_CODE_UNKNOWN:
             default:
                 // unrecoverable error
-                String errorMessage = "Android Pay is unavailable" + "\n" +
+                String errorMessage = "<b>Android Pay is unavailable</b>" + "\n" +
                         "Error code: " + errorCode;
-                Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
+                showErrorNotification(errorMessage);
                 break;
         }
     }
