@@ -13,7 +13,7 @@ public class EnvData {
     static {
         envMap.put("CERT", new EnvPropertiesImpl(
                         "CERT",
-                        "https://api-cert.payeezy.com",//"https://api-cert.payeezy.com/v1/transactions",
+                        "https://api-cert.payeezy.com",
                         "y6pWAJNyJyjGv66IsVuWnklkKUPFbb0a",
                         "fdoa-a480ce8951daa73262734cf102641994c1e55e7cdf4c02b6",
                         "BAcuCtcmGXqVrVUUmyFbsAoC4+MZ80V5AVmm4rm/tj+7lV3KxYAe9xOWASR13nJZf9CxLenkBAdMz8I5EKefCPk=",

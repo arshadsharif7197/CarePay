@@ -35,8 +35,10 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiAccountsDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiMetadataMerchantServiceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -134,6 +136,7 @@ public class FullWalletConfirmationButtonFragment extends BaseFragment
 
     private double amountToMakePayment;
     private String paymentsDTOString;
+    private DemographicsSettingsPapiMetadataMerchantServiceDTO payeezyMerchantService = null;
 
     /**
      * Select the appropriate First Data server for the environment.
@@ -204,6 +207,8 @@ public class FullWalletConfirmationButtonFragment extends BaseFragment
             paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
             amountToMakePayment = arguments.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
         }
+
+        payeezyMerchantService= getPayeezyMerchantService();
     }
 
     @Override
@@ -464,15 +469,17 @@ public class FullWalletConfirmationButtonFragment extends BaseFragment
         }
     }
 
-    private List<LineItem> buildLineItems(String amount) {
+    private List<LineItem> getLineItems() {
         List<LineItem> list = new ArrayList<>();
-        list.add(LineItem.newBuilder()
-                .setCurrencyCode(PaymentConstants.CURRENCY_CODE_USD)
-                .setDescription("Tesla model S")
-                .setQuantity("1")
-                .setUnitPrice(amount)
-                .setTotalPrice(amount)
-                .build());
+        for (int i = 0; i < paymentsModel.getPaymentPayload().getPatientPayments().getPayload().size(); i++) {
+            list.add(LineItem.newBuilder()
+                    .setCurrencyCode(PaymentConstants.CURRENCY_CODE_USD)
+                    .setDescription(paymentsModel.getPaymentPayload().getPatientPayments().getPayload().get(i).getType())
+                    .setQuantity("1")
+                    .setUnitPrice(paymentsModel.getPaymentPayload().getPatientPayments().getPayload().get(i).getTotal().toString())
+                    .setTotalPrice(paymentsModel.getPaymentPayload().getPatientPayments().getPayload().get(i).getTotal().toString())
+                    .build());
+        }
 
         return list;
     }
@@ -485,7 +492,7 @@ public class FullWalletConfirmationButtonFragment extends BaseFragment
      */
     public FullWalletRequest createFullWalletRequest(String googleTransactionId) {
 
-        List<LineItem> lineItems = buildLineItems(totalAmount);
+        List<LineItem> lineItems = getLineItems();
 
         return FullWalletRequest.newBuilder()
                 .setGoogleTransactionId(googleTransactionId)
@@ -527,7 +534,6 @@ public class FullWalletConfirmationButtonFragment extends BaseFragment
         }
 
         sendRequestToFirstData(fullWallet, payeezyEnvironment);
-        //sendFirstDataRequestWithRetroFit(fullWallet, payeezyEnvironment);
     }
 
     /**
@@ -579,11 +585,12 @@ public class FullWalletConfirmationButtonFragment extends BaseFragment
             service = retrofit.create(FirstDataService.class);
             RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),payloadString);
 
-            Call<ResponseBody> response = service.performRequest(EnvData.getProperties(payeezyEnvironment).getApiKey(),
+
+            Call<ResponseBody> response = service.performRequest(payeezyMerchantService.getApiKey(),
                     HMACMap.get("Authorization"),
                     HMACMap.get("nonce"),
                     HMACMap.get("timestamp"),
-                    EnvData.getProperties(payeezyEnvironment).getToken(),
+                    paymentsModel.getPaymentPayload().getPapiAccountByType("payeezy").getBankAccount().getToken(),
                     body);
 
             response.enqueue(new Callback<ResponseBody>() {
@@ -612,6 +619,16 @@ public class FullWalletConfirmationButtonFragment extends BaseFragment
         }
     }
 
+    private DemographicsSettingsPapiMetadataMerchantServiceDTO getPayeezyMerchantService(){
+        DemographicsSettingsPapiMetadataMerchantServiceDTO merchantServiceDTO = null;
+        for (DemographicsSettingsPapiAccountsDTO papiAccountDTO : paymentsModel.getPaymentPayload().getPapiAccounts()) {
+            if (papiAccountDTO.getType().contains("payeezy")) {
+                merchantServiceDTO = papiAccountDTO.getMetadata().getMerchantService();
+            }
+        }
+
+        return  merchantServiceDTO;
+    }
 
     private void postPaymentConfirmation(String jsonInString)
     {
@@ -709,7 +726,7 @@ public class FullWalletConfirmationButtonFragment extends BaseFragment
         Map<String, String> headerMap = new HashMap<>();
         headerMap.put("ephemeralPublicKey", ephemeralPublicKey);
         //  First data issued Public Key Hash identifies the public key used to encrypt the data
-        headerMap.put("publicKeyHash", EnvData.getProperties(payeezyEnvironment).getPublicKeyHash());
+        headerMap.put("publicKeyHash", payeezyMerchantService.getAndroidPublicKeyHash());
 
         Map<String, Object> ccmap = new HashMap<>();
         ccmap.put("type", "G");             //  Identify the request as Android Pay request
@@ -731,10 +748,10 @@ public class FullWalletConfirmationButtonFragment extends BaseFragment
      */
     private Map<String, String> computeHMAC(String payload) {
 
-        FirstDatEnvironmentProperties ep = EnvData.getProperties(payeezyEnvironment);
-        String apiSecret = ep.getApiSecret();
-        String apiKey = ep.getApiKey();
-        String token = ep.getToken();
+        //FirstDatEnvironmentProperties ep = EnvData.getProperties(payeezyEnvironment);
+        String apiSecret = payeezyMerchantService.getApiSecret();
+        String apiKey = payeezyMerchantService.getApiKey();
+        String token = paymentsModel.getPaymentPayload().getPapiAccountByType("payeezy").getBankAccount().getToken();
 
         Map<String, String> headerMap = new HashMap<>();
         if (apiSecret != null) {

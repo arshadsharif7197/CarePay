@@ -206,6 +206,20 @@ public class PaymentsPayloadDTO implements Serializable {
     }
 
     /**
+     * Gets papi account by type.
+     *
+     * @return the papi account
+     */
+    public DemographicsSettingsPapiAccountsDTO getPapiAccountByType(String accountType) {
+        for (DemographicsSettingsPapiAccountsDTO papiAccountDTO : getPapiAccounts()) {
+            if (papiAccountDTO.getType().contains(accountType)) {
+               return papiAccountDTO ;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Sets papi accounts.
      *
      * @param papiAccounts the papi accounts
