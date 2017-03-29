@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -35,6 +36,7 @@ import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
 import com.carecloud.carepaylibray.demographics.scanner.InsuranceDocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.scanner.ProfilePictureFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -142,6 +144,8 @@ public class ReviewDemographicsActivity extends BasePatientActivity
         transaction.commit();
 
     }
+
+
 
     @Override
     public void initializeInsurancesFragment(){

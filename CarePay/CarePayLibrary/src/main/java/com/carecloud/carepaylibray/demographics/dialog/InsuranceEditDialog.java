@@ -16,6 +16,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -188,12 +189,12 @@ public class InsuranceEditDialog extends Dialog {
             setGothamRoundedMediumTypeface(getContext(), title);
             toolbar.setNavigationIcon(ContextCompat.getDrawable(getContext(), R.drawable.icn_patient_mode_nav_close));
             title.setText(Label.getLabel("demographics_insurance_setup_health_insurance"));
-            findViewById(R.id.demographics_toolbar).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View closeButton) {
-                    dismiss();
-                }
-            });
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View view) {
+                   dismiss();
+               }
+           });
         }
 
 
