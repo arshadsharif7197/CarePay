@@ -1044,7 +1044,8 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             String getGender = demographicPersDetailsPayloadDTO.getGender();
             if (SystemUtil.isNotEmptyString(getGender)) {
                 selectGender.setText(getGender);
-            } else {                selectGender.setText(chooseLabel);
+            } else {
+                selectGender.setText(chooseLabel);
 
             }
 

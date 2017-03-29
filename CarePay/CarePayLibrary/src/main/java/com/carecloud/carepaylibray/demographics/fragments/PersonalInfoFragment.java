@@ -56,8 +56,6 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         initViewFromModels(view);
         checkIfEnableButton(view);
         (view.findViewById(R.id.toolbar_layout)).setVisibility(View.INVISIBLE);
-        stepProgressBar.setCurrentProgressDot(0);
-        checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 1);
         return view;
     }
 
@@ -66,6 +64,14 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         profilePicturelistener.loadPictureFragment();
         scrollView = (ScrollView) view.findViewById(R.id.reviewdemographicsPersonalContainer);
         scrollToPosition(0,0);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        stepProgressBar.setCurrentProgressDot(0);
+        checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 1);
+        checkInNavListener.setCurrentStep(1);
     }
 
     @Override
