@@ -199,6 +199,7 @@ public class InsuranceEditDialog extends Dialog {
                     if (callback != null) {
                         callback.onInsuranceEdited();
                     }
+                    dismiss();
                 }
             });
         }

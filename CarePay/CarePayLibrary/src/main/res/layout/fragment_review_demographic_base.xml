@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -68,10 +69,10 @@
 
 
 
-    <Button
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
         android:id="@+id/checkinDemographicsNextButton"
         android:enabled="true"
-        android:text="Next Question"
+        breeze:textKey="demographics_review_next_button"
         style="@style/InTakeNextButtonStyle"/>
 
 

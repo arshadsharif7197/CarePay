@@ -21,26 +21,18 @@
             android:id="@+id/available_health_insurance_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_70dp" />
+            android:layout_marginTop="@dimen/dimen_20dp" />
 
 
 
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/health_insurance_add_another"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginTop="@dimen/dimen_25dp"
-            android:background="@drawable/round_border_button_bg"
-            android:paddingBottom="@dimen/dimen_10dp"
-            android:paddingEnd="@dimen/dimen_24dp"
-            android:paddingStart="@dimen/dimen_24dp"
-            android:paddingTop="@dimen/dimen_10dp"
-            android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/text_size_13"
-            app:customAssetFont="gotham_rounded_medium"
-            breeze:textKey="practice_checkin_demogr_ins_add_another"/>
+            style="@style/reviewDemographicsButtonStyle"
+            android:layout_width="match_parent"
+            android:textAlignment="center"
+            breeze:textKey="practice_checkin_demogr_ins_add_another"
+            />
     </LinearLayout>
 
     <LinearLayout
