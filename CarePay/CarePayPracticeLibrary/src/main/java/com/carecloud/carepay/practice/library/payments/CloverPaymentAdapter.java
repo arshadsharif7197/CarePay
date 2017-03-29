@@ -24,11 +24,20 @@ public class CloverPaymentAdapter {
     private PaymentsModel paymentsModel;
     private Activity activity;
 
+    /**
+     * Constructor
+     * @param activity Activity
+     * @param paymentsModel payment model
+     */
     public CloverPaymentAdapter(Activity activity, PaymentsModel paymentsModel){
         this.activity = activity;
         this.paymentsModel = paymentsModel;
     }
 
+    /**
+     * Set Generic Payment
+     * @param amount amount to pay
+     */
     public void setCloverPayment(double amount){
         PaymentObject paymentObject = new PaymentObject();
         paymentObject.setAmount(amount);
@@ -40,6 +49,10 @@ public class CloverPaymentAdapter {
 
     }
 
+    /**
+     * Set Applied Payment
+     * @param postModel payment model for payment application
+     */
     public void setCloverPayment(PaymentPostModel postModel) {
 
         Intent intent = new Intent();

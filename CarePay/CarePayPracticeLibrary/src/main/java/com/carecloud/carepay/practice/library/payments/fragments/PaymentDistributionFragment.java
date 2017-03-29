@@ -437,7 +437,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     private boolean validateBalanceItems(){
         boolean isValid = true;
         for(BalanceItemDTO balanceItem : balanceItems){
-            if(balanceItem.getBalance() > 0) {
+            if(balanceItem.getBalance() != 0) {
                 if (balanceItem.getLocation() == null || balanceItem.getLocation().getId() == null) {
                     isValid = false;
                     if (balanceItem.getLocation() != null) {
@@ -470,7 +470,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     }
 
     private void addPaymentObject(BalanceItemDTO balanceItem, PaymentPostModel postModel){
-        if(balanceItem.getBalance()>0){
+        if(balanceItem.getBalance()!=0){
             PaymentObject paymentObject = new PaymentObject();
             paymentObject.setAmount(balanceItem.getBalance());
             paymentObject.setDescription(balanceItem.getDescription());
