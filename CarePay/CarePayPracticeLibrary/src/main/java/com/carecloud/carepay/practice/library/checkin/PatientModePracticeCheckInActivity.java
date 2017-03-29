@@ -23,7 +23,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.updatebalance.PaymentUpdateBalanceDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 

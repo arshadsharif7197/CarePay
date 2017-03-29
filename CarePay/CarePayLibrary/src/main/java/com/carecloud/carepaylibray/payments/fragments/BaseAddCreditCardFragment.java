@@ -32,9 +32,11 @@ import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialogFragment;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiAccountsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiMetadataMerchantServiceDTO;
+import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.postmodel.TokenizationService;
 import com.carecloud.carepaylibray.payments.utils.CardPattern;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -95,6 +97,9 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
     protected PaymentCreditCardsPayloadDTO creditCardsPayloadDTO;
     protected PaymentsCreditCardBillingInformationDTO billingInformationDTO;
     protected IAuthoriseCreditCardResponse authoriseCreditCardResponseCallback;
+
+    protected PaymentNavigationCallback callback;
+    protected PaymentsModel paymentsModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -290,6 +295,9 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
                         @Override
                         public void onClick(View view) {
                             dismiss();
+                            if(callback!=null){
+                                callback.onPayButtonClicked(amountToMakePayment, paymentsModel);
+                            }
                         }
                     });
                 }
@@ -430,6 +438,7 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
         billingInformationDTO.setCity(cityEditText.getText().toString().trim());
         billingInformationDTO.setState(stateAutoCompleteTextView.getText().toString().trim());
         creditCardsPayloadDTO.setBillingInformation(billingInformationDTO);
+        creditCardsPayloadDTO.setTokenizationService(TokenizationService.payeezy);
     }
 
     private void authorizeCreditCard() {

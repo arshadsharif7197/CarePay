@@ -141,6 +141,7 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
                         @Override
                         public void onClick(View view) {
                             dismiss();
+                            callback.onPayButtonClicked(amountToMakePayment, paymentsModel);
                         }
                     });
                 }
@@ -173,12 +174,12 @@ public class ChooseCreditCardFragment extends BaseDialogFragment {
             }
         });
 
-        if (getDialog() != null) {
-            //limit width of listview
-            ViewGroup.LayoutParams layoutParams = creditCardsListView.getLayoutParams();
-            layoutParams.width = (int) (getResources().getDisplayMetrics().widthPixels * .5);
-            creditCardsListView.setLayoutParams(layoutParams);
-        }
+//        if (getDialog() != null) {
+//            //limit width of listview
+//            ViewGroup.LayoutParams layoutParams = creditCardsListView.getLayoutParams();
+//            layoutParams.width = (int) (getResources().getDisplayMetrics().widthPixels * .5);
+//            creditCardsListView.setLayoutParams(layoutParams);
+//        }
 
     }
 

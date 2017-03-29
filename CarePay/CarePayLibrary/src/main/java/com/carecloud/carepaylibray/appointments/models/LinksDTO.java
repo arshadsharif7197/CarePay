@@ -47,6 +47,10 @@ public class LinksDTO {
     @Expose
     private TransitionDTO queueStatus = new TransitionDTO();
 
+    @SerializedName("page")
+    @Expose
+    private TransitionDTO pagePatient = new TransitionDTO();
+
     /**
      * @return The self
      */
@@ -174,5 +178,13 @@ public class LinksDTO {
 
     public TransitionDTO getQueueStatus() {
         return queueStatus;
+    }
+
+    public TransitionDTO getPagePatient() {
+        return pagePatient;
+    }
+
+    public void setPagePatient(TransitionDTO pagePatient) {
+        this.pagePatient = pagePatient;
     }
 }

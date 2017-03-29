@@ -25,7 +25,6 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPayloadDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
@@ -53,7 +52,6 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     private Context context;
     private LayoutInflater inflater;
     private AppointmentAvailabilityDTO availabilityDTO;
-    private final AppointmentLabelDTO appointmentLabelDTO;
     private final AppointmentResourcesItemDTO appointmentResourcesDTO;
     private final AppointmentsResultModel appointmentsResultModel;
     private VisitTypeDTO visitTypeDTO;
@@ -73,29 +71,27 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
      *
      * @param context      the context
      * @param cancelString the cancel string
-     * @param visitTypeDTO      visit type
-     * @param callback          dialog callback
+     * @param visitTypeDTO visit type
+     * @param callback     dialog callback
      */
     public PracticeAvailableHoursDialog(Context context, String cancelString,
-                                        AppointmentLabelDTO appointmentLabelDTO,
                                         AppointmentResourcesItemDTO appointmentResourcesDTO,
                                         AppointmentsResultModel appointmentsResultModel,
                                         VisitTypeDTO visitTypeDTO,
                                         TransitionDTO appointmentAvailabilityTransitionDTO,
                                         AppointmentNavigationCallback callback) {
-        this(context, cancelString, appointmentLabelDTO, appointmentResourcesDTO, appointmentsResultModel, visitTypeDTO, appointmentAvailabilityTransitionDTO, callback, null, null);
+        this(context, cancelString, appointmentResourcesDTO, appointmentsResultModel, visitTypeDTO, appointmentAvailabilityTransitionDTO, callback, null, null);
     }
 
     /**
-     * @param context           the context
-     * @param cancelString      the cancel string
-     * @param visitTypeDTO      visit type
-     * @param callback          dialog callback
-     * @param startDate         start date to pick from
-     * @param endDate           end date to pick from
+     * @param context      the context
+     * @param cancelString the cancel string
+     * @param visitTypeDTO visit type
+     * @param callback     dialog callback
+     * @param startDate    start date to pick from
+     * @param endDate      end date to pick from
      */
     public PracticeAvailableHoursDialog(Context context, String cancelString,
-                                        AppointmentLabelDTO appointmentLabelDTO,
                                         AppointmentResourcesItemDTO appointmentResourcesDTO,
                                         AppointmentsResultModel appointmentsResultModel,
                                         VisitTypeDTO visitTypeDTO,
@@ -105,7 +101,6 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
                                         Date endDate) {
         super(context, cancelString, false);
         this.context = context;
-        this.appointmentLabelDTO = appointmentLabelDTO;
         this.appointmentResourcesDTO = appointmentResourcesDTO;
         this.appointmentsResultModel = appointmentsResultModel;
         this.visitTypeDTO = visitTypeDTO;
@@ -127,7 +122,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
             @Override
             public void run() {
                 getAvailableHoursTimeSlots();
-                if(progressView!=null){
+                if (progressView != null) {
                     progressView.setVisibility(View.GONE);
                 }
             }
@@ -156,21 +151,15 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
         availableLocationsRecycleView = (RecyclerView) view.findViewById(R.id.available_locations_recycler);
         availableLocationsRecycleView.setLayoutManager(availableLocationsLayoutManager);
 
-        String range = null;
-        try {
-            range = appointmentLabelDTO.getAppointmentEditDateRangeButton();
+        setDialogTitle(Label.getLabel("available_hours_heading"));
 
-            String location = appointmentLabelDTO.getAppointmentLocationsLabel();
-            TextView locationsLabel = (TextView) view.findViewById(R.id.location_text);
-            locationsLabel.setText(location != null ? location : context.getString(R.string.locations_label));
+        String location = Label.getLabel("appointment_locations_label");
+        TextView locationsLabel = (TextView) view.findViewById(R.id.location_text);
+        locationsLabel.setText(location != null ? location : context.getString(R.string.locations_label));
 
-            setDialogTitle(appointmentLabelDTO
-                    .getAvailableHoursHeading());
-        }catch (NullPointerException ex){
-            ex.printStackTrace();
-        }
 
         TextView editRangeButton = (TextView) view.findViewById(R.id.edit_date_range_button);
+        String range = Label.getLabel("appoitment_edit_date_range_button");
         editRangeButton.setText(range != null ? range : context.getString(R.string.edit_date_range_button_label));
         editRangeButton.setOnClickListener(dateRangeClickListener);
         SystemUtil.setGothamRoundedBoldTypeface(context, editRangeButton);
@@ -184,14 +173,14 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
         updateDateRange();
     }
 
-    private void setAdapters(){
+    private void setAdapters() {
         try {
             List<FilterDataDTO> locations = extractAvailableLocations(availabilityDTO);
             filterModel.setLocations(locations);
 
             setPracticeAvailableHoursAdapter();
             setAvailableLocationsAdapter(locations);
-        }catch (NullPointerException ex){
+        } catch (NullPointerException ex) {
             ex.printStackTrace();
         }
     }
@@ -262,8 +251,8 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     /**
      * Method to update date range that is selected on calendar
      */
-    private void updateDateRange(){
-        if(startDate == null || endDate == null){
+    private void updateDateRange() {
+        if (startDate == null || endDate == null) {
             startDate = Calendar.getInstance().getTime();//today
             endDate = startDate;
         }
@@ -327,7 +316,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     @Override
     public void onSelectAppointmentTimeSlot(AppointmentsSlotsDTO appointmentsSlotsDTO) {
         if (null != callback) {
-            callback.confirmAppointment(appointmentsSlotsDTO.getStartTime(), appointmentsSlotsDTO.getEndTime(), availabilityDTO);
+            callback.confirmAppointment(appointmentsSlotsDTO, availabilityDTO);
         }
 
         dismiss();
@@ -338,10 +327,10 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
         availableHoursAdapter.applyFilter(new MapFilterModel(filterModel));
     }
 
-    private List<FilterDataDTO> extractAvailableLocations(AppointmentAvailabilityDTO availabilityDTO){
+    private List<FilterDataDTO> extractAvailableLocations(AppointmentAvailabilityDTO availabilityDTO) {
         List<FilterDataDTO> locations = new LinkedList<>();
         List<AppointmentAvailabilityPayloadDTO> availableAppointments = availabilityDTO.getPayload().getAppointmentAvailability().getPayload();
-        for(AppointmentAvailabilityPayloadDTO availableAppointment : availableAppointments){
+        for (AppointmentAvailabilityPayloadDTO availableAppointment : availableAppointments) {
             LocationDTO location = availableAppointment.getLocation();
 
             FilterDataDTO filterDataDTO = new FilterDataDTO(location.getId(), location.getName(), FilterDataDTO.FilterDataType.LOCATION);

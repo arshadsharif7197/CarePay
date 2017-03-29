@@ -37,6 +37,9 @@ public class CheckInPayloadDTO {
     @SerializedName("locations")
     @Expose
     private List<LocationDTO> locations = new ArrayList<>();
+    @SerializedName("page_messages")
+    @Expose
+    private List<String> pageMessages = new ArrayList<>();
 
     /**
      *
@@ -143,4 +146,13 @@ public class CheckInPayloadDTO {
     public void setLocations(List<LocationDTO> locations) {
         this.locations = locations;
     }
+
+    public List<String> getPageMessages() {
+        return pageMessages;
+    }
+
+    public void setPageMessages(List<String> pageMessages) {
+        this.pageMessages = pageMessages;
+    }
+
 }

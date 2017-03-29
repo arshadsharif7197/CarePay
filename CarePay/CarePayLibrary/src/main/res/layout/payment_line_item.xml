@@ -29,7 +29,7 @@
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/lineItemNameLabelDetails"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="@dimen/dimen_10dp"
@@ -44,7 +44,7 @@
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/lineItemAmountLabel"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_weight="1"

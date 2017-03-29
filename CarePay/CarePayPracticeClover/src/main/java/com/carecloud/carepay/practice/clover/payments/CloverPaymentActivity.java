@@ -27,7 +27,6 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentType;
 import com.carecloud.carepaylibray.payments.models.postmodel.TokenizationService;
-import com.carecloud.carepaylibray.payments.models.postmodel.TransactionResponse;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.util.CloverAuth;
 import com.clover.sdk.v1.BindingException;
@@ -40,8 +39,7 @@ import com.clover.sdk.v3.order.OrderConnector;
 import com.clover.sdk.v3.payments.Payment;
 import com.clover.sdk.v3.payments.Result;
 import com.google.gson.Gson;
-
-import org.json.JSONObject;
+import com.google.gson.JsonObject;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -360,10 +358,10 @@ public class CloverPaymentActivity extends BaseActivity {
         paymentPostModel.setAmount(amountDouble);
         paymentPostModel.addPaymentMethod(paymentObject);
 
-        TransactionResponse transactionResponse = new TransactionResponse();
-        transactionResponse.setTransactionID(cloverPayment.getId());
-        transactionResponse.setResponse(payment.getJSONObject());
-        paymentPostModel.setTransactionResponse(transactionResponse);
+//        TransactionResponse transactionResponse = new TransactionResponse();
+//        transactionResponse.setTransactionID(cloverPayment.getId());
+//        transactionResponse.setResponse(payment.getJSONObject());
+        postModel.setTransactionResponse(gson.fromJson(jsonString, JsonObject.class));
 
         if(paymentPostModel.isPaymentModelValid()){
             postPayment(gson.toJson(paymentPostModel));
@@ -380,10 +378,11 @@ public class CloverPaymentActivity extends BaseActivity {
         CloverCardTransactionInfo transactionInfo = cloverPayment.getCloverCardTransactionInfo();
         CreditCardModel creditCardModel = getCreditCardModel(transactionInfo);
 
-        TransactionResponse transactionResponse = new TransactionResponse();
-        transactionResponse.setTransactionID(cloverPayment.getId());
-        transactionResponse.setResponse(payment.getJSONObject());
-        postModel.setTransactionResponse(transactionResponse);
+//        TransactionResponse transactionResponse = new TransactionResponse();
+//        transactionResponse.setTransactionID(cloverPayment.getId());
+//        transactionResponse.setResponse(payment.getJSONObject());
+
+        postModel.setTransactionResponse(gson.fromJson(jsonString, JsonObject.class));
 
         for(PaymentObject paymentObject : postModel.getPaymentObjects()){
             paymentObject.setType(PaymentType.credit_card);
@@ -454,10 +453,10 @@ public class CloverPaymentActivity extends BaseActivity {
         paymentPostModel.setAmount(5.00);
         paymentPostModel.addPaymentMethod(paymentObject);
 
-        TransactionResponse transactionResponse = new TransactionResponse();
-        transactionResponse.setTransactionID(String.valueOf(System.currentTimeMillis()));
-        transactionResponse.setResponse(new JSONObject());
-        paymentPostModel.setTransactionResponse(transactionResponse);
+//        TransactionResponse transactionResponse = new TransactionResponse();
+//        transactionResponse.setTransactionID(String.valueOf(System.currentTimeMillis()));
+//        transactionResponse.setResponse(new JSONObject());
+//        paymentPostModel.setTransactionResponse(new JSONObject());
 
         Gson gson = new Gson();
         if(paymentPostModel.isPaymentModelValid()){
@@ -484,7 +483,7 @@ public class CloverPaymentActivity extends BaseActivity {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             Intent intent = getIntent();
-            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA, workflowDTO.getPayload().toString());
+            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA, workflowDTO.toString());
             setResult(RESULT_OK, intent);
             finish();
 //            PracticeNavigationHelper.navigateToWorkflow(CloverPaymentActivity.this, workflowDTO);

@@ -11,6 +11,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 /**
  * Created by pjohnson on 23/03/17.
@@ -59,13 +60,13 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
         super.onViewCreated(view, icicle);
         TextView pendingAmountTextView = (TextView) view.findViewById(R.id.pendingAmountTextView);
         pendingAmountTextView.setVisibility(View.VISIBLE);
-        pendingAmountTextView.setText(Label.getLabel("payment_pending_text") + " " + amount);
+        pendingAmountTextView.setText(Label.getLabel("payment_pending_text") + " " + StringUtil.getFormattedBalanceAmount(amount));
     }
 
     @Override
     public void onClick(View view) {
         super.onClick(view);
-        if (view.getId() == R.id.enter_amount_button) {
+        if ((view.getId() == R.id.enter_amount_button) && !StringUtil.isNullOrEmpty(amountText.getText().toString())) {
             callback.onPayButtonClicked(Double.parseDouble(amountText.getText().toString()), paymentsModel);
             dismiss();
         }

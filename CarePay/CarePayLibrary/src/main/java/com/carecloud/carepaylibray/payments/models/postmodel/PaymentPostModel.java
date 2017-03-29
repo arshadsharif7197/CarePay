@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.payments.models.postmodel;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class PaymentPostModel {
     private List<PaymentObject> paymentObjects = new ArrayList<>();
 
     @SerializedName("transaction_response")
-    private TransactionResponse transactionResponse;
+    private JsonObject transactionResponse;
 
     public double getAmount() {
         return amount;
@@ -36,11 +37,11 @@ public class PaymentPostModel {
         this.paymentObjects = paymentObjects;
     }
 
-    public TransactionResponse getTransactionResponse() {
+    public JsonObject getTransactionResponse() {
         return transactionResponse;
     }
 
-    public void setTransactionResponse(TransactionResponse transactionResponse) {
+    public void setTransactionResponse(JsonObject transactionResponse) {
         this.transactionResponse = transactionResponse;
     }
 
@@ -68,7 +69,7 @@ public class PaymentPostModel {
                 case android_pay:
                 case apple_pay:
                 case clover: {
-                    if(transactionResponse == null || !transactionResponse.isValid()){
+                    if(transactionResponse == null){
                         return false;
                     }
                     break;

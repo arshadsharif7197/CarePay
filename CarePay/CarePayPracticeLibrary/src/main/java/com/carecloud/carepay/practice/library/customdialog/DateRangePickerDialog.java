@@ -16,14 +16,13 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.timessquare.CalendarPickerView;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
-import org.joda.time.DateTime;
 
 public class DateRangePickerDialog extends BaseDialogFragment {
 

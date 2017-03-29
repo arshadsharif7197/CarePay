@@ -25,9 +25,6 @@ import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class FilterDialog extends PopupWindow
         implements CustomFilterListAdapter.CustomFilterListAdapterListener, CustomSearchAdapter.OnSearchChangedListener {
 

@@ -19,158 +19,177 @@ import com.carecloud.carepaylibrary.R;
  */
 
 public abstract class BaseDialogFragment extends DialogFragment implements ISession {
-        private Dialog dialog;
+    private Dialog dialog;
 
-        @Override
-        public void setupDialog(Dialog dialog, int style) {
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            this.dialog = getDialog();
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-            setCancelable(false);
-        }
+    @Override
+    public void setupDialog(Dialog dialog, int style) {
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.dialog = getDialog();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        setCancelable(false);
+    }
 
-        @Override
-        public int getTheme(){
+    @Override
+    public int getTheme(){
 //        return android.R.style.Theme_DeviceDefault_Dialog_NoActionBar_MinWidth;
-            return R.style.Base_Dialog_MinWidth;
+        return R.style.Base_Dialog_MinWidth;
+    }
+
+    /**
+     * Set a listener when the dialog is dimissed. Will be ignored if fragment is not shown as a dialog
+     * @param dismissListener listener
+     */
+    public void setOnDismissListener(Dialog.OnDismissListener dismissListener){
+        if(dialog!=null) {
+            dialog.setOnDismissListener(dismissListener);
+        }
+    }
+
+    /**
+     * Set a listener when the dialog is canceled. Will be ignored if fragment is not shown as a dialog
+     * @param cancelListener listener
+     */
+    public void setOnCancelListener(Dialog.OnCancelListener cancelListener){
+        if(dialog!=null) {
+            dialog.setOnCancelListener(cancelListener);
+        }
+    }
+
+
+
+    public boolean enableViewById(int id) {
+        return setEnabledViewById(id, true);
+    }
+
+    public boolean disableViewById(int id) {
+        return setEnabledViewById(id, true);
+    }
+
+    private boolean setEnabledViewById(int id, boolean enabled) {
+        View view = findViewById(id);
+        if (null == view) {
+            return false;
         }
 
-        /**
-         * Set a listener when the dialog is dimissed. Will be ignored if fragment is not shown as a dialog
-         * @param dismissListener listener
-         */
-        public void setOnDismissListener(Dialog.OnDismissListener dismissListener){
-            if(dialog!=null) {
-                dialog.setOnDismissListener(dismissListener);
-            }
+        view.setEnabled(enabled);
+
+        return true;
+    }
+
+    public boolean showViewById(int id) {
+        return setVisibilityById(id, View.VISIBLE);
+    }
+
+    public boolean disappearViewById(int id) {
+        return setVisibilityById(id, View.GONE);
+    }
+
+    private boolean setVisibilityById(int id, int visibility) {
+        View view = findViewById(id);
+        if (null == view) {
+            return false;
         }
 
-        /**
-         * Set a listener when the dialog is canceled. Will be ignored if fragment is not shown as a dialog
-         * @param cancelListener listener
-         */
-        public void setOnCancelListener(Dialog.OnCancelListener cancelListener){
-            if(dialog!=null) {
-                dialog.setOnCancelListener(cancelListener);
-            }
+        view.setVisibility(visibility);
+
+        return true;
+    }
+
+    /**
+     * @param id of the view to be found
+     * @return the view or null if not found
+     */
+    public View findViewById(int id) {
+        View rootView = getView();
+        if (null == rootView) {
+            return null;
         }
 
+        return rootView.findViewById(id);
+    }
 
+    @Override
+    public ApplicationPreferences getApplicationPreferences() {
+        return ((ISession) getActivity()).getApplicationPreferences();
+    }
 
-        public boolean enableViewById(int id) {
-            return setEnabledViewById(id, true);
+    @Override
+    public WorkflowServiceHelper getWorkflowServiceHelper() {
+        return ((ISession) getActivity()).getWorkflowServiceHelper();
+    }
+
+    @Override
+    public AppAuthorizationHelper getAppAuthorizationHelper() {
+        return ((IApplicationSession) getActivity()).getAppAuthorizationHelper();
+    }
+
+    @Override
+    public ApplicationMode getApplicationMode() {
+        return ((IApplicationSession) getActivity()).getApplicationMode();
+    }
+
+    @Override
+    public void showProgressDialog() {
+        ISession session = (ISession) getActivity();
+        if (null != session) {
+            session.showProgressDialog();
         }
+    }
 
-        public boolean disableViewById(int id) {
-            return setEnabledViewById(id, true);
+    @Override
+    public void hideProgressDialog() {
+        ISession session = (ISession) getActivity();
+        if (null != session) {
+            session.hideProgressDialog();
         }
+    }
 
-        private boolean setEnabledViewById(int id, boolean enabled) {
-            View view = findViewById(id);
-            if (null == view) {
-                return false;
-            }
-
-            view.setEnabled(enabled);
-
-            return true;
+    @Override
+    public void showErrorNotification(String errorMessage) {
+        ISession session = (ISession) getActivity();
+        if (null != session) {
+            session.showErrorNotification(errorMessage);
         }
+    }
 
-        public boolean showViewById(int id) {
-            return setVisibilityById(id, View.VISIBLE);
+    @Override
+    public void hideErrorNotification() {
+        ISession session = (ISession) getActivity();
+        if (null != session) {
+            session.hideErrorNotification();
         }
+    }
 
-        public boolean disappearViewById(int id) {
-            return setVisibilityById(id, View.GONE);
+    protected void hideDefaultActionBar(){
+        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        if(actionBar!=null){
+            actionBar.hide();
         }
+    }
 
-        private boolean setVisibilityById(int id, int visibility) {
-            View view = findViewById(id);
-            if (null == view) {
-                return false;
-            }
-
-            view.setVisibility(visibility);
-
-            return true;
+    protected void showDefaultActionBar() {
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.show();
         }
+    }
 
-        /**
-         * @param id of the view to be found
-         * @return the view or null if not found
-         */
-        public View findViewById(int id) {
-            View rootView = getView();
-            if (null == rootView) {
-                return null;
-            }
 
-            return rootView.findViewById(id);
+    /**
+     * Display Previously hidden fragment
+     */
+    public void showDialog(){
+        if(getDialog()!=null){
+            getDialog().show();
         }
+    }
 
-        @Override
-        public ApplicationPreferences getApplicationPreferences() {
-            return ((ISession) getActivity()).getApplicationPreferences();
+    /**
+     * hide dialog fragment without dismissing
+     */
+    public void hideDialog(){
+        if(getDialog()!=null){
+            getDialog().hide();
         }
-
-        @Override
-        public WorkflowServiceHelper getWorkflowServiceHelper() {
-            return ((ISession) getActivity()).getWorkflowServiceHelper();
-        }
-
-        @Override
-        public AppAuthorizationHelper getAppAuthorizationHelper() {
-            return ((IApplicationSession) getActivity()).getAppAuthorizationHelper();
-        }
-
-        @Override
-        public ApplicationMode getApplicationMode() {
-            return ((IApplicationSession) getActivity()).getApplicationMode();
-        }
-
-        @Override
-        public void showProgressDialog() {
-            ISession session = (ISession) getActivity();
-            if (null != session) {
-                session.showProgressDialog();
-            }
-        }
-
-        @Override
-        public void hideProgressDialog() {
-            ISession session = (ISession) getActivity();
-            if (null != session) {
-                session.hideProgressDialog();
-            }
-        }
-
-        @Override
-        public void showErrorNotification(String errorMessage) {
-            ISession session = (ISession) getActivity();
-            if (null != session) {
-                session.showErrorNotification(errorMessage);
-            }
-        }
-
-        @Override
-        public void hideErrorNotification() {
-            ISession session = (ISession) getActivity();
-            if (null != session) {
-                session.hideErrorNotification();
-            }
-        }
-
-        protected void hideDefaultActionBar(){
-            ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
-            if(actionBar!=null){
-                actionBar.hide();
-            }
-        }
-
-        protected void showDefaultActionBar() {
-            ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.show();
-            }
-        }
+    }
 }

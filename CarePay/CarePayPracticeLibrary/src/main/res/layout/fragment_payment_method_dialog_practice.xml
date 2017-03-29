@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/closeViewLayout"
@@ -27,13 +27,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:src="@drawable/icn_close" />
+                android:src="@drawable/icn_arrow_left" />
         </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="@dimen/dialog_width"
-        android:layout_height="@dimen/dialog_height"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/dimen_26dp"
         android:layout_marginStart="@dimen/dimen_26dp"
         android:orientation="vertical">
@@ -130,16 +130,16 @@
 
 
         <FrameLayout
-            android:layout_width="@dimen/dialog_width"
-            android:layout_height="@dimen/list_dialog_min_height"
-            android:layout_weight="3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/list_dialog_min_height_small"
             android:background="@color/white"
             android:paddingTop="@dimen/dimen_20dp">
 
             <ListView
                 android:id="@+id/list_payment_types"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dimen_20dp"
                 android:layout_marginEnd="@dimen/dimen_20dp"
                 android:layout_marginStart="@dimen/dimen_20dp"

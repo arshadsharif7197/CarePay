@@ -230,6 +230,7 @@
     <dimen name="responsibility_list_margin">80dp</dimen>
 
     <dimen name="list_dialog_min_height">400dp</dimen>
+    <dimen name="list_dialog_min_height_small">200dp</dimen>
 
     <dimen name="dimen_72dp">72dp</dimen>
     <dimen name="payment_distibution_dialog_height">540dp</dimen>

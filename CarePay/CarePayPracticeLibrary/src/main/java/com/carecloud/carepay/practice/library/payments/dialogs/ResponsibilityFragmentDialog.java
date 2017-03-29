@@ -32,8 +32,6 @@ import java.util.List;
 
 public class ResponsibilityFragmentDialog extends BaseDialogFragment implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
 
-    private static final String TAG = "ResponsibilityDialog";
-
     private String leftLabel;
     private String rightLabel;
     private PaymentsModel paymentsModel;
@@ -66,6 +64,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
     @Override
     public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
         callback.onDetailItemClick(paymentsModel, paymentLineItem);
+        dismiss();
     }
 
     /**
@@ -203,7 +202,6 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
             leftButton.setVisibility(View.GONE);
         } else {
             leftButton.setText(leftLabel);
-            SystemUtil.setGothamRoundedMediumTypeface(getContext(), leftButton);
             leftButton.setEnabled(isLeftButtonEnabled);
             leftButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -218,7 +216,6 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
 
         Button rightButton = (Button) view.findViewById(R.id.payment_pay_button);
         rightButton.setText(rightLabel);
-        SystemUtil.setGothamRoundedMediumTypeface(getContext(), rightButton);
         rightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

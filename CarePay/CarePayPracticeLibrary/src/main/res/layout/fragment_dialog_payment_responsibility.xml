@@ -103,31 +103,31 @@
         android:layout_alignParentBottom="true"
         android:background="@drawable/patient_mode_dialog_body_bg"
         android:orientation="horizontal"
-        android:paddingBottom="@dimen/dimen_15dp"
-        android:paddingEnd="@dimen/dimen_24dp"
-        android:paddingStart="@dimen/dimen_24dp"
-        android:paddingTop="@dimen/dimen_15dp">
+        android:padding="@dimen/dimen_10dp">
 
-        <Button
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/payment_plan_button"
             style="@style/PaymentPlanButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dimen_5dp"
             android:layout_weight="1"
             android:background="@drawable/blue_border_rounded_button_selector"
-            android:enabled="false" />
+            android:enabled="false"
+            app:customAssetFont="gotham_rounded_medium"/>
 
-        <Button
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/payment_pay_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen_18dp"
+            android:layout_marginStart="@dimen/dimen_5dp"
             android:layout_weight="1"
             android:background="@drawable/green_rounded_button_selector"
             android:paddingBottom="@dimen/dimen_14dp"
             android:paddingTop="@dimen/dimen_14dp"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_22sp"
-            tools:ignore="ButtonStyle" />
+            tools:ignore="ButtonStyle"
+            app:customAssetFont="gotham_rounded_medium"/>
     </LinearLayout>
 </RelativeLayout>

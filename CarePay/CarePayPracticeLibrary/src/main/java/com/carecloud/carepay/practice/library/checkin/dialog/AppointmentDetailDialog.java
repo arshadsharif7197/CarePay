@@ -3,7 +3,6 @@ package com.carecloud.carepay.practice.library.checkin.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -17,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.checkin.adapters.PagePickerAdapter;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInLabelDTO;
@@ -25,6 +25,7 @@ import com.carecloud.carepay.practice.library.checkin.dtos.CheckInStatusPayloadD
 import com.carecloud.carepay.practice.library.checkin.dtos.QueryStrings;
 import com.carecloud.carepay.practice.library.checkin.dtos.QueueDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.QueueStatusPayloadDTO;
+import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerWindow;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -40,6 +41,7 @@ import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
@@ -55,7 +57,7 @@ import java.util.Vector;
 /**
  * Created by sudhir_pingale on 10/26/2016.
  */
-public class AppointmentDetailDialog extends Dialog {
+public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter.PagePickerCallback {
 
     private static final String TAG = "AppointmentDetailDialog";
 
@@ -98,6 +100,8 @@ public class AppointmentDetailDialog extends Dialog {
     private ISession sessionHandler;
 
     private AppointmentDialogCallback callback;
+    private PopupPickerWindow pickerWindow;
+    private String pushUserId;
 
     /**
      * Constructor.
@@ -189,29 +193,25 @@ public class AppointmentDetailDialog extends Dialog {
         spacers.add(spacer);
         spacer = findViewById(R.id.spacer_three);
         spacers.add(spacer);
-    }
 
-    /**
-     * for setting  UI Component Style .
-     */
-    private void onSettingStyle() {
-        checkingInLabel.setTextColor(ContextCompat.getColor(context, R.color.charcoal_78));
-        checkingInLabel.setTextColor(ContextCompat.getColor(context, R.color.white));
+        pickerWindow = new PopupPickerWindow(context);
+        pickerWindow.flipPopup(true);
+        pickerWindow.setAdapter(new PagePickerAdapter(context, checkInDTO.getPayload().getPageMessages(), this));
 
-        GradientDrawable bgShapeAssistButton = (GradientDrawable) assistButton.getBackground();
-        if (checkInDTO.getMetadata().hasAssistEnabled()) {
-            bgShapeAssistButton.setColor(ContextCompat.getColor(context, R.color.colorPrimary));
-        } else {
-            bgShapeAssistButton.setColor(ContextCompat.getColor(context, R.color.light_gray));
+        if(!canSendPage()){
+            pageButton.setEnabled(false);
+        }else{
+            View mainView = findViewById(R.id.dialog_checkin_main);
+            mainView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    pickerWindow.dismiss();
+                }
+            });
         }
 
-        GradientDrawable bgShapePageButton = (GradientDrawable) pageButton.getBackground();
-        if (checkInDTO.getMetadata().hasPageEnabled()) {
-            bgShapePageButton.setColor(ContextCompat.getColor(context, R.color.rose_madder));
-        } else {
-            bgShapePageButton.setColor(ContextCompat.getColor(context, R.color.light_gray));
-        }
     }
+
 
     /**
      * for setting values to UI Component from DTO .
@@ -281,14 +281,13 @@ public class AppointmentDetailDialog extends Dialog {
     }
 
     private void enableActionItems() {
-        paymentButton.setEnabled(checkInDTO.getMetadata().hasPaymentEnabled());
         assistButton.setEnabled(checkInDTO.getMetadata().hasAssistEnabled());
-        pageButton.setEnabled(checkInDTO.getMetadata().hasPageEnabled());
     }
 
     private View.OnClickListener paymentActionListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            pickerWindow.dismiss();
             getPatientBalanceDetails();
         }
     };
@@ -303,7 +302,8 @@ public class AppointmentDetailDialog extends Dialog {
     private View.OnClickListener pageActionListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-
+            int offset = view.getWidth()/2-pickerWindow.getWidth()/2;
+            pickerWindow.showAsDropDown(view, offset, 10);
         }
     };
 
@@ -602,6 +602,19 @@ public class AppointmentDetailDialog extends Dialog {
 
     }
 
+    private boolean canSendPage(){
+        String userId = pendingBalanceDTO.getMetadata().getUserId();
+        String checkUserId;
+        for(PatientBalanceDTO patientBalanceDTO : checkInDTO.getPayload().getPatientBalances()){
+            checkUserId = patientBalanceDTO.getDemographics().getMetadata().getUserId();
+            if(userId.equals(checkUserId)){
+                pushUserId = checkUserId;
+                return patientBalanceDTO.getDemographics().getPayload().getNotificationOptions().hasPushNotification();
+            }
+        }
+        return false;
+    }
+
 
     private WorkflowServiceCallback patientBalancesCallback = new WorkflowServiceCallback() {
 
@@ -641,20 +654,34 @@ public class AppointmentDetailDialog extends Dialog {
         }
     };
 
+    @Override
+    public void sendMessage(String message) {
+        pickerWindow.dismiss();
 
-    private void showResponsibilityDialog(PaymentsModel paymentsModel) {
-//        String tag = ResponsibilityFragmentDialog.class.getSimpleName();
-//        FragmentTransaction ft = ((AppCompatActivity) getOwnerActivity()).getSupportFragmentManager().beginTransaction();
-//        Fragment prev = ((AppCompatActivity) getOwnerActivity()).getSupportFragmentManager().findFragmentByTag(tag);
-//        if (prev != null) {
-//            ft.remove(prev);
-//        }
-//        ft.addToBackStack(null);
-//
-//        ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newPatientHeader(paymentsModel);
-//        ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
-//                .newInstance(paymentsModel, Label.getLabel("practice_payments_detail_dialog_payment_plan"),
-//                        Label.getLabel("practice_payments_detail_dialog_pay"), headerModel);
-//        dialog.show(ft, tag);
+        TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getPagePatient();
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("user_id", pushUserId);
+        queryMap.put("message", message);
+
+        sessionHandler.getWorkflowServiceHelper().execute(transitionDTO, pushNotificationCallback, queryMap);
+
     }
+
+    private WorkflowServiceCallback pushNotificationCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            SystemUtil.showSuccessToast(context, Label.getLabel("push_notification_sent"));
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            sessionHandler.showErrorNotification(Label.getLabel("push_notification_failed"));
+        }
+    };
+
 }
