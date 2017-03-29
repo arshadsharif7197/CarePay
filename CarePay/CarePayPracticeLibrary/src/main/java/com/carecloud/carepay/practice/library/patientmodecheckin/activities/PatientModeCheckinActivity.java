@@ -63,9 +63,6 @@ import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class PatientModeCheckinActivity extends BasePracticeActivity implements
         DemographicsReviewLabelsHolder, DemographicsLabelsHolder,
         HealthInsuranceFragment.InsuranceDocumentScannerListener, MedicationsAllergyFragment.MedicationAllergyCallback,
@@ -83,7 +80,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     private static final int NUM_OF_SUBFLOWS = 4;
 
     //demographics nav
-    private Map<Integer, CheckInDemographicsBaseFragment> demographicFragMap = new HashMap<>();
+//    private Map<Integer, CheckInDemographicsBaseFragment> demographicFragMap = new HashMap<>();
     private int currentDemographicStep = 1;
     //
 
@@ -121,11 +118,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         initializeCheckinViews();
 
         // place the initial fragment
-        demographicFragMap.put(1, new PersonalInfoFragment());
-        demographicFragMap.put(2, new AddressFragment());
-        demographicFragMap.put(3, new DemographicsFragment());
-        demographicFragMap.put(4, new IdentificationFragment());
-        demographicFragMap.put(5, new HealthInsuranceFragment());
+//        demographicFragMap.put(1, new PersonalInfoFragment());
+//        demographicFragMap.put(2, new AddressFragment());
+//        demographicFragMap.put(3, new DemographicsFragment());
+//        demographicFragMap.put(4, new IdentificationFragment());
+//        demographicFragMap.put(5, new HealthInsuranceFragment());
 
         navigateToDemographicFragment(1);
     }
@@ -479,7 +476,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void onBackPressed() {
-        setCurrentStep(currentDemographicStep - 1);
         try {
             BaseCheckinFragment fragment = (BaseCheckinFragment) getSupportFragmentManager().findFragmentById(R.id.checkInContentHolderId);
             if (fragment != null && !fragment.navigateBack()) {
@@ -616,12 +612,14 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
      * @param step fragment
      */
     public void navigateToDemographicFragment(Integer step) {
-        CheckInDemographicsBaseFragment fragment = demographicFragMap.get(step);
-        Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, demographicDTO);
-        fragment.setArguments(args);
+        CheckInDemographicsBaseFragment fragment = getDemographicFragment(step);
+        if(fragment!=null) {
+            Bundle args = new Bundle();
+            DtoHelper.bundleDto(args, demographicDTO);
+            fragment.setArguments(args);
 
-        navigateToFragment(fragment, currentDemographicStep != 1);
+            navigateToFragment(fragment, currentDemographicStep != 1);
+        }
     }
 
     @Override
@@ -633,4 +631,23 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             fragment.imageCaptured(bitmap);
         }
     }
+
+
+    private CheckInDemographicsBaseFragment getDemographicFragment(int step){
+        switch (step){
+            case 1:
+                return new PersonalInfoFragment();
+            case 2:
+                return new AddressFragment();
+            case 3:
+                return new DemographicsFragment();
+            case 4:
+                return new IdentificationFragment();
+            case 5:
+                return new HealthInsuranceFragment();
+            default:
+                return null;
+        }
+    }
+
 }
