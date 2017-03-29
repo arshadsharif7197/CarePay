@@ -29,10 +29,6 @@ public class CloverVaultedCard {
         return cardholderName;
     }
 
-    public void setCardholderName(String cardholderName) {
-        this.cardholderName = cardholderName;
-    }
-
     /**
      * Overload to get a default value in case cardholder name is null
      * @param defValue default value
@@ -40,6 +36,10 @@ public class CloverVaultedCard {
      */
     public String getCardholderName(String defValue){
         return cardholderName!=null?cardholderName:defValue;
+    }
+
+    public void setCardholderName(String cardholderName) {
+        this.cardholderName = cardholderName;
     }
 
     public String getFirst6() {
