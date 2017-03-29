@@ -73,6 +73,14 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        stepProgressBar.setCurrentProgressDot(0);
+        checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 1);
+        checkInNavListener.setCurrentStep(1);
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 

@@ -36,6 +36,13 @@ public class ApplicationMode {
         this.userPracticeDTO.setUserName(appAuthorizationHelper.getCurrUser());
     }
 
+    /**
+     * Clears the current practice DTO, should be called when logging out of app
+     */
+    public void clearUserPracticeDTO(){
+        this.userPracticeDTO = null;
+    }
+
     public ApplicationType getApplicationType() {
         return applicationType;
     }

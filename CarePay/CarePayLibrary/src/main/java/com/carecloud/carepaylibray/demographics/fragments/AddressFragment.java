@@ -38,9 +38,9 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.smartystreets.api.us_zipcode.City;
 
-import java.util.Arrays;
-
 import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
+
+import java.util.Arrays;
 
 /**
  * A simple {@link CheckInDemographicsBaseFragment} subclass.
@@ -99,8 +99,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 //        setTypefaces(mainView);
 
         initViewFromModels(mainView);
-        stepProgressBar.setCurrentProgressDot(1);
-        checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 2);
         return mainView;
     }
 
@@ -108,6 +106,15 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         hideSoftKeyboard(getActivity());
     }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        stepProgressBar.setCurrentProgressDot(1);
+        checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 2);
+        checkInNavListener.setCurrentStep(2);
+    }
+
 
     private boolean checkFormatedFields(View view) {
 

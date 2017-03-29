@@ -22,12 +22,12 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link CheckInDemographicsBaseFragment} subclass.
@@ -112,11 +112,15 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
 
         checkIfEnableButton(mainView);
 
-        stepProgressBar.setCurrentProgressDot(2);
-
-        checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 3);
-
         return mainView;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        stepProgressBar.setCurrentProgressDot(2);
+        checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 3);
+        checkInNavListener.setCurrentStep(3);
     }
 
     /**

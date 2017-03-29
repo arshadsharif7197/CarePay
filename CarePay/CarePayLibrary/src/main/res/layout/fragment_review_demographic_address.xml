@@ -9,12 +9,15 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <!--<TextView-->
-    <!--android:id="@+id/demographicsAddressSectionLabel"-->
-    <!--style="@style/reviewDemographicBlue."-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginTop="36dp" />-->
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/demographicsAddressSectionLabel"
+        style="@style/reviewDemographicBlue."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_36dp"
+        android:textAllCaps="true"
+        breeze:textKey="demographics_address_section"
+        app:customAssetFont="proxima_nova_semi_bold"/>
 
 
 
