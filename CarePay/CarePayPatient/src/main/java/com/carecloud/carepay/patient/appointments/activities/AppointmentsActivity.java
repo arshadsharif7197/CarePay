@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.TextView;
 
@@ -75,7 +76,6 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                 .findViewById(com.carecloud.carepaylibrary.R.id.appointmentsDrawerIdTextView);
 
         appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
-
         if (appointmentsResultModel.getPayload() != null) {
             try {
                 List<IdsDTO> practicePatientIds = appointmentsResultModel.getPayload().getPracticePatientIds();
@@ -309,8 +309,8 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     public void requestAppointment(String startTime, String endTime, String comments) {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("language", getApplicationPreferences().getUserLanguage());
-        queryMap.put("practice_mgmt", selectedResourcesPracticeDTO.getPracticeMgmt());
-        queryMap.put("practice_id", selectedResourcesPracticeDTO.getPracticeId());
+        queryMap.put("practice_mgmt", getApplicationPreferences().getPracticeManagement());
+        queryMap.put("practice_id", getApplicationPreferences().getPracticeId());
 
         JsonObject appointmentJSONObj = new JsonObject();
         JsonObject patientJSONObj = new JsonObject();
