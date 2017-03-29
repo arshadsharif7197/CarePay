@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -98,7 +97,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
         if (demographicsSettingsDTO != null) {
             DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
             demographicsSettingsLabelsDTO = demographicsSettingsMetadataDTO.getLabels();
-            imageCaptureHelper = new ImageCaptureHelper(appCompatActivity, profileImageview, demographicsSettingsLabelsDTO);
+            imageCaptureHelper = new ImageCaptureHelper(appCompatActivity, profileImageview);
         }
 
         getPersonalDetails();
@@ -379,7 +378,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
     protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner, Bitmap bitmap) {
         // save the image as base64 in the model
         if (bitmap != null) {
-            String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
+            String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
             DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
             if (demographicsSettingsPayloadDTO != null) {
                 DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();

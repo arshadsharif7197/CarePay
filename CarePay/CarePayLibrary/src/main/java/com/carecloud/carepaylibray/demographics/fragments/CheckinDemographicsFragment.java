@@ -233,7 +233,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     private void initialiseUIFields(View view) {
 
         profileImageview = (ImageView) view.findViewById(R.id.patientPicImageView);
-        imageCaptureHelper = new ImageCaptureHelper(getActivity(), profileImageview, globalLabelsMetaDTO);
+        imageCaptureHelper = new ImageCaptureHelper(getActivity(), profileImageview);
         updateProfileImageButton = (Button) view.findViewById(R.id.updateProfileImageButton);
 
 
@@ -873,7 +873,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         activityCallback.onDemographicDtoChanged(demographicDTO);
 
 //        if (bitmap != null) {
-//            String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
+//            String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
 //            demographicPersDetailsPayloadDTO.setProfilePhoto(imageAsBase64);
 //        }
         return demographicDTO;

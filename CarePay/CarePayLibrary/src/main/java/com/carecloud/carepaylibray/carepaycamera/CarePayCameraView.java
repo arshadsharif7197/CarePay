@@ -14,6 +14,7 @@ import com.carecloud.carepaylibrary.R;
  */
 
 public class CarePayCameraView extends RelativeLayout {
+    private CarePayCameraCallback callback;
     Context context;
     Button buttonCapture;
     private CarePayCameraPreview carePayCameraPreview;
@@ -21,12 +22,23 @@ public class CarePayCameraView extends RelativeLayout {
     /**
      * Public constructor with context
      *
+     * @param callback after photo taken
+     * @param context sender context
+     */
+    public CarePayCameraView(CarePayCameraCallback callback, Context context) {
+        super(context);
+        this.callback = callback;
+        this.context = context;
+        init(null);
+    }
+
+    /**
+     * Public constructor with context
+     *
      * @param context sender context
      */
     public CarePayCameraView(Context context) {
-        super(context);
-        this.context = context;
-        init(null);
+        this((CarePayCameraCallback) context, context);
     }
 
     /**
@@ -75,16 +87,8 @@ public class CarePayCameraView extends RelativeLayout {
         public void onClick(View view) {
             buttonCapture.setClickable(false);
             if (carePayCameraPreview != null) {
-                carePayCameraPreview.takePicture();
+                carePayCameraPreview.takePicture(callback);
             }
         }
     };
-
-    private Bitmap getCapturedBitmap() {
-        return carePayCameraPreview == null ? null : carePayCameraPreview.getCapturedBitmap();
-    }
-
-    public CarePayCameraPreview getCarePayCameraPreview() {
-        return carePayCameraPreview;
-    }
 }

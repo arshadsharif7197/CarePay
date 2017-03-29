@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -45,10 +46,48 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 
 public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragment {
 
-    protected CheckInNavListener checkInNavListener;
     StepProgressBar stepProgressBar;
 
+    protected CheckInNavListener checkInNavListener;
 
+    public interface CheckInNavListener {
+        void applyChangesAndNavTo(DemographicDTO demographicDTO, Integer step);
+
+        Integer getCurrentStep();
+
+        void setCurrentStep(Integer step);
+
+        void setCheckinFlow(CheckinFlowState flowState, int totalPages, int currentPage);
+
+        void navigateToConsentFlow(WorkflowDTO workflowDTO);
+    }
+
+    private WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            DemographicDTO demographicDTO = new Gson().fromJson(workflowDTO.toString(), DemographicDTO.class);
+
+            if (checkInNavListener.getCurrentStep() == 5) {
+                checkInNavListener.navigateToConsentFlow(workflowDTO);
+            } else {
+                checkInNavListener.applyChangesAndNavTo(demographicDTO, checkInNavListener.getCurrentStep() + 1);
+            }
+
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            Log.e(getActivity().getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,7 +97,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         stepProgressBar = (StepProgressBar) view.findViewById(R.id.stepProgressBarCheckin);
         stepProgressBar.setCumulativeDots(true);
         stepProgressBar.setNumDots(5);
-        inflateContent(inflater,view);
+        inflateContent(inflater, view);
         //initializeToolbar(view);
         inflateToolbarViews(view);
 
@@ -66,10 +105,9 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         return view;
     }
 
-
-    private void inflateToolbarViews(View view){
+    private void inflateToolbarViews(View view) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
-        if(toolbar == null) {
+        if (toolbar == null) {
             return;
         }
         toolbar.setTitle("");
@@ -78,7 +116,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             @Override
             public void onClick(View view) {
                 getActivity().onBackPressed();
-                checkInNavListener.setCurrentStep(checkInNavListener.getCurrentStep()-1);
+                checkInNavListener.setCurrentStep(checkInNavListener.getCurrentStep() - 1);
             }
         });
 
@@ -86,14 +124,14 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     }
 
-    protected boolean checkTextEmptyValue( int textEditableId, View view) {
+    protected boolean checkTextEmptyValue(int textEditableId, View view) {
         EditText editText = (EditText) view.findViewById(textEditableId);
         return StringUtil.isNullOrEmpty(editText.getText().toString());
     }
 
-    private void inflateContent(LayoutInflater inflater, View view){
-        View childview = inflater.inflate(getContentId(),null);
-        ((FrameLayout)view.findViewById(R.id.checkinDemographicsContentLayout)).addView(childview);
+    private void inflateContent(LayoutInflater inflater, View view) {
+        View childview = inflater.inflate(getContentId(), null);
+        ((FrameLayout) view.findViewById(R.id.checkinDemographicsContentLayout)).addView(childview);
     }
 
     protected void setHeaderTitle(String title, String heading, String subHeading, View view){
@@ -138,7 +176,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         nextButton.setOnClickListener(listener);
     }
 
-    protected void checkIfEnableButton(View view){
+    protected void checkIfEnableButton(View view) {
         Button nextButton = (Button) view.findViewById(R.id.checkinDemographicsNextButton);
         boolean isEnabled = passConstraints(view);
         nextButton.setEnabled(isEnabled);
@@ -156,6 +194,8 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     protected abstract DemographicDTO updateDemographicDTO(View view);
 
+    public abstract void imageCaptured(Bitmap bitmap);
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -170,29 +210,14 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         }
     }
 
-    public interface CheckInNavListener {
-        public void applyChangesAndNavTo(DemographicDTO demographicDTO, Integer step);
-
-        public Integer getCurrentStep();
-
-        public void setCurrentStep(Integer step);
-
-        void setCheckinFlow(CheckinFlowState flowState, int totalPages, int currentPage);
-
-        void navigateToConsentFlow(WorkflowDTO workflowDTO);
-    }
-
-
-
-
-    protected void openNextFragment( DemographicDTO demographicDTO, boolean transition){
+    protected void openNextFragment(DemographicDTO demographicDTO, boolean transition) {
         Map<String, String> queries = new HashMap<>();
         queries.put("practice_mgmt", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
         queries.put("practice_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
         queries.put("appointment_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId());
 
         Map<String, String> header = getWorkflowServiceHelper().getPreferredLanguageHeader();
-        header.put("transition",  Boolean.valueOf(transition).toString());
+        header.put("transition", Boolean.valueOf(transition).toString());
 
         Gson gson = new Gson();
         String demogrPayloadString = gson.toJson(demographicDTO.getPayload().getDemographics().getPayload());
@@ -201,33 +226,4 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                 demographicDTO.getPayload().getDemographics().getPayload().getAddress());
         getWorkflowServiceHelper().execute(transitionDTO, consentformcallback, demogrPayloadString, queries, header);
     }
-
-    private WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            DemographicDTO demographicDTO = new Gson().fromJson(workflowDTO.toString(), DemographicDTO.class);
-
-            if(checkInNavListener.getCurrentStep() ==5){
-                checkInNavListener.navigateToConsentFlow(workflowDTO);
-            }else{
-                checkInNavListener.applyChangesAndNavTo(demographicDTO, checkInNavListener.getCurrentStep() + 1);
-            }
-
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
-            Log.e(getActivity().getString(R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
-
-
 }

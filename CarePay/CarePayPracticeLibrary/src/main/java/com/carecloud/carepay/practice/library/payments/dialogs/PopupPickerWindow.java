@@ -20,6 +20,7 @@ import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 public class PopupPickerWindow extends PopupWindow {
     private Context context;
     private RecyclerView popupRecycler;
+    private View popupBackgroundView;
 
     /**
      * Constructor
@@ -35,6 +36,7 @@ public class PopupPickerWindow extends PopupWindow {
     private void initView(){
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.popup_picker_list, null, false);
+        popupBackgroundView = view.findViewById(R.id.popup_background);
         setContentView(view);
         setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -64,5 +66,17 @@ public class PopupPickerWindow extends PopupWindow {
 
     public void setBalanceItemDTO(BalanceItemDTO balanceItemDTO) {
         ((PopupPickerAdapter) popupRecycler.getAdapter()).setSelectedBalanceItem(balanceItemDTO);
+    }
+
+    /**
+     * Set the background to top view if necessary
+     * @param showOnTop true to show above th anchor view
+     */
+    public void flipPopup(boolean showOnTop){
+        if(showOnTop){
+            popupBackgroundView.setBackgroundResource(R.drawable.popup_picker_bg_top);
+        }else{
+            popupBackgroundView.setBackgroundResource(R.drawable.popup_picker_bg);
+        }
     }
 }

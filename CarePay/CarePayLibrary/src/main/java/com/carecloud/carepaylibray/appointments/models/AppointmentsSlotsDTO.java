@@ -8,7 +8,6 @@ import java.io.Serializable;
 /**
  * Created by sudhir_pingale on 12/20/2016.
  */
-
 public class AppointmentsSlotsDTO implements Serializable {
 
     @SerializedName("start_time")
@@ -19,10 +18,7 @@ public class AppointmentsSlotsDTO implements Serializable {
     private String endTime;
 
     @Expose(serialize = false)
-    private String locationName;
-
-    @Expose(serialize = false)
-    private String locationId;
+    private LocationDTO location;
 
     /**
      * Gets start time.
@@ -60,19 +56,19 @@ public class AppointmentsSlotsDTO implements Serializable {
         this.endTime = endTime;
     }
 
-    public String getLocationName() {
-        return locationName;
+    /**
+     *
+     * @param location appointment Location
+     */
+    public void setLocation(LocationDTO location) {
+        this.location = location;
     }
 
-    public void setLocationName(String locationName) {
-        this.locationName = locationName;
-    }
-
-    public String getLocationId() {
-        return locationId;
-    }
-
-    public void setLocationId(String locationId) {
-        this.locationId = locationId;
+    /**
+     *
+     * @return appointment Location
+     */
+    public LocationDTO getLocation() {
+        return location;
     }
 }

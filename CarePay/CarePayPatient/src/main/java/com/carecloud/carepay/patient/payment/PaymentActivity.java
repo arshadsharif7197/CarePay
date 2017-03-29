@@ -139,7 +139,7 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
     protected void handleError(int errorCode) {
         switch (errorCode) {
             case WalletConstants.ERROR_CODE_SPENDING_LIMIT_EXCEEDED:
-                Toast.makeText(this, "Way too much!!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Insufficient Balance", Toast.LENGTH_LONG).show();
                 break;
             case WalletConstants.ERROR_CODE_INVALID_PARAMETERS:
             case WalletConstants.ERROR_CODE_AUTHENTICATION_FAILURE:

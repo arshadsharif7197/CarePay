@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -27,10 +28,19 @@
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/health_insurance_add_another"
-            style="@style/reviewDemographicsButtonStyle"
-            android:text="add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/dimen_25dp"
+            android:background="@drawable/round_border_button_bg"
+            android:paddingBottom="@dimen/dimen_10dp"
+            android:paddingEnd="@dimen/dimen_24dp"
+            android:paddingStart="@dimen/dimen_24dp"
+            android:paddingTop="@dimen/dimen_10dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_13"
             app:customAssetFont="gotham_rounded_medium"
-             />
+            breeze:textKey="practice_checkin_demogr_ins_add_another"/>
     </LinearLayout>
 
     <LinearLayout
@@ -61,6 +71,7 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_22"
                 app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="practice_checkin_demogr_ins_dont_have_one_button_label"
                 tools:ignore="ButtonStyle" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
@@ -77,6 +88,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_22"
                 app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="practice_checkin_demogr_ins_add_new_button_label"
                 tools:ignore="ButtonStyle" />
         </LinearLayout>
 

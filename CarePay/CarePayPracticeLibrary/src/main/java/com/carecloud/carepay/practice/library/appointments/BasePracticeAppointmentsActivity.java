@@ -12,6 +12,7 @@ import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -19,6 +20,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LinksDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
@@ -57,25 +59,22 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     public void showAppointmentConfirmation() {
 
         if (isVisible()) {
-                SystemUtil.showSuccessToast(getContext(), getLabels().getAppointmentRequestSuccessMessage());
-            }
+            SystemUtil.showSuccessToast(getContext(), getLabels().getAppointmentRequestSuccessMessage());
+        }
 
-            onAppointmentRequestSuccess();
+        onAppointmentRequestSuccess();
     }
 
     @Override
-    public void confirmAppointment(String startTime, String endTime, AppointmentAvailabilityDTO availabilityDTO) {
+    public void confirmAppointment(AppointmentsSlotsDTO appointmentsSlot, AppointmentAvailabilityDTO availabilityDTO) {
         this.availabilityDTO = availabilityDTO;
         // Call Request appointment Summary dialog from here
-        String cancelString = getLabels().getAvailableHoursBack();
+        String cancelString = Label.getLabel("available_hours_back");
         new PracticeRequestAppointmentDialog(
                 this,
                 cancelString,
-                getLabels(),
-                startTime,
-                endTime,
+                appointmentsSlot,
                 appointmentResourcesDTO,
-                availabilityDTO,
                 visitTypeDTO,
                 this
         ).show();

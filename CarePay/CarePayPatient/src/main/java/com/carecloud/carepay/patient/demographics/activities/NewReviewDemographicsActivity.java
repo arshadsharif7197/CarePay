@@ -127,24 +127,6 @@ public class NewReviewDemographicsActivity extends BasePatientActivity
     }
 
     @Override
-    public void navigateToInsuranceDocumentFragment(int index, DemographicInsurancePayloadDTO model) {
-
-        CheckinDemographicsFragment checkinFragment = (CheckinDemographicsFragment)
-                getSupportFragmentManager().findFragmentById(R.id.root_layout);
-        onDemographicDtoChanged(checkinFragment.updateModels());
-
-        Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, demographicDTO.getMetadata().getLabels());
-        DtoHelper.bundleDto(args, demographicDTO.getMetadata().getDataModels().demographic.insurances.properties.items.insurance);
-        DtoHelper.bundleDto(args, model);
-        DtoHelper.bundleDto(args, index);
-        InsuranceDocumentScannerFragment fragment = new InsuranceDocumentScannerFragment();
-        fragment.setArguments(args);
-
-        navigateToFragment(fragment, false);
-    }
-
-    @Override
     public void navigateToParentFragment() {
         CheckinDemographicsFragment fragment = new CheckinDemographicsFragment();
         Bundle args = new Bundle();
@@ -167,10 +149,8 @@ public class NewReviewDemographicsActivity extends BasePatientActivity
     }
 
     @Override
-    public void disableMainButton(boolean isDisabled) {
-        CheckinDemographicsFragment checkinFragment = (CheckinDemographicsFragment)
-                getSupportFragmentManager().findFragmentById(R.id.root_layout);
-        checkinFragment.checkIfDisableButton(isDisabled);
+    public void captureImage() {
+
     }
 
     @Override

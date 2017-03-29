@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -170,6 +171,11 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
         updatableDemographicDTO.setMetadata(demographicDTO.getMetadata());
         updatableDemographicDTO.getPayload().setAppointmentpayloaddto(demographicDTO.getPayload().getAppointmentpayloaddto());
         return updatableDemographicDTO;
+    }
+
+    @Override
+    public void imageCaptured(Bitmap bitmap) {
+
     }
 
     /**

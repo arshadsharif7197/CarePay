@@ -178,7 +178,7 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
         insuranceCardNumEditText.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
 
         frontInsuranceImageView = (ImageView) view.findViewById(R.id.demogr_insurance_frontimage);
-        insuranceFrontScanHelper = new ImageCaptureHelper(getActivity(), frontInsuranceImageView, demographicsSettingsLabelsDTO);
+        insuranceFrontScanHelper = new ImageCaptureHelper(getActivity(), frontInsuranceImageView);
 
         btnScanFrontInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_frontbtn);
         btnScanFrontInsurance.setText(documentsdocumentsScanFirstString);
@@ -197,7 +197,7 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
         });
 
         backInsuranceImageView = (ImageView) view.findViewById(R.id.demogr_insurance_backimage);
-        insuranceBackScanHelper = new ImageCaptureHelper(getActivity(), backInsuranceImageView, demographicsSettingsLabelsDTO);
+        insuranceBackScanHelper = new ImageCaptureHelper(getActivity(), backInsuranceImageView);
         btnScanBackInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_backbtn);
         btnScanBackInsurance.setText(documentsScanBackString);
         btnScanBackInsurance.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
@@ -330,13 +330,13 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
                 // change button caption to 'rescan'
                 btnScanFrontInsurance.setText(documentsdocumentsScanFirstString);
                 // save from image
-                String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
+                String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
                 DemographicInsurancePhotoDTO frontDTO = insuranceDTO.getInsurancePhotos().get(0);
                 frontDTO.setInsurancePhoto(imageAsBase64); // create the image dto
             } else if (scanner == insuranceBackScanHelper) {
                 // change button caption to 'rescan'
                 btnScanBackInsurance.setText(documentsScanBackString);
-                String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
+                String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
                 DemographicInsurancePhotoDTO backDTO = insuranceDTO.getInsurancePhotos().get(1);
                 backDTO.setInsurancePhoto(imageAsBase64); // create the image dto
             }
@@ -363,7 +363,7 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
                     btnScanFrontInsurance.setText(documentsdocumentsScanFirstString);
                 } catch (MalformedURLException e) {
                     Bitmap bitmap;
-                    if (!StringUtil.isNullOrEmpty(photoFrontURL) && (bitmap = SystemUtil.base64ToBitmap(photoFrontURL)) != null) {
+                    if (!StringUtil.isNullOrEmpty(photoFrontURL) && (bitmap = SystemUtil.convertStringToBitmap(photoFrontURL)) != null) {
                         Log.v(LOG_TAG, "load as base64");
                         frontInsuranceImageView.setImageBitmap(bitmap);
                     } else {
@@ -387,7 +387,7 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
                         btnScanBackInsurance.setText(documentsScanBackString);
                     } catch (MalformedURLException e) {
                         Bitmap bitmap;
-                        if (!StringUtil.isNullOrEmpty(photoBackURL) && (bitmap = SystemUtil.base64ToBitmap(photoBackURL)) != null) {
+                        if (!StringUtil.isNullOrEmpty(photoBackURL) && (bitmap = SystemUtil.convertStringToBitmap(photoBackURL)) != null) {
                             Log.v(LOG_TAG, "load as base64");
                             backInsuranceImageView.setImageBitmap(bitmap);
                         } else {

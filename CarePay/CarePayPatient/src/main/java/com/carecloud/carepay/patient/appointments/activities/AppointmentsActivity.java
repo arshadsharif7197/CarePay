@@ -31,6 +31,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.IdsDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
@@ -270,13 +271,13 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     }
 
     @Override
-    public void confirmAppointment(String startTime, String endTime, AppointmentAvailabilityDTO availabilityDTO) {
+    public void confirmAppointment(AppointmentsSlotsDTO appointmentsSlot, AppointmentAvailabilityDTO availabilityDTO) {
         this.availabilityDTO = availabilityDTO;
         ProviderDTO providersDTO = selectedAppointmentResourcesDTO.getResource().getProvider();
 
         AppointmentsPayloadDTO payloadDTO = new AppointmentsPayloadDTO();
-        payloadDTO.setStartTime(startTime);
-        payloadDTO.setEndTime(endTime);
+        payloadDTO.setStartTime(appointmentsSlot.getStartTime());
+        payloadDTO.setEndTime(appointmentsSlot.getEndTime());
         payloadDTO.setProviderId(providersDTO.getId().toString());
         payloadDTO.setVisitReasonId(selectedVisitTypeDTO.getId());
         payloadDTO.setResourceId(selectedAppointmentResourcesDTO.getResource().getId());

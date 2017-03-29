@@ -45,7 +45,6 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     int shadowWidth = 100;
     float borderCornerRadius = 15;
     Context context;
-    private Bitmap capturedBitmap;
     private boolean isPracticeCamera;
     boolean surfaceCreated;
 
@@ -367,7 +366,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
                     camera.setDisplayOrientation(90);
                 } else {
                     camera = Camera.open(getBackFaceCamera());
-                    camera.setDisplayOrientation(HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE)?180:90);
+                    camera.setDisplayOrientation(HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE) ? 180 : 90);
                 }
                 // attempt to get a Camera instance
             } catch (Exception e) {
@@ -379,19 +378,9 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
 
     CarePayCameraCallback carePayCameraCallback;
 
-    public void takePicture() {
-        this.carePayCameraCallback=(CarePayCameraCallback)context;
+    public void takePicture(CarePayCameraCallback callback) {
+        this.carePayCameraCallback = callback;
         camera.takePicture(null, null, pictureCallback);
-    }
-
-    /**
-     * Call back for practice app
-      */
-
-    public void takePicturePractice(CarePayCameraCallback carePayCameraCallback) {
-        isPracticeCamera = true;
-        this.carePayCameraCallback=carePayCameraCallback;
-        camera.takePicture(null, null, picturePracticeCallback);
     }
 
     private Camera.PictureCallback pictureCallback = new Camera.PictureCallback() {
@@ -418,7 +407,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         Bitmap capturedBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
         if (cameraType == CameraType.SCAN_DOC) {
 
-            if(HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE)){
+            if (HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE)) {
                 capturedBitmap = rotateBitmap(capturedBitmap, 270);
             }
             // removed extra rotation
@@ -455,8 +444,9 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
 
     /**
      * Rotale original bitmap by sending angle
+     *
      * @param source source bitmap
-     * @param angle angle
+     * @param angle  angle
      * @return
      */
     public Bitmap rotateBitmap(Bitmap source, float angle) {
@@ -470,45 +460,5 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
             camera.release();        // release the camera for other applications
             camera = null;
         }
-    }
-
-
-
-
-    /**
-     * Rounded bitmap
-     *
-     * @param bitmap
-     * @return
-     */
-    public Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
-        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-                bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(output);
-
-        final int color = 0xff424242;
-        final Paint paint = new Paint();
-        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-        final RectF rectF = new RectF(rect);
-        final float roundPx = 70;
-
-        paint.setAntiAlias(true);
-        canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(color);
-        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
-
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(bitmap, rect, rect, paint);
-
-        return output;
-    }
-
-    public Bitmap getCapturedBitmap() {
-        return capturedBitmap;
-    }
-
-    // for restart camera needed camera object
-    public Camera getCameraObject() {
-        return camera;
     }
 }
