@@ -103,7 +103,7 @@ public class InsuranceEditDialog extends Dialog {
     public InsuranceEditDialog(Context context, DemographicInsurancePayloadDTO lineItem,
                                DemographicDTO demographicDTO,
                                InsuranceEditDialogListener callback, boolean isInPatientMode) {
-        super(context);
+        super(isInPatientMode?context:context,R.style.health_insurance_screen);
         this.context = context;
         this.lineItem = lineItem;
         this.demographicDTO = demographicDTO;
@@ -196,7 +196,9 @@ public class InsuranceEditDialog extends Dialog {
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    dismiss();
+                    if (callback != null) {
+                        callback.onInsuranceEdited();
+                    }
                 }
             });
         }
