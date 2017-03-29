@@ -196,7 +196,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
                     ((TextInputLayout) mainView.findViewById(R.id.address1TextInputLayout)).setErrorEnabled(false);
                 } else {
                     try {
-                        final String lastNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.address1.validations.get(0).getErrorMessage();
+                        final String lastNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.getProperties().getAddress1().validations.get(0).getErrorMessage();
                         ((TextInputLayout) mainView.findViewById(R.id.address1TextInputLayout)).setError(lastNameError);
                         ((TextInputLayout) mainView.findViewById(R.id.address1TextInputLayout)).setErrorEnabled(true);
                     }catch (Exception e){
@@ -231,7 +231,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
                     ( (TextInputLayout) mainView.findViewById(R.id.zipCodeTextInputLayout)).setErrorEnabled(false);
                 } else {
                     try {
-                        final String zipcodeError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.zipcode.validations.get(0).getErrorMessage();
+                        final String zipcodeError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.getProperties().getZipcode().validations.get(0).getErrorMessage();
                         ( (TextInputLayout) mainView.findViewById(R.id.zipCodeTextInputLayout)).setError(zipcodeError);
                         ((TextInputLayout) mainView.findViewById(R.id.zipCodeTextInputLayout)).setErrorEnabled(true);
                     }catch (Exception e){
@@ -262,7 +262,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
                     ((TextInputLayout) mainView.findViewById(R.id.cityTextInputLayout)).setError(null);
                     ((TextInputLayout) mainView.findViewById(R.id.cityTextInputLayout)).setErrorEnabled(false);
                 } else {
-                    final String lastNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.city.validations.get(0).getErrorMessage();
+                    final String lastNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.getProperties().getCity().validations.get(0).getErrorMessage();
                     ((TextInputLayout) mainView.findViewById(R.id.cityTextInputLayout)).setError(lastNameError);
                     ((TextInputLayout) mainView.findViewById(R.id.cityTextInputLayout)).setErrorEnabled(true);
                 }
@@ -283,7 +283,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         // apply validate from backend
         return ValidationHelper.applyPatternValidationToWrappedEdit(((EditText) view.findViewById(R.id.zipCodeId)),
                 ((TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout)),
-                addressMetaDTO.properties.zipcode,
+                addressMetaDTO.getProperties().getZipcode(),
                 null);
     }
 

@@ -123,21 +123,21 @@ public class DemographicsDetailsFragment extends BaseFragment
             return;
         }
 
-        List<MetadataOptionDTO> options = persDetailsMetaDTO.properties.primaryRace.options;
+        List<MetadataOptionDTO> options = persDetailsMetaDTO.getProperties().getPrimaryRace().options;
         List<String> races = new ArrayList<>();
         for (MetadataOptionDTO o : options) {
             races.add(o.getLabel());
         }
         raceArray = races.toArray(new String[0]);
 
-        options = persDetailsMetaDTO.properties.ethnicity.options;
+        options = persDetailsMetaDTO.getProperties().getEthnicity().options;
         List<String> ethnicities = new ArrayList<>();
         for (MetadataOptionDTO o : options) {
             ethnicities.add(o.getLabel());
         }
         ethnicityArray = ethnicities.toArray(new String[0]);
 
-        options = persDetailsMetaDTO.properties.gender.options;
+        options = persDetailsMetaDTO.getProperties().getGender().options;
         List<String> genders = new ArrayList<>();
         for (MetadataOptionDTO o : options) {
             genders.add(o.getLabel());
@@ -148,7 +148,7 @@ public class DemographicsDetailsFragment extends BaseFragment
     private void setupEdit(View view) {
         dobInputText = (TextInputLayout) view.findViewById(R.id.demogrDetailsDobInputText);
         dobEdit = (EditText) view.findViewById(R.id.demogrDetailsDobEdit);
-        String hint = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.dateOfBirth.getLabel();
+        String hint = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getDateOfBirth().getLabel();
         dobInputText.setTag(hint);
         dobEdit.setTag(dobInputText);
         dobEdit.setHint(hint);
@@ -224,7 +224,7 @@ public class DemographicsDetailsFragment extends BaseFragment
         boolean isValidFormat = ValidationHelper.applyPatternValidationToWrappedEdit(
                 dobEdit,
                 dobInputText,
-                persDetailsMetaDTO.properties.dateOfBirth,
+                persDetailsMetaDTO.getProperties().getDateOfBirth(),
                 new ValidationHelper.LocalValidation() {
                     @Override
                     public boolean validate(MetadataValidationDTO validation) {
@@ -252,15 +252,15 @@ public class DemographicsDetailsFragment extends BaseFragment
         subheader.setText(label);
 
         raceLabel = (TextView) view.findViewById(R.id.demogrDetailsRaceLabel);
-        label = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.primaryRace.getLabel();
+        label = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getPrimaryRace().getLabel();
         raceLabel.setText(label);
 
         ethnicityLabel = (TextView) view.findViewById(R.id.demogrDetailsEthnicityLabel);
-        label = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.ethnicity.getLabel();
+        label = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getEthnicity().getLabel();
         ethnicityLabel.setText(label);
 
         genderLabel = (TextView) view.findViewById(R.id.demogrDetailsGenderLabel);
-        label = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.gender.getLabel();
+        label = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getGender().getLabel();
         genderLabel.setText(label);
 
         dobHint = (TextView) view.findViewById(R.id.demogrDetailsDobHint);
