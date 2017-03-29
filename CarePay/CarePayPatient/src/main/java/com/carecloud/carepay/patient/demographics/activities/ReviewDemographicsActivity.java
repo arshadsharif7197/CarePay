@@ -161,7 +161,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity
         transaction.commit();
     }
 
-    @Override
+    //@Override
     public void navigateToInsuranceDocumentFragment(int index, DemographicInsurancePayloadDTO model) {
 
         CheckinDemographicsFragment checkinFragment = (CheckinDemographicsFragment)
@@ -202,6 +202,11 @@ public class ReviewDemographicsActivity extends BasePatientActivity
     }
 
     @Override
+    public void captureImage() {
+
+    }
+
+    //@Override
     public void disableMainButton(boolean isDisabled) {
         CheckinDemographicsFragment checkinFragment = (CheckinDemographicsFragment)
                 getSupportFragmentManager().findFragmentById(R.id.root_layout);
