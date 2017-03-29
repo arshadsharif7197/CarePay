@@ -318,9 +318,9 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         updateProfileImageButton.setText(globalLabelsMetaDTO.getDemographicsProfileReCaptureCaption().toUpperCase());
         reviewTitleTextView.setText(globalLabelsMetaDTO.getDemographicsReviewScreenTitle());
         reviewSubtitileTextView.setText(globalLabelsMetaDTO.getDemographicsReviewScreenSubtitle());
-        peronalInfoSectionTextview.setText(globalLabelsMetaDTO.getDemographicsReviewPeronsonalinfoSection().toUpperCase());
+        //peronalInfoSectionTextview.setText(globalLabelsMetaDTO.getDemographicsReviewPeronsonalinfoSection().toUpperCase());
         demographicSectionTextView.setText(globalLabelsMetaDTO.getDemographicSectionTitle().toUpperCase());
-        addressSectionTextView.setText(globalLabelsMetaDTO.getDemographicsAddressSection().toUpperCase());
+        //addressSectionTextView.setText(globalLabelsMetaDTO.getDemographicsAddressSection().toUpperCase());
         optinalLabelTextView.setText(globalLabelsMetaDTO.getDemographicsDetailsOptionalHint());
 
 
@@ -1299,7 +1299,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
         setProximaNovaExtraboldTypeface(getActivity(), stateLabel);
 
-        setProximaNovaSemiboldTypeface(getActivity(), peronalInfoSectionTextview);
+        //setProximaNovaSemiboldTypeface(getActivity(), peronalInfoSectionTextview);
         setProximaNovaSemiboldTypeface(getActivity(), demographicSectionTextView);
 
 
@@ -1309,7 +1309,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         setProximaNovaRegularTypeface(getActivity(), genderLabelTextView);
         setProximaNovaSemiboldTypeface(getActivity(), selectGender);
 
-        setProximaNovaSemiboldTypeface(getActivity(), addressSectionTextView);
+        //setProximaNovaSemiboldTypeface(getActivity(), addressSectionTextView);
 
 
         setProximaNovaRegularTypeface(getActivity(), ethnicityLabelTextView);
