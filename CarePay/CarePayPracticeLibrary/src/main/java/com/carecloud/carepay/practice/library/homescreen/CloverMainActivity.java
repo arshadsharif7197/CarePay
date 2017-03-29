@@ -478,6 +478,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
+            getApplicationMode().clearUserPracticeDTO();
             if(!HttpConstants.isUseUnifiedAuth()) {
                 // log out previous user from Cognito
                 getAppAuthorizationHelper().getPool().getUser().signOut();
