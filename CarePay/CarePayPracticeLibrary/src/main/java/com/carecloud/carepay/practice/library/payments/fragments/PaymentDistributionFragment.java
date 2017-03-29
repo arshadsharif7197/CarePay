@@ -78,6 +78,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     private LocationDTO defaultLocation;
     private ProviderDTO defaultProvider;
 
+    private boolean hasPaymentError = false;
+
+
     @Override
     public void onAttach(Context context){
         super.onAttach(context);
@@ -169,8 +172,10 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             public void onClick(View view) {
                 if(validateBalanceItems()) {
                     generatePaymentsModel();
-                    callback.onPayButtonClicked(paymentAmount, paymentsModel);
-                    hideDialog();
+                    if(!hasPaymentError) {
+                        callback.onPayButtonClicked(paymentAmount, paymentsModel);
+                        hideDialog();
+                    }
                 }
             }
         });
@@ -437,7 +442,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     private boolean validateBalanceItems(){
         boolean isValid = true;
         for(BalanceItemDTO balanceItem : balanceItems){
-            if(balanceItem.getBalance() != 0) {
+            if(balanceItem.getBalance() > 0) {
                 if (balanceItem.getLocation() == null || balanceItem.getLocation().getId() == null) {
                     isValid = false;
                     if (balanceItem.getLocation() != null) {
@@ -460,6 +465,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     }
 
     private void generatePaymentsModel(){
+        hasPaymentError = false;
         PaymentPostModel postModel = new PaymentPostModel();
         postModel.setAmount(paymentAmount);
         for(BalanceItemDTO balanceItemDTO : balanceItems){
@@ -467,10 +473,11 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         }
 
         paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
+
     }
 
     private void addPaymentObject(BalanceItemDTO balanceItem, PaymentPostModel postModel){
-        if(balanceItem.getBalance()!=0){
+        if(balanceItem.getBalance()>0){
             PaymentObject paymentObject = new PaymentObject();
             paymentObject.setAmount(balanceItem.getBalance());
             paymentObject.setDescription(balanceItem.getDescription());
@@ -498,6 +505,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             }
 
             postModel.addPaymentMethod(paymentObject);
+        }else if(balanceItem.getBalance()<0){
+            showErrorNotification(Label.getLabel("negative_payment_amount_error"));
+            hasPaymentError = true;
         }
     }
 
