@@ -9,10 +9,13 @@ import android.widget.AdapterView;
 import android.widget.Button;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.payments.CloverPaymentAdapter;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
@@ -20,6 +23,8 @@ import com.google.gson.Gson;
  * A simple {@link Fragment} subclass.
  */
 public class PracticePaymentMethodFragment extends PaymentMethodFragment {
+
+    protected double amountToMakePayment;
 
     /**
      *
@@ -45,6 +50,10 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+        Bundle bundle = getArguments();
+        if(bundle!=null) {
+            amountToMakePayment = bundle.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
+        }
     }
 
     @Override
@@ -60,9 +69,7 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 PaymentsMethodsDTO paymentMethod = paymentMethodsList.get(position);
-                Bundle bundle = getArguments();
-                double amount = bundle.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
-                handlePaymentButton(paymentMethod, amount);
+                handlePaymentButton(paymentMethod, amountToMakePayment);
             }
         });
     }
@@ -73,9 +80,27 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
     }
 
     private void setSwipeCardNowVisibility(View view) {
+        boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
         Button swipeCreditCarNowButton = (Button) view.findViewById(R.id.swipeCreditCarNowButton);
         View swipeCreditCardNowLayout = view.findViewById(R.id.swipeCreditCardNowLayout);
-        swipeCreditCarNowButton.setEnabled(false);
-        swipeCreditCardNowLayout.setVisibility(View.GONE);
+        swipeCreditCarNowButton.setEnabled(isCloverDevice);
+        swipeCreditCardNowLayout.setVisibility(isCloverDevice?View.VISIBLE:View.GONE);
+        swipeCreditCarNowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handleSwipeCard();
+            }
+        });
+
+    }
+
+    protected void handleSwipeCard(){
+        CloverPaymentAdapter cloverPaymentAdapter = new CloverPaymentAdapter(getActivity(), paymentsModel);
+        PaymentPostModel paymentPostModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
+        if (paymentPostModel == null) {
+            cloverPaymentAdapter.setCloverPayment(amountToMakePayment);
+        } else {
+            cloverPaymentAdapter.setCloverPayment(paymentPostModel);
+        }
     }
 }
