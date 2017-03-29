@@ -24,7 +24,6 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
-import com.carecloud.carepaylibray.appointments.models.AppointmentAddressDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
@@ -33,7 +32,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.IdsDTO;
-import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.ResourcesPracticeDTO;
 import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
@@ -60,6 +58,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     private AppointmentResourcesDTO selectedAppointmentResourcesDTO;
     private AppointmentAvailabilityDTO availabilityDTO;
     private VisitTypeDTO selectedVisitTypeDTO;
+    private AppointmentDTO appointmentDTO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,31 +176,6 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     }
 
     @Override
-    public void rescheduleAppointment(AppointmentDTO appointmentDTO) {
-        AppointmentResourcesItemDTO resourcesItemDTO = new AppointmentResourcesItemDTO();
-        resourcesItemDTO.setId(appointmentDTO.getPayload().getResourceId());
-        resourcesItemDTO.setProvider(appointmentDTO.getPayload().getProvider());
-        ResourcesToScheduleDTO resourcesToSchedule = new ResourcesToScheduleDTO();
-        resourcesToSchedule.getPractice().setPracticeId(appointmentDTO.getMetadata().getPracticeId());
-        resourcesToSchedule.getPractice().setPracticeMgmt(appointmentDTO.getMetadata().getPracticeMgmt());
-        appointmentsResultModel.getPayload().getResourcesToSchedule().add(resourcesToSchedule);
-
-        String patientID = appointmentDTO.getPayload().getPatient().getPatientId();
-        Gson gson = new Gson();
-        Bundle bundle = new Bundle();
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID, patientID);
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(resourcesItemDTO));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(appointmentDTO.getPayload().getVisitType()));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(appointmentsResultModel));
-
-        AvailableHoursFragment availableHoursFragment = new AvailableHoursFragment();
-        availableHoursFragment.setArguments(bundle);
-
-        navigateToFragment(availableHoursFragment, true);
-        displayToolbar(false, null);
-    }
-
-    @Override
     public void selectVisitType(AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel) {
         selectedResourcesPracticeDTO = appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getPractice();
         String tag = VisitTypeFragmentDialog.class.getSimpleName();
@@ -218,37 +192,21 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     }
 
     @Override
-    public void selectTime(VisitTypeDTO visitTypeDTO, AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel) {
+    public void selectTime(VisitTypeDTO visitTypeDTO, AppointmentResourcesDTO appointmentResourcesDTO,
+                           AppointmentsResultModel appointmentsResultModel) {
         selectedAppointmentResourcesDTO = appointmentResourcesDTO;
         selectedVisitTypeDTO = visitTypeDTO;
-        Bundle bundle = new Bundle();
-        Gson gson = new Gson();
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(appointmentResourcesDTO.getResource()));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(visitTypeDTO));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(appointmentsResultModel));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID, patientId);//TODO this should be updated for multi practice support
-
-        AvailableHoursFragment availableHoursFragment = new AvailableHoursFragment();
-        availableHoursFragment.setArguments(bundle);
-
+        AvailableHoursFragment availableHoursFragment = AvailableHoursFragment.newInstance(appointmentsResultModel,
+                appointmentResourcesDTO.getResource(), null, null, visitTypeDTO);
         navigateToFragment(availableHoursFragment, true);
         displayToolbar(false, null);
     }
 
     @Override
-    public void selectTime(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource, AppointmentsResultModel appointmentsResultModel) {
-        Bundle bundle = new Bundle();
-        Gson gson = new Gson();
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID, patientId);//TODO this should be updated for multi practice support
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, startDate);
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, endDate);
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(appointmentResource));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(visitTypeDTO));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(appointmentsResultModel));
-
-        AvailableHoursFragment availableHoursFragment = new AvailableHoursFragment();
-        availableHoursFragment.setArguments(bundle);
-
+    public void selectTime(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource,
+                           AppointmentsResultModel appointmentsResultModel) {
+        AvailableHoursFragment availableHoursFragment = AvailableHoursFragment.newInstance(appointmentsResultModel, appointmentResource,
+                startDate, endDate, visitTypeDTO);
         navigateToFragment(availableHoursFragment, false);
         displayToolbar(false, null);
     }
@@ -271,37 +229,54 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     }
 
     @Override
+    public void rescheduleAppointment(AppointmentDTO appointmentDTO) {
+        this.appointmentDTO = appointmentDTO;
+        selectedVisitTypeDTO = appointmentDTO.getPayload().getVisitType();
+        AppointmentResourcesItemDTO resourcesItemDTO = new AppointmentResourcesItemDTO();
+        resourcesItemDTO.setId(appointmentDTO.getPayload().getResourceId());
+        resourcesItemDTO.setProvider(appointmentDTO.getPayload().getProvider());
+
+        ResourcesToScheduleDTO resourcesToSchedule = new ResourcesToScheduleDTO();
+        resourcesToSchedule.getPractice().setPracticeId(appointmentDTO.getMetadata().getPracticeId());
+        resourcesToSchedule.getPractice().setPracticeMgmt(appointmentDTO.getMetadata().getPracticeMgmt());
+        appointmentsResultModel.getPayload().getResourcesToSchedule().add(resourcesToSchedule);
+
+        AvailableHoursFragment availableHoursFragment = AvailableHoursFragment.newInstance(appointmentsResultModel, appointmentDTO);
+
+        navigateToFragment(availableHoursFragment, true);
+        displayToolbar(false, null);
+    }
+
+    @Override
     public void confirmAppointment(AppointmentsSlotsDTO appointmentsSlot, AppointmentAvailabilityDTO availabilityDTO) {
         this.availabilityDTO = availabilityDTO;
-        ProviderDTO providersDTO = selectedAppointmentResourcesDTO.getResource().getProvider();
+        ProviderDTO providersDTO = null;
+        if (selectedAppointmentResourcesDTO != null) {
+            providersDTO = selectedAppointmentResourcesDTO.getResource().getProvider();
+        } else {
+            providersDTO = appointmentDTO.getPayload().getProvider();
+        }
 
         AppointmentsPayloadDTO payloadDTO = new AppointmentsPayloadDTO();
         payloadDTO.setStartTime(appointmentsSlot.getStartTime());
         payloadDTO.setEndTime(appointmentsSlot.getEndTime());
-        payloadDTO.setProviderId(providersDTO.getId().toString());
+        payloadDTO.setLocation(appointmentsSlot.getLocation());
         payloadDTO.setVisitReasonId(selectedVisitTypeDTO.getId());
-        payloadDTO.setResourceId(selectedAppointmentResourcesDTO.getResource().getId());
         payloadDTO.setChiefComplaint(selectedVisitTypeDTO.getName());
+
+        payloadDTO.setProvider(providersDTO);
+        payloadDTO.setProviderId(providersDTO.getId().toString());
+//        payloadDTO.setResourceId(selectedAppointmentResourcesDTO.getResource().getId());
 
         PatientModel patientDTO = new PatientModel();
         patientDTO.setPatientId(patientId);
         payloadDTO.setPatient(patientDTO);
 
-        LocationDTO locationDTO = availabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getLocation();
-        if(locationDTO == null){
-            locationDTO = new LocationDTO();
-            AppointmentAddressDTO addressDTO = new AppointmentAddressDTO();
-            locationDTO.setName(appointmentsResultModel.getMetadata().getLabel().getAppointmentsPlaceNameHeading());
-            locationDTO.setAddress(addressDTO);
-        }
-
-        payloadDTO.setLocation(locationDTO);
-        payloadDTO.setProvider(providersDTO);
-
         AppointmentDTO appointmentDTO = new AppointmentDTO();
         appointmentDTO.setPayload(payloadDTO);
 
-        final RequestAppointmentDialog requestAppointmentDialog =  new RequestAppointmentDialog(getContext(), appointmentDTO, appointmentsResultModel);
+        final RequestAppointmentDialog requestAppointmentDialog = new RequestAppointmentDialog(getContext(), appointmentDTO,
+                appointmentsResultModel);
         requestAppointmentDialog.show();
     }
 
@@ -332,7 +307,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
         TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getMakeAppointment();
 
-        getWorkflowServiceHelper().execute(transitionDTO, getMakeAppointmentCallback,makeAppointmentJSONObj.toString(), queryMap);
+        getWorkflowServiceHelper().execute(transitionDTO, getMakeAppointmentCallback, makeAppointmentJSONObj.toString(), queryMap);
     }
 
     @Override
