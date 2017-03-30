@@ -30,6 +30,8 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraReady;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
@@ -47,7 +49,7 @@ import com.squareup.picasso.Picasso;
 import java.util.Arrays;
 import java.util.List;
 
-public class InsuranceEditDialog extends BaseDialogFragment {
+public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCameraCallback {
 
     private static final ImageCaptureHelper.CameraType CAMERA_TYPE = ImageCaptureHelper.CameraType.CUSTOM_CAMERA;
     private static final ImageCaptureHelper.ImageShape IMAGE_SHAPE = ImageCaptureHelper.ImageShape.RECTANGULAR;
@@ -70,19 +72,17 @@ public class InsuranceEditDialog extends BaseDialogFragment {
 
     private boolean isCardNumberEmpty;
     private boolean isGroupNumberEmpty;
+    private boolean isFrontScan;
 
     private String frontImageAsBase64;
     private String backImageAsBase64;
 
     private InsuranceEditDialogListener callback;
+    private CarePayCameraReady carePayCameraReady;
     private int editedIndex;
 
     public interface InsuranceEditDialogListener {
         void onInsuranceEdited(DemographicDTO demographicDTO);
-
-        void captureInsuranceFrontImage();
-
-        void captureInsuranceBackImage();
 
         void goOneStepBack();
     }
@@ -94,6 +94,12 @@ public class InsuranceEditDialog extends BaseDialogFragment {
             callback = (InsuranceEditDialogListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement InsuranceEditDialogListener");
+        }
+
+        try {
+            carePayCameraReady = (CarePayCameraReady) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement CarePayCameraReady");
         }
     }
 
@@ -244,7 +250,7 @@ public class InsuranceEditDialog extends BaseDialogFragment {
                 disappearViewById(R.id.insurance_toolbar);
                 disappearViewById(R.id.add_edit_insurance_bottom_division);
                 showViewById(R.id.check_in_demographics_left_button);
-                findViewById(R.id.check_in_demographics_left_button).setOnClickListener(getRemoveListener());
+                findViewById(R.id.check_in_demographics_left_button).setOnClickListener(getNoInsuranceListener());
 
                 saveInsuranceButton = (Button) findViewById(R.id.checkinDemographicsNextButton);
                 saveInsuranceButton.setText(Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));
@@ -276,6 +282,17 @@ public class InsuranceEditDialog extends BaseDialogFragment {
                 if (editedIndex != NEW_INSURANCE) {
                     demographicDTO.getPayload().getDemographics().getPayload().getInsurances().remove(editedIndex);
                 }
+
+                closeDialog();
+            }
+        };
+    }
+
+    private View.OnClickListener getNoInsuranceListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View saveChanges) {
+                demographicDTO = null;
 
                 closeDialog();
             }
@@ -352,7 +369,8 @@ public class InsuranceEditDialog extends BaseDialogFragment {
             @Override
             public void onClick(View frontButtonView) {
                 if (callback != null) {
-                    callback.captureInsuranceFrontImage();
+                    isFrontScan = true;
+                    carePayCameraReady.captureImage(InsuranceEditDialog.this);
                 }
             }
         });
@@ -362,7 +380,8 @@ public class InsuranceEditDialog extends BaseDialogFragment {
             @Override
             public void onClick(View frontButtonView) {
                 if (callback != null) {
-                    callback.captureInsuranceBackImage();
+                    isFrontScan = false;
+                    carePayCameraReady.captureImage(InsuranceEditDialog.this);
                 }
             }
         });
@@ -565,13 +584,13 @@ public class InsuranceEditDialog extends BaseDialogFragment {
 
     /**
      * @param bitmap  scanned insurance
-     * @param isFront true if front part of insurance card
      */
-    public void updateModelAndViewsAfterScan(Bitmap bitmap, boolean isFront) {
+    @Override
+    public void onCapturedSuccess(Bitmap bitmap) {
         String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
         ImageView target;
 
-        if (isFront) {
+        if (isFrontScan) {
             frontImageAsBase64 = imageAsBase64;
             target = healthInsuranceFrontPhotoView;
         } else {

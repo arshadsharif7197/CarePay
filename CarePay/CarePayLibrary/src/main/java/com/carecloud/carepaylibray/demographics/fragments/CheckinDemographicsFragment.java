@@ -57,6 +57,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.gson.Gson;
 import com.smartystreets.api.us_zipcode.City;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -91,7 +92,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     private DemographicDTO demographicDTO;
 
     //profile image
-    private ImageView profileImageView;
     private Button updateProfileImageButton;
 
     private EditText phoneNumberEditText;
@@ -226,8 +226,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
     private void initialiseUIFields(View view) {
 
-        profileImageView = (ImageView) view.findViewById(R.id.patientPicImageView);
-        imageCaptureHelper = new ImageCaptureHelper(getActivity(), profileImageView);
+        imageFront = (ImageView) view.findViewById(R.id.patientPicImageView);
         updateProfileImageButton = (Button) view.findViewById(R.id.updateProfileImageButton);
 
 
@@ -570,7 +569,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         updateProfileImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage(imageCaptureHelper, ImageCaptureHelper.CameraType.DEFAULT_CAMERA);
+                selectImage(imageFront, true, ImageCaptureHelper.CameraType.DEFAULT_CAMERA);
             }
 
         });
@@ -1006,10 +1005,22 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         if (demographicPersDetailsPayloadDTO != null) {
             String imageUrl = demographicPersDetailsPayloadDTO.getProfilePhoto();
             if (!StringUtil.isNullOrEmpty(imageUrl)) {
+                Callback callback = new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+                        loadFrontPlaceHolder();
+                    }
+                };
+
                 Picasso.with(getActivity()).load(imageUrl).transform(
-                        new CircleImageTransform()).fit().into(this.profileImageView);
+                        new CircleImageTransform()).fit().into(imageFront, callback);
             } else {
-                profileImageView.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.icn_placeholder_user_profile_png));
+                loadFrontPlaceHolder();
             }
 
             //Personal Details
@@ -1270,7 +1281,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
         setProximaNovaExtraboldTypeface(getActivity(), stateLabel);
 
-//        setProximaNovaSemiboldTypeface(getActivity(), personalInfoSectionTextView);
         setProximaNovaSemiboldTypeface(getActivity(), demographicSectionTextView);
 
 
@@ -1279,9 +1289,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
         setProximaNovaRegularTypeface(getActivity(), genderLabelTextView);
         setProximaNovaSemiboldTypeface(getActivity(), selectGender);
-
-//        setProximaNovaSemiboldTypeface(getActivity(), addressSectionTextView);
-
 
         setProximaNovaRegularTypeface(getActivity(), ethnicityLabelTextView);
         setProximaNovaSemiboldTypeface(getActivity(), ethnicityDataTextView);
@@ -1347,7 +1354,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     }
 
     @Override
-    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner, Bitmap bitmap) {
+    public void onCapturedSuccess(Bitmap bitmap) {
 
     }
 

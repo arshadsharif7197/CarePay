@@ -25,8 +25,6 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
 
     private DemographicDTO demographicDTO;
 
-    protected ImageCaptureHelper imageCaptureHelper;
-
     private InsuranceLineItemsListAdapter adapter;
     private InsuranceDocumentScannerListener callback;
 
@@ -58,7 +56,9 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
+        if (demographicDTO == null) {
+            demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
+        }
         initActiveSection(view);
 
         checkIfEnableButton(view);
@@ -129,8 +129,6 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
             }
         });
 
-        imageCaptureHelper = new ImageCaptureHelper(getActivity(), null);
-
         setHeaderTitle(Label.getLabel("demographics_insurance_label"), view);
         initNextButton(null, view, View.VISIBLE);
 
@@ -153,14 +151,13 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
      * @param demographicDTO Demographic DTO
      */
     public void updateInsuranceList(DemographicDTO demographicDTO) {
-        boolean hadInsurance = hasInsurance();
         this.demographicDTO = demographicDTO;
+        initializeViews();
+    }
 
-        if (hadInsurance || hasInsurance()) {
-            initializeViews();
-        } else {
-            openNextFragment(demographicDTO, true);
-        }
+    public void openNextFragment(DemographicDTO demographicDTO) {
+        this.demographicDTO = demographicDTO;
+        openNextFragment(demographicDTO, true);
     }
 
     private boolean hasInsurance() {
