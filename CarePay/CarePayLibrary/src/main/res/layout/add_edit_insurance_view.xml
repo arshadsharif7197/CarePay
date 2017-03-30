@@ -43,7 +43,7 @@
             android:layout_height="40dp"
             android:layout_alignParentEnd="true"
             android:layout_below="@id/health_insurance_providers"
-            android:layout_marginTop="@dimen/dimen_20dp"
+            android:layout_marginTop="@dimen/dimen_25dp"
             android:textAlignment="textEnd"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_16"
