@@ -63,27 +63,27 @@ public class DemographicsActivity extends BasePatientActivity
         DemographicsDetailsFragment.DemographicsDetailsFragmentListener,
         DemographicsAddressFragment.DemographicsAddressFragmentListener,
         CheckinDemographicsFragment.CheckinDemographicsFragmentListener,
-        HealthInsuranceFragment.InsuranceDocumentScannerListener{
+        HealthInsuranceFragment.InsuranceDocumentScannerListener {
 
-    private int       currentPageIndex;
+    private int currentPageIndex;
     // views
-    private TextView  titleTextView;
+    private TextView titleTextView;
     private CustomViewPager viewPager;
     private ImageView tabImageView;
     // jsons (payload)
     private DemographicDTO modelGet = null;
-    private DemographicAddressPayloadDTO     addressModel;
+    private DemographicAddressPayloadDTO addressModel;
     private PatientModel detailsModel;
-    private DemographicIdDocPayloadDTO       idDocModel;
+    private DemographicIdDocPayloadDTO idDocModel;
     private List<DemographicInsurancePayloadDTO> insuranceModelList = new ArrayList<>();
     // jsons (metadata)
-    private DemographicMetadataEntityAddressDTO     addressEntityMetaDTO;
+    private DemographicMetadataEntityAddressDTO addressEntityMetaDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
-    private DemographicMetadataEntityIdDocsDTO      idDocsMetaDTO;
-    private DemographicMetadataEntityInsurancesDTO  insurancesMetaDTO;
-    private DemographicLabelsDTO                    labelsDTO;
-    private Toolbar                                 toolbar;
-    private String[]                                fragLabels;
+    private DemographicMetadataEntityIdDocsDTO idDocsMetaDTO;
+    private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
+    private DemographicLabelsDTO labelsDTO;
+    private Toolbar toolbar;
+    private String[] fragLabels;
 
     /**
      * Updating with info model
@@ -273,8 +273,8 @@ public class DemographicsActivity extends BasePatientActivity
                 return true;
             } else {
                 ActivityCompat.requestPermissions(this,
-                                                  new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                                          Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
                 return false;
             }
         } else { //permission is automatically granted on sdk<23 upon installation
@@ -305,7 +305,7 @@ public class DemographicsActivity extends BasePatientActivity
         if (currentPageIndex == 0) {
             SystemUtil.hideSoftKeyboard(this);
 
-            if(!HttpConstants.isUseUnifiedAuth()) {
+            if (!HttpConstants.isUseUnifiedAuth()) {
                 // sign-out from Cognito
                 getAppAuthorizationHelper().getPool().getUser().signOut();
                 getAppAuthorizationHelper().setUser(null);
@@ -373,10 +373,10 @@ public class DemographicsActivity extends BasePatientActivity
         transaction.commit();
     }
 
-    private void hideShowComponents(boolean isParent){
-        findViewById(R.id.demographics_toolbar).setVisibility(isParent? View.VISIBLE :View.GONE);
-        findViewById(R.id.demogr_content_holder).setVisibility(isParent? View.VISIBLE :View.GONE);
-        findViewById(R.id.insurance_item_holder).setVisibility(isParent? View.GONE :View.VISIBLE);
+    private void hideShowComponents(boolean isParent) {
+        findViewById(R.id.demographics_toolbar).setVisibility(isParent ? View.VISIBLE : View.GONE);
+        findViewById(R.id.demogr_content_holder).setVisibility(isParent ? View.VISIBLE : View.GONE);
+        findViewById(R.id.insurance_item_holder).setVisibility(isParent ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -399,12 +399,12 @@ public class DemographicsActivity extends BasePatientActivity
 
     @Override
     public void updateInsuranceDTO(int index, DemographicInsurancePayloadDTO model) {
-        if (index>=0){
+        if (index >= 0) {
             insuranceModelList.set(index, model);
         } else {
             insuranceModelList.add(model);
         }
-        if(modelGet.getPayload().getDemographics() ==null){
+        if (modelGet.getPayload().getDemographics() == null) {
             modelGet.getPayload().setDemographics(new DemographicPayloadInfoDTO());
             modelGet.getPayload().getDemographics().setPayload(new DemographicPayloadDTO());
             modelGet.getPayload().getDemographics().getPayload().setInsurances(insuranceModelList);
