@@ -9,9 +9,14 @@ import android.view.Surface;
 import android.view.WindowManager;
 
 public class DisplayUtils {
+    /**
+     * @param context  context
+     * @param cameraId camera ID
+     * @return display orientation
+     */
     public static int getDisplayOrientation(Context context, int cameraId) {
         Camera.CameraInfo info = new Camera.CameraInfo();
-        if(cameraId == -1) {
+        if (cameraId == -1) {
             Camera.getCameraInfo(Camera.CameraInfo.CAMERA_FACING_BACK, info);
         } else {
             Camera.getCameraInfo(cameraId, info);
@@ -21,12 +26,22 @@ public class DisplayUtils {
         Display display = wm.getDefaultDisplay();
 
         int rotation = display.getRotation();
-        int degrees = 0;
+        int degrees;
         switch (rotation) {
-            case Surface.ROTATION_0: degrees = 0; break;
-            case Surface.ROTATION_90: degrees = 90; break;
-            case Surface.ROTATION_180: degrees = 180; break;
-            case Surface.ROTATION_270: degrees = 270; break;
+            case Surface.ROTATION_0:
+                degrees = 0;
+                break;
+            case Surface.ROTATION_90:
+                degrees = 90;
+                break;
+            case Surface.ROTATION_180:
+                degrees = 180;
+                break;
+            case Surface.ROTATION_270:
+                degrees = 270;
+                break;
+            default:
+                degrees = 0;
         }
 
         int result;
@@ -40,18 +55,17 @@ public class DisplayUtils {
         return result;
     }
 
-    public static int getScreenOrientation(Context context)
-    {
+    public static int getScreenOrientation(Context context) {
         WindowManager systemService = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = systemService.getDefaultDisplay();
 
         int orientation = Configuration.ORIENTATION_UNDEFINED;
-        if(display.getWidth()==display.getHeight()){
+        if (display.getWidth() == display.getHeight()) {
             orientation = Configuration.ORIENTATION_SQUARE;
-        } else{
-            if(display.getWidth() < display.getHeight()){
+        } else {
+            if (display.getWidth() < display.getHeight()) {
                 orientation = Configuration.ORIENTATION_PORTRAIT;
-            }else {
+            } else {
                 orientation = Configuration.ORIENTATION_LANDSCAPE;
             }
         }

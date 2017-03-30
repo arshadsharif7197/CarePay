@@ -139,6 +139,9 @@ public class ImageCaptureHelper {
         ImageCaptureHelper.orientation = orientation;
     }
 
+    /**
+     * @return captured bitmap
+     */
     public static Bitmap getImageBitmap() {
         Bitmap answer = imageBitmap;
         imageBitmap = null;
@@ -232,7 +235,6 @@ public class ImageCaptureHelper {
      * Genrate an intent to launch a camera
      *
      * @param cameraType CAMERA_DEFAULT or CAMERA_CUSTOM
-     * @return The intent
      */
     public static void requestCamera(Activity context, CameraType cameraType) {
         Intent intent;

@@ -56,7 +56,9 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
+        if (demographicDTO == null) {
+            demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
+        }
         initActiveSection(view);
 
         checkIfEnableButton(view);
@@ -149,19 +151,13 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
      * @param demographicDTO Demographic DTO
      */
     public void updateInsuranceList(DemographicDTO demographicDTO) {
-        if (demographicDTO == null) {
-            openNextFragment(this.demographicDTO, true);
-            return;
-        }
-
-        boolean hadInsurance = hasInsurance();
         this.demographicDTO = demographicDTO;
+        initializeViews();
+    }
 
-        if (hadInsurance || hasInsurance()) {
-            initializeViews();
-        } else {
-            openNextFragment(demographicDTO, true);
-        }
+    public void openNextFragment(DemographicDTO demographicDTO) {
+        this.demographicDTO = demographicDTO;
+        openNextFragment(demographicDTO, true);
     }
 
     private boolean hasInsurance() {
