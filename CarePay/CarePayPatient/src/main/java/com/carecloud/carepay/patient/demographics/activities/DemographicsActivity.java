@@ -46,7 +46,6 @@ import com.carecloud.carepaylibray.demographics.fragments.CheckinDemographicsFra
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
-import com.carecloud.carepaylibray.demographics.scanner.InsuranceDocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.scanner.ProfilePictureFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -381,6 +380,11 @@ public class DemographicsActivity extends BasePatientActivity
     }
 
     @Override
+    public void editInsurance(DemographicDTO demographicDTO, Integer editedIndex, boolean showAsDialog) {
+
+    }
+
+    @Override
     public void navigateToParentFragment() {
         hideShowComponents(true);
         //setCurrentItem(2, true);
@@ -407,11 +411,6 @@ public class DemographicsActivity extends BasePatientActivity
         }
 
         initializeInsurancesFragment();
-    }
-
-    @Override
-    public void captureImage() {
-
     }
 
 
