@@ -16,8 +16,10 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
@@ -118,11 +120,28 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         ((FrameLayout) view.findViewById(R.id.checkinDemographicsContentLayout)).addView(childview);
     }
 
-    protected void setHeaderTitle(String title, View view) {
+    protected void setHeaderTitle(String title, String heading, String subHeading, View view){
         TextView textView = (TextView) view.findViewById(R.id.checkinDemographicsHeaderLabel);
-        textView.setText(title);
         SystemUtil.setGothamRoundedMediumTypeface(getContext(), textView);
-        (view.findViewById(R.id.toolbar_layout)).setVisibility(View.VISIBLE);
+        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            //(view.findViewById(R.id.toolbar_layout)).setVisibility(checkInNavListener.getCurrentStep()>1 ?View.VISIBLE:View.INVISIBLE);
+            (view.findViewById(R.id.toolbar_layout)).setVisibility(View.VISIBLE);
+            textView.setText(title);
+        }else{
+            TextView mainHeadingTextView = (TextView) view.findViewById(R.id.demographicsMainHeading);
+            TextView subHeadingTextView = (TextView)  view.findViewById(R.id.demographicsSubHeading);
+            (view.findViewById(R.id.toolbar_layout)).setVisibility(View.VISIBLE);
+/*
+            setGothamRoundedMediumTypeface(getActivity(), mainHeadingTextView);
+            setProximaNovaRegularTypeface(getActivity(), subHeadingTextView);
+*/
+            textView.setText(String.format(Label.getLabel("demographics_heading"), checkInNavListener.getCurrentStep(), 5));
+            mainHeadingTextView.setText(heading);
+            subHeadingTextView.setText(subHeading);
+            //"Donec ullamcorper nulla non metus auctor fringilla. Aenean eu leo quam."
+
+        }
+
     }
 
     protected void initNextButton(View.OnClickListener listener, final View view, int visibility) {
@@ -148,7 +167,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         nextButton.setEnabled(isEnabled);
         nextButton.setClickable(isEnabled);
         Context context = getActivity();
-        if (context != null) {
+        if (context != null && getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             nextButton.setBackground(ContextCompat.getDrawable(context, isEnabled ? R.drawable.bg_green_overlay : R.drawable.bg_silver_overlay));
         }
     }

@@ -131,7 +131,10 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
 
         imageCaptureHelper = new ImageCaptureHelper(getActivity(), null);
 
-        setHeaderTitle(Label.getLabel("demographics_insurance_label"), view);
+        setHeaderTitle(Label.getLabel("demographics_insurance_label"),
+                Label.getLabel("demographics_health_insurance_heading"),
+                Label.getLabel("demographics_health_insurance_subheading"),
+                view);
         initNextButton(null, view, View.VISIBLE);
 
         Button nextButton = (Button) view.findViewById(R.id.checkinDemographicsNextButton);

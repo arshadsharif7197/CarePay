@@ -16,6 +16,7 @@ import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.demographics.dialog.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
@@ -66,6 +67,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity
     private View checkinPayment;
     //
     private DemographicDTO demographicDTO;
+    private InsuranceEditDialog insuranceEditDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -163,6 +165,12 @@ public class ReviewDemographicsActivity extends BasePatientActivity
 
 
     @Override
+    public void editInsurance(DemographicDTO demographicDTO, Integer editedIndex, boolean showAsDialog) {
+
+
+    }
+
+    @Override
     public void navigateToParentFragment() {
         CheckinDemographicsFragment fragment = new CheckinDemographicsFragment();
         Bundle args = new Bundle();
@@ -184,10 +192,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity
         }
     }
 
-    @Override
-    public void captureImage() {
 
-    }
 
 
     @Override
