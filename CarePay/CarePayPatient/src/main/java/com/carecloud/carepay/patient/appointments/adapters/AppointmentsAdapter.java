@@ -340,7 +340,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         }
     }
 
-        public int getItemCount() {
+    public int getItemCount() {
         return appointmentItems.size();
     }
 
@@ -417,7 +417,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
         @Override
         public void onClick(View view) {
-            if (null != callback) {
+            if (callback != null) {
                 Object selectedItem = appointmentItems.get(getAdapterPosition());
 
                 // Restricted the appointment list item click if it is appointment header type.
