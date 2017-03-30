@@ -328,7 +328,6 @@
                             android:layout_marginLeft="@dimen/payment_method_layout_checkbox_margin"
                             android:layout_marginRight="@dimen/payment_method_layout_checkbox_margin"
                             android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
-                            android:layout_weight="1"
                             android:textColorHint="@color/payne_gray"
                             app:customAssetFont="proxima_nova_regular">
 
@@ -363,7 +362,6 @@
                                 android:layout_marginLeft="@dimen/payment_method_layout_checkbox_margin"
                                 android:layout_marginRight="@dimen/payment_method_layout_checkbox_margin"
                                 android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
-                                android:layout_weight="1"
                                 android:textColorHint="@color/payne_gray"
                                 app:customAssetFont="proxima_nova_regular">
 
@@ -401,7 +399,6 @@
                             android:layout_marginLeft="@dimen/payment_method_layout_checkbox_margin"
                             android:layout_marginRight="@dimen/payment_method_layout_checkbox_margin"
                             android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
-                            android:layout_weight="1"
                             android:textColorHint="@color/payne_gray"
                             app:customAssetFont="proxima_nova_regular">
 
@@ -431,12 +428,12 @@
                             <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                                 android:id="@+id/cityTextInputLayout"
                                 style="@style/PaymentEditTextHint"
-                                android:layout_width="match_parent"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_weight="1"
                                 android:layout_marginLeft="@dimen/payment_method_layout_checkbox_margin"
                                 android:layout_marginRight="@dimen/payment_method_layout_checkbox_margin"
                                 android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
-                                android:layout_weight="1"
                                 android:textColorHint="@color/payne_gray"
                                 app:customAssetFont="proxima_nova_regular">
 
@@ -457,13 +454,13 @@
                             <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                                 android:id="@+id/stateTextInputLayout"
                                 style="@style/PaymentEditTextHint"
-                                android:layout_width="match_parent"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_weight="1"
                                 android:layout_marginBottom="@dimen/payment_method_layout_checkbox_margin"
                                 android:layout_marginLeft="@dimen/payment_method_layout_checkbox_margin"
                                 android:layout_marginRight="@dimen/payment_method_layout_checkbox_margin"
                                 android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
-                                android:layout_weight="1"
                                 android:textColorHint="@color/payne_gray"
                                 app:customAssetFont="proxima_nova_regular">
 
