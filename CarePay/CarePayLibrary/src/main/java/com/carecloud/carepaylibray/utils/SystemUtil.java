@@ -32,7 +32,7 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.base.BaseActivity;
-import com.carecloud.carepaylibray.customcomponents.SuccessMessageToast;
+import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
@@ -400,7 +400,24 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
             return;
         }
 
-        new SuccessMessageToast(context, successMessage)
+        new CustomMessageToast(context, successMessage, CustomMessageToast.NOTIFICATION_TYPE_SUCCESS)
+                .show();
+
+    }
+
+    /**
+     * Show error Toast
+     *
+     * @param context context
+     * @param errorMessage message to display
+     */
+    public static void showErrorToast(Context context, String errorMessage){
+
+        if (null == context) {
+            return;
+        }
+
+        new CustomMessageToast(context, errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR)
                 .show();
 
     }

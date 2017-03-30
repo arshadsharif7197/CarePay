@@ -79,30 +79,26 @@ public class CustomPopupNotification extends PopupWindow {
 
         switch (notificationType) {
             case TYPE_ALERT_NOTIFICATION:
-                popupWindowLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.yellowGreen));
+                popupWindowLayout.setBackgroundResource(R.drawable.alert_notification_background);
                 popupMessageLabel.setTextColor(ContextCompat.getColor(context, R.color.white));
                 popupIcon.setImageResource(R.drawable.icn_notification_alert);
                 break;
             case TYPE_TIMED_NOTIFICATION:
-                popupWindowLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.charcoal));
+                popupWindowLayout.setBackgroundResource(R.drawable.timed_notification_background);
                 popupMessageLabel.setTextColor(ContextCompat.getColor(context, R.color.glitter));
                 popupIcon.setImageResource(R.drawable.icn_notification_basic_green);
                 break;
             case TYPE_ERROR_NOTIFICATION:
-                popupWindowLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.remove_red));
+                popupWindowLayout.setBackgroundResource(R.drawable.error_notification_background);
                 popupMessageLabel.setTextColor(ContextCompat.getColor(context, R.color.white));
                 ApplicationMode.ApplicationType appMode = ((IApplicationSession) context).getApplicationMode().getApplicationType();
-                if (appMode !=  ApplicationMode.ApplicationType.PATIENT) {
-                    this.hasStatusBar = false;
-                    popupWindowLayout.setBackground(ContextCompat.getDrawable(context, R.drawable.error_message_background));
-                }
-                else{
-                    this.hasStatusBar = true;
-                }
+
+                this.hasStatusBar = (appMode == ApplicationMode.ApplicationType.PATIENT);
+
                 popupIcon.setImageResource(R.drawable.icn_notification_error);
                 break;
             case AUTO_DISSMISS_SUCCESS_NOTIFICATION:
-                popupWindowLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.emerald));
+                popupWindowLayout.setBackgroundResource(R.drawable.success_notification_background);
                 popupMessageLabel.setTextColor(ContextCompat.getColor(context, R.color.white));
                 popupIcon.setImageResource(R.drawable.icn_notification_basic_white_check);
                 break;
