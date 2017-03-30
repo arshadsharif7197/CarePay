@@ -338,8 +338,7 @@ public class WorkflowServiceHelper {
                 String message = response.message().toLowerCase();
                 if(message.contains(TOKEN) && message.contains(REVOKED)){
                     atomicAppRestart();
-                }
-                else{
+                }else{
                     onFailure(response);
                 }
             }
@@ -452,11 +451,12 @@ public class WorkflowServiceHelper {
 
 
     private void atomicAppRestart(){
-        Context context = applicationPreferences.getContext();
         applicationMode.clearUserPracticeDTO();
         Intent intent = new Intent();
         intent.setAction("com.carecloud.carepay.restart");
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        Context context = applicationPreferences.getContext();
         Toast.makeText(context, "Login Authorization has Expired!\nPlease Login to Application again", Toast.LENGTH_LONG).show();
         context.startActivity(intent);
     }
