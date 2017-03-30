@@ -507,7 +507,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
             postModel.addPaymentMethod(paymentObject);
         }else if(balanceItem.getBalance()<0){
-            showErrorNotification(Label.getLabel("negative_payment_amount_error"));
             SystemUtil.showErrorToast(getContext(), Label.getLabel("negative_payment_amount_error"));
             hasPaymentError = true;
         }
