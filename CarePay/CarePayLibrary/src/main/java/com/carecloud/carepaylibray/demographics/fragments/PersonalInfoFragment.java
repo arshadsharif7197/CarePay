@@ -390,14 +390,9 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         return updatableDemographicDTO;
     }
 
-    @Override
-    public void imageCaptured(Bitmap bitmap) {
-
-    }
-
     public interface UpdateProfilePictureListener{
-        public String getProfilePicture();
+        String getProfilePicture();
 
-        public void loadPictureFragment();
+        void loadPictureFragment();
     }
 }

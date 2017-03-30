@@ -90,7 +90,6 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         //initializeToolbar(view);
         inflateToolbarViews(view);
 
-
         return view;
     }
 
@@ -108,8 +107,6 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                 checkInNavListener.setCurrentStep(checkInNavListener.getCurrentStep() - 1);
             }
         });
-
-
     }
 
     protected boolean checkTextEmptyValue(int textEditableId, View view) {
@@ -127,10 +124,6 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         textView.setText(title);
         SystemUtil.setGothamRoundedMediumTypeface(getContext(), textView);
         (view.findViewById(R.id.toolbar_layout)).setVisibility(View.VISIBLE);
-
-
-//        (view.findViewById(R.id.toolbar_layout)).setVisibility(checkInNavListener.getCurrentStep()>1 ?View.VISIBLE:View.INVISIBLE);
-        //stepProgressBar.setCurrentProgressDot(checkInNavListener.getCurrentStep()-1);
     }
 
     protected void initNextButton(View.OnClickListener listener, final View view, int visibility) {
@@ -166,8 +159,6 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     protected abstract int getContentId();
 
     protected abstract DemographicDTO updateDemographicDTO(View view);
-
-    public abstract void imageCaptured(Bitmap bitmap);
 
     @Override
     public void onAttach(Context context) {

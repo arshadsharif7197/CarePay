@@ -18,22 +18,20 @@ public class InsuranceLineItemsListAdapter extends
         RecyclerView.Adapter<InsuranceLineItemsListAdapter.InsuranceDetailsListViewHolder> {
 
     private Context context;
-    private DemographicDTO model;
-    private List<DemographicInsurancePayloadDTO> detailsList;
+    private DemographicDTO demographicDTO;
     private OnInsuranceEditClickListener listener;
 
     /**
      * Constructor
      *
-     * @param context     context
-     * @param model       model
+     * @param context        context
+     * @param demographicDTO Demographic DTO
      */
-    public InsuranceLineItemsListAdapter(Context context, DemographicDTO model,
+    public InsuranceLineItemsListAdapter(Context context, DemographicDTO demographicDTO,
                                          OnInsuranceEditClickListener listener) {
 
         this.context = context;
-        this.model = model;
-        this.detailsList = model.getPayload().getDemographics().getPayload().getInsurances();
+        this.demographicDTO = demographicDTO;
         this.listener = listener;
     }
 
@@ -46,7 +44,24 @@ public class InsuranceLineItemsListAdapter extends
 
     @Override
     public int getItemCount() {
-        return detailsList.size();
+        return demographicDTO.getPayload().getDemographics().getPayload().getInsurances().size();
+    }
+
+    @Override
+    public void onBindViewHolder(final InsuranceDetailsListViewHolder holder, int position) {
+        final DemographicInsurancePayloadDTO lineItem = demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(position);
+        holder.name.setText(lineItem.getInsurancePlan());
+        holder.type.setText(lineItem.getInsuranceType());
+    }
+
+    public void setDemographicDTO(DemographicDTO demographicDTO) {
+        this.demographicDTO = demographicDTO;
+
+        notifyDataSetChanged();
+    }
+
+    public interface OnInsuranceEditClickListener {
+        void onEditInsuranceClicked(int position);
     }
 
     class InsuranceDetailsListViewHolder extends RecyclerView.ViewHolder {
@@ -65,23 +80,12 @@ public class InsuranceLineItemsListAdapter extends
             edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.onEditInsuranceClicked(detailsList.get(getAdapterPosition()));
+                    listener.onEditInsuranceClicked(getAdapterPosition());
                 }
             });
 
-            DemographicLabelsDTO labels = model.getMetadata().getLabels();
+            DemographicLabelsDTO labels = demographicDTO.getMetadata().getLabels();
             edit.setText(labels.getPracticeCheckinEditClickableLabel());
         }
-    }
-
-    @Override
-    public void onBindViewHolder(final InsuranceDetailsListViewHolder holder, int position) {
-        final DemographicInsurancePayloadDTO lineItem = detailsList.get(position);
-        holder.name.setText(lineItem.getInsurancePlan());
-        holder.type.setText(lineItem.getInsuranceType());
-    }
-
-    public interface OnInsuranceEditClickListener {
-        void onEditInsuranceClicked(DemographicInsurancePayloadDTO lineItem);
     }
 }

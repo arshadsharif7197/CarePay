@@ -61,11 +61,6 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment {
         return updatableDemographicDTO;
     }
 
-    @Override
-    public void imageCaptured(Bitmap bitmap) {
-
-    }
-
     private void initialiseChildFragment(DemographicLabelsDTO globalLabelDTO,
                                                  DemographicIdDocPayloadDTO demPayloadIdDocDTO,
                                                  DemographicMetadataEntityItemIdDocDTO demographicMetadataEntityItemIdDocDTO) {
