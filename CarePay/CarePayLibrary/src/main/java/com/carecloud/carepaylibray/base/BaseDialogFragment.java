@@ -19,6 +19,8 @@ import com.carecloud.carepaylibrary.R;
  */
 
 public abstract class BaseDialogFragment extends DialogFragment implements ISession {
+    private static final int FULLSCREEN_VALUE = 0x10000000;
+
     private Dialog dialog;
 
     @Override
@@ -27,6 +29,11 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         this.dialog = getDialog();
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         setCancelable(false);
+
+        boolean isPracticeAppPatientMode = ((ISession) getActivity()).getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE;
+        if (isPracticeAppPatientMode) {
+            setNavigationBarVisibility();
+        }
     }
 
     @Override
@@ -192,4 +199,15 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
             getDialog().hide();
         }
     }
+
+    private void setNavigationBarVisibility() {
+
+        View decorView = getDialog().getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_IMMERSIVE
+                | FULLSCREEN_VALUE;
+        decorView.setSystemUiVisibility(uiOptions);
+    }
+
 }
