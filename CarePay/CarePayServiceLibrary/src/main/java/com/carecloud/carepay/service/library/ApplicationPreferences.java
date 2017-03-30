@@ -260,4 +260,10 @@ public class ApplicationPreferences {
     private SharedPreferences getSharedPreferences() {
         return context.getSharedPreferences(PREFERENCE_CAREPAY, Context.MODE_PRIVATE);
     }
+
+    public Context getContext() {
+        return context;
+    }
+
+
 }

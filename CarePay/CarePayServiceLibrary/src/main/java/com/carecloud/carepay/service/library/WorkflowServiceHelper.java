@@ -1,8 +1,11 @@
 package com.carecloud.carepay.service.library;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
@@ -40,9 +43,14 @@ import retrofit2.Response;
 public class WorkflowServiceHelper {
 
     private static final String TOKEN_HAS_EXPIRED = "Identity token has expired";
+    private static final String TOKEN = "token";
+    private static final String REVOKED = "revoked";
+    private static final String EXPIRED = "expired";
+    private static final String UNAUTHORIZED = "unauthorized";
 
     private static final int STATUS_CODE_OK = 200;
     private static final int STATUS_CODE_UNAUTHORIZED = 401;
+    private static final int STATUS_BAD_REQUEST = 400;
 
     private AppAuthorizationHelper appAuthorizationHelper;
     private ApplicationPreferences applicationPreferences;
@@ -270,15 +278,18 @@ public class WorkflowServiceHelper {
                         case STATUS_CODE_UNAUTHORIZED:
                             onResponseUnauthorized(response);
                             break;
+                        case STATUS_BAD_REQUEST:
+                            onResponseBadRequest(response);
+                            break;
                         default:
                             onFailure(response);
 
                     }
                 } catch (Exception exception) {
-                    if(exception.getMessage()!=null) {
+                    if (exception.getMessage() != null) {
                         callback.onFailure(exception.getMessage());
                         Log.e("WorkflowServiceHelper", exception.getMessage(), exception);
-                    }else{
+                    } else {
                         callback.onFailure(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
                     }
                 }
@@ -313,12 +324,22 @@ public class WorkflowServiceHelper {
             }
 
             private void onResponseUnauthorized(Response<WorkflowDTO> response) throws IOException {
-                if (!response.message().contains(TOKEN_HAS_EXPIRED) && !response.message().toLowerCase().contains("unauthorized")) {
+                String message = response.message().toLowerCase();
+                if (!(message.contains(TOKEN) && message.contains(EXPIRED)) && !message.contains(UNAUTHORIZED)) {
                     onFailure(response);
                 } else if (!HttpConstants.isUseUnifiedAuth() && !appAuthorizationHelper.refreshToken(getCognitoActionCallback(transitionDTO, callback, jsonBody, queryMap, headers))) {
                     callback.onFailure("No User found to refresh token");
                 } else if (HttpConstants.isUseUnifiedAuth()) {
                     executeRefreshTokenRequest(getRefreshTokenCallback(transitionDTO, callback, jsonBody, queryMap, headers));
+                }
+            }
+
+            private void onResponseBadRequest(Response<WorkflowDTO> response) throws IOException {
+                String message = response.message().toLowerCase();
+                if(message.contains(TOKEN) && message.contains(REVOKED)){
+                    atomicAppRestart();
+                }else{
+                    onFailure(response);
                 }
             }
 
@@ -429,5 +450,15 @@ public class WorkflowServiceHelper {
     }
 
 
+    private void atomicAppRestart(){
+        applicationMode.clearUserPracticeDTO();
+        Intent intent = new Intent();
+        intent.setAction("com.carecloud.carepay.restart");
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        Context context = applicationPreferences.getContext();
+        Toast.makeText(context, "Login Authorization has Expired!\nPlease Login to Application again", Toast.LENGTH_LONG).show();
+        context.startActivity(intent);
+    }
 
 }
