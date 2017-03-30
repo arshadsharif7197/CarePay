@@ -22,7 +22,6 @@ import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragmen
 import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterface;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
-import com.carecloud.carepaylibray.demographics.scanner.InsuranceDocumentScannerFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.util.List;
@@ -99,7 +98,7 @@ public class NewReviewDemographicsActivity extends BasePatientActivity
     public void initializeDocumentFragment(){
 
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, demographicDTO.getMetadata().getDataModels().demographic.identityDocuments);
+        DtoHelper.bundleDto(args, demographicDTO.getMetadata().getDataModels().getDemographic().getIdentityDocuments());
         DtoHelper.bundleDto(args, demographicDTO.getMetadata().getLabels());
         DtoHelper.bundleDto(args, getDemographicIdDocPayloadDTO());
 
@@ -127,6 +126,11 @@ public class NewReviewDemographicsActivity extends BasePatientActivity
     }
 
     @Override
+    public void editInsurance(DemographicDTO demographicDTO, Integer editedIndex, boolean showAsDialog) {
+
+    }
+
+    @Override
     public void navigateToParentFragment() {
         CheckinDemographicsFragment fragment = new CheckinDemographicsFragment();
         Bundle args = new Bundle();
@@ -149,11 +153,6 @@ public class NewReviewDemographicsActivity extends BasePatientActivity
     }
 
     @Override
-    public void captureImage() {
-
-    }
-
-    @Override
     public void initializeIdDocScannerFragment() {
 
         // add license fragment
@@ -163,7 +162,7 @@ public class NewReviewDemographicsActivity extends BasePatientActivity
         DtoHelper.bundleDto(args, getDemographicIdDocPayloadDTO());
 
         DemographicMetadataEntityIdDocsDTO idDocsMetaDTO =
-                demographicDTO.getMetadata().getDataModels().demographic.identityDocuments;
+                demographicDTO.getMetadata().getDataModels().getDemographic().getIdentityDocuments();
 
         if (null != idDocsMetaDTO) {
             DtoHelper.bundleDto(args, idDocsMetaDTO.properties.items.identityDocument);

@@ -308,7 +308,7 @@ public class DemographicsAddressFragment extends BaseFragment {
         if (addressMetaDTO != null
                 && addressMetaDTO.getProperties() != null
                 && addressMetaDTO.getProperties().getState() != null) {
-            List<MetadataOptionDTO> optionDTOs = addressMetaDTO.getProperties().getState().options;
+            List<MetadataOptionDTO> optionDTOs = addressMetaDTO.getProperties().getState().getOptions();
             List<String> statesStrings = new ArrayList<>();
             for (MetadataOptionDTO optionDTO : optionDTOs) {
                 statesStrings.add(optionDTO.getLabel());

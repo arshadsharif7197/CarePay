@@ -15,21 +15,61 @@ import com.google.gson.annotations.SerializedName;
 public class DemographicMetadataEntitiesDTO {
     @SerializedName("address")
     @Expose
-    public DemographicMetadataEntityAddressDTO address = new DemographicMetadataEntityAddressDTO();
+    private DemographicMetadataEntityAddressDTO address = new DemographicMetadataEntityAddressDTO();
 
     @SerializedName("personal_details")
     @Expose
-    public DemographicMetadataEntityPersDetailsDTO personalDetails = new DemographicMetadataEntityPersDetailsDTO();
+    private DemographicMetadataEntityPersDetailsDTO personalDetails = new DemographicMetadataEntityPersDetailsDTO();
 
     @SerializedName("identity_documents")
     @Expose
-    public DemographicMetadataEntityIdDocsDTO identityDocuments = new DemographicMetadataEntityIdDocsDTO();
+    private DemographicMetadataEntityIdDocsDTO identityDocuments = new DemographicMetadataEntityIdDocsDTO();
 
     @SerializedName("insurances")
     @Expose
-    public DemographicMetadataEntityInsurancesDTO insurances = new DemographicMetadataEntityInsurancesDTO();
+    private DemographicMetadataEntityInsurancesDTO insurances = new DemographicMetadataEntityInsurancesDTO();
 
     @SerializedName("updates")
     @Expose
-    public DemographicMetadataEntityUpdatesDTO updates = new DemographicMetadataEntityUpdatesDTO();
+    private DemographicMetadataEntityUpdatesDTO updates = new DemographicMetadataEntityUpdatesDTO();
+
+    public DemographicMetadataEntityAddressDTO getAddress() {
+        return address;
+    }
+
+    public void setAddress(DemographicMetadataEntityAddressDTO address) {
+        this.address = address;
+    }
+
+    public DemographicMetadataEntityPersDetailsDTO getPersonalDetails() {
+        return personalDetails;
+    }
+
+    public void setPersonalDetails(DemographicMetadataEntityPersDetailsDTO personalDetails) {
+        this.personalDetails = personalDetails;
+    }
+
+    public DemographicMetadataEntityIdDocsDTO getIdentityDocuments() {
+        return identityDocuments;
+    }
+
+    public void setIdentityDocuments(DemographicMetadataEntityIdDocsDTO identityDocuments) {
+        this.identityDocuments = identityDocuments;
+    }
+
+    public DemographicMetadataEntityInsurancesDTO getInsurances() {
+        return insurances;
+    }
+
+    public void setInsurances(DemographicMetadataEntityInsurancesDTO insurances) {
+        this.insurances = insurances;
+    }
+
+    public DemographicMetadataEntityUpdatesDTO getUpdates() {
+        return updates;
+    }
+
+    public void setUpdates(DemographicMetadataEntityUpdatesDTO updates) {
+        this.updates = updates;
+    }
 }

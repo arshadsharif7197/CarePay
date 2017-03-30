@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.demographics.dialog;
+package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -26,8 +26,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
@@ -53,6 +53,9 @@ public class InsuranceEditDialog extends BaseDialogFragment {
     private static final ImageCaptureHelper.ImageShape IMAGE_SHAPE = ImageCaptureHelper.ImageShape.RECTANGULAR;
     public static final String EDITED_INDEX = "EditedIndex";
     public static final int NEW_INSURANCE = -1;
+    private static final int PROVIDERS = 0;
+    private static final int PLANS = 1;
+    private static final int TYPES = 2;
 
     private DemographicDTO demographicDTO;
 
@@ -61,7 +64,7 @@ public class InsuranceEditDialog extends BaseDialogFragment {
     private EditText cardNumber;
     private EditText groupNumber;
 
-    private CarePayTextView selectedProvider;
+    private CarePayTextView selectedProviderTextView;
     private CarePayTextView selectedPlan;
 
     private CarePayTextView selectedType;
@@ -76,6 +79,8 @@ public class InsuranceEditDialog extends BaseDialogFragment {
 
     private InsuranceEditDialogListener callback;
     private int editedIndex;
+    private String selectedProvider;
+    private EditText otherProviderEditText;
 
     public interface InsuranceEditDialogListener {
         void onInsuranceEdited(DemographicDTO demographicDTO);
@@ -118,8 +123,8 @@ public class InsuranceEditDialog extends BaseDialogFragment {
         View child = inflater.inflate(R.layout.dialog_add_edit_insurance, null);
         ((ViewGroup) view.findViewById(R.id.checkinDemographicsContentLayout)).addView(child);
 
-        ViewGroup ly = (ViewGroup) view.findViewById(R.id.dialog_content_layout);
-        ly.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
+//        ViewGroup ly = (ViewGroup) view.findViewById(R.id.dialog_content_layout);
+//        ly.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
 
         inflateToolbarViews(view);
 
@@ -187,12 +192,13 @@ public class InsuranceEditDialog extends BaseDialogFragment {
             }
         });
 
-        selectedProvider = (CarePayTextView) findViewById(R.id.health_insurance_providers);
+        selectedProviderTextView = (CarePayTextView) findViewById(R.id.health_insurance_providers);
         selectedPlan = (CarePayTextView) findViewById(R.id.health_insurance_choose_plans);
         selectedType = (CarePayTextView) findViewById(R.id.health_insurance_types);
 
         cardNumberInput = (TextInputLayout) findViewById(R.id.health_insurance_card_number_layout);
         cardNumber = (EditText) findViewById(R.id.health_insurance_card_number);
+        otherProviderEditText = (EditText) findViewById(R.id.otherProviderEditText);
 
         String cardNumberHint = Label.getLabel("demographics_insurance_card_number");
         cardNumberInput.setTag(cardNumberHint);
@@ -220,13 +226,6 @@ public class InsuranceEditDialog extends BaseDialogFragment {
 
         setValues();
 
-        ((CarePayTextView) findViewById(R.id.edit_insurance_cancel_label)).setText(
-                Label.getLabel("demographics_review_edit_insurance_close"));
-        ((CarePayTextView) findViewById(R.id.health_insurance_provider_label)).setText(
-                Label.getLabel("demographics_documents_title_select_provider"));
-        ((CarePayTextView) findViewById(R.id.health_insurance_plan_label)).setText(
-                Label.getLabel("demographics_documents_title_select_plan"));
-
         if (editedIndex == NEW_INSURANCE) {
             ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(
                     Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));
@@ -242,7 +241,7 @@ public class InsuranceEditDialog extends BaseDialogFragment {
             } else {
                 disappearViewById(R.id.dialog_add_edit_insurance_bottom_toolbar);
                 disappearViewById(R.id.insurance_toolbar);
-                disappearViewById(R.id.add_edit_insurance_bottom_division);
+//                disappearViewById(R.id.add_edit_insurance_bottom_division);
                 showViewById(R.id.check_in_demographics_left_button);
                 findViewById(R.id.check_in_demographics_left_button).setOnClickListener(getRemoveListener());
 
@@ -252,7 +251,7 @@ public class InsuranceEditDialog extends BaseDialogFragment {
         } else {
             DemographicInsurancePayloadDTO dto = demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(editedIndex);
             ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(dto.getInsurancePlan());
-            selectedProvider.setText(dto.getInsuranceProvider());
+            selectedProviderTextView.setText(dto.getInsuranceProvider());
             selectedPlan.setText(dto.getInsurancePlan());
             selectedType.setText(dto.getInsuranceType());
 
@@ -304,7 +303,7 @@ public class InsuranceEditDialog extends BaseDialogFragment {
                     photos.add(new DemographicInsurancePhotoDTO());
                 }
 
-                demographicInsurancePayloadDTO.setInsuranceProvider(selectedProvider.getText().toString());
+                demographicInsurancePayloadDTO.setInsuranceProvider(selectedProvider);
                 demographicInsurancePayloadDTO.setInsurancePlan(selectedPlan.getText().toString());
                 demographicInsurancePayloadDTO.setInsuranceType(selectedType.getText().toString());
                 demographicInsurancePayloadDTO.setInsuranceMemberId(cardNumber.getText().toString());
@@ -382,25 +381,26 @@ public class InsuranceEditDialog extends BaseDialogFragment {
     }
 
     private void setValues() {
-        DemographicMetadataEntityInsurancesDTO insurancesMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.insurances;
+        DemographicMetadataEntityInsurancesDTO insurancesMetaDTO = demographicDTO.getMetadata().getDataModels().getDemographic().getInsurances();
         if (insurancesMetaDTO != null) {
-            DemographicMetadataPropertiesInsuranceDTO properties = insurancesMetaDTO.properties.items.insurance.properties;
+            DemographicMetadataPropertiesInsuranceDTO properties = insurancesMetaDTO.getProperties()
+                    .getItems().getInsurance().getProperties();
 
             // Providers
-            List<MetadataOptionDTO> providerList = properties.insuranceProvider.options;
+            List<MetadataOptionDTO> providerList = properties.getInsuranceProvider().getOptions();
             final String[] providers = new String[providerList.size()];
             for (int i = 0; i < providerList.size(); i++) {
                 providers[i] = providerList.get(i).getLabel();
             }
-            selectedProvider.setOnClickListener(new View.OnClickListener() {
+            selectedProviderTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View providerView) {
-                    showAlertDialogWithListView(providers, "Choose Provider", "Cancel", 0);
+                    showAlertDialogWithListView(providers, "Choose Provider", "Cancel", PROVIDERS);
                 }
             });
 
             // Plans
-            List<MetadataOptionDTO> planList = properties.insurancePlan.options;
+            List<MetadataOptionDTO> planList = properties.getInsurancePlan().getOptions();
             final String[] plans = new String[planList.size()];
             for (int i = 0; i < planList.size(); i++) {
                 plans[i] = planList.get(i).getLabel();
@@ -408,12 +408,12 @@ public class InsuranceEditDialog extends BaseDialogFragment {
             selectedPlan.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View providerView) {
-                    showAlertDialogWithListView(plans, "Choose Plan", "Cancel", 1);
+                    showAlertDialogWithListView(plans, "Choose Plan", "Cancel", PLANS);
                 }
             });
 
             // Types
-            List<MetadataOptionDTO> typeList = properties.insuranceType.options;
+            List<MetadataOptionDTO> typeList = properties.getInsuranceType().getOptions();
             final String[] types = new String[typeList.size()];
             for (int i = 0; i < typeList.size(); i++) {
                 types[i] = typeList.get(i).getLabel();
@@ -421,7 +421,7 @@ public class InsuranceEditDialog extends BaseDialogFragment {
             selectedType.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View providerView) {
-                    showAlertDialogWithListView(types, "Choose Type", "Cancel", 2);
+                    showAlertDialogWithListView(types, "Choose Type", "Cancel", TYPES);
                 }
             });
         }
@@ -455,17 +455,28 @@ public class InsuranceEditDialog extends BaseDialogFragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long listener) {
                 switch (index) {
-                    case 0:
-                        selectedProvider.setText(dataArray[position]);
-                        selectedPlan.setVisibility(View.VISIBLE);
+                    case PROVIDERS:
+                        otherProviderEditText = (EditText) findViewById(R.id.otherProviderEditText);
                         findViewById(R.id.health_insurance_plans).setVisibility(View.GONE);
+                        if ("other".equals(dataArray[position].toLowerCase())) {
+                            otherProviderEditText.setVisibility(View.VISIBLE);
+                            otherProviderEditText.requestFocus();
+                            selectedProviderTextView.setText(dataArray[position]);
+
+                        } else {
+                            otherProviderEditText.setVisibility(View.GONE);
+                            selectedProviderTextView.setText(dataArray[position]);
+                            selectedProvider = dataArray[position];
+
+                            selectedPlan.setVisibility(View.VISIBLE);
+                        }
                         break;
 
-                    case 1:
+                    case PLANS:
                         selectedPlan.setText(dataArray[position]);
                         break;
 
-                    case 2:
+                    case TYPES:
                         selectedType.setText(dataArray[position]);
                         break;
                     default:
@@ -514,10 +525,28 @@ public class InsuranceEditDialog extends BaseDialogFragment {
                 }
             }
         });
+
+        otherProviderEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                selectedProvider = s.toString();
+            }
+        });
+
     }
 
     private void setChangeFocusListeners() {
-        cardNumber.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean bool) {
                 if (bool) {
@@ -525,17 +554,9 @@ public class InsuranceEditDialog extends BaseDialogFragment {
                 }
                 SystemUtil.handleHintChange(view, bool);
             }
-        });
-
-        groupNumber.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
+        };
+        cardNumber.setOnFocusChangeListener(onFocusChangeListener);
+        groupNumber.setOnFocusChangeListener(onFocusChangeListener);
     }
 
     private void setActionListeners() {

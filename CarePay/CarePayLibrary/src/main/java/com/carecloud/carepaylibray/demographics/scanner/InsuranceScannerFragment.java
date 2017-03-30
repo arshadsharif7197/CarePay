@@ -107,11 +107,11 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         String label;
 
         insurancePlanLabel = (TextView) view.findViewById(R.id.demogr_insurance_plan_label);
-        label = insuranceMetadataDTO == null ? CarePayConstants.NOT_DEFINED : insuranceMetadataDTO.properties.insurancePlan.getLabel();
+        label = insuranceMetadataDTO == null ? CarePayConstants.NOT_DEFINED : insuranceMetadataDTO.getProperties().getInsurancePlan().getLabel();
         insurancePlanLabel.setText(label);
 
         insuranceProviderLabel = (TextView) view.findViewById(R.id.demogr_insurance_provider_label);
-        label = insuranceMetadataDTO == null ? CarePayConstants.NOT_DEFINED : insuranceMetadataDTO.properties.insuranceProvider.getLabel();
+        label = insuranceMetadataDTO == null ? CarePayConstants.NOT_DEFINED : insuranceMetadataDTO.getProperties().getInsuranceProvider().getLabel();
         insuranceProviderLabel.setText(label);
 
         insuranceTypeLabel = (TextView) view.findViewById(R.id.demogr_insurance_card_type_abel);
@@ -119,7 +119,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         insuranceTypeLabel.setText(label);
 
         insuranceCardNumEditText = (EditText) view.findViewById(R.id.reviewinsurncecardnum);
-        label = insuranceMetadataDTO == null ? CarePayConstants.NOT_DEFINED : insuranceMetadataDTO.properties.insuranceMemberId.getLabel();
+        label = insuranceMetadataDTO == null ? CarePayConstants.NOT_DEFINED : insuranceMetadataDTO.getProperties().getInsuranceMemberId().getLabel();
         insuranceCardNumEditText.setHint(label);
 
         frontInsuranceImageView = (ImageView) view.findViewById(R.id.demogr_insurance_frontimage);
@@ -192,15 +192,15 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     }
 
     private void getOptions() {
-        if (insuranceMetadataDTO == null || insuranceMetadataDTO.properties == null) {
+        if (insuranceMetadataDTO == null || insuranceMetadataDTO.getProperties() == null) {
             return;
         }
 
         List<MetadataOptionDTO> optionDTOs;
         // init the providers
-        if (insuranceMetadataDTO.properties.insuranceProvider != null
-                && insuranceMetadataDTO.properties.insuranceProvider.options != null) {
-            optionDTOs = insuranceMetadataDTO.properties.insuranceProvider.options;
+        if (insuranceMetadataDTO.getProperties().getInsuranceProvider() != null
+                && insuranceMetadataDTO.getProperties().getInsuranceProvider().getOptions() != null) {
+            optionDTOs = insuranceMetadataDTO.getProperties().getInsuranceProvider().getOptions();
             List<String> providers = new ArrayList<>();
             for (MetadataOptionDTO o : optionDTOs) {
                 providers.add(o.getLabel());
@@ -212,9 +212,9 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         }
 
         // init the plans
-        if (insuranceMetadataDTO.properties.insurancePlan != null &&
-                insuranceMetadataDTO.properties.insurancePlan.options != null) {
-            optionDTOs = insuranceMetadataDTO.properties.insurancePlan.options;
+        if (insuranceMetadataDTO.getProperties().getInsurancePlan() != null &&
+                insuranceMetadataDTO.getProperties().getInsurancePlan().getOptions() != null) {
+            optionDTOs = insuranceMetadataDTO.getProperties().getInsurancePlan().getOptions();
             List<String> plans = new ArrayList<>();
             for (MetadataOptionDTO o : optionDTOs) {
                 plans.add(o.getLabel());
@@ -226,9 +226,9 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         }
 
         // init the type options
-        if (insuranceMetadataDTO.properties.insuranceType != null &&
-                insuranceMetadataDTO.properties.insuranceType.options != null) {
-            optionDTOs = insuranceMetadataDTO.properties.insuranceType.options;
+        if (insuranceMetadataDTO.getProperties().getInsuranceType() != null &&
+                insuranceMetadataDTO.getProperties().getInsuranceType().getOptions() != null) {
+            optionDTOs = insuranceMetadataDTO.getProperties().getInsuranceType().getOptions();
             List<String> cardTypes = new ArrayList<>();
             for (MetadataOptionDTO o : optionDTOs) {
                 cardTypes.add(o.getLabel());
@@ -364,7 +364,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     private void setEditTexts(final View view) {
         insuranceCardNumberTextInput = (TextInputLayout) view.findViewById(R.id.insurancecardNumberLabel);
         insuranceCardNumEditText = (EditText) view.findViewById(R.id.reviewinsurncecardnum);
-        String hint = insuranceMetadataDTO == null ? CarePayConstants.NOT_DEFINED : insuranceMetadataDTO.properties.insuranceMemberId.getLabel();
+        String hint = insuranceMetadataDTO == null ? CarePayConstants.NOT_DEFINED : insuranceMetadataDTO.getProperties().getInsuranceMemberId().getLabel();
         insuranceCardNumberTextInput.setTag(hint);
         insuranceCardNumEditText.setTag(insuranceCardNumberTextInput);
         insuranceCardNumEditText.setHint(hint);

@@ -178,10 +178,10 @@ public class CheckinDemographicsRevFragment extends BaseFragment implements View
 
         // fetch the metadata
         globalLabelsMetaDTO = demographicDTO.getMetadata().getLabels();
-        addressMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.address;
-        persDetailsMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.personalDetails;
-        idDocsMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.identityDocuments;
-        insurancesMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.insurances;
+        addressMetaDTO = demographicDTO.getMetadata().getDataModels().getDemographic().getAddress();
+        persDetailsMetaDTO = demographicDTO.getMetadata().getDataModels().getDemographic().getPersonalDetails();
+        idDocsMetaDTO = demographicDTO.getMetadata().getDataModels().getDemographic().getIdentityDocuments();
+        insurancesMetaDTO = demographicDTO.getMetadata().getDataModels().getDemographic().getInsurances();
 
         // get the payloads
         DemographicPayloadInfoDTO demographicPayloadInfoDTO = demographicDTO.getPayload().getDemographics();
@@ -401,7 +401,7 @@ public class CheckinDemographicsRevFragment extends BaseFragment implements View
         genderTextView = (TextView) view.findViewById(R.id.reviewGenderTextView);
 
         driverLicenseLabel = (TextView) view.findViewById(R.id.reviewDriverLicenseLabel);
-        driverLicenseLabel.setText(idDocsMetaDTO.properties.items.identityDocument.properties.identityDocumentType.options.get(0).getLabel().toUpperCase());
+        driverLicenseLabel.setText(idDocsMetaDTO.properties.items.identityDocument.properties.identityDocumentType.getOptions().get(0).getLabel().toUpperCase());
     }
 
     private void initializeAddressSectionView() {
@@ -463,15 +463,15 @@ public class CheckinDemographicsRevFragment extends BaseFragment implements View
         insContainers[1].setVisibility(View.GONE);
         insContainers[2].setVisibility(View.GONE);
 
-        insurance1policyNumberLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insuranceMemberId.getLabel().toUpperCase());
-        insurance1planLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insurancePlan.getLabel().toUpperCase());
-        insurance1companyLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insuranceProvider.getLabel().toUpperCase());
-        insurance2planLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insurancePlan.getLabel().toUpperCase());
-        insurance2companyLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insuranceProvider.getLabel().toUpperCase());
-        insurance2policyNumberLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insuranceMemberId.getLabel().toUpperCase());
-        insurance3planLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insurancePlan.getLabel().toUpperCase());
-        insurance3companyLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insuranceProvider.getLabel().toUpperCase());
-        insurance3policyNumberLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insuranceMemberId.getLabel().toUpperCase());
+        insurance1policyNumberLabel.setText(insurancesMetaDTO.getProperties().getItems().getInsurance().getProperties().getInsuranceMemberId().getLabel().toUpperCase());
+        insurance1planLabel.setText(insurancesMetaDTO.getProperties().getItems().getInsurance().getProperties().getInsurancePlan().getLabel().toUpperCase());
+        insurance1companyLabel.setText(insurancesMetaDTO.getProperties().getItems().getInsurance().getProperties().getInsuranceProvider().getLabel().toUpperCase());
+        insurance2planLabel.setText(insurancesMetaDTO.getProperties().getItems().getInsurance().getProperties().getInsurancePlan().getLabel().toUpperCase());
+        insurance2companyLabel.setText(insurancesMetaDTO.getProperties().getItems().getInsurance().getProperties().getInsuranceProvider().getLabel().toUpperCase());
+        insurance2policyNumberLabel.setText(insurancesMetaDTO.getProperties().getItems().getInsurance().getProperties().getInsuranceMemberId().getLabel().toUpperCase());
+        insurance3planLabel.setText(insurancesMetaDTO.getProperties().getItems().getInsurance().getProperties().getInsurancePlan().getLabel().toUpperCase());
+        insurance3companyLabel.setText(insurancesMetaDTO.getProperties().getItems().getInsurance().getProperties().getInsuranceProvider().getLabel().toUpperCase());
+        insurance3policyNumberLabel.setText(insurancesMetaDTO.getProperties().getItems().getInsurance().getProperties().getInsuranceMemberId().getLabel().toUpperCase());
     }
 
     /**

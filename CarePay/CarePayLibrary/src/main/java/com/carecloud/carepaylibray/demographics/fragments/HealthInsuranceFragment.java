@@ -83,18 +83,14 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
 
     private void initializeViews() {
         if (hasInsurance()) {
-
             adapter.setDemographicDTO(demographicDTO);
-
         } else {
-
             editInsurance(null, false);
-
         }
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         stepProgressBar.setCurrentProgressDot(4);
         checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 5);
@@ -118,6 +114,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
 
     /**
      * enable or disable sections
+     *
      * @param view main view
      */
     public void initActiveSection(final View view) {
