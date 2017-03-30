@@ -134,11 +134,11 @@ public class PaymentObject {
         }
         switch (type){
             case credit_card:{
-                return  amount >0 &&
+                return  amount != 0 &&
                         isExecutionValid();
             }
             default:
-                return amount > 0;
+                return amount != 0;
         }
     }
 

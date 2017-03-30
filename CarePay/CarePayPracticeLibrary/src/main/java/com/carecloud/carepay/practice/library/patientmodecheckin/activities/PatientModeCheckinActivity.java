@@ -3,7 +3,6 @@ package com.carecloud.carepay.practice.library.patientmodecheckin.activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,11 +22,11 @@ import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.Pract
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckInFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckinFlowCallback;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentPlanFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePartialPaymentDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.models.PatientModel;
@@ -56,7 +55,6 @@ import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragm
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -66,9 +64,6 @@ import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class PatientModeCheckinActivity extends BasePracticeActivity implements
         DemographicsReviewLabelsHolder, DemographicsLabelsHolder,
@@ -88,7 +83,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     private static final int NUM_OF_SUBFLOWS = 4;
 
     //demographics nav
-    private Map<Integer, CheckInDemographicsBaseFragment> demographicFragMap = new HashMap<>();
+//    private Map<Integer, CheckInDemographicsBaseFragment> demographicFragMap = new HashMap<>();
     private int currentDemographicStep = 1;
 
     private DemographicDTO demographicDTO;
@@ -125,11 +120,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         initializeCheckinViews();
 
         // place the initial fragment
-        demographicFragMap.put(1, new PersonalInfoFragment());
-        demographicFragMap.put(2, new AddressFragment());
-        demographicFragMap.put(3, new DemographicsFragment());
-        demographicFragMap.put(4, new IdentificationFragment());
-        demographicFragMap.put(5, new HealthInsuranceFragment());
+//        demographicFragMap.put(1, new PersonalInfoFragment());
+//        demographicFragMap.put(2, new AddressFragment());
+//        demographicFragMap.put(3, new DemographicsFragment());
+//        demographicFragMap.put(4, new IdentificationFragment());
+//        demographicFragMap.put(5, new HealthInsuranceFragment());
 
         navigateToDemographicFragment(1);
     }
@@ -353,8 +348,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
-        boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
-        if (isCloverDevice || paymentDTO.getPaymentPayload().getPatientCreditCards() != null && !paymentDTO.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+//        boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
+        if (paymentDTO.getPaymentPayload().getPatientCreditCards() != null && !paymentDTO.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             DialogFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel,
                     selectedPaymentMethod.getLabel(), amount);
             fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
@@ -370,7 +365,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         String paymentsDTOString = gson.toJson(paymentDTO);
         args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-        DialogFragment fragment = new AddNewCreditCardFragment();
+        DialogFragment fragment = new PracticeAddNewCreditCardFragment();
         fragment.setArguments(args);
         fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
     }
@@ -511,7 +506,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void onBackPressed() {
-        setCurrentStep(currentDemographicStep - 1);
         try {
             BaseCheckinFragment fragment = (BaseCheckinFragment) getSupportFragmentManager().findFragmentById(R.id.checkInContentHolderId);
             if (fragment != null && !fragment.navigateBack()) {
@@ -648,12 +642,14 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
      * @param step fragment
      */
     public void navigateToDemographicFragment(Integer step) {
-        CheckInDemographicsBaseFragment fragment = demographicFragMap.get(step);
-        Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, demographicDTO);
-        fragment.setArguments(args);
+        CheckInDemographicsBaseFragment fragment = getDemographicFragment(step);
+        if(fragment!=null) {
+            Bundle args = new Bundle();
+            DtoHelper.bundleDto(args, demographicDTO);
+            fragment.setArguments(args);
 
-        navigateToFragment(fragment, currentDemographicStep != 1);
+            navigateToFragment(fragment, currentDemographicStep != 1);
+        }
     }
 
     @Override
@@ -676,7 +672,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         Fragment fragment = fm.findFragmentById(R.id.checkInContentHolderId);
         if (fragment != null && fragment instanceof InsuranceEditDialog) {
 
-            demographicFragMap.put(5, new HealthInsuranceFragment());
             navigateToDemographicFragment(5);
 
         } else {
@@ -715,5 +710,22 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
         CarePayCameraFragment dialog = new CarePayCameraFragment();
         dialog.show(ft, tag);
+    }
+
+    private CheckInDemographicsBaseFragment getDemographicFragment(int step){
+        switch (step){
+            case 1:
+                return new PersonalInfoFragment();
+            case 2:
+                return new AddressFragment();
+            case 3:
+                return new DemographicsFragment();
+            case 4:
+                return new IdentificationFragment();
+            case 5:
+                return new HealthInsuranceFragment();
+            default:
+                return null;
+        }
     }
 }

@@ -30,13 +30,20 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment {
         setHeaderTitle(demographicDTO.getMetadata().getLabels().getDemographicsReviewIdentification(), view);
         initNextButton(null, view, View.VISIBLE);
 
-        stepProgressBar.setCurrentProgressDot(3);
         initialiseChildFragment(demographicDTO.getMetadata().getLabels(),
                 demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().size()>0?demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(0):new DemographicIdDocPayloadDTO(),
                 demographicDTO.getMetadata().getDataModels().demographic.identityDocuments.properties.items.identityDocument);
-        checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 4);
         return view;
     }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        stepProgressBar.setCurrentProgressDot(3);
+        checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 4);
+        checkInNavListener.setCurrentStep(4);
+    }
+
 
     @Override
     protected boolean passConstraints(View view) {

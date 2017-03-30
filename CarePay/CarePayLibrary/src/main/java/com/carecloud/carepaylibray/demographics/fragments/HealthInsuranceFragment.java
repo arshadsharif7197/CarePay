@@ -64,8 +64,6 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
         checkIfEnableButton(view);
         SystemUtil.hideSoftKeyboard(getActivity());
 
-        stepProgressBar.setCurrentProgressDot(4);
-        checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 5);
         return view;
     }
 
@@ -93,6 +91,14 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
             editInsurance(null, false);
 
         }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        stepProgressBar.setCurrentProgressDot(4);
+        checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 5);
+        checkInNavListener.setCurrentStep(5);
     }
 
     @Override
