@@ -67,8 +67,6 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
     private TextView           planTextView;
     private TextView           providerTextView;
     private TextView           cardTypeTextView;
-    private ImageView          frontInsuranceImageView;
-    private ImageView          backInsuranceImageView;
     private TextInputLayout    insuranceCardNumberTextInput;
     private TextView           insurancePlanLabel;
     private TextView           insuranceProviderLabel;
@@ -154,15 +152,8 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
     }
 
     private void initializeUIFields() {
-        DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO = null;
         getOptions();
 
-        if (demographicsSettingsDTO != null) {
-            DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
-            if (demographicsSettingsMetadataDTO != null) {
-                 demographicsSettingsLabelsDTO = demographicsSettingsMetadataDTO.getLabels();
-            }
-        }
         insurancePlanLabel = (TextView) view.findViewById(R.id.demogr_insurance_plan_label);
         insurancePlanLabel.setText(documentsPlanString);
 
@@ -176,7 +167,7 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
         insuranceCardNumEditText.setHint(documentsCardNumberString);
         insuranceCardNumEditText.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
 
-        frontInsuranceImageView = (ImageView) view.findViewById(R.id.demogr_insurance_frontimage);
+        imageFront = (ImageView) view.findViewById(R.id.demogr_insurance_frontimage);
 
         btnScanFrontInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_frontbtn);
         btnScanFrontInsurance.setText(documentsdocumentsScanFirstString);
@@ -190,11 +181,11 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
         btnScanFrontInsurance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage(true, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
+                selectImage(imageFront, true, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
             }
         });
 
-        backInsuranceImageView = (ImageView) view.findViewById(R.id.demogr_insurance_backimage);
+        imageBack = (ImageView) view.findViewById(R.id.demogr_insurance_backimage);
         btnScanBackInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_backbtn);
         btnScanBackInsurance.setText(documentsScanBackString);
         btnScanBackInsurance.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
@@ -204,7 +195,7 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
             @Override
             public void onClick(View view) {
                 Log.v(LOG_TAG, "scan insurance");
-                selectImage(false, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
+                selectImage(imageBack, false, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
 
             }
         });
@@ -356,17 +347,17 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
                     Log.d(LOG_TAG, "valid url: " + url.toString());
                     Picasso.with(getActivity()).load(photoFrontURL)
                             .fit().centerCrop()
-                            .into(frontInsuranceImageView);
+                            .into(imageFront);
                     btnScanFrontInsurance.setText(documentsdocumentsScanFirstString);
                 } catch (MalformedURLException e) {
                     Bitmap bitmap;
                     if (!StringUtil.isNullOrEmpty(photoFrontURL) && (bitmap = SystemUtil.convertStringToBitmap(photoFrontURL)) != null) {
                         Log.v(LOG_TAG, "load as base64");
-                        frontInsuranceImageView.setImageBitmap(bitmap);
+                        imageFront.setImageBitmap(bitmap);
                     } else {
                         Log.v(LOG_TAG, "load as the placeholder");
                         // if no, (re)-load the placeholder
-                        backInsuranceImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                        imageBack.setImageDrawable(ContextCompat.getDrawable(getActivity(),
                                 R.drawable.icn_camera));
                     }
                 }
@@ -379,18 +370,18 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
                         Log.d(LOG_TAG, "valid url: " + url.toString());
                         Picasso.with(getActivity()).load(photoBackURL)
                                 .fit().centerCrop()
-                                .into(backInsuranceImageView);
+                                .into(imageBack);
                         //String label1 = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanBackLabel();
                         btnScanBackInsurance.setText(documentsScanBackString);
                     } catch (MalformedURLException e) {
                         Bitmap bitmap;
                         if (!StringUtil.isNullOrEmpty(photoBackURL) && (bitmap = SystemUtil.convertStringToBitmap(photoBackURL)) != null) {
                             Log.v(LOG_TAG, "load as base64");
-                            backInsuranceImageView.setImageBitmap(bitmap);
+                            imageBack.setImageBitmap(bitmap);
                         } else {
                             Log.v(LOG_TAG, "load as the placeholder");
                             // if no, (re)-load the placeholder
-                            backInsuranceImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                            imageBack.setImageDrawable(ContextCompat.getDrawable(getActivity(),
                                     R.drawable.icn_camera));
                         }
                     }

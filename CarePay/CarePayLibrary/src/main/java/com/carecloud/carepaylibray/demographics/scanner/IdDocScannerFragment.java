@@ -44,8 +44,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
     private View view;
     private Button scanFrontButton;
     private Button scanBackButton;
-    private ImageView imageFront;
-    private ImageView imageBack;
+
     private DemographicIdDocPayloadDTO model;
     private DemographicLabelsDTO globalLabelsDTO;
 
@@ -88,7 +87,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         scanFrontButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage(true, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
+                selectImage(imageFront, true, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
             }
         });
 
@@ -98,7 +97,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         scanBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage(false, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
+                selectImage(imageBack, false, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
             }
         });
 

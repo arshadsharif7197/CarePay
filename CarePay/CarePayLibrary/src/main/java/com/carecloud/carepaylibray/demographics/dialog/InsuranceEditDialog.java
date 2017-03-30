@@ -250,7 +250,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
                 disappearViewById(R.id.insurance_toolbar);
                 disappearViewById(R.id.add_edit_insurance_bottom_division);
                 showViewById(R.id.check_in_demographics_left_button);
-                findViewById(R.id.check_in_demographics_left_button).setOnClickListener(getRemoveListener());
+                findViewById(R.id.check_in_demographics_left_button).setOnClickListener(getNoInsuranceListener());
 
                 saveInsuranceButton = (Button) findViewById(R.id.checkinDemographicsNextButton);
                 saveInsuranceButton.setText(Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));
@@ -282,6 +282,17 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
                 if (editedIndex != NEW_INSURANCE) {
                     demographicDTO.getPayload().getDemographics().getPayload().getInsurances().remove(editedIndex);
                 }
+
+                closeDialog();
+            }
+        };
+    }
+
+    private View.OnClickListener getNoInsuranceListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View saveChanges) {
+                demographicDTO = null;
 
                 closeDialog();
             }

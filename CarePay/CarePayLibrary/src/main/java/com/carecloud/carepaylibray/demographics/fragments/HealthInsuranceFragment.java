@@ -25,8 +25,6 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
 
     private DemographicDTO demographicDTO;
 
-    protected ImageCaptureHelper imageCaptureHelper;
-
     private InsuranceLineItemsListAdapter adapter;
     private InsuranceDocumentScannerListener callback;
 
@@ -129,8 +127,6 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
             }
         });
 
-        imageCaptureHelper = new ImageCaptureHelper(getActivity(), null);
-
         setHeaderTitle(Label.getLabel("demographics_insurance_label"), view);
         initNextButton(null, view, View.VISIBLE);
 
@@ -153,6 +149,11 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
      * @param demographicDTO Demographic DTO
      */
     public void updateInsuranceList(DemographicDTO demographicDTO) {
+        if (demographicDTO == null) {
+            openNextFragment(this.demographicDTO, true);
+            return;
+        }
+
         boolean hadInsurance = hasInsurance();
         this.demographicDTO = demographicDTO;
 

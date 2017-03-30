@@ -164,7 +164,7 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
         btnScanFrontInsurance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage(true, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
+                selectImage(imageFront, true, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
             }
         });
 
@@ -175,7 +175,7 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
             @Override
             public void onClick(View view) {
                 Log.v(LOG_TAG, "scan insurance");
-                selectImage(false, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
+                selectImage(imageBack, false, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
 
             }
         });
@@ -325,9 +325,9 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
 
         TextView insuranceCardNumEditText = (EditText) view.findViewById(R.id.reviewinsurncecardnum);
         TextView insuranceGroupNumEditText = (EditText) view.findViewById(R.id.reviewinsurncegroupnum);
-        ImageView frontInsuranceImageView = (ImageView) view.findViewById(R.id.demogr_insurance_frontimage);
+        imageFront = (ImageView) view.findViewById(R.id.demogr_insurance_frontimage);
         Button btnScanFrontInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_frontbtn);
-        ImageView backInsuranceImageView = (ImageView) view.findViewById(R.id.demogr_insurance_backimage);
+        imageBack = (ImageView) view.findViewById(R.id.demogr_insurance_backimage);
         Button btnScanBackInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_backbtn);
         final TextView providerTextView = (TextView) view.findViewById(R.id.demogr_docs_provider);
         final TextView cardTypeTextView = (TextView) view.findViewById(R.id.demogr_insurance_card_type_textview);
@@ -343,18 +343,18 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
                         Log.d(LOG_TAG, "valid url: " + url.toString());
                         Picasso.with(getActivity()).load(photoFrontURL)
                                 .fit().centerCrop()
-                                .into(frontInsuranceImageView);
+                                .into(imageFront);
                         String label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanFrontLabel();
                         btnScanFrontInsurance.setText(label);
                     } catch (MalformedURLException e) {
                         Bitmap bitmap;
                         if (!StringUtil.isNullOrEmpty(photoFrontURL) && (bitmap = SystemUtil.convertStringToBitmap(photoFrontURL)) != null) {
                             Log.v(LOG_TAG, "load as base64");
-                            frontInsuranceImageView.setImageBitmap(bitmap);
+                            imageFront.setImageBitmap(bitmap);
                         } else {
                             Log.v(LOG_TAG, "load as the placeholder");
                             // if no, (re)-load the placeholder
-                            backInsuranceImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                            imageBack.setImageDrawable(ContextCompat.getDrawable(getActivity(),
                                                                                               R.drawable.icn_camera));
                         }
                     }
@@ -367,18 +367,18 @@ public class InsuranceDocumentScannerFragment extends DocumentScannerFragment {
                         Log.d(LOG_TAG, "valid url: " + url.toString());
                         Picasso.with(getActivity()).load(photoBackURL)
                                 .fit().centerCrop()
-                                .into(backInsuranceImageView);
+                                .into(imageBack);
                         String label1 = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanBackLabel();
                         btnScanBackInsurance.setText(label1);
                     } catch (MalformedURLException e) {
                         Bitmap bitmap;
                         if (!StringUtil.isNullOrEmpty(photoBackURL) && (bitmap = SystemUtil.convertStringToBitmap(photoBackURL)) != null) {
                             Log.v(LOG_TAG, "load as base64");
-                            backInsuranceImageView.setImageBitmap(bitmap);
+                            imageBack.setImageBitmap(bitmap);
                         } else {
                             Log.v(LOG_TAG, "load as the placeholder");
                             // if no, (re)-load the placeholder
-                            backInsuranceImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                            imageBack.setImageDrawable(ContextCompat.getDrawable(getActivity(),
                                                                                               R.drawable.icn_camera));
                         }
                     }

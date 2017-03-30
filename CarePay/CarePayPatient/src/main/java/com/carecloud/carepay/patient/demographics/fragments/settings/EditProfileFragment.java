@@ -65,6 +65,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
     private String saveChangesString = null;
 
     private DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO = null;
+    private ImageView profileImageview;
 
     @Nullable
     @Override
@@ -92,12 +93,11 @@ public class EditProfileFragment extends DocumentScannerFragment {
         Button updateProfileButton = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
         updateProfileButton.setText(saveChangesString);
 
-        ImageView profileImageview = (ImageView) view.findViewById(R.id.providerPicImageView);
+        profileImageview = (ImageView) view.findViewById(R.id.providerPicImageView);
 
         if (demographicsSettingsDTO != null) {
             DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
             demographicsSettingsLabelsDTO = demographicsSettingsMetadataDTO.getLabels();
-            imageCaptureHelper = new ImageCaptureHelper(appCompatActivity, profileImageview);
         }
 
         getPersonalDetails();
@@ -180,7 +180,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
         changeProfilePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage(imageCaptureHelper, ImageCaptureHelper.CameraType.DEFAULT_CAMERA);
+                selectImage(true, ImageCaptureHelper.CameraType.DEFAULT_CAMERA);
             }
 
         });
@@ -353,8 +353,8 @@ public class EditProfileFragment extends DocumentScannerFragment {
                     Picasso.with(getContext())
                             .load(profilePicURL)
                             .transform(new CircleImageTransform())
-                            .resize(imageCaptureHelper.getImgWidth(), imageCaptureHelper.getImgWidth())
-                            .into(imageCaptureHelper.getImageViewTarget());
+                            .fit().centerCrop()
+                            .into(profileImageview);
                     // successfully load a profile image
                     return;
                 } catch (MalformedURLException e) {
@@ -364,8 +364,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
             }
         }
         // if no image to load, simply load the placeholder
-        imageCaptureHelper.getImageViewTarget()
-                .setImageDrawable(ContextCompat.getDrawable(getActivity(),
+        profileImageview.setImageDrawable(ContextCompat.getDrawable(getActivity(),
                         R.drawable.icn_placeholder_user_profile_png));
     }
 

@@ -566,14 +566,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     /**
      * Entry point for navigating to medication fragment
      *
-     * @param globalLabelDTO global dto
      * @param persDetailsDTO personal details dto
      */
-    public void initializeProfilePictureFragment(DemographicLabelsDTO globalLabelDTO,
-                                                 PatientModel persDetailsDTO) {
+    public void initializeProfilePictureFragment(PatientModel persDetailsDTO) {
 
         ProfilePictureFragment fragment = new ProfilePictureFragment();
-        fragment.setGlobalLabelsDTO(globalLabelDTO);
 
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, persDetailsDTO);
@@ -621,7 +618,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void loadPictureFragment() {
-        initializeProfilePictureFragment(demographicDTO.getMetadata().getLabels(),
+        initializeProfilePictureFragment(
                 demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails());
     }
 
@@ -657,7 +654,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.checkInContentHolderId);
-        if (fragment != null && fragment instanceof InsuranceEditDialog) {
+        if (demographicDTO != null && fragment != null && fragment instanceof InsuranceEditDialog) {
 
             navigateToDemographicFragment(5);
 

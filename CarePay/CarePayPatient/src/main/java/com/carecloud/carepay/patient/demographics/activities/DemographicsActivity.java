@@ -500,7 +500,6 @@ public class DemographicsActivity extends BasePatientActivity
         ProfilePictureFragment fragment = (ProfilePictureFragment) fm.findFragmentByTag(tag);
         if (fragment == null) {
             fragment = new ProfilePictureFragment();
-            fragment.setGlobalLabelsDTO(globalLabelDTO);
 
             Bundle args = new Bundle();
             DtoHelper.bundleDto(args, persDetailsDTO);

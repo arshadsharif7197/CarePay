@@ -38,19 +38,14 @@ import java.io.IOException;
  */
 public class ImageCaptureHelper {
 
-    public static final int            REQUEST_CAMERA        = 0;
-    public static final int            SELECT_FILE           = 1;
-    public static final String         CHOOSER_NAME          = "Select File";
-    public static final CharSequence[] chooseActionDlOptions = new CharSequence[3];
-    public static final CharSequence[] chooseActionDocumentDlOptions = new CharSequence[2];
-    public static String chooseActionDlgTitle;
+    public static final int REQUEST_CAMERA = 0;
+    public static final int SELECT_FILE = 1;
+    public static final String CHOOSER_NAME = "Select File";
+    public static String chooseActionDlgTitle = StringUtil.captialize(Label.getLabel("demographics_select_capture_option_title"));
 
-    private static int           orientation                 = 0;
-    private String               userChoosenTask;
-    private int                  imgWidth;
-    private int                  imgHeight;
-    private Activity             context;
-    private CameraType           cameraType;
+    private static Bitmap imageBitmap;
+    private static int orientation = 0;
+    private static String userChoosenTask;
 
     public enum CameraType {
         DEFAULT_CAMERA, CUSTOM_CAMERA;
@@ -61,44 +56,74 @@ public class ImageCaptureHelper {
     }
 
     /**
-     * C-Tor
-     * @param activity The activity using the helper
+     * @param option dialog options 1. Capture, 2. Cancel
+     * @return chose action
      */
-    public ImageCaptureHelper(Activity activity) {
-        this.context = activity;
-        // dialog options 1. Capture, 2.Library, 3. Cancel
-        chooseActionDlOptions[0] = StringUtil.captialize(Label.getLabel("demographics_take_pic_option"));
-        chooseActionDlOptions[1] = StringUtil.captialize(Label.getLabel("demographics_select_gallery_option"));
-        chooseActionDlOptions[2] = StringUtil.captialize(Label.getLabel("demographics_cancel_label"));
+    public static String getActionDlOptions(int option) {
+        String key;
+        switch (option) {
+            case 0:
+                key = "demographics_take_pic_option";
+                break;
+            case 1:
+                key = "demographics_select_gallery_option";
+                break;
+            default:
+                key = "demographics_cancel_label";
+        }
 
-        // dialog options 1. Capture, 2. Cancel
-        chooseActionDocumentDlOptions[0] = StringUtil.captialize(Label.getLabel("demographics_take_pic_option"));
-        chooseActionDocumentDlOptions[1] = StringUtil.captialize(Label.getLabel("demographics_cancel_label"));
-
-        chooseActionDlgTitle = StringUtil.captialize(Label.getLabel("demographics_select_capture_option_title"));
-
-        imgWidth = (int) context.getResources().getDimension(R.dimen.demographics_docs_thumbnail_width);
-        imgHeight = (int) context.getResources().getDimension(R.dimen.demographics_docs_thumbnail_height);
+        return StringUtil.captialize(Label.getLabel(key));
     }
 
-    public int getImgHeight() {
-        return imgHeight;
+    /**
+     * @return actions
+     */
+    public static CharSequence[] getActionDlOptions() {
+        return new CharSequence[]{
+                getActionDlOptions(0),
+                getActionDlOptions(1),
+                getActionDlOptions(2)
+        };
     }
 
-    public int getImgWidth() {
-        return imgWidth;
+    /**
+     * @param option dialog options 1. Capture, 2. Cancel
+     * @return actions
+     */
+    private static String getActionDocumentDlOptions(int option) {
+        String key;
+        switch (option) {
+            case 0:
+                key = "demographics_take_pic_option";
+                break;
+            default:
+                key = "demographics_cancel_label";
+        }
+
+        return StringUtil.captialize(Label.getLabel(key));
     }
 
-    public String getUserChoosenTask() {
+    /**
+     * @return actions
+     */
+    public static CharSequence[] getActionDocumentDlOptions() {
+        return new CharSequence[]{
+                getActionDocumentDlOptions(0),
+                getActionDocumentDlOptions(1)
+        };
+    }
+
+    public static String getUserChoosenTask() {
         return userChoosenTask;
     }
 
-    public void setUserChoosenTask(String userChoosenTask) {
-        this.userChoosenTask = userChoosenTask;
+    public static void setUserChoosenTask(String userChoosenTask) {
+        ImageCaptureHelper.userChoosenTask = userChoosenTask;
     }
 
     /**
      * Getter of device orientation
+     *
      * @return orientation value
      */
     public static int getOrientation() {
@@ -107,16 +132,27 @@ public class ImageCaptureHelper {
 
     /**
      * Setter of device orientation
+     *
      * @param orientation orientation value
      */
     public static void setOrientation(int orientation) {
         ImageCaptureHelper.orientation = orientation;
     }
 
+    public static Bitmap getImageBitmap() {
+        Bitmap answer = imageBitmap;
+        imageBitmap = null;
+        return answer;
+    }
+
+    public static void setImageBitmap(Bitmap imageBitmap) {
+        ImageCaptureHelper.imageBitmap = imageBitmap;
+    }
+
     /**
      * Rotate a bitmap from center point
      *
-     * @param bitmap picture to be rotated
+     * @param bitmap  picture to be rotated
      * @param degrees degrees to be rotated
      * @return rotated picture
      */
@@ -134,7 +170,7 @@ public class ImageCaptureHelper {
      * @param shape The intended shape of the captured image
      * @return The bitmap
      */
-    public Bitmap onCaptureImageResult(ImageView imageViewTarget, Intent data, ImageShape shape) {
+    public static Bitmap onCaptureImageResult(Context context, ImageView imageViewTarget, Intent data, CameraType cameraType, ImageShape shape) {
         Bundle extras = data.getExtras();
         Bitmap thumbnail = (Bitmap) extras.get("data");
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -153,7 +189,7 @@ public class ImageCaptureHelper {
      * @param shape The intended shape of the captured image
      * @return The bitmap
      */
-    public Bitmap onSelectFromGalleryResult(ImageView imageViewTarget, Intent data, ImageShape shape) {
+    public static Bitmap onSelectFromGalleryResult(Context context, ImageView imageViewTarget, Intent data, CameraType cameraType, ImageShape shape) {
         try {
             Bitmap thumbnail = MediaStore.Images.Media.getBitmap(context.getContentResolver(), data.getData());
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -172,7 +208,7 @@ public class ImageCaptureHelper {
      *
      * @return The intent
      */
-    public Intent galleryIntent() {
+    public static Intent galleryIntent() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -184,11 +220,11 @@ public class ImageCaptureHelper {
      *
      * @return The intent
      */
-    public Intent cameraIntent() {
+    private static Intent cameraIntent() {
         return new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     }
 
-    public Intent cameraIntent(Context context) {
+    private static Intent cameraIntent(Context context) {
         return new Intent(context, CarePayCameraActivity.class);
     }
 
@@ -198,13 +234,15 @@ public class ImageCaptureHelper {
      * @param cameraType CAMERA_DEFAULT or CAMERA_CUSTOM
      * @return The intent
      */
-    public Intent getCameraIntent(CameraType cameraType) {
+    public static void requestCamera(Activity context, CameraType cameraType) {
+        Intent intent;
         if (cameraType == CameraType.CUSTOM_CAMERA) {
-            this.cameraType=CameraType.CUSTOM_CAMERA;
-            return cameraIntent(context);
+            intent = cameraIntent(context);
+        } else {
+            intent = cameraIntent(); // launch default
         }
-        this.cameraType=CameraType.DEFAULT_CAMERA;
-        return cameraIntent(); // launch default
+
+        context.startActivityForResult(intent, REQUEST_CAMERA);
     }
 
     /**
@@ -244,17 +282,17 @@ public class ImageCaptureHelper {
     private static Bitmap getRoundedCroppedBitmap(Context context, Bitmap input, int outSize) {
         Bitmap output = Bitmap.createBitmap(outSize, outSize, Bitmap.Config.ARGB_8888);
 
-        Canvas canvas = new Canvas(output); 
+        Canvas canvas = new Canvas(output);
 
         final Paint paint = new Paint();
         paint.setAntiAlias(true);
         paint.setFilterBitmap(true);
         paint.setDither(true);
         canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(ContextCompat.getColor(context, R.color.paint_color_thumbnail)); 
+        paint.setColor(ContextCompat.getColor(context, R.color.paint_color_thumbnail));
 
         float halfSize = outSize / 2;
-        canvas.drawCircle(halfSize + 0.7f, halfSize + 0.7f, halfSize + 0.1f, paint); 
+        canvas.drawCircle(halfSize + 0.7f, halfSize + 0.7f, halfSize + 0.1f, paint);
 
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
 
@@ -265,7 +303,7 @@ public class ImageCaptureHelper {
         int top = (height - inSize) / 2;
         Rect src = new Rect(left, top, left + inSize, top + inSize);
         Rect dest = new Rect(0, 0, outSize, outSize);
-        canvas.drawBitmap(input, src, dest, paint); 
+        canvas.drawBitmap(input, src, dest, paint);
 
         return output;
     }
@@ -274,7 +312,7 @@ public class ImageCaptureHelper {
      * Set the a bitmap to the target image view
      *
      * @param image The bitmap
-     * @param shape     The shape
+     * @param shape The shape
      */
     public static Bitmap setCapturedImageToTargetView(Context context, ImageView imageViewTarget, Bitmap image, CameraType cameraType, ImageShape shape) {
         Resources resources = context.getResources();
@@ -333,10 +371,6 @@ public class ImageCaptureHelper {
         return image;
     }
 
-    public void setCameraType(CameraType cameraType){
-        this.cameraType=cameraType;
-    }
-
     private static Bitmap rotateImageIfRequired(Context context, Bitmap img, Uri selectedImage) throws IOException {
 
         int orientation = getExifOrientation(context, selectedImage);
@@ -361,7 +395,7 @@ public class ImageCaptureHelper {
                 String id = DocumentsContract.getDocumentId(uri);
                 id = id.split(":")[1];
 
-                selectionArgs = new String[]{ id };
+                selectionArgs = new String[]{id};
                 uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
                 selection = MediaStore.Images.Media._ID + " = ?";
 
