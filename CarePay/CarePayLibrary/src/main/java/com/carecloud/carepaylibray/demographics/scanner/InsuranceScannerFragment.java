@@ -59,8 +59,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     private String[] cardTypeDataArray;
 
     private View               view;
-    private ImageCaptureHelper insuranceFrontScanHelper;
-    private ImageCaptureHelper insuranceBackScanHelper;
+    private boolean isFrontScan;
     private Button             btnScanFrontInsurance;
     private Button             btnScanBackInsurance;
     private EditText           insuranceCardNumEditText;
@@ -123,7 +122,6 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         insuranceCardNumEditText.setHint(label);
 
         frontInsuranceImageView = (ImageView) view.findViewById(R.id.demogr_insurance_frontimage);
-        insuranceFrontScanHelper = new ImageCaptureHelper(getActivity(), frontInsuranceImageView);
 
         btnScanFrontInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_frontbtn);
         label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsScanFrontLabel();
@@ -131,12 +129,11 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         btnScanFrontInsurance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage(insuranceFrontScanHelper, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
+                selectImage(true, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
             }
         });
 
         backInsuranceImageView = (ImageView) view.findViewById(R.id.demogr_insurance_backimage);
-        insuranceBackScanHelper = new ImageCaptureHelper(getActivity(), backInsuranceImageView);
         btnScanBackInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_backbtn);
         label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsScanBackLabel();
         btnScanBackInsurance.setText(label);
@@ -144,7 +141,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
             @Override
             public void onClick(View view) {
                 Log.v(LOG_TAG, "scan insurance");
-                selectImage(insuranceBackScanHelper, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
+                selectImage(false, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
 
             }
         });
@@ -261,16 +258,16 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     }
 
     @Override
-    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner, Bitmap bitmap) {
+    public void onCapturedSuccess(Bitmap bitmap) {
         if (bitmap != null) {
-            if (scanner == insuranceFrontScanHelper) {
+            if (isFrontScan) {
                 // change button caption to 'rescan'
                 btnScanFrontInsurance.setText(globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED:globalLabelsDTO.getDemographicsDocumentsRescanFrontLabel());
                 // save from image
                 String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
                 DemographicInsurancePhotoDTO frontDTO = insuranceDTO.getInsurancePhotos().get(0);
                 frontDTO.setInsurancePhoto(imageAsBase64); // create the image dto
-            } else if (scanner == insuranceBackScanHelper) {
+            } else {
                 // change button caption to 'rescan'
                 btnScanBackInsurance.setText(globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED:globalLabelsDTO.getDemographicsDocumentsRescanBackLabel());
                 String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
@@ -295,7 +292,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                         URL url = new URL(photoFrontURL);
                         Log.d(LOG_TAG, "valid url: " + url.toString());
                         Picasso.with(getActivity()).load(photoFrontURL)
-                                .resize(insuranceFrontScanHelper.getImgWidth(), insuranceFrontScanHelper.getImgHeight())
+                                .fit().centerCrop()
                                 .into(frontInsuranceImageView);
                         String label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanFrontLabel();
                         btnScanFrontInsurance.setText(label);
@@ -319,7 +316,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                         URL url = new URL(photoBackURL);
                         Log.d(LOG_TAG, "valid url: " + url.toString());
                         Picasso.with(getActivity()).load(photoBackURL)
-                                .resize(insuranceBackScanHelper.getImgWidth(), insuranceBackScanHelper.getImgHeight())
+                                .fit().centerCrop()
                                 .into(backInsuranceImageView);
                         String label1 = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanBackLabel();
                         btnScanBackInsurance.setText(label1);
@@ -443,10 +440,10 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         String label;
-        if (imageCaptureHelper == insuranceFrontScanHelper) {
+        if (isFrontScan) {
             label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanFrontLabel();
             btnScanFrontInsurance.setText(label);
-        } else if (imageCaptureHelper == insuranceBackScanHelper) {
+        } else {
             label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanBackLabel();
             btnScanBackInsurance.setText(label);
         }

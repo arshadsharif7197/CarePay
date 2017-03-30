@@ -47,7 +47,6 @@ public class ImageCaptureHelper {
 
     private static int           orientation                 = 0;
     private String               userChoosenTask;
-    private ImageView            imageViewTarget;
     private int                  imgWidth;
     private int                  imgHeight;
     private Activity             context;
@@ -64,11 +63,9 @@ public class ImageCaptureHelper {
     /**
      * C-Tor
      * @param activity The activity using the helper
-     * @param targetImageView The target view where the captured image will be placed
      */
-    public ImageCaptureHelper(Activity activity, ImageView targetImageView) {
+    public ImageCaptureHelper(Activity activity) {
         this.context = activity;
-        this.imageViewTarget = targetImageView;
         // dialog options 1. Capture, 2.Library, 3. Cancel
         chooseActionDlOptions[0] = StringUtil.captialize(Label.getLabel("demographics_take_pic_option"));
         chooseActionDlOptions[1] = StringUtil.captialize(Label.getLabel("demographics_select_gallery_option"));
@@ -82,7 +79,6 @@ public class ImageCaptureHelper {
 
         imgWidth = (int) context.getResources().getDimension(R.dimen.demographics_docs_thumbnail_width);
         imgHeight = (int) context.getResources().getDimension(R.dimen.demographics_docs_thumbnail_height);
-        resetTargetView();
     }
 
     public int getImgHeight() {
@@ -93,22 +89,12 @@ public class ImageCaptureHelper {
         return imgWidth;
     }
 
-    public ImageView getImageViewTarget() {
-        return imageViewTarget;
-    }
-
     public String getUserChoosenTask() {
         return userChoosenTask;
     }
 
     public void setUserChoosenTask(String userChoosenTask) {
         this.userChoosenTask = userChoosenTask;
-    }
-
-    private static Bitmap imageBitmap;
-
-    public static void setImageBitmap(Bitmap imageBitmap) {
-        ImageCaptureHelper.imageBitmap = imageBitmap;
     }
 
     /**
@@ -125,21 +111,6 @@ public class ImageCaptureHelper {
      */
     public static void setOrientation(int orientation) {
         ImageCaptureHelper.orientation = orientation;
-    }
-
-    /**
-     * Estimates the value of the orientation to degree
-     * @param orientation device orientation
-     * @return estimated degree value
-     */
-    private static int orientationToQuadrantDegrees(int orientation) {
-        int degrees = 0;
-
-        if (orientation < 140 & orientation > 30) {
-            degrees = 180;
-        }
-
-        return degrees;
     }
 
     /**
@@ -163,7 +134,7 @@ public class ImageCaptureHelper {
      * @param shape The intended shape of the captured image
      * @return The bitmap
      */
-    public Bitmap onCaptureImageResult(Intent data, ImageShape shape) {
+    public Bitmap onCaptureImageResult(ImageView imageViewTarget, Intent data, ImageShape shape) {
         Bundle extras = data.getExtras();
         Bitmap thumbnail = (Bitmap) extras.get("data");
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -182,7 +153,7 @@ public class ImageCaptureHelper {
      * @param shape The intended shape of the captured image
      * @return The bitmap
      */
-    public Bitmap onSelectFromGalleryResult(Intent data, ImageShape shape) {
+    public Bitmap onSelectFromGalleryResult(ImageView imageViewTarget, Intent data, ImageShape shape) {
         try {
             Bitmap thumbnail = MediaStore.Images.Media.getBitmap(context.getContentResolver(), data.getData());
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -360,12 +331,6 @@ public class ImageCaptureHelper {
         imageViewTarget.setImageBitmap(image);
 
         return image;
-    }
-
-    private void resetTargetView() {
-        if (imageViewTarget != null) {
-            imageViewTarget.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icn_camera));
-        }
     }
 
     public void setCameraType(CameraType cameraType){

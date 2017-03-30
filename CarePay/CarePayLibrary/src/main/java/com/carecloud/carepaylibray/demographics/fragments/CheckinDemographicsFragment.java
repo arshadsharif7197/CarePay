@@ -1347,7 +1347,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     }
 
     @Override
-    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner, Bitmap bitmap) {
+    public void onCapturedSuccess(Bitmap bitmap) {
 
     }
 

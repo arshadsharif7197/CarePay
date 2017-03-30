@@ -40,15 +40,14 @@ public class DocScannerFragment extends DocumentScannerFragment {
 
     private static final String LOG_TAG = DocScannerFragment.class.getSimpleName();
     private View view;
-    private ImageCaptureHelper scannerFront;
-    private ImageCaptureHelper scannerBack;
     private Button scanFrontButton;
     private Button scanBackButton;
+    private ImageView imageFront;
+    private ImageView imageBack;
     private DemographicIdDocPayloadDTO model;
     private DemographicsSettingsDTO demographicsSettingsDTO;
     private String documentsdocumentsScanFirstString = null;
     private String documentsScanBackString = null;
-    private DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,16 +94,8 @@ public class DocScannerFragment extends DocumentScannerFragment {
     }
 
     private void initializeUIFields() {
-        // fetch the options
-        if (demographicsSettingsDTO != null) {
-            DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
-            demographicsSettingsLabelsDTO = demographicsSettingsMetadataDTO.getLabels();
-        }
-        ImageView imageFront = (ImageView) view.findViewById(R.id.demogrDocsFrontScanImage);
-        scannerFront = new ImageCaptureHelper(getActivity(), imageFront);
-
-        ImageView imageBack = (ImageView) view.findViewById(R.id.demogrDocsBackScanImage);
-        scannerBack = new ImageCaptureHelper(getActivity(), imageBack);
+        imageFront = (ImageView) view.findViewById(R.id.demogrDocsFrontScanImage);
+        imageBack = (ImageView) view.findViewById(R.id.demogrDocsBackScanImage);
 
         scanFrontButton = (Button) view.findViewById(R.id.demogrDocsFrontScanButton);
         scanFrontButton.setText(documentsdocumentsScanFirstString);
@@ -117,7 +108,7 @@ public class DocScannerFragment extends DocumentScannerFragment {
         scanFrontButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage(scannerFront, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
+                selectImage(true, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
             }
         });
 
@@ -127,7 +118,7 @@ public class DocScannerFragment extends DocumentScannerFragment {
         scanBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage(scannerBack, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
+                selectImage(false, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
             }
         });
 
@@ -142,16 +133,16 @@ public class DocScannerFragment extends DocumentScannerFragment {
     }
 
     @Override
-    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner, Bitmap bitmap) { // license has been scanned
+    public void onCapturedSuccess(Bitmap bitmap) { // license has been scanned
         if (bitmap != null) {
-            if (scanner == scannerFront) {
+            if (isFrontScan) {
                 // change button caption to 'rescan'
                 scanFrontButton.setText(documentsdocumentsScanFirstString);
                 // save from image
                 String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
                 DemographicIdDocPhotoDTO frontDTO = model.getIdDocPhothos().get(0);
                 frontDTO.setIdDocPhoto(imageAsBase64); // create the image dto
-            } else if (scanner == scannerBack) {
+            } else {
                 // change button caption to 'rescan'
                 scanBackButton.setText(documentsScanBackString);
                 String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
@@ -171,11 +162,11 @@ public class DocScannerFragment extends DocumentScannerFragment {
                     URL url = new URL(frontPic);
                     Log.v(LOG_TAG, "valid url: " + url.toString());
                     Picasso.with(getContext()).load(frontPic)
-                            .resize(scannerFront.getImgWidth(), scannerFront.getImgHeight())
-                            .into(scannerFront.getImageViewTarget());
+                            .fit().centerCrop()
+                            .into(imageFront);
                 } catch (MalformedURLException e) {
                     Log.e(LOG_TAG, "invalid url: " + frontPic);
-                    scannerFront.getImageViewTarget().setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                    imageFront.setImageDrawable(ContextCompat.getDrawable(getActivity(),
                             R.drawable.icn_camera));
                 }
             }
@@ -186,11 +177,11 @@ public class DocScannerFragment extends DocumentScannerFragment {
                     URL url = new URL(backPic);
                     Log.v(LOG_TAG, "valid url: " + url.toString());
                     Picasso.with(getContext()).load(backPic)
-                            .resize(scannerBack.getImgWidth(), scannerBack.getImgHeight())
-                            .into(scannerBack.getImageViewTarget());
+                            .fit().centerCrop()
+                            .into(imageBack);
                 } catch (MalformedURLException e) {
                     Log.e(LOG_TAG, "invalid url: " + backPic);
-                    scannerBack.getImageViewTarget().setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                    imageBack.setImageDrawable(ContextCompat.getDrawable(getActivity(),
                             R.drawable.icn_camera));
                 }
             }
@@ -208,9 +199,9 @@ public class DocScannerFragment extends DocumentScannerFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (imageCaptureHelper == scannerFront) {
+        if (isFrontScan) {
             scanFrontButton.setText(documentsdocumentsScanFirstString);
-        } else if (imageCaptureHelper == scannerBack) {
+        } else {
             scanBackButton.setText(documentsScanBackString);
         }
     }

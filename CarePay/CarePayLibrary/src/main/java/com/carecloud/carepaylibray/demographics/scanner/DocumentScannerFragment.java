@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.demographics.scanner;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,6 +12,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraReady;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
@@ -23,19 +26,31 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
  * Created by lsoco_user on 9/13/2016.
  * Generic fragment that incorporates camera scanning functionality
  */
-public abstract class DocumentScannerFragment extends BaseCheckinFragment {
+public abstract class DocumentScannerFragment extends BaseCheckinFragment implements CarePayCameraCallback {
 
     protected boolean hasImageChanged;
-    protected ImageCaptureHelper imageCaptureHelper;
+    protected boolean isFrontScan;
     protected ImageCaptureHelper.CameraType cameraType;
+
+    protected CarePayCameraReady carePayCameraReady;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            carePayCameraReady = (CarePayCameraReady) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement CarePayCameraReady");
+        }
+    }
 
     /**
      * Starts Camera or Gallery to capture/select an image
      *
-     * @param imageCaptureHelper The camera helper used with a particular imageview
+     * @param isFrontScan The camera helper used with a particular imageview
      */
-    public void selectImage(final ImageCaptureHelper imageCaptureHelper, final ImageCaptureHelper.CameraType cameraType) {
-        this.imageCaptureHelper = imageCaptureHelper;
+    public void selectImage(final boolean isFrontScan, final ImageCaptureHelper.CameraType cameraType) {
+        this.isFrontScan = isFrontScan;
         this.cameraType = cameraType;
         // create the chooser dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -142,39 +157,12 @@ public abstract class DocumentScannerFragment extends BaseCheckinFragment {
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == Activity.RESULT_OK) {
-            Bitmap bitmap = null;
-            if (requestCode == ImageCaptureHelper.SELECT_FILE) {
-                bitmap = imageCaptureHelper.onSelectFromGalleryResult(data, getImageShape());
-            } else if (requestCode == ImageCaptureHelper.REQUEST_CAMERA) {
-                if (cameraType == ImageCaptureHelper.CameraType.CUSTOM_CAMERA) {
-//                    bitmap = imageCaptureHelper.onCaptureImageResult(getImageShape());
-//                    Log.v(LOG_TAG, "Orientation camera to: " + imageCaptureHelper.getOrientation());
-                } else {
-                    bitmap = imageCaptureHelper.onCaptureImageResult(data, getImageShape());
-                }
-            }
-
-            hasImageChanged = bitmap != null;
-            updateModelAndViewsAfterScan(imageCaptureHelper, bitmap);
-        }
-    }
-
     /**
      * Gets the shape of the captured image
      *
      * @return The shape (ImageCaptureHelper.ImageShape)
      */
     public abstract ImageCaptureHelper.ImageShape getImageShape();
-
-    /**
-     * Updates the number the button label and the number textview accoring to doc scanned (license or insurance)
-     */
-    protected abstract void updateModelAndViewsAfterScan(ImageCaptureHelper scanner, Bitmap bitmap);
 
     /**
      * Populate the views with the date from model

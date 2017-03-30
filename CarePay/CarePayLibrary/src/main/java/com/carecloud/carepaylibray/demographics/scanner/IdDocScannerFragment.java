@@ -42,10 +42,10 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
 
     private static final String LOG_TAG = IdDocScannerFragment.class.getSimpleName();
     private View view;
-    private ImageCaptureHelper scannerFront;
-    private ImageCaptureHelper scannerBack;
     private Button scanFrontButton;
     private Button scanBackButton;
+    private ImageView imageFront;
+    private ImageView imageBack;
     private DemographicIdDocPayloadDTO model;
     private DemographicLabelsDTO globalLabelsDTO;
 
@@ -76,11 +76,8 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
 
         initializePhotos();
 
-        ImageView imageFront = (ImageView) view.findViewById(R.id.demogrDocsFrontScanImage);
-        scannerFront = new ImageCaptureHelper(getActivity(), imageFront);
-
-        ImageView imageBack = (ImageView) view.findViewById(R.id.demogrDocsBackScanImage);
-        scannerBack = new ImageCaptureHelper(getActivity(), imageBack);
+        imageFront = (ImageView) view.findViewById(R.id.demogrDocsFrontScanImage);
+        imageBack = (ImageView) view.findViewById(R.id.demogrDocsBackScanImage);
 
         // init views (labels and logic)
         String label;
@@ -91,7 +88,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         scanFrontButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage(scannerFront, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
+                selectImage(true, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
             }
         });
 
@@ -101,7 +98,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         scanBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage(scannerBack, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
+                selectImage(false, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
             }
         });
 
@@ -119,9 +116,9 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
     }
 
     @Override
-    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner, Bitmap bitmap) { // license has been scanned
+    public void onCapturedSuccess(Bitmap bitmap) { // license has been scanned
         if (bitmap != null) {
-            if (scanner == scannerFront) {
+            if (isFrontScan) {
                 // change button caption to 'rescan'
                 scanFrontButton.setText(R.string.demogr_docs_rescan_front);
                 // save from image
@@ -130,7 +127,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                 frontDTO.setIdDocPhoto(imageAsBase64); // create the image dto
                 frontDTO.setPage(1);
                 frontDTO.setDelete(false);
-            } else if (scanner == scannerBack) {
+            } else {
                 // change button caption to 'rescan'
                 scanBackButton.setText(R.string.demogr_docs_rescan_back);
                 String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
@@ -152,11 +149,11 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                     URL url = new URL(frontPic);
                     Log.v(LOG_TAG, "valid url: " + url.toString());
                     Picasso.with(getContext()).load(frontPic)
-                            .resize(scannerFront.getImgWidth(), scannerFront.getImgHeight())
-                            .into(scannerFront.getImageViewTarget());
+                            .fit().centerCrop()
+                            .into(imageFront);
                 } catch (MalformedURLException e) {
                     Log.e(LOG_TAG, "invalid url: " + frontPic);
-                    scannerFront.getImageViewTarget().setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                    imageFront.setImageDrawable(ContextCompat.getDrawable(getActivity(),
                             R.drawable.icn_camera));
                 }
             }
@@ -167,11 +164,11 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                     URL url = new URL(backPic);
                     Log.v(LOG_TAG, "valid url: " + url.toString());
                     Picasso.with(getContext()).load(backPic)
-                            .resize(scannerBack.getImgWidth(), scannerBack.getImgHeight())
-                            .into(scannerBack.getImageViewTarget());
+                            .fit().centerCrop()
+                            .into(imageBack);
                 } catch (MalformedURLException e) {
                     Log.e(LOG_TAG, "invalid url: " + backPic);
-                    scannerBack.getImageViewTarget().setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                    imageBack.setImageDrawable(ContextCompat.getDrawable(getActivity(),
                             R.drawable.icn_camera));
                 }
             }
@@ -190,10 +187,10 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         String label;
-        if (imageCaptureHelper == scannerFront) {
+        if (isFrontScan) {
             label = globalLabelsDTO.getDemographicsDocumentsPictureOfFront();
             scanFrontButton.setText(label);
-        } else if (imageCaptureHelper == scannerBack) {
+        } else {
             label = globalLabelsDTO.getDemographicsDocumentsPictureOfBack();
             scanBackButton.setText(label);
         }

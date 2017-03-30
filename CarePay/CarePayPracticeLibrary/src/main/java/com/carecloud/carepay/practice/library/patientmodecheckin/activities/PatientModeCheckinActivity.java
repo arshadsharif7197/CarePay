@@ -32,6 +32,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraFragment;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraReady;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.dialog.InsuranceEditDialog;
@@ -73,7 +74,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         CheckInDemographicsBaseFragment.CheckInNavListener,
         PersonalInfoFragment.UpdateProfilePictureListener,
         CarePayCameraCallback,
-        InsuranceEditDialog.InsuranceEditDialogListener {
+        InsuranceEditDialog.InsuranceEditDialogListener,
+        CarePayCameraReady {
 
 
     public final static int SUBFLOW_DEMOGRAPHICS_INS = 0;
@@ -83,7 +85,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     private static final int NUM_OF_SUBFLOWS = 4;
 
     //demographics nav
-//    private Map<Integer, CheckInDemographicsBaseFragment> demographicFragMap = new HashMap<>();
     private int currentDemographicStep = 1;
 
     private DemographicDTO demographicDTO;
@@ -91,12 +92,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     private ImageView logoImageView;
     private ImageView homeClickable;
 
+    private CarePayCameraCallback carePayCameraCallback;
     private InsuranceEditDialog insuranceEditDialog;
-    private boolean isFrontScan;
-//
-//    private AppointmentsPayloadDTO appointmentsPayloadDTO;
-//
-//    private FormId showingForm = FormId.FORM1;
 
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
     private PaymentsModel paymentDTO;
@@ -118,13 +115,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         initializeViews();
 
         initializeCheckinViews();
-
-        // place the initial fragment
-//        demographicFragMap.put(1, new PersonalInfoFragment());
-//        demographicFragMap.put(2, new AddressFragment());
-//        demographicFragMap.put(3, new DemographicsFragment());
-//        demographicFragMap.put(4, new IdentificationFragment());
-//        demographicFragMap.put(5, new HealthInsuranceFragment());
 
         navigateToDemographicFragment(1);
     }
@@ -654,11 +644,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void onCapturedSuccess(Bitmap bitmap) {
-        // Send image to current demographic fragment
-        FragmentManager fm = getSupportFragmentManager();
-        InsuranceEditDialog fragment = (InsuranceEditDialog) fm.findFragmentByTag(InsuranceEditDialog.class.getSimpleName());
-        if (fragment != null) {
-            fragment.updateModelAndViewsAfterScan(bitmap, isFrontScan);
+        if (carePayCameraCallback != null) {
+            carePayCameraCallback.onCapturedSuccess(bitmap);
         }
     }
 
@@ -684,22 +671,13 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void captureInsuranceFrontImage() {
-        selectImage(true);
-    }
-
-    @Override
-    public void captureInsuranceBackImage() {
-        selectImage(false);
-    }
-
-    @Override
     public void goOneStepBack() {
         onBackPressed();
     }
 
-    private void selectImage(boolean isFrontScan) {
-        this.isFrontScan = isFrontScan;
+    @Override
+    public void captureImage(CarePayCameraCallback callback) {
+        this.carePayCameraCallback = callback;
 
         String tag = CarePayCameraFragment.class.getSimpleName();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
