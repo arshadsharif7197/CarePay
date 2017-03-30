@@ -362,7 +362,7 @@ public class ImageCaptureHelper {
         return image;
     }
 
-    public void resetTargetView() {
+    private void resetTargetView() {
         if (imageViewTarget != null) {
             imageViewTarget.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icn_camera));
         }
