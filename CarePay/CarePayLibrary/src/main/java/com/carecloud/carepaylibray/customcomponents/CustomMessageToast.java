@@ -22,7 +22,11 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 /**
  * Created by kkannan on 2/23/17.
  */
-public class SuccessMessageToast extends Toast {
+public class CustomMessageToast extends Toast {
+
+    public static final int NOTIFICATION_TYPE_SUCCESS = 0x1;
+    public static final int NOTIFICATION_TYPE_ERROR = 0x2;
+
 
     private final Context context;
 
@@ -33,7 +37,7 @@ public class SuccessMessageToast extends Toast {
      * @param context        The context to use.  Usually your {@link Application}                or {@link Activity} object.
      * @param successMessage the success message
      */
-    public SuccessMessageToast(Context context, String successMessage) {
+    public CustomMessageToast(Context context, String successMessage, int notificationType) {
         super(context);
         this.context = context;
         int orientation = DisplayUtils.getScreenOrientation(context);
@@ -54,9 +58,21 @@ public class SuccessMessageToast extends Toast {
         }else {
             setGravity(Gravity.TOP, 0, 0);
         }
-        setDuration(Toast.LENGTH_SHORT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ((BaseActivity) context).getWindow().setStatusBarColor(ContextCompat.getColor(context, R.color.emerald));
+        }
+
+        View container = layout.findViewById(R.id.success_message_toast_layout);
+        switch(notificationType){
+            case NOTIFICATION_TYPE_ERROR:
+                container.setBackgroundResource(R.drawable.error_notification_background);
+                setDuration(Toast.LENGTH_LONG);
+                break;
+            case NOTIFICATION_TYPE_SUCCESS:
+            default:
+                container.setBackgroundResource(R.drawable.success_notification_background);
+                setDuration(Toast.LENGTH_SHORT);
+                break;
         }
 
     }
@@ -71,7 +87,7 @@ public class SuccessMessageToast extends Toast {
                     ((BaseActivity) context).getWindow().setStatusBarColor(ContextCompat.getColor(context, R.color.colorPrimary));
                 }
             }
-        }, 3000);
+        }, getDuration()==LENGTH_SHORT?5000:1000);//this should correspond to Toast LENGTH_SHORT & LENGTH_LONG
 
     }
 }

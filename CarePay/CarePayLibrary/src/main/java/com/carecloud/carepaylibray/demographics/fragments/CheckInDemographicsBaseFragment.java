@@ -3,8 +3,6 @@ package com.carecloud.carepaylibray.demographics.fragments;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -14,18 +12,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterface;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -35,9 +29,6 @@ import com.marcok.stepprogressbar.StepProgressBar;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 
 
 /**
@@ -91,16 +82,13 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-
-        View   view = inflater.inflate(R.layout.fragment_review_demographic_base, container, false);
+        View view = inflater.inflate(R.layout.fragment_review_demographic_base, container, false);
         stepProgressBar = (StepProgressBar) view.findViewById(R.id.stepProgressBarCheckin);
         stepProgressBar.setCumulativeDots(true);
         stepProgressBar.setNumDots(5);
         inflateContent(inflater, view);
         //initializeToolbar(view);
         inflateToolbarViews(view);
-
 
         return view;
     }
@@ -118,9 +106,6 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                 getActivity().onBackPressed();
             }
         });
-
-
-
     }
 
     protected boolean checkTextEmptyValue(int textEditableId, View view) {
@@ -133,29 +118,11 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         ((FrameLayout) view.findViewById(R.id.checkinDemographicsContentLayout)).addView(childview);
     }
 
-    protected void setHeaderTitle(String title, String heading, String subHeading, View view){
+    protected void setHeaderTitle(String title, View view) {
         TextView textView = (TextView) view.findViewById(R.id.checkinDemographicsHeaderLabel);
-
-
-
+        textView.setText(title);
         SystemUtil.setGothamRoundedMediumTypeface(getContext(), textView);
-        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
-            //(view.findViewById(R.id.toolbar_layout)).setVisibility(checkInNavListener.getCurrentStep()>1 ?View.VISIBLE:View.INVISIBLE);
-            (view.findViewById(R.id.toolbar_layout)).setVisibility(View.VISIBLE);
-            textView.setText(title);
-        }else{
-            TextView mainHeadingTextView = (TextView) view.findViewById(R.id.demographicsMainHeading);
-            TextView subHeadingTextView = (TextView)  view.findViewById(R.id.demographicsSubHeading);
-            (view.findViewById(R.id.toolbar_layout)).setVisibility(View.VISIBLE);
-            setGothamRoundedMediumTypeface(getActivity(), mainHeadingTextView);
-            setProximaNovaRegularTypeface(getActivity(), subHeadingTextView);
-            textView.setText(String.format(Label.getLabel("demographics_heading"), checkInNavListener.getCurrentStep(), 5));
-            mainHeadingTextView.setText(heading);
-            subHeadingTextView.setText(subHeading);
-            //"Donec ullamcorper nulla non metus auctor fringilla. Aenean eu leo quam."
-
-        }
-        //stepProgressBar.setCurrentProgressDot(checkInNavListener.getCurrentStep()-1);
+        (view.findViewById(R.id.toolbar_layout)).setVisibility(View.VISIBLE);
     }
 
     protected void initNextButton(View.OnClickListener listener, final View view, int visibility) {
@@ -181,10 +148,9 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         nextButton.setEnabled(isEnabled);
         nextButton.setClickable(isEnabled);
         Context context = getActivity();
-        if (context != null && getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+        if (context != null) {
             nextButton.setBackground(ContextCompat.getDrawable(context, isEnabled ? R.drawable.bg_green_overlay : R.drawable.bg_silver_overlay));
         }
-
     }
 
     protected abstract boolean passConstraints(View view);
@@ -192,8 +158,6 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     protected abstract int getContentId();
 
     protected abstract DemographicDTO updateDemographicDTO(View view);
-
-    public abstract void imageCaptured(Bitmap bitmap);
 
     @Override
     public void onAttach(Context context) {

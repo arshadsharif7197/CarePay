@@ -75,17 +75,17 @@ public class AppointmentsListFragment extends BaseFragment {
     private AppointmentNavigationCallback callback;
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
-        try{
+        try {
             callback = (AppointmentNavigationCallback) context;
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement AppointmentNavigationCallback");
         }
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
     }
 
@@ -107,7 +107,7 @@ public class AppointmentsListFragment extends BaseFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         appointmentRecyclerView = (RecyclerView) appointmentsListView.findViewById(R.id.appointments_recycler_view);
         appointmentsListFragment = this;
 
@@ -186,7 +186,12 @@ public class AppointmentsListFragment extends BaseFragment {
                 }
 
                 appointmentsAdapter = new AppointmentsAdapter(getActivity(),
-                        appointmentListWithHeader, appointmentsListFragment, appointmentInfo, getAppointmentsAdapterListener());
+                        appointmentListWithHeader, appointmentsListFragment, appointmentInfo, new AppointmentsAdapter.AppointmentsAdapterListener() {
+                    @Override
+                    public void onItemTapped(AppointmentDTO appointmentDTO) {
+                        showAppointmentPopup(appointmentDTO);
+                    }
+                });
                 appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 appointmentRecyclerView.setAdapter(appointmentsAdapter);
             } else {
@@ -198,60 +203,33 @@ public class AppointmentsListFragment extends BaseFragment {
         }
     }
 
-    private AppointmentsAdapter.AppointmentsAdapterListener getAppointmentsAdapterListener() {
-        return new AppointmentsAdapter.AppointmentsAdapterListener() {
-
-            public void onItemTapped(AppointmentDTO appointmentDTO)
-            {
-                showAppointmentPopup(appointmentDTO) ;
-            }
-        };
-    }
-
     private void showAppointmentPopup(AppointmentDTO appointmentDTO) {
-
         AppointmentsPayloadDTO payloadDTO = appointmentDTO.getPayload();
-
         String statusCode = payloadDTO.getAppointmentStatusModel().getCode();
-
         switch (statusCode) {
             case CarePayConstants.CHECKED_IN:
                 new QueueAppointmentDialog(getContext(), appointmentDTO, appointmentLabels).show();
-
                 break;
-
             case CarePayConstants.CANCELLED:
                 new CancelAppointmentDialog(getContext(), appointmentDTO, appointmentInfo,
                         AppointmentType.CANCELLED, getCancelAppointmentDialogListener()).show();
-
                 break;
-
             case CarePayConstants.REQUESTED:
                 new CancelAppointmentDialog(getContext(), appointmentDTO, appointmentInfo,
                         AppointmentType.REQUESTED, getCancelAppointmentDialogListener()).show();
-
                 break;
-
             default:
-
                 // Missed Appointment
                 if (payloadDTO.isAppointmentOver()) {
-
                     new CancelAppointmentDialog(getContext(), appointmentDTO, appointmentInfo,
                             AppointmentType.MISSED, getCancelAppointmentDialogListener()).show();
-
                 } else if (payloadDTO.canCheckInNow(appointmentInfo)) {
-
                     new CheckInOfficeNowAppointmentDialog(getContext(), appointmentDTO, appointmentInfo, getCheckInOfficeNowAppointmentDialogListener()).show();
-
                 } else if (payloadDTO.isAppointmentCancellable(appointmentInfo)) {
-
                     new CancelAppointmentDialog(getContext(), appointmentDTO, appointmentInfo,
                             AppointmentType.CANCEL,
                             getCancelAppointmentDialogListener()).show();
-
                 } else {
-
                     new CheckInOfficeNowAppointmentDialog(getContext(), appointmentDTO, appointmentInfo, getCheckInOfficeNowAppointmentDialogListener()).show();
                 }
         }
@@ -296,7 +274,7 @@ public class AppointmentsListFragment extends BaseFragment {
      * @return the qr code view dialog . qr code view dialog listener
      */
     public QrCodeViewDialog.QRCodeViewDialogListener qrCodeViewDialogListener() {
-        return new QrCodeViewDialog.QRCodeViewDialogListener(){
+        return new QrCodeViewDialog.QRCodeViewDialogListener() {
 
             @Override
             public void onGenerateQRCodeError(String errorMessage) {
@@ -391,13 +369,11 @@ public class AppointmentsListFragment extends BaseFragment {
 
         DataDTO data = appointmentInfo.getMetadata().getTransitions().getCancel().getData();
         JsonObject postBodyObj = new JsonObject();
-        if(!StringUtil.isNullOrEmpty(cancellationReasonComment))
-        {
-            postBodyObj.addProperty(data.getCancellationComments().getName(),cancellationReasonComment);
+        if (!StringUtil.isNullOrEmpty(cancellationReasonComment)) {
+            postBodyObj.addProperty(data.getCancellationComments().getName(), cancellationReasonComment);
         }
-        if(cancellationReasonID != -1)
-        {
-            postBodyObj.addProperty(data.getCancellationReasonId().getName(),cancellationReasonID);
+        if (cancellationReasonID != -1) {
+            postBodyObj.addProperty(data.getCancellationReasonId().getName(), cancellationReasonID);
         }
 
         String body = postBodyObj.toString();
@@ -424,8 +400,7 @@ public class AppointmentsListFragment extends BaseFragment {
             hideProgressDialog();
             try {
                 FaultResponseDTO fault = DtoHelper.getConvertedDTO(FaultResponseDTO.class, exceptionMessage);
-                if(fault.isUnprocessableEntityError())
-                {
+                if (fault.isUnprocessableEntityError()) {
                     showErrorNotification(fault.getErrorMessageDTO().getServiceErrorDTO().getMessage());
                 }
             } catch (Exception e) {

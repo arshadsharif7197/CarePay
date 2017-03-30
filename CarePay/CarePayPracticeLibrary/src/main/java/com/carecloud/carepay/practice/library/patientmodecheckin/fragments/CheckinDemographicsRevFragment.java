@@ -383,35 +383,35 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
 
     private void initializePersonalDetailsSectionView() {
         firstNameLabel = (TextView) view.findViewById(R.id.reviewFirstNameLabel);
-        firstNameLabel.setText(persDetailsMetaDTO.properties.firstName.getLabel().toUpperCase());
+        firstNameLabel.setText(persDetailsMetaDTO.getProperties().getFirstName().getLabel().toUpperCase());
         firstnameTextView = (TextView) view.findViewById(R.id.reviewFirstNameTextView);
 
         middleNameLabel = (TextView) view.findViewById(R.id.reviewMiddleNameLabel);
-        middleNameLabel.setText(persDetailsMetaDTO.properties.middleName.getLabel().toUpperCase());
+        middleNameLabel.setText(persDetailsMetaDTO.getProperties().getMiddleName().getLabel().toUpperCase());
         middlenameTextView = (TextView) view.findViewById(R.id.reviewMiddelNameTextView);
 
         lastNameLabel = (TextView) view.findViewById(R.id.reviewLastNameLabel);
-        lastNameLabel.setText(persDetailsMetaDTO.properties.lastName.getLabel().toUpperCase());
+        lastNameLabel.setText(persDetailsMetaDTO.getProperties().getLastName().getLabel().toUpperCase());
         lastNameTextView = (TextView) view.findViewById(R.id.reviewLastNameTextView);
 
         dobLabel = (TextView) view.findViewById(R.id.reviewDOBLabel);
-        dobLabel.setText(persDetailsMetaDTO.properties.dateOfBirth.getLabel().toUpperCase());
+        dobLabel.setText(persDetailsMetaDTO.getProperties().getDateOfBirth().getLabel().toUpperCase());
         dobTExtView = (TextView) view.findViewById(R.id.reviewDOBTextView);
 
         phoneNumberLabel = (TextView) view.findViewById(R.id.reviewPhoneNumberLabel);
-        phoneNumberLabel.setText(addressMetaDTO.properties.phone.getLabel().toUpperCase());
+        phoneNumberLabel.setText(addressMetaDTO.getProperties().getPhone().getLabel().toUpperCase());
         phoneNumberTextView = (TextView) view.findViewById(R.id.reviewPhoneNumberTextView);
 
         ethnicityLabel = (TextView) view.findViewById(R.id.reviewEthnicityLabel);
-        ethnicityLabel.setText(persDetailsMetaDTO.properties.ethnicity.getLabel());
+        ethnicityLabel.setText(persDetailsMetaDTO.getProperties().getEthnicity().getLabel());
         ethnicityTextView = (TextView) view.findViewById(R.id.reviewEthnicityTextView);
 
         raceLabel = (TextView) view.findViewById(R.id.reviewRaceLabel);
-        raceLabel.setText(persDetailsMetaDTO.properties.primaryRace.getLabel());
+        raceLabel.setText(persDetailsMetaDTO.getProperties().getPrimaryRace().getLabel());
         raceTextView = (TextView) view.findViewById(R.id.reviewRaceTextView);
 
         genderLabel = (TextView) view.findViewById(R.id.reviewGenderLabel);
-        genderLabel.setText(persDetailsMetaDTO.properties.gender.getLabel());
+        genderLabel.setText(persDetailsMetaDTO.getProperties().getGender().getLabel());
         genderTextView = (TextView) view.findViewById(R.id.reviewGenderTextView);
 
         driverLicenseLabel = (TextView) view.findViewById(R.id.reviewDriverLicenseLabel);
@@ -420,23 +420,23 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
 
     private void initializeAddressSectionView() {
         address1Label = (TextView) view.findViewById(R.id.reviewAddress1label);
-        address1Label.setText(addressMetaDTO.properties.address1.getLabel().toUpperCase());
+        address1Label.setText(addressMetaDTO.getProperties().getAddress1().getLabel().toUpperCase());
         address1TextView = (TextView) view.findViewById(R.id.reviewAddress1TextView);
 
         address2Label = (TextView) view.findViewById(R.id.reviewAddress2label);
-        address2Label.setText(addressMetaDTO.properties.address2.getLabel().toUpperCase());
+        address2Label.setText(addressMetaDTO.getProperties().getAddress2().getLabel().toUpperCase());
         address2TextView = (TextView) view.findViewById(R.id.reviewAddress2TextView);
 
         cityLabel = (TextView) view.findViewById(R.id.reviewCityLabel);
-        cityLabel.setText(addressMetaDTO.properties.city.getLabel().toUpperCase());
+        cityLabel.setText(addressMetaDTO.getProperties().getCity().getLabel().toUpperCase());
         cityTextView = (TextView) view.findViewById(R.id.reviewCityTextView);
 
         stateLabel = (TextView) view.findViewById(R.id.reviewStateLabel);
-        stateLabel.setText(addressMetaDTO.properties.state.getLabel().toUpperCase());
+        stateLabel.setText(addressMetaDTO.getProperties().getState().getLabel().toUpperCase());
         stateTextView = (TextView) view.findViewById(R.id.reviewStateTextView);
 
         zipcodeLabel = (TextView) view.findViewById(R.id.reviewZipcodeLabel);
-        zipcodeLabel.setText(addressMetaDTO.properties.zipcode.getLabel().toUpperCase());
+        zipcodeLabel.setText(addressMetaDTO.getProperties().getZipcode().getLabel().toUpperCase());
         zipcodeTextView = (TextView) view.findViewById(R.id.reviewZipcodeTextView);
     }
 

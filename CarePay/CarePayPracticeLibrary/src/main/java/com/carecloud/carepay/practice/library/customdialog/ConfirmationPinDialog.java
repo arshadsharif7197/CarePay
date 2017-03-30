@@ -34,6 +34,8 @@ import java.util.Map;
 
 public class ConfirmationPinDialog extends Dialog implements View.OnClickListener {
 
+    private static final int FULLSCREEN_VALUE = 0x10000000;
+
     private Context context;
     private EditText pinEditText;
     private CarePayTextView headerLabel;
@@ -73,6 +75,7 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setNavigationBarVisibility();
         setContentView(R.layout.dialog_confirmation_pin);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         setCancelable(false);
@@ -82,6 +85,17 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
         onSetPinLabels();
 
     }
+
+    private void setNavigationBarVisibility() {
+
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_IMMERSIVE
+                | FULLSCREEN_VALUE;
+        decorView.setSystemUiVisibility(uiOptions);
+    }
+
 
     /**
      * for initialization UI components  .

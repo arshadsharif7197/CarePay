@@ -275,8 +275,12 @@ public class WorkflowServiceHelper {
 
                     }
                 } catch (Exception exception) {
-                    callback.onFailure(exception.getMessage());
-                    Log.e("WorkflowServiceHelper", exception.getMessage(), exception);
+                    if(exception.getMessage()!=null) {
+                        callback.onFailure(exception.getMessage());
+                        Log.e("WorkflowServiceHelper", exception.getMessage(), exception);
+                    }else{
+                        callback.onFailure(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+                    }
                 }
             }
 
