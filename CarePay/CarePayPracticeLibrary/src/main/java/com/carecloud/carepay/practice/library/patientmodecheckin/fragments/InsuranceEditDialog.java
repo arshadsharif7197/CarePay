@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
@@ -92,6 +91,25 @@ public class InsuranceEditDialog extends BaseDialogFragment {
         void goOneStepBack();
     }
 
+    /**
+     * Creates a InsuranceEditDialog fragment
+     *
+     * @param demographicDTO Demographic DTO
+     * @param editedIndex    index of the insurance being modified
+     */
+    public static InsuranceEditDialog newInstance(DemographicDTO demographicDTO,
+                                                  Integer editedIndex) {
+        // Supply inputs as an argument
+        Bundle args = new Bundle();
+        args.putInt(EDITED_INDEX, editedIndex == null ? NEW_INSURANCE : editedIndex);
+        DtoHelper.bundleDto(args, demographicDTO);
+
+        InsuranceEditDialog dialog = new InsuranceEditDialog();
+        dialog.setArguments(args);
+
+        return dialog;
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -109,6 +127,15 @@ public class InsuranceEditDialog extends BaseDialogFragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Bundle arguments = getArguments();
+        editedIndex = arguments.getInt(EDITED_INDEX);
+        demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, arguments);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (hasInsurance()) {
             return inflater.inflate(R.layout.dialog_add_edit_insurance, container, false);
@@ -122,9 +149,6 @@ public class InsuranceEditDialog extends BaseDialogFragment {
 
         View child = inflater.inflate(R.layout.dialog_add_edit_insurance, null);
         ((ViewGroup) view.findViewById(R.id.checkinDemographicsContentLayout)).addView(child);
-
-//        ViewGroup ly = (ViewGroup) view.findViewById(R.id.dialog_content_layout);
-//        ly.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
 
         inflateToolbarViews(view);
 
@@ -151,34 +175,6 @@ public class InsuranceEditDialog extends BaseDialogFragment {
 
         TextView textView = (TextView) view.findViewById(R.id.checkinDemographicsHeaderLabel);
         textView.setText(Label.getLabel("demographics_insurance_label"));
-    }
-
-    /**
-     * Creates a InsuranceEditDialog fragment
-     *
-     * @param demographicDTO Demographic DTO
-     * @param editedIndex    index of the insurance being modified
-     */
-    public static InsuranceEditDialog newInstance(DemographicDTO demographicDTO,
-                                                  Integer editedIndex) {
-        // Supply inputs as an argument
-        Bundle args = new Bundle();
-        args.putInt(EDITED_INDEX, editedIndex == null ? NEW_INSURANCE : editedIndex);
-        DtoHelper.bundleDto(args, demographicDTO);
-
-        InsuranceEditDialog dialog = new InsuranceEditDialog();
-        dialog.setArguments(args);
-
-        return dialog;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        Bundle arguments = getArguments();
-        editedIndex = arguments.getInt(EDITED_INDEX);
-        demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, arguments);
     }
 
     @Override
@@ -243,89 +239,88 @@ public class InsuranceEditDialog extends BaseDialogFragment {
                 disappearViewById(R.id.insurance_toolbar);
 //                disappearViewById(R.id.add_edit_insurance_bottom_division);
                 showViewById(R.id.check_in_demographics_left_button);
-                findViewById(R.id.check_in_demographics_left_button).setOnClickListener(getRemoveListener());
+                findViewById(R.id.check_in_demographics_left_button).setOnClickListener(removeButtonListener);
 
                 saveInsuranceButton = (Button) findViewById(R.id.checkinDemographicsNextButton);
                 saveInsuranceButton.setText(Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));
             }
         } else {
-            DemographicInsurancePayloadDTO dto = demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(editedIndex);
-            ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(dto.getInsurancePlan());
-            selectedProviderTextView.setText(dto.getInsuranceProvider());
-            selectedPlan.setText(dto.getInsurancePlan());
-            selectedType.setText(dto.getInsuranceType());
+            DemographicInsurancePayloadDTO demographicInsurancePayload = demographicDTO.getPayload().getDemographics()
+                    .getPayload().getInsurances().get(editedIndex);
+            ((CarePayTextView) findViewById(R.id.toolbar_title))
+                    .setText(demographicInsurancePayload.getInsurancePlan());
+            findViewById(R.id.health_insurance_plans).setVisibility(View.GONE);
+            selectedProviderTextView.setText(demographicInsurancePayload.getInsuranceProvider());
+            selectedPlan.setText(demographicInsurancePayload.getInsurancePlan());
+            selectedType.setText(demographicInsurancePayload.getInsuranceType());
 
-            cardNumber.setText(dto.getInsuranceMemberId());
+            cardNumber.setText(demographicInsurancePayload.getInsuranceMemberId());
             cardNumber.getOnFocusChangeListener().onFocusChange(cardNumber, false);
-            groupNumber.setText(dto.getInsuranceGroupId());
+            groupNumber.setText(demographicInsurancePayload.getInsuranceGroupId());
             groupNumber.getOnFocusChangeListener().onFocusChange(groupNumber, false);
 
-            findViewById(R.id.remove_insurance_entry).setOnClickListener(getRemoveListener());
+            findViewById(R.id.remove_insurance_entry).setOnClickListener(removeButtonListener);
         }
 
-        saveInsuranceButton.setOnClickListener(getSaveListener());
+        saveInsuranceButton.setOnClickListener(saveButtonListener);
         // TO-DO: Need to know what fields are required
         saveInsuranceButton.setEnabled(true);
     }
 
-    private View.OnClickListener getRemoveListener() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View saveChanges) {
-                if (editedIndex != NEW_INSURANCE) {
-                    demographicDTO.getPayload().getDemographics().getPayload().getInsurances().remove(editedIndex);
-                }
-
-                closeDialog();
+    private View.OnClickListener removeButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View saveChanges) {
+            if (editedIndex != NEW_INSURANCE) {
+                demographicDTO.getPayload().getDemographics().getPayload().getInsurances().remove(editedIndex);
             }
-        };
-    }
 
-    @NonNull
-    private View.OnClickListener getSaveListener() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View saveChanges) {
-                DemographicInsurancePayloadDTO demographicInsurancePayloadDTO;
-                if (editedIndex == NEW_INSURANCE) {
-                    demographicInsurancePayloadDTO = new DemographicInsurancePayloadDTO();
-                    demographicDTO.getPayload().getDemographics().getPayload().getInsurances().add(demographicInsurancePayloadDTO);
-                } else {
-                    demographicInsurancePayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(editedIndex);
-                }
+            closeDialog();
+        }
+    };
 
-                List<DemographicInsurancePhotoDTO> photos = demographicInsurancePayloadDTO.getInsurancePhotos();
-                if (photos.isEmpty()) {
-                    photos.add(new DemographicInsurancePhotoDTO());
-                }
 
-                if (photos.size() == 1) {
-                    photos.add(new DemographicInsurancePhotoDTO());
-                }
-
-                demographicInsurancePayloadDTO.setInsuranceProvider(selectedProvider);
-                demographicInsurancePayloadDTO.setInsurancePlan(selectedPlan.getText().toString());
-                demographicInsurancePayloadDTO.setInsuranceType(selectedType.getText().toString());
-                demographicInsurancePayloadDTO.setInsuranceMemberId(cardNumber.getText().toString());
-                demographicInsurancePayloadDTO.setInsuranceGroupId(groupNumber.getText().toString());
-
-                photos = demographicInsurancePayloadDTO.getInsurancePhotos();
-                if (frontImageAsBase64 != null) {
-                    photos.get(0).setInsurancePhoto(frontImageAsBase64);
-                }
-
-                if (backImageAsBase64 != null) {
-                    photos.get(1).setInsurancePhoto(backImageAsBase64);
-                }
-
-                closeDialog();
+    View.OnClickListener saveButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View saveChanges) {
+            DemographicInsurancePayloadDTO demographicInsurancePayloadDTO;
+            if (editedIndex == NEW_INSURANCE) {
+                demographicInsurancePayloadDTO = new DemographicInsurancePayloadDTO();
+                demographicDTO.getPayload().getDemographics().getPayload().getInsurances().add(demographicInsurancePayloadDTO);
+            } else {
+                demographicInsurancePayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(editedIndex);
             }
-        };
-    }
+
+            List<DemographicInsurancePhotoDTO> photos = demographicInsurancePayloadDTO.getInsurancePhotos();
+            if (photos.isEmpty()) {
+                photos.add(new DemographicInsurancePhotoDTO());
+            }
+
+            if (photos.size() == 1) {
+                photos.add(new DemographicInsurancePhotoDTO());
+            }
+
+            demographicInsurancePayloadDTO.setInsuranceProvider(selectedProvider);
+            demographicInsurancePayloadDTO.setInsurancePlan(selectedPlan.getText().toString());
+            demographicInsurancePayloadDTO.setInsuranceType(selectedType.getText().toString());
+            demographicInsurancePayloadDTO.setInsuranceMemberId(cardNumber.getText().toString());
+            demographicInsurancePayloadDTO.setInsuranceGroupId(groupNumber.getText().toString());
+
+            photos = demographicInsurancePayloadDTO.getInsurancePhotos();
+            if (frontImageAsBase64 != null) {
+                photos.get(0).setInsurancePhoto(frontImageAsBase64);
+            }
+
+            if (backImageAsBase64 != null) {
+                photos.get(1).setInsurancePhoto(backImageAsBase64);
+            }
+
+            closeDialog();
+        }
+    };
+
 
     private void closeDialog() {
         dismiss();
-
         if (callback != null) {
             callback.onInsuranceEdited(demographicDTO);
         }
@@ -528,18 +523,18 @@ public class InsuranceEditDialog extends BaseDialogFragment {
 
         otherProviderEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
 
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                selectedProvider = s.toString();
+            public void afterTextChanged(Editable editable) {
+                selectedProvider = editable.toString();
             }
         });
 
