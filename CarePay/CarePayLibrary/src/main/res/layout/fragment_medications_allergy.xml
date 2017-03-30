@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -217,8 +218,8 @@
         style="@style/InTakeNextButtonStyle"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_13"
-        app:customAssetFont="gotham_rounded_light"
-        />
+        breeze:textKey="medication_allergies_continue_button"
+        app:customAssetFont="gotham_rounded_light"/>
 
 
 </LinearLayout>

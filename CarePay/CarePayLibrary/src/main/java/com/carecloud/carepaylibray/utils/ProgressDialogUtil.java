@@ -30,9 +30,7 @@ public class ProgressDialogUtil extends Dialog {
 
     @Override
     public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.dialog_progress);
 
         int[] attributes = {R.attr.keepStatusBar};
         TypedArray typedArray = getContext().obtainStyledAttributes(theme, attributes);
@@ -46,6 +44,7 @@ public class ProgressDialogUtil extends Dialog {
         if (isPracticeAppPatientMode) {
             setNavigationBarVisibility();
         }
+        setContentView(R.layout.dialog_progress);
     }
 
     /**

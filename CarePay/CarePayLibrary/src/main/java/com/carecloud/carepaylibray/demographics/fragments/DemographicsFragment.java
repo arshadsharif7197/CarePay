@@ -46,7 +46,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
         public void onClick(View view) {
 
             showDialog(
-                    getOptionsFrom(persDetailsMetaDTO.properties.gender.options),
+                    getOptionsFrom(persDetailsMetaDTO.getProperties().getGender().options),
                     Label.getLabel("demographics_documents_title_select_gender"),
                     Label.getLabel("demographics_cancel_label"),
                     (TextView) findViewById(R.id.chooseGenderTextView),
@@ -62,7 +62,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
         public void onClick(View view) {
 
             showDialog(
-                    getOptionsFrom(persDetailsMetaDTO.properties.primaryRace.options),
+                    getOptionsFrom(persDetailsMetaDTO.getProperties().getPrimaryRace().options),
                     Label.getLabel("demographics_documents_title_select_race"),
                     Label.getLabel("demographics_cancel_label"),
                     (TextView) findViewById(R.id.raceListDataTextView),
@@ -78,7 +78,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
         public void onClick(View view) {
 
             showDialog(
-                    getOptionsFrom(persDetailsMetaDTO.properties.ethnicity.options) ,
+                    getOptionsFrom(persDetailsMetaDTO.getProperties().getEthnicity().options) ,
                     Label.getLabel("demographics_documents_title_select_ethnicity"),
                     Label.getLabel("demographics_cancel_label"),
                     (TextView) findViewById(R.id.ethnicityListDataTextView),
@@ -185,15 +185,15 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
         initNextButton(null, view, View.VISIBLE);
 
         ((TextView) view.findViewById(R.id.raceListDataTextView)).setText(Label.getLabel("demographics_choose"));
-        ((TextView) view.findViewById(R.id.raceDataTextView)).setText(persDetailsMetaDTO.properties.primaryRace.getLabel());
+        ((TextView) view.findViewById(R.id.raceDataTextView)).setText(persDetailsMetaDTO.getProperties().getPrimaryRace().getLabel());
         view.findViewById(R.id.raceListDataTextView).setOnClickListener(raceListener);
 
         ((TextView) view.findViewById(R.id.ethnicityListDataTextView)).setText(Label.getLabel("demographics_choose"));
-        ((TextView) view.findViewById(R.id.ethnicityDataTextView)).setText(persDetailsMetaDTO.properties.ethnicity.getLabel());
+        ((TextView) view.findViewById(R.id.ethnicityDataTextView)).setText(persDetailsMetaDTO.getProperties().getEthnicity().getLabel());
         view.findViewById(R.id.ethnicityListDataTextView).setOnClickListener(ethnicityListener);
 
         ((TextView) view.findViewById(R.id.chooseGenderTextView)).setText(Label.getLabel("demographics_choose"));
-        ((TextView) view.findViewById(R.id.genderTextView)).setText(persDetailsMetaDTO.properties.gender.getLabel());
+        ((TextView) view.findViewById(R.id.genderTextView)).setText(persDetailsMetaDTO.getProperties().getGender().getLabel());
         view.findViewById(R.id.chooseGenderTextView).setOnClickListener(genderListener);
     }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/popup_background"
+    android:id="@+id/popup_container"
     android:orientation="vertical"
     android:layout_width="@dimen/popup_picker_width"
     android:layout_height="@dimen/popup_picker_height"

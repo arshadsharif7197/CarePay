@@ -4,7 +4,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:background="@color/emerald"
+        android:background="@drawable/success_notification_background"
         android:id="@+id/success_message_toast_layout"
         android:padding="@dimen/apt_popup_parent_padding">
 

@@ -292,8 +292,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                 ft.addToBackStack(null);
 
                 DateRangePickerDialog dialog = DateRangePickerDialog.newInstance(
-                        checkInLabelDTO.getDateRangePickerDialogTitle(),
-                        checkInLabelDTO.getDateRangePickerDialogClose(),
+                        Label.getLabel("date_range_picker_dialog_title"),
+                        Label.getLabel("date_range_picker_dialog_close"),
                         true,
                         startDate,
                         endDate,

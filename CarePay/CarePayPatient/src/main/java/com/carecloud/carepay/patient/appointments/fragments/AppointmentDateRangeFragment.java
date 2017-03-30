@@ -14,9 +14,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
@@ -58,9 +58,9 @@ public class AppointmentDateRangeFragment extends BaseFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        try{
+        try {
             callback = (AppointmentNavigationCallback) context;
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Atached context must implement AppointmentNavigationCallback");
         }
     }
@@ -72,9 +72,9 @@ public class AppointmentDateRangeFragment extends BaseFragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             previousStartDate = (Date)
-                bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE);
+                    bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE);
             previousEndDate = (Date)
-                bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE);
+                    bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE);
 
             Gson gson = new Gson();
             String appointmentInfoString;
@@ -140,7 +140,7 @@ public class AppointmentDateRangeFragment extends BaseFragment {
     private void inflateUIComponents(View view) {
         TextView sundayTextView = (TextView) view.findViewById(R.id.sundayTextView);
         sundayTextView.setTextColor(ContextCompat.getColor(getContext(),
-            R.color.dark_blue));
+                R.color.dark_blue));
 
         TextView mondayTextView = (TextView) view.findViewById(R.id.mondayTextView);
         mondayTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
@@ -159,7 +159,7 @@ public class AppointmentDateRangeFragment extends BaseFragment {
 
         TextView saturdayTextView = (TextView) view.findViewById(R.id.saturdayTextView);
         saturdayTextView.setTextColor(ContextCompat.getColor(getContext(),
-            R.color.dark_blue));
+                R.color.dark_blue));
     }
 
     /**
@@ -168,16 +168,16 @@ public class AppointmentDateRangeFragment extends BaseFragment {
      * @param view used as view component
      */
     private void initCalendarView(View view) {
-        calendarPickerView=(CalendarPickerView)view.findViewById(R.id.calendarView);
-        if(previousStartDate!=null && previousEndDate!=null) {
+        calendarPickerView = (CalendarPickerView) view.findViewById(R.id.calendarView);
+        if (previousStartDate != null && previousEndDate != null) {
             /*Instantiate calendar for a date range selected*/
             Collection<Date> selectedDates = new ArrayList<>();
             selectedDates.add(previousStartDate);
             selectedDates.add(previousEndDate);
 
             calendarPickerView.init(new Date(), getNextSixMonthCalendar().getTime())
-                .inMode(CalendarPickerView.SelectionMode.RANGE)
-                .withSelectedDates(selectedDates);
+                    .inMode(CalendarPickerView.SelectionMode.RANGE)
+                    .withSelectedDates(selectedDates);
         } else {
             /*Instantiate calendar by default a week as a date range*/
             Calendar rangeStart = Calendar.getInstance();
@@ -191,14 +191,14 @@ public class AppointmentDateRangeFragment extends BaseFragment {
 
             Date today = new Date();
             calendarPickerView.init(today, getNextSixMonthCalendar().getTime())
-                .inMode(CalendarPickerView.SelectionMode.RANGE);
+                    .inMode(CalendarPickerView.SelectionMode.RANGE);
 //                .withSelectedDates(selectedDates);
         }
 
         calendarPickerView.setOnDateSelectedListener(onDateSelectListener);
         List<CalendarCellDecorator> decorators = new ArrayList<>();
         decorators.add(new CustomCalendarCellDecorator(ContextCompat.getColor(getContext(), R.color.white),
-                                                       ContextCompat.getColor(getContext(), R.color.payne_gray)));
+                ContextCompat.getColor(getContext(), R.color.payne_gray)));
         calendarPickerView.setDecorators(decorators);
 
         applyDateRangeButton = (CustomGothamRoundedMediumButton)
@@ -231,40 +231,40 @@ public class AppointmentDateRangeFragment extends BaseFragment {
      */
     CalendarPickerView.OnDateSelectedListener onDateSelectListener =
             new CalendarPickerView.OnDateSelectedListener() {
-        @Override
-        public void onDateSelected(Date date) {
-            List<Date> dateList = calendarPickerView.getSelectedDates();
+                @Override
+                public void onDateSelected(Date date) {
+                    List<Date> dateList = calendarPickerView.getSelectedDates();
 
-            if (dateList.size() > 1) {
-                newStartDate = dateList.get(0);
-                newEndDate = dateList.get(dateList.size() - 1);
-            } else if (dateList.size() == 1) {
-                if(newStartDate != null) {
-                    newEndDate = dateList.get(0);
-                } else {
-                    newStartDate = dateList.get(0);
+                    if (dateList.size() > 1) {
+                        newStartDate = dateList.get(0);
+                        newEndDate = dateList.get(dateList.size() - 1);
+                    } else if (dateList.size() == 1) {
+                        if (newStartDate != null) {
+                            newEndDate = dateList.get(0);
+                        } else {
+                            newStartDate = dateList.get(0);
+                        }
+                    }
+
+                    if (newStartDate != null && newEndDate != null) {
+                        long diff = newEndDate.getTime() - newStartDate.getTime();
+                        long numOfDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+                        if (numOfDays >= 93) {
+                            AppointmentLabelDTO label = resourcesToScheduleDTO.getMetadata().getLabel();
+                            Toast.makeText(getActivity(), label.getAddAppointmentMaxDateRangeMessage(), Toast.LENGTH_LONG).show();
+                        } else {
+                            applyDateRangeButton.setEnabled(true);
+                        }
+                    } else {
+                        applyDateRangeButton.setEnabled(false);
+                    }
                 }
-            }
 
-            if(newStartDate != null && newEndDate != null) {
-                long diff = newEndDate.getTime() - newStartDate.getTime();
-                long numOfDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-                if (numOfDays >= 93) {
-                    AppointmentLabelDTO label = resourcesToScheduleDTO.getMetadata().getLabel();
-                    Toast.makeText(getActivity(), label.getAddAppointmentMaxDateRangeMessage(), Toast.LENGTH_LONG).show();
-                } else {
-                    applyDateRangeButton.setEnabled(true);
+                @Override
+                public void onDateUnselected(Date date) {
+                    clearSelectedDate();
                 }
-            } else {
-                applyDateRangeButton.setEnabled(false);
-            }
-        }
-
-        @Override
-        public void onDateUnselected(Date date) {
-            clearSelectedDate();
-        }
-    };
+            };
 
     /**
      * Click listener for today button on toolbar
@@ -279,8 +279,8 @@ public class AppointmentDateRangeFragment extends BaseFragment {
             nextSixMonths.add(Calendar.MONTH, 5);
 
             calendarPickerView.init(today, nextSixMonths.getTime())
-                .withSelectedDate(today)
-                .inMode(CalendarPickerView.SelectionMode.RANGE);
+                    .withSelectedDate(today)
+                    .inMode(CalendarPickerView.SelectionMode.RANGE);
 
             newStartDate = today;
         }
@@ -292,31 +292,7 @@ public class AppointmentDateRangeFragment extends BaseFragment {
     View.OnClickListener applyButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-
             callback.selectTime(newStartDate, newEndDate, selectedVisitTypeDTO, selectedResourcesDTO, resourcesToScheduleDTO);
-//                FragmentManager fm = getFragmentManager();
-//                AvailableHoursFragment availableHoursFragment = (AvailableHoursFragment)
-//                        fm.findFragmentByTag(AppointmentDateRangeFragment.class.getSimpleName());
-//
-//                if (availableHoursFragment == null) {
-//                    availableHoursFragment = new AvailableHoursFragment();
-//                }
-//
-//                Bundle bundle = new Bundle();
-//                Gson gson = new Gson();
-//                bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE,
-//                        newStartDate);
-//                bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE,
-//                        newEndDate);
-//                bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(selectedResourcesDTO));
-//                bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(selectedVisitTypeDTO));
-//                bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(resourcesToScheduleDTO));
-//                bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID,addAppointmentPatientId);
-//                availableHoursFragment.setArguments(bundle);
-//
-//                fm.beginTransaction().replace(R.id.add_appointments_frag_holder,
-//                        availableHoursFragment,
-//                        AvailableHoursFragment.class.getSimpleName()).commit();
         }
     };
 

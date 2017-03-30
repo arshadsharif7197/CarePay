@@ -26,6 +26,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPayloadDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
@@ -34,6 +35,7 @@ import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -64,11 +66,33 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
     private View singleLocation;
     private TextView singleLocationText;
 
-    private String addAppointmentPatientId;
     private List<LocationDTO> selectedLocations = new LinkedList<>();
     private SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
 
     private AppointmentNavigationCallback callback;
+
+    public static AvailableHoursFragment newInstance(AppointmentsResultModel appointmentsResultModel, AppointmentDTO appointmentDTO) {
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, appointmentsResultModel);
+        DtoHelper.bundleDto(args, appointmentDTO);
+        AvailableHoursFragment availableHoursFragment = new AvailableHoursFragment();
+        availableHoursFragment.setArguments(args);
+        return availableHoursFragment;
+    }
+
+    public static AvailableHoursFragment newInstance(AppointmentsResultModel appointmentsResultModel,
+                                                     AppointmentResourcesItemDTO appointmentResource, Date startDate, Date endDate,
+                                                     VisitTypeDTO visitTypeDTO) {
+        Bundle args = new Bundle();
+        args.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, startDate);
+        args.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, endDate);
+        DtoHelper.bundleDto(args, appointmentResource);
+        DtoHelper.bundleDto(args, visitTypeDTO);
+        DtoHelper.bundleDto(args, appointmentsResultModel);
+        AvailableHoursFragment availableHoursFragment = new AvailableHoursFragment();
+        availableHoursFragment.setArguments(args);
+        return availableHoursFragment;
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -83,33 +107,25 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Gson gson = new Gson();
-        String appointmentInfoString;
         Bundle bundle = getArguments();
-        if (bundle != null) {
+        AppointmentDTO appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, bundle);
+        if (appointmentDTO != null) {
+            startDate = DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime()).getDate();
+            endDate = DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getEndTime()).getDate();
+            selectedVisitTypeDTO = appointmentDTO.getPayload().getVisitType();
+//            selectedVisitTypeDTO = DtoHelper.getConvertedDTO(VisitTypeDTO.class, bundle);
+            selectedResource = new AppointmentResourcesItemDTO();
+            selectedResource.setId(appointmentDTO.getPayload().getResourceId());
+            selectedResource.setProvider(appointmentDTO.getPayload().getProvider());
+            resourcesToScheduleDTO = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, bundle);
+        } else {
             startDate = (Date) bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE);
             endDate = (Date) bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE);
-
-            appointmentInfoString = bundle.getString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE);
-            selectedVisitTypeDTO = gson.fromJson(appointmentInfoString, VisitTypeDTO.class);
-
-            appointmentInfoString = bundle.getString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE);
-            if (appointmentInfoString != null) {
-                selectedResource = gson.fromJson(appointmentInfoString, AppointmentResourcesItemDTO.class);
-            }
-
-//            appointmentInfoString = bundle.getString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE);
-//            if(appointmentInfoString != null) {
-//                selectedResourcesDTO = gson.fromJson(appointmentInfoString, AppointmentResourcesDTO.class);
-//                selectedResource = selectedResourcesDTO.getResource();
-//            }
-
-            appointmentInfoString = bundle.getString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE);
-            resourcesToScheduleDTO = gson.fromJson(appointmentInfoString, AppointmentsResultModel.class);
-
-            addAppointmentPatientId = bundle.getString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID);
+            selectedVisitTypeDTO = DtoHelper.getConvertedDTO(VisitTypeDTO.class, bundle);
+            selectedResource = DtoHelper.getConvertedDTO(AppointmentResourcesItemDTO.class, bundle);
+            resourcesToScheduleDTO = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, bundle);
         }
+
 
     }
 
@@ -122,20 +138,11 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
                 container, false);
 
         hideDefaultActionBar();
-
-        /*inflate toolbar*/
         inflateToolbar(availableHoursListView);
-        /*inflate other UI components like button etc.*/
         inflateUIComponents(availableHoursListView);
-        /*update date range*/
         updateDateRange();
 
         return availableHoursListView;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle icicle) {
-//        getAvailableHoursTimeSlots();
     }
 
     @Override
@@ -144,11 +151,6 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
         getAvailableHoursTimeSlots();
     }
 
-    /**
-     * Method to inflate toolbar to UI
-     *
-     * @param view used as view component
-     */
     private void inflateToolbar(View view) {
         Toolbar toolbar = (Toolbar)
                 view.findViewById(R.id.add_appointment_toolbar);
@@ -168,7 +170,6 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         toolbar.setNavigationOnClickListener(navigationOnClickListener);
-
     }
 
 
@@ -186,7 +187,6 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
 
         availableHoursRecycleView = (RecyclerView) view.findViewById(R.id.available_hours_recycler_view);
         availableHoursRecycleView.setLayoutManager(availableHoursLayoutManager);
-
 
         LinearLayoutManager availableLocationsLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         availableLocationsRecycleView = (RecyclerView) view.findViewById(R.id.available_locations_recycler);
@@ -231,9 +231,6 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
         }
     }
 
-    /**
-     * Method to update date range that is selected on calendar
-     */
     private void updateDateRange() {
         if (startDate == null || endDate == null) {
             startDate = Calendar.getInstance().getTime();//today
@@ -270,7 +267,7 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
         }
     };
 
-    private void resetLocatonSelections(boolean clearAll) {
+    private void resetLocationSelections(boolean clearAll) {
         RecyclerView.LayoutManager layoutManager = availableLocationsRecycleView.getLayoutManager();
         for (int i = 0; i < layoutManager.getChildCount(); i++) {
             layoutManager.getChildAt(i).findViewById(R.id.available_location).setSelected(false);
@@ -281,7 +278,7 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
 
     private void updateSelectedLocationsForAdapter() {
         if (selectedLocations.isEmpty()) {//if user removed last location reset everything
-            resetLocatonSelections(true);
+            resetLocationSelections(true);
         } else {
             ((AvailableLocationsAdapter) availableLocationsRecycleView.getAdapter()).updateSelectedLocations(selectedLocations);
         }
@@ -293,7 +290,7 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
 
         if (availabilityDTO != null && availabilityDTO.getPayload().getAppointmentAvailability().getPayload().size() > 0) {
             List<AppointmentAvailabilityPayloadDTO> availabilityPayloadDTOs = availabilityDTO.getPayload().getAppointmentAvailability().getPayload();
-            List<AppointmentsSlotsDTO> appointmentsSlotsDTOList = groupAllLocatonSlotsByTime(availabilityPayloadDTOs);//availabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getSlots();
+            List<AppointmentsSlotsDTO> appointmentsSlotsDTOList = groupAllLocationSlotsByTime(availabilityPayloadDTOs);//availabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getSlots();
             if (appointmentsSlotsDTOList != null && appointmentsSlotsDTOList.size() > 0) {
                 // To sort appointment time slots list based on time
                 Collections.sort(appointmentsSlotsDTOList, new Comparator<AppointmentsSlotsDTO>() {
@@ -413,9 +410,7 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
             hideProgressDialog();
             Gson gson = new Gson();
             availabilityDTO = gson.fromJson(workflowDTO.toString(), AppointmentAvailabilityDTO.class);
-
             setAdapters();
-
             updateDateRange();
         }
 
@@ -433,21 +428,18 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
     @Override
     public void onSelectLocation(LocationDTO locationDTO) {
         if (locationDTO == null) {//selected ALL locations
-            resetLocatonSelections(true);
+            resetLocationSelections(true);
         } else {
             if (selectedLocations.isEmpty()) {//Initial state, reset location selections to remove the All selected status
-                resetLocatonSelections(false);
+                resetLocationSelections(false);
             }
             if (!selectedLocations.contains(locationDTO)) {
                 selectedLocations.add(locationDTO);
             } else if (selectedLocations.contains(locationDTO)) {
                 selectedLocations.remove(locationDTO);
             }
-
             updateSelectedLocationsForAdapter();
-
         }
-
         setAdapters();
     }
 
@@ -457,11 +449,10 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
         for (AppointmentAvailabilityPayloadDTO availableAppointment : availableAppointments) {
             locationsDTOs.add(availableAppointment.getLocation());
         }
-//        locationsDTOs.addAll(getExtraLocationsStub(3));
         return locationsDTOs;
     }
 
-    private List<AppointmentsSlotsDTO> groupAllLocatonSlotsByTime(List<AppointmentAvailabilityPayloadDTO> appointmentAvailabilityPayloadDTOs) {
+    private List<AppointmentsSlotsDTO> groupAllLocationSlotsByTime(List<AppointmentAvailabilityPayloadDTO> appointmentAvailabilityPayloadDTOs) {
         List<AppointmentsSlotsDTO> appointmentsSlots = new LinkedList<>();
         for (AppointmentAvailabilityPayloadDTO availabilityPayloadDTO : appointmentAvailabilityPayloadDTOs) {
             LocationDTO location = availabilityPayloadDTO.getLocation();
