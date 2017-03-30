@@ -11,6 +11,7 @@ import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.dtos.FaultResponseDTO;
 import com.carecloud.carepay.service.library.dtos.RefreshDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -51,6 +52,7 @@ public class WorkflowServiceHelper {
     private static final int STATUS_CODE_OK = 200;
     private static final int STATUS_CODE_UNAUTHORIZED = 401;
     private static final int STATUS_BAD_REQUEST = 400;
+    private static final int STATUS_CODE_UNPROCESSABLE_ENTITY = 422;
 
     private AppAuthorizationHelper appAuthorizationHelper;
     private ApplicationPreferences applicationPreferences;
@@ -281,17 +283,25 @@ public class WorkflowServiceHelper {
                         case STATUS_BAD_REQUEST:
                             onResponseBadRequest(response);
                             break;
+                        case STATUS_CODE_UNPROCESSABLE_ENTITY:
+                            onValidationError(response);
+                            break;
                         default:
                             onFailure(response);
 
                     }
                 } catch (Exception exception) {
-                    if (exception.getMessage() != null) {
-                        callback.onFailure(exception.getMessage());
-                        Log.e("WorkflowServiceHelper", exception.getMessage(), exception);
-                    } else {
-                        callback.onFailure(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
-                    }
+                    handleException(exception);
+                }
+            }
+
+            private void handleException(Exception exception)
+            {
+                if(exception.getMessage()!=null) {
+                    callback.onFailure(exception.getMessage());
+                    Log.e("WorkflowServiceHelper", exception.getMessage(), exception);
+                }else{
+                    callback.onFailure(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
                 }
             }
 
@@ -341,6 +351,33 @@ public class WorkflowServiceHelper {
                 }else{
                     onFailure(response);
                 }
+            }
+
+            private void onValidationError(Response<WorkflowDTO> response) throws IOException {
+                if (null != response.errorBody()) {
+                    try {
+                        FaultResponseDTO fault = getConvertedDTO(FaultResponseDTO.class, response.errorBody().string());
+                            onFailure(fault.getException().getBody().getError().getMessage());
+                    } catch (Exception e) {
+                        onFailure(response.errorBody().string());
+                    }
+                } else {
+                    onFailure("");
+                }
+            }
+
+            /**
+             * Converts to the desire DTO object from String DTO
+             *
+             * @param dtoClass class to convert
+             * @param <S>      Dynamic class to convert
+             * @return Dynamic converted class object
+             */
+            public <S> S getConvertedDTO(Class<S> dtoClass, String jsonString) {
+
+                Gson gson = new Gson();
+                return gson.fromJson(jsonString, dtoClass);
+
             }
 
             private void onFailure(Response<WorkflowDTO> response) throws IOException {
