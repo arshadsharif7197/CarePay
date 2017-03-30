@@ -54,6 +54,9 @@ public class InsuranceLineItemsListAdapter extends
         holder.type.setText(lineItem.getInsuranceType());
     }
 
+    /**
+     * @param demographicDTO Demographic DTO
+     */
     public void setDemographicDTO(DemographicDTO demographicDTO) {
         this.demographicDTO = demographicDTO;
 

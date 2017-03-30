@@ -149,6 +149,9 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
         }
     }
 
+    /**
+     * @param demographicDTO Demographic DTO
+     */
     public void updateInsuranceList(DemographicDTO demographicDTO) {
         boolean hadInsurance = hasInsurance();
         this.demographicDTO = demographicDTO;
