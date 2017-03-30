@@ -177,11 +177,6 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
         return updatableDemographicDTO;
     }
 
-    @Override
-    public void imageCaptured(Bitmap bitmap) {
-
-    }
-
     /**
      * Init ui fields
      */

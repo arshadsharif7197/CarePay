@@ -34,6 +34,7 @@ import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraFragment;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.demographics.dialog.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
@@ -61,6 +62,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 public class PatientModeCheckinActivity extends BasePracticeActivity implements
@@ -70,7 +72,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         PaymentNavigationCallback, CheckinFlowCallback,
         CheckInDemographicsBaseFragment.CheckInNavListener,
         PersonalInfoFragment.UpdateProfilePictureListener,
-        CarePayCameraCallback {
+        CarePayCameraCallback,
+        InsuranceEditDialog.InsuranceEditDialogListener {
 
 
     public final static int SUBFLOW_DEMOGRAPHICS_INS = 0;
@@ -82,15 +85,14 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     //demographics nav
 //    private Map<Integer, CheckInDemographicsBaseFragment> demographicFragMap = new HashMap<>();
     private int currentDemographicStep = 1;
-    //
 
     private DemographicDTO demographicDTO;
     private CarePayTextView backButton;
     private ImageView logoImageView;
     private ImageView homeClickable;
 
-    // Using for consent form
-    // TODO : Will be create separate fragment in next sprint
+    private InsuranceEditDialog insuranceEditDialog;
+    private boolean isFrontScan;
 //
 //    private AppointmentsPayloadDTO appointmentsPayloadDTO;
 //
@@ -138,6 +140,19 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     protected void onResume() {
         super.onResume();
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    @Override
+    public void onDestroy() {
+        dismissInsuranceEditDialog();
+        super.onDestroy();
+    }
+
+    private void dismissInsuranceEditDialog() {
+        if (insuranceEditDialog != null) {
+            insuranceEditDialog.dismiss();
+            insuranceEditDialog = null;
+        }
     }
 
     private void instantiateViewsRefs() {
@@ -194,9 +209,16 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
      * @param addToBackStack Whether to add the transaction to back-stack
      */
     public void navigateToFragment(Fragment fragment, boolean addToBackStack) {
+        String tag = fragment.getClass().getSimpleName();
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.checkInContentHolderId, fragment, fragment.getClass().getSimpleName());
+
+        Fragment prev = fm.findFragmentByTag(tag);
+        if (prev != null) {
+            transaction.remove(prev);
+        }
+
+        transaction.replace(R.id.checkInContentHolderId, fragment, tag);
         if (addToBackStack) {
             transaction.addToBackStack(fragment.getClass().getName());
         }
@@ -396,16 +418,24 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void captureImage() {
-        String tag = CarePayCameraFragment.class.getSimpleName();
+    public void editInsurance(DemographicDTO demographicDTO, Integer editedIndex, boolean showAsDialog) {
+        insuranceEditDialog = InsuranceEditDialog.newInstance(demographicDTO, editedIndex);
+
+        String tag = InsuranceEditDialog.class.getSimpleName();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
         Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
         if (prev != null) {
             ft.remove(prev);
         }
 
-        CarePayCameraFragment dialog = new CarePayCameraFragment();
-        dialog.show(ft, tag);
+        if (showAsDialog) {
+            insuranceEditDialog.show(ft, tag);
+        } else {
+            ft.replace(R.id.checkInContentHolderId, insuranceEditDialog, tag);
+            ft.addToBackStack(tag);
+            ft.commitAllowingStateLoss();
+        }
     }
 
     /**
@@ -626,12 +656,61 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     public void onCapturedSuccess(Bitmap bitmap) {
         // Send image to current demographic fragment
         FragmentManager fm = getSupportFragmentManager();
-        CheckInDemographicsBaseFragment fragment = (CheckInDemographicsBaseFragment) fm.findFragmentById(R.id.checkInContentHolderId);
+        InsuranceEditDialog fragment = (InsuranceEditDialog) fm.findFragmentByTag(InsuranceEditDialog.class.getSimpleName());
         if (fragment != null) {
-            fragment.imageCaptured(bitmap);
+            fragment.updateModelAndViewsAfterScan(bitmap, isFrontScan);
         }
     }
 
+    @Override
+    public void onInsuranceEdited(DemographicDTO demographicDTO) {
+        this.demographicDTO = demographicDTO;
+        SystemUtil.hideSoftKeyboard(this);
+        dismissInsuranceEditDialog();
+
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = fm.findFragmentById(R.id.checkInContentHolderId);
+        if (fragment != null && fragment instanceof InsuranceEditDialog) {
+
+            navigateToDemographicFragment(5);
+
+        } else {
+
+            // Update Health Insurance Fragment
+            String tag = HealthInsuranceFragment.class.getSimpleName();
+            HealthInsuranceFragment healthInsuranceFragment = (HealthInsuranceFragment) fm.findFragmentByTag(tag);
+            healthInsuranceFragment.updateInsuranceList(demographicDTO);
+        }
+    }
+
+    @Override
+    public void captureInsuranceFrontImage() {
+        selectImage(true);
+    }
+
+    @Override
+    public void captureInsuranceBackImage() {
+        selectImage(false);
+    }
+
+    @Override
+    public void goOneStepBack() {
+        onBackPressed();
+    }
+
+    private void selectImage(boolean isFrontScan) {
+        this.isFrontScan = isFrontScan;
+
+        String tag = CarePayCameraFragment.class.getSimpleName();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+
+        CarePayCameraFragment dialog = new CarePayCameraFragment();
+        dialog.show(ft, tag);
+    }
 
     private CheckInDemographicsBaseFragment getDemographicFragment(int step){
         switch (step){
@@ -649,5 +728,4 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 return null;
         }
     }
-
 }

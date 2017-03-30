@@ -464,11 +464,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
     }
 
     @Override
-    public void imageCaptured(Bitmap bitmap) {
-
-    }
-
-    @Override
     protected boolean passConstraints(View view) {
         boolean isStateValid = ! Label.getLabel("demographics_choose").equals(((TextView) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView)).getText().toString());
         return !isZipEmpty && !isAddressEmpty && !isCityEmpty && isStateValid && checkFormatedFields(view);
