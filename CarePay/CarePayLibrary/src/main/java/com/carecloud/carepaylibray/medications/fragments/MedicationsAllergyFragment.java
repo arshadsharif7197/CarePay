@@ -19,7 +19,6 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.ISession;
@@ -162,7 +161,6 @@ public class MedicationsAllergyFragment extends BaseFragment implements Medicati
 
 
         Button continueButton = (Button) view.findViewById(R.id.medication_allergies_continue_button);
-        continueButton.setText(Label.getLabel("medication_allergies_continue_button"));
         continueButton.setOnClickListener(continueClickListener);
 
         unlistedAllergies = (EditText) view.findViewById(R.id.allergy_none_placeholder_text);
