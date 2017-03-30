@@ -337,7 +337,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity
             return;
         }
 
-        for (View flowView : checkinFlowViews) {;
+        for (View flowView : checkinFlowViews) {
             TextView progress = (TextView) flowView.findViewById(R.id.checkinDemographicsHeaderLabel);
 
             if (flowView == highlightView && totalPages > 1) {
