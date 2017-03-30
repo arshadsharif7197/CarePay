@@ -39,6 +39,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentNewCharge;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.text.NumberFormat;
@@ -507,6 +508,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             postModel.addPaymentMethod(paymentObject);
         }else if(balanceItem.getBalance()<0){
             showErrorNotification(Label.getLabel("negative_payment_amount_error"));
+            SystemUtil.showErrorToast(getContext(), Label.getLabel("negative_payment_amount_error"));
             hasPaymentError = true;
         }
     }

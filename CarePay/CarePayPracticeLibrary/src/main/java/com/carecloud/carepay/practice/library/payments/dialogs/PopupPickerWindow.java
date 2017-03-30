@@ -36,7 +36,7 @@ public class PopupPickerWindow extends PopupWindow {
     private void initView(){
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.popup_picker_list, null, false);
-        popupBackgroundView = view.findViewById(R.id.popup_background);
+        popupBackgroundView = view.findViewById(R.id.popup_container);
         setContentView(view);
         setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

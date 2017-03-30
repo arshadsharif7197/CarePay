@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/charcoal"
@@ -14,11 +16,12 @@
         android:layout_margin="@dimen/apt_popup_icon_margin"
          android:src="@drawable/icn_notification_basic_green" />
 
-    <TextView
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/popup_message_tv"
         style="@style/AppointmentPopupMessageText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/apt_popup_message_margin"
-        android:text="@string/apt_popup_message_text" />
+        android:text="@string/apt_popup_message_text"
+        app:customAssetFont="proxima_nova_regular"/>
 </LinearLayout>
