@@ -139,6 +139,8 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
         initializeViews(addNewCreditCardView);
 //        setTypefaces();
         setTextWatchers();
+
+        hideKeyboardOnViewTouch(addNewCreditCardView);
         return addNewCreditCardView;
     }
 

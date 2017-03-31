@@ -22,6 +22,17 @@ public class HomeScreenOfficeNewsPayloadDTO {
     @SerializedName("headline_photo")
     @Expose
     private String headlinePhoto;
+    @SerializedName("url")
+    @Expose
+    private String newsUrl;
+
+    public String getNewsUrl() {
+        return newsUrl;
+    }
+
+    public void setNewsUrl(String newsUrl) {
+        this.newsUrl = newsUrl;
+    }
 
     public String getHeadline() {
         return headline;

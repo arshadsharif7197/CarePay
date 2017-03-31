@@ -21,6 +21,7 @@ import com.carecloud.carepaylibray.customdialogs.BaseDialogFragment;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -145,7 +146,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
 
         PatientModel patientDTO = appointmentDTO.getPayload().getPatient();
         photoUrl = patientDTO.getProfilePhoto();
-        setTextViewById(R.id.appointment_patient_name, patientDTO.getFullName());
+        setTextViewById(R.id.appointment_patient_name, StringUtil.captialize(patientDTO.getFullName()));
 
         String primaryPhoneNumber = patientDTO.getPrimaryPhoneNumber();
         if (null == primaryPhoneNumber) {
@@ -156,7 +157,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
 
         setTextViewById(R.id.appointment_short_name, patientDTO.getShortName());
 
-        setTextViewById(R.id.appointment_visit_type, appointmentPayloadDTO.getVisitReason().getName());
+        setTextViewById(R.id.appointment_visit_type, StringUtil.captialize(appointmentPayloadDTO.getVisitReason().getName()));
         setTextViewById(R.id.appointment_visit_type_label, visitTypeLabel);
 
         initializeButtons();

@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -62,8 +61,6 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         profilePicturelistener.loadPictureFragment();
-        scrollView = (ScrollView) view.findViewById(R.id.reviewdemographicsPersonalContainer);
-        scrollToPosition(0,0);
     }
 
     @Override

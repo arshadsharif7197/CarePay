@@ -7,11 +7,11 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/dimen_26dp"
         android:gravity="center"
+        android:layout_marginEnd="@dimen/dimen_26dp"
         android:orientation="vertical">
 
         <ImageButton
@@ -23,23 +23,15 @@
             android:src="@drawable/icn_close"
             tools:ignore="ContentDescription" />
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/edit_insurance_cancel_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:textAllCaps="true"
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:customAssetFont="gotham_rounded_bold" />
-    </LinearLayout>
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/dialog_content_layout"
         android:layout_width="@dimen/dialog_width"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
         <FrameLayout
             android:id="@+id/insurance_toolbar"
@@ -54,15 +46,23 @@
 
         </FrameLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:paddingEnd="@dimen/dimen_24dp"
-            android:paddingStart="@dimen/dimen_24dp">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-            <include layout="@layout/add_edit_insurance_view" />
-        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/container_main"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:paddingEnd="@dimen/dimen_24dp"
+                android:paddingStart="@dimen/dimen_24dp">
+
+                <include layout="@layout/add_edit_insurance_view" />
+            </LinearLayout>
+
+        </ScrollView>
 
         <LinearLayout
             android:id="@+id/dialog_add_edit_insurance_bottom_toolbar"
@@ -78,9 +78,7 @@
                 android:id="@+id/remove_insurance_entry"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dimen_15dp"
-                android:layout_marginEnd="@dimen/dimen_18dp"
-                android:layout_marginTop="@dimen/dimen_15dp"
+                android:layout_margin="@dimen/dimen_10dp"
                 android:layout_weight="0.3"
                 android:background="@drawable/button_rounded_rose"
                 android:paddingBottom="@dimen/dimen_14dp"
@@ -94,8 +92,7 @@
                 android:id="@+id/save_insurance_changes"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dimen_15dp"
-                android:layout_marginTop="@dimen/dimen_15dp"
+                android:layout_margin="@dimen/dimen_10dp"
                 android:layout_weight="0.7"
                 android:background="@drawable/button_rounded_gray_selector"
                 android:enabled="false"
@@ -107,4 +104,23 @@
                 breeze:textKey="demographics_save_changes_button"/>
         </LinearLayout>
     </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_26dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/round_semi_transparent_bg"
+            android:src="@drawable/icn_close"
+            tools:ignore="ContentDescription" />
+
+    </FrameLayout>
+
 </LinearLayout>

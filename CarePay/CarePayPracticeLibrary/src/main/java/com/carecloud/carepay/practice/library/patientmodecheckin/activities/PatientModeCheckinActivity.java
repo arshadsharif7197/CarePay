@@ -133,14 +133,14 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onDestroy() {
+    public void onStop() {
         dismissInsuranceEditDialog();
-        super.onDestroy();
+        super.onStop();
     }
 
     private void dismissInsuranceEditDialog() {
         if (insuranceEditDialog != null) {
-            insuranceEditDialog.dismiss();
+            insuranceEditDialog.dismissAllowingStateLoss();
             insuranceEditDialog = null;
         }
     }
@@ -210,7 +210,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
         transaction.replace(R.id.checkInContentHolderId, fragment, tag);
         if (addToBackStack) {
-            transaction.addToBackStack(fragment.getClass().getName());
+            transaction.addToBackStack(null);
         }
         transaction.commitAllowingStateLoss();
     }
@@ -409,22 +409,21 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void editInsurance(DemographicDTO demographicDTO, Integer editedIndex, boolean showAsDialog) {
+        this.demographicDTO = demographicDTO;
         insuranceEditDialog = InsuranceEditDialog.newInstance(demographicDTO, editedIndex);
 
-        String tag = InsuranceEditDialog.class.getSimpleName();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
-        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
-        if (prev != null) {
-            ft.remove(prev);
-        }
-
         if (showAsDialog) {
+            String tag = "InsuranceEditFloatingDialog";
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            Fragment prev = fragmentManager.findFragmentByTag(tag);
+            if (prev != null) {
+                ft.remove(prev);
+            }
+
             insuranceEditDialog.show(ft, tag);
         } else {
-            ft.replace(R.id.checkInContentHolderId, insuranceEditDialog, tag);
-            ft.addToBackStack(tag);
-            ft.commitAllowingStateLoss();
+            navigateToFragment(insuranceEditDialog, true);
         }
     }
 
@@ -494,18 +493,19 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
 
-    @Override
-    public void onBackPressed() {
-        try {
-            BaseCheckinFragment fragment = (BaseCheckinFragment) getSupportFragmentManager().findFragmentById(R.id.checkInContentHolderId);
-            if (fragment != null && !fragment.navigateBack()) {
-                super.onBackPressed();
-            }
-        } catch (ClassCastException cce) {
-            cce.printStackTrace();
-            super.onBackPressed();
-        }
-    }
+//    @Override
+//    public void onBackPressed() {
+//        try {
+//            FragmentManager fragmentManager = getSupportFragmentManager();
+//            BaseCheckinFragment fragment = (BaseCheckinFragment) fragmentManager.findFragmentById(R.id.checkInContentHolderId);
+//            if (fragment != null && !fragment.navigateBack()) {
+//                super.onBackPressed();
+//            }
+//        } catch (ClassCastException cce) {
+//            cce.printStackTrace();
+//            super.onBackPressed();
+//        }
+//    }
 
     /**
      * Launch intake forms
@@ -648,22 +648,22 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void onInsuranceEdited(DemographicDTO demographicDTO) {
-        this.demographicDTO = demographicDTO;
+        if (demographicDTO != null) {
+            this.demographicDTO = demographicDTO;
+        }
+
         SystemUtil.hideSoftKeyboard(this);
-        dismissInsuranceEditDialog();
 
         FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.checkInContentHolderId);
-        if (demographicDTO != null && fragment != null && fragment instanceof InsuranceEditDialog) {
 
-            navigateToDemographicFragment(5);
+        // Update Health Insurance Fragment
+        String tag = HealthInsuranceFragment.class.getSimpleName();
+        HealthInsuranceFragment healthInsuranceFragment = (HealthInsuranceFragment) fm.findFragmentByTag(tag);
 
-        } else {
-
-            // Update Health Insurance Fragment
-            String tag = HealthInsuranceFragment.class.getSimpleName();
-            HealthInsuranceFragment healthInsuranceFragment = (HealthInsuranceFragment) fm.findFragmentByTag(tag);
+        if (demographicDTO != null) {
             healthInsuranceFragment.updateInsuranceList(demographicDTO);
+        } else {
+            healthInsuranceFragment.openNextFragment(this.demographicDTO);
         }
     }
 
