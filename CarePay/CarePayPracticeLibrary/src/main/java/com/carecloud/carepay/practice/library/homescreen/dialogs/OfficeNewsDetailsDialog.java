@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenOfficeNewsDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
@@ -24,28 +25,22 @@ import java.util.List;
 public class OfficeNewsDetailsDialog extends Dialog {
 
     private Context context;
-    private String titleText;
-    private String cancelText;
-
     private List<HomeScreenOfficeNewsDTO> officeNewsList;
     private List<View> officeNewsPages;
-
+    private int position;
     private RadioGroup pages;
 
     /**
      * Constructor
      *
      * @param context        context
-     * @param title          dialog title
-     * @param cancelText     dialog cancel
      * @param officeNewsList data
      */
-    public OfficeNewsDetailsDialog(Context context, String title, String cancelText,
-                                   List<HomeScreenOfficeNewsDTO> officeNewsList) {
+    public OfficeNewsDetailsDialog(Context context, List<HomeScreenOfficeNewsDTO> officeNewsList,
+                                   int position) {
         super(context);
         this.context = context;
-        this.titleText = title;
-        this.cancelText = cancelText;
+        this.position = position;
         this.officeNewsList = officeNewsList;
     }
 
@@ -73,8 +68,8 @@ public class OfficeNewsDetailsDialog extends Dialog {
     @SuppressWarnings("deprecation")
     @SuppressLint("SetJavaScriptEnabled")
     private void initializeView() {
-        ((TextView) findViewById(R.id.office_news_details_cancel_label)).setText(cancelText);
-        ((TextView) findViewById(R.id.office_news_details_header)).setText(titleText);
+        ((TextView) findViewById(R.id.office_news_details_cancel_label)).setText(Label.getLabel("news_cancel_label"));
+        ((TextView) findViewById(R.id.office_news_details_header)).setText(Label.getLabel("news_title"));
 
         if (officeNewsList != null && !officeNewsList.isEmpty()) {
             NewsPagerAdapter adapter = new NewsPagerAdapter();
@@ -93,6 +88,8 @@ public class OfficeNewsDetailsDialog extends Dialog {
                     pageIndicator.setChecked(true);
                 }
             });
+
+            newsArticle.setCurrentItem(position, true);
         }
 
         findViewById(R.id.office_news_details_close_button).setOnClickListener(new View.OnClickListener() {
@@ -124,7 +121,7 @@ public class OfficeNewsDetailsDialog extends Dialog {
             pages.addView(newsPages, params);
         }
 
-        ((RadioButton) pages.getChildAt(0)).setChecked(true);
+        ((RadioButton) pages.getChildAt(position)).setChecked(true);
     }
 
     @SuppressWarnings("deprecation")

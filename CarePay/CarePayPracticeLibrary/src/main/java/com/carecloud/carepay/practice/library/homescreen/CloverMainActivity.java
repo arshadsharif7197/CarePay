@@ -532,10 +532,9 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     OfficeNewsListAdapter.OnOfficeNewsClickedListener officeNewsClickedListener
             = new OfficeNewsListAdapter.OnOfficeNewsClickedListener() {
         @Override
-        public void onOfficeNewsSelected(List<HomeScreenOfficeNewsDTO> officeNewsList) {
-            HomeScreenLabelDTO labels = homeScreenDTO.getMetadata().getLabels();
-            OfficeNewsDetailsDialog detailsDialog = new OfficeNewsDetailsDialog(CloverMainActivity.this,
-                    labels.getNewsTitle(), labels.getNewsCancelLabel(), officeNewsList);
+        public void onOfficeNewsSelected(List<HomeScreenOfficeNewsDTO> officeNewsList, int position) {
+            OfficeNewsDetailsDialog detailsDialog = new OfficeNewsDetailsDialog(
+                    CloverMainActivity.this, officeNewsList, position);
             detailsDialog.show();
         }
     };
