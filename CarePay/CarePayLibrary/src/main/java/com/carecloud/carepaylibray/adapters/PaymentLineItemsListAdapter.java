@@ -66,10 +66,8 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
                     }
                 });
             }
-        } else{
-            holder.lineItemNameLabelDetails.setText(Label.getLabel("payment_responsibility_details"));
-            holder.paymentDetailLabel.setText(Label.getLabel("payment_details_patient_balance_label"));
-            holder.paymentDetailAmount.setText("$0.00");
+        } else if (holder.lineItemNameLabelDetails.getVisibility() == View.VISIBLE) {
+            holder.lineItemNameLabelDetails.setVisibility(View.GONE);
         }
     }
 
