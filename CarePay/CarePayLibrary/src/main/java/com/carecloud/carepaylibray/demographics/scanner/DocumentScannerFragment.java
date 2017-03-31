@@ -90,21 +90,26 @@ public abstract class DocumentScannerFragment extends BaseCheckinFragment implem
     private DialogInterface.OnClickListener dialogOnClickListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int item) {
-            if (item == 0) { // "Take picture" chosen
-                ImageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.getActionDlOptions(0));
-                boolean result = PermissionsUtil.checkPermissionCamera(getActivity());
-                if (result) {
-                    // uncomment when camera activity
-                    ImageCaptureHelper.requestCamera(getActivity(), cameraType);
-                }
-            } else if (item == 1) {  // "Select from Gallery" chosen
-                ImageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.getActionDlOptions(1));
-                boolean result = PermissionsUtil.checkPermission(getActivity());
-                if (result) {
-                    startActivityForResult(ImageCaptureHelper.galleryIntent(), ImageCaptureHelper.SELECT_FILE);
-                }
-            } else if (item == 2) { // "Cancel"
-                dialog.dismiss();
+            switch (item) {
+                case 0:  // "Take picture" chosen
+                    ImageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.getActionDlOptions(0));
+
+                    if (PermissionsUtil.checkPermissionCamera(getActivity())) {
+                        // uncomment when camera activity
+                        carePayCameraReady.captureImage(DocumentScannerFragment.this);
+                    }
+                    break;
+
+                case 1:   // "Select from Gallery" chosen
+                    ImageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.getActionDlOptions(1));
+
+                    if (PermissionsUtil.checkPermission(getActivity())) {
+                        startActivityForResult(ImageCaptureHelper.galleryIntent(), ImageCaptureHelper.SELECT_FILE);
+                    }
+                    break;
+
+                default:  // "Cancel"
+                    dialog.dismiss();
             }
         }
     };
@@ -191,15 +196,6 @@ public abstract class DocumentScannerFragment extends BaseCheckinFragment implem
 
         if (imageFront != null) {
             imageFront.setImageDrawable(drawable);
-        }
-    }
-
-    protected void loadBackPlaceHolder() {
-        // if no image to load, simply load the placeholder
-        Drawable drawable = ContextCompat.getDrawable(getActivity(), R.drawable.icn_placeholder_user_profile_png);
-
-        if (imageBack != null) {
-            imageBack.setImageDrawable(drawable);
         }
     }
 
