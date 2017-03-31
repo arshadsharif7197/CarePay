@@ -12,6 +12,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
+import com.newrelic.agent.android.NewRelic;
 
 import java.util.Map;
 
@@ -87,6 +88,11 @@ public class SplashActivity extends BasePatientActivity {
 
         // dynamic transition
         getWorkflowServiceHelper().executeApplicationStartRequest(applicationStartCallback);
+
+        NewRelic.withApplicationToken(
+                getString(R.string.new_relic_application_token)
+        ).start(this.getApplication());
+
 
     }
 }
