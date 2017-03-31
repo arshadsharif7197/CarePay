@@ -136,10 +136,9 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         @Override
         public void onClick(View view) {
             if (null != callback) {
-                callback.requestAppointment(appointmentSlot.getStartTime(), appointmentSlot.getEndTime(),
+                callback.requestAppointment(appointmentSlot,
                         visitTypeTextView.getText().toString().trim());
             }
-
             dismiss();
         }
     };
