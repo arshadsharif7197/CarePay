@@ -52,6 +52,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             Gson gson = new Gson();
             String paymentsDTOString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
             paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
+            addressPayloadDTO = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getAddress();
         }
     }
 

@@ -107,7 +107,6 @@
             android:layout_marginStart="@dimen/dimen_20dp"
             android:layout_weight="1"
             android:background="@drawable/round_border_button_bg"
-            android:enabled="false"
             android:gravity="center"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_22"

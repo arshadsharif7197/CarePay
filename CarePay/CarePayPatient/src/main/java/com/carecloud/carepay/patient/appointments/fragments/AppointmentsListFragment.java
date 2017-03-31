@@ -24,7 +24,6 @@ import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.appointment.DataDTO;
-import com.carecloud.carepay.service.library.dtos.FaultResponseDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
@@ -398,15 +397,7 @@ public class AppointmentsListFragment extends BaseFragment {
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            try {
-                FaultResponseDTO fault = DtoHelper.getConvertedDTO(FaultResponseDTO.class, exceptionMessage);
-                if (fault.isUnprocessableEntityError()) {
-                    showErrorNotification(fault.getErrorMessageDTO().getServiceErrorDTO().getMessage());
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
+            showErrorNotification(exceptionMessage);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

@@ -1,4 +1,3 @@
-
 package com.carecloud.carepay.service.library.dtos;
 
 import com.google.gson.annotations.Expose;
@@ -6,17 +5,18 @@ import com.google.gson.annotations.SerializedName;
 
 public class FaultResponseDTO {
 
-    private static final String ERROR_CODE_UNPROCESSABLE_ENTITY = "422";
-
     @SerializedName("status")
     @Expose
     private String status;
-    @SerializedName("message")
+    @SerializedName("exception")
     @Expose
-    private ErrorMessageDTO errorMessageDTO;
-    @SerializedName("call")
+    private ExceptionDTO exception;
+    @SerializedName("method")
     @Expose
-    private String call;
+    private String method;
+    @SerializedName("module")
+    @Expose
+    private String module;
 
     public String getStatus() {
         return status;
@@ -26,28 +26,28 @@ public class FaultResponseDTO {
         this.status = status;
     }
 
-    public ErrorMessageDTO getErrorMessageDTO() {
-        return errorMessageDTO;
+    public ExceptionDTO getException() {
+        return exception;
     }
 
-    public void setErrorMessageDTO(ErrorMessageDTO errorMessageDTO) {
-        this.errorMessageDTO = errorMessageDTO;
+    public void setException(ExceptionDTO exception) {
+        this.exception = exception;
     }
 
-    public String getCall() {
-        return call;
+    public String getMethod() {
+        return method;
     }
 
-    public void setCall(String call) {
-        this.call = call;
+    public void setMethod(String method) {
+        this.method = method;
     }
 
-    /**
-     * Is unprocessable entity error boolean.
-     *
-     * @return the boolean
-     */
-    public boolean isUnprocessableEntityError(){
-        return  getStatus().equalsIgnoreCase(ERROR_CODE_UNPROCESSABLE_ENTITY) ;
+    public String getModule() {
+        return module;
     }
+
+    public void setModule(String module) {
+        this.module = module;
+    }
+
 }

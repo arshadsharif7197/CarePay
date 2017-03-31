@@ -137,8 +137,6 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         setTextFocusListener(R.id.reviewgrdemoPhoneNumberEdit, R.id.reviewdemogrPhoneNumberTextInput, view);
 
 
-
-
         phoneNumberEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -303,11 +301,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         }
         TextInputLayout doblabel = (TextInputLayout) view.findViewById( R.id.reviewdemogrDOBTextInput);
         EditText dobEditText = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
-        boolean isdobValid = isDateOfBirthValid(doblabel, dobEditText);
-        if (!isdobValid) {
-            return false;
-        }
-        return true;
+        return isDateOfBirthValid(doblabel, dobEditText);
     }
 
     private void scrollToPosition(final int positionX, final int positionY){
