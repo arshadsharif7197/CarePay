@@ -98,7 +98,7 @@ public class NewReviewDemographicsActivity extends BasePatientActivity
     public void initializeDocumentFragment(){
 
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, demographicDTO.getMetadata().getDataModels().demographic.identityDocuments);
+        DtoHelper.bundleDto(args, demographicDTO.getMetadata().getDataModels().getDemographic().getIdentityDocuments());
         DtoHelper.bundleDto(args, demographicDTO.getMetadata().getLabels());
         DtoHelper.bundleDto(args, getDemographicIdDocPayloadDTO());
 
@@ -162,7 +162,7 @@ public class NewReviewDemographicsActivity extends BasePatientActivity
         DtoHelper.bundleDto(args, getDemographicIdDocPayloadDTO());
 
         DemographicMetadataEntityIdDocsDTO idDocsMetaDTO =
-                demographicDTO.getMetadata().getDataModels().demographic.identityDocuments;
+                demographicDTO.getMetadata().getDataModels().getDemographic().getIdentityDocuments();
 
         if (null != idDocsMetaDTO) {
             DtoHelper.bundleDto(args, idDocsMetaDTO.properties.items.identityDocument);

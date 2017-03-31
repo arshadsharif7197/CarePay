@@ -249,9 +249,9 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
 
         List<MetadataOptionDTO> optionDTOs;
         // init the providers
-        if (insuranceMetadataDTO.properties.items.insurance.properties.insuranceProvider != null
-                && insuranceMetadataDTO.properties.items.insurance.properties.insuranceProvider.options != null) {
-            optionDTOs = insuranceMetadataDTO.properties.items.insurance.properties.insuranceProvider.options;
+        if (insuranceMetadataDTO.getProperties().getItems().getInsurance().getProperties().getInsuranceProvider() != null
+                && insuranceMetadataDTO.getProperties().getItems().getInsurance().getProperties().getInsuranceProvider().getOptions() != null) {
+            optionDTOs = insuranceMetadataDTO.getProperties().getItems().getInsurance().getProperties().getInsuranceProvider().getOptions();
             List<String> providers = new ArrayList<>();
             for (MetadataOptionDTO o : optionDTOs) {
                 providers.add(o.getLabel());
@@ -263,9 +263,9 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
         }
 
         // init the plans
-        if (insuranceMetadataDTO.properties.items.insurance.properties.insurancePlan != null &&
-                insuranceMetadataDTO.properties.items.insurance.properties.insurancePlan.options != null) {
-            optionDTOs = insuranceMetadataDTO.properties.items.insurance.properties.insurancePlan.options;
+        if (insuranceMetadataDTO.getProperties().getItems().getInsurance().getProperties().getInsurancePlan() != null &&
+                insuranceMetadataDTO.getProperties().getItems().getInsurance().getProperties().getInsurancePlan().getOptions() != null) {
+            optionDTOs = insuranceMetadataDTO.getProperties().getItems().getInsurance().getProperties().getInsurancePlan().getOptions();
             List<String> plans = new ArrayList<>();
             for (MetadataOptionDTO o : optionDTOs) {
                 plans.add(o.getLabel());
@@ -277,9 +277,9 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
         }
 
         // init the type options
-        if (insuranceMetadataDTO.properties.items.insurance.properties.insuranceType != null &&
-                insuranceMetadataDTO.properties.items.insurance.properties.insuranceType.options != null) {
-            optionDTOs = insuranceMetadataDTO.properties.items.insurance.properties.insuranceType.options;
+        if (insuranceMetadataDTO.getProperties().getItems().getInsurance().getProperties().getInsuranceType() != null &&
+                insuranceMetadataDTO.getProperties().getItems().getInsurance().getProperties().getInsuranceType().getOptions() != null) {
+            optionDTOs = insuranceMetadataDTO.getProperties().getItems().getInsurance().getProperties().getInsuranceType().getOptions();
             List<String> cardTypes = new ArrayList<>();
             for (MetadataOptionDTO o : optionDTOs) {
                 cardTypes.add(o.getLabel());

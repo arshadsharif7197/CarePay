@@ -10,5 +10,13 @@ import com.google.gson.annotations.SerializedName;
 public class DemographicMetadataDataModelsDTO {
     @SerializedName("demographic")
     @Expose
-    public DemographicMetadataEntitiesDTO demographic = new DemographicMetadataEntitiesDTO();
+    private DemographicMetadataEntitiesDTO demographic = new DemographicMetadataEntitiesDTO();
+
+    public DemographicMetadataEntitiesDTO getDemographic() {
+        return demographic;
+    }
+
+    public void setDemographic(DemographicMetadataEntitiesDTO demographic) {
+        this.demographic = demographic;
+    }
 }

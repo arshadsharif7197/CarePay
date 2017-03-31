@@ -35,7 +35,7 @@ import com.carecloud.carepaylibray.carepaycamera.CarePayCameraFragment;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraReady;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.demographics.dialog.InsuranceEditDialog;
+import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;

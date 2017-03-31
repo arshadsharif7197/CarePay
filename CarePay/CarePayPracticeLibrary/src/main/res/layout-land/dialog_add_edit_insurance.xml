@@ -3,15 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_marginEnd="@dimen/dimen_26dp"
+        android:gravity="center"
         android:orientation="vertical">
 
         <ImageButton
@@ -25,18 +25,19 @@
 
     </FrameLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/dialog_content_layout"
         android:layout_width="@dimen/dialog_width"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:focusable="true"
-        android:focusableInTouchMode="true">
+        android:layout_height="@dimen/dialog_height"
+        android:layout_marginEnd="@dimen/dimen_26dp"
+        android:layout_marginStart="@dimen/dimen_26dp">
+
 
         <FrameLayout
             android:id="@+id/insurance_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             android:background="@drawable/patient_mode_dialog_header_bg"
             android:padding="@dimen/dimen_10dp">
 
@@ -46,28 +47,11 @@
 
         </FrameLayout>
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <LinearLayout
-                android:id="@+id/container_main"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:paddingEnd="@dimen/dimen_24dp"
-                android:paddingStart="@dimen/dimen_24dp">
-
-                <include layout="@layout/add_edit_insurance_view" />
-            </LinearLayout>
-
-        </ScrollView>
-
         <LinearLayout
             android:id="@+id/dialog_add_edit_insurance_bottom_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:background="@drawable/patient_mode_dialog_body_bg"
             android:orientation="horizontal"
             android:padding="@dimen/dimen_10dp"
@@ -86,7 +70,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_22"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="demographics_documents_remove"/>
+                breeze:textKey="demographics_documents_remove" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/save_insurance_changes"
@@ -101,8 +85,40 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_22"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="demographics_save_changes_button"/>
+                breeze:textKey="demographics_save_changes_button" />
         </LinearLayout>
+
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/dialog_add_edit_insurance_bottom_toolbar"
+            android:layout_below="@id/insurance_toolbar"
+            android:background="@color/white"
+            android:paddingEnd="@dimen/dimen_24dp"
+            android:paddingStart="@dimen/dimen_24dp"
+            android:scrollbars="none">
+
+            <include
+                android:id="@+id/container_main"
+                layout="@layout/add_edit_insurance_view" />
+
+        </ScrollView>
+
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/dialog_button_bg" />
+
     </LinearLayout>
 
     <FrameLayout

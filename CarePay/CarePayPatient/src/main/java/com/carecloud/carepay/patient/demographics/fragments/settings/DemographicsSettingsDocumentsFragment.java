@@ -247,7 +247,7 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
         }
         // init doc types
         List<String> docTypesStrings = new ArrayList<>();
-        for (MetadataOptionDTO o : idDocsMetaDTO.properties.items.identityDocument.properties.identityDocumentType.options) {
+        for (MetadataOptionDTO o : idDocsMetaDTO.properties.items.identityDocument.properties.identityDocumentType.getOptions()) {
             docTypesStrings.add(o.getLabel());
         }
         docTypes = docTypesStrings.toArray(new String[0]);
@@ -417,7 +417,7 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
             }
         }
         DemographicMetadataEntityItemInsuranceDTO metadataInsuranceDTO
-                = (insurancesMetaDTO == null ? null : insurancesMetaDTO.properties.items.insurance);
+                = (insurancesMetaDTO == null ? null : insurancesMetaDTO.getProperties().getItems().getInsurance());
         wrapperCollection1 = new InsuranceWrapperCollection((AppCompatActivity) getActivity(),
                 insContainersWrapper,
                 metadataInsuranceDTO,

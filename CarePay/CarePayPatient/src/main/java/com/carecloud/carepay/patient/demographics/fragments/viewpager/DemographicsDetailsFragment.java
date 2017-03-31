@@ -123,21 +123,21 @@ public class DemographicsDetailsFragment extends BaseFragment
             return;
         }
 
-        List<MetadataOptionDTO> options = persDetailsMetaDTO.getProperties().getPrimaryRace().options;
+        List<MetadataOptionDTO> options = persDetailsMetaDTO.getProperties().getPrimaryRace().getOptions();
         List<String> races = new ArrayList<>();
         for (MetadataOptionDTO o : options) {
             races.add(o.getLabel());
         }
         raceArray = races.toArray(new String[0]);
 
-        options = persDetailsMetaDTO.getProperties().getEthnicity().options;
+        options = persDetailsMetaDTO.getProperties().getEthnicity().getOptions();
         List<String> ethnicities = new ArrayList<>();
         for (MetadataOptionDTO o : options) {
             ethnicities.add(o.getLabel());
         }
         ethnicityArray = ethnicities.toArray(new String[0]);
 
-        options = persDetailsMetaDTO.getProperties().getGender().options;
+        options = persDetailsMetaDTO.getProperties().getGender().getOptions();
         List<String> genders = new ArrayList<>();
         for (MetadataOptionDTO o : options) {
             genders.add(o.getLabel());
