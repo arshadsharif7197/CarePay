@@ -42,6 +42,7 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
     private static String LOG_TAG = ProfilePictureFragment.class.getSimpleName();
     private String recaptureCaption;
     private PatientModel demographicPersDetailsPayloadDTO;
+    private CircleImageTransform circleImageTransform = new CircleImageTransform();
 
     @Nullable
     @Override
@@ -67,6 +68,11 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
         if (bitmap != null) {
             String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
             demographicPersDetailsPayloadDTO.setProfilePhoto(imageAsBase64);
+
+            bitmap = circleImageTransform.transform(bitmap);
+            imageFront.setImageBitmap(bitmap);
+
+            ((Button) findViewById(R.id.changeCurrentPhotoButton)).setText(recaptureCaption);
         }
     }
 
@@ -110,8 +116,7 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
 
                     Picasso.with(getContext())
                             .load(profilePicURL)
-                            .transform(new CircleImageTransform())
-                            .resize(100, 100)
+                            .transform(circleImageTransform)
                             .into(imageFront, callback);
                     // successfully load a profile image
                     buttonChangeCurrentPhoto.setText(recaptureCaption);

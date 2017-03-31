@@ -4,42 +4,62 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 
 import com.squareup.picasso.Transformation;
 
-/**
- * Created by Jahirul Bhuiyan on 9/30/2016.
- */
-
 public class CircleImageTransform implements Transformation {
+
+    private static final int MAX_SIZE = 100;
+
+    private int maxSize = MAX_SIZE;
+
+    public CircleImageTransform() {
+    }
+
+    public CircleImageTransform(int maxSize) {
+        this.maxSize = maxSize;
+    }
+
     @Override
     public Bitmap transform(Bitmap source) {
-        int size = Math.min(source.getWidth(), source.getHeight());
+        return circle(square(source));
+    }
 
-        int x = (source.getWidth() - size) / 2;
-        int y = (source.getHeight() - size) / 2;
-
-        Bitmap.Config sourceConfig = source.getConfig();
-
-        Bitmap squaredBitmap = Bitmap.createBitmap(source, x, y, size, size);
-        if (squaredBitmap != source) {
-            source.recycle();
-        }
-
-        Bitmap bitmap = Bitmap.createBitmap(size, size, sourceConfig);
-
-        Canvas canvas = new Canvas(bitmap);
+    private Bitmap circle(Bitmap input) {
         Paint paint = new Paint();
-        BitmapShader shader = new BitmapShader(squaredBitmap,
-                BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP);
-        paint.setShader(shader);
+        paint.setShader(new BitmapShader(input, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP));
         paint.setAntiAlias(true);
 
+        int size = input.getWidth();
         float r = size / 2f;
+
+        Bitmap output = Bitmap.createBitmap(size, size, input.getConfig());
+
+        Canvas canvas = new Canvas(output);
         canvas.drawCircle(r, r, r, paint);
 
-        squaredBitmap.recycle();
-        return bitmap;
+        input.recycle();
+        return output;
+    }
+
+    private Bitmap square(Bitmap input) {
+        int inSize = Math.min(input.getWidth(), input.getHeight());
+        int outSize = Math.min(inSize, maxSize);
+
+        int left = (input.getWidth() - inSize) / 2;
+        int top = (input.getHeight() - inSize) / 2;
+
+        final Rect inRect = new Rect(left, top, inSize, inSize);
+        final Rect outRect = new Rect(0, 0, outSize, outSize);
+
+        Bitmap output = Bitmap.createBitmap(outSize, outSize, input.getConfig());
+
+        Canvas canvas = new Canvas(output);
+        canvas.drawBitmap(input, inRect, outRect, null);
+
+        input.recycle();
+        return output;
     }
 
     @Override
