@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-
-    android:background="@android:color/white"
-    android:orientation="vertical">
+    android:background="@android:color/white">
 
     <FrameLayout
+        android:id="@+id/headerContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:foregroundGravity="center_vertical"
         android:paddingTop="@dimen/dimen_10dp">
 
@@ -38,10 +38,10 @@
         </LinearLayout>
     </FrameLayout>
 
-
     <com.marcok.stepprogressbar.StepProgressBar
         android:id="@+id/stepProgressBarCheckin"
         style="@style/InTakeDottedProgressBarStyle"
+        android:layout_below="@id/headerContainer"
         android:layout_marginTop="0dp"
         app:activeDotColor="@color/colorPrimary"
         app:activeDotIcon="@drawable/circle_indicator_blue"
@@ -50,56 +50,22 @@
         app:inactiveDotColor="@color/colorPrimary"
         app:inactiveDotIcon="@drawable/circle_indicator_gray"
         app:numberDots="5"
-        app:spacing="12dp"/>
+        app:spacing="12dp" />
 
     <View
+        android:id="@+id/headerDivider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/demo_view_height"
+        android:layout_below="@id/stepProgressBarCheckin"
         android:background="@color/light_gray"
         android:focusable="true"
-        android:focusableInTouchMode="true"/>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="true"
-        android:padding="0dp">
-
-        <LinearLayout
-            android:id="@+id/container_main"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight=".20" />
-
-            <FrameLayout
-                android:id="@+id/checkinDemographicsContentLayout"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight=".20" />
-
-        </LinearLayout>
-    </ScrollView>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/demo_view_height"
-        android:background="@color/light_gray" />
+        android:focusableInTouchMode="true" />
 
     <LinearLayout
+        android:id="@+id/footerContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="@dimen/dimen_20dp">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
@@ -135,4 +101,46 @@
 
     </LinearLayout>
 
-</LinearLayout>
+    <View
+        android:id="@+id/footerDivider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/demo_view_height"
+        android:layout_above="@id/footerContainer"
+        android:background="@color/light_gray" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/footerDivider"
+        android:layout_below="@id/headerDivider"
+        android:padding="0dp">
+
+        <LinearLayout
+            android:id="@+id/container_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".20" />
+
+            <FrameLayout
+                android:id="@+id/checkinDemographicsContentLayout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:layout_weight="1"
+                android:orientation="vertical" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".20" />
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+
+</RelativeLayout>

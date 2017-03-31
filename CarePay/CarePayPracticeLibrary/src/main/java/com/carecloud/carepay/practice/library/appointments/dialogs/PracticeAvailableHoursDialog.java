@@ -164,7 +164,7 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
         editRangeButton.setOnClickListener(dateRangeClickListener);
         SystemUtil.setGothamRoundedBoldTypeface(context, editRangeButton);
 
-        setCancelImage(R.drawable.icn_arrow_up);
+        setCancelImage(R.drawable.icn_close);
         setCancelable(false);
 
         progressView = view.findViewById(R.id.progressview);

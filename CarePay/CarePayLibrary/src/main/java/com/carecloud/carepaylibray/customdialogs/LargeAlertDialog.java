@@ -3,7 +3,9 @@ package com.carecloud.carepaylibray.customdialogs;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
@@ -90,7 +92,7 @@ public class LargeAlertDialog extends Dialog  implements View.OnClickListener {
         largeMssageLabel.setText(message);
         largeMssageLabel.setTextColor(context.getResources().getColor(R.color.white));
         largeMssageLabel.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
-        ((LinearLayout)findViewById(R.id.headerLayout)).setBackgroundResource(headerBackGroundColor);
+        setBackgroundColor();
         ((ImageView)findViewById(R.id.headerIconImageView)).setBackgroundResource(headerIcon);
     }
     @Override
@@ -101,6 +103,17 @@ public class LargeAlertDialog extends Dialog  implements View.OnClickListener {
         }else if(viewId == R.id.actionButton){
             largeAlertInterface.onActionButton();
             cancel();
+        }
+    }
+
+    private void setBackgroundColor(){
+        View header = findViewById(R.id.headerLayout);
+        try {
+            GradientDrawable drawable = (GradientDrawable) header.getBackground();
+            drawable.setColor(ContextCompat.getColor(context, headerBackGroundColor));
+
+        }catch (ClassCastException cce){
+            header.setBackgroundResource(headerBackGroundColor);
         }
     }
 }

@@ -57,7 +57,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
 
         if (demographicDTO == null) {
             demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
-        } else if (!hasInsurance()){
+        } else if (!hasInsurance()) {
             demographicDTO = null;
         }
         initActiveSection(view);
@@ -84,22 +84,16 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
 
     private void initializeViews() {
         if (demographicDTO == null) {
-
             getActivity().getSupportFragmentManager().popBackStack();
-
         } else if (hasInsurance()) {
-
             adapter.setDemographicDTO(demographicDTO);
-
-        } else  {
-
+        } else {
             editInsurance(null, false);
-
         }
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         stepProgressBar.setCurrentProgressDot(4);
         checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 5);
@@ -123,6 +117,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
 
     /**
      * enable or disable sections
+     *
      * @param view main view
      */
     public void initActiveSection(final View view) {
@@ -137,8 +132,8 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
         setHeaderTitle(Label.getLabel("demographics_insurance_label"), view);
         initNextButton(null, view, View.VISIBLE);
 
-        Button nextButton = (Button) view.findViewById(R.id.checkinDemographicsNextButton);
-        nextButton.setText(Label.getLabel("demographics_review_go_to_consent"));
+//        Button nextButton = (Button) view.findViewById(R.id.checkinDemographicsNextButton);
+//        nextButton.setText(Label.getLabel("demographics_review_go_to_consent"));
     }
 
     @Override

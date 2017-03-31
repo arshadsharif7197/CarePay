@@ -283,7 +283,7 @@ public class DateRangePickerDialog extends BaseDialogFragment {
 
     @Override
     protected int getCancelImageResource() {
-        return isCancelable ? R.drawable.icn_close : R.drawable.icn_arrow_up;
+        return isCancelable ? R.drawable.icn_close : R.drawable.icn_arrow_left;
     }
 
     @Override

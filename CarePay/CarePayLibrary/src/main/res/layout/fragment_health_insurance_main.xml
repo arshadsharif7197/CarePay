@@ -21,6 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
+        android:layout_marginBottom="@dimen/dimen_10dp"
         android:layout_marginTop="@dimen/dimen_25dp"
         android:background="@drawable/round_border_button_bg"
         android:paddingBottom="@dimen/dimen_10dp"
@@ -30,5 +31,5 @@
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/text_size_13"
         app:customAssetFont="gotham_rounded_medium"
-        breeze:textKey="practice_checkin_demogr_ins_add_another"/>
+        breeze:textKey="practice_checkin_demogr_ins_add_another" />
 </LinearLayout>

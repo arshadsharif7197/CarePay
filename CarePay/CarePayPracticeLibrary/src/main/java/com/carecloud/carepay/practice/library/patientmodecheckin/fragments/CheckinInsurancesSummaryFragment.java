@@ -107,7 +107,7 @@ public class CheckinInsurancesSummaryFragment extends BaseCheckinFragment {
     private void initDTOs() {
         demographicDTO = ((PatientModeCheckinActivity) getActivity()).getDemographicDTO();
 
-        insurancesMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.insurances;
+        insurancesMetaDTO = demographicDTO.getMetadata().getDataModels().getDemographic().getInsurances();
         globalLabelsMetaDTO = demographicDTO.getMetadata().getLabels();
 
         // get the payload
@@ -187,7 +187,7 @@ public class CheckinInsurancesSummaryFragment extends BaseCheckinFragment {
     private void createInsuranceFragments(LinearLayout insContainersWrapper) {
 
         DemographicMetadataEntityItemInsuranceDTO metadataInsuranceDTO
-                = (insurancesMetaDTO == null ? null : insurancesMetaDTO.properties.items.insurance);
+                = (insurancesMetaDTO == null ? null : insurancesMetaDTO.getProperties().getItems().getInsurance());
         wrapperCollection1 = new InsuranceWrapperCollection((AppCompatActivity) getActivity(),
                                                             insContainersWrapper,
                                                             metadataInsuranceDTO,

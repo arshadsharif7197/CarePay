@@ -7,9 +7,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -165,12 +167,25 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
 
     private void initializeBody(View view) {
         if (null != patientBalance && null != patientBalance.getBalances() && !patientBalance.getBalances().isEmpty()) {
+            LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.rowLayout);
             List<PendingBalanceDTO> balances = patientBalance.getBalances();
-            initializeOwedAmount(balances);
             if (owedAmount > 0) {
                 initializePaymentLines(view, balances);
+                linearLayout.setVisibility(View.INVISIBLE);
+            } else{
+                linearLayout.setVisibility(View.VISIBLE);
+                TextView itemNameLabelDetails = (TextView) view.findViewById(R.id.itemNameLabelDetails);
+                TextView paymentDetailLabel =(TextView) view.findViewById(R.id.itemNameLabel);
+                TextView paymentDetailAmount =(TextView) view.findViewById(R.id.itemAmountLabel);
+
+                itemNameLabelDetails.setText(Label.getLabel("payment_responsibility_details"));
+                paymentDetailLabel.setText(Label.getLabel("payment_details_patient_balance_label"));
+                paymentDetailAmount.setText("$0.00");
+
             }
+            initializePaymentLines(view, balances);
         }
+
         initializeOwedAmountTextView(view);
     }
 
