@@ -41,6 +41,15 @@
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/round_list_tv" />
 
+            <ImageView
+                android:id="@+id/providerImageView"
+                android:layout_width="@dimen/provider_card_avatar_size"
+                android:layout_height="@dimen/provider_card_avatar_size"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:visibility="gone" />
+
+
         </RelativeLayout>
 
         <RelativeLayout

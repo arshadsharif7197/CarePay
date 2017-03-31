@@ -1,7 +1,6 @@
 package com.carecloud.carepay.practice.library.appointments.adapters;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -26,6 +25,7 @@ import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import org.joda.time.DateTime;
@@ -137,18 +137,21 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         holder.setTimeView(patient);
 
         if (!TextUtils.isEmpty(patient.photoUrl)) {
-            Picasso.Builder builder = new Picasso.Builder(context);
-            builder.listener(new Picasso.Listener() {
-                @Override
-                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                    holder.initials.setText(patient.initials);
-                }
-            });
+            Picasso.with(context).load(patient.photoUrl)
+                    .transform(new CircleImageTransform())
+                    .resize(60, 60)
+                    .into(holder.profilePicture, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            holder.profilePicture.setVisibility(View.VISIBLE);
+                        }
 
-            builder.build().load(patient.photoUrl).transform(new CircleImageTransform())
-                    .resize(60, 60).into(holder.profilePicture);
+                        @Override
+                        public void onError() {
+                            holder.initials.setText(patient.initials);
+                        }
+                    });
 
-            holder.profilePicture.setVisibility(View.VISIBLE);
         } else {
             holder.profilePicture.setVisibility(View.INVISIBLE);
         }

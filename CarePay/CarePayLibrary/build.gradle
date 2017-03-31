@@ -62,6 +62,7 @@ dependencies {
 
     // Using for image loading
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'jp.wasabeef:picasso-transformations:2.1.2'
 
     compile 'com.mcxiaoke.viewpagerindicator:library:2.4.1@aar'
     compile 'com.github.gcacace:signature-pad:1.2.0'

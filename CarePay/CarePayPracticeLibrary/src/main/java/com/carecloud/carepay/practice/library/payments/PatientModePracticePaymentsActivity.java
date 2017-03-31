@@ -101,11 +101,11 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         recyclerView.setVisibility(View.VISIBLE);
         findViewById(R.id.emptyPaymentsImageView).setVisibility(View.GONE);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        PaymentBalancesAdapter paymentBalancesAdapter = new PaymentBalancesAdapter(paymentsModel.getPaymentPayload().getPatientBalances(),
+        PaymentBalancesAdapter paymentBalancesAdapter = new PaymentBalancesAdapter(this, paymentsModel.getPaymentPayload().getPatientBalances(),
                 paymentsModel.getPaymentPayload().getUserPractices().get(0));
         paymentBalancesAdapter.setCallback(this);
         recyclerView.setAdapter(paymentBalancesAdapter);
-        //TODO: Should change this to the proper keys
+
         ((TextView) findViewById(R.id.title)).setText("Select a pending payment");
         ((TextView) findViewById(R.id.subtitle)).setText(Label.getLabel("no_payment_description"));
 
