@@ -9,42 +9,44 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
 
+    private final AppointmentsSlotsDTO appointmentSlot;
     private Context context;
-    private LinearLayout mainLayout;
-    private AppointmentsResultModel appointmentsResultModel;
     private AppointmentDTO appointmentDTO;
 
     private AppointmentNavigationCallback callback;
 
     /**
      * Constructor.
-     * @param context activity context
-     * @param appointmentDTO appointment model
-     * @param appointmentsResultModel appointments result model
+     *
+     * @param context           activity context
+     * @param appointmentDTO    appointment model
+     * @param appointmentsSlot  The appointment slot
      */
     public RequestAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
-                                    AppointmentsResultModel appointmentsResultModel) {
+                                    AppointmentsSlotsDTO appointmentsSlot) {
 
         super(context, appointmentDTO, true);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
-        this.appointmentsResultModel = appointmentsResultModel;
+        this.appointmentSlot = appointmentsSlot;
         setupCallback();
     }
 
-    private void setupCallback(){
-        try{
+    private void setupCallback() {
+        try {
             callback = (AppointmentNavigationCallback) context;
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Provided Context must implement AppointmentNavigationCallback");
         }
     }
@@ -54,8 +56,6 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-
-        mainLayout = (LinearLayout) getAddActionChildView();
         setActionButton();
     }
 
@@ -65,14 +65,14 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         View childActionView = inflater.inflate(R.layout.dialog_request_appointment, null);
 
         Button appointmentRequestButton = (Button) childActionView.findViewById(R.id.requestAppointmentButton);
-        appointmentRequestButton.setText(appointmentsResultModel.getMetadata().getLabel().getAppointmentsRequestHeading());
+        appointmentRequestButton.setText(Label.getLabel("appointments_request_heading"));
         appointmentRequestButton.setOnClickListener(this);
         appointmentRequestButton.requestFocus();
 
         CarePayTextView reasonTypeTextView = (CarePayTextView)
                 childActionView.findViewById(R.id.reasonTypeTextView);
         SystemUtil.setProximaNovaRegularTypeface(context, reasonTypeTextView);
-        reasonTypeTextView.setText(appointmentsResultModel.getMetadata().getLabel().getVisitTypeHeading());
+        reasonTypeTextView.setText(Label.getLabel("visit_type_heading"));
 
         CarePayTextView reasonTextView = (CarePayTextView)
                 childActionView.findViewById(R.id.reasonTextView);
@@ -83,7 +83,7 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
             reasonTextView.setText(visitReason);
         }
 
-        mainLayout.addView(childActionView);
+        ((LinearLayout) getAddActionChildView()).addView(childActionView);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         int viewId = view.getId();
         if (viewId == R.id.requestAppointmentButton) {
             dismiss();
-            callback.requestAppointment(appointmentDTO.getPayload().getStartTime(), appointmentDTO.getPayload().getEndTime(), "");
+            callback.requestAppointment(appointmentSlot, "");
         }
     }
 }

@@ -94,7 +94,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     }
 
     @Override
-    public void requestAppointment(String startTime, String endTime, String comments) {
+    public void requestAppointment(AppointmentsSlotsDTO appointmentSlot, String comments) {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("language", getApplicationPreferences().getUserLanguage());
         queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
@@ -104,10 +104,10 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         JsonObject patientJSONObj = new JsonObject();
 
         patientJSONObj.addProperty("id", patientId);
-        appointmentJSONObj.addProperty("start_time", startTime);
-        appointmentJSONObj.addProperty("end_time", endTime);
+        appointmentJSONObj.addProperty("start_time", appointmentSlot.getStartTime());
+        appointmentJSONObj.addProperty("end_time", appointmentSlot.getEndTime());
         appointmentJSONObj.addProperty("appointment_status_id", "5");
-        appointmentJSONObj.addProperty("location_id", availabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getLocation().getId());
+        appointmentJSONObj.addProperty("location_id", appointmentSlot.getLocation().getId());
         appointmentJSONObj.addProperty("provider_id", appointmentResourcesDTO.getResource().getProvider().getId());
         appointmentJSONObj.addProperty("visit_reason_id", visitTypeDTO.getId());
         appointmentJSONObj.addProperty("resource_id", appointmentResourcesDTO.getResource().getId());
