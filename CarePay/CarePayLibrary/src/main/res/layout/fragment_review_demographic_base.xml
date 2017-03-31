@@ -38,11 +38,25 @@
         </LinearLayout>
     </FrameLayout>
 
+    <com.marcok.stepprogressbar.StepProgressBar
+        android:id="@+id/stepProgressBarCheckin"
+        style="@style/InTakeDottedProgressBarStyle"
+        android:layout_below="@id/headerContainer"
+        android:layout_marginTop="0dp"
+        app:activeDotColor="@color/colorPrimary"
+        app:activeDotIcon="@drawable/circle_indicator_blue"
+        app:activeDotIndex="-1"
+        app:dotSize="10dp"
+        app:inactiveDotColor="@color/colorPrimary"
+        app:inactiveDotIcon="@drawable/circle_indicator_gray"
+        app:numberDots="5"
+        app:spacing="12dp" />
+
     <View
         android:id="@+id/headerDivider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/demo_view_height"
-        android:layout_below="@id/headerContainer"
+        android:layout_below="@id/stepProgressBarCheckin"
         android:background="@color/light_gray"
         android:focusable="true"
         android:focusableInTouchMode="true" />
@@ -94,21 +108,7 @@
         android:layout_above="@id/footerContainer"
         android:background="@color/light_gray" />
 
-    <com.marcok.stepprogressbar.StepProgressBar
-        android:id="@+id/stepProgressBarCheckin"
-        style="@style/InTakeDottedProgressBarStyle"
-        android:layout_below="@id/headerDivider"
-        android:layout_marginTop="0dp"
-        app:activeDotColor="@color/colorPrimary"
-        app:activeDotIcon="@drawable/circle_indicator_blue"
-        app:activeDotIndex="-1"
-        app:dotSize="10dp"
-        app:inactiveDotColor="@color/colorPrimary"
-        app:inactiveDotIcon="@drawable/circle_indicator_gray"
-        app:numberDots="5"
-        app:spacing="12dp" />
-
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/footerDivider"
@@ -130,6 +130,7 @@
                 android:id="@+id/checkinDemographicsContentLayout"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/dimen_10dp"
                 android:layout_weight="1"
                 android:orientation="vertical" />
 
@@ -139,7 +140,7 @@
                 android:layout_weight=".20" />
 
         </LinearLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 
 
 </RelativeLayout>
