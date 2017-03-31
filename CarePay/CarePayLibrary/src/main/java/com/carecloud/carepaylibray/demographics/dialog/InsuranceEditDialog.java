@@ -73,6 +73,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     private boolean isCardNumberEmpty;
     private boolean isGroupNumberEmpty;
     private boolean isFrontScan;
+    private boolean hadInsurance;
 
     private String frontImageAsBase64;
     private String backImageAsBase64;
@@ -111,7 +112,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (hasInsurance()) {
+        hadInsurance = hasInsurance();
+        if (hadInsurance) {
             return inflater.inflate(R.layout.dialog_add_edit_insurance, container, false);
         }
 
@@ -294,9 +296,9 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         return new View.OnClickListener() {
             @Override
             public void onClick(View saveChanges) {
-                demographicDTO = null;
-
-                closeDialog();
+                if (callback != null) {
+                    callback.onInsuranceEdited(null);
+                }
             }
         };
     }
@@ -348,6 +350,10 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
         if (callback != null) {
             callback.onInsuranceEdited(demographicDTO);
+
+            if (!hadInsurance) {
+                callback.goOneStepBack();
+            }
         }
     }
 
