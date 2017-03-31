@@ -30,6 +30,12 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
     private PaymentRecyclerViewCallback callback;
     private Context context;
 
+    /**
+     * Constructor
+     * @param context context
+     * @param patientBalances balances
+     * @param userPracticeDTO dto
+     */
     public PaymentBalancesAdapter(Context context, List<PatientBalanceDTO> patientBalances, UserPracticeDTO userPracticeDTO) {
         this.context = context;
         this.balances = patientBalances;
@@ -74,15 +80,6 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
                         }
                     });
 
-
-//            Picasso.Builder builder = new Picasso.Builder(context);
-//            builder.listener(new Picasso.Listener() {
-//                @Override
-//                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-//                    holder.providerImageTextView.setText(StringUtil.getShortName(userPractice.getPracticeName()));
-//                }
-//            }).build().load(photoUrl);
-//
 
         }
     }
