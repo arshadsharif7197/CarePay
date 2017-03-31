@@ -29,7 +29,6 @@ import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenAppointm
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenLabelDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenOfficeNewsDTO;
-import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenOfficeNewsPayloadDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PatientHomeScreenTransitionsDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenPayloadDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenTransitionsDTO;
@@ -533,47 +532,11 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     OfficeNewsListAdapter.OnOfficeNewsClickedListener officeNewsClickedListener
             = new OfficeNewsListAdapter.OnOfficeNewsClickedListener() {
         @Override
-        public void onOfficeNewsSelected(HomeScreenOfficeNewsPayloadDTO newsPayload) {
-            Gson gson = new Gson();
-            JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getLinks();
-            PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
-            TransitionDTO transitionDTO = transitionsDTO.getOfficeNewsPost();
-
-            Map<String, String> queryMap = new HashMap<>();
-            queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
-            queryMap.put("post_uuid", newsPayload.getUuid());
-            getWorkflowServiceHelper().execute(transitionDTO, getNewsPostCallback, queryMap);
-        }
-    };
-
-    WorkflowServiceCallback getNewsPostCallback = new WorkflowServiceCallback() {
-
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            Gson gson = new Gson();
-            HomeScreenDTO homeScreenDTO = gson.fromJson(workflowDTO.toString(), HomeScreenDTO.class);
-            JsonObject payloadAsJsonObject = homeScreenDTO.getPayload();
-            PracticeHomeScreenPayloadDTO practiceHomePayloadDTO = gson.fromJson(payloadAsJsonObject,
-                    PracticeHomeScreenPayloadDTO.class);
-            HomeScreenOfficeNewsDTO officeNewsPost = practiceHomePayloadDTO.getOfficeNewsPost();
-
+        public void onOfficeNewsSelected(List<HomeScreenOfficeNewsDTO> officeNewsList) {
             HomeScreenLabelDTO labels = homeScreenDTO.getMetadata().getLabels();
             OfficeNewsDetailsDialog detailsDialog = new OfficeNewsDetailsDialog(CloverMainActivity.this,
-                    labels.getNewsTitle(), labels.getNewsCancelLabel(), officeNewsPost);
+                    labels.getNewsTitle(), labels.getNewsCancelLabel(), officeNewsList);
             detailsDialog.show();
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
-            Log.e("Office News", exceptionMessage);
         }
     };
 

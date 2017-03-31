@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#489DA6</color>
     <color name="left_panel_color">#4EAAB3</color>
     <color name="screen_gradient">#41949D</color>
+    <color name="page_indicator">#4D5BC5D0</color>
 
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
