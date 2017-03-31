@@ -29,7 +29,7 @@ public interface AppointmentNavigationCallback {
 
     void confirmAppointment(AppointmentsSlotsDTO appointmentsSlot, AppointmentAvailabilityDTO availabilityDTO);
 
-    void requestAppointment(String startTime, String endTime, String comments);
+    void requestAppointment(AppointmentsSlotsDTO appointmentSlot, String comments);
 
     void onAppointmentUnconfirmed();
 

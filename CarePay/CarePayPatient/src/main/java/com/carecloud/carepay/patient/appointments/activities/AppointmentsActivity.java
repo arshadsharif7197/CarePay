@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.widget.TextView;
 
@@ -275,13 +274,13 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         AppointmentDTO appointmentDTO = new AppointmentDTO();
         appointmentDTO.setPayload(payloadDTO);
 
-        final RequestAppointmentDialog requestAppointmentDialog = new RequestAppointmentDialog(getContext(), appointmentDTO,
-                appointmentsResultModel);
+        final RequestAppointmentDialog requestAppointmentDialog = new RequestAppointmentDialog(getContext(),
+                appointmentDTO, appointmentsSlot);
         requestAppointmentDialog.show();
     }
 
     @Override
-    public void requestAppointment(String startTime, String endTime, String comments) {
+    public void requestAppointment(AppointmentsSlotsDTO appointmentSlot, String comments) {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("language", getApplicationPreferences().getUserLanguage());
         queryMap.put("practice_mgmt", getApplicationPreferences().getPracticeManagement());
@@ -291,10 +290,10 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         JsonObject patientJSONObj = new JsonObject();
 
         patientJSONObj.addProperty("id", patientId);
-        appointmentJSONObj.addProperty("start_time", startTime);
-        appointmentJSONObj.addProperty("end_time", endTime);
+        appointmentJSONObj.addProperty("start_time", appointmentSlot.getStartTime());
+        appointmentJSONObj.addProperty("end_time", appointmentSlot.getEndTime());
         appointmentJSONObj.addProperty("appointment_status_id", "5");
-        appointmentJSONObj.addProperty("location_id", availabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getLocation().getId());
+        appointmentJSONObj.addProperty("location_id", appointmentSlot.getLocation().getId());
         appointmentJSONObj.addProperty("provider_id", selectedAppointmentResourcesDTO.getResource().getProvider().getId());
         appointmentJSONObj.addProperty("visit_reason_id", selectedVisitTypeDTO.getId());
         appointmentJSONObj.addProperty("resource_id", selectedAppointmentResourcesDTO.getResource().getId());
