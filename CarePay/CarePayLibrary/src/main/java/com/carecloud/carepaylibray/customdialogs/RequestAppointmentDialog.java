@@ -29,9 +29,9 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
     /**
      * Constructor.
      *
-     * @param context                 activity context
-     * @param appointmentDTO          appointment model
-     * @param appointmentsSlot
+     * @param context           activity context
+     * @param appointmentDTO    appointment model
+     * @param appointmentsSlot  The appointment slot
      */
     public RequestAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
                                     AppointmentsSlotsDTO appointmentsSlot) {
