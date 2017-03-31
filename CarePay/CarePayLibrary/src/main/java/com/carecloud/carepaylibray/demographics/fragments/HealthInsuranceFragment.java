@@ -132,8 +132,8 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
         setHeaderTitle(Label.getLabel("demographics_insurance_label"), view);
         initNextButton(null, view, View.VISIBLE);
 
-        Button nextButton = (Button) view.findViewById(R.id.checkinDemographicsNextButton);
-        nextButton.setText(Label.getLabel("demographics_review_go_to_consent"));
+//        Button nextButton = (Button) view.findViewById(R.id.checkinDemographicsNextButton);
+//        nextButton.setText(Label.getLabel("demographics_review_go_to_consent"));
     }
 
     @Override
