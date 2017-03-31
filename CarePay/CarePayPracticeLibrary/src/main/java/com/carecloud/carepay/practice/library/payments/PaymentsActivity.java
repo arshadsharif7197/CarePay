@@ -28,6 +28,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
@@ -220,7 +221,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
                 FindPatientDialog findPatientDialog = new FindPatientDialog(PaymentsActivity.this,
                         transitionDTO,
-                        paymentsLabel.getPracticePaymentsFindPatientLabel());
+                        Label.getLabel("practice_payments_filter_find_patient_by_name"));
                 setFindPatientOnItemClickedListener(findPatientDialog);
                 findPatientDialog.show();
             }

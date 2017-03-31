@@ -92,7 +92,7 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
     private String stateAbbr = null;
     private City smartyStreetsResponse;
     protected double amountToMakePayment;
-    private DemographicAddressPayloadDTO addressPayloadDTO;
+    protected DemographicAddressPayloadDTO addressPayloadDTO;
     private List<DemographicsSettingsPapiAccountsDTO> papiAccountsDTO;
     protected PaymentCreditCardsPayloadDTO creditCardsPayloadDTO;
     protected PaymentsCreditCardBillingInformationDTO billingInformationDTO;
@@ -111,10 +111,13 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
             Bundle arguments = getArguments();
             if (arguments != null) {
                 Gson gson = new Gson();
-                String payloadString = getApplicationPreferences().readStringFromSharedPref(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE);
-                addressPayloadDTO = new DemographicAddressPayloadDTO();
-                if (payloadString.length() > 1) {
-                    addressPayloadDTO = gson.fromJson(payloadString, DemographicAddressPayloadDTO.class);
+                String payloadString;
+                if(addressPayloadDTO==null) {
+                    payloadString = getApplicationPreferences().readStringFromSharedPref(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE);
+                    addressPayloadDTO = new DemographicAddressPayloadDTO();
+                    if (payloadString.length() > 1) {
+                        addressPayloadDTO = gson.fromJson(payloadString, DemographicAddressPayloadDTO.class);
+                    }
                 }
                 if (arguments.containsKey(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE)){
                     payloadString = arguments.getString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE);
@@ -136,6 +139,8 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
         initializeViews(addNewCreditCardView);
 //        setTypefaces();
         setTextWatchers();
+
+        hideKeyboardOnViewTouch(addNewCreditCardView);
         return addNewCreditCardView;
     }
 
@@ -389,12 +394,6 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
         setAddressFieldsEnabled(false);
         setDefaultBillingAddressTexts();
 
-        View scrollView = view.findViewById(R.id.scroll_card_info);
-        if(getDialog()!=null){
-            ViewGroup.LayoutParams layoutParams = scrollView.getLayoutParams();
-            layoutParams.width = (int) (getResources().getDisplayMetrics().widthPixels * .5);
-            scrollView.setLayoutParams(layoutParams);
-        }
     }
 
 
@@ -462,6 +461,7 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
             for (DemographicsSettingsPapiAccountsDTO papiAccountDTO : papiAccountsDTO) {
                 if (papiAccountDTO.getType().contains("payeezy")) {
                     merchantServiceDTO = papiAccountDTO.getMetadata().getMerchantService();
+                    break;
                 }
             }
             RequestTask requestTask = new RequestTask(getActivity(), BaseAddCreditCardFragment.this, merchantServiceDTO);

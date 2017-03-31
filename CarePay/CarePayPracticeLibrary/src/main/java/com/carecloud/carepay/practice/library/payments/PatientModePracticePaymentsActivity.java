@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.payments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,6 +34,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
@@ -251,10 +253,11 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
+            paymentResultModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
             if (hasNoPayments()) {
                 showNoPaymentsImage();
             } else {
-                showPayments(DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString()));
+                showPayments(paymentResultModel);
             }
         }
 
@@ -264,4 +267,23 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
             showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
         }
     };
+
+    @Override
+    protected void processExternalPayment(PaymentExecution execution, Intent data) {
+        switch (execution) {
+            case clover: {
+                String jsonPayload = data.getStringExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA);
+                if (jsonPayload != null) {
+                    Gson gson = new Gson();
+                    PaymentsModel paymentsModel = gson.fromJson(jsonPayload, PaymentsModel.class);
+                    showPaymentConfirmation(paymentsModel);
+                }
+                break;
+            }
+            default:
+                //nothing
+                return;
+        }
+    }
+
 }

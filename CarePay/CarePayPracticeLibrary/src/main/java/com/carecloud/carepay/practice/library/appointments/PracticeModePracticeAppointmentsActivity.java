@@ -342,7 +342,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
                 FindPatientDialog findPatientDialog = new FindPatientDialog(getContext(),
                         transitionDTO,
-                        checkInLabelDTO.getPracticeCheckinFilterFindPatient());
+                        Label.getLabel(needsConfirmation?"practice_checkin_filter_find_patient_by_name":"practice_filter_find_patient_first"));
                 findPatientDialog.setClickedListener(getFindPatientDialogListener());
                 findPatientDialog.show();
             }

@@ -44,11 +44,11 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         super.onResume();
         isVisible = true;
        final View rootView = findViewById(android.R.id.content);
+        rootView.setSoundEffectsEnabled(false);
         rootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 SystemUtil.hideSoftKeyboard(BaseActivity.this);
-                rootView.setSoundEffectsEnabled(false);
             }
         });
 

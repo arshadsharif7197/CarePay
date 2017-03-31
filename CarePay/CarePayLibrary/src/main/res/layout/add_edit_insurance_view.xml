@@ -102,7 +102,7 @@
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/health_insurance_card_number_layout"
-            style="@style/TextInputLayoutStyle"
+            style="@style/SigninSignupTextInputStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dimen_10dp"
@@ -113,14 +113,14 @@
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/health_insurance_card_number"
-                style="@style/EditTextStyle"
+                style="@style/SigninSignupEditStyle"
                 android:inputType="number"
                 app:customAssetFont="proxima_nova_regular" />
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/health_insurance_group_number_layout"
-            style="@style/TextInputLayoutStyle"
+            style="@style/SigninSignupTextInputStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_10dp"
@@ -131,7 +131,7 @@
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/health_insurance_group_number"
-                style="@style/EditTextStyle"
+                style="@style/SigninSignupEditStyle"
                 android:inputType="number"
                 app:customAssetFont="proxima_nova_regular" />
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
