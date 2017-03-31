@@ -178,6 +178,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
         if (null != patientBalance && null != patientBalance.getBalances() && !patientBalance.getBalances().isEmpty()) {
             LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.rowLayout);
             List<PendingBalanceDTO> balances = patientBalance.getBalances();
+            initializeOwedAmount(balances);
             if (owedAmount > 0) {
                 initializePaymentLines(view, balances);
                 linearLayout.setVisibility(View.GONE);
