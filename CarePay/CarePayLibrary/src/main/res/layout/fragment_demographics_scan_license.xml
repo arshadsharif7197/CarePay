@@ -3,6 +3,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:descendantFocusability="beforeDescendants"
@@ -27,11 +28,13 @@
             android:contentDescription="@string/scanned_id_doc"
             android:src="@drawable/icn_camera"/>
 
-        <Button
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/demogrDocsFrontScanButton"
             style="@style/DemographicsDocsButtonStyle"
             android:layout_width="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="demographics_documents_picture_of_front"/>
 
     </LinearLayout>
 
@@ -47,11 +50,13 @@
             android:contentDescription="@string/scanned_id_doc"
             android:src="@drawable/icn_camera"/>
 
-        <Button
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/demogrDocsBackScanButton"
             style="@style/DemographicsDocsButtonStyle"
             android:layout_width="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="demographics_documents_picture_of_back"/>
 
     </LinearLayout>
 </LinearLayout>

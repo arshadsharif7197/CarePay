@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemInsuranceDTO;
@@ -147,7 +148,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         // 'Cancel' label
         final String cancelLabel = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsCancelLabel();
         // 'Choose' label
-        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsChooseLabel();
+        label = Label.getLabel("demographics_choose");
 
         providerTextView = (TextView) view.findViewById(R.id.demogr_docs_provider);
         providerTextView.setText(label);
@@ -260,14 +261,14 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         if (bitmap != null) {
             if (isFrontScan) {
                 // change button caption to 'rescan'
-                btnScanFrontInsurance.setText(globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED:globalLabelsDTO.getDemographicsDocumentsRescanFrontLabel());
+                btnScanFrontInsurance.setText(Label.getLabel("demographics_documents_rescan_front"));
                 // save from image
                 String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
                 DemographicInsurancePhotoDTO frontDTO = insuranceDTO.getInsurancePhotos().get(0);
                 frontDTO.setInsurancePhoto(imageAsBase64); // create the image dto
             } else {
                 // change button caption to 'rescan'
-                btnScanBackInsurance.setText(globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED:globalLabelsDTO.getDemographicsDocumentsRescanBackLabel());
+                btnScanBackInsurance.setText(Label.getLabel("demographics_documents_rescan_back"));
                 String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
                 DemographicInsurancePhotoDTO backDTO = insuranceDTO.getInsurancePhotos().get(1);
                 backDTO.setInsurancePhoto(imageAsBase64); // create the image dto
@@ -292,8 +293,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                         Picasso.with(getActivity()).load(photoFrontURL)
                                 .fit().centerCrop()
                                 .into(imageFront);
-                        String label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanFrontLabel();
-                        btnScanFrontInsurance.setText(label);
+                        btnScanFrontInsurance.setText(Label.getLabel("demographics_documents_rescan_front"));
                     } catch (MalformedURLException e) {
                         Bitmap bitmap;
                         if (!StringUtil.isNullOrEmpty(photoFrontURL) && (bitmap = SystemUtil.convertStringToBitmap(photoFrontURL)) != null) {
@@ -316,8 +316,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                         Picasso.with(getActivity()).load(photoBackURL)
                                 .fit().centerCrop()
                                 .into(imageBack);
-                        String label1 = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanBackLabel();
-                        btnScanBackInsurance.setText(label1);
+                        btnScanBackInsurance.setText(Label.getLabel("demographics_documents_rescan_back"));
                     } catch (MalformedURLException e) {
                         Bitmap bitmap;
                         if (!StringUtil.isNullOrEmpty(photoBackURL) && (bitmap = SystemUtil.convertStringToBitmap(photoBackURL)) != null) {
@@ -437,13 +436,10 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        String label;
         if (isFrontScan) {
-            label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanFrontLabel();
-            btnScanFrontInsurance.setText(label);
+            btnScanFrontInsurance.setText(Label.getLabel("demographics_documents_rescan_front"));
         } else {
-            label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanBackLabel();
-            btnScanBackInsurance.setText(label);
+            btnScanBackInsurance.setText(Label.getLabel("demographics_documents_rescan_back"));
         }
     }
 
@@ -501,8 +497,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
     @Override
     protected void enablePlanClickable(boolean enabled) {
         if (enabled) {
-            String label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsChooseLabel();
-            planTextView.setText(label);
+            planTextView.setText(Label.getLabel("demographics_choose"));
             planTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
             planTextView.setEnabled(true);
         } else {

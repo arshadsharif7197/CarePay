@@ -25,7 +25,6 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePhotoDTO;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
@@ -60,7 +59,6 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
     private String[] cardTypeDataArray;
 
     private View               view;
-    private boolean isFrontScan;
     private Button             btnScanFrontInsurance;
     private Button             btnScanBackInsurance;
     private EditText           insuranceCardNumEditText;
@@ -74,7 +72,6 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
 
     private DemographicInsurancePayloadDTO            insuranceDTO;
     private DemographicMetadataEntityInsurancesDTO insuranceMetadataDTO;
-    private DemographicLabelsDTO                      globalLabelsDTO;
     private DemographicsSettingsDTO demographicsSettingsDTO;
     private String documentsdocumentsScanFirstString = null;
     private String documentsScanBackString = null;
@@ -84,7 +81,6 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
     private String documentsHaveHealthInsuranceString = null;
     private String documentsAddnotherInsuranceString = null;
     private String documentsGoldenCrossString = null;
-    private String languageString = null;
     private String documentsTypeString = null;
     private String documentsCancelString = null;
     private String documentsRemoveString = null;
@@ -92,8 +88,6 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
     private String documentsProviderString = null;
     private String documentsCardTypeString = null;
     private String documentsCardNumberString = null;
-
-    private DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO = null;
 
     @Nullable
     @Override

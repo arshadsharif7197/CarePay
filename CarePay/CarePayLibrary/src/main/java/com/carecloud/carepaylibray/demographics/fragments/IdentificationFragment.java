@@ -12,7 +12,10 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entitie
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
+import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+
+import java.util.List;
 
 
 public class IdentificationFragment extends CheckInDemographicsBaseFragment {
@@ -24,25 +27,24 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
         checkIfEnableButton(view);
-        (view.findViewById(R.id.toolbar_layout)).setVisibility(View.INVISIBLE);
+        view.findViewById(R.id.toolbar_layout).setVisibility(View.INVISIBLE);
 
         setHeaderTitle(demographicDTO.getMetadata().getLabels().getDemographicsReviewIdentification(), view);
         initNextButton(null, view, View.VISIBLE);
 
-        initialiseChildFragment(demographicDTO.getMetadata().getLabels(),
-                demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().size()>0?demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(0):new DemographicIdDocPayloadDTO(),
+        List<DemographicIdDocPayloadDTO> idDocuments = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments();
+        initialiseChildFragment(idDocuments.size() > 0 ? idDocuments.get(0) : new DemographicIdDocPayloadDTO(),
                 demographicDTO.getMetadata().getDataModels().getDemographic().getIdentityDocuments().properties.items.identityDocument);
         return view;
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         stepProgressBar.setCurrentProgressDot(3);
         checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 4);
         checkInNavListener.setCurrentStep(4);
     }
-
 
     @Override
     protected boolean passConstraints(View view) {
@@ -56,7 +58,7 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment {
 
     @Override
     protected DemographicDTO updateDemographicDTO(View view) {
-        PracticeIdDocScannerFragment fragment = (PracticeIdDocScannerFragment)getChildFragmentManager().findFragmentById(R.id.revDemographicsIdentificationPicCapturer);
+        IdDocScannerFragment fragment = (IdDocScannerFragment) getChildFragmentManager().findFragmentById(R.id.revDemographicsIdentificationPicCapturer);
         DemographicDTO updatableDemographicDTO = new DemographicDTO();
         if (fragment != null) {
             updatableDemographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().clear();
@@ -67,16 +69,14 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment {
         return updatableDemographicDTO;
     }
 
-    private void initialiseChildFragment(DemographicLabelsDTO globalLabelDTO,
-                                                 DemographicIdDocPayloadDTO demPayloadIdDocDTO,
-                                                 DemographicMetadataEntityItemIdDocDTO demographicMetadataEntityItemIdDocDTO) {
+    private void initialiseChildFragment(DemographicIdDocPayloadDTO demPayloadIdDocDTO,
+                                         DemographicMetadataEntityItemIdDocDTO demographicMetadataEntityItemIdDocDTO) {
 
         FragmentManager fm = getChildFragmentManager();
-        String tag = PracticeIdDocScannerFragment.class.getSimpleName();
-        PracticeIdDocScannerFragment fragment = (PracticeIdDocScannerFragment) fm.findFragmentByTag(tag);
+        String tag = IdDocScannerFragment.class.getSimpleName();
+        IdDocScannerFragment fragment = (IdDocScannerFragment) fm.findFragmentByTag(tag);
         if (fragment == null) {
-            fragment = new PracticeIdDocScannerFragment();
-            fragment.setGlobalLabelsDTO(globalLabelDTO);
+            fragment = new IdDocScannerFragment();
             Bundle args = new Bundle();
             DtoHelper.bundleDto(args, demPayloadIdDocDTO);
 
