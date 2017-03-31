@@ -61,8 +61,6 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         profilePicturelistener.loadPictureFragment();
-        scrollView = (ScrollView) view.findViewById(R.id.reviewdemographicsPersonalContainer);
-        scrollToPosition(0,0);
     }
 
     @Override

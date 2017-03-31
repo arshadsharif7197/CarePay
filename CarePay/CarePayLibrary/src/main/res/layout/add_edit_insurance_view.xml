@@ -43,7 +43,7 @@
             android:layout_height="40dp"
             android:layout_alignParentEnd="true"
             android:layout_below="@id/health_insurance_providers"
-            android:layout_marginTop="@dimen/dimen_25dp"
+            android:layout_marginTop="@dimen/dimen_30dp"
             android:textAlignment="textEnd"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_16"
@@ -114,7 +114,7 @@
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/health_insurance_card_number_layout"
-            style="@style/TextInputLayoutStyle"
+            style="@style/SigninSignupTextInputStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dimen_10dp"
@@ -125,14 +125,14 @@
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/health_insurance_card_number"
-                style="@style/EditTextStyle"
+                style="@style/SigninSignupEditStyle"
                 android:inputType="number"
                 app:customAssetFont="proxima_nova_regular" />
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/health_insurance_group_number_layout"
-            style="@style/TextInputLayoutStyle"
+            style="@style/SigninSignupTextInputStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_10dp"
@@ -143,7 +143,7 @@
 
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/health_insurance_group_number"
-                style="@style/EditTextStyle"
+                style="@style/SigninSignupEditStyle"
                 android:inputType="number"
                 app:customAssetFont="proxima_nova_regular" />
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>

@@ -75,6 +75,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     private boolean isCardNumberEmpty;
     private boolean isGroupNumberEmpty;
     private boolean isFrontScan;
+    private boolean hadInsurance;
 
     private String frontImageAsBase64;
     private String backImageAsBase64;
@@ -143,7 +144,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (hasInsurance()) {
+        hadInsurance = hasInsurance();
+        if (hadInsurance) {
             return inflater.inflate(R.layout.dialog_add_edit_insurance, container, false);
         }
 
@@ -153,10 +155,13 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         stepProgressBar.setCumulativeDots(true);
         stepProgressBar.setNumDots(5);
 
-        View child = inflater.inflate(R.layout.dialog_add_edit_insurance, null);
+        View child = inflater.inflate(R.layout.add_edit_insurance_view, null);
         ((ViewGroup) view.findViewById(R.id.checkinDemographicsContentLayout)).addView(child);
 
         inflateToolbarViews(view);
+
+        hideKeyboardOnViewTouch(view);
+        hideKeyboardOnViewTouch(view.findViewById(R.id.container_main));
 
         return view;
     }
@@ -187,12 +192,16 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        findViewById(R.id.edit_insurance_close_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View closeButton) {
-                closeDialog();
-            }
-        });
+        if(hasInsurance()) {
+            findViewById(R.id.edit_insurance_close_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View closeButton) {
+                    closeDialog();
+                }
+            });
+        }
+        View container = view.findViewById(R.id.container_main);
+        hideKeyboardOnViewTouch(container);
 
         selectedProviderTextView = (CarePayTextView) findViewById(R.id.health_insurance_providers);
         selectedPlan = (CarePayTextView) findViewById(R.id.health_insurance_choose_plans);
@@ -229,8 +238,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         setValues();
 
         if (editedIndex == NEW_INSURANCE) {
-            ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(
-                    Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));
             ((Button) findViewById(R.id.take_front_photo_button)).setText(
                     Label.getLabel("demographics_insurance_take_front_photo"));
             ((Button) findViewById(R.id.take_back_photo_button)).setText(
@@ -240,25 +247,21 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
             if (hasInsurance()) {
                 disappearViewById(R.id.remove_insurance_entry);
+                ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(
+                        Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));
             } else {
-                disappearViewById(R.id.dialog_add_edit_insurance_bottom_toolbar);
-                disappearViewById(R.id.insurance_toolbar);
-//                disappearViewById(R.id.add_edit_insurance_bottom_division);
                 showViewById(R.id.check_in_demographics_left_button);
                 findViewById(R.id.check_in_demographics_left_button).setOnClickListener(getNoInsuranceListener());
                 saveInsuranceButton = (Button) findViewById(R.id.checkinDemographicsNextButton);
                 saveInsuranceButton.setText(Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));
             }
         } else {
-            DemographicInsurancePayloadDTO demographicInsurancePayload = demographicDTO.getPayload().getDemographics()
-                    .getPayload().getInsurances().get(editedIndex);
-            ((CarePayTextView) findViewById(R.id.toolbar_title))
-                    .setText(demographicInsurancePayload.getInsurancePlan());
+            DemographicInsurancePayloadDTO demographicInsurancePayload = demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(editedIndex);
+            ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(demographicInsurancePayload.getInsurancePlan());
             findViewById(R.id.health_insurance_plans).setVisibility(View.GONE);
             selectedProviderTextView.setText(demographicInsurancePayload.getInsuranceProvider());
             selectedPlan.setText(demographicInsurancePayload.getInsurancePlan());
             selectedType.setText(demographicInsurancePayload.getInsuranceType());
-
             cardNumber.setText(demographicInsurancePayload.getInsuranceMemberId());
             cardNumber.getOnFocusChangeListener().onFocusChange(cardNumber, false);
             groupNumber.setText(demographicInsurancePayload.getInsuranceGroupId());
@@ -286,9 +289,9 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         return new View.OnClickListener() {
             @Override
             public void onClick(View saveChanges) {
-                demographicDTO = null;
-
-                closeDialog();
+                if (callback != null) {
+                    callback.onInsuranceEdited(null);
+                }
             }
         };
     }
@@ -338,6 +341,10 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         dismiss();
         if (callback != null) {
             callback.onInsuranceEdited(demographicDTO);
+
+            if (!hadInsurance) {
+                callback.goOneStepBack();
+            }
         }
     }
 
@@ -473,15 +480,13 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
                         if ("other".equals(dataArray[position].toLowerCase())) {
                             otherProviderEditText.setVisibility(View.VISIBLE);
                             otherProviderEditText.requestFocus();
-                            selectedProviderTextView.setText(dataArray[position]);
 
                         } else {
                             otherProviderEditText.setVisibility(View.GONE);
-                            selectedProviderTextView.setText(dataArray[position]);
                             selectedProvider = dataArray[position];
-
-                            selectedPlan.setVisibility(View.VISIBLE);
                         }
+                        selectedProviderTextView.setText(dataArray[position]);
+                        selectedPlan.setVisibility(View.VISIBLE);
                         break;
 
                     case PLANS:
