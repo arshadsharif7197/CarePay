@@ -45,18 +45,14 @@ public class DemographicLabelsDTO {
     @SerializedName("demographics_healthinsurance_1_section")
     @Expose
     private String demographicsHealthinsurance1Section;
-    @SerializedName("demographics_missing_information")
-    @Expose
-    private String demographicsMissingInformation;
+
     @SerializedName("demographics_healthinsurance_2_section")
     @Expose
     private String demographicsHealthinsurance2Section;
     @SerializedName("demographics_healthinsurance_3_section")
     @Expose
     private String demographicsHealthinsurance3Section;
-    @SerializedName("demographics_update_demographic_title")
-    @Expose
-    private String demographicsUpdateDemographicTitle;
+
     @SerializedName("demographics_identity_text")
     @Expose
     private String demographicsIdentityText;
@@ -64,10 +60,6 @@ public class DemographicLabelsDTO {
     @SerializedName("demographics_update_profile_photo_link")
     @Expose
     private String demographicsUpdateProfilePhotoLink;
-
-    @SerializedName("demographics_update_email_and_password_link")
-    @Expose
-    private String demographicsUpdateEmailAndPasswordLink;
 
     @SerializedName("demographics_address_section")
     @Expose
@@ -84,10 +76,6 @@ public class DemographicLabelsDTO {
     @SerializedName("demographics_allset_section")
     @Expose
     private String demographicsAllSetSection;
-
-    @SerializedName("demographics_add_another_insurance_link")
-    @Expose
-    private String demographicsAddAnotherInsuranceLink;
 
     @SerializedName("demographics_next")
     @Expose
@@ -120,30 +108,6 @@ public class DemographicLabelsDTO {
     @SerializedName("demographics_choose")
     @Expose
     private String demographicsChooseLabel;
-
-    @SerializedName("demographics_details_recapture_picture_caption")
-    @Expose
-    private String demographicsProfileReCaptureCaption;
-
-    @SerializedName("demographics_health_insurance")
-    @Expose
-    private String demographicsHealthInsurance;
-
-    @SerializedName("demographics_details_allergies_section")
-    @Expose
-    private String demographicsDetailsAllergiesSection;
-
-    @SerializedName("demographics_details_optional_hint")
-    @Expose
-    private String demographicsDetailsOptionalHint;
-
-    @SerializedName("demographics_details_medications_section")
-    @Expose
-    private String demographicsDetailsMedicationsSection;
-
-    @SerializedName("demographics_details_medication_add_unlisted")
-    @Expose
-    private String demographicsDetailsMedAddUnlistedLabel;
 
     @SerializedName("demographics_documents_header")
     @Expose
@@ -233,18 +197,6 @@ public class DemographicLabelsDTO {
     @Expose
     private String documentsRemove;
 
-    @SerializedName("demographics_take_pic_option")
-    @Expose
-    private String demographicsTakePhotoOption;
-
-    @SerializedName("demographics_select_gallery_option")
-    @Expose
-    private String demographicsChooseFromLibraryOption;
-
-    @SerializedName("demographics_select_capture_option_title")
-    @Expose
-    private String demographicsCaptureOptionsTitle;
-
     @SerializedName("practice_checin_edit_clickable_label")
     @Expose
     private String practiceCheckinEditClickableLabel;
@@ -272,14 +224,6 @@ public class DemographicLabelsDTO {
     @SerializedName("demographics_documents_identification")
     @Expose
     private String demographicsDocumentsIdentification;
-
-    @SerializedName("demographics_documents_picture_of_front")
-    @Expose
-    private String demographicsDocumentsPictureOfFront;
-
-    @SerializedName("demographics_documents_picture_of_back")
-    @Expose
-    private String demographicsDocumentsPictureOfBack;
 
     @SerializedName("demographics_review_identification")
     @Expose
@@ -349,14 +293,6 @@ public class DemographicLabelsDTO {
         this.demographicsChooseLabel = demographicsChooseLabel;
     }
 
-    public String getDemographicsProfileReCaptureCaption() {
-        return StringUtil.getLabelForView(demographicsProfileReCaptureCaption);
-    }
-
-    public String getDemographicsDetailsOptionalHint() {
-        return StringUtil.getLabelForView(demographicsDetailsOptionalHint);
-    }
-
     public String getDemographicsDocumentsSwitchLabel() {
         return StringUtil.getLabelForView(demographicsDocumentsSwitchLabel);
     }
@@ -421,32 +357,16 @@ public class DemographicLabelsDTO {
         return StringUtil.getLabelForView(demographicsTitleSelectIdType);
     }
 
-    public void setDemographicsTitleSelectIdType(String demographicsTitleSelectIdType) {
-        this.demographicsTitleSelectIdType = demographicsTitleSelectIdType;
-    }
-
     public String getDemographicsDocumentsChoosePlanLabel() {
         return StringUtil.getLabelForView(demographicsDocumentsChoosePlanLabel);
-    }
-
-    public void setDemographicsDocumentsChoosePlanLabel(String demographicsDocumentsChoosePlanLabel) {
-        this.demographicsDocumentsChoosePlanLabel = demographicsDocumentsChoosePlanLabel;
     }
 
     public String getDemographicsDocumentsInsTypeLabel() {
         return StringUtil.getLabelForView(demographicsDocumentsInsTypeLabel);
     }
 
-    public void setDemographicsDocumentsInsTypeLabel(String demographicsDocumentsInsTypeLabel) {
-        this.demographicsDocumentsInsTypeLabel = demographicsDocumentsInsTypeLabel;
-    }
-
     public String getDemographicsTitleCardType() {
         return StringUtil.getLabelForView(demographicsTitleCardType);
-    }
-
-    public void setDemographicsTitleCardType(String demographicsTitleCardType) {
-        this.demographicsTitleCardType = demographicsTitleCardType;
     }
 
     public String getDemographicsAllSetHeader() {
@@ -455,13 +375,6 @@ public class DemographicLabelsDTO {
 
     public String getDemographicsAllSetGoButton() {
         return StringUtil.getLabelForView(demographicsAllSetGoButton);
-    }
-
-    /**
-     * @return The demographicsReviewToolbarTitle
-     */
-    public String getDemographicsReviewToolbarTitle() {
-        return StringUtil.getLabelForView(demographicsReviewToolbarTitle);
     }
 
     /**
@@ -557,42 +470,12 @@ public class DemographicLabelsDTO {
     }
 
     /**
-      * @return The label
-     */
-    public String getDemographicsTakePhotoOption() {
-        return StringUtil.getLabelForView(demographicsTakePhotoOption) ;
-    }
-
-    /**
-     * @return The label
-     */
-    public String getDemographicsChooseFromLibraryOption() {
-        return StringUtil.getLabelForView(demographicsChooseFromLibraryOption);
-    }
-
-    /**
-     * @return The label
-     */
-    public String getDemographicsCaptureOptionsTitle() {
-        return StringUtil.getLabelForView(demographicsCaptureOptionsTitle);
-    }
-
-    /**
      * Gets demographics identity text.
      *
      * @return the demographics identity text
      */
     public String getDemographicsIdentityText() {
         return StringUtil.getLabelForView(demographicsIdentityText);
-    }
-
-    /**
-     * Gets demographics missing information.
-     *
-     * @return the demographics missing information
-     */
-    public String getDemographicsMissingInformation() {
-        return StringUtil.getLabelForView(demographicsMissingInformation);
     }
 
     /**
@@ -656,24 +539,6 @@ public class DemographicLabelsDTO {
      */
     public String getDemographicsDocumentsIdentification() {
         return StringUtil.getLabelForView(demographicsDocumentsIdentification);
-    }
-
-    /**
-     * Gets demographics documents picture of front.
-     *
-     * @return the demographics documents picture of front
-     */
-    public String getDemographicsDocumentsPictureOfFront() {
-        return StringUtil.getLabelForView(demographicsDocumentsPictureOfFront);
-    }
-
-    /**
-     * Gets demographics documents picture of back.
-     *
-     * @return the demographics documents picture of back
-     */
-    public String getDemographicsDocumentsPictureOfBack() {
-        return StringUtil.getLabelForView(demographicsDocumentsPictureOfBack);
     }
 
     public String getDemographicsReviewIdentification() {

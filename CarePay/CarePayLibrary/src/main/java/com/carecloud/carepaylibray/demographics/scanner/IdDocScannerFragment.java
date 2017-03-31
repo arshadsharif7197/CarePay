@@ -46,17 +46,11 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
     private Button scanBackButton;
 
     private DemographicIdDocPayloadDTO model;
-    private DemographicLabelsDTO globalLabelsDTO;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        // fetch the labels
-        Activity activity = getActivity();
-        if (activity instanceof DemographicsLabelsHolder) {
-            globalLabelsDTO = ((DemographicsLabelsHolder) getActivity()).getLabelsDTO();
-        }
 
         // create the view
         view = inflater.inflate(getLayoutRes(), container, false);
@@ -78,12 +72,8 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         imageFront = (ImageView) view.findViewById(R.id.demogrDocsFrontScanImage);
         imageBack = (ImageView) view.findViewById(R.id.demogrDocsBackScanImage);
 
-        // init views (labels and logic)
-        String label;
         // add click listener
         scanFrontButton = (Button) view.findViewById(R.id.demogrDocsFrontScanButton);
-        label = globalLabelsDTO.getDemographicsDocumentsPictureOfFront();
-        scanFrontButton.setText(label);
         scanFrontButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,8 +82,6 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         });
 
         scanBackButton = (Button) view.findViewById(R.id.demogrDocsBackScanButton);
-        label = globalLabelsDTO.getDemographicsDocumentsPictureOfBack();
-        scanBackButton.setText(label);
         scanBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,10 +92,6 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         setTypefaces(view);
 
         populateViewsFromModel(view);
-    }
-
-    public void setGlobalLabelsDTO(DemographicLabelsDTO globalLabelsDTO) {
-        this.globalLabelsDTO = globalLabelsDTO;
     }
 
     @Override
@@ -126,6 +110,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                 frontDTO.setIdDocPhoto(imageAsBase64); // create the image dto
                 frontDTO.setPage(1);
                 frontDTO.setDelete(false);
+                imageFront.setImageBitmap(bitmap);
             } else {
                 // change button caption to 'rescan'
                 scanBackButton.setText(R.string.demogr_docs_rescan_back);
@@ -134,6 +119,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                 backDTO.setIdDocPhoto(imageAsBase64); // create the image dto
                 backDTO.setPage(2);
                 backDTO.setDelete(false);
+                imageBack.setImageBitmap(bitmap);
             }
         }
     }
@@ -176,23 +162,6 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
 
     @Override
     protected void setTypefaces(View view) {
-        Context context = getActivity();
-        setGothamRoundedMediumTypeface(context, scanFrontButton);
-        setGothamRoundedMediumTypeface(context, scanBackButton);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        String label;
-        if (isFrontScan) {
-            label = globalLabelsDTO.getDemographicsDocumentsPictureOfFront();
-            scanFrontButton.setText(label);
-        } else {
-            label = globalLabelsDTO.getDemographicsDocumentsPictureOfBack();
-            scanBackButton.setText(label);
-        }
     }
 
     @Override
