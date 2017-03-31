@@ -121,13 +121,13 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         stepProgressBar.setCumulativeDots(true);
         stepProgressBar.setNumDots(5);
 
-        View child = inflater.inflate(R.layout.dialog_add_edit_insurance, null);
+        View child = inflater.inflate(R.layout.add_edit_insurance_view, null);
         ((ViewGroup) view.findViewById(R.id.checkinDemographicsContentLayout)).addView(child);
 
-        ViewGroup ly = (ViewGroup) view.findViewById(R.id.dialog_content_layout);
-        ly.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
-
         inflateToolbarViews(view);
+
+        hideKeyboardOnViewTouch(view);
+        hideKeyboardOnViewTouch(view.findViewById(R.id.container_main));
 
         return view;
     }
@@ -186,12 +186,16 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        findViewById(R.id.edit_insurance_close_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View closeButton) {
-                closeDialog();
-            }
-        });
+        if(hasInsurance()) {
+            findViewById(R.id.edit_insurance_close_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View closeButton) {
+                    closeDialog();
+                }
+            });
+        }
+        View container = view.findViewById(R.id.container_main);
+        hideKeyboardOnViewTouch(container);
 
         selectedProvider = (CarePayTextView) findViewById(R.id.health_insurance_providers);
         selectedPlan = (CarePayTextView) findViewById(R.id.health_insurance_choose_plans);
@@ -226,16 +230,12 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
         setValues();
 
-        ((CarePayTextView) findViewById(R.id.edit_insurance_cancel_label)).setText(
-                Label.getLabel("demographics_review_edit_insurance_close"));
         ((CarePayTextView) findViewById(R.id.health_insurance_provider_label)).setText(
                 Label.getLabel("demographics_documents_title_select_provider"));
         ((CarePayTextView) findViewById(R.id.health_insurance_plan_label)).setText(
                 Label.getLabel("demographics_documents_title_select_plan"));
 
         if (editedIndex == NEW_INSURANCE) {
-            ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(
-                    Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));
             ((Button) findViewById(R.id.take_front_photo_button)).setText(
                     Label.getLabel("demographics_insurance_take_front_photo"));
             ((Button) findViewById(R.id.take_back_photo_button)).setText(
@@ -245,10 +245,12 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
             if (hasInsurance()) {
                 disappearViewById(R.id.remove_insurance_entry);
+                ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(
+                        Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));
             } else {
-                disappearViewById(R.id.dialog_add_edit_insurance_bottom_toolbar);
-                disappearViewById(R.id.insurance_toolbar);
-                disappearViewById(R.id.add_edit_insurance_bottom_division);
+//                disappearViewById(R.id.dialog_add_edit_insurance_bottom_toolbar);
+//                disappearViewById(R.id.insurance_toolbar);
+//                disappearViewById(R.id.add_edit_insurance_bottom_division);
                 showViewById(R.id.check_in_demographics_left_button);
                 findViewById(R.id.check_in_demographics_left_button).setOnClickListener(getNoInsuranceListener());
 
@@ -257,7 +259,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
             }
         } else {
             DemographicInsurancePayloadDTO dto = demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(editedIndex);
-            ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(dto.getInsurancePlan());
+            ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(dto.getInsuranceProvider());
             selectedProvider.setText(dto.getInsuranceProvider());
             selectedPlan.setText(dto.getInsurancePlan());
             selectedType.setText(dto.getInsuranceType());

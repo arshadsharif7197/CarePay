@@ -253,10 +253,11 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
+            paymentResultModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
             if (hasNoPayments()) {
                 showNoPaymentsImage();
             } else {
-                showPayments(DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString()));
+                showPayments(paymentResultModel);
             }
         }
 
