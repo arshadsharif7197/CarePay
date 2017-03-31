@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
@@ -103,7 +104,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         if (bitmap != null) {
             if (isFrontScan) {
                 // change button caption to 'rescan'
-                scanFrontButton.setText(R.string.demogr_docs_rescan_front);
+                scanFrontButton.setText(Label.getLabel("demographics_documents_rescan_front"));
                 // save from image
                 String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
                 DemographicIdDocPhotoDTO frontDTO = model.getIdDocPhothos().get(0);
@@ -113,7 +114,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                 imageFront.setImageBitmap(bitmap);
             } else {
                 // change button caption to 'rescan'
-                scanBackButton.setText(R.string.demogr_docs_rescan_back);
+                scanBackButton.setText(Label.getLabel("demographics_documents_rescan_back"));
                 String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
                 DemographicIdDocPhotoDTO backDTO = model.getIdDocPhothos().get(1);
                 backDTO.setIdDocPhoto(imageAsBase64); // create the image dto

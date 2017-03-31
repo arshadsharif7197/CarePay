@@ -93,8 +93,6 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
     private String documentsCardTypeString = null;
     private String documentsCardNumberString = null;
 
-    private DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO = null;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,

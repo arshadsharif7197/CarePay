@@ -10,6 +10,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
@@ -96,14 +97,14 @@ public class DemographicsCheckInDocumentsFragment extends BaseFragment {
 
         final TextView idTypeClickable = (TextView) view.findViewById(R.id.demogrDocTypeClickable);
         if(StringUtil.isNullOrEmpty(demPayloadIdDocDTO.getIdType())){
-            label = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsChooseLabel();
+            label = Label.getLabel("demographics_choose");
         } else {
             label = demPayloadIdDocDTO.getIdType();
             showCard(idCardContainer, true);
         }
 
         idTypeClickable.setText(label);
-        final String titleSelIdDoc = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsChooseLabel();
+        final String titleSelIdDoc = Label.getLabel("demographics_choose");
         idTypeClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -22,6 +22,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
@@ -340,7 +341,7 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
         correctInformationButton = (Button) view.findViewById(R.id.YesCorrectButton);
         correctInformationButton.setText(globalLabelsMetaDTO.getDemographicsReviewCorrectButton().toUpperCase());
         updateInformationUpdate = (Button) view.findViewById(R.id.needUpdateButton);
-        updateInformationUpdate.setText(globalLabelsMetaDTO.getDemographicsReviewUpdateButton().toUpperCase());
+        updateInformationUpdate.setText(Label.getLabel("demographics_review_update_button").toUpperCase());
         correctInformationButton.setOnClickListener(this);
         updateInformationUpdate.setOnClickListener(this);
         demographicProgressBar = (ProgressBar) view.findViewById(R.id.demographicReviewProgressBar);
@@ -360,7 +361,7 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
         getDriverLicenseTextView = (TextView) view.findViewById(R.id.reviewDriverLicenseTextView);
 
         demographicSectionTextView = (TextView) view.findViewById(R.id.demographicSectionLabel);
-        demographicSectionTextView.setText(globalLabelsMetaDTO.getDemographicSectionTitle().toUpperCase());
+        demographicSectionTextView.setText(Label.getLabel("demographics_section").toUpperCase());
 
         healthInsurance1SecionTextView = (TextView) view.findViewById(R.id.healthInsurance1SubTitle);
         healthInsurance1SecionTextView.setText(globalLabelsMetaDTO.getDemographicsHealthinsurance1Section().toUpperCase());
