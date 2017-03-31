@@ -61,7 +61,6 @@ import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
-import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -563,26 +562,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         navigateToFragment(medicationsAllergyFragment, true);
     }
 
-    /**
-     * Entry point for navigating to medication fragment
-     *
-     * @param persDetailsDTO personal details dto
-     */
-    public void initializeProfilePictureFragment(PatientModel persDetailsDTO) {
-
-        ProfilePictureFragment fragment = new ProfilePictureFragment();
-
-        Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, persDetailsDTO);
-        args.putBoolean(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE, true);
-        fragment.setArguments(args);
-        FragmentManager fm = getSupportFragmentManager();
-        String tag = ProfilePictureFragment.class.getSimpleName();
-        fm.beginTransaction().replace(R.id.revdemographicsAddressPicCapturer, fragment, tag)
-                .commit();
-
-    }
-
     @Override
     public String getProfilePicture() {
         ProfilePictureFragment fragment = (ProfilePictureFragment)
@@ -618,10 +597,17 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void loadPictureFragment() {
-        initializeProfilePictureFragment(
-                demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails());
-    }
+        ProfilePictureFragment fragment = new ProfilePictureFragment();
 
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails());
+        args.putBoolean(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE, true);
+        fragment.setArguments(args);
+        FragmentManager fm = getSupportFragmentManager();
+        String tag = ProfilePictureFragment.class.getSimpleName();
+        fm.beginTransaction().replace(R.id.revdemographicsAddressPicCapturer, fragment, tag)
+                .commit();
+    }
 
     /**
      * Navigate to fragment

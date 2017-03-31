@@ -41,8 +41,6 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
     private DemographicDTO demographicDTO;
     private UpdateProfilePictureListener profilePicturelistener;
 
-    private ScrollView scrollView;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
@@ -300,16 +298,6 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         TextInputLayout doblabel = (TextInputLayout) view.findViewById( R.id.reviewdemogrDOBTextInput);
         EditText dobEditText = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
         return isDateOfBirthValid(doblabel, dobEditText);
-    }
-
-    private void scrollToPosition(final int positionX, final int positionY){
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                scrollView.scrollTo(positionX, positionY);
-            }
-        }, 30);
-
     }
 
     @Override
