@@ -25,6 +25,7 @@ import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Picasso;
 
 import org.joda.time.DateTime;
@@ -128,7 +129,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     private void bindCardViewHolder(final CardViewHolder holder, final CardViewPatient patient) {
-        holder.name.setText(patient.name);
+        holder.name.setText(StringUtil.captialize(patient.name));
         holder.balance.setText(patient.balance);
         holder.provider.setText(patient.providerName);
         holder.initials.setText(patient.initials);
