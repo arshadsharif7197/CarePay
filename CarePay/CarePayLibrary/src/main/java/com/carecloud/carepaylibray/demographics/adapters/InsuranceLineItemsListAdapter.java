@@ -44,6 +44,10 @@ public class InsuranceLineItemsListAdapter extends
 
     @Override
     public int getItemCount() {
+        if (demographicDTO == null) {
+            return 0;
+        }
+
         return demographicDTO.getPayload().getDemographics().getPayload().getInsurances().size();
     }
 
