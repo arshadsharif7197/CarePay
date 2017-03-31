@@ -17,7 +17,6 @@ import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment implements
@@ -58,6 +57,8 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
 
         if (demographicDTO == null) {
             demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
+        } else if (!hasInsurance()){
+            demographicDTO = null;
         }
         initActiveSection(view);
 
@@ -82,11 +83,15 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     }
 
     private void initializeViews() {
-        if (hasInsurance()) {
+        if (demographicDTO == null) {
+
+            getActivity().getSupportFragmentManager().popBackStack();
+
+        } else if (hasInsurance()) {
 
             adapter.setDemographicDTO(demographicDTO);
 
-        } else {
+        } else  {
 
             editInsurance(null, false);
 

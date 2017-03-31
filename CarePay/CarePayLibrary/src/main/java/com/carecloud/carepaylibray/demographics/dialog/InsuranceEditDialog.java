@@ -73,6 +73,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     private boolean isCardNumberEmpty;
     private boolean isGroupNumberEmpty;
     private boolean isFrontScan;
+    private boolean hadInsurance;
 
     private String frontImageAsBase64;
     private String backImageAsBase64;
@@ -111,7 +112,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (hasInsurance()) {
+        hadInsurance = hasInsurance();
+        if (hadInsurance) {
             return inflater.inflate(R.layout.dialog_add_edit_insurance, container, false);
         }
 
@@ -248,9 +250,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
                 ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(
                         Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));
             } else {
-//                disappearViewById(R.id.dialog_add_edit_insurance_bottom_toolbar);
-//                disappearViewById(R.id.insurance_toolbar);
-//                disappearViewById(R.id.add_edit_insurance_bottom_division);
                 showViewById(R.id.check_in_demographics_left_button);
                 findViewById(R.id.check_in_demographics_left_button).setOnClickListener(getNoInsuranceListener());
 
@@ -294,9 +293,9 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         return new View.OnClickListener() {
             @Override
             public void onClick(View saveChanges) {
-                demographicDTO = null;
-
-                closeDialog();
+                if (callback != null) {
+                    callback.onInsuranceEdited(null);
+                }
             }
         };
     }
@@ -348,6 +347,10 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
         if (callback != null) {
             callback.onInsuranceEdited(demographicDTO);
+
+            if (!hadInsurance) {
+                callback.goOneStepBack();
+            }
         }
     }
 
