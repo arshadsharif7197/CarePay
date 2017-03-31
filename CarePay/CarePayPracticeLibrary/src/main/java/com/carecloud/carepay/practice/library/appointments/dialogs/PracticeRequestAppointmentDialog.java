@@ -14,7 +14,6 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.customdialog.BasePracticeDialog;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
-import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
@@ -112,7 +111,7 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
 
         initializeVisitTypeTextView(view);
 
-        setCancelImage(R.drawable.icn_arrow_up);
+        setCancelImage(R.drawable.icn_arrow_left);
         setCancelable(false);
     }
 
