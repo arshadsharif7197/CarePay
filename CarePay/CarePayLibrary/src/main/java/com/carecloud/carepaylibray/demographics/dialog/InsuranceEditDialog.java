@@ -250,9 +250,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
                 ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(
                         Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));
             } else {
-//                disappearViewById(R.id.dialog_add_edit_insurance_bottom_toolbar);
-//                disappearViewById(R.id.insurance_toolbar);
-//                disappearViewById(R.id.add_edit_insurance_bottom_division);
                 showViewById(R.id.check_in_demographics_left_button);
                 findViewById(R.id.check_in_demographics_left_button).setOnClickListener(getNoInsuranceListener());
 
