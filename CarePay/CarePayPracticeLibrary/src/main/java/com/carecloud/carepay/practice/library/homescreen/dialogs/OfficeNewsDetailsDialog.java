@@ -1,43 +1,47 @@
 package com.carecloud.carepay.practice.library.homescreen.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.Window;
-import android.widget.ImageView;
+import android.webkit.WebView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenOfficeNewsDTO;
-import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenOfficeNewsPayloadDTO;
-import com.carecloud.carepaylibray.utils.DateUtil;
-import com.carecloud.carepaylibray.utils.RoundedImageTransfer;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class OfficeNewsDetailsDialog extends Dialog {
 
     private Context context;
-    private String titleText;
-    private String cancelText;
-    private HomeScreenOfficeNewsDTO officeNewsPost;
+    private List<HomeScreenOfficeNewsDTO> officeNewsList;
+    private List<View> officeNewsPages;
+    private int position;
+    private RadioGroup pages;
 
     /**
      * Constructor
-     * @param context context
-     * @param title dialog title
-     * @param cancelText dialog cancel
-     * @param officeNewsPost data
+     *
+     * @param context        context
+     * @param officeNewsList data
      */
-    public OfficeNewsDetailsDialog(Context context, String title, String cancelText,
-                                   HomeScreenOfficeNewsDTO officeNewsPost) {
+    public OfficeNewsDetailsDialog(Context context, List<HomeScreenOfficeNewsDTO> officeNewsList,
+                                   int position) {
         super(context);
         this.context = context;
-        this.titleText = title;
-        this.cancelText = cancelText;
-        this.officeNewsPost = officeNewsPost;
+        this.position = position;
+        this.officeNewsList = officeNewsList;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -50,6 +54,7 @@ public class OfficeNewsDetailsDialog extends Dialog {
         setCancelable(false);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
+        addView();
         initializeView();
         handleException();
     }
@@ -60,22 +65,31 @@ public class OfficeNewsDetailsDialog extends Dialog {
         thread.setDefaultUncaughtExceptionHandler(new SystemUtil());
     }
 
+    @SuppressWarnings("deprecation")
+    @SuppressLint("SetJavaScriptEnabled")
     private void initializeView() {
-        ((TextView) findViewById(R.id.office_news_details_cancel_label)).setText(cancelText);
-        ((TextView) findViewById(R.id.office_news_details_header)).setText(titleText);
+        ((TextView) findViewById(R.id.office_news_details_cancel_label)).setText(Label.getLabel("news_cancel_label"));
+        ((TextView) findViewById(R.id.office_news_details_header)).setText(Label.getLabel("news_title"));
 
-        if (officeNewsPost != null && officeNewsPost.getPayload() != null) {
-            HomeScreenOfficeNewsPayloadDTO payload = officeNewsPost.getPayload();
+        if (officeNewsList != null && !officeNewsList.isEmpty()) {
+            NewsPagerAdapter adapter = new NewsPagerAdapter();
+            ViewPager newsArticle = (ViewPager) findViewById(R.id.office_news_viewpager);
+            newsArticle.setAdapter(adapter);
 
-            String publishedDate = DateUtil.getInstance().setDateRaw(payload.getPublishDate())
-                    .getDateAsMonthLiteralDayOrdinalYear();
-            ((TextView) findViewById(R.id.office_news_published_date)).setText(publishedDate);
-            ((TextView) findViewById(R.id.office_news_headline)).setText(payload.getHeadline());
-            ((TextView) findViewById(R.id.office_news_body)).setText(payload.getBody());
+            newsArticle.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                public void onPageScrollStateChanged(int state) {
+                }
 
-            ImageView photo = (ImageView) findViewById(R.id.office_news_headline_photo);
-            Picasso.with(context).load(payload.getHeadlinePhoto()).transform(
-                    new RoundedImageTransfer(20, 0)).resize(528, 222).into(photo);
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                }
+
+                public void onPageSelected(int position) {
+                    RadioButton pageIndicator = (RadioButton) pages.getChildAt(position);
+                    pageIndicator.setChecked(true);
+                }
+            });
+
+            newsArticle.setCurrentItem(position, true);
         }
 
         findViewById(R.id.office_news_details_close_button).setOnClickListener(new View.OnClickListener() {
@@ -84,5 +98,58 @@ public class OfficeNewsDetailsDialog extends Dialog {
                 dismiss();
             }
         });
+    }
+
+    @SuppressWarnings("deprecation")
+    private void addView() {
+        officeNewsPages = new ArrayList<>();
+        pages = (RadioGroup) findViewById(R.id.office_news_page_indicator);
+        RadioGroup.LayoutParams params;
+
+        for (int i = 0; i < officeNewsList.size(); i++) {
+            HomeScreenOfficeNewsDTO officeNewsDTO = officeNewsList.get(i);
+            WebView webView = new WebView(context);
+            webView.loadUrl(officeNewsDTO.getPayload().getNewsUrl());
+            officeNewsPages.add(webView);
+
+            RadioButton newsPages = new RadioButton(context);
+            newsPages.setId(i);
+
+            newsPages.setButtonDrawable(context.getResources().getDrawable(R.drawable.office_news_page_indicator));
+            params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, 0, 10, 0);
+            pages.addView(newsPages, params);
+        }
+
+        ((RadioButton) pages.getChildAt(position)).setChecked(true);
+    }
+
+    @SuppressWarnings("deprecation")
+    private class NewsPagerAdapter extends PagerAdapter {
+        @Override
+        public void destroyItem(View arg0, int arg1, Object arg2) {
+            ((ViewPager) arg0).removeView(officeNewsPages.get(arg1));
+        }
+
+        @Override
+        public void finishUpdate(View arg0) {
+
+        }
+
+        @Override
+        public int getCount() {
+            return officeNewsPages.size();
+        }
+
+        @Override
+        public Object instantiateItem(View arg0, int arg1) {
+            ((ViewPager) arg0).addView(officeNewsPages.get(arg1), 0);
+            return officeNewsPages.get(arg1);
+        }
+
+        @Override
+        public boolean isViewFromObject(View arg0, Object arg1) {
+            return arg0 == (arg1);
+        }
     }
 }
