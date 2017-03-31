@@ -183,6 +183,11 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         EditText city = (EditText) mainView.findViewById(R.id.cityId);
         city.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(cityInputLayout, null));
 
+
+        TextInputLayout stateInputLayout = (TextInputLayout) mainView.findViewById(R.id.stateTextInputLayout);
+        EditText state = (EditText) mainView.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView);
+        state.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(cityInputLayout, null));
+
         address.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int end) {
@@ -315,10 +320,12 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
             String state = demographicAddressPayloadDTO.getState();
             if (SystemUtil.isNotEmptyString(state) || !((TextView) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView)).getText().toString().isEmpty()) {
-                ((TextView) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView)).setText(state);
+//                ((TextView) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView)).setText(state);
+                initializeInputLayoutValue(demographicAddressPayloadDTO.getState(), R.id.reviewDemographicsStateAutoCompleteTextView, view);
             } else {
-                ((TextView) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView)).setText(
-                        Label.getLabel("demographics_choose"));
+//                ((TextView) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView)).setText(
+//                        Label.getLabel("demographics_choose"));
+                initializeInputLayoutValue(Label.getLabel("demographics_choose"), R.id.reviewDemographicsStateAutoCompleteTextView, view);
             }
 
             if (SystemUtil.isNotEmptyString(demographicAddressPayloadDTO.getZipcode())) {
@@ -420,7 +427,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         cityEditText = (EditText) view.findViewById(R.id.cityId);
         stateEditText = (TextView) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView);
 
-        (view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView)).setOnClickListener(editStateListener);
+        stateEditText.setOnClickListener(editStateListener);
     }
 
     @Override
