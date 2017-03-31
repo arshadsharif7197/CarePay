@@ -26,6 +26,7 @@ import com.carecloud.carepay.patient.demographics.fragments.viewpager.Demographi
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsDocumentsFragmentWthWrapper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CustomViewPager;
@@ -80,7 +81,6 @@ public class DemographicsActivity extends BasePatientActivity
     private DemographicMetadataEntityAddressDTO addressEntityMetaDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
     private DemographicMetadataEntityIdDocsDTO idDocsMetaDTO;
-    private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
     private DemographicLabelsDTO labelsDTO;
     private Toolbar toolbar;
     private String[] fragLabels;
@@ -113,10 +113,10 @@ public class DemographicsActivity extends BasePatientActivity
 
         // init frag labels
         fragLabels = new String[4];
-        fragLabels[0] = labelsDTO == null ? CarePayConstants.NOT_DEFINED : labelsDTO.getDemographicsAddressSection();
-        fragLabels[1] = labelsDTO == null ? CarePayConstants.NOT_DEFINED : labelsDTO.getDemographicsDetailsSection();
-        fragLabels[2] = labelsDTO == null ? CarePayConstants.NOT_DEFINED : labelsDTO.getDemographicsDocumentsSection();
-        fragLabels[3] = labelsDTO == null ? CarePayConstants.NOT_DEFINED : labelsDTO.getDemographicsAllSetSection();
+        fragLabels[0] = Label.getLabel("demographics_address_section");
+        fragLabels[1] = Label.getLabel("demographics_details_section");
+        fragLabels[2] = Label.getLabel("demographics_documents_section");
+        fragLabels[3] = Label.getLabel("demographics_allset_section");
 
         toolbar = (Toolbar) findViewById(R.id.demographics_toolbar);
         titleTextView = (TextView) toolbar.findViewById(R.id.demographics_toolbar_title);
@@ -254,10 +254,6 @@ public class DemographicsActivity extends BasePatientActivity
         return insuranceModelList;
     }
 
-    public void setInsuranceModelList(List<DemographicInsurancePayloadDTO> insuranceModelList) {
-        this.insuranceModelList = insuranceModelList;
-    }
-
     /**
      * checking storage permission
      *
@@ -280,16 +276,6 @@ public class DemographicsActivity extends BasePatientActivity
         } else { //permission is automatically granted on sdk<23 upon installation
             return true;
         }
-    }
-
-    /**
-     * Returns the fragment in the view pager at a certain index. Used in tests
-     *
-     * @param pos The index
-     * @return The fragments
-     */
-    public Fragment getFragmentAt(int pos) {
-        return ((DemographicPagerAdapter) viewPager.getAdapter()).getItem(pos);
     }
 
     @Override
@@ -342,7 +328,6 @@ public class DemographicsActivity extends BasePatientActivity
         addressEntityMetaDTO = metadataDTO.getDataModels().getDemographic().getAddress();
         persDetailsMetaDTO = metadataDTO.getDataModels().getDemographic().getPersonalDetails();
         idDocsMetaDTO = metadataDTO.getDataModels().getDemographic().getIdentityDocuments();
-        insurancesMetaDTO = metadataDTO.getDataModels().getDemographic().getInsurances();
     }
 
     @Override

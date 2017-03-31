@@ -53,18 +53,6 @@ public class DemographicLabelsDTO {
     @Expose
     private String demographicsAddressSection;
 
-    @SerializedName("demographics_details_section")
-    @Expose
-    private String demographicsDetailsSection;
-
-    @SerializedName("demographics_documents_section")
-    @Expose
-    private String demographicsDocumentsSection;
-
-    @SerializedName("demographics_allset_section")
-    @Expose
-    private String demographicsAllSetSection;
-
     @SerializedName("demographics_next")
     @Expose
     private String demographicsNext;
@@ -214,27 +202,6 @@ public class DemographicLabelsDTO {
      */
     public String getDemographicsAddressSection() {
         return StringUtil.getLabelForView(demographicsAddressSection);
-    }
-
-    /**
-     * @return The demographicsDetailsSection
-     */
-    public String getDemographicsDetailsSection() {
-        return StringUtil.getLabelForView(demographicsDetailsSection);
-    }
-
-    /**
-     * @return The demographicsDocumentsSection
-     */
-    public String getDemographicsDocumentsSection() {
-        return StringUtil.getLabelForView(demographicsDocumentsSection);
-    }
-
-    /**
-     * @return The demographicsAllSetSection
-     */
-    public String getDemographicsAllSetSection() {
-        return StringUtil.getLabelForView(demographicsAllSetSection);
     }
 
     public String getDemographicsNext() {
