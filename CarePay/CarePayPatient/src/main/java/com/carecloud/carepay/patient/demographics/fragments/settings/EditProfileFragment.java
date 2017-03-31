@@ -180,7 +180,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
         changeProfilePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage(true, ImageCaptureHelper.CameraType.DEFAULT_CAMERA);
+                selectImage(imageFront,true, ImageCaptureHelper.CameraType.DEFAULT_CAMERA);
             }
 
         });
