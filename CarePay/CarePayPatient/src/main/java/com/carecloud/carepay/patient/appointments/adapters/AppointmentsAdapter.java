@@ -2,7 +2,6 @@ package com.carecloud.carepay.patient.appointments.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +25,7 @@ import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.Date;
@@ -148,16 +148,22 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             if (TextUtils.isEmpty(photoUrl)) {
                 holder.shortName.setText(StringUtil.getShortName(item.getProvider().getName()));
             } else {
-                Picasso.Builder builder = new Picasso.Builder(context);
-                builder.listener(new Picasso.Listener() {
-                    @Override
-                    public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                        holder.shortName.setText(StringUtil.getShortName(item.getProvider().getName()));
-                    }
-                });
+                Picasso.with(context).load(photoUrl)
+                        .resize(58,58)
+                        .transform(new CircleImageTransform())
+                        .into(holder.profileImage, new Callback() {
+                            @Override
+                            public void onSuccess() {
 
-                builder.build().load(photoUrl).transform(new CircleImageTransform())
-                        .resize(58, 58).into(holder.profileImage);
+                            }
+
+                            @Override
+                            public void onError() {
+                                holder.shortName.setText(StringUtil.getShortName(item.getProvider().getName()));
+                            }
+                        });
+
+
                 holder.profileImage.setVisibility(View.VISIBLE);
             }
 

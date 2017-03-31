@@ -3,7 +3,6 @@ package com.carecloud.carepay.practice.library.checkin.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -44,8 +43,8 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestCreator;
 
 import org.joda.time.DateTime;
 
@@ -254,20 +253,24 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
         String photoUrl = appointmentPayloadDTO.getPatient().getProfilePhoto();
         if (!TextUtils.isEmpty(photoUrl)) {
-            Picasso.Builder builder = new Picasso.Builder(context);
-            builder.listener(new Picasso.Listener() {
-                @Override
-                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                    shortName.setText(appointmentPayloadDTO.getPatient().getShortName());
-                }
-            });
+            Picasso.with(context).load(photoUrl)
+                    .transform(new CircleImageTransform())
+                    .resize(88, 88)
+                    .into(profilePhoto, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            profilePhoto.setVisibility(View.VISIBLE);
+                        }
 
-            builder.build().load(photoUrl).transform(new CircleImageTransform()).resize(88, 88).into(profilePhoto);
+                        @Override
+                        public void onError() {
+                            shortName.setText(appointmentPayloadDTO.getPatient().getShortName());
+                        }
+                    });
+            Picasso.with(context).load(photoUrl)
+                    .fit()
+                    .into(bgImage);
 
-            RequestCreator load = builder.build().load(photoUrl);
-            load.fit().into(bgImage);
-
-            profilePhoto.setVisibility(View.VISIBLE);
             bgImage.setScaleX(5);
             bgImage.setScaleY(5);
         } else {
