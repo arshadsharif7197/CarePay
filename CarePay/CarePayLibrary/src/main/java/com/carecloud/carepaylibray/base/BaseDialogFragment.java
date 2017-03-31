@@ -13,6 +13,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
  * Created by cocampo on 2/6/17.
@@ -22,6 +23,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     private static final int FULLSCREEN_VALUE = 0x10000000;
 
     private Dialog dialog;
+    private boolean isPracticeAppPatientMode;
 
     @Override
     public void setupDialog(Dialog dialog, int style) {
@@ -30,7 +32,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         setCancelable(false);
 
-        boolean isPracticeAppPatientMode = ((ISession) getActivity()).getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE;
+        isPracticeAppPatientMode = ((ISession) getActivity()).getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE;
         if (isPracticeAppPatientMode) {
             setNavigationBarVisibility();
         }
@@ -113,6 +115,19 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         }
 
         return rootView.findViewById(id);
+    }
+
+    protected void hideKeyboardOnViewTouch(View view){
+        if(isPracticeAppPatientMode){
+            view.setSoundEffectsEnabled(false);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    SystemUtil.hideSoftKeyboard(getContext(), view);
+                }
+            });
+        }
+
     }
 
     @Override
