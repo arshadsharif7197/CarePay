@@ -47,10 +47,10 @@ public class CircleImageTransform implements Transformation {
         int inSize = Math.min(input.getWidth(), input.getHeight());
         int outSize = Math.min(inSize, maxSize);
 
-        int x = (input.getWidth() - inSize) / 2;
-        int y = (input.getHeight() - inSize) / 2;
+        int left = (input.getWidth() - inSize) / 2;
+        int top = (input.getHeight() - inSize) / 2;
 
-        final Rect inRect = new Rect(x, y, inSize, inSize);
+        final Rect inRect = new Rect(left, top, inSize, inSize);
         final Rect outRect = new Rect(0, 0, outSize, outSize);
 
         Bitmap output = Bitmap.createBitmap(outSize, outSize, input.getConfig());
