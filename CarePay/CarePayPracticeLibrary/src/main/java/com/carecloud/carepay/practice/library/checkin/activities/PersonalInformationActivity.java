@@ -19,17 +19,14 @@ import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.signin.dtos.GenderOptionDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeLabelsDTO;
-import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
-import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.DateUtil;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -64,7 +61,6 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         signinPatientModeDTO = getConvertedDTO(SigninPatientModeDTO.class);
         labelsDTO = signinPatientModeDTO.getMetadata().getLabels();
         setContentView(R.layout.activity_personal_information);
-        setNavigationBarVisibility();
         /*Initialise views*/
         initViews();
     }
@@ -438,12 +434,16 @@ public class PersonalInformationActivity extends BasePracticeActivity {
                 queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
                 queryMap.put("patient_id", signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getPatientId());
                 Map<String, String> headers = new HashMap<>();
-                getCognitoAppHelper().setUser(signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getUsername());
+
+                getAppAuthorizationHelper().setUser(signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getUsername());
+
                 transitionDTO = signinPatientModeDTO.getMetadata().getTransitions().getAction();
                 getWorkflowServiceHelper().execute(transitionDTO, patientModeAppointmentsCallback, queryMap, headers);
             } else {
-                SystemUtil.showFailureDialogMessage(PersonalInformationActivity.this, StringUtil.getLabelForView(labelsDTO.getSignInFailed()),
-                        StringUtil.getLabelForView(labelsDTO.getPersonalInfoIncorrectDetails()));
+                String errorMessage = Label.getLabel("sign_in_failed") + ", "+ Label.getLabel("personal_info_incorrect_details");
+                showErrorNotification(errorMessage);
+//                SystemUtil.showFailureDialogMessage(PersonalInformationActivity.this, StringUtil.getLabelForView(labelsDTO.getSignInFailed()),
+//                        StringUtil.getLabelForView(labelsDTO.getPersonalInfoIncorrectDetails()));
             }
         }
 
@@ -451,7 +451,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             findMyAppointmentButton.setEnabled(true);
-            SystemUtil.showDefaultFailureDialog(PersonalInformationActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -473,7 +473,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             findMyAppointmentButton.setEnabled(true);
-            SystemUtil.showDefaultFailureDialog(PersonalInformationActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

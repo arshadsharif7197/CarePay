@@ -15,8 +15,9 @@ import android.widget.Toast;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.PaymentResponsibilityModel;
-import com.carecloud.carepay.patient.payment.androidpay.EnvData;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiAccountsDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiMetadataMerchantServiceDTO;
 import com.carecloud.carepaylibray.payments.adapter.PaymentMethodAdapter;
 import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
@@ -192,13 +193,12 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
 
 
     @Override
-    protected void handlePaymentButton(String type, double amount){
-        if(type == CarePayConstants.TYPE_ANDROID_PAY){
-            setLineItems(paymentsModel.getPaymentPayload().getPatientBalances().get(0).getPayload());
-//            createAndAddWalletFragment(paymentsModel.getPaymentPayload().getPatientBalances().get(0).getPendingRepsonsibility());// getPayload().get(0).getTotal());
+    protected void handlePaymentButton(PaymentsMethodsDTO paymentMethod, double amount){
+        if(paymentMethod.getType() == CarePayConstants.TYPE_ANDROID_PAY){
+            setLineItems(paymentList.get(0).getPayload());
             createAndAddWalletFragment(String.valueOf(amount));
         }else{
-            super.handlePaymentButton(type, amount);
+            super.handlePaymentButton(paymentMethod, amount);
         }
     }
 
@@ -276,10 +276,21 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         //  Set tokenization type and First Data issued public key
         PaymentMethodTokenizationParameters tokenizationParameters = PaymentMethodTokenizationParameters.newBuilder()
                 .setPaymentMethodTokenizationType(PaymentMethodTokenizationType.NETWORK_TOKEN)
-                .addParameter("publicKey", EnvData.getProperties("CERT").getPublicKey())
+                .addParameter("publicKey", getPayeezyMerchantService().getAndroidPublicKey())
                 .build();
         builder.setPaymentMethodTokenizationParameters(tokenizationParameters);
         return builder.build();
+    }
+
+    private DemographicsSettingsPapiMetadataMerchantServiceDTO getPayeezyMerchantService(){
+        DemographicsSettingsPapiMetadataMerchantServiceDTO merchantServiceDTO = null;
+        for (DemographicsSettingsPapiAccountsDTO papiAccountDTO : paymentsModel.getPaymentPayload().getPapiAccounts()) {
+            if (papiAccountDTO.getType().contains("payeezy")) {
+                merchantServiceDTO = papiAccountDTO.getMetadata().getMerchantService();
+            }
+        }
+
+        return  merchantServiceDTO;
     }
 
     /**
@@ -314,11 +325,4 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         this.lineItems = list;
     }
 
-    private void removeWalletFragment() {
-        getFragmentManager().beginTransaction()
-                .remove(walletFragment)
-                .commit();
-
-        walletFragment = null;
-    }
 }

@@ -28,6 +28,7 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserCodeDel
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -49,6 +50,7 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
  */
 public class SignupFragment extends BaseFragment {
 
+    private static final String TAG = "SignupFragment";
     private SignInSignUpDTO signInSignUpDTO;
     private SignInLablesDTO signInLablesDTO;
     private LinearLayout    parentLayout;
@@ -73,7 +75,7 @@ public class SignupFragment extends BaseFragment {
             // Check signUpConfirmationState to see if the user is already confirmed
             if (signUpConfirmationState) {
                 // auto-confirmed; sign-in
-                getCognitoAppHelper().signIn(userName, passwordText.getText().toString(), cognitoActionCallback);
+                getAppAuthorizationHelper().signIn(userName, passwordText.getText().toString(), cognitoActionCallback);
             } else {
                 Log.v(LOG_TAG, "signUpConfirmationState == false");
                 // User is not confirmed
@@ -83,12 +85,13 @@ public class SignupFragment extends BaseFragment {
 
         @Override
         public void onFailure(Exception exception) {
-            progressBar.setVisibility(View.INVISIBLE);
-            String errorMsg = getCognitoAppHelper().formatException(exception);
-
-            SystemUtil.showFailureDialogMessage(getActivity(),
-                                         "Sign up failed!",//TODO this should not be hardcoded string
-                                         errorMsg);
+            hideProgressDialog();
+            String errorMsg = getAppAuthorizationHelper().formatException(exception);
+            showErrorNotification(errorMsg);
+            Log.e(TAG, exception.getMessage());
+//            SystemUtil.showFailureDialogMessage(getActivity(),
+//                                         "Sign up failed!",//TODO this should not be hardcoded string
+//                                         errorMsg);
         }
     };
     private WorkflowServiceCallback signUpWorkflowCallback = new WorkflowServiceCallback() {
@@ -106,7 +109,7 @@ public class SignupFragment extends BaseFragment {
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(getActivity());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -125,9 +128,12 @@ public class SignupFragment extends BaseFragment {
 
         @Override
         public void onLoginFailure(String exceptionMessage) {
-            SystemUtil.showFailureDialogMessage(getContext(),
-                                         "Sign-in failed",
-                                         exceptionMessage);
+            hideProgressDialog();
+            showErrorNotification(null);
+            Log.e(TAG, exceptionMessage);
+//            SystemUtil.showFailureDialogMessage(getContext(),
+//                                         "Sign-in failed",
+//                                         exceptionMessage);
 
         }
     };
@@ -490,7 +496,7 @@ public class SignupFragment extends BaseFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 10 && resultCode == RESULT_OK) {
             // confirmed; (auto)sign-in
-            getCognitoAppHelper().signIn(userName, passwordText.getText().toString(), cognitoActionCallback);
+            getAppAuthorizationHelper().signIn(userName, passwordText.getText().toString(), cognitoActionCallback);
         }
     }
 
@@ -514,12 +520,12 @@ public class SignupFragment extends BaseFragment {
 
         userName = emailText.getText().toString();
         if (userName.length() > 0) {
-            userAttributes.addAttribute(getCognitoAppHelper().getSignUpFieldsC2O().get("Email"), userName);
+            userAttributes.addAttribute(getAppAuthorizationHelper().getSignUpFieldsC2O().get("Email"), userName);
             // add more attributes here is needed...
         }
         String password = passwordText.getText().toString();
 
-        getCognitoAppHelper().getPool().signUpInBackground(userName,
+        getAppAuthorizationHelper().getPool().signUpInBackground(userName,
                                                       password,
                                                       userAttributes,
                                                       null,

@@ -17,19 +17,17 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
-import com.carecloud.carepay.patient.payment.adapter.PaymentDetailsListAdapter;
+import com.carecloud.carepay.patient.payment.adapters.PaymentDetailsListAdapter;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.payments.models.PaymentDetailsItemDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -128,8 +126,8 @@ public class PaymentAmountReceiptDialog extends Dialog implements View.OnClickLi
     }
 
     private void showPaymentHistory() {
-        PaymentPayloadMetaDataDTO metadata = paymentReceiptModel.getPaymentPayload()
-                .getPatientPayments().getPayload().get(0).getMetadata();
+        PendingBalanceMetadataDTO metadata = paymentReceiptModel.getPaymentPayload()
+                .getPatientBalances().get(0).getBalances().get(0).getMetadata();
         Map<String, String> queryString = new HashMap<>();
         queryString.put("practice_id", metadata.getPracticeId());
         queryString.put("practice_mgmt", metadata.getPracticeMgmt());

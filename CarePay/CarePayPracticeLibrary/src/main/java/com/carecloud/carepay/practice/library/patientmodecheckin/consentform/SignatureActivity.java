@@ -88,7 +88,7 @@ public class SignatureActivity extends BaseActivity {
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(SignatureActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -226,7 +226,7 @@ public class SignatureActivity extends BaseActivity {
             @Override
             public void onSigned() {
                 clearButton.setVisibility(View.VISIBLE);
-                signatureAsBase64 = SystemUtil.encodeToBase64(signaturePad.getSignatureBitmap(), Bitmap.CompressFormat.JPEG, 90);
+                signatureAsBase64 = SystemUtil.convertBitmapToString(signaturePad.getSignatureBitmap(), Bitmap.CompressFormat.JPEG, 90);
                 agreeButton.setEnabled(true);
             }
 

@@ -10,14 +10,13 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.HashMap;
@@ -47,6 +46,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
     protected NavigationView navigationView;
     protected DrawerLayout drawer;
     protected Toolbar toolbar;
+    protected boolean toolbarVisibility = false;
 
 
     protected void inflateDrawer() {
@@ -59,7 +59,9 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        String userId = getCognitoAppHelper().getCurrUser();
+        String userId = getAppAuthorizationHelper().getCurrUser();
+
+
         if (userId != null) {
             appointmentsDrawerUserIdTextView.setText(userId);
         } else {
@@ -87,34 +89,38 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (id == com.carecloud.carepaylibrary.R.id.nav_appointments && transitionAppointments != null) {
-                Map<String, String> queryString = new HashMap<>();
-                queryString.put("practice_id", practiceId == null ? "" : practiceId);
-                queryString.put("practice_mgmt", practiceMgmt == null ? "" : practiceMgmt);
-                queryString.put("patient_id", patientId == null ? "" : patientId);
-                getWorkflowServiceHelper().execute(transitionAppointments, appointmentsWorkflowCallback, queryString);
+            Map<String, String> queryString = new HashMap<>();
+            queryString.put("practice_id", practiceId == null ? "" : practiceId);
+            queryString.put("practice_mgmt", practiceMgmt == null ? "" : practiceMgmt);
+            queryString.put("patient_id", patientId == null ? "" : patientId);
+            getWorkflowServiceHelper().execute(transitionAppointments, appointmentsWorkflowCallback, queryString);
 
         } else if (id == com.carecloud.carepaylibrary.R.id.nav_payments && transitionBalance != null) {
-                Map<String, String> queryString = new HashMap<>();
-                queryString.put("practice_id", practiceId == null ? "" : practiceId);
-                queryString.put("practice_mgmt", practiceMgmt == null ? "" : practiceMgmt);
-                queryString.put("patient_id", patientId == null ? "" : patientId);
-                getWorkflowServiceHelper().execute(transitionBalance, paymentsCallBack, queryString);
+            Map<String, String> queryString = new HashMap<>();
+            queryString.put("practice_id", practiceId == null ? "" : practiceId);
+            queryString.put("practice_mgmt", practiceMgmt == null ? "" : practiceMgmt);
+            queryString.put("patient_id", patientId == null ? "" : patientId);
+            getWorkflowServiceHelper().execute(transitionBalance, paymentsCallBack, queryString);
 
         } else if (id == com.carecloud.carepaylibrary.R.id.nav_settings && transitionProfile != null) {
-                Map<String, String> queryString = new HashMap<>();
-                queryString.put("practice_id", practiceId == null ? "" : practiceId);
-                queryString.put("practice_mgmt", practiceMgmt == null ? "" : practiceMgmt);
-                queryString.put("patient_id", patientId == null ? "" : patientId);
-                getWorkflowServiceHelper().execute(transitionProfile, demographicsSettingsCallBack, queryString);
+            Map<String, String> queryString = new HashMap<>();
+            queryString.put("practice_id", practiceId == null ? "" : practiceId);
+            queryString.put("practice_mgmt", practiceMgmt == null ? "" : practiceMgmt);
+            queryString.put("patient_id", patientId == null ? "" : patientId);
+            getWorkflowServiceHelper().execute(transitionProfile, demographicsSettingsCallBack, queryString);
 
         } else if (id == com.carecloud.carepaylibrary.R.id.nav_logout && transitionLogout != null) {
             // perform log out, of course
-            String userName = getCognitoAppHelper().getCurrUser();
+            String userName = getAppAuthorizationHelper().getCurrUser();
+
             if (userName != null) {
                 Log.v(LOG_TAG, "sign out");
                 Map<String, String> headersMap = new HashMap<>();
                 headersMap.put("x-api-key", HttpConstants.getApiStartKey());
-                headersMap.put("Authorization", getCognitoAppHelper().getCurrSession().getIdToken().getJWTToken());
+                if(!HttpConstants.isUseUnifiedAuth())
+                {
+                    headersMap.put("Authorization", getAppAuthorizationHelper().getCurrSession().getIdToken().getJWTToken());
+                }
                 headersMap.put("transition", "true");
                 Map<String, String> queryMap = new HashMap<>();
                 getWorkflowServiceHelper().execute(transitionLogout, appointmentsWorkflowCallback, queryMap, headersMap);
@@ -158,7 +164,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            //SystemUtil.showDefaultFailureDialog(InTakeWebViewActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -179,7 +185,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showDefaultFailureDialog(MenuPatientActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
 
             hideProgressDialog();
 
@@ -202,7 +208,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(MenuPatientActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -224,7 +230,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(MenuPatientActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -245,7 +251,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(MenuPatientActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -266,5 +272,26 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
     public static void setTransitionLogout(TransitionDTO transitionLogout) {
         MenuPatientActivity.transitionLogout = transitionLogout;
     }
+
+    /**
+     * Display toolbar.
+     *
+     * @param visibility the visibility
+     */
+    public void displayToolbar(boolean visibility, String toolBarTitle){
+//        toolbarVisibility = visibility;
+        TextView toolbarText = (TextView) findViewById(R.id.balance_history_toolbar_title);
+        if(toolBarTitle!=null) {
+            toolbarText.setText(StringUtil.isNullOrEmpty(toolBarTitle) ? CarePayConstants.NOT_DEFINED : toolBarTitle);
+        }
+        if(visibility){
+            setSupportActionBar(toolbar);
+            getSupportActionBar().show();
+        } else {
+            getSupportActionBar().hide();
+        }
+    }
+
+
 
 }

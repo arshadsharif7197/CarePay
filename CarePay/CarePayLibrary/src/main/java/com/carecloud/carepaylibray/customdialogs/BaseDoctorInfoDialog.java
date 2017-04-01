@@ -15,7 +15,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
@@ -29,11 +28,11 @@ public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener
     private static final String LOG_TAG = BaseDoctorInfoDialog.class.getSimpleName();
 
     public enum AppointmentType {
-        UPCOMING_APPOINTMENT,
-        MISSED_APPOINTMENT,
-        REQUESTED_APPOINTMENT,
-        CANCEL_APPOINTMENT,
-        CANCELLED_APPOINTMENT
+        UPCOMING,
+        MISSED,
+        REQUESTED,
+        CANCEL,
+        CANCELLED
     }
 
     private Context context;
@@ -88,7 +87,7 @@ public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener
         }
 
         CarePayTextView shortNameTextView = ((CarePayTextView) findViewById(R.id.appointShortnameTextView));
-        shortNameTextView.setText(StringUtil.onShortDrName(payload.getProvider().getName()));
+        shortNameTextView.setText(StringUtil.getShortName(payload.getProvider().getName()));
 
         CarePayTextView nameTextView = ((CarePayTextView) findViewById(R.id.appointNameTextView));
         nameTextView.setText(payload.getProvider().getName());

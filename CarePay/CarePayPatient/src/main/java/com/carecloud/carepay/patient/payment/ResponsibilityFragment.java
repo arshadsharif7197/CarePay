@@ -3,6 +3,8 @@ package com.carecloud.carepay.patient.payment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -13,17 +15,18 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.payment.dialogs.PatientPartialPaymentDialog;
+import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
-import com.carecloud.carepaylibray.payments.models.PatienceBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PatiencePayloadDTO;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 public class ResponsibilityFragment extends ResponsibilityBaseFragment {
 
@@ -75,13 +78,13 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
             getPaymentInformation();
             if (paymentDTO != null) {
                 getPaymentLabels();
-                List<PatienceBalanceDTO> paymentList = paymentDTO.getPaymentPayload()
+                List<PendingBalanceDTO> paymentList = paymentDTO.getPaymentPayload()
                         .getPatientBalances().get(0).getBalances();
 
                 total = 0;
                 if (paymentList != null && paymentList.size() > 0) {
                     fillDetailAdapter(view, paymentList);
-                    for (PatiencePayloadDTO payment : paymentList.get(0).getPayload()) {
+                    for (PendingBalancePayloadDTO payment : paymentList.get(0).getPayload()) {
                         total += payment.getAmount();
                     }
                     try {
@@ -155,12 +158,21 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
     }
 
     protected void doPayment() {
-        actionCallback.onPayButtonClicked(total);
+        actionCallback.onPayButtonClicked(total, paymentDTO);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
+    public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
+        String tag = PaymentDetailsFragmentDialog.class.getSimpleName();
+        FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+        Fragment prev = getChildFragmentManager().findFragmentByTag(tag);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
 
+        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
+                .newInstance(paymentDTO, paymentLineItem);
+        dialog.show(ft, tag);
+    }
 }

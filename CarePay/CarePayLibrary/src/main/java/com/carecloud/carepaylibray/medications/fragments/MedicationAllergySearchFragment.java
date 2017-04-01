@@ -7,16 +7,18 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.medications.adapters.MedicationAllergySearchAdapter;
 import com.carecloud.carepaylibray.medications.models.MedicationAllergiesLinkDTO;
@@ -35,7 +37,7 @@ import java.util.Map;
  * Created by lmenendez on 2/15/17.
  */
 
-public class MedicationAllergySearchFragment extends BaseFragment implements MedicationAllergySearchAdapter.SearchItemSelectedCallback {
+public class MedicationAllergySearchFragment extends BaseDialogFragment implements MedicationAllergySearchAdapter.SearchItemSelectedCallback {
 
 
     public interface MedicationAllergySearchCallback {
@@ -102,9 +104,16 @@ public class MedicationAllergySearchFragment extends BaseFragment implements Med
 //            ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
         }
-        searchView = (SearchView) toolbar.findViewById(R.id.search_entry_view);
+        searchView = (SearchView) view.findViewById(R.id.search_entry_view);
         searchView.setOnQueryTextListener(searchQueryListener);
+        searchView.requestFocus(View.FOCUS_DOWN);
+        SystemUtil.showSoftKeyboard(getActivity());
 
+        TextView title = (TextView) view.findViewById(R.id.toolbar_title);
+        if(title!=null){
+            title.setText(medicationsAllergiesDTO.getMetadata().getLabels().getMedicationsTitle());
+            title.setGravity(Gravity.CENTER_HORIZONTAL);
+        }
     }
 
     private void initViews(View view){
@@ -118,6 +127,7 @@ public class MedicationAllergySearchFragment extends BaseFragment implements Med
                 closeButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        SystemUtil.hideSoftKeyboard(getContext(), view);
                         dismiss();
                     }
                 });
@@ -200,8 +210,8 @@ public class MedicationAllergySearchFragment extends BaseFragment implements Med
             ((ISession) getContext()).hideProgressDialog();
 
             Gson gson = new Gson();
-            medicationsAllergiesDTO =gson.fromJson(workflowDTO.toString(), MedicationsAllergiesResultsModel.class);
-            resultsList = medicationsAllergiesDTO.getPayload().getSearchMedications().getMedicationsObjects();
+            MedicationsAllergiesResultsModel searchResults = gson.fromJson(workflowDTO.toString(), MedicationsAllergiesResultsModel.class);
+            resultsList = searchResults.getPayload().getSearchMedications().getMedicationsObjects();
 
             MedicationAllergySearchAdapter adapter = (MedicationAllergySearchAdapter) searchRecycler.getAdapter();
             adapter.setItems(resultsList);

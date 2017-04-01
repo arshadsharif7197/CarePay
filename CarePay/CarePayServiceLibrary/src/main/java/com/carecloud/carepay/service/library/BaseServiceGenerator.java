@@ -1,14 +1,9 @@
 package com.carecloud.carepay.service.library;
 
-import android.content.Context;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+
 import java.io.IOException;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -49,7 +44,7 @@ public class BaseServiceGenerator {
      * Create the retrofil service for the specific service class
      * @param serviceClass Specific service class for converting in to retrofit service model
      * */
-    public  <S> S createService(final CognitoAppHelper cognitoAppHelper, Class<S> serviceClass) {
+    public  <S> S createService(final AppAuthorizationHelper appAuthorizationHelper, Class<S> serviceClass) {
         httpClient.readTimeout(HttpConstants.READ_TIMEOUT_MS, TimeUnit.MILLISECONDS);
         httpClient.connectTimeout(HttpConstants.CONNECT_TIMEOUT_MS, TimeUnit.MILLISECONDS);
         httpClient.writeTimeout(HttpConstants.WRITE_TIMEOUT_MS, TimeUnit.MILLISECONDS);
@@ -63,11 +58,11 @@ public class BaseServiceGenerator {
                         .header("Accept", "application/json")
                         .header("Cache-Control", "no-cache, no-store")
                         .method(original.method(), original.body());
-                if( !isNullOrEmpty(cognitoAppHelper.getCurrUser())) {
-                    requestBuilderWithToken.header("username", cognitoAppHelper.getCurrUser());
+                if( !isNullOrEmpty(appAuthorizationHelper.getCurrUser())) {
+                    requestBuilderWithToken.header("username", appAuthorizationHelper.getCurrUser());
                 }
-                if(cognitoAppHelper.getCurrSession()!=null &&  !isNullOrEmpty(cognitoAppHelper.getCurrSession().getIdToken().getJWTToken())){
-                    requestBuilderWithToken.header("Authorization", cognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
+                if(appAuthorizationHelper.getCurrSession()!=null &&  !isNullOrEmpty(appAuthorizationHelper.getCurrSession().getIdToken().getJWTToken())){
+                    requestBuilderWithToken.header("Authorization", appAuthorizationHelper.getCurrSession().getIdToken().getJWTToken());
                 }
                 Request request = requestBuilderWithToken.build();
                 return chain.proceed(request);

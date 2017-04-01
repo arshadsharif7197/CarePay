@@ -27,7 +27,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.appointments.utils.PatientAppUtil;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -35,16 +34,17 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsAddressDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsAddressInfoDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCityDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDataModelsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDateOfBirthDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDetailsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDriversLicenseDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsEthnicityDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsGenderDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
@@ -52,10 +52,8 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMetadataDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMetadataPropertiesDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsOptionDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadAddressDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPropertiesDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPhoneDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPreferredLanguageDTO;
@@ -293,7 +291,7 @@ public class DemographicsInformationFragment extends BaseFragment {
             stateEditText.setText(stateValString);
             stateEditText.requestFocus();
         }
-        rootview.requestFocus();
+        dobEditText.requestFocus();
 
         SystemUtil.hideSoftKeyboard(getActivity());
         selectGender.setText(genderValString);
@@ -960,10 +958,10 @@ public class DemographicsInformationFragment extends BaseFragment {
             DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
             if(demographicsSettingsPayloadDTO!=null){
                 DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-                DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
-                DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
-                DemographicsSettingsPayloadAddressDTO demographicsAddressDetails = demographicPayload.getAddress();
-                DemographicsSettingsDriversLicenseDTO demographicsLicenseDetails = demographicPayload.getDriversLicense();
+                DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
+                PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+                DemographicAddressPayloadDTO demographicsAddressDetails = demographicPayload.getAddress();
+//                DemographicsSettingsDriversLicenseDTO demographicsLicenseDetails = demographicPayload.getDriversLicense();
 
                 dobValString = demographicsPersonalDetails.getDateOfBirth();
                 phoneValString = demographicsAddressDetails.getPhone();
@@ -1001,9 +999,9 @@ public class DemographicsInformationFragment extends BaseFragment {
                                     DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
                                     if (demographicsSettingsPayloadDTO != null) {
                                         DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-                                        DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
-                                        DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
-                                        DemographicsSettingsPayloadAddressDTO demographicsAddressDetails = demographicPayload.getAddress();
+                                        DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
+                                        PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+                                        DemographicAddressPayloadDTO demographicsAddressDetails = demographicPayload.getAddress();
                                         demographicsPersonalDetails.setDateOfBirth(dobEditText.getText().toString());
                                         demographicsAddressDetails.setPhone(phoneNumberEditext.getText().toString());
                                         demographicsAddressDetails.setAddress1(addressLine1Editext.getText().toString());
@@ -1048,7 +1046,7 @@ public class DemographicsInformationFragment extends BaseFragment {
             updateProfileButton.setEnabled(true);
             progressBar.setVisibility(View.GONE);
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
-            PatientAppUtil.showSuccessToast(getContext(), successMessageString);
+            SystemUtil.showSuccessToast(getContext(), successMessageString);
         }
 
         @Override
@@ -1057,7 +1055,7 @@ public class DemographicsInformationFragment extends BaseFragment {
             updateProfileButton.setEnabled(true);
             progressBar.setVisibility(View.GONE);
 
-            SystemUtil.showDefaultFailureDialog(getActivity());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

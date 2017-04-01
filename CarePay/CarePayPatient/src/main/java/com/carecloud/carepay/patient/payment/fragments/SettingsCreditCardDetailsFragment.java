@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.appointments.utils.PatientAppUtil;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -27,19 +26,19 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadAddressDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -123,7 +122,7 @@ public class SettingsCreditCardDetailsFragment extends BaseFragment {
                 CarePayTextView addressValue = (CarePayTextView) view.findViewById(R.id.addressValue);
                 addressLabel.setText(settingsLabelsDTO.getSettingAddressLabel());
 
-                DemographicsSettingsPayloadAddressDTO addressDTO = demographicsSettingsDTO.getPayload().getDemographics()
+                DemographicAddressPayloadDTO addressDTO = demographicsSettingsDTO.getPayload().getDemographics()
                         .getPayload().getAddress();
                 addressValue.setText(addressDTO.getAddress1());
 
@@ -203,8 +202,8 @@ public class SettingsCreditCardDetailsFragment extends BaseFragment {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
             try {
-                hideProgressDialog();
                 Gson gson = new Gson();
                 DemographicsSettingsDTO removeCreditCardResponseDTO = gson.fromJson(workflowDTO.toString(),
                         DemographicsSettingsDTO.class);
@@ -213,9 +212,10 @@ public class SettingsCreditCardDetailsFragment extends BaseFragment {
                 ((DemographicsSettingsActivity) getActivity()).onCreditCardOperation(demographicsSettingsDTO);
                 getActivity().onBackPressed();
 
-                PatientAppUtil.showSuccessNotification(getActivity(), getView(), demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getLabels().getSettingsSavedSuccessMessage());
+                SystemUtil.showSuccessToast(getActivity(), demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getLabels().getSettingsSavedSuccessMessage());
             } catch(Exception e) {
                 Log.e(TAG, "Credit Card onPostExecute" + e.getMessage());
+                showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             }
 
         }
@@ -223,8 +223,8 @@ public class SettingsCreditCardDetailsFragment extends BaseFragment {
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            System.out.print(exceptionMessage);
-            SystemUtil.showDefaultFailureDialog(getActivity());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            Log.e(TAG, "Credit Card onFailure" + exceptionMessage);
         }
     };
 

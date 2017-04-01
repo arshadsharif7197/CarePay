@@ -115,7 +115,7 @@ public class InTakeActivity extends KeyboardHolderActivity {
                 } else {
                     intakeProgressBar.setVisibility(View.VISIBLE);
                     /*InTake API call to fetch payment information*/
-                    InTakeService apptService = (new BaseServiceGenerator()).createService(getCognitoAppHelper(), InTakeService.class); //, String token, String searchString
+                    InTakeService apptService = (new BaseServiceGenerator()).createService(getAppAuthorizationHelper(), InTakeService.class); //, String token, String searchString
                     Call<IntakeResponseModel> call = apptService.confirmInTakeInformation();
                     call.enqueue(new Callback<IntakeResponseModel>() {
                         @Override
@@ -135,7 +135,7 @@ public class InTakeActivity extends KeyboardHolderActivity {
                         @Override
                         public void onFailure(Call<IntakeResponseModel> call, Throwable t) {
                             intakeProgressBar.setVisibility(View.GONE);
-                            SystemUtil.showDefaultFailureDialog(InTakeActivity.this);
+                            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
                             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), "");
                         }
                     });

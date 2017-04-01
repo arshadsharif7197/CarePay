@@ -1,8 +1,5 @@
 package com.carecloud.carepay.practice.library.checkin.filters;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by sudhir_pingale on 10/19/2016.
  * This class use for filtering the checkin screen
@@ -20,8 +17,6 @@ public class FilterDataDTO {
     private FilterDataType filterDataType=FilterDataType.HEADER;
     private boolean checked = false;
 
-    private List<String> appointmentList;
-
     /**
      * Constructor with text and type
      * @param id of the DTO
@@ -32,7 +27,6 @@ public class FilterDataDTO {
         this.id = id;
         this.filterDataType=filterDataType;
         this.displayText=displayText;
-        appointmentList=new ArrayList<>();
     }
 
     /**
@@ -76,14 +70,6 @@ public class FilterDataDTO {
 
     public void setChecked(boolean checked) {
         this.checked = checked;
-    }
-
-    public List<String> getAppointmentList() {
-        return appointmentList;
-    }
-
-    public void setAppointmentList(List<String> appointmentList) {
-        this.appointmentList = appointmentList;
     }
 
     public String getId() {

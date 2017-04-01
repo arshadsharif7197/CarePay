@@ -14,6 +14,9 @@ public class SigninPatientModeTransitionsDTO {
     @SerializedName("qrcode")
     @Expose
     private TransitionDTO qrcode = new TransitionDTO();
+    @SerializedName("sign_in")
+    @Expose
+    private TransitionDTO signIn = new TransitionDTO();
 
     public TransitionDTO getAction() {
         return action;
@@ -29,5 +32,13 @@ public class SigninPatientModeTransitionsDTO {
 
     public void setQrcode(TransitionDTO qrcode) {
         this.qrcode = qrcode;
+    }
+
+    public TransitionDTO getSignIn() {
+        return signIn;
+    }
+
+    public void setSignIn(TransitionDTO signIn) {
+        this.signIn = signIn;
     }
 }

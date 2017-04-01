@@ -16,10 +16,10 @@ public class PayloadModel {
     private List<AppointmentPayloadModel> appointments = new ArrayList<>();
     @SerializedName("intake_forms")
     @Expose
-    private List<IntakeFormPayloadModel> intakeForms = new ArrayList<>();
+    private List<IntakeForm> intakeForms = new ArrayList<>();
     @SerializedName("findings")
     @Expose
-    private FindingsPayloadModel findings = new FindingsPayloadModel();
+    private IntakeFindings findings = new IntakeFindings();
 
 
     /**
@@ -63,7 +63,7 @@ public class PayloadModel {
      * @return
      *     The intakeForms
      */
-    public List<IntakeFormPayloadModel> getIntakeForms() {
+    public List<IntakeForm> getIntakeForms() {
         return intakeForms;
     }
 
@@ -72,7 +72,7 @@ public class PayloadModel {
      * @param intakeForms
      *     The intake_forms
      */
-    public void setIntakeForms(List<IntakeFormPayloadModel> intakeForms) {
+    public void setIntakeForms(List<IntakeForm> intakeForms) {
         this.intakeForms = intakeForms;
     }
 
@@ -81,7 +81,7 @@ public class PayloadModel {
      * @return
      *     The findings
      */
-    public FindingsPayloadModel getFindings() {
+    public IntakeFindings getFindings() {
         return findings;
     }
 
@@ -90,7 +90,7 @@ public class PayloadModel {
      * @param findings
      *     The findings
      */
-    public void setFindings(FindingsPayloadModel findings) {
+    public void setFindings(IntakeFindings findings) {
         this.findings = findings;
     }
 

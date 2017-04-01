@@ -11,13 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.models.FilterModel;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,18 +27,18 @@ import java.util.List;
  */
 public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    // The items to display in your RecyclerView
-    private List<FilterDataDTO> filterableDataDTOList;
     private Context context;
+    private FilterModel filterModel;
+    private List<FilterDataDTO> filterableDataDTOList;
     private static final int ROW_SECTION_HEADER = 0;
     private static final int ROW_ITEM = 1;
 
-    private OnFilterOptionChangedListener onFilterOptionChangedListener;
+    private CustomFilterListAdapterListener callback;
 
     /**
      * The callback used to indicate the user selected the filter.
      */
-    public interface OnFilterOptionChangedListener {
+    public interface CustomFilterListAdapterListener {
 
         /**
          * Called upon a filter change.
@@ -50,13 +52,34 @@ public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.V
      * Constructor.
      *
      * @param context context
-     * @param items   list of occurrence
+     * @param filterModel   Filter Model
      */
-    public CustomFilterListAdapter(Context context, OnFilterOptionChangedListener onFilterOptionChangedListener,
-                                   List<FilterDataDTO> items) {
+    public CustomFilterListAdapter(Context context,
+                                   FilterModel filterModel,
+                                   CustomFilterListAdapterListener callback) {
         this.context = context;
-        this.filterableDataDTOList = items;
-        this.onFilterOptionChangedListener = onFilterOptionChangedListener;
+        this.filterModel = filterModel;
+        this.callback = callback;
+
+        load();
+    }
+
+    /**
+     * Loads filterable list
+     */
+    public void load() {
+        filterableDataDTOList = new ArrayList<>();
+
+        ArrayList<FilterDataDTO> patients = filterModel.getCheckedPatients();
+        if (!patients.isEmpty()) {
+            filterableDataDTOList.add(new FilterDataDTO(Label.getLabel("practice_filter_patients")));
+            filterableDataDTOList.addAll(patients);
+        }
+
+        filterableDataDTOList.add(new FilterDataDTO(Label.getLabel("practice_filter_doctors")));
+        filterableDataDTOList.addAll(filterModel.getDoctors());
+        filterableDataDTOList.add(new FilterDataDTO(Label.getLabel("practice_filter_locations")));
+        filterableDataDTOList.addAll(filterModel.getLocations());
     }
 
     // Return the size of your data set (invoked by the layout manager)
@@ -132,7 +155,7 @@ public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.V
                 } else {
                     selectedItemImageView.setVisibility(View.GONE);
                 }
-                onFilterOptionChangedListener.onFilterChanged(filterDataDTO);
+                callback.onFilterChanged(filterDataDTO);
             }
         };
 

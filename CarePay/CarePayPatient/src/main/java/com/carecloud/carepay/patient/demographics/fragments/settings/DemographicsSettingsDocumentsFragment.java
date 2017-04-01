@@ -34,12 +34,12 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.Demographic
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePhotoDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapper;
 import com.carecloud.carepaylibray.demographics.misc.InsuranceWrapperCollection;
 import com.carecloud.carepaylibray.demographics.misc.OnClickRemoveOrAddCallback;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDataModelsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDetailsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
@@ -247,7 +247,7 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
         }
         // init doc types
         List<String> docTypesStrings = new ArrayList<>();
-        for (MetadataOptionDTO o : idDocsMetaDTO.properties.items.identityDocument.properties.identityDocumentType.options) {
+        for (MetadataOptionDTO o : idDocsMetaDTO.properties.items.identityDocument.properties.identityDocumentType.getOptions()) {
             docTypesStrings.add(o.getLabel());
         }
         docTypes = docTypesStrings.toArray(new String[0]);
@@ -259,9 +259,9 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
             DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
             if(demographicsSettingsPayloadDTO!=null) {
                 DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-                DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
+                DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
 
-                demPayloadIdDocDTO = demographicPayload.getIdentityDocuments();
+                demPayloadIdDocDTO = demographicPayload.getIdDocuments();
                 insuranceDTOsList = demographicPayload.getInsurances();
 
                 if (demPayloadIdDocDTO == null) {
@@ -301,7 +301,7 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             nextButton.setEnabled(true);
-            SystemUtil.showDefaultFailureDialog(getActivity());
+            showErrorNotification(null);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -335,7 +335,7 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
                                 DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
                                 if (demographicsSettingsPayloadDTO != null) {
                                     DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-                                    DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
+                                    DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
 
                                     List<DemographicInsurancePayloadDTO> demographicsInsuranceDetailsPayloadDTO = demographicPayload.getInsurances();
                                     for(int i = 0; i<=demographicsInsuranceDetailsPayloadDTO.size()-1;i++){
@@ -395,7 +395,6 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
         if (idDocFragment == null) {
             idDocFragment = new DocScannerFragment();
             idDocFragment.setModel(demPayloadIdDocDTO.get(0)); // set the model
-            idDocFragment.setIdDocsMetaDTO(idDocsMetaDTO == null ? null : idDocsMetaDTO.properties.items.identityDocument);
         }
         //fix for random crashes
         if(idDocFragment.getArguments() !=null){
@@ -418,7 +417,7 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
             }
         }
         DemographicMetadataEntityItemInsuranceDTO metadataInsuranceDTO
-                = (insurancesMetaDTO == null ? null : insurancesMetaDTO.properties.items.insurance);
+                = (insurancesMetaDTO == null ? null : insurancesMetaDTO.getProperties().getItems().getInsurance());
         wrapperCollection1 = new InsuranceWrapperCollection((AppCompatActivity) getActivity(),
                 insContainersWrapper,
                 metadataInsuranceDTO,

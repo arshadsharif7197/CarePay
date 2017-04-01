@@ -18,15 +18,15 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
-import com.carecloud.carepaylibray.payments.models.PaymentPayloadMetaDataDTO;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.CreditCardModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentLineItem;
-import com.carecloud.carepaylibray.payments.models.postmodel.PaymentMethod;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentType;
-import com.carecloud.carepaylibray.payments.models.postmodel.TransactionResponse;
+import com.carecloud.carepaylibray.payments.models.postmodel.TokenizationService;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.util.CloverAuth;
 import com.clover.sdk.v1.BindingException;
@@ -39,11 +39,10 @@ import com.clover.sdk.v3.order.OrderConnector;
 import com.clover.sdk.v3.payments.Payment;
 import com.clover.sdk.v3.payments.Result;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -67,14 +66,16 @@ public class CloverPaymentActivity extends BaseActivity {
     private Long amountLong = 0L;
     private double amountDouble;
     private String paymentTransitionString ;
-    private String patientPaymentMetaDataString;
     private CloverAuth.AuthResult authResult = null;
+    private PaymentPostModel postModel;
+    private PatientBalanceDTO patientBalance;
 
     private PaymentLineItem[] paymentLineItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.dialog_progress);
         try
         {
 
@@ -83,19 +84,26 @@ public class CloverPaymentActivity extends BaseActivity {
                 amountDouble = intent.getDoubleExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, 0.00);
                 amountLong = (long) (amountDouble * 100);
             }
-            if (intent.hasExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS)) {
-                Gson gson = new Gson();
-                String lineItemString = intent.getStringExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS);
-                paymentLineItems = gson.fromJson(lineItemString, PaymentLineItem[].class);
 
-            }
             if (intent.hasExtra(CarePayConstants.CLOVER_PAYMENT_TRANSITION)) {
                 paymentTransitionString = intent.getStringExtra(CarePayConstants.CLOVER_PAYMENT_TRANSITION);
 
             }
             if (intent.hasExtra(CarePayConstants.CLOVER_PAYMENT_METADATA)) {
-                patientPaymentMetaDataString = intent.getStringExtra(CarePayConstants.CLOVER_PAYMENT_METADATA);
+                Gson gson = new Gson();
+                String patientPaymentMetaDataString = intent.getStringExtra(CarePayConstants.CLOVER_PAYMENT_METADATA);
+                patientBalance = gson.fromJson(patientPaymentMetaDataString, PatientBalanceDTO.class);
 
+            }
+            Gson gson = new Gson();
+            if (intent.hasExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS)) {
+                String lineItemString = intent.getStringExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS);
+                paymentLineItems = gson.fromJson(lineItemString, PaymentLineItem[].class);
+
+            }
+            if(intent.hasExtra(CarePayConstants.CLOVER_PAYMENT_POST_MODEL)){
+                String paymentPostModelString = intent.getStringExtra(CarePayConstants.CLOVER_PAYMENT_POST_MODEL);
+                postModel = gson.fromJson(paymentPostModelString, PaymentPostModel.class);
             }
 
             if (account == null) {
@@ -204,7 +212,7 @@ public class CloverPaymentActivity extends BaseActivity {
 
             @Override
             protected void onPostExecute(Void param) {
-                if (authResult.authToken != null && authResult.baseUrl != null) {
+                if (authResult != null && authResult.authToken != null && authResult.baseUrl != null) {
                     connect();
                     new OrderAsyncTask().execute();
                 }
@@ -313,7 +321,11 @@ public class CloverPaymentActivity extends BaseActivity {
                 Payment payment = data.getParcelableExtra(Intents.EXTRA_PAYMENT);
                 if (payment != null) {
                     isPaymentComplete = true;
-                    processPayment(payment);
+                    if(postModel!=null){
+                        processPayment(payment, postModel);
+                    }else {
+                        processPayment(payment);
+                    }
                 }
             } else if(resultCode == RESULT_CANCELED) {
                 String manufacturer = Build.MANUFACTURER;
@@ -332,83 +344,28 @@ public class CloverPaymentActivity extends BaseActivity {
         }
     }
 
-    private void postPaymentConfirmation(Payment payment)
-    {
-        String jsonInString = payment.getJSONObject().toString();
-        JSONObject payload = new JSONObject();
-        try {
-
-            JSONObject paymentMethod = new JSONObject();
-            JSONObject creditCard = new JSONObject(jsonInString);
-
-            paymentMethod.put("amount", amountLong);
-            payload.put("amount", amountLong);
-
-            JSONObject billingInformation = new JSONObject();
-            billingInformation.put("same_as_patient", true);
-            creditCard.put("billing_information", billingInformation);
-
-            Gson gson  =new Gson();
-            CloverPaymentDTO cloverPaymentDTO = gson.fromJson(payment.getJSONObject().toString(), CloverPaymentDTO.class);
-            creditCard.put("card_type", cloverPaymentDTO.getCloverCardTransactionInfo().getCardType());
-
-            paymentMethod.put("credit_card", creditCard);
-            paymentMethod.put("type", "credit_card");
-            paymentMethod.put("execution", "clover");
-
-            JSONArray paymentMethods = new JSONArray();
-            paymentMethods.put(paymentMethod);
-            payload.put("payment_methods", paymentMethods);
-
-            PaymentPayloadMetaDataDTO metadataDTO = gson.fromJson(patientPaymentMetaDataString, PaymentPayloadMetaDataDTO.class);
-            Map<String, String> queries = new HashMap<>();
-            queries.put("practice_mgmt", metadataDTO.getPracticeMgmt());
-            queries.put("practice_id", metadataDTO.getPracticeId());
-            queries.put("patient_id", metadataDTO.getPatientId());
-
-            Map<String, String> header = new HashMap<>();
-            header.put("transition", "true");
-
-            TransitionDTO transitionDTO = gson.fromJson(paymentTransitionString, TransitionDTO.class);
-            getWorkflowServiceHelper().execute(transitionDTO, makePaymentCallback, payload.toString(), queries, header);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-
     private void processPayment(Payment payment){
         Gson gson = new Gson();
-
         String jsonString = payment.getJSONObject().toString();
         CloverPaymentDTO cloverPayment = gson.fromJson(jsonString, CloverPaymentDTO.class);
         CloverCardTransactionInfo transactionInfo = cloverPayment.getCloverCardTransactionInfo();
-        CreditCardModel creditCardModel = new CreditCardModel();
-        creditCardModel.setCardType(transactionInfo.getCardType());
-        creditCardModel.setCardNumber(transactionInfo.getLast4());
-        creditCardModel.setExpiryDate(transactionInfo.getVaultedCard().getExpirationDate());
-        creditCardModel.setNameOnCard(transactionInfo.getVaultedCard().getCardholderName());
-        creditCardModel.setToken(transactionInfo.getToken());
 
-        PaymentsCreditCardBillingInformationDTO billingInformation = new PaymentsCreditCardBillingInformationDTO();
-        billingInformation.setSameAsPatient(true);
-        creditCardModel.setBillingInformation(billingInformation);
+        PaymentObject paymentObject = new PaymentObject();
+        paymentObject.setType(PaymentType.credit_card);
+        paymentObject.setExecution(PaymentExecution.clover);
+        paymentObject.setAmount(amountDouble);
+        paymentObject.setCreditCard(getCreditCardModel(transactionInfo));
 
-        PaymentMethod paymentMethod = new PaymentMethod();
-        paymentMethod.setType(PaymentType.credit_card);
-        paymentMethod.setExecution(PaymentExecution.clover);
-        paymentMethod.setAmount(amountDouble);
-        paymentMethod.setCreditCard(creditCardModel);
-
-        TransactionResponse transactionResponse = new TransactionResponse();
-        transactionResponse.setTransactionID(cloverPayment.getId());
-        transactionResponse.setResponse(payment.getJSONObject());
-        paymentMethod.setTransactionResponse(transactionResponse);
-//        paymentMethod.setBankAccountToken(paymentTransition.getMetadata());//TODO
+//        paymentObject.setBankAccountToken(paymentTransition.getMetadata());//TODO
 
         PaymentPostModel paymentPostModel = new PaymentPostModel();
         paymentPostModel.setAmount(amountDouble);
-        paymentPostModel.addPaymentMethod(paymentMethod);
+        paymentPostModel.addPaymentMethod(paymentObject);
+
+//        TransactionResponse transactionResponse = new TransactionResponse();
+//        transactionResponse.setTransactionID(cloverPayment.getId());
+//        transactionResponse.setResponse(payment.getJSONObject());
+        postModel.setTransactionResponse(gson.fromJson(jsonString, JsonObject.class));
 
         if(paymentPostModel.isPaymentModelValid()){
             postPayment(gson.toJson(paymentPostModel));
@@ -418,20 +375,66 @@ public class CloverPaymentActivity extends BaseActivity {
         }
     }
 
+    private void processPayment(Payment payment, PaymentPostModel postModel){
+        Gson gson = new Gson();
+        String jsonString = payment.getJSONObject().toString();
+        CloverPaymentDTO cloverPayment = gson.fromJson(jsonString, CloverPaymentDTO.class);
+        CloverCardTransactionInfo transactionInfo = cloverPayment.getCloverCardTransactionInfo();
+        CreditCardModel creditCardModel = getCreditCardModel(transactionInfo);
+
+//        TransactionResponse transactionResponse = new TransactionResponse();
+//        transactionResponse.setTransactionID(cloverPayment.getId());
+//        transactionResponse.setResponse(payment.getJSONObject());
+
+        postModel.setTransactionResponse(gson.fromJson(jsonString, JsonObject.class));
+
+        for(PaymentObject paymentObject : postModel.getPaymentObjects()){
+            paymentObject.setType(PaymentType.credit_card);
+            paymentObject.setExecution(PaymentExecution.clover);
+            paymentObject.setCreditCard(creditCardModel);
+        }
+
+
+        if(postModel.isPaymentModelValid()){
+            postPayment(gson.toJson(postModel));
+        }else{
+            Toast.makeText(getApplicationContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+    }
+
     private void postPayment(String paymentModelJson){
         Gson gson = new Gson();
-        PaymentPayloadMetaDataDTO metadataDTO = gson.fromJson(patientPaymentMetaDataString, PaymentPayloadMetaDataDTO.class);
         Map<String, String> queries = new HashMap<>();
-        queries.put("patient_id", metadataDTO.getPatientId());
+        queries.put("patient_id", patientBalance.getBalances().get(0).getMetadata().getPatientId());
 
         Map<String, String> header = new HashMap<>();
         header.put("transition", "true");
 
         TransitionDTO transitionDTO = gson.fromJson(paymentTransitionString, TransitionDTO.class);
-//        transitionDTO.setUrl("https://ix1uhlyid1.execute-api.us-east-1.amazonaws.com/qa/workflow/shamrock/practice_mode/practice_payments/make_payment");
-
         getWorkflowServiceHelper().execute(transitionDTO, makePaymentCallback, paymentModelJson, queries, header);
 
+    }
+
+    private CreditCardModel getCreditCardModel(CloverCardTransactionInfo transactionInfo){
+        CreditCardModel creditCardModel = new CreditCardModel();
+        creditCardModel.setCardType(transactionInfo.getCardType());
+        creditCardModel.setCardNumber(transactionInfo.getLast4());
+        creditCardModel.setToken(transactionInfo.getToken());
+        creditCardModel.setTokenizationService(TokenizationService.clover);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, 1);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMyy");
+        creditCardModel.setExpiryDate(transactionInfo.getVaultedCard().getExpirationDate(dateFormat.format(calendar.getTime())));
+        creditCardModel.setNameOnCard(transactionInfo.getVaultedCard().getCardholderName(patientBalance.getDemographics().getPayload().getPersonalDetails().getFullName()));
+
+        PaymentsCreditCardBillingInformationDTO billingInformation = new PaymentsCreditCardBillingInformationDTO();
+        billingInformation.setSameAsPatient(true);
+        creditCardModel.setBillingInformation(billingInformation);
+
+        return creditCardModel;
     }
 
     private void fakePaymentResponse(){
@@ -446,20 +449,21 @@ public class CloverPaymentActivity extends BaseActivity {
         billingInformation.setSameAsPatient(true);
         creditCardModel.setBillingInformation(billingInformation);
 
-        PaymentMethod paymentMethod = new PaymentMethod();
-        paymentMethod.setType(PaymentType.credit_card);
-        paymentMethod.setExecution(PaymentExecution.clover);
-        paymentMethod.setAmount(5.00);
-        paymentMethod.setCreditCard(creditCardModel);
+        PaymentObject paymentObject = new PaymentObject();
+        paymentObject.setType(PaymentType.credit_card);
+        paymentObject.setExecution(PaymentExecution.clover);
+        paymentObject.setAmount(5.00);
+        paymentObject.setCreditCard(creditCardModel);
 
-        TransactionResponse transactionResponse = new TransactionResponse();
-        transactionResponse.setTransactionID(String.valueOf(System.currentTimeMillis()));
-        transactionResponse.setResponse(new JSONObject());
-        paymentMethod.setTransactionResponse(transactionResponse);
 
         PaymentPostModel paymentPostModel = new PaymentPostModel();
         paymentPostModel.setAmount(5.00);
-        paymentPostModel.addPaymentMethod(paymentMethod);
+        paymentPostModel.addPaymentMethod(paymentObject);
+
+//        TransactionResponse transactionResponse = new TransactionResponse();
+//        transactionResponse.setTransactionID(String.valueOf(System.currentTimeMillis()));
+//        transactionResponse.setResponse(new JSONObject());
+//        paymentPostModel.setTransactionResponse(new JSONObject());
 
         Gson gson = new Gson();
         if(paymentPostModel.isPaymentModelValid()){
@@ -486,7 +490,7 @@ public class CloverPaymentActivity extends BaseActivity {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             Intent intent = getIntent();
-            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA, workflowDTO.getPayload().toString());
+            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA, workflowDTO.toString());
             setResult(RESULT_OK, intent);
             finish();
 //            PracticeNavigationHelper.navigateToWorkflow(CloverPaymentActivity.this, workflowDTO);
@@ -497,6 +501,7 @@ public class CloverPaymentActivity extends BaseActivity {
             hideProgressDialog();
             setResult(RESULT_CANCELED);
             System.out.print(exceptionMessage);
+            Toast.makeText(getApplicationContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
             finish();
         }
     };

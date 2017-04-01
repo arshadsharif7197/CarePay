@@ -32,11 +32,10 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.base.BaseActivity;
+import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class SystemUtil implements Thread.UncaughtExceptionHandler{
 
@@ -141,6 +140,17 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
     }
 
     /**
+     * Hides the keyboard
+     *
+     * @param context the context for the view
+     * @param view the view showing the keyboard
+     */
+    public static void hideSoftKeyboard(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    /**
      * Shows the soft keyboard
      *
      * @param activity The activity
@@ -198,54 +208,35 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
     }
 
     /**
-     * Shows a message success dialog
-     *
-     * @param context The context
-     * @param title   The title
-     * @param body    The message
+     * Focus listener for handling CAPS on EditTexts that have attached TextInputLayout
+     * @param textInputLayout TextInputLayout that will handle the hint
+     * @param optionalListener Set if the view needs to do additional work on focus change
+     * @return focus change listener
      */
-    public static void showSuccessDialogMessage(Context context, String title, String body) {
+    public static View.OnFocusChangeListener getHintFocusChangeListener(final TextInputLayout textInputLayout, final View.OnFocusChangeListener optionalListener){
+        return new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                TextView textView = (TextView) view;
+                String[] tags = (String[]) view.getTag();
+                if(tags == null && textInputLayout.getHint()!=null){
+                    tags = new String[]{textInputLayout.getHint().toString().toUpperCase(), textInputLayout.getHint().toString()};
+                    view.setTag(tags);
+                }
 
-        showSweetDialog(context, SweetAlertDialog.SUCCESS_TYPE, title, body);
+                if(tags!=null){
+                    if(hasFocus || !StringUtil.isNullOrEmpty(textView.getText().toString())){
+                        textInputLayout.setHint(tags[0]);
+                    }else{
+                        textInputLayout.setHint(tags[1]);
+                    }
+                }
 
-    }
-
-    /**
-     * Shows a message failure dialog
-     *
-     * @param context The context
-     * @param title   The title
-     * @param body    The message
-     */
-    public static void showFailureDialogMessage(Context context, String title, String body) {
-
-        showSweetDialog(context, SweetAlertDialog.ERROR_TYPE, title, body);
-
-    }
-
-    /**
-     * Shows a default error message dialog
-     *
-     * @param context The context
-     */
-    public static void showDefaultFailureDialog(Context context) {
-
-        showFailureDialogMessage(context, "Connection issue", "There was a problem with your request. Please try again later.");
-
-    }
-
-    private static void showSweetDialog(Context context, int alertType, String title, String body) {
-        // Skip if activity is in the background
-        if (null == context || (context instanceof BaseActivity &&
-                !((BaseActivity) context).isVisible())) {
-            return;
-        }
-
-        new SweetAlertDialog(context, alertType)
-                .setTitleText(title)
-                .setContentText(body)
-                .setConfirmText(context.getString(R.string.alert_ok))
-                .show();
+                if(optionalListener!=null){
+                    optionalListener.onFocusChange(view, hasFocus);
+                }
+            }
+        };
     }
 
     public static boolean isNotEmptyString(String string) {
@@ -253,12 +244,12 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
     }
 
     /**
-     * Utility to dencode a bitmapinto a base64
+     * Utility to encode a bitmapinto a base64
      *
      * @param image The encoding as bytes
      * @return The bitmap
      */
-    public static String encodeToBase64(Bitmap image, Bitmap.CompressFormat compressFormat, int quality) {
+    public static String convertBitmapToString(Bitmap image, Bitmap.CompressFormat compressFormat, int quality) {
         ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
         image.compress(compressFormat, quality, byteArrayOS);
         return Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT);
@@ -269,7 +260,7 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
      * @param bitmapString The bitmap as base64
      * @return The bitmap
      */
-    public static Bitmap base64ToBitmap(String bitmapString) {
+    public static Bitmap convertStringToBitmap(String bitmapString) {
         try {
             byte[] decodedString = Base64.decode(bitmapString, Base64.DEFAULT);
             return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
@@ -279,14 +270,14 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
     }
 
 
-        /**
-         * Convert the image capture place holder into a base64
-         * @param context The context
-         * @return The base64 string
-         */
+    /**
+     * Convert the image capture place holder into a base64
+     * @param context The context
+     * @return The base64 string
+     */
     public static String getPlaceholderAsBase64(Context context) {
         Bitmap placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.icn_camera);
-        return SystemUtil.encodeToBase64(placeholder, Bitmap.CompressFormat.JPEG, 90);
+        return SystemUtil.convertBitmapToString(placeholder, Bitmap.CompressFormat.JPEG, 90);
     }
 
     /**
@@ -344,8 +335,8 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
 
         // create dialog layout
         View customView = LayoutInflater.from(activity).inflate(R.layout.alert_list_layout,
-                                                                (ViewGroup) activity.getWindow().getDecorView().getRootView(),
-                                                                false);
+                (ViewGroup) activity.getWindow().getDecorView().getRootView(),
+                false);
         ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
         // create the adapter
         CustomAlertAdapter customAlertAdapter = new CustomAlertAdapter(activity, Arrays.asList(options));
@@ -387,5 +378,47 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
 //        t.setDefaultUncaughtExceptionHandler(new SystemUtil());
     }
 
+    /**
+     * @param context The context
+     * @param exceptionMessage message to log
+     */
+    public static void doDefaultFailureBehavior(BaseActivity context, String exceptionMessage) {
+        context.hideProgressDialog();
+        context.showErrorNotification(exceptionMessage);
+        Log.e(context.getString(R.string.alert_title_server_error), exceptionMessage);
+    }
 
+    /**
+     * Show success toast.
+     *
+     * @param context        the context
+     * @param successMessage the success message
+     */
+    public static void showSuccessToast(Context context, String successMessage) {
+
+        if (null == context) {
+            return;
+        }
+
+        new CustomMessageToast(context, successMessage, CustomMessageToast.NOTIFICATION_TYPE_SUCCESS)
+                .show();
+
+    }
+
+    /**
+     * Show error Toast
+     *
+     * @param context context
+     * @param errorMessage message to display
+     */
+    public static void showErrorToast(Context context, String errorMessage){
+
+        if (null == context) {
+            return;
+        }
+
+        new CustomMessageToast(context, errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR)
+                .show();
+
+    }
 }

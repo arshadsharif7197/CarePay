@@ -20,19 +20,16 @@ import com.carecloud.carepay.patient.demographics.activities.DemographicsActivit
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataValidationDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -40,6 +37,9 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtrabo
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -66,14 +66,14 @@ public class DemographicsDetailsFragment extends BaseFragment
     private TextView        genderLabel;
     private TextView        dobHint;
 
-    private DemographicPersDetailsPayloadDTO        persDetailsDTO;
+    private PatientModel persDetailsDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
     private DemographicLabelsDTO                    globalLabelDTO;
 
     DemographicsDetailsFragmentListener activityCallback;
 
     public interface DemographicsDetailsFragmentListener {
-        void initializeProfilePictureFragment(DemographicLabelsDTO globalLabelDTO, DemographicPersDetailsPayloadDTO persDetailsDTO);
+        void initializeProfilePictureFragment(DemographicLabelsDTO globalLabelDTO, PatientModel persDetailsDTO);
     }
 
     @Override
@@ -123,21 +123,21 @@ public class DemographicsDetailsFragment extends BaseFragment
             return;
         }
 
-        List<MetadataOptionDTO> options = persDetailsMetaDTO.properties.primaryRace.options;
+        List<MetadataOptionDTO> options = persDetailsMetaDTO.getProperties().getPrimaryRace().getOptions();
         List<String> races = new ArrayList<>();
         for (MetadataOptionDTO o : options) {
             races.add(o.getLabel());
         }
         raceArray = races.toArray(new String[0]);
 
-        options = persDetailsMetaDTO.properties.ethnicity.options;
+        options = persDetailsMetaDTO.getProperties().getEthnicity().getOptions();
         List<String> ethnicities = new ArrayList<>();
         for (MetadataOptionDTO o : options) {
             ethnicities.add(o.getLabel());
         }
         ethnicityArray = ethnicities.toArray(new String[0]);
 
-        options = persDetailsMetaDTO.properties.gender.options;
+        options = persDetailsMetaDTO.getProperties().getGender().getOptions();
         List<String> genders = new ArrayList<>();
         for (MetadataOptionDTO o : options) {
             genders.add(o.getLabel());
@@ -148,7 +148,7 @@ public class DemographicsDetailsFragment extends BaseFragment
     private void setupEdit(View view) {
         dobInputText = (TextInputLayout) view.findViewById(R.id.demogrDetailsDobInputText);
         dobEdit = (EditText) view.findViewById(R.id.demogrDetailsDobEdit);
-        String hint = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.dateOfBirth.getLabel();
+        String hint = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getDateOfBirth().getLabel();
         dobInputText.setTag(hint);
         dobEdit.setTag(dobInputText);
         dobEdit.setHint(hint);
@@ -224,7 +224,7 @@ public class DemographicsDetailsFragment extends BaseFragment
         boolean isValidFormat = ValidationHelper.applyPatternValidationToWrappedEdit(
                 dobEdit,
                 dobInputText,
-                persDetailsMetaDTO.properties.dateOfBirth,
+                persDetailsMetaDTO.getProperties().getDateOfBirth(),
                 new ValidationHelper.LocalValidation() {
                     @Override
                     public boolean validate(MetadataValidationDTO validation) {
@@ -252,15 +252,15 @@ public class DemographicsDetailsFragment extends BaseFragment
         subheader.setText(label);
 
         raceLabel = (TextView) view.findViewById(R.id.demogrDetailsRaceLabel);
-        label = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.primaryRace.getLabel();
+        label = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getPrimaryRace().getLabel();
         raceLabel.setText(label);
 
         ethnicityLabel = (TextView) view.findViewById(R.id.demogrDetailsEthnicityLabel);
-        label = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.ethnicity.getLabel();
+        label = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getEthnicity().getLabel();
         ethnicityLabel.setText(label);
 
         genderLabel = (TextView) view.findViewById(R.id.demogrDetailsGenderLabel);
-        label = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.gender.getLabel();
+        label = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getGender().getLabel();
         genderLabel.setText(label);
 
         dobHint = (TextView) view.findViewById(R.id.demogrDetailsDobHint);
@@ -309,7 +309,7 @@ public class DemographicsDetailsFragment extends BaseFragment
      *
      * @return The DTO for personal details
      */
-    public DemographicPersDetailsPayloadDTO getPersDetailsDTO() {
+    public PatientModel getPersDetailsDTO() {
         DemographicPayloadDTO payload
                 = ((DemographicsActivity) getActivity()).getDemographicInfoPayloadModel();
         if (payload != null) {
@@ -345,7 +345,7 @@ public class DemographicsDetailsFragment extends BaseFragment
             view.requestFocus();
         } else {
             Log.v(LOG_TAG, "demographics details: views populated with defaults");
-            persDetailsDTO = new DemographicPersDetailsPayloadDTO();
+            persDetailsDTO = new PatientModel();
         }
     }
 

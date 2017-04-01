@@ -11,6 +11,13 @@ import com.google.gson.annotations.SerializedName;
  */
 public class DemographicMetadataEntityAddressDTO extends MetadataEntityDTO {
     @SerializedName("properties") @Expose
-    public DemographicMetadataPropertiesAddressDTO properties = new DemographicMetadataPropertiesAddressDTO();
+    private DemographicMetadataPropertiesAddressDTO properties = new DemographicMetadataPropertiesAddressDTO();
 
+    public DemographicMetadataPropertiesAddressDTO getProperties() {
+        return properties;
+    }
+
+    public void setProperties(DemographicMetadataPropertiesAddressDTO properties) {
+        this.properties = properties;
+    }
 }

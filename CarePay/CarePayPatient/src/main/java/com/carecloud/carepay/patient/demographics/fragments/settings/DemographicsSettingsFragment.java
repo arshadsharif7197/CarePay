@@ -18,26 +18,28 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMetadataDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPersonalDetailsPayloadDTO;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
@@ -118,7 +120,6 @@ public class DemographicsSettingsFragment extends BaseFragment {
         editTextview = (CarePayTextView) view.findViewById(R.id.editTextView);
         signOutButton = (Button) view.findViewById(R.id.signOutButton);
         CarePayTextView patientNameTextview = (CarePayTextView) view.findViewById(R.id.patient_name);
-        CarePayTextView patientIdTextview = (CarePayTextView) view.findViewById(R.id.patient_id);
         profileImageview = (ImageView) view.findViewById(R.id.providerPicImageView);
 
         demographicsTextview.setText(demographicsString);
@@ -129,21 +130,24 @@ public class DemographicsSettingsFragment extends BaseFragment {
         signOutButton.setText(signOutString);
         title.setText(settingsString);
         patientNameTextview.setText(getUserName());
-        patientIdTextview.setText(getCognitoAppHelper().getCurrUser());
+
+        CarePayTextView patientIdTextview = (CarePayTextView) view.findViewById(R.id.patient_id);
+        patientIdTextview.setText(getAppAuthorizationHelper().getCurrUser());
+
         try {
-         DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
-         DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-         DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
-         DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
-         String imageUrl = demographicsPersonalDetails.getProfilePhoto();
-         if (!StringUtil.isNullOrEmpty(imageUrl)) {
-           Picasso.with(getActivity()).load(imageUrl).transform(
-                new CircleImageTransform()).resize(160, 160).into(this.profileImageview);
-         }
-         setClickables(view);
-         }catch(Exception e){
+            DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
+            DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
+            DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
+            PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+            String imageUrl = demographicsPersonalDetails.getProfilePhoto();
+            if (!StringUtil.isNullOrEmpty(imageUrl)) {
+                Picasso.with(getActivity()).load(imageUrl).transform(
+                        new CircleImageTransform()).resize(160, 160).into(this.profileImageview);
+            }
+            setClickables(view);
+        }catch(Exception e){
             e.printStackTrace();
-         }
+        }
         return view;
 
     }
@@ -285,7 +289,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
                 try {
 //                    if (demographicsSettingsDTO.getPayload().getPatientCreditCards() != null &&
 //                            !demographicsSettingsDTO.getPayload().getPatientCreditCards().isEmpty()) {
-                        activityCallback.initializeCreditCardListFragment();
+                    activityCallback.initializeCreditCardListFragment();
 //                    } else {
 //                        ((DemographicsSettingsActivity) getActivity()).initializeAddNewCreditCardFragment();
 //                    }
@@ -298,16 +302,17 @@ public class DemographicsSettingsFragment extends BaseFragment {
 
     private String getUserName() {
         try{
-        if(demographicsSettingsDTO!=null) {
-            DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
-            DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-            DemographicsSettingsDemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
-            DemographicsSettingsPersonalDetailsPayloadDTO demographicsPersonalDetails = demographicPayload.getPersonalDetails();
-            String firstName = demographicsPersonalDetails.getFirstName();
-            String lastName = demographicsPersonalDetails.getLastName();
-            String userName = firstName + " " + lastName;
-            return userName;
-        }
+            if(demographicsSettingsDTO!=null) {
+                DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
+                DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
+                DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
+                PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+                String firstName = demographicsPersonalDetails.getFirstName();
+                String lastName = demographicsPersonalDetails.getLastName();
+                String userName = firstName + " " + lastName;
+                return (StringUtil.capitalize(userName));
+
+            }
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -325,8 +330,10 @@ public class DemographicsSettingsFragment extends BaseFragment {
             hideProgressDialog();
             signOutButton.setEnabled(true);
             // log out previous user from Cognito
-            getCognitoAppHelper().getPool().getUser().signOut();
-            getCognitoAppHelper().setUser(null);
+            if(!HttpConstants.isUseUnifiedAuth()) {
+                getAppAuthorizationHelper().getPool().getUser().signOut();
+                getAppAuthorizationHelper().setUser(null);
+            }
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
         }
 

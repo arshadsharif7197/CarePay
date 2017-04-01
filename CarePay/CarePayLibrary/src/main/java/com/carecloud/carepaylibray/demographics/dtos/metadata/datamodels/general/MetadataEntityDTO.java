@@ -25,19 +25,19 @@ public class MetadataEntityDTO {
 
     @SerializedName("type")
     @Expose
-    public String type;
+    private String type;
 
     @SerializedName("method")
     @Expose
-    public MetadataActionDTO method = new MetadataActionDTO();
+    private MetadataActionDTO method = new MetadataActionDTO();
 
     @SerializedName("options")
     @Expose
-    public List<MetadataOptionDTO> options = new ArrayList<>();
+    private List<MetadataOptionDTO> options = new ArrayList<>();
 
     @SerializedName("validations")
     @Expose
-    public List<MetadataValidationDTO> validations = new ArrayList<>();
+    private List<MetadataValidationDTO> validations = new ArrayList<>();
 
     /**
      * Getter
@@ -53,5 +53,37 @@ public class MetadataEntityDTO {
      */
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public MetadataActionDTO getMethod() {
+        return method;
+    }
+
+    public void setMethod(MetadataActionDTO method) {
+        this.method = method;
+    }
+
+    public List<MetadataOptionDTO> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<MetadataOptionDTO> options) {
+        this.options = options;
+    }
+
+    public List<MetadataValidationDTO> getValidations() {
+        return validations;
+    }
+
+    public void setValidations(List<MetadataValidationDTO> validations) {
+        this.validations = validations;
     }
 }

@@ -16,19 +16,14 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsCheckinDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog;
-import com.carecloud.carepaylibray.customdialogs.QrCodeViewDialog;
-import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,6 +40,10 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
 
     public interface CheckInOfficeNowAppointmentDialogListener {
         void onPreRegisterTapped(AppointmentDTO appointmentDTO, AppointmentsResultModel appointmentInfo);
+
+        void onCheckInAtOfficeButtonClicked(AppointmentDTO appointmentDTO);
+
+        void onDemographicsVerifyCallbackError(String errorMessage);
     }
 
     /**
@@ -61,20 +60,7 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         this.appointmentDTO = appointmentDTO;
         this.appointmentInfo = appointmentInfo;
         this.callback = callback;
-        this.canCheckIn = canCheckIn();
-    }
-
-    private boolean canCheckIn() {
-        AppointmentsCheckinDTO checkin = appointmentInfo.getPayload().getAppointmentsSettings().get(0).getCheckin();
-        boolean allowEarlyCheckin = checkin.getAllowEarlyCheckin();
-        long allowEarlyCheckinPeriod = Long.parseLong(checkin.getEarlyCheckinPeriod());
-        String appointmentTimeStr = appointmentDTO.getPayload().getStartTime();
-        Date appointmentDate = DateUtil.getInstance().setDateRaw(appointmentTimeStr).getDate();
-        Date currentDate = DateUtil.getInstance().setToCurrent().getDate();
-
-        long differenceInMinutes = DateUtil.getMinutesElapsed(appointmentDate, currentDate);
-
-        return (differenceInMinutes < allowEarlyCheckinPeriod) && allowEarlyCheckin;
+        this.canCheckIn = appointmentDTO.getPayload().canCheckInNow(appointmentInfo);
     }
 
     @Override
@@ -117,7 +103,7 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         int viewId = view.getId();
         if (viewId == R.id.checkInAtOfficeButton) {
             checkInAtOfficeButton.setEnabled(false);
-            new QrCodeViewDialog(context, appointmentDTO, appointmentInfo.getMetadata()).show();
+            callback.onCheckInAtOfficeButtonClicked(appointmentDTO);
             checkInAtOfficeButton.setEnabled(true);
             cancel();
         } else if (viewId == R.id.checkInNowButton) {
@@ -189,7 +175,8 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         public void onFailure(String exceptionMessage) {
             ((ISession) context).hideProgressDialog();
             checkInNowButton.setEnabled(true);
-            SystemUtil.showDefaultFailureDialog(getContext());
+            callback.onDemographicsVerifyCallbackError(exceptionMessage);
+            //SystemUtil.showDefaultFailureDialog(getContext());
             Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

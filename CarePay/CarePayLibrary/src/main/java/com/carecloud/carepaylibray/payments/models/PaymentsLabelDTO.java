@@ -270,12 +270,6 @@ public class PaymentsLabelDTO {
     @SerializedName("practice_payments_filter_find_patient_by_name")
     @Expose
     private String practicePaymentsFilterFindPatientByName;
-    @SerializedName("practice_payments_filter_doctors")
-    @Expose
-    private String practicePaymentsFilterDoctors;
-    @SerializedName("practice_payments_filter_locations")
-    @Expose
-    private String practicePaymentsFilterLocations;
     @SerializedName("practice_payments_filter_clear_filters")
     @Expose
     private String practicePaymentsFilterClearFilters;
@@ -321,6 +315,45 @@ public class PaymentsLabelDTO {
     @SerializedName("payment_pay_using_payment_plan_label")
     @Expose
     private String paymentPayUsingPaymentPlan;
+    @SerializedName("payment_balance_owed_label")
+    @Expose
+    private String paymentBalanceOwedLabel;
+    @SerializedName("payment_total_paid_label")
+    @Expose
+    private String paymentTotalPaidLabel;
+    @SerializedName("payment_add_item_button")
+    @Expose
+    private String paymentAddItemButton;
+    @SerializedName("payment_clear_button")
+    @Expose
+    private String paymentClearButton;
+    @SerializedName("payment_title")
+    @Expose
+    private String paymentTitle;
+
+    public String getPaymentBalanceOwedLabel() {
+        return paymentBalanceOwedLabel;
+    }
+
+    public void setPaymentBalanceOwedLabel(String paymentBalanceOwedLabel) {
+        this.paymentBalanceOwedLabel = paymentBalanceOwedLabel;
+    }
+
+    public String getPaymentTotalPaidLabel() {
+        return paymentTotalPaidLabel;
+    }
+
+    public void setPaymentTotalPaidLabel(String paymentTotalPaidLabel) {
+        this.paymentTotalPaidLabel = paymentTotalPaidLabel;
+    }
+
+    public String getPaymentAddItemButton() {
+        return paymentAddItemButton;
+    }
+
+    public void setPaymentAddItemButton(String paymentAddItemButton) {
+        this.paymentAddItemButton = paymentAddItemButton;
+    }
 
     public String getPaymentPostedSuccessMessage() {
         return StringUtil.getLabelForView(paymentPostedSuccessMessage);
@@ -1782,38 +1815,6 @@ public class PaymentsLabelDTO {
 
     /**
      *
-     * @return practicePaymentsFilterDoctors
-     */
-    public String getPracticePaymentsFilterDoctors() {
-        return StringUtil.getLabelForView(practicePaymentsFilterDoctors);
-    }
-
-    /**
-     *
-     * @param practicePaymentsFilterDoctors practicePaymentsFilterDoctors
-     */
-    public void setPracticePaymentsFilterDoctors(String practicePaymentsFilterDoctors) {
-        this.practicePaymentsFilterDoctors = practicePaymentsFilterDoctors;
-    }
-
-    /**
-     *
-     * @return practicePaymentsFilterLocations
-     */
-    public String getPracticePaymentsFilterLocations() {
-        return StringUtil.getLabelForView(practicePaymentsFilterLocations);
-    }
-
-    /**
-     *
-     * @param practicePaymentsFilterLocations practicePaymentsFilterLocations
-     */
-    public void setPracticePaymentsFilterLocations(String practicePaymentsFilterLocations) {
-        this.practicePaymentsFilterLocations = practicePaymentsFilterLocations;
-    }
-
-    /**
-     *
      * @return practicePaymentsFilterClearFilters
      */
     public String getPracticePaymentsFilterClearFilters() {
@@ -1923,5 +1924,21 @@ public class PaymentsLabelDTO {
      */
     public void setPaymentPayUsingPaymentPlan(String paymentPayUsingPaymentPlan) {
         this.paymentPayUsingPaymentPlan = paymentPayUsingPaymentPlan;
+    }
+
+    public String getPaymentClearButton() {
+        return paymentClearButton;
+    }
+
+    public void setPaymentClearButton(String paymentClearButton) {
+        this.paymentClearButton = paymentClearButton;
+    }
+
+    public String getPaymentTitle() {
+        return paymentTitle;
+    }
+
+    public void setPaymentTitle(String paymentTitle) {
+        this.paymentTitle = paymentTitle;
     }
 }

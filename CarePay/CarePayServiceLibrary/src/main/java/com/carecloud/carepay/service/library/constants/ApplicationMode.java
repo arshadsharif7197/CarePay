@@ -1,6 +1,6 @@
 package com.carecloud.carepay.service.library.constants;
 
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.dtos.CognitoDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 
@@ -27,9 +27,20 @@ public class ApplicationMode {
         return userPracticeDTO;
     }
 
-    public void setUserPracticeDTO(CognitoAppHelper cognitoAppHelper, UserPracticeDTO userPracticeDTO) {
+    /**
+     * @param appAuthorizationHelper auth helper
+     * @param userPracticeDTO practice user DTO
+     */
+    public void setUserPracticeDTO(AppAuthorizationHelper appAuthorizationHelper, UserPracticeDTO userPracticeDTO) {
         this.userPracticeDTO = userPracticeDTO;
-        this.userPracticeDTO.setUserName(cognitoAppHelper.getCurrUser());
+        this.userPracticeDTO.setUserName(appAuthorizationHelper.getCurrUser());
+    }
+
+    /**
+     * Clears the current practice DTO, should be called when logging out of app
+     */
+    public void clearUserPracticeDTO(){
+        this.userPracticeDTO = null;
     }
 
     public ApplicationType getApplicationType() {

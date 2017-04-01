@@ -16,15 +16,12 @@ import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeSwitchPinDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeSwitchPinResponseDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -37,6 +34,8 @@ import java.util.Map;
 
 public class ConfirmationPinDialog extends Dialog implements View.OnClickListener {
 
+    private static final int FULLSCREEN_VALUE = 0x10000000;
+
     private Context context;
     private EditText pinEditText;
     private CarePayTextView headerLabel;
@@ -46,18 +45,24 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
     private PatientModeSwitchPinDTO patientModeSwitchPinDTO;
     private boolean isDynamicLabels ;
     private TransitionDTO transitionDTOPinLink;
+    private ConfirmationPinDialogListener callBack;
+
+    public interface ConfirmationPinDialogListener {
+        void onError(String errorMessage);
+    }
 
     /**
      * Constructor calling from  Patient screen for Switching to Practice Mode.
      *
      * @param context context
      */
-    public ConfirmationPinDialog(Context context, TransitionDTO transitionDTOPinLink, PatientModeSwitchPinDTO patientModeSwitchPinDTO, boolean isDynamicLabels) {
+    public ConfirmationPinDialog(Context context, TransitionDTO transitionDTOPinLink, PatientModeSwitchPinDTO patientModeSwitchPinDTO, boolean isDynamicLabels, ConfirmationPinDialogListener callBack) {
         super(context);
         this.context = context;
         this.transitionDTOPinLink = transitionDTOPinLink;
         this.patientModeSwitchPinDTO = patientModeSwitchPinDTO;
         this.isDynamicLabels = isDynamicLabels;
+        this.callBack = callBack;
     }
 
     /**
@@ -70,6 +75,7 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setNavigationBarVisibility();
         setContentView(R.layout.dialog_confirmation_pin);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         setCancelable(false);
@@ -79,6 +85,17 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
         onSetPinLabels();
 
     }
+
+    private void setNavigationBarVisibility() {
+
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_IMMERSIVE
+                | FULLSCREEN_VALUE;
+        decorView.setSystemUiVisibility(uiOptions);
+    }
+
 
     /**
      * for initialization UI components  .
@@ -201,16 +218,16 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
             Gson gson = new Gson();
             PatientModeSwitchPinResponseDTO patientModeSwitchPinResponseDTO =   gson.fromJson(workflowDTO.toString(),PatientModeSwitchPinResponseDTO.class);
             if(patientModeSwitchPinResponseDTO.getPayload().getPinpad().getPayload()) {
+                ((ISession) context).getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
                 ((BasePracticeActivity) context).onPinConfirmationCheck(true, pinEditText.getText().toString());
                 dismiss();
-                ((ISession) context).getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
             }
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
             ((ISession) context).hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(context);
+            callBack.onError(exceptionMessage);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

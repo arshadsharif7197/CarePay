@@ -7,12 +7,12 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.patientsplash.dtos.SelectLanguageDTO;
-import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
+import com.newrelic.agent.android.NewRelic;
 
 import java.util.Map;
 
@@ -43,10 +43,12 @@ public class SplashActivity extends BasePatientActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showDefaultFailureDialog(SplashActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+
         }
     };
+
     WorkflowServiceCallback applicationStartCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -74,7 +76,7 @@ public class SplashActivity extends BasePatientActivity {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            SystemUtil.showDefaultFailureDialog(SplashActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -86,6 +88,11 @@ public class SplashActivity extends BasePatientActivity {
 
         // dynamic transition
         getWorkflowServiceHelper().executeApplicationStartRequest(applicationStartCallback);
+
+        NewRelic.withApplicationToken(
+                getString(R.string.new_relic_application_token)
+        ).start(this.getApplication());
+
 
     }
 }

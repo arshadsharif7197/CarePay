@@ -74,7 +74,7 @@ public class ValidationHelper {
                                                                   TextInputLayout wrapperLayout,
                                                                   MetadataEntityDTO metadataEntityDTO,
                                                                   @Nullable LocalValidation extraValidation) {
-        if (metadataEntityDTO == null || metadataEntityDTO.validations == null) {
+        if (metadataEntityDTO == null || metadataEntityDTO.getValidations() == null) {
             return true;
         }
 
@@ -88,7 +88,7 @@ public class ValidationHelper {
             return true; // if empty content, pass
         }
 
-        List<MetadataOptionDTO> options = metadataEntityDTO.options;
+        List<MetadataOptionDTO> options = metadataEntityDTO.getOptions();
         if (options == null || options.size() == 0) {
             return false; // if no options, fail
         }
@@ -113,7 +113,7 @@ public class ValidationHelper {
 
     private static MetadataValidationDTO getValidationUtility(String type, MetadataEntityDTO addressMetaDTO) {
         if (addressMetaDTO != null) {
-            List<MetadataValidationDTO> validations = addressMetaDTO.validations;
+            List<MetadataValidationDTO> validations = addressMetaDTO.getValidations();
             for (int i = 0; i < validations.size(); i++) {
                 MetadataValidationDTO metadataValidationDTO = validations.get(i);
                 if (metadataValidationDTO.type.equals(type)) {

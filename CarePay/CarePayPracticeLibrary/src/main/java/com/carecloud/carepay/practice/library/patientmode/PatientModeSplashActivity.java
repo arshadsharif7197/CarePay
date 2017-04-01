@@ -18,15 +18,13 @@ import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLabels
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModePayloadDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeSplashDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.LanguageOptionDTO;
-import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -72,8 +70,12 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
 
             if (patientModeLabelsDTO != null) {
                 getStartedButton.setText(patientModeLabelsDTO.getGetStartedHeading());
-                praticewelcomeText.setText(patientModeLabelsDTO.getWelcomeHeading());
             }
+
+            praticewelcomeText.setText(patientModeSplashDTO.getPayload().getPractice().getWelcomeScreen().getMessage());
+
+            String welcomeLogoUrl = patientModeSplashDTO.getPayload().getPractice().getWelcomeScreen().getWelcomePhoto();
+            Picasso.with(this).load(welcomeLogoUrl).into(practicelogo);
 
             if (patientModePayloadDTO != null) {
                 // set the languages spinner
@@ -135,10 +137,26 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
         lockIcnImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(context,patientModeSplashDTO.getMetadata().getLinks().getPinpad(),patientModeSplashDTO.getMetadata().getLabels(), false);
+                ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(context,patientModeSplashDTO.getMetadata().getLinks().getPinpad(),patientModeSplashDTO.getMetadata().getLabels(), false, getConfirmationPinDialogCallBacK());
                 confirmationPinDialog.show();
             }
         });
+    }
+
+    /**
+     * Get confirmation pin dialog call bac k confirmation pin dialog . confirmation pin dialog listener.
+     *
+     * @return the confirmation pin dialog . confirmation pin dialog listener
+     */
+    public ConfirmationPinDialog.ConfirmationPinDialogListener getConfirmationPinDialogCallBacK(){
+        return new ConfirmationPinDialog.ConfirmationPinDialogListener() {
+
+            @Override
+            public void onError(String errorMessage) {
+
+                showErrorNotification(null);
+            }
+        };
     }
 
     @Override
@@ -167,7 +185,7 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             getStartedButton.setEnabled(true);
-            SystemUtil.showDefaultFailureDialog(PatientModeSplashActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -178,8 +196,10 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
         super.onBackPressed();
         // log out previous user from Cognito
         Log.v(this.getClass().getSimpleName(), "sign out Cognito");
-        getCognitoAppHelper().getPool().getUser().signOut();
-        getCognitoAppHelper().setUser(null);
+        if(!HttpConstants.isUseUnifiedAuth()) {
+            getAppAuthorizationHelper().getPool().getUser().signOut();
+            getAppAuthorizationHelper().setUser(null);
+        }
         getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
     }
 

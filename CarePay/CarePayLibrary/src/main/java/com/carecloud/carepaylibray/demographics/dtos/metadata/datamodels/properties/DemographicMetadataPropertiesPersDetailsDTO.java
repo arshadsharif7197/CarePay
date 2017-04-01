@@ -10,42 +10,112 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class DemographicMetadataPropertiesPersDetailsDTO {
+
     @SerializedName("first_name")
     @Expose
-    public MetadataEntityDTO firstName = new MetadataEntityDTO();
+    private MetadataEntityDTO firstName = new MetadataEntityDTO();
 
     @SerializedName("last_name")
     @Expose
-    public MetadataEntityDTO lastName = new MetadataEntityDTO();
+    private MetadataEntityDTO lastName = new MetadataEntityDTO();
 
     @SerializedName("middle_name")
     @Expose
-    public MetadataEntityDTO middleName = new MetadataEntityDTO();
+    private MetadataEntityDTO middleName = new MetadataEntityDTO();
 
     @SerializedName("date_of_birth")
     @Expose
-    public MetadataEntityDTO dateOfBirth = new MetadataEntityDTO();
+    private MetadataEntityDTO dateOfBirth = new MetadataEntityDTO();
 
     @SerializedName("gender")
     @Expose
-    public MetadataEntityDTO gender = new MetadataEntityDTO();
+    private MetadataEntityDTO gender = new MetadataEntityDTO();
 
     @SerializedName("primary_race")
     @Expose
-    public MetadataEntityDTO primaryRace = new MetadataEntityDTO();
+    private MetadataEntityDTO primaryRace = new MetadataEntityDTO();
 
     @SerializedName("secondary_race")
     @Expose
-    public MetadataEntityDTO secondaryRace = new MetadataEntityDTO();
+    private MetadataEntityDTO secondaryRace = new MetadataEntityDTO();
 
     @SerializedName("ethnicity")
     @Expose
-    public MetadataEntityDTO ethnicity = new MetadataEntityDTO();
-
-//    @SerializedName("preferred_language") @Expose
-//    public MetadataEntityDTO preferredLanguage;
+    private MetadataEntityDTO ethnicity = new MetadataEntityDTO();
 
     @SerializedName("profile_photo")
     @Expose
-    public MetadataEntityDTO profilePhoto = new MetadataEntityDTO();
+    private MetadataEntityDTO profilePhoto = new MetadataEntityDTO();
+
+    public MetadataEntityDTO getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(MetadataEntityDTO firstName) {
+        this.firstName = firstName;
+    }
+
+    public MetadataEntityDTO getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(MetadataEntityDTO lastName) {
+        this.lastName = lastName;
+    }
+
+    public MetadataEntityDTO getMiddleName() {
+        return middleName;
+    }
+
+    public void setMiddleName(MetadataEntityDTO middleName) {
+        this.middleName = middleName;
+    }
+
+    public MetadataEntityDTO getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(MetadataEntityDTO dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public MetadataEntityDTO getGender() {
+        return gender;
+    }
+
+    public void setGender(MetadataEntityDTO gender) {
+        this.gender = gender;
+    }
+
+    public MetadataEntityDTO getPrimaryRace() {
+        return primaryRace;
+    }
+
+    public void setPrimaryRace(MetadataEntityDTO primaryRace) {
+        this.primaryRace = primaryRace;
+    }
+
+    public MetadataEntityDTO getSecondaryRace() {
+        return secondaryRace;
+    }
+
+    public void setSecondaryRace(MetadataEntityDTO secondaryRace) {
+        this.secondaryRace = secondaryRace;
+    }
+
+    public MetadataEntityDTO getEthnicity() {
+        return ethnicity;
+    }
+
+    public void setEthnicity(MetadataEntityDTO ethnicity) {
+        this.ethnicity = ethnicity;
+    }
+
+    public MetadataEntityDTO getProfilePhoto() {
+        return profilePhoto;
+    }
+
+    public void setProfilePhoto(MetadataEntityDTO profilePhoto) {
+        this.profilePhoto = profilePhoto;
+    }
 }

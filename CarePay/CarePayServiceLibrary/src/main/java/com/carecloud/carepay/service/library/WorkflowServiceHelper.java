@@ -1,17 +1,34 @@
 package com.carecloud.carepay.service.library;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.util.Log;
+import android.widget.Toast;
 
+import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.dtos.FaultResponseDTO;
+import com.carecloud.carepay.service.library.dtos.RefreshDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepay.service.library.platform.AndroidPlatform;
+import com.carecloud.carepay.service.library.platform.Platform;
+import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
+import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,13 +44,21 @@ import retrofit2.Response;
 public class WorkflowServiceHelper {
 
     private static final String TOKEN_HAS_EXPIRED = "Identity token has expired";
+    private static final String TOKEN = "token";
+    private static final String REVOKED = "revoked";
+    private static final String EXPIRED = "expired";
+    private static final String UNAUTHORIZED = "unauthorized";
 
     private static final int STATUS_CODE_OK = 200;
     private static final int STATUS_CODE_UNAUTHORIZED = 401;
+    private static final int STATUS_BAD_REQUEST = 400;
+    private static final int STATUS_CODE_UNPROCESSABLE_ENTITY = 422;
 
-    private CognitoAppHelper cognitoAppHelper;
+    private AppAuthorizationHelper appAuthorizationHelper;
     private ApplicationPreferences applicationPreferences;
     private ApplicationMode applicationMode;
+
+    private Stack<Call<?>> callStack = new Stack<>();
 
     public WorkflowServiceHelper(ApplicationPreferences applicationPreferences,
                                  ApplicationMode applicationMode) {
@@ -41,8 +66,8 @@ public class WorkflowServiceHelper {
         this.applicationMode = applicationMode;
     }
 
-    public void setCognitoAppHelper(CognitoAppHelper cognitoAppHelper) {
-        this.cognitoAppHelper = cognitoAppHelper;
+    public void setAppAuthorizationHelper(AppAuthorizationHelper appAuthorizationHelper) {
+        this.appAuthorizationHelper = appAuthorizationHelper;
     }
 
     /**
@@ -53,21 +78,26 @@ public class WorkflowServiceHelper {
     private Map<String, String> getUserAuthenticationHeaders() {
         Map<String, String> userAuthHeaders = new HashMap<>();
 
-        if (null != cognitoAppHelper) {
+        if (appAuthorizationHelper != null) {
 
-            if ((applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE
-                    || applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)
-                    && applicationMode.getUserPracticeDTO() != null) {
+            if ((applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE ||
+                    applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) &&
+                    applicationMode.getUserPracticeDTO() != null) {
+
                 userAuthHeaders.put("username", applicationMode.getUserPracticeDTO().getUserName());
-                userAuthHeaders.put("Authorization", cognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
+
                 if (applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
-                    userAuthHeaders.put("username_patient", cognitoAppHelper.getCurrUser());
+                    userAuthHeaders.put("username_patient", appAuthorizationHelper.getCurrUser());
                 }
-            } else if (!isNullOrEmpty(cognitoAppHelper.getCurrUser())) {
-                userAuthHeaders.put("username", cognitoAppHelper.getCurrUser());
-                if (cognitoAppHelper.getCurrSession() != null && !isNullOrEmpty(cognitoAppHelper.getCurrSession().getIdToken().getJWTToken())) {
-                    userAuthHeaders.put("Authorization", cognitoAppHelper.getCurrSession().getIdToken().getJWTToken());
-                }
+
+            } else {
+                userAuthHeaders.put("username", appAuthorizationHelper.getCurrUser());
+            }
+
+            if (HttpConstants.isUseUnifiedAuth()) {
+                userAuthHeaders.put("Authorization", appAuthorizationHelper.getIdToken());
+            } else {
+                userAuthHeaders.put("Authorization", appAuthorizationHelper.getCurrSession().getIdToken().getJWTToken());
             }
         }
 
@@ -83,6 +113,7 @@ public class WorkflowServiceHelper {
      */
     private Map<String, String> getHeaders(Map<String, String> customHeaders) {
         Map<String, String> headers = getUserAuthenticationHeaders();
+
         // Add auth headers to custom in case custom has old auth headers
         if (customHeaders != null) {
             customHeaders.putAll(headers);
@@ -99,7 +130,7 @@ public class WorkflowServiceHelper {
     public Map<String, String> getApplicationStartHeaders() {
         Map<String, String> appStartHeaders = new HashMap<>();
         appStartHeaders.put("x-api-key", HttpConstants.getApiStartKey());
-        if( applicationPreferences.getUserLanguage().isEmpty()) {
+        if (applicationPreferences.getUserLanguage().isEmpty()) {
             appStartHeaders.put("Accept-Language", "en");
         } else {
             appStartHeaders.put("Accept-Language", applicationPreferences.getUserLanguage());
@@ -110,9 +141,9 @@ public class WorkflowServiceHelper {
     /**
      * @return map with language header
      */
-    public  Map<String, String> getPreferredLanguageHeader(){
+    public Map<String, String> getPreferredLanguageHeader() {
         Map<String, String> prefredLanguage = new HashMap<>();
-        if( applicationPreferences.getUserLanguage().isEmpty()) {
+        if (applicationPreferences.getUserLanguage().isEmpty()) {
             prefredLanguage.put("Accept-Language", "en");
         } else {
             prefredLanguage.put("Accept-Language", applicationPreferences.getUserLanguage());
@@ -156,7 +187,7 @@ public class WorkflowServiceHelper {
         executeRequest(transitionDTO, callback, jsonBody, queryMap, getHeaders(customHeaders), 0);
     }
 
-    private void updateQueryMapWithDefault(Map<String, String> queryMap) {
+    private Map<String, String> updateQueryMapWithDefault(Map<String, String> queryMap) {
         if (queryMap == null) {
             queryMap = new HashMap<>();
         }
@@ -164,6 +195,8 @@ public class WorkflowServiceHelper {
             queryMap.put("practice_mgmt", applicationMode.getUserPracticeDTO().getPracticeMgmt());
             queryMap.put("practice_id", applicationMode.getUserPracticeDTO().getPracticeId());
         }
+
+        return queryMap;
     }
 
     private void executeRequest(@NonNull TransitionDTO transitionDTO,
@@ -174,7 +207,7 @@ public class WorkflowServiceHelper {
                                 int attemptCount) {
 
         callback.onPreExecute();
-        updateQueryMapWithDefault(queryMap);
+        queryMap = updateQueryMapWithDefault(queryMap);
         WorkflowService workflowService = ServiceGenerator.getInstance().createService(WorkflowService.class, headers); //, String token, String searchString
         Call<WorkflowDTO> call = null;
 
@@ -188,7 +221,7 @@ public class WorkflowServiceHelper {
             } else {
                 call = workflowService.executeGet(transitionDTO.getUrl());
             }
-        } else if (transitionDTO.isPost()){
+        } else if (transitionDTO.isPost()) {
             if (jsonBody != null && queryMap == null) {
                 call = workflowService.executePost(transitionDTO.getUrl(), jsonBody);
             } else if (jsonBody == null && queryMap != null) {
@@ -238,6 +271,7 @@ public class WorkflowServiceHelper {
         call.enqueue(new Callback<WorkflowDTO>() {
             @Override
             public void onResponse(Call<WorkflowDTO> call, Response<WorkflowDTO> response) {
+                callStack.remove(call);
                 try {
                     switch (response.code()) {
                         case STATUS_CODE_OK:
@@ -246,17 +280,37 @@ public class WorkflowServiceHelper {
                         case STATUS_CODE_UNAUTHORIZED:
                             onResponseUnauthorized(response);
                             break;
+                        case STATUS_BAD_REQUEST:
+                            onResponseBadRequest(response);
+                            break;
+                        case STATUS_CODE_UNPROCESSABLE_ENTITY:
+                            onValidationError(response);
+                            break;
                         default:
                             onFailure(response);
 
                     }
                 } catch (Exception exception) {
-                    onFailure(call, exception);
+                    handleException(exception);
+                }
+            }
+
+            private void handleException(Exception exception)
+            {
+                if(exception.getMessage()!=null) {
+                    callback.onFailure(exception.getMessage());
+                    Log.e("WorkflowServiceHelper", exception.getMessage(), exception);
+                }else{
+                    callback.onFailure(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
                 }
             }
 
             private void onResponseOk(Response<WorkflowDTO> response) throws IOException {
                 WorkflowDTO workflowDTO = response.body();
+                // This is temporary. We should use an exclusive service for labels
+                // in order to retrieve them and save them only once.
+                // TODO: erase this code when that service exists
+                saveLabels(workflowDTO);
                 if (workflowDTO != null && !isNullOrEmpty(workflowDTO.getState())) {
                     callback.onPostExecute(response.body());
                 } else {
@@ -264,31 +318,93 @@ public class WorkflowServiceHelper {
                 }
             }
 
-            private void onResponseUnauthorized(Response<WorkflowDTO> response) throws IOException {
-                if (!response.errorBody().string().contains(TOKEN_HAS_EXPIRED)) {
-                    onFailure(response);
-                } else if (!cognitoAppHelper.refreshToken(getCognitoActionCallback(transitionDTO, callback, jsonBody, queryMap, headers))) {
-                    callback.onFailure("No User found to refresh token");
+            private void saveLabels(WorkflowDTO workflowDTO) {
+                //TODO: this should change after the creation of the Label service
+                JsonObject labels = workflowDTO.getMetadata().getAsJsonObject("labels");
+                String state = workflowDTO.getState();
+                boolean contains = ((AndroidPlatform) Platform.get()).openSharedPreferences(AndroidPlatform.LABELS_FILE_NAME).contains("labelFor" + state);
+                if (labels != null && !contains) {
+                    Set<Map.Entry<String, JsonElement>> set = labels.entrySet();
+                    for (Map.Entry<String, JsonElement> entry : set) {
+                        Label.putLabel(entry.getKey(), entry.getValue().getAsString());
+                    }
+                    SharedPreferences.Editor editor = ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences().edit();
+                    editor.putBoolean("labelFor" + state, true).apply();
                 }
             }
 
-            private void onFailure(Response<WorkflowDTO> response) throws IOException {
-                // Only re-try GET requests for now
-                if (transitionDTO.isGet() && attemptCount < 2) {
-                    // Re-try failed request with increased attempt count
-                    executeRequest(transitionDTO, callback, jsonBody, queryMap, headers, attemptCount + 1);
-                } else if (null != response.errorBody()) {
-                    callback.onFailure(response.errorBody().string());
+            private void onResponseUnauthorized(Response<WorkflowDTO> response) throws IOException {
+                String message = response.message().toLowerCase();
+                if (!(message.contains(TOKEN) && message.contains(EXPIRED)) && !message.contains(UNAUTHORIZED)) {
+                    onFailure(response);
+                } else if (!HttpConstants.isUseUnifiedAuth() && !appAuthorizationHelper.refreshToken(getCognitoActionCallback(transitionDTO, callback, jsonBody, queryMap, headers))) {
+                    callback.onFailure("No User found to refresh token");
+                } else if (HttpConstants.isUseUnifiedAuth()) {
+                    executeRefreshTokenRequest(getRefreshTokenCallback(transitionDTO, callback, jsonBody, queryMap, headers));
+                }
+            }
+
+            private void onResponseBadRequest(Response<WorkflowDTO> response) throws IOException {
+                String message = response.message().toLowerCase();
+                if(message.contains(TOKEN) && message.contains(REVOKED)){
+                    atomicAppRestart();
+                }else{
+                    onFailure(response);
+                }
+            }
+
+            private void onValidationError(Response<WorkflowDTO> response) throws IOException {
+                if (null != response.errorBody()) {
+                    try {
+                        FaultResponseDTO fault = getConvertedDTO(FaultResponseDTO.class, response.errorBody().string());
+                            onFailure(fault.getException().getBody().getError().getMessage());
+                    } catch (Exception e) {
+                        onFailure(response.errorBody().string());
+                    }
                 } else {
-                    callback.onFailure("");
+                    onFailure("");
+                }
+            }
+
+            /**
+             * Converts to the desire DTO object from String DTO
+             *
+             * @param dtoClass class to convert
+             * @param <S>      Dynamic class to convert
+             * @return Dynamic converted class object
+             */
+            public <S> S getConvertedDTO(Class<S> dtoClass, String jsonString) {
+
+                Gson gson = new Gson();
+                return gson.fromJson(jsonString, dtoClass);
+
+            }
+
+            private void onFailure(Response<WorkflowDTO> response) throws IOException {
+                if (null != response.errorBody()) {
+                    onFailure(response.errorBody().string());
+                } else {
+                    onFailure("");
                 }
             }
 
             @Override
             public void onFailure(Call<WorkflowDTO> call, Throwable throwable) {
-                callback.onFailure(throwable.getMessage());
+                callStack.remove(call);
+                onFailure(throwable.getMessage());
+            }
+
+            void onFailure(String errorMessage) {
+                if (attemptCount < 2) {
+                    // Re-try failed request with increased attempt count
+                    executeRequest(transitionDTO, callback, jsonBody, queryMap, headers, attemptCount + 1);
+                } else {
+                    callback.onFailure(errorMessage);
+                }
             }
         });
+
+        callStack.push(call);
     }
 
     private CognitoActionCallback getCognitoActionCallback(@NonNull final TransitionDTO transitionDTO,
@@ -315,7 +431,71 @@ public class WorkflowServiceHelper {
         };
     }
 
+    private void executeRefreshTokenRequest(@NonNull final WorkflowServiceCallback callback) {
+        Gson gson = new Gson();
+        String jsonBody = gson.toJson(new RefreshDTO(appAuthorizationHelper.getRefreshToken()));
+
+        execute(appAuthorizationHelper.getRefreshTransition(), callback, jsonBody, null, getApplicationStartHeaders());
+    }
+
+    private WorkflowServiceCallback getRefreshTokenCallback(@NonNull final TransitionDTO transitionDTO,
+                                                            @NonNull final WorkflowServiceCallback callback,
+                                                            final String jsonBody,
+                                                            final Map<String, String> queryMap,
+                                                            final Map<String, String> headers) {
+
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                Gson gson = new Gson();
+                String signInResponseString = gson.toJson(workflowDTO);
+                UnifiedSignInResponse signInResponse = gson.fromJson(signInResponseString, UnifiedSignInResponse.class);
+                if (signInResponse != null) {
+                    UnifiedAuthenticationTokens authTokens = signInResponse.getPayload().getAuthorizationModel().getCognito().getAuthenticationTokens();
+                    appAuthorizationHelper.setAuthorizationTokens(authTokens);
+                }
+
+                // Re-try failed request with new auth headers
+                execute(transitionDTO, callback, jsonBody, queryMap, headers);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                callback.onFailure(exceptionMessage);
+            }
+        };
+    }
+
     private static boolean isNullOrEmpty(String string) {
         return (string == null || string.trim().equals(""));
     }
+
+    /**
+     * Stop all calls in progress
+     */
+    public void interrupt(){
+        while(!callStack.isEmpty()){
+            Call<?> call = callStack.peek();
+            call.cancel();
+            callStack.pop();
+        }
+    }
+
+
+    private void atomicAppRestart(){
+        applicationMode.clearUserPracticeDTO();
+        Intent intent = new Intent();
+        intent.setAction("com.carecloud.carepay.restart");
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        Context context = applicationPreferences.getContext();
+        Toast.makeText(context, "Login Authorization has Expired!\nPlease Login to Application again", Toast.LENGTH_LONG).show();
+        context.startActivity(intent);
+    }
+
 }

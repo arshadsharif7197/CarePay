@@ -5,15 +5,16 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/dimen_10dp"
     android:layout_marginStart="@dimen/dimen_20dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
     android:paddingBottom="@dimen/dimen_15dp"
-    android:paddingTop="@dimen/dimen_15dp"
-    android:gravity="center_vertical">
+    android:paddingTop="@dimen/dimen_15dp">
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/timeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/glitter"
-        android:textSize="30sp"
-        card_view:customAssetFont="proxima_nova_semi_bold" />
+        android:textColor="@color/confirm_pin_sub_title"
+        android:textSize="@dimen/text_size_22sp"
+        card_view:customAssetFont="gotham_rounded_medium" />
 </LinearLayout>

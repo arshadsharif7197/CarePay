@@ -5,4 +5,8 @@ package com.carecloud.carepay.practice.library.homescreen.dtos;
  */
 
 public class HomeScreenAlertsDTO {
+
+    public int getCount(){
+        return 0;
+    }
 }

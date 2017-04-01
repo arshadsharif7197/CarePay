@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="@dimen/dialog_height"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -28,25 +28,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:src="@drawable/icn_close" />
+                android:src="@drawable/icn_arrow_left" />
         </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginStart="@dimen/dimen_26dp"
+        android:layout_width="@dimen/dialog_width"
+        android:layout_height="@dimen/dialog_height"
         android:layout_marginEnd="@dimen/dimen_26dp"
+        android:layout_marginStart="@dimen/dimen_26dp"
         android:orientation="vertical">
 
         <FrameLayout
+            android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/patient_mode_dialog_header_bg"
-            android:padding="@dimen/dimen_10dp"
             android:focusable="true"
-            android:focusableInTouchMode="true">
+            android:focusableInTouchMode="true"
+            android:padding="@dimen/dimen_10dp">
 
             <include
                 android:id="@+id/toolbar_layout"
@@ -55,12 +55,10 @@
         </FrameLayout>
 
         <ScrollView
+            android:id="@+id/scroll_card_info"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:minHeight="@dimen/list_dialog_min_height"
-            android:id="@+id/scroll_card_info"
-            android:fillViewport="true"
             android:background="@color/white">
 
             <LinearLayout
@@ -73,7 +71,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <android.support.design.widget.TextInputLayout
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                         android:id="@+id/nameOnCardTextInputLayout"
                         style="@style/PaymentEditTextHint"
                         android:layout_width="match_parent"
@@ -81,18 +79,22 @@
                         android:layout_marginLeft="@dimen/payment_method_layout_checkbox_margin"
                         android:layout_marginRight="@dimen/payment_method_layout_checkbox_margin"
                         android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
-                        android:textColorHint="@color/payne_gray">
+                        android:textColorHint="@color/payne_gray"
+                        app:customAssetFont="proxima_nova_regular">
 
-                        <EditText
+                        <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                             android:id="@+id/nameOnCardEditText"
                             style="@style/PaymentEditTextStyle"
                             android:imeOptions="actionNext"
                             android:inputType="textPersonName"
                             android:maxLength="200"
                             android:maxLines="1"
-                            android:nextFocusForward="@+id/creditCardNoEditText" />
+                            android:nextFocusForward="@+id/creditCardNoEditText"
+                            android:padding="@dimen/dimen_10dp"
+                            app:customAssetFont="proxima_nova_regular"
+                            breeze:hintKey="payment_name_on_card_text" />
 
-                    </android.support.design.widget.TextInputLayout>
+                    </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/nameOnCardOptionalTextView"
@@ -107,7 +109,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
+                    android:layout_height="@dimen/dimen_1dp"
                     android:layout_marginTop="1dp"
                     android:background="@color/cadet_gray" />
 
@@ -115,7 +117,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <android.support.design.widget.TextInputLayout
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                         android:id="@+id/creditCardNoTextInputLayout"
                         style="@style/PaymentEditTextHint"
                         android:layout_width="match_parent"
@@ -123,18 +125,22 @@
                         android:layout_marginLeft="@dimen/payment_method_layout_checkbox_margin"
                         android:layout_marginRight="@dimen/payment_method_layout_checkbox_margin"
                         android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
-                        android:textColorHint="@color/payne_gray">
+                        android:textColorHint="@color/payne_gray"
+                        app:customAssetFont="proxima_nova_regular">
 
-                        <EditText
+                        <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                             android:id="@+id/creditCardNoEditText"
                             style="@style/PaymentEditTextStyle"
                             android:digits="@string/restrict_digits_space"
                             android:imeOptions="actionNext"
                             android:inputType="number"
                             android:maxLength="19"
-                            android:nextFocusForward="@+id/verificationCodeEditText" />
+                            android:nextFocusForward="@+id/verificationCodeEditText"
+                            android:padding="@dimen/dimen_10dp"
+                            app:customAssetFont="proxima_nova_regular"
+                            breeze:hintKey="payment_credit_card_number" />
 
-                    </android.support.design.widget.TextInputLayout>
+                    </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/cardTypeTextView"
@@ -152,7 +158,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
+                    android:layout_height="@dimen/dimen_1dp"
                     android:layout_marginTop="1dp"
                     android:background="@color/cadet_gray" />
 
@@ -160,7 +166,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <android.support.design.widget.TextInputLayout
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                         android:id="@+id/verificationCodeTextInputLayout"
                         style="@style/PaymentEditTextHint"
                         android:layout_width="match_parent"
@@ -168,17 +174,21 @@
                         android:layout_marginLeft="@dimen/payment_method_layout_checkbox_margin"
                         android:layout_marginRight="@dimen/payment_method_layout_checkbox_margin"
                         android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
-                        android:textColorHint="@color/payne_gray">
+                        android:textColorHint="@color/payne_gray"
+                        app:customAssetFont="proxima_nova_regular">
 
-                        <EditText
+                        <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                             android:id="@+id/verificationCodeEditText"
                             style="@style/PaymentEditTextStyle"
                             android:digits="@string/restrict_digits"
                             android:imeOptions="actionDone"
                             android:inputType="number"
-                            android:maxLength="4" />
+                            android:maxLength="4"
+                            android:padding="@dimen/dimen_10dp"
+                            app:customAssetFont="proxima_nova_regular"
+                            breeze:hintKey="payment_verification_number" />
 
-                    </android.support.design.widget.TextInputLayout>
+                    </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/verificationCodeOptionalTextView"
@@ -193,7 +203,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
+                    android:layout_height="@dimen/dimen_1dp"
                     android:layout_marginBottom="@dimen/payment_method_layout_label_margin_top"
                     android:layout_marginTop="1dp"
                     android:background="@color/cadet_gray" />
@@ -208,9 +218,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
+                        android:padding="@dimen/dimen_10dp"
                         android:textColor="@color/charcoal"
                         android:textSize="@dimen/payment_method_layout_label_text_size"
-                        app:customAssetFont="proxima_nova_regular" />
+                        app:customAssetFont="proxima_nova_regular"
+                        breeze:textKey="payment_expiration_date" />
 
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -218,17 +230,19 @@
                         style="@style/PaymentPickDateLabelStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
                         android:clickable="true"
-                        app:customAssetFont="proxima_nova_semi_bold" />
+                        app:customAssetFont="proxima_nova_semi_bold"
+                        breeze:textKey="payment_pick_date" />
 
                 </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
+                    android:layout_height="@dimen/dimen_1dp"
                     android:background="@color/cadet_gray" />
 
-                <CheckBox
+                <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
                     android:id="@+id/saveCardOnFileCheckBox"
                     style="@style/PaymentMethodLabelStyle"
                     android:layout_width="match_parent"
@@ -236,14 +250,17 @@
                     android:layout_margin="@dimen/payment_method_layout_checkbox_margin"
                     android:background="@null"
                     android:button="@null"
-                    android:drawableRight="@drawable/cell_checkbox" />
+                    android:drawableRight="@drawable/cell_checkbox"
+                    android:padding="@dimen/dimen_10dp"
+                    app:customAssetFont="proxima_nova_semi_bold"
+                    breeze:textKey="payment_save_card_on_file" />
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
+                    android:layout_height="@dimen/dimen_1dp"
                     android:background="@color/cadet_gray" />
 
-                <CheckBox
+                <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
                     android:id="@+id/setAsDefaultCheckBox"
                     style="@style/PaymentMethodLabelStyle"
                     android:layout_width="match_parent"
@@ -251,11 +268,14 @@
                     android:layout_margin="@dimen/payment_method_layout_checkbox_margin"
                     android:background="@null"
                     android:button="@null"
-                    android:drawableRight="@drawable/cell_checkbox" />
+                    android:drawableRight="@drawable/cell_checkbox"
+                    android:padding="@dimen/dimen_10dp"
+                    app:customAssetFont="proxima_nova_semi_bold"
+                    breeze:textKey="payment_set_as_default_credit_card_label" />
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
+                    android:layout_height="@dimen/dimen_1dp"
                     android:background="@color/cadet_gray" />
 
                 <LinearLayout
@@ -273,9 +293,10 @@
                         android:textAllCaps="true"
                         android:textColor="@color/charcoal"
                         android:textSize="@dimen/payment_method_layout_label_text_size"
-                        app:customAssetFont="proxima_nova_regular" />
+                        app:customAssetFont="proxima_nova_regular"
+                        breeze:textKey="payment_billing_address_text" />
 
-                    <CheckBox
+                    <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
                         android:id="@+id/useProfileAddressCheckBox"
                         style="@style/PaymentMethodLabelStyle"
                         android:layout_width="match_parent"
@@ -283,11 +304,14 @@
                         android:layout_margin="@dimen/payment_method_layout_checkbox_margin"
                         android:background="@null"
                         android:button="@null"
-                        android:drawableRight="@drawable/cell_checkbox" />
+                        android:drawableRight="@drawable/cell_checkbox"
+                        android:padding="@dimen/dimen_10dp"
+                        app:customAssetFont="proxima_nova_semi_bold"
+                        breeze:textKey="payment_use_profile_address" />
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
+                        android:layout_height="@dimen/dimen_1dp"
                         android:background="@color/cadet_gray" />
 
                     <LinearLayout
@@ -296,7 +320,7 @@
                         android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop"
                         android:orientation="vertical">
 
-                        <android.support.design.widget.TextInputLayout
+                        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                             android:id="@+id/address1TextInputLayout"
                             style="@style/PaymentEditTextHint"
                             android:layout_width="match_parent"
@@ -304,30 +328,33 @@
                             android:layout_marginLeft="@dimen/payment_method_layout_checkbox_margin"
                             android:layout_marginRight="@dimen/payment_method_layout_checkbox_margin"
                             android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
-                            android:layout_weight="1"
-                            android:textColorHint="@color/payne_gray">
+                            android:textColorHint="@color/payne_gray"
+                            app:customAssetFont="proxima_nova_regular">
 
-                            <EditText
+                            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                                 android:id="@+id/addressEditTextId"
                                 style="@style/PaymentEditTextStyle"
                                 android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789 "
                                 android:imeOptions="actionNext"
                                 android:inputType="textPostalAddress"
                                 android:maxLength="256"
-                                android:nextFocusForward="@+id/addressEditText2Id" />
+                                android:nextFocusForward="@+id/addressEditText2Id"
+                                android:padding="@dimen/dimen_10dp"
+                                app:customAssetFont="proxima_nova_regular"
+                                breeze:hintKey="payment_address_line1_text" />
 
-                        </android.support.design.widget.TextInputLayout>
+                        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="0.5dp"
+                            android:layout_height="@dimen/dimen_1dp"
                             android:background="@color/cadet_gray" />
 
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
-                            <android.support.design.widget.TextInputLayout
+                            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                                 android:id="@+id/address2TextInputLayout"
                                 style="@style/PaymentEditTextHint"
                                 android:layout_width="match_parent"
@@ -335,32 +362,36 @@
                                 android:layout_marginLeft="@dimen/payment_method_layout_checkbox_margin"
                                 android:layout_marginRight="@dimen/payment_method_layout_checkbox_margin"
                                 android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
-                                android:layout_weight="1"
-                                android:textColorHint="@color/payne_gray">
+                                android:textColorHint="@color/payne_gray"
+                                app:customAssetFont="proxima_nova_regular">
 
-                                <EditText
+                                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                                     android:id="@+id/addressEditText2Id"
                                     style="@style/PaymentEditTextStyle"
                                     android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789 "
                                     android:imeOptions="actionNext"
                                     android:inputType="textPostalAddress"
                                     android:maxLength="256"
-                                    android:nextFocusForward="@+id/zipCodeId" />
+                                    android:nextFocusForward="@+id/zipCodeId"
+                                    android:padding="@dimen/dimen_10dp"
+                                    app:customAssetFont="proxima_nova_regular"
+                                    breeze:hintKey="payment_address_line2_text" />
 
-                            </android.support.design.widget.TextInputLayout>
+                            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
-                            <TextView
+                            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                                 android:id="@+id/demogrAddressOptionalLabel"
-                                style="@style/SignupRequireHintStyle" />
+                                style="@style/SignupRequireHintStyle"
+                                app:customAssetFont="proxima_nova_regular" />
 
                         </FrameLayout>
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="0.5dp"
+                            android:layout_height="@dimen/dimen_1dp"
                             android:background="@color/cadet_gray" />
 
-                        <android.support.design.widget.TextInputLayout
+                        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                             android:id="@+id/zipCodeTextInputLayout"
                             style="@style/PaymentEditTextHint"
                             android:layout_width="match_parent"
@@ -368,22 +399,25 @@
                             android:layout_marginLeft="@dimen/payment_method_layout_checkbox_margin"
                             android:layout_marginRight="@dimen/payment_method_layout_checkbox_margin"
                             android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
-                            android:layout_weight="1"
-                            android:textColorHint="@color/payne_gray">
+                            android:textColorHint="@color/payne_gray"
+                            app:customAssetFont="proxima_nova_regular">
 
-                            <EditText
+                            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                                 android:id="@+id/zipCodeId"
                                 style="@style/PaymentEditTextStyle"
                                 android:digits="0123456789-"
                                 android:imeOptions="actionNext"
                                 android:maxLength="10"
-                                android:nextFocusForward="@+id/cityId" />
+                                android:nextFocusForward="@+id/cityId"
+                                android:padding="@dimen/dimen_10dp"
+                                app:customAssetFont="proxima_nova_regular"
+                                breeze:hintKey="payment_zipcode" />
 
-                        </android.support.design.widget.TextInputLayout>
+                        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="0.5dp"
+                            android:layout_height="@dimen/dimen_1dp"
                             android:background="@color/cadet_gray" />
 
                         <LinearLayout
@@ -391,75 +425,103 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
-                            <android.support.design.widget.TextInputLayout
+                            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                                 android:id="@+id/cityTextInputLayout"
                                 style="@style/PaymentEditTextHint"
-                                android:layout_width="match_parent"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_weight="1"
                                 android:layout_marginLeft="@dimen/payment_method_layout_checkbox_margin"
                                 android:layout_marginRight="@dimen/payment_method_layout_checkbox_margin"
                                 android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
-                                android:layout_weight="1"
-                                android:textColorHint="@color/payne_gray">
+                                android:textColorHint="@color/payne_gray"
+                                app:customAssetFont="proxima_nova_regular">
 
-                                <EditText
+                                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                                     android:id="@+id/cityId"
                                     style="@style/PaymentEditTextStyle"
                                     android:imeOptions="actionNext"
                                     android:inputType="textCapCharacters"
                                     android:maxLength="255"
                                     android:maxLines="1"
-                                    android:nextFocusRight="@+id/addNewCredidCardStateAutoCompleteTextView" />
+                                    android:nextFocusRight="@+id/addNewCredidCardStateAutoCompleteTextView"
+                                    android:padding="@dimen/dimen_10dp"
+                                    app:customAssetFont="proxima_nova_regular"
+                                    breeze:hintKey="payment_city" />
 
-                            </android.support.design.widget.TextInputLayout>
+                            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
-                            <android.support.design.widget.TextInputLayout
+                            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                                 android:id="@+id/stateTextInputLayout"
                                 style="@style/PaymentEditTextHint"
-                                android:layout_width="match_parent"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginBottom="@dimen/payment_method_layout_checkbox_margin"
                                 android:layout_marginLeft="@dimen/payment_method_layout_checkbox_margin"
                                 android:layout_marginRight="@dimen/payment_method_layout_checkbox_margin"
                                 android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
-                                android:layout_weight="1"
-                                android:textColorHint="@color/payne_gray">
+                                android:textColorHint="@color/payne_gray"
+                                app:customAssetFont="proxima_nova_regular">
 
-                                <AutoCompleteTextView
+                                <com.carecloud.carepaylibray.customcomponents.CarePayAutoCompleteTextView
                                     android:id="@+id/addNewCredidCardStateAutoCompleteTextView"
-                                    style="@style/EditTextStyle"
+                                    style="@style/PaymentEditTextStyle"
+                                    android:digits="@string/restrict_letters"
                                     android:imeOptions="actionDone"
                                     android:inputType="textAutoComplete"
                                     android:maxLength="2"
-                                    android:digits="@string/restrict_letters"/>
+                                    android:padding="@dimen/dimen_10dp"
+                                    app:customAssetFont="proxima_nova_regular"
+                                    breeze:hintKey="payment_state" />
 
-                            </android.support.design.widget.TextInputLayout>
+                            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
                         </LinearLayout>
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="0.5dp"
+                            android:layout_height="@dimen/dimen_1dp"
+                            android:layout_marginBottom="@dimen/payment_method_layout_checkbox_margin"
                             android:background="@color/cadet_gray" />
+
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
 
         <View
+            android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_1dp"
-            android:background="@color/light_gray"/>
+            android:background="@color/light_gray" />
 
-        <FrameLayout
+        <LinearLayout
+            android:id="@+id/footer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/dimen_10dp"
             android:background="@drawable/patient_mode_dialog_body_bg">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                android:id="@+id/nextButton"
-                android:layout_width="match_parent"
+                android:id="@+id/swipeCreditCarNowButton"
+                style="@style/PaymentButtonStyle"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_20dp"
-                android:layout_alignParentBottom="true"
+                android:layout_weight="1"
+                android:layout_margin="@dimen/dimen_10dp"
+                android:background="@drawable/blue_border_rounded_button_selector"
+                android:textColor="@color/colorPrimary"
+                breeze:textKey="payment_clover_swipe_now_button_label"
+                app:customAssetFont="gotham_rounded_medium"
+                android:visibility="gone"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/nextButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="@dimen/dimen_10dp"
                 android:background="@drawable/green_rounded_button_selector"
                 android:gravity="center"
                 android:textAllCaps="true"
@@ -467,14 +529,15 @@
                 android:textSize="@dimen/respons_button_text_size"
                 app:customAssetFont="gotham_rounded_medium" />
 
-        </FrameLayout>
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_toRightOf="@+id/search_content"
+        android:orientation="vertical"
         android:visibility="invisible">
 
 

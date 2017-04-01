@@ -16,7 +16,9 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,14 +29,13 @@ import java.util.List;
 public class CustomSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         implements Filterable {
 
-    // The items to display in your RecyclerView
-    private List<FilterDataDTO> filterableDataDTOList;
-    private List<FilterDataDTO> originalFilterableDataDTOList;
     private Context context;
-    private Filter filterableDataDTOFilter;
+    private List<FilterDataDTO> filteredPatients;
+    private List<FilterDataDTO> allPatients;
+    private Filter filter;
 
     // private boolean isPatientListData = false;
-    private OnSearchChangedListener onFilterOptionChangedListener;
+    private OnSearchChangedListener searchChangedListener;
 
     /**
      * The callback used to indicate the user selected the filter.
@@ -55,18 +56,18 @@ public class CustomSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      * @param context context
      * @param items   list of occurrence
      */
-    public CustomSearchAdapter(Context context, OnSearchChangedListener onFilterOptionChangedListener,
+    public CustomSearchAdapter(Context context, OnSearchChangedListener searchChangedListener,
                                List<FilterDataDTO> items) {
         this.context = context;
-        this.filterableDataDTOList = items;
-        this.originalFilterableDataDTOList = items;
-        this.onFilterOptionChangedListener = onFilterOptionChangedListener;
+        this.filteredPatients = items;
+        this.allPatients = items;
+        this.searchChangedListener = searchChangedListener;
     }
 
     // Return the size of your data set (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return this.filterableDataDTOList.size();
+        return this.filteredPatients.size();
     }
 
     @Override
@@ -74,17 +75,15 @@ public class CustomSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
         View customFilterListDataRow = inflater.inflate(R.layout.custom_filter_patient_list_item,
                 viewGroup, false);
-        RecyclerView.ViewHolder viewHolder = new ViewHolderFilterableDataItem(customFilterListDataRow);
-        return viewHolder;
+        return new ViewHolderFilterableDataItem(customFilterListDataRow);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        FilterDataDTO filterDataDTO = this.filterableDataDTOList.get(position);
+        FilterDataDTO filterDataDTO = this.filteredPatients.get(position);
         ViewHolderFilterableDataItem vhDataItem = (ViewHolderFilterableDataItem) viewHolder;
         vhDataItem.setFilterDataDTO(filterDataDTO);
         viewHolder.itemView.setTag(vhDataItem);
-
     }
 
     /**
@@ -116,7 +115,7 @@ public class CustomSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 } else {
                     selectedItemImageView.setVisibility(View.GONE);
                 }
-                onFilterOptionChangedListener.onSearchChanged(filterDataDTO);
+                searchChangedListener.onSearchChanged(filterDataDTO);
             }
         };
 
@@ -130,11 +129,17 @@ public class CustomSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             } else {
                 selectedItemImageView.setVisibility(View.GONE);
             }
+            if(!StringUtil.isNullOrEmpty(filterDataDTO.getImageURL())) {
+                Picasso.with(context)
+                        .load(filterDataDTO.getImageURL())
+                        .placeholder(R.drawable.icn_placeholder_user_profile_png)
+                        .into(patientImageView);
+            }
         }
     }
 
     public void resetData() {
-        filterableDataDTOList = originalFilterableDataDTOList;
+        filteredPatients = allPatients;
     }
 
     /*
@@ -142,10 +147,10 @@ public class CustomSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 	 */
     @Override
     public Filter getFilter() {
-        if (filterableDataDTOFilter == null) {
-            filterableDataDTOFilter = new FilterableDataDTOFilter();
+        if (filter == null) {
+            filter = new FilterableDataDTOFilter();
         }
-        return filterableDataDTOFilter;
+        return filter;
     }
 
     /**
@@ -159,13 +164,13 @@ public class CustomSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             // We implement here the filter logic
             if (constraint == null || constraint.length() == 0) {
                 // No filter implemented we return all the list
-                results.values = originalFilterableDataDTOList;
-                results.count = originalFilterableDataDTOList.size();
+                results.values = allPatients;
+                results.count = allPatients.size();
             } else {
                 // We perform filtering operation
                 List<FilterDataDTO> filterableDataDTOList = new ArrayList<>();
 
-                for (FilterDataDTO dataDTO : originalFilterableDataDTOList) {
+                for (FilterDataDTO dataDTO : allPatients) {
                     try {
                         String displayName = dataDTO.getDisplayText();
                         String[] nameList = displayName.split(" ");
@@ -200,7 +205,7 @@ public class CustomSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         protected void publishResults(CharSequence constraint,
                                       FilterResults results) {
             // Now we have to inform the adapter about the new list filtered
-            filterableDataDTOList = (List<FilterDataDTO>) results.values;
+            filteredPatients = (List<FilterDataDTO>) results.values;
             notifyDataSetChanged();
         }
     }

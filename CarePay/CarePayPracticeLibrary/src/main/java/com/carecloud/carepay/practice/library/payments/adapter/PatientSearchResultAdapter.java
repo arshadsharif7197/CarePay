@@ -7,19 +7,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.payments.models.PatientDTO;
 
 import java.util.List;
 
 public class PatientSearchResultAdapter extends RecyclerView.Adapter<PatientSearchResultAdapter.ViewHolder> {
 
     private Context context;
-    private List<PatientDTO> patients;
+    private List<PatientModel> patients;
     private OnItemClickedListener clickedListener;
 
     public interface OnItemClickedListener {
-        void onItemClicked(PatientDTO patient);
+        void onItemClicked(PatientModel patient);
     }
 
     /**
@@ -27,7 +27,7 @@ public class PatientSearchResultAdapter extends RecyclerView.Adapter<PatientSear
      * @param context context
      * @param patients patient list
      */
-    public PatientSearchResultAdapter(Context context, List<PatientDTO> patients) {
+    public PatientSearchResultAdapter(Context context, List<PatientModel> patients) {
         this.context = context;
         this.patients = patients;
     }
@@ -44,9 +44,9 @@ public class PatientSearchResultAdapter extends RecyclerView.Adapter<PatientSear
 
     @Override
     public void onBindViewHolder(PatientSearchResultAdapter.ViewHolder holder, int position) {
-        PatientDTO patient = patients.get(position);
-        holder.name.setText(patient.getFirstName() + " " + patient.getLastName());
-        holder.patientDOBTextView.setText(patient.getDateOfBirth());
+        PatientModel patient = patients.get(position);
+        holder.name.setText(patient.getFullName());
+        holder.patientDOBTextView.setText(patient.getFormattedDateOfBirth());
     }
 
     @Override

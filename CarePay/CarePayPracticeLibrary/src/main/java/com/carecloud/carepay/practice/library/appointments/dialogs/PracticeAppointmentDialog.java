@@ -1,7 +1,9 @@
 package com.carecloud.carepay.practice.library.appointments.dialogs;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,12 +15,14 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.PatientDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customdialogs.BaseDialogFragment;
+import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringUtils;
@@ -35,6 +39,10 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
     private String leftAction;
     private String rightAction;
     private String visitTypeLabel;
+    private String photoUrl;
+
+    private View view;
+    private LinearLayout headerView;
 
     public interface PracticeAppointmentDialogListener {
         void onLeftActionTapped(AppointmentDTO appointmentDTO);
@@ -111,17 +119,14 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-
-        initializeViews(view);
+        view = super.onCreateView(inflater, container, savedInstanceState);
 
         return view;
     }
 
     @SuppressWarnings("deprecation")
-    private void initializeViews(View view) {
-        LinearLayout headerView = (LinearLayout) view.findViewById(R.id.appointment_card_header);
-        headerView.setBackgroundResource(headerColor);
+    private void initializeViews() {
+        headerView = (LinearLayout) view.findViewById(R.id.appointment_card_header);
 
         AppointmentPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
 
@@ -139,9 +144,9 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
 
         setTextViewById(R.id.appointment_doctor, appointmentPayloadDTO.getProvider().getName());
 
-        PatientDTO patientDTO = appointmentDTO.getPayload().getPatient();
-        String longName = patientDTO.getFirstName() + " " + patientDTO.getLastName();
-        setTextViewById(R.id.appointment_patient_name, longName);
+        PatientModel patientDTO = appointmentDTO.getPayload().getPatient();
+        photoUrl = patientDTO.getProfilePhoto();
+        setTextViewById(R.id.appointment_patient_name, StringUtil.captialize(patientDTO.getFullName()));
 
         String primaryPhoneNumber = patientDTO.getPrimaryPhoneNumber();
         if (null == primaryPhoneNumber) {
@@ -150,24 +155,60 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
             setTextViewById(R.id.appointment_patient_phone, PhoneNumberUtils.formatNumber(primaryPhoneNumber));
         }
 
-        String shortName = StringUtil.onShortDrName(longName);
-        setTextViewById(R.id.appointment_short_name, shortName);
+        setTextViewById(R.id.appointment_short_name, patientDTO.getShortName());
 
-        // TODO: This is not in DTO
-        String visitType = appointmentPayloadDTO.getVisitReasonId().toString();
-        setTextViewById(R.id.appointment_visit_type, visitType);
+        setTextViewById(R.id.appointment_visit_type, StringUtil.captialize(appointmentPayloadDTO.getVisitReason().getName()));
         setTextViewById(R.id.appointment_visit_type_label, visitTypeLabel);
 
         initializeButtons();
+    }
 
-        String photoUrl = patientDTO.getProfilePhoto();
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        initializeViews();
+
         if (!TextUtils.isEmpty(photoUrl)) {
-            ImageView profileImage = (ImageView) view.findViewById(R.id.appointment_patient_picture_image_view);
-
-            Picasso.with(getActivity()).load(photoUrl)/*.transform(new CircleImageTransform())*/
-                    .resize(58, 58).into(profileImage);
-            profileImage.setVisibility(View.VISIBLE);
+            initializeHeaderBackgroundView();
+        } else {
+            headerView.setBackgroundResource(headerColor);
         }
+    }
+
+    private void initializeHeaderBackgroundView() {
+        final ImageView imageView = (ImageView) view.findViewById(R.id.appointment_card_header_background);
+
+        Picasso.with(getActivity()).load(photoUrl).resize(510, 510).into(imageView, new Callback() {
+            @Override
+            public void onSuccess() {
+                imageView.setVisibility(View.VISIBLE);
+                initializeProfilePhotoView();
+
+                if (isAdded()) {
+                    int trueHeaderColor = getResources().getColor(headerColor);
+                    headerView.setBackgroundColor(Color.argb(
+                            230,
+                            Color.red(trueHeaderColor),
+                            Color.green(trueHeaderColor),
+                            Color.blue(trueHeaderColor)
+                    ));
+                }
+            }
+
+            @Override
+            public void onError() {
+                headerView.setBackgroundResource(headerColor);
+            }
+        });
+    }
+
+    private void initializeProfilePhotoView() {
+        ImageView profileImage = (ImageView) view.findViewById(R.id.appointment_patient_picture_image_view);
+
+        Picasso.with(getActivity()).load(photoUrl).transform(new CircleImageTransform())
+                .resize(58, 58).into(profileImage);
+        profileImage.setVisibility(View.VISIBLE);
     }
 
     private void initializeButtons() {

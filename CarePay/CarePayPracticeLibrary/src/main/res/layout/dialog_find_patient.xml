@@ -1,100 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/find_patient_bg"
     android:gravity="center">
 
-    <LinearLayout
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/find_patient_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_26dp"
+        android:gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_36sp"
+        app:customAssetFont="gotham_rounded_medium"
+        breeze:textKey="practice_payments_filter_find_patient_by_name" />
+
+    <LinearLayout
         android:id="@+id/contain_close"
-        android:layout_marginEnd="@dimen/dimen_26dp"
-        android:layout_gravity="center_vertical"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/find_patient_title"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:gravity="top"
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/find_patient_close_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_gravity="center_vertical"
             android:background="@drawable/round_semi_transparent_bg"
             android:src="@drawable/icn_close" />
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/find_patient_close_label"
-            android:layout_width="wrap_content"
+        <FrameLayout
+            android:layout_width="520dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_6dp"
-            android:textAllCaps="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_12sp"
-            android:textStyle="bold"
-            app:customAssetFont="gotham_rounded_medium" />
-    </LinearLayout>
+            android:layout_marginStart="@dimen/dimen_26dp"
+            android:layout_marginEnd="@dimen/dimen_26dp">
 
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/find_patient_scroll"
-        android:layout_toEndOf="@id/contain_close">
+            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                android:id="@+id/find_patient_edit_box"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_60dp"
+                android:background="@drawable/bg_find_patient_edit_box"
+                android:inputType="textVisiblePassword"
+                android:paddingBottom="@dimen/dimen_17dp"
+                android:paddingEnd="@dimen/dimen_24dp"
+                android:paddingStart="@dimen/dimen_24dp"
+                android:paddingTop="@dimen/dimen_17dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_22"
+                app:customAssetFont="proxima_nova_regular"
+                breeze:hintKey="practice_filter_search_patient" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="horizontal">
-
-
-            <LinearLayout
-                android:layout_width="520dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <EditText
-                    android:id="@+id/find_patient_edit_box"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_60dp"
-                    android:background="@drawable/bg_find_patient_edit_box"
-                    android:inputType="textVisiblePassword"
-                    android:paddingBottom="@dimen/dimen_17dp"
-                    android:paddingEnd="@dimen/dimen_24dp"
-                    android:paddingStart="@dimen/dimen_24dp"
-                    android:paddingTop="@dimen/dimen_17dp" />
-
-               <com.carecloud.carepaylibray.customcomponents.RecyclerViewWithDivider
-                    android:id="@+id/patient_searched_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="182dp"
-                    android:layout_marginTop="@dimen/dimen_18dp"
-                    android:background="@drawable/layout_white_background"
-                    android:paddingLeft="@dimen/dimen_11dp"
-                    android:paddingRight="@dimen/dimen_11dp"
-                    android:visibility="gone" />
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen_26dp"
-        android:layout_gravity="center_vertical"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="invisible"
-        android:layout_toEndOf="@+id/find_patient_scroll">
+        </FrameLayout>
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_gravity="center_vertical"
             android:background="@drawable/round_semi_transparent_bg"
-            android:src="@drawable/icn_close" />
+            android:src="@drawable/icn_close"
+            android:visibility="invisible"/>
 
     </LinearLayout>
 
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="520dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/dimen_18dp"
+        android:layout_marginStart="@dimen/dimen_26dp"
+        android:layout_marginEnd="@dimen/dimen_26dp">
+
+        <com.carecloud.carepaylibray.customcomponents.RecyclerViewWithDivider
+            android:id="@+id/patient_searched_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/layout_white_background"
+            android:paddingLeft="@dimen/dimen_11dp"
+            android:paddingRight="@dimen/dimen_11dp"
+            android:visibility="gone" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/patient_not_found_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:paddingTop="@dimen/dimen_11dp"
+            android:paddingBottom="@dimen/dimen_11dp"
+            android:background="@drawable/layout_white_background"
+            android:textColor="@color/textview_default_textcolor"
+            android:textSize="15sp"
+            app:customAssetFont="proxima_nova_regular"
+            breeze:textKey="practice_filter_patient_not_found"
+            android:visibility="gone" />
+    </LinearLayout>
+
+
+</LinearLayout>

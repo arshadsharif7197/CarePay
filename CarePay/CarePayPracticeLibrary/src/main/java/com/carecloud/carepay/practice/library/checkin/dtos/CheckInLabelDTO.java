@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.checkin.dtos;
 
+import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -7,8 +8,8 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by Jahirul Bhuiyan on 10/27/2016.
  */
-
-public class CheckInLabelDTO {
+@Deprecated
+public class CheckInLabelDTO extends AppointmentLabelDTO {
 
     @SerializedName("practice_checkin_detail_dialog_checking_in")
     @Expose
@@ -49,12 +50,6 @@ public class CheckInLabelDTO {
     @SerializedName("practice_checkin_filter_clear_filters")
     @Expose
     private String practiceCheckinFilterClearFilters;
-    @SerializedName("practice_checkin_filter_doctors")
-    @Expose
-    private String practiceCheckinFilterDoctors;
-    @SerializedName("practice_checkin_filter_locations")
-    @Expose
-    private String practiceCheckinFilterLocations;
     @SerializedName("practice_checkin_detail_dialog_ordinal_th")
     @Expose
     private String practiceCheckinDetailDialogOrdinalTh;
@@ -143,6 +138,10 @@ public class CheckInLabelDTO {
     @Expose
     private String createAppointmentLabel;
 
+    @SerializedName("cancel_appointment_label")
+    @Expose
+    private String cancelAppointmentLabel;
+
     @SerializedName("accept_label")
     @Expose
     private String acceptLabel;
@@ -150,10 +149,6 @@ public class CheckInLabelDTO {
     @SerializedName("reject_label")
     @Expose
     private String rejectLabel;
-
-    @SerializedName("visit_type_heading")
-    @Expose
-    private String visitTypeHeading;
 
     /**
      * @return The practiceCheckinDetailDialogCheckingIn
@@ -323,34 +318,6 @@ public class CheckInLabelDTO {
         this.practiceCheckinFilterClearFilters = practiceCheckinFilterClearFilters;
     }
 
-    /**
-     * @return The practiceCheckinFilterDoctors
-     */
-    public String getPracticeCheckinFilterDoctors() {
-        return practiceCheckinFilterDoctors == null ? "Doctors" : practiceCheckinFilterDoctors;
-    }
-
-    /**
-     * @param practiceCheckinFilterDoctors The practice_checkin_filter_doctors
-     */
-    public void setPracticeCheckinFilterDoctors(String practiceCheckinFilterDoctors) {
-        this.practiceCheckinFilterDoctors = practiceCheckinFilterDoctors;
-    }
-
-    /**
-     * @return The practiceCheckinFilterLocations
-     */
-    public String getPracticeCheckinFilterLocations() {
-        return practiceCheckinFilterLocations == null ? "Locations" : practiceCheckinFilterLocations;
-    }
-
-    /**
-     * @param practiceCheckinFilterLocations The practice_checkin_filter_locations
-     */
-    public void setPracticeCheckinFilterLocations(String practiceCheckinFilterLocations) {
-        this.practiceCheckinFilterLocations = practiceCheckinFilterLocations;
-    }
-
     public String getPracticeCheckinWaitingRoom() {
         return StringUtil.getLabelForView(practiceCheckinWaitingRoom);
     }
@@ -495,15 +462,15 @@ public class CheckInLabelDTO {
         return StringUtil.getLabelForView(createAppointmentLabel);
     }
 
+    public String getCancelAppointmentLabel() {
+        return StringUtil.getLabelForView(cancelAppointmentLabel);
+    }
+
     public String getAcceptLabel() {
         return StringUtil.getLabelForView(acceptLabel);
     }
 
     public String getRejectLabel() {
         return StringUtil.getLabelForView(rejectLabel);
-    }
-
-    public String getVisitTypeHeading() {
-        return StringUtil.getLabelForView(visitTypeHeading);
     }
 }

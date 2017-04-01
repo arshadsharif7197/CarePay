@@ -25,11 +25,8 @@ import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class FilterDialog extends PopupWindow
-        implements CustomFilterListAdapter.OnFilterOptionChangedListener, CustomSearchAdapter.OnSearchChangedListener {
+        implements CustomFilterListAdapter.CustomFilterListAdapterListener, CustomSearchAdapter.OnSearchChangedListener {
 
     private Context context;
     private View parentView;
@@ -41,19 +38,19 @@ public class FilterDialog extends PopupWindow
     private CustomSearchAdapter patientAdapter;
     private FilterModel filterModel;
 
-    private FilterCallBack filterCallBack;
-
-    private String practiceCheckinFilterDoctorsLabel;
-    private String practiceCheckinFilterLocationsLabel;
     private String practicePaymentsFilter;
     private String practicePaymentsFilterFindPatientByName;
     private String practicePaymentsFilterClearFilters;
 
+    private FilterDialogListener callBack;
+
+    public interface FilterDialogListener {
+        void applyFilter();
+    }
+
     /**
      * @param context    the context to inflate custom popup layout
      * @param parentView a parent view to get the {@link View#getWindowToken()} token from
-     * @param practiceCheckinFilterDoctorsLabel on top of doctors list
-     * @param practiceCheckinFilterLocationsLabel on top on locations list
      * @param practicePaymentsFilter label on top of filter dialog
      * @param practicePaymentsFilterFindPatientByName label for patient search text view
      * @param practicePaymentsFilterClearFilters label for clear filters button
@@ -61,19 +58,15 @@ public class FilterDialog extends PopupWindow
     public FilterDialog(Context context,
                         View parentView,
                         FilterModel filterModel,
-                        String practiceCheckinFilterDoctorsLabel,
-                        String practiceCheckinFilterLocationsLabel,
                         String practicePaymentsFilter,
                         String practicePaymentsFilterFindPatientByName,
                         String practicePaymentsFilterClearFilters) {
 
         super(context);
-        this.practiceCheckinFilterDoctorsLabel = practiceCheckinFilterDoctorsLabel;
-        this.practiceCheckinFilterLocationsLabel = practiceCheckinFilterLocationsLabel;
         this.practicePaymentsFilter = practicePaymentsFilter;
         this.practicePaymentsFilterFindPatientByName = practicePaymentsFilterFindPatientByName;
         this.practicePaymentsFilterClearFilters = practicePaymentsFilterClearFilters;
-        filterCallBack = (FilterCallBack) context;
+        callBack = (FilterDialogListener) context;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.custom_filter_popup_window_layout, null);
         setContentView(contentView);
@@ -91,10 +84,6 @@ public class FilterDialog extends PopupWindow
         displayRecyclerView();
     }
 
-    public interface FilterCallBack {
-        void applyFilter();
-    }
-
     private void displayRecyclerView() {
         // Set our custom adapter as the ListView's adapter.
         LinearLayoutManager filterableListLayoutManager = new LinearLayoutManager(context);
@@ -103,7 +92,7 @@ public class FilterDialog extends PopupWindow
         filterableDataRecyclerView.setLayoutManager(filterableListLayoutManager);
 
         patientAdapter = new CustomSearchAdapter(context, this, filterModel.getPatients());
-        doctorsLocationsAdapter = new CustomFilterListAdapter(context, this, getDoctorsPlusLocations());
+        doctorsLocationsAdapter = new CustomFilterListAdapter(context, filterModel, this);
         filterableDataRecyclerView.setAdapter(doctorsLocationsAdapter);
     }
 
@@ -127,9 +116,17 @@ public class FilterDialog extends PopupWindow
         clearSearchImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                clearPatientSearch();
+
+                applyFilter();
+            }
+
+            private void clearPatientSearch() {
                 searchPatientEditText.setText("");
                 searchPatientEditText.clearFocus();
-                filterModel.clearFilterByPatients();
+
+                InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getContentView().getWindowToken(), 0);
             }
         });
 
@@ -157,13 +154,6 @@ public class FilterDialog extends PopupWindow
 
             @Override
             public void afterTextChanged(Editable string) {
-                if (string.toString().isEmpty()) {
-                    InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(getContentView().getWindowToken(), 0);
-                    clearFiltersButton.setVisibility(View.GONE);
-                } else {
-                    clearFiltersButton.setVisibility(View.VISIBLE);
-                }
             }
         });
 
@@ -188,7 +178,7 @@ public class FilterDialog extends PopupWindow
                 clearSearchImageView.performClick();
                 filterModel.clear();
                 filterableDataRecyclerView.setAdapter(doctorsLocationsAdapter);
-                filterCallBack.applyFilter();
+                callBack.applyFilter();
             }
         });
 
@@ -202,25 +192,17 @@ public class FilterDialog extends PopupWindow
 
     @Override
     public void onFilterChanged(FilterDataDTO filteredDataDTO) {
-        clearFiltersButton.setVisibility(View.VISIBLE);
-        filterCallBack.applyFilter();
+        applyFilter();
     }
 
     @Override
     public void onSearchChanged(FilterDataDTO filteredDataDTO) {
-        filterCallBack.applyFilter();
+        applyFilter();
+        doctorsLocationsAdapter.load();
     }
 
-    /**
-     * @return list of doctor plus locations
-     */
-    private List<FilterDataDTO> getDoctorsPlusLocations() {
-        List<FilterDataDTO> list = new ArrayList<>();
-        list.add(new FilterDataDTO(practiceCheckinFilterDoctorsLabel));
-        list.addAll(filterModel.getDoctors());
-        list.add(new FilterDataDTO(practiceCheckinFilterLocationsLabel));
-        list.addAll(filterModel.getLocations());
-
-        return list;
+    private void applyFilter() {
+        clearFiltersButton.setVisibility(View.VISIBLE);
+        callBack.applyFilter();
     }
 }

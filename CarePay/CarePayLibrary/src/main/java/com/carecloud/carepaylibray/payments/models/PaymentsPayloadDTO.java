@@ -1,7 +1,13 @@
 package com.carecloud.carepaylibray.payments.models;
 
+
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
+import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMerchantServicesDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiAccountsDTO;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -41,7 +47,7 @@ public class PaymentsPayloadDTO implements Serializable {
     private Integer inOfficeCounts;
     @SerializedName("patient_balances")
     @Expose
-    private List<PaymentsPatientBalancessDTO> patientBalances = new ArrayList<>();
+    private List<PatientBalanceDTO> patientBalances = new ArrayList<>();
     @SerializedName("providers")
     @Expose
     private List<ProviderDTO> providers = new ArrayList<>();
@@ -53,19 +59,28 @@ public class PaymentsPayloadDTO implements Serializable {
     private PatientPaymentsDTO patientPayments = new PatientPaymentsDTO();
     @SerializedName("patients")
     @Expose
-    private List<PatientDTO> patients = new ArrayList<>();
+    private List<PatientModel> patients = new ArrayList<>();
     @SerializedName("papi_accounts")
     @Expose
     private List<DemographicsSettingsPapiAccountsDTO> papiAccounts = new ArrayList<>();
     @SerializedName("merchant_services")
     @Expose
     private List<DemographicsSettingsMerchantServicesDTO> merchantServices = new ArrayList<>();
+    @SerializedName("user_practices")
+    @Expose
+    private List<UserPracticeDTO> userPractices = new ArrayList<>();
+    @SerializedName("payment_post_model")
+    @Expose
+    private PaymentPostModel paymentPostModel;
+    @SerializedName("simple_charge_types")
+    @Expose
+    private List<SimpleChargeItem> simpleChargeItems = new ArrayList<>();
 
-    public List<PatientDTO> getPatients() {
+    public List<PatientModel> getPatients() {
         return patients;
     }
 
-    public void setPatients(List<PatientDTO> patients) {
+    public void setPatients(List<PatientModel> patients) {
         this.patients = patients;
     }
 
@@ -78,54 +93,42 @@ public class PaymentsPayloadDTO implements Serializable {
     }
 
     /**
-     *
-     * @return
-     * The intakeForms
+     * @return The intakeForms
      */
     public PaymentsPayloadIntakeFormsDTO getIntakeForms() {
         return intakeForms;
     }
 
     /**
-     *
-     * @param intakeForms
-     * The intake_forms
+     * @param intakeForms The intake_forms
      */
     public void setIntakeForms(PaymentsPayloadIntakeFormsDTO intakeForms) {
         this.intakeForms = intakeForms;
     }
 
     /**
-     *
-     * @return
-     * The patientPaymentPlans
+     * @return The patientPaymentPlans
      */
     public PaymentsPatientsPlansDTO getPatientPaymentPlans() {
         return patientPaymentPlans;
     }
 
     /**
-     *
-     * @param patientPaymentPlans
-     * The patient_payment_plans
+     * @param patientPaymentPlans The patient_payment_plans
      */
     public void setPatientPaymentPlans(PaymentsPatientsPlansDTO patientPaymentPlans) {
         this.patientPaymentPlans = patientPaymentPlans;
     }
 
     /**
-     *
-     * @return
-     * The patientCreditCards
+     * @return The patientCreditCards
      */
     public List<PaymentsPatientsCreditCardsPayloadListDTO> getPatientCreditCards() {
         return patientCreditCards;
     }
 
     /**
-     *
-     * @param patientCreditCards
-     * The patient_credit_cards
+     * @param patientCreditCards The patient_credit_cards
      */
     public void setPatientCreditCards(List<PaymentsPatientsCreditCardsPayloadListDTO> patientCreditCards) {
         this.patientCreditCards = patientCreditCards;
@@ -140,18 +143,16 @@ public class PaymentsPayloadDTO implements Serializable {
     }
 
     /**
-     *
      * @return The patientBalances
      */
-    public List<PaymentsPatientBalancessDTO> getPatientBalances() {
+    public List<PatientBalanceDTO> getPatientBalances() {
         return patientBalances;
     }
 
     /**
-     *
      * @param patientBalances The patient_balances
      */
-    public void setPatientBalances(List<PaymentsPatientBalancessDTO>patientBalances) {
+    public void setPatientBalances(List<PatientBalanceDTO> patientBalances) {
         this.patientBalances = patientBalances;
     }
 
@@ -205,6 +206,20 @@ public class PaymentsPayloadDTO implements Serializable {
     }
 
     /**
+     * Gets papi account by type.
+     *
+     * @return the papi account
+     */
+    public DemographicsSettingsPapiAccountsDTO getPapiAccountByType(String accountType) {
+        for (DemographicsSettingsPapiAccountsDTO papiAccountDTO : getPapiAccounts()) {
+            if (papiAccountDTO.getType().contains(accountType)) {
+               return papiAccountDTO ;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Sets papi accounts.
      *
      * @param papiAccounts the papi accounts
@@ -237,5 +252,29 @@ public class PaymentsPayloadDTO implements Serializable {
 
     public void setPaymentSettings(List<PaymentsPayloadSettingsDTO> paymentSettings) {
         this.paymentSettings = paymentSettings;
+    }
+
+    public List<UserPracticeDTO> getUserPractices() {
+        return userPractices;
+    }
+
+    public void setUserPractices(List<UserPracticeDTO> userPractices) {
+        this.userPractices = userPractices;
+    }
+
+    public PaymentPostModel getPaymentPostModel() {
+        return paymentPostModel;
+    }
+
+    public void setPaymentPostModel(PaymentPostModel paymentPostModel) {
+        this.paymentPostModel = paymentPostModel;
+    }
+
+    public List<SimpleChargeItem> getSimpleChargeItems() {
+        return simpleChargeItems;
+    }
+
+    public void setSimpleChargeItems(List<SimpleChargeItem> simpleChargeItems) {
+        this.simpleChargeItems = simpleChargeItems;
     }
 }

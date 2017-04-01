@@ -39,7 +39,8 @@
             android:layout_marginTop="@dimen/dimen_5dp"
             android:textColor="@color/gray_white"
             app:customAssetFont="gotham_rounded_bold"
-            android:textSize="@dimen/text_size_12sp" />
+            android:textSize="@dimen/text_size_12sp"
+            android:visibility="gone"/>
     </LinearLayout>
 
 

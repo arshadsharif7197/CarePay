@@ -20,7 +20,6 @@
     <dimen name="dimen_15dp">15dp</dimen>
     <dimen name="dimen_17dp">17dp</dimen>
     <dimen name="dimen_18dp">18dp</dimen>
-    <dimen name="dimen_19dp">19dp</dimen>
     <dimen name="dimen_20dp">20dp</dimen>
     <dimen name="dimen_21dp">21dp</dimen>
     <dimen name="dimen_22dp">22dp</dimen>
@@ -66,15 +65,12 @@
     <dimen name="text_size_14sp">14sp</dimen>
     <dimen name="text_size_16sp">16sp</dimen>
     <dimen name="text_size_17sp">17sp</dimen>
-    <dimen name="text_size_18sp">18sp</dimen>
     <dimen name="text_size_20sp">20sp</dimen>
     <dimen name="text_size_21sp">21sp</dimen>
     <dimen name="text_size_22sp">22sp</dimen>
     <dimen name="text_size_23sp">23sp</dimen>
-    <dimen name="text_size_24sp">24sp</dimen>
     <dimen name="text_size_28sp">28sp</dimen>
     <dimen name="text_size_30sp">30sp</dimen>
-    <dimen name="text_size_34sp">34sp</dimen>
     <dimen name="text_size_36sp">36sp</dimen>
     <dimen name="text_size_40sp">40sp</dimen>
 
@@ -204,6 +200,7 @@
     <dimen name="checkin_logo_width">150dp</dimen>
     <dimen name="checkin_logo_height">46dp</dimen>
     <dimen name="checkin_info_label_width">150dp</dimen>
+    <dimen name="checked_in_card_status_top_margin">36dp</dimen>
 
     <!--Provider lists-->
     <dimen name="provider_list_title_margin">34dp</dimen>
@@ -229,13 +226,20 @@
     <dimen name="profile_pic_size">60dp</dimen>
 
     <!--Practice Responsibility dialog-->
-    <dimen name="dialog_width">510dp</dimen>
-    <dimen name="dialog_height">672dp</dimen>
-    <dimen name="dialog_header_height">205dp</dimen>
-    <dimen name="dialog_profile_pic_size">88dp</dimen>
     <dimen name="dialog_row_padding">24.5dp</dimen>
     <dimen name="responsibility_list_margin">80dp</dimen>
 
     <dimen name="list_dialog_min_height">400dp</dimen>
+    <dimen name="list_dialog_min_height_small">200dp</dimen>
 
+    <dimen name="dimen_72dp">72dp</dimen>
+    <dimen name="payment_distibution_dialog_height">540dp</dimen>
+    <dimen name="payment_distribution_dialog_width">800dp</dimen>
+
+    <dimen name="popup_picker_width">300dp</dimen>
+    <dimen name="popup_picker_height">200dp</dimen>
+
+    <dimen name="keypad_width">600dp</dimen>
+    <dimen name="keypad_height">700dp</dimen>
+    <dimen name="calculator_entry_text">90sp</dimen>
 </resources>

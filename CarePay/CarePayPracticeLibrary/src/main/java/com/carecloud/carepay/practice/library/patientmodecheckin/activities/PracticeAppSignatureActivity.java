@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ActionBarOverlayLayout;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -19,14 +18,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
@@ -37,22 +34,19 @@ import com.carecloud.carepaylibray.consentforms.models.datamodels.consentformedi
 import com.carecloud.carepaylibray.consentforms.models.labels.ConsentFormLabelsDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConseFormsPayloadDTO;
 import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormPayloadDTO;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.github.gcacace.signaturepad.views.SignaturePad;
+import com.google.gson.Gson;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setTypefaceFromAssets;
-
-import com.github.gcacace.signaturepad.views.SignaturePad;
-import com.google.gson.Gson;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 
 public class PracticeAppSignatureActivity extends BaseActivity {
@@ -101,7 +95,7 @@ public class PracticeAppSignatureActivity extends BaseActivity {
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(PracticeAppSignatureActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -169,12 +163,12 @@ public class PracticeAppSignatureActivity extends BaseActivity {
                 if (switchButton.isChecked()) {
                     clearButton.setVisibility(View.VISIBLE);
                  //   agreeButton.setBackground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.signatureview_rounded_border));
-                    signatureAsBase64 = SystemUtil.encodeToBase64(signaturePad.getSignatureBitmap(), Bitmap.CompressFormat.JPEG, 90);
+                    signatureAsBase64 = SystemUtil.convertBitmapToString(signaturePad.getSignatureBitmap(), Bitmap.CompressFormat.JPEG, 90);
                     isSignatureEmpty = false;
                     enableAgreeButton();
                 } else {
                     clearButton.setVisibility(View.VISIBLE);
-                    signatureAsBase64 = SystemUtil.encodeToBase64(signaturePad.getSignatureBitmap(), Bitmap.CompressFormat.JPEG, 90);
+                    signatureAsBase64 = SystemUtil.convertBitmapToString(signaturePad.getSignatureBitmap(), Bitmap.CompressFormat.JPEG, 90);
                     agreeButton.setEnabled(true);
                     agreeButton.setBackground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.bg_green_overlay));
                 }

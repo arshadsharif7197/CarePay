@@ -2,8 +2,6 @@ package com.carecloud.carepaylibray.qrcodescanner;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.hardware.Camera;
@@ -14,9 +12,6 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
-
-import java.io.ByteArrayOutputStream;
 
 public abstract class BarcodeScannerView extends FrameLayout implements Camera.PreviewCallback  {
     private CameraWrapper cameraWrapper;

@@ -9,10 +9,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -22,12 +22,15 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.ISession;
+import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.customcomponents.CarePayEditText;
 import com.carecloud.carepaylibray.customcomponents.RecyclerViewWithDivider;
-import com.carecloud.carepaylibray.payments.models.PatientDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.JsonArray;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,10 +38,10 @@ import java.util.Map;
 public class FindPatientDialog extends Dialog {
 
     private Context context;
-    private String closeLabel;
-    private String hintLabel;
     private TransitionDTO transitionDTO;
     private OnItemClickedListener clickedListener;
+    private String titleLabel;
+    private String query;
 
     /**
      * Constructor
@@ -46,12 +49,11 @@ public class FindPatientDialog extends Dialog {
      * @param context       context
      * @param transitionDTO transition dto
      */
-    public FindPatientDialog(Context context, TransitionDTO transitionDTO, String closeLabel, String hintLabel) {
+    public FindPatientDialog(Context context, TransitionDTO transitionDTO, String titleLabel) {
         super(context);
         this.context = context;
         this.transitionDTO = transitionDTO;
-        this.closeLabel = closeLabel;
-        this.hintLabel = hintLabel;
+        this.titleLabel = titleLabel;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -74,23 +76,24 @@ public class FindPatientDialog extends Dialog {
     }
 
     private void initializeView() {
-        EditText findPatientEditBox = (EditText) findViewById(R.id.find_patient_edit_box);
-        findPatientEditBox.setHint(hintLabel);
+        CarePayEditText findPatientEditBox = (CarePayEditText) findViewById(R.id.find_patient_edit_box);
+        findPatientEditBox.addTextChangedListener(getTextChangedListener());
+        findPatientEditBox.setOnKeyListener(getKeyListener());
 
-        setTextListener(findPatientEditBox);
-        setKeyListener(findPatientEditBox);
-
-        ((TextView) findViewById(R.id.find_patient_close_label)).setText(closeLabel);
         findViewById(R.id.find_patient_close_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ((ISession) context).getWorkflowServiceHelper().interrupt();
                 dismiss();
             }
         });
+
+        TextView titleView = (TextView) findViewById(R.id.find_patient_title);
+        titleView.setText(titleLabel);
     }
 
-    private void setKeyListener(final EditText editText) {
-        editText.setOnKeyListener(new View.OnKeyListener() {
+    private View.OnKeyListener getKeyListener() {
+        return new View.OnKeyListener() {
 
             @Override
             public boolean onKey(View view, int keyCode, KeyEvent event) {
@@ -103,8 +106,9 @@ public class FindPatientDialog extends Dialog {
                     queryMap.put("practice_mgmt", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
                     queryMap.put("practice_id", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeId());
 
+                    query = ((CarePayEditText) view).getText().toString().toUpperCase();
                     JsonArray postModel = new JsonArray();
-                    postModel.add(editText.getText().toString());
+                    postModel.add(query);
                     String postBody = postModel.toString();
 
                     ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, findPatientCallback, postBody, queryMap);
@@ -112,11 +116,11 @@ public class FindPatientDialog extends Dialog {
                 }
                 return false;
             }
-        });
+        };
     }
 
-    private void setTextListener(final EditText editView) {
-        editView.addTextChangedListener(new TextWatcher() {
+    private TextWatcher getTextChangedListener() {
+        return new TextWatcher() {
 
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
@@ -128,52 +132,96 @@ public class FindPatientDialog extends Dialog {
 
             @Override
             public void afterTextChanged(Editable charSequence) {
-                String query = editView.getText().toString();
-                if (query.length() == 0) {
+                if (charSequence.length() == 0) {
                     findViewById(R.id.patient_searched_list).setVisibility(View.GONE);
+                } else if (charSequence.length() > 3) {
+                    ((ISession) context).getWorkflowServiceHelper().interrupt();
+                    //InputMethodManager manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    //manager.hideSoftInputFromWindow(findPatientEditBox.getWindowToken(), 0);
+
+                    Map<String, String> queryMap = new HashMap<>();
+                    queryMap.put("practice_mgmt", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+                    queryMap.put("practice_id", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeId());
+
+                    query = charSequence.toString().toUpperCase();
+                    JsonArray postModel = new JsonArray();
+                    postModel.add(query);
+                    String postBody = postModel.toString();
+                    ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, findPatientCallback, postBody, queryMap);
                 }
             }
-        });
+        };
     }
 
     private WorkflowServiceCallback findPatientCallback = new WorkflowServiceCallback() {
 
         @Override
         public void onPreExecute() {
-            ((ISession) context).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ((ISession) context).hideProgressDialog();
-
             PaymentsModel searchResult = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
             if (searchResult != null) {
-                List<PatientDTO> patients = searchResult.getPaymentPayload().getPatients();
+                findViewById(R.id.patient_searched_list).setVisibility(View.VISIBLE);
+                findViewById(R.id.patient_not_found_text).setVisibility(View.GONE);
+                List<PatientModel> patients = searchResult.getPaymentPayload().getPatients();
+                sortPatients(patients);
                 showSearchResultList(patients);
+            } else {
+                findViewById(R.id.patient_searched_list).setVisibility(View.GONE);
+                findViewById(R.id.patient_not_found_text).setVisibility(View.VISIBLE);
             }
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ((ISession) context).hideProgressDialog();
+            findViewById(R.id.patient_searched_list).setVisibility(View.GONE);
+            findViewById(R.id.patient_not_found_text).setVisibility(View.VISIBLE);
+        }
+
+        private void sortPatients(List<PatientModel> patients) {
+            Collections.sort(patients, new Comparator<PatientModel>() {
+                @Override
+                public int compare(PatientModel left, PatientModel right) {
+                    String leftName = left.getFullName();
+                    String rightName = right.getFullName();
+
+                    boolean leftStartsWithQuery = leftName.startsWith(query);
+                    if (leftStartsWithQuery == rightName.startsWith(query)) {
+                        return leftName.compareTo(rightName);
+                    }
+
+                    if (leftStartsWithQuery) {
+                        return -1;
+                    }
+
+                    return 1;
+                }
+            });
         }
     };
 
-    private void showSearchResultList(List<PatientDTO> patients) {
+    private void showSearchResultList(List<PatientModel> patients) {
         PatientSearchResultAdapter adapter = new PatientSearchResultAdapter(context, patients);
         setOnItemClickedListener(adapter);
-        
+
         RecyclerViewWithDivider searchedList = (RecyclerViewWithDivider) findViewById(R.id.patient_searched_list);
         searchedList.setLayoutManager(new LinearLayoutManager(context));
+        ViewGroup.LayoutParams params = searchedList.getLayoutParams();
+        if (patients != null && patients.size() > 4) {
+            params.height = getContext().getResources().getDimensionPixelSize(R.dimen.dimen_175dp);
+        } else {
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        }
+        searchedList.setLayoutParams(params);
         searchedList.setAdapter(adapter);
-        searchedList.setVisibility(View.VISIBLE);
     }
 
     private void setOnItemClickedListener(PatientSearchResultAdapter adapter) {
         adapter.setClickedListener(new PatientSearchResultAdapter.OnItemClickedListener() {
             @Override
-            public void onItemClicked(PatientDTO patient) {
+            public void onItemClicked(PatientModel patient) {
                 dismiss();
                 clickedListener.onItemClicked(patient);
             }
@@ -185,6 +233,6 @@ public class FindPatientDialog extends Dialog {
     }
 
     public interface OnItemClickedListener {
-        void onItemClicked(PatientDTO patient);
+        void onItemClicked(PatientModel patient);
     }
 }

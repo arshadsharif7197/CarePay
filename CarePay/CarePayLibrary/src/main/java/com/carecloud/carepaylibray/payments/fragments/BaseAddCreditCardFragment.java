@@ -25,16 +25,19 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialog;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialogFragment;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiAccountsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiMetadataMerchantServiceDTO;
+import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.postmodel.TokenizationService;
 import com.carecloud.carepaylibray.payments.utils.CardPattern;
-import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -49,7 +52,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class BaseAddCreditCardFragment extends BaseCheckinFragment implements RequestTask.AuthorizeCreditCardCallback, SimpleDatePickerDialog.OnDateSetListener {
+public abstract class BaseAddCreditCardFragment extends BaseDialogFragment implements RequestTask.AuthorizeCreditCardCallback, SimpleDatePickerDialog.OnDateSetListener {
 
     public interface IAuthoriseCreditCardResponse {
         void onAuthorizeCreditCardSuccess();
@@ -89,11 +92,14 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
     private String stateAbbr = null;
     private City smartyStreetsResponse;
     protected double amountToMakePayment;
-    private DemographicAddressPayloadDTO addressPayloadDTO;
+    protected DemographicAddressPayloadDTO addressPayloadDTO;
     private List<DemographicsSettingsPapiAccountsDTO> papiAccountsDTO;
     protected PaymentCreditCardsPayloadDTO creditCardsPayloadDTO;
     protected PaymentsCreditCardBillingInformationDTO billingInformationDTO;
     protected IAuthoriseCreditCardResponse authoriseCreditCardResponseCallback;
+
+    protected PaymentNavigationCallback callback;
+    protected PaymentsModel paymentsModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -105,14 +111,21 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
             Bundle arguments = getArguments();
             if (arguments != null) {
                 Gson gson = new Gson();
-                String addressPayloadString = getApplicationPreferences().readStringFromSharedPref(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE);
-                addressPayloadDTO = new DemographicAddressPayloadDTO();
-                if (addressPayloadString.length() > 1) {
-                    addressPayloadDTO = gson.fromJson(addressPayloadString, DemographicAddressPayloadDTO.class);
+                String payloadString;
+                if(addressPayloadDTO==null) {
+                    payloadString = getApplicationPreferences().readStringFromSharedPref(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE);
+                    addressPayloadDTO = new DemographicAddressPayloadDTO();
+                    if (payloadString.length() > 1) {
+                        addressPayloadDTO = gson.fromJson(payloadString, DemographicAddressPayloadDTO.class);
+                    }
                 }
                 if (arguments.containsKey(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE)){
-                    addressPayloadString = arguments.getString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE);
-                    papiAccountsDTO = gson.fromJson(addressPayloadString, new TypeToken<List<DemographicsSettingsPapiAccountsDTO>>(){}.getType());
+                    payloadString = arguments.getString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE);
+                    papiAccountsDTO = gson.fromJson(payloadString, new TypeToken<List<DemographicsSettingsPapiAccountsDTO>>(){}.getType());
+                }else if(arguments.containsKey(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE)){
+                    payloadString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
+                    PaymentsModel paymentsModel = gson.fromJson(payloadString, PaymentsModel.class);
+                    papiAccountsDTO = paymentsModel.getPaymentPayload().getPapiAccounts();
                 }
                 if (arguments.containsKey(CarePayConstants.PAYMENT_AMOUNT_BUNDLE)) {
                     amountToMakePayment = arguments.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
@@ -124,8 +137,10 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
 
         setupTitleViews(addNewCreditCardView);
         initializeViews(addNewCreditCardView);
-        setTypefaces();
+//        setTypefaces();
         setTextWatchers();
+
+        hideKeyboardOnViewTouch(addNewCreditCardView);
         return addNewCreditCardView;
     }
 
@@ -269,7 +284,6 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
         Toolbar toolbar = (Toolbar) view.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
         if(toolbar!=null) {
             title = (TextView) toolbar.findViewById(com.carecloud.carepaylibrary.R.id.respons_toolbar_title);
-            SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
             toolbar.setTitle("");
             if(getDialog()==null) {
                 toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), com.carecloud.carepaylibrary.R.drawable.icn_nav_back));
@@ -286,9 +300,15 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
                         @Override
                         public void onClick(View view) {
                             dismiss();
+                            if(callback!=null){
+                                callback.onPayButtonClicked(amountToMakePayment, paymentsModel);
+                            }
                         }
                     });
                 }
+                ViewGroup.LayoutParams layoutParams = title.getLayoutParams();
+                layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                title.setLayoutParams(layoutParams);
                 title.setGravity(Gravity.CENTER_HORIZONTAL);
             }
 
@@ -299,17 +319,14 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
     private void initializeViews(View view) {
         creditCardNoTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.creditCardNoTextInputLayout);
         creditCardNoEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.creditCardNoEditText);
-        creditCardNoEditText.setTag(creditCardNoTextInput);
 
         cardTypeTextView = (CarePayTextView) view.findViewById(R.id.cardTypeTextView);
 
         nameOnCardTextInputLayout = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.nameOnCardTextInputLayout);
         nameOnCardEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.nameOnCardEditText);
-        nameOnCardEditText.setTag(nameOnCardTextInputLayout);
 
         verificationCodeTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.verificationCodeTextInputLayout);
         verificationCodeEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.verificationCodeEditText);
-        verificationCodeEditText.setTag(verificationCodeTextInput);
 
         expirationDateTextView = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.expirationDateTextView);
         pickDateTextView = (TextView) view.findViewById(com.carecloud.carepaylibrary.R.id.pickDateTextView);
@@ -334,23 +351,19 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
 
         address1TextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.address1TextInputLayout);
         address1EditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.addressEditTextId);
-        address1EditText.setTag(address1TextInput);
 
         address2TextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.address2TextInputLayout);
         address2EditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.addressEditText2Id);
-        address2EditText.setTag(address2TextInput);
 
         zipCodeTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.zipCodeTextInputLayout);
         zipCodeEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.zipCodeId);
-        zipCodeEditText.setTag(zipCodeTextInput);
 
         cityTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.cityTextInputLayout);
         cityEditText = (EditText) view.findViewById(com.carecloud.carepaylibrary.R.id.cityId);
-        cityEditText.setTag(cityTextInput);
 
         stateTextInput = (TextInputLayout) view.findViewById(com.carecloud.carepaylibrary.R.id.stateTextInputLayout);
         stateAutoCompleteTextView = (AutoCompleteTextView) view.findViewById(R.id.addNewCredidCardStateAutoCompleteTextView);
-        stateAutoCompleteTextView.setTag(stateTextInput);
+
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
                 R.layout.autocomplete_state_item,
                 R.id.text1,
@@ -370,35 +383,17 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
         setChangeFocusListeners();
         setActionListeners();
 
-        creditCardNoEditText.clearFocus();
-        nameOnCardEditText.clearFocus();
-        verificationCodeEditText.clearFocus();
-
-        address1EditText.clearFocus();
-        address2EditText.clearFocus();
-        zipCodeEditText.clearFocus();
-        cityEditText.clearFocus();
-        stateAutoCompleteTextView.clearFocus();
-
         saveCardOnFileCheckBox.setChecked(false);
         setAsDefaultCheckBox.setChecked(false);
 
         useProfileAddressCheckBox.setChecked(true);
-        setAddressFiledsEnabled(false);
         nextButton.setEnabled(false);
         nextButton.setClickable(false);
 
-        //billingAddressLayout.setVisibility(View.GONE); SHMRK-1077
         useProfileAddressCheckBox.setChecked(true);
-        setAddressFiledsEnabled(false);
+        setAddressFieldsEnabled(false);
         setDefaultBillingAddressTexts();
 
-        View scrollView = view.findViewById(R.id.scroll_card_info);
-        if(getDialog()!=null){
-            ViewGroup.LayoutParams layoutParams = scrollView.getLayoutParams();
-            layoutParams.width = (int) (getResources().getDisplayMetrics().widthPixels * .5);
-            scrollView.setLayoutParams(layoutParams);
-        }
     }
 
 
@@ -442,6 +437,7 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
         billingInformationDTO.setCity(cityEditText.getText().toString().trim());
         billingInformationDTO.setState(stateAutoCompleteTextView.getText().toString().trim());
         creditCardsPayloadDTO.setBillingInformation(billingInformationDTO);
+        creditCardsPayloadDTO.setTokenizationService(TokenizationService.payeezy);
     }
 
     private void authorizeCreditCard() {
@@ -465,6 +461,7 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
             for (DemographicsSettingsPapiAccountsDTO papiAccountDTO : papiAccountsDTO) {
                 if (papiAccountDTO.getType().contains("payeezy")) {
                     merchantServiceDTO = papiAccountDTO.getMetadata().getMerchantService();
+                    break;
                 }
             }
             RequestTask requestTask = new RequestTask(getActivity(), BaseAddCreditCardFragment.this, merchantServiceDTO);
@@ -477,122 +474,41 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
     }
 
     private void setDefaultBillingAddressTexts() {
-        try {
+        if(addressPayloadDTO!=null) {
             address1EditText.setText(addressPayloadDTO.getAddress1());
-            address2EditText.setText(addressPayloadDTO.getAddress2());
-            zipCodeEditText.setText(addressPayloadDTO.getZipcode());
-            cityEditText.setText(addressPayloadDTO.getCity());
-            stateAutoCompleteTextView.setText(addressPayloadDTO.getState());
+            address1EditText.getOnFocusChangeListener().onFocusChange(address1EditText, !StringUtil.isNullOrEmpty(addressPayloadDTO.getAddress1()));
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            address2EditText.setText(addressPayloadDTO.getAddress2());
+            address2EditText.getOnFocusChangeListener().onFocusChange(address2EditText, !StringUtil.isNullOrEmpty(addressPayloadDTO.getAddress2()));
+
+            zipCodeEditText.setText(addressPayloadDTO.getZipcode());
+            zipCodeEditText.getOnFocusChangeListener().onFocusChange(zipCodeEditText, !StringUtil.isNullOrEmpty(addressPayloadDTO.getZipcode()));
+
+            cityEditText.setText(addressPayloadDTO.getCity());
+            cityEditText.getOnFocusChangeListener().onFocusChange(cityEditText, !StringUtil.isNullOrEmpty(addressPayloadDTO.getCity()));
+
+            stateAutoCompleteTextView.setText(addressPayloadDTO.getState());
+            stateAutoCompleteTextView.getOnFocusChangeListener().onFocusChange(stateAutoCompleteTextView, !StringUtil.isNullOrEmpty(addressPayloadDTO.getState()));
         }
     }
 
-    private void setTypefaces() {
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), creditCardNoEditText);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), verificationCodeEditText);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), nameOnCardEditText);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), expirationDateTextView);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), address1EditText);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), address2EditText);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), zipCodeEditText);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), cityEditText);
-        SystemUtil.setProximaNovaRegularTypeface(getActivity(), stateAutoCompleteTextView);
-
-
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), creditCardNoTextInput);
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), nameOnCardTextInputLayout);
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), verificationCodeTextInput);
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), address1TextInput);
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), address2TextInput);
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), zipCodeTextInput);
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), cityTextInput);
-        SystemUtil.setProximaNovaRegularTypefaceLayout(getActivity(), stateTextInput);
-
-        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), nextButton);
-
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), saveCardOnFileCheckBox);
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), setAsDefaultCheckBox);
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), useProfileAddressCheckBox);
-    }
 
     private void setChangeFocusListeners() {
-        creditCardNoEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        creditCardNoEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(creditCardNoTextInput, null));
+        nameOnCardEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(nameOnCardTextInputLayout, null));
+        verificationCodeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(verificationCodeTextInput, null));
+        address1EditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(address1TextInput, null));
+        address2EditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(address2TextInput, null));
+        zipCodeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeTextInput, new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View view, boolean flag) {
-                if (flag) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, flag);
-            }
-        });
-        nameOnCardEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean flag) {
-                if (flag) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, flag);
-            }
-        });
-        verificationCodeEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean flag) {
-                if (flag) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, flag);
-            }
-        });
-        address1EditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean flag) {
-                if (flag) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, flag);
-            }
-        });
-        address2EditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean flag) {
-                if (flag) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, flag);
-            }
-        });
-        zipCodeEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean flag) {
-                if (flag) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, flag);
-                if (!flag) { // for SmartyStreets
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus) { // for SmartyStreets
                     getCityAndState(zipCodeEditText.getText().toString());
                 }
             }
-        });
-        cityEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean flag) {
-                if (flag) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, flag);
-            }
-        });
-        stateAutoCompleteTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean flag) {
-                if (flag) {
-                    SystemUtil.showSoftKeyboard(getActivity());
-                }
-                SystemUtil.handleHintChange(view, flag);
-            }
-        });
+        }));
+        cityEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(cityTextInput, null));
+        stateAutoCompleteTextView.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(stateTextInput, null));
     }
 
     private void setActionListeners() {
@@ -635,29 +551,25 @@ public class BaseAddCreditCardFragment extends BaseCheckinFragment implements Re
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             validateCreditCardDetails();
             if (isChecked) {
-                setAddressFiledsEnabled(false);
+                setAddressFieldsEnabled(false);
                 setDefaultBillingAddressTexts();
             } else {
-                setAddressFiledsEnabled(true);
-                address1EditText.setText("");
-                address2EditText.setText("");
-                zipCodeEditText.setText("");
-                cityEditText.setText("");
-                stateAutoCompleteTextView.setText("");
+                setAddressFieldsEnabled(true);
+                address1EditText.setText(null);
+                address2EditText.setText(null);
+                zipCodeEditText.setText(null);
+                cityEditText.setText(null);
+                stateAutoCompleteTextView.setText(null);
             }
         }
     };
 
-    private void setAddressFiledsEnabled(boolean isEnabled) {
-        address1EditText.setEnabled(isEnabled);
-        address1EditText.setClickable(isEnabled);
-        address2EditText.setEnabled(isEnabled);
-        address2EditText.setClickable(isEnabled);
-        zipCodeEditText.setEnabled(isEnabled);
-        zipCodeEditText.setClickable(isEnabled);
-        cityEditText.setEnabled(isEnabled);
-        cityEditText.setClickable(isEnabled);
-        stateAutoCompleteTextView.setEnabled(isEnabled);
+    private void setAddressFieldsEnabled(boolean isEnabled) {
+        address1EditText.setFocusable(isEnabled);
+        address2EditText.setFocusable(isEnabled);
+        zipCodeEditText.setFocusable(isEnabled);
+        cityEditText.setFocusable(isEnabled);
+        stateAutoCompleteTextView.setFocusable(isEnabled);
         stateAutoCompleteTextView.setClickable(isEnabled);
     }
 

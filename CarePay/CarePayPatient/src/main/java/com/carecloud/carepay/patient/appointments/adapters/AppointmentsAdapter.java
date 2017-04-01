@@ -2,7 +2,6 @@ package com.carecloud.carepay.patient.appointments.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,8 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepay.patient.appointments.dialog.CheckInOfficeNowAppointmentDialog;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
@@ -24,13 +21,11 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderM
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog;
-import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentDialog;
-import com.carecloud.carepaylibray.customdialogs.QueueAppointmentDialog;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.Date;
@@ -151,18 +146,24 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
             String photoUrl = item.getProvider().getPhoto();
             if (TextUtils.isEmpty(photoUrl)) {
-                holder.shortName.setText(StringUtil.onShortDrName(item.getProvider().getName()));
+                holder.shortName.setText(StringUtil.getShortName(item.getProvider().getName()));
             } else {
-                Picasso.Builder builder = new Picasso.Builder(context);
-                builder.listener(new Picasso.Listener() {
-                    @Override
-                    public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                        holder.shortName.setText(StringUtil.onShortDrName(item.getProvider().getName()));
-                    }
-                });
+                Picasso.with(context).load(photoUrl)
+                        .resize(58,58)
+                        .transform(new CircleImageTransform())
+                        .into(holder.profileImage, new Callback() {
+                            @Override
+                            public void onSuccess() {
 
-                builder.build().load(photoUrl).transform(new CircleImageTransform())
-                        .resize(58, 58).into(holder.profileImage);
+                            }
+
+                            @Override
+                            public void onError() {
+                                holder.shortName.setText(StringUtil.getShortName(item.getProvider().getName()));
+                            }
+                        });
+
+
                 holder.profileImage.setVisibility(View.VISIBLE);
             }
 
@@ -345,7 +346,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         }
     }
 
-        public int getItemCount() {
+    public int getItemCount() {
         return appointmentItems.size();
     }
 
@@ -422,7 +423,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
         @Override
         public void onClick(View view) {
-            if (null != callback) {
+            if (callback != null) {
                 Object selectedItem = appointmentItems.get(getAdapterPosition());
 
                 // Restricted the appointment list item click if it is appointment header type.

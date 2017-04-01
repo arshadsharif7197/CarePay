@@ -21,9 +21,10 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibray.intake.models.IntakeFormPayloadModel;
+import com.carecloud.carepaylibray.intake.models.IntakeForm;
 import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
 import com.carecloud.carepaylibray.intake.models.LabelModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -218,14 +219,15 @@ public class InTakeWebViewActivity extends BasePatientActivity {
         // return a collection of intake objects received from backend i.e. payload.intake_forms
         @JavascriptInterface
         public String getForms() {
-            List<IntakeFormPayloadModel> myPaylod = inTakeForm.getPayload().getIntakeForms();
+            List<IntakeForm> myPaylod = inTakeForm.getPayload().getIntakeForms();
             return new Gson().toJson(myPaylod);
         }
 
         // return answers XML received from backend i.e. payload.findings.payload.findings
         @JavascriptInterface
         public String getAnswers() {
-            return inTakeForm.getPayload().getFindings().getPayload().getFindings();
+            return null;
+//            return inTakeForm.getPayload().getFindings().getPayload().getFindings();
         }
 
 
@@ -287,7 +289,7 @@ public class InTakeWebViewActivity extends BasePatientActivity {
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(InTakeWebViewActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -312,7 +314,7 @@ public class InTakeWebViewActivity extends BasePatientActivity {
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(InTakeWebViewActivity.this);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

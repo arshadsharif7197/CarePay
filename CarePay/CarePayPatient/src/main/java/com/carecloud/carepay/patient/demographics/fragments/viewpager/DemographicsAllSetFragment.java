@@ -17,23 +17,22 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 
 /**
@@ -62,7 +61,7 @@ public class DemographicsAllSetFragment extends BaseFragment {
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(getActivity());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -117,13 +116,13 @@ public class DemographicsAllSetFragment extends BaseFragment {
             demographicPayloadDTO.setAddress(addressModel);
         }
 
-        DemographicPersDetailsPayloadDTO detailsModel = ((DemographicsActivity) getActivity()).getDetailsDTO();
+        PatientModel detailsModel = ((DemographicsActivity) getActivity()).getDetailsDTO();
         if (detailsModel != null) {
             demographicPayloadDTO.setPersonalDetails(detailsModel);
         }
 
         DemographicIdDocPayloadDTO idDocPojo = ((DemographicsActivity) getActivity()).getIdDocModel();
-        if (idDocPojo != null) { // add the doc
+        if (idDocPojo != null && idDocPojo.getIdType()!=null) { // add the doc
             List<DemographicIdDocPayloadDTO> idDocPayloadDTOs = new ArrayList<>();
             idDocPojo.setIdCountry("USA"); // to remove
             idDocPayloadDTOs.add(idDocPojo);

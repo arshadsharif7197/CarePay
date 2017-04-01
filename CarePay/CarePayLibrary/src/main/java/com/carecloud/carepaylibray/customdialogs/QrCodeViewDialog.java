@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -22,8 +21,6 @@ import com.carecloud.carepaylibray.appointments.models.QRCodePayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
@@ -40,17 +37,23 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
     private ProgressBar qrCodeProgressBar;
     private CarePayTextView scanQRCodeTextView;
     private AppointmentMetadataModel appointmentMetadataModel;
+    private QRCodeViewDialogListener callBack;
+
+    public interface QRCodeViewDialogListener{
+        void onGenerateQRCodeError(String errorMessage);
+    }
 
     /**
      * @param context        activity context
      * @param appointmentDTO appointment model
      */
     public QrCodeViewDialog(Context context, AppointmentDTO appointmentDTO,
-                            AppointmentMetadataModel appointmentMetadataModel) {
+                            AppointmentMetadataModel appointmentMetadataModel, QRCodeViewDialogListener callback) {
         super(context);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
         this.appointmentMetadataModel = appointmentMetadataModel;
+        this.callBack = callback;
     }
 
     @Override
@@ -126,7 +129,7 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
         @Override
         public void onFailure(String exceptionMessage) {
             ((ISession) context).hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(context);
+            callBack.onGenerateQRCodeError(exceptionMessage);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

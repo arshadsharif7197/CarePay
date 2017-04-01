@@ -3,53 +3,52 @@ package com.carecloud.carepaylibray.customdialogs;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import com.carecloud.carepay.service.library.ApplicationPreferences;
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.base.ISession;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.google.gson.JsonObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
 
+    private final AppointmentsSlotsDTO appointmentSlot;
     private Context context;
-    private LinearLayout mainLayout;
-    private AppointmentsResultModel appointmentsResultModel;
     private AppointmentDTO appointmentDTO;
-    public static boolean isAppointmentAdded = false;
+
+    private AppointmentNavigationCallback callback;
 
     /**
      * Constructor.
-     * @param context activity context
-     * @param appointmentDTO appointment model
-     * @param appointmentsResultModel appointments result model
+     *
+     * @param context           activity context
+     * @param appointmentDTO    appointment model
+     * @param appointmentsSlot  The appointment slot
      */
     public RequestAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
-                                    AppointmentsResultModel appointmentsResultModel) {
+                                    AppointmentsSlotsDTO appointmentsSlot) {
 
         super(context, appointmentDTO, true);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
-        this.appointmentsResultModel = appointmentsResultModel;
-        isAppointmentAdded=false;
+        this.appointmentSlot = appointmentsSlot;
+        setupCallback();
+    }
+
+    private void setupCallback() {
+        try {
+            callback = (AppointmentNavigationCallback) context;
+        } catch (ClassCastException cce) {
+            throw new ClassCastException("Provided Context must implement AppointmentNavigationCallback");
+        }
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -57,8 +56,6 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-
-        mainLayout = (LinearLayout) getAddActionChildView();
         setActionButton();
     }
 
@@ -68,14 +65,14 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         View childActionView = inflater.inflate(R.layout.dialog_request_appointment, null);
 
         Button appointmentRequestButton = (Button) childActionView.findViewById(R.id.requestAppointmentButton);
-        appointmentRequestButton.setText(appointmentsResultModel.getMetadata().getLabel().getAppointmentsRequestHeading());
+        appointmentRequestButton.setText(Label.getLabel("appointments_request_heading"));
         appointmentRequestButton.setOnClickListener(this);
         appointmentRequestButton.requestFocus();
 
         CarePayTextView reasonTypeTextView = (CarePayTextView)
                 childActionView.findViewById(R.id.reasonTypeTextView);
         SystemUtil.setProximaNovaRegularTypeface(context, reasonTypeTextView);
-        reasonTypeTextView.setText(appointmentsResultModel.getMetadata().getLabel().getVisitTypeHeading());
+        reasonTypeTextView.setText(Label.getLabel("visit_type_heading"));
 
         CarePayTextView reasonTextView = (CarePayTextView)
                 childActionView.findViewById(R.id.reasonTextView);
@@ -86,7 +83,7 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
             reasonTextView.setText(visitReason);
         }
 
-        mainLayout.addView(childActionView);
+        ((LinearLayout) getAddActionChildView()).addView(childActionView);
     }
 
     @Override
@@ -94,62 +91,8 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         super.onClick(view);
         int viewId = view.getId();
         if (viewId == R.id.requestAppointmentButton) {
-            onRequestAppointment();
-            cancel();
+            dismiss();
+            callback.requestAppointment(appointmentSlot, "");
         }
     }
-
-    /**
-     * call make_appointment api.
-     */
-    private void onRequestAppointment() {
-
-        Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("language", ((ISession) context).getApplicationPreferences().getUserLanguage());
-        queryMap.put("practice_mgmt", appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getPractice().getPracticeMgmt());
-        queryMap.put("practice_id", appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getPractice().getPracticeId());
-
-        JsonObject appointmentJSONObj = new JsonObject();
-        JsonObject patientJSONObj = new JsonObject();
-
-        patientJSONObj.addProperty("id", appointmentDTO.getPayload().getPatient().getId());
-        appointmentJSONObj.addProperty("start_time", appointmentDTO.getPayload().getStartTime());
-        appointmentJSONObj.addProperty("end_time", appointmentDTO.getPayload().getEndTime());
-        appointmentJSONObj.addProperty("appointment_status_id", "5");
-        appointmentJSONObj.addProperty("location_id", appointmentDTO.getPayload().getLocation().getId());
-        appointmentJSONObj.addProperty("provider_id", appointmentDTO.getPayload().getProviderId());
-        appointmentJSONObj.addProperty("visit_reason_id", appointmentDTO.getPayload().getVisitReasonId());
-        appointmentJSONObj.addProperty("resource_id", appointmentDTO.getPayload().getResourceId());
-        appointmentJSONObj.addProperty("chief_complaint", appointmentDTO.getPayload().getChiefComplaint().toString());
-        appointmentJSONObj.addProperty("comments", "");
-        appointmentJSONObj.add("patient", patientJSONObj);
-
-        JsonObject makeAppointmentJSONObj = new JsonObject();
-        makeAppointmentJSONObj.add("appointment", appointmentJSONObj);
-
-        TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getMakeAppointment();
-
-        ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, getMakeAppointmentCallback,makeAppointmentJSONObj.toString(), queryMap);
-    }
-
-    private WorkflowServiceCallback getMakeAppointmentCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            ((ISession) context).showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            ((ISession) context).hideProgressDialog();
-            isAppointmentAdded = true;
-            ((AppCompatActivity) context).finish();
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            ((ISession) context).hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(context);
-            Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
 }

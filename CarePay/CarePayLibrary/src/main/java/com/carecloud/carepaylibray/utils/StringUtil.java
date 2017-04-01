@@ -15,10 +15,9 @@ import java.util.regex.Pattern;
 
 public class StringUtil {
 
-    private static final String PHONE_NUMBER_REGEX = "([\\+(]?(\\d){2,}[)]?[- \\.]?(\\d){2,}[- \\.]?(\\d){2,}[- \\.]?(\\d){2,}[- \\.]?(\\d){2,})|([\\+(]?(\\d){2,}[)]?[- \\.]?(\\d){2,}[- \\.]?(\\d){2,}[- \\.]?(\\d){2,})|([\\+(]?(\\d){2,}[)]?[- \\.]?(\\d){2,}[- \\.]?(\\d){2,})";
     private static final String EMAIL_PATTERN      =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-    static private final String PASWWORD_REGEX_VALIDATION
+    private static final String PASSWORD_REGEX_VALIDATION
                                                    = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@!%*?&_-])[A-Za-z\\d$@!%*?&_-]{8,}";
 
     /**
@@ -51,7 +50,7 @@ public class StringUtil {
      */
     public static boolean isValidPassword(String password) {
         if (password != null) {
-            Pattern pattern = Pattern.compile(PASWWORD_REGEX_VALIDATION);
+            Pattern pattern = Pattern.compile(PASSWORD_REGEX_VALIDATION);
             Matcher matcher = pattern.matcher(password);
             return matcher.matches();
         }
@@ -59,8 +58,8 @@ public class StringUtil {
     }
 
 
-    public static String getFormatedLabal(Context context, String labal){
-        return isNullOrEmpty(labal)?context.getString(R.string.not_defined):labal;
+    public static String getFormatedLabal(Context context, String label){
+        return isNullOrEmpty(label)?context.getString(R.string.not_defined):label;
     }
 
     /**
@@ -232,26 +231,38 @@ public class StringUtil {
         }
     }
 
-    public static String onShortDrName(String fullName) {
-        if (fullName != null && fullName.length() > 1) {
-            String stringSplitArr[] = fullName.split(" ");
-            if (fullName.contains(".")) {
-                if (stringSplitArr.length >= 3) {
-                    return String.valueOf(stringSplitArr[1].charAt(0)).toUpperCase()
-                            + String.valueOf(stringSplitArr[stringSplitArr.length - 1].charAt(0)).toUpperCase();
-                } else if (stringSplitArr.length == 2) {
-                    return String.valueOf(stringSplitArr[1].charAt(0)).toUpperCase();
-                }
-            } else {
-                if (stringSplitArr.length == 2) {
-                    return String.valueOf(stringSplitArr[0].charAt(0)).toUpperCase()
-                            + String.valueOf(stringSplitArr[stringSplitArr.length - 1].charAt(0)).toUpperCase();
-                } else {
-                    return String.valueOf(stringSplitArr[0].charAt(0)).toUpperCase();
-                }
-            }
+    /**
+     * @param fullName full name
+     * @return short two letter name
+     */
+    public static String getShortName(String fullName) {
+        if (fullName == null || fullName.isEmpty()) {
+            return "";
         }
-        return "";
+
+        String[] splitArr = fullName.split(" ");
+        if (splitArr.length == 1) {
+            return getFirstChar(splitArr[0]);
+        }
+
+        // Check for doctor
+        if (fullName.contains(".")) {
+            if (splitArr.length > 2) {
+                return getFirstChar(splitArr[1]) + getFirstChar(splitArr[splitArr.length - 1]);
+            }
+
+            return getFirstChar(splitArr[1]);
+        }
+
+        return getFirstChar(splitArr[0]) + getFirstChar(splitArr[splitArr.length - 1]);
+    }
+
+    private static String getFirstChar(String word) {
+        if (word.isEmpty()) {
+            return "";
+        }
+
+        return String.valueOf(word.charAt(0)).toUpperCase();
     }
 
     /**
@@ -315,5 +326,20 @@ public class StringUtil {
             return cardType + " " + cardNumber.substring(cardNumber.length() - 4, cardNumber.length());
         }
         return "";
+    }
+
+    /**
+     *
+     * @param capString The capString
+     * @return modified String
+     */
+    public static String capitalize(String capString){
+        StringBuffer capBuffer = new StringBuffer();
+        Matcher capMatcher = Pattern.compile("([a-z])([a-z]*)", Pattern.CASE_INSENSITIVE).matcher(capString);
+        while (capMatcher.find()){
+            capMatcher.appendReplacement(capBuffer, capMatcher.group(1).toUpperCase() + capMatcher.group(2).toLowerCase());
+        }
+
+        return capMatcher.appendTail(capBuffer).toString();
     }
 }

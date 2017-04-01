@@ -16,7 +16,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
-        android:name=".CarePayApplication"
+        android:name=".CarePayCloverApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -32,6 +32,10 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="com.carecloud.carepay.restart" />
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
         </activity>
         <activity android:name="com.carecloud.carepay.practice.library.signin.SigninActivity"
             android:screenOrientation="sensorLandscape"/>
@@ -43,7 +47,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.carecloud.carepay.practice.library.checkin.CheckInActivity"
+            android:name="com.carecloud.carepay.practice.library.checkin.PracticeModePracticeCheckInActivity"
             android:parentActivityName="com.carecloud.carepay.practice.library.homescreen.CloverMainActivity"
             android:screenOrientation="sensorLandscape">
             <meta-data
@@ -51,13 +55,7 @@
                 android:value="com.carecloud.carepay.practice.library.homescreen.CloverMainActivity" />
         </activity>
         <activity
-            android:name="com.carecloud.carepay.practice.library.appointments.PracticeAppointmentsActivity"
-            android:screenOrientation="sensorLandscape"/>
-        <activity
-            android:name="com.carecloud.carepay.practice.library.payments.PatientResponsibilityActivity"
-            android:screenOrientation="sensorLandscape"/>
-        <activity
-            android:name="com.carecloud.carepay.practice.library.payments.RotateActivity"
+            android:name="com.carecloud.carepay.practice.library.appointments.PracticeModePracticeAppointmentsActivity"
             android:screenOrientation="sensorLandscape"/>
         <activity
             android:name="com.carecloud.carepay.practice.library.checkin.activities.HowToCheckInActivity"
@@ -66,10 +64,10 @@
             android:name="com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity"
             android:screenOrientation="sensorLandscape"/>
         <activity
-            android:name="com.carecloud.carepay.practice.library.appointments.AppointmentsActivity"
+            android:name="com.carecloud.carepay.practice.library.checkin.PatientModePracticeCheckInActivity"
             android:screenOrientation="sensorLandscape"/>
         <activity
-            android:name="com.carecloud.carepay.practice.library.appointments.ScheduleAppointmentActivity"
+            android:name="com.carecloud.carepay.practice.library.appointments.PatientModePracticeAppointmentActivity"
             android:screenOrientation="sensorLandscape"/>
         <activity
             android:name="com.carecloud.carepay.practice.library.checkin.activities.PersonalInformationActivity"
@@ -100,7 +98,8 @@
         </activity>
         <activity
             android:name="com.carecloud.carepay.practice.clover.payments.CloverPaymentActivity"
-            android:label="@string/clover_payment_activity">
+            android:label="@string/clover_payment_activity"
+            android:theme="@style/Theme.AppCompat.Translucent">
             <intent-filter>
                 <action android:name="com.carecloud.carepay.practice.clover.payments.CloverPaymentActivity" />
                 <category android:name="android.intent.category.DEFAULT" />

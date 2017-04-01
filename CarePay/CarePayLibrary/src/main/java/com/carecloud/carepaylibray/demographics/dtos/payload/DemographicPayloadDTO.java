@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographics.dtos.payload;
 
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,26 +12,25 @@ import java.util.List;
  * Model for Demographics payload
  */
 public class DemographicPayloadDTO {
-
-    @SerializedName("address")
-    @Expose
-    private DemographicAddressPayloadDTO address = new DemographicAddressPayloadDTO();
-
     @SerializedName("personal_details")
     @Expose
-    private DemographicPersDetailsPayloadDTO personalDetails = new DemographicPersDetailsPayloadDTO();
-
-    @SerializedName("identity_documents")
-    @Expose
-    private List<DemographicIdDocPayloadDTO> idDocuments = new ArrayList<>();
+    private PatientModel personalDetails = new PatientModel();
 
     @SerializedName("insurances")
     @Expose
     private List<DemographicInsurancePayloadDTO> insurances = new ArrayList<>();
 
-    @SerializedName("updates")
+    @SerializedName("identity_documents")
     @Expose
-    private List<DemographicPayloadUpdateDTO> updates = new ArrayList<>();
+    private List<DemographicIdDocPayloadDTO> idDocuments = new ArrayList<>();
+
+    @SerializedName("address")
+    @Expose
+    private DemographicAddressPayloadDTO address = new DemographicAddressPayloadDTO();
+
+    @SerializedName("notifications")
+    @Expose
+    private NotificationOptions notificationOptions = new NotificationOptions();
 
     /**
      * @return The address
@@ -49,14 +49,14 @@ public class DemographicPayloadDTO {
     /**
      * @return The personalDetails
      */
-    public DemographicPersDetailsPayloadDTO getPersonalDetails() {
+    public PatientModel getPersonalDetails() {
         return personalDetails;
     }
 
     /**
      * @param personalDetails The personal_details
      */
-    public void setPersonalDetails(DemographicPersDetailsPayloadDTO personalDetails) {
+    public void setPersonalDetails(PatientModel personalDetails) {
         this.personalDetails = personalDetails;
     }
 
@@ -91,11 +91,11 @@ public class DemographicPayloadDTO {
         this.insurances = insurances;
     }
 
-    public List<DemographicPayloadUpdateDTO> getUpdates() {
-        return updates;
+    public NotificationOptions getNotificationOptions() {
+        return notificationOptions;
     }
 
-    public void setUpdates(List<DemographicPayloadUpdateDTO> updates) {
-        this.updates = updates;
+    public void setNotificationOptions(NotificationOptions notificationOptions) {
+        this.notificationOptions = notificationOptions;
     }
 }

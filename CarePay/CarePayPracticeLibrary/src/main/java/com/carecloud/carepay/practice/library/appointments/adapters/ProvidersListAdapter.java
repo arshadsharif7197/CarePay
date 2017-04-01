@@ -51,13 +51,13 @@ public class ProvidersListAdapter extends RecyclerView.Adapter<ProvidersListAdap
         AppointmentResourcesDTO resource = providersArrayList.get(position);
 
         String providerName = resource.getResource().getProvider().getName();
-        holder.shortName.setText(StringUtil.onShortDrName(providerName));
+        holder.shortName.setText(StringUtil.getShortName(providerName));
         holder.doctorName.setText(providerName);
         holder.doctorType.setText(resource.getResource().getProvider().getSpecialty().getName());
 
         //Endpoint not support location for individual resource,
         //Hence used 0th item from location array
-//        AppointmentLocationsDTO location = appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getLocations().get(0);
+//        LocationDTO location = appointmentsResultModel.getPayload().getResourcesToSchedule().get(0).getLocations().get(0);
 //        holder.placeName.setText(location.getName());
 //        holder.address.setText(location.getAddress().getPlaceAddressString());
 

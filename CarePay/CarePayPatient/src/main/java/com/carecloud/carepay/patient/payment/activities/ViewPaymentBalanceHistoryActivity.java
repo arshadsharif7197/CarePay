@@ -17,7 +17,6 @@ import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.ResponsibilityFragment;
 import com.carecloud.carepay.patient.payment.androidpay.ConfirmationActivity;
-import com.carecloud.carepay.patient.payment.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanFragment;
@@ -25,8 +24,10 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
+import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.google.android.gms.wallet.MaskedWallet;
 import com.google.android.gms.wallet.WalletConstants;
 import com.google.gson.Gson;
@@ -40,7 +41,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     private static boolean isPaymentDone;
     private PaymentsModel paymentsDTO;
     public Bundle bundle;
-    private boolean toolbarVisibility = false;
+    private String toolBarTitle;
 
     public static boolean isPaymentDone() {
         return isPaymentDone;
@@ -64,7 +65,10 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         practiceId = paymentsDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPracticeId();
         practiceMgmt = paymentsDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPracticeMgmt();
         patientId = paymentsDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPatientId();
-        displayToolbar(true);
+
+        toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.balance_history_toolbar);
+        toolBarTitle = paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPatientBalanceToolbar();
+        displayToolbar(true, toolBarTitle);
         inflateDrawer();
         FragmentManager fm = getSupportFragmentManager();
         PaymentBalanceHistoryFragment paymentBalanceHistoryFragment = (PaymentBalanceHistoryFragment)
@@ -85,27 +89,12 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         //include fragment
         fm.beginTransaction().replace(R.id.add_balance_history_frag_holder, paymentBalanceHistoryFragment,
                 PaymentBalanceHistoryFragment.class.getSimpleName()).commit();
-        navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_PAYMENTS).setChecked(true);
-
     }
 
-    /**
-     * Display toolbar.
-     *
-     * @param visibility the visibility
-     */
-    public void displayToolbar(boolean visibility){
-        toolbarVisibility = visibility;
-        toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.balance_history_toolbar);
-        TextView toolbarText = (TextView) findViewById(R.id.balance_history_toolbar_title);
-        String toolBarTitle = paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPatientBalanceToolbar();
-        toolbarText.setText(StringUtil.isNullOrEmpty(toolBarTitle) ? CarePayConstants.NOT_DEFINED : toolBarTitle);
-        if(visibility){
-            setSupportActionBar(toolbar);
-            getSupportActionBar().show();
-        } else {
-            getSupportActionBar().hide();
-        }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_PAYMENTS).setChecked(true);
     }
 
     /**
@@ -203,12 +192,17 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void startPartialPayment() {
+    public void startPaymentProcess(PaymentsModel paymentsModel) {
 
     }
 
     @Override
-    public void onPayButtonClicked(double amount) {
+    public void startPartialPayment(double owedAmount) {
+
+    }
+
+    @Override
+    public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
         PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
 
         Bundle bundle = new Bundle();
@@ -220,47 +214,51 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
         navigateToFragment(fragment, true);
 
-        displayToolbar(false);
+        displayToolbar(false, toolBarTitle);
     }
 
     @Override
-    public void onBackPressed(){
-        if(!toolbarVisibility && getSupportFragmentManager().getBackStackEntryCount()<2){
-            displayToolbar(true);
+    public void onBackPressed() {
+        if (!toolbarVisibility && getSupportFragmentManager().getBackStackEntryCount() < 2) {
+            displayToolbar(true, toolBarTitle);
         }
         super.onBackPressed();
     }
 
     @Override
-    public void onPaymentMethodAction(String selectedPaymentMethod, double amount) {
-        if(paymentsDTO.getPaymentPayload().getPatientCreditCards()!=null && !paymentsDTO.getPaymentPayload().getPatientCreditCards().isEmpty()){
-            Gson gson = new Gson();
-            Bundle args = new Bundle();
-            String paymentsDTOString = gson.toJson(paymentsDTO);
-            args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
-            args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
-            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-            Fragment fragment = new ChooseCreditCardFragment();
-            fragment.setArguments(args);
+    public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
+        if (paymentsDTO.getPaymentPayload().getPatientCreditCards() != null && !paymentsDTO.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            Fragment fragment = ChooseCreditCardFragment.newInstance(paymentsDTO, selectedPaymentMethod.getLabel(), amount);
+            navigateToFragment(fragment, true);
             navigateToFragment(fragment, true);
         } else {
-            showAddCard(amount);
+            showAddCard(amount, paymentsModel);
         }
     }
 
     @Override
-    public void showAddCard(double amount) {
+    public void showAddCard(double amount, PaymentsModel paymentsModel) {
         Gson gson = new Gson();
         Bundle args = new Bundle();
         Fragment fragment;
         String paymentsDTOString = gson.toJson(paymentsDTO);
         args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
-        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE,  amount);
+        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
         fragment = new AddNewCreditCardFragment();
 
 
         fragment.setArguments(args);
         navigateToFragment(fragment, true);
+    }
+
+    @Override
+    public void completePaymentProcess(UpdatePatientBalancesDTO updatePatientBalancesDTO) {
+
+    }
+
+    @Override
+    public void cancelPaymentProcess(PaymentsModel paymentsModel) {
+
     }
 
     @Override
@@ -277,11 +275,17 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void showReceipt(PaymentsModel paymentsModel) {
+    public void showPaymentConfirmation(PaymentsModel paymentsModel) {
         getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
-        PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(this, paymentsModel);
-        receiptDialog.show();
+        Gson gson = new Gson();
+        Bundle args = new Bundle();
+        String paymentsDTOString = gson.toJson(paymentsModel);
+        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
+
+        PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
+        confirmationFragment.setArguments(args);
+        confirmationFragment.show(getSupportFragmentManager(), confirmationFragment.getClass().getSimpleName());
 
     }
 

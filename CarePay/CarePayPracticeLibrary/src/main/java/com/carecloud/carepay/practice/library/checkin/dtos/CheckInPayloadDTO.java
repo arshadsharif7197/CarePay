@@ -1,5 +1,10 @@
 package com.carecloud.carepay.practice.library.checkin.dtos;
 
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
+import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
+import com.carecloud.carepaylibray.payments.models.LocationIndexDTO;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -26,6 +31,15 @@ public class CheckInPayloadDTO {
     @SerializedName("appointment_counts")
     @Expose
     private AppointmentCountsDTO appointmentCounts = new AppointmentCountsDTO();
+    @SerializedName("providers")
+    @Expose
+    private List<ProviderDTO> providers = new ArrayList<>();
+    @SerializedName("locations")
+    @Expose
+    private List<LocationDTO> locations = new ArrayList<>();
+    @SerializedName("page_messages")
+    @Expose
+    private List<String> pageMessages = new ArrayList<>();
 
     /**
      *
@@ -117,61 +131,28 @@ public class CheckInPayloadDTO {
         this.appointmentCounts = appointmentCounts;
     }
 
-    /**
-     * Gives total balance.
-     * @return total balance
-     */
-    public double getTotalBalance() {
-        double total = 0.00;
-        if (patientBalances != null && patientBalances.size() > 0) {
-            for (PatientBalanceDTO patientBalanceDTO : patientBalances) {
-                if (patientBalanceDTO.getPayload().get(0).getBalanceType().equalsIgnoreCase("Account")) {
-                    total = total + patientBalanceDTO.getPayload().get(0).getTotal();
-                } else if (patientBalanceDTO.getPayload().get(0).getBalanceType().equalsIgnoreCase("Copay")) {
-                    total = total + patientBalanceDTO.getPayload().get(0).getTotal();
-                }
-            }
-        }
-
-        // using for demo. will remove this after the demo.
-        if (total == 0.00) {
-            total = 20.00;
-        }
-        return total;
+    public List<ProviderDTO> getProviders() {
+        return providers;
     }
 
-    /**
-     * Gives responsibility account.
-     * @return responsibility account
-     *//*
-    public double getResponsibilityAccount() {
-        double total;
-        if (patientBalances != null && patientBalances.size() > 0) {
-            for (PatientResponsibilityDTO patientResponsibilityDto : patientBalances) {
-                if (patientResponsibilityDto.getBalanceType().equalsIgnoreCase("Account")) {
-                    return patientResponsibilityDto.getTotal();
-                }
-            }
-        }
-
-        // using for demo. will remove this after the demo.
-        total = 20.00;
-        return total;
+    public void setProviders(List<ProviderDTO> providers) {
+        this.providers = providers;
     }
 
-    *//**
-     * Gives responsibility copay.
-     * @return responsibility copay
-     *//*
-    public double getResponsibilityCopay() {
-        double total = 0.00;
-        if (patientBalances != null && patientBalances.size() > 0) {
-            for (PatientResponsibilityDTO patientResponsibilityDto : patientBalances) {
-                if (patientResponsibilityDto.getBalanceType().equalsIgnoreCase("Copay")) {
-                    return patientResponsibilityDto.getTotal();
-                }
-            }
-        }
-        return total;
-    }*/
+    public List<LocationDTO> getLocations() {
+        return locations;
+    }
+
+    public void setLocations(List<LocationDTO> locations) {
+        this.locations = locations;
+    }
+
+    public List<String> getPageMessages() {
+        return pageMessages;
+    }
+
+    public void setPageMessages(List<String> pageMessages) {
+        this.pageMessages = pageMessages;
+    }
+
 }

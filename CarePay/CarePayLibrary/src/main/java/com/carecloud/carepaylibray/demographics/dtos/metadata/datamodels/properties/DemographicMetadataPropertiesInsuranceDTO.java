@@ -4,6 +4,9 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by lsoco_user on 10/24/2016.
  * Specific properties DTO for insurance.
@@ -12,25 +15,85 @@ import com.google.gson.annotations.SerializedName;
 public class DemographicMetadataPropertiesInsuranceDTO {
     @SerializedName("insurance_photos")
     @Expose
-    public MetadataEntityDTO insurancePhotos = new MetadataEntityDTO();
+    private MetadataEntityDTO insurancePhotos = new MetadataEntityDTO();
 
     @SerializedName("insurance_provider")
     @Expose
-    public MetadataEntityDTO insuranceProvider = new MetadataEntityDTO();
+    private MetadataEntityDTO insuranceProvider = new MetadataEntityDTO();
 
     @SerializedName("insurance_plan")
     @Expose
-    public MetadataEntityDTO insurancePlan = new MetadataEntityDTO();
+    private MetadataEntityDTO insurancePlan = new MetadataEntityDTO();
 
     @SerializedName("insurance_member_id")
     @Expose
-    public MetadataEntityDTO insuranceMemberId = new MetadataEntityDTO();
+    private MetadataEntityDTO insuranceMemberId = new MetadataEntityDTO();
 
     @SerializedName("insurance_group_id")
     @Expose
-    public MetadataEntityDTO insuranceGroupId = new MetadataEntityDTO();
+    private MetadataEntityDTO insuranceGroupId = new MetadataEntityDTO();
 
     @SerializedName("insurance_type")
     @Expose
-    public MetadataEntityDTO insuranceType = new MetadataEntityDTO();
+    private MetadataEntityDTO insuranceType = new MetadataEntityDTO();
+
+    @SerializedName("required")
+    @Expose
+    private List<MetadataEntityDTO> required = new ArrayList<>();
+
+    public MetadataEntityDTO getInsurancePhotos() {
+        return insurancePhotos;
+    }
+
+    public void setInsurancePhotos(MetadataEntityDTO insurancePhotos) {
+        this.insurancePhotos = insurancePhotos;
+    }
+
+    public MetadataEntityDTO getInsuranceProvider() {
+        return insuranceProvider;
+    }
+
+    public void setInsuranceProvider(MetadataEntityDTO insuranceProvider) {
+        this.insuranceProvider = insuranceProvider;
+    }
+
+    public MetadataEntityDTO getInsurancePlan() {
+        return insurancePlan;
+    }
+
+    public void setInsurancePlan(MetadataEntityDTO insurancePlan) {
+        this.insurancePlan = insurancePlan;
+    }
+
+    public MetadataEntityDTO getInsuranceMemberId() {
+        return insuranceMemberId;
+    }
+
+    public void setInsuranceMemberId(MetadataEntityDTO insuranceMemberId) {
+        this.insuranceMemberId = insuranceMemberId;
+    }
+
+    public MetadataEntityDTO getInsuranceGroupId() {
+        return insuranceGroupId;
+    }
+
+    public void setInsuranceGroupId(MetadataEntityDTO insuranceGroupId) {
+        this.insuranceGroupId = insuranceGroupId;
+    }
+
+    public MetadataEntityDTO getInsuranceType() {
+        return insuranceType;
+    }
+
+    public void setInsuranceType(MetadataEntityDTO insuranceType) {
+        this.insuranceType = insuranceType;
+    }
+
+    public List<MetadataEntityDTO> getRequired() {
+        return required;
+    }
+
+    public void setRequired(List<MetadataEntityDTO> required) {
+        this.required = required;
+    }
 }

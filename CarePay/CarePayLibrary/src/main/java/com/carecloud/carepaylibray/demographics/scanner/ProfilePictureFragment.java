@@ -1,6 +1,5 @@
 package com.carecloud.carepaylibray.demographics.scanner;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -14,23 +13,24 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
-import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 
 /**
@@ -40,16 +40,14 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediu
 public class ProfilePictureFragment extends DocumentScannerFragment {
 
     private static String LOG_TAG = ProfilePictureFragment.class.getSimpleName();
-    private ImageCaptureHelper imageCaptureHelper;
     private String recaptureCaption;
-    private DemographicPersDetailsPayloadDTO demographicPersDetailsPayloadDTO;
-    private DemographicLabelsDTO globalLabelsDTO;
+    private PatientModel demographicPersDetailsPayloadDTO;
+    private CircleImageTransform circleImageTransform = new CircleImageTransform();
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(getLayoutRes(), container, false);
-
         populateViewsFromModel(view);
 
         return view;
@@ -65,43 +63,38 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
     }
 
     @Override
-    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner, Bitmap bitmap) {
+    public void onCapturedSuccess(Bitmap bitmap) {
         // save the image as base64 in the model
         if (bitmap != null) {
-            String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
+            String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
             demographicPersDetailsPayloadDTO.setProfilePhoto(imageAsBase64);
+
+            bitmap = circleImageTransform.transform(bitmap);
+            imageFront.setImageBitmap(bitmap);
+
+            ((Button) findViewById(R.id.changeCurrentPhotoButton)).setText(recaptureCaption);
         }
     }
 
     @Override
     public void populateViewsFromModel(View view) {
-        // set label for capture button
-        Activity activity = getActivity();
-        DemographicLabelsDTO labelsMetaDTO = null;
-        if (activity instanceof DemographicsLabelsHolder) {
-            labelsMetaDTO = ((DemographicsLabelsHolder) getActivity()).getLabelsDTO();
-        }
-
-        if (null == labelsMetaDTO) {
-            labelsMetaDTO = new DemographicLabelsDTO();
-        }
-
-        recaptureCaption = labelsMetaDTO.getDemographicsProfileReCaptureCaption();
-
-        ImageView imageViewDetailsImage = (ImageView) view.findViewById(R.id.DetailsProfileImage);
-        imageCaptureHelper = new ImageCaptureHelper(getActivity(), imageViewDetailsImage, globalLabelsDTO);
+        recaptureCaption = Label.getLabel("demographics_take_another_picture_button_title");
 
         Button buttonChangeCurrentPhoto = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
         buttonChangeCurrentPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage(imageCaptureHelper, ImageCaptureHelper.CameraType.DEFAULT_CAMERA);
+                selectImage(imageFront, true, ImageCaptureHelper.CameraType.DEFAULT_CAMERA);
             }
         });
-        String captureCaption = labelsMetaDTO.getDemographicsProfileCaptureCaption();
-        buttonChangeCurrentPhoto.setText(captureCaption);
 
-        demographicPersDetailsPayloadDTO = DtoHelper.getConvertedDTO(DemographicPersDetailsPayloadDTO.class, getArguments());
+        boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
+        if(isCloverDevice){
+            buttonChangeCurrentPhoto.setVisibility(View.INVISIBLE);
+        }
+
+        imageFront = (ImageView) view.findViewById(R.id.DetailsProfileImage);
+        demographicPersDetailsPayloadDTO = DtoHelper.getConvertedDTO(PatientModel.class, getArguments());
 
         if (demographicPersDetailsPayloadDTO != null) {
             String profilePicURL = demographicPersDetailsPayloadDTO.getProfilePhoto();
@@ -109,24 +102,31 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
                 try {
                     URL url = new URL(profilePicURL);
                     Log.v(LOG_TAG, "valid url: " + url.toString());
+                    Callback callback = new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError() {
+                            loadFrontPlaceHolder();
+                        }
+                    };
+
                     Picasso.with(getContext())
                             .load(profilePicURL)
-                            .transform(new CircleImageTransform())
-                            .resize(imageCaptureHelper.getImgWidth(), imageCaptureHelper.getImgWidth())
-                            .into(imageCaptureHelper.getImageViewTarget());
+                            .transform(circleImageTransform)
+                            .into(imageFront, callback);
                     // successfully load a profile image
                     buttonChangeCurrentPhoto.setText(recaptureCaption);
-                    return;
                 } catch (MalformedURLException e) {
                     // just log
                     Log.d(LOG_TAG, "invalid url: " + profilePicURL);
+                    loadFrontPlaceHolder();
                 }
             }
         }
-        // if no image to load, simply load the placeholder
-        imageCaptureHelper.getImageViewTarget()
-                .setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                        R.drawable.icn_placeholder_user_profile_png));
     }
 
     @Override
@@ -150,8 +150,8 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
         return ImageCaptureHelper.ImageShape.CIRCULAR;
     }
 
-    public void setGlobalLabelsDTO(DemographicLabelsDTO globalLabelsDTO) {
-        this.globalLabelsDTO = globalLabelsDTO;
+    public PatientModel getDemographicPersDetailsPayloadDTO() {
+        return demographicPersDetailsPayloadDTO;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.carecloud.carepaylibray.payments.models;
 
-import com.carecloud.carepaylibray.appointments.models.AppointmentChargeDTO;
+import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -14,24 +14,24 @@ import java.util.List;
 public class PaymentsPatientChargesDTO {
     @SerializedName("metadata")
     @Expose
-    private PaymentPayloadMetaDataDTO metadata = new PaymentPayloadMetaDataDTO();
+    private PendingBalanceMetadataDTO metadata = new PendingBalanceMetadataDTO();
     @SerializedName("payload")
     @Expose
-    private List<AppointmentChargeDTO> charges = new ArrayList<>();
+    private List<BalanceItemDTO> charges = new ArrayList<>();
 
-    public List<AppointmentChargeDTO> getCharges() {
+    public List<BalanceItemDTO> getCharges() {
         return charges;
     }
 
-    public void setCharges(List<AppointmentChargeDTO> charges) {
+    public void setCharges(List<BalanceItemDTO> charges) {
         this.charges = charges;
     }
 
-    public PaymentPayloadMetaDataDTO getMetadata() {
+    public PendingBalanceMetadataDTO getMetadata() {
         return metadata;
     }
 
-    public void setMetadata(PaymentPayloadMetaDataDTO metadata) {
+    public void setMetadata(PendingBalanceMetadataDTO metadata) {
         this.metadata = metadata;
     }
 

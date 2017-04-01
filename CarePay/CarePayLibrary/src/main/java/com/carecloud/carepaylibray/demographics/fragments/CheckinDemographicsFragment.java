@@ -34,22 +34,21 @@ import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterface;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
-import com.carecloud.carepaylibray.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
@@ -58,7 +57,14 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.gson.Gson;
 import com.smartystreets.api.us_zipcode.City;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -67,12 +73,6 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtrabo
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 public class CheckinDemographicsFragment extends DocumentScannerFragment implements View.OnClickListener {
@@ -86,14 +86,12 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
     private DemographicMetadataEntityAddressDTO addressMetaDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
-    private DemographicLabelsDTO globalLabelsMetaDTO;
-    private DemographicPersDetailsPayloadDTO demographicPersDetailsPayloadDTO;
+    private PatientModel demographicPersDetailsPayloadDTO;
     private DemographicAddressPayloadDTO demographicAddressPayloadDTO;
     private DemographicIdDocPayloadDTO demographicIdDocPayloadDTO;
     private DemographicDTO demographicDTO;
 
     //profile image
-    private ImageView profileImageview;
     private Button updateProfileImageButton;
 
     private EditText phoneNumberEditText;
@@ -115,12 +113,12 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     private TextInputLayout address2Label;
     private TextInputLayout cityLabel;
     private TextView stateLabel;
-    private TextInputLayout zipcodeLabel;
-    private TextInputLayout doblabel;
-    private LinearLayout rootview;
+    private TextInputLayout zipCodeLabel;
+    private TextInputLayout dobLabel;
+    private LinearLayout rootView;
 
     private TextView addressSectionTextView;
-    private TextView peronalInfoSectionTextview;
+    private TextView personalInfoSectionTextView;
     private TextView demographicSectionTextView;
     private TextView raceDataTextView;
     private TextView raceLabelTextView;
@@ -128,10 +126,10 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     private TextView ethnicityLabelTextView;
     private TextView selectGender;
     private TextView genderLabelTextView;
-    private TextView dateformatLabelTextView;
-    private TextView optinalLabelTextView;
+    private TextView dateFormatLabelTextView;
+    private TextView optimalLabelTextView;
     private TextView reviewTitleTextView;
-    private TextView reviewSubtitileTextView;
+    private TextView reviewSubtitleTextView;
 
     private boolean isFirstNameEmpty;
     private boolean isLastNameEmpty;
@@ -174,13 +172,9 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
         isPractice = getApplicationMode().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
         View view = inflater.inflate(R.layout.fragment_review_demographic, container, false);
-
-
-        rootview = (LinearLayout) view.findViewById(R.id.demographicsReviewRootLayout);
-
+        rootView = (LinearLayout) view.findViewById(R.id.demographicsReviewRootLayout);
         initializeDemographicsDTO();
 
         initialiseUIFields(view);
@@ -192,7 +186,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             Toolbar toolbar = (Toolbar) view.findViewById(R.id.demographics_review_toolbar);
             TextView title = (TextView) toolbar.findViewById(R.id.demographics_review_toolbar_title);
             SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
-            title.setText(globalLabelsMetaDTO.getDemographicsReviewToolbarTitle());
+            title.setText(Label.getLabel("demographics_review_toolbar_title"));
             toolbar.setTitle("");
             toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -206,16 +200,15 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
         formatEditText();
         checkIfEnableButton();
-        ((ScrollView)view.findViewById(R.id.adddemoScrollview)).smoothScrollTo(0,0);
+        ((ScrollView) view.findViewById(R.id.adddemoScrollview)).smoothScrollTo(0, 0);
         return view;
     }
 
 
     private void initializeDemographicsDTO() {
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
-        globalLabelsMetaDTO = demographicDTO.getMetadata().getLabels();
-        addressMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.address;
-        persDetailsMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.personalDetails;
+        addressMetaDTO = demographicDTO.getMetadata().getDataModels().getDemographic().getAddress();
+        persDetailsMetaDTO = demographicDTO.getMetadata().getDataModels().getDemographic().getPersonalDetails();
 
         if (demographicDTO.getPayload().getDemographics() != null) {
             demographicPersDetailsPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
@@ -226,30 +219,29 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             }
         }
 
-        if(demographicIdDocPayloadDTO == null){
+        if (demographicIdDocPayloadDTO == null) {
             demographicIdDocPayloadDTO = new DemographicIdDocPayloadDTO();
         }
     }
 
     private void initialiseUIFields(View view) {
 
-        profileImageview = (ImageView) view.findViewById(R.id.patientPicImageView);
-        imageCaptureHelper = new ImageCaptureHelper(getActivity(), profileImageview, globalLabelsMetaDTO);
+        imageFront = (ImageView) view.findViewById(R.id.patientPicImageView);
         updateProfileImageButton = (Button) view.findViewById(R.id.updateProfileImageButton);
 
 
-        if (HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE)){
+        if (HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE)) {
             updateProfileImageButton.setVisibility(View.GONE);
         }
         reviewTitleTextView = (TextView) view.findViewById(R.id.reviewtitle);
-        reviewSubtitileTextView = (TextView) view.findViewById(R.id.reviewSubtitle);
-        peronalInfoSectionTextview = (TextView) view.findViewById(R.id.reviewdemogrPersonalInfoLabel);
+        reviewSubtitleTextView = (TextView) view.findViewById(R.id.reviewSubtitle);
+        personalInfoSectionTextView = (TextView) view.findViewById(R.id.reviewdemogrPersonalInfoLabel);
         demographicSectionTextView = (TextView) view.findViewById(R.id.demographicsSectionLabel);
         addressSectionTextView = (TextView) view.findViewById(R.id.demographicsAddressSectionLabel);
 
-        optinalLabelTextView = (TextView) view.findViewById(R.id.reviewdemogrMiddleNameOptionalLabel);
+        optimalLabelTextView = (TextView) view.findViewById(R.id.reviewdemogrMiddleNameOptionalLabel);
 
-        dateformatLabelTextView = (TextView) view.findViewById(R.id.dobformatlabel);
+        dateFormatLabelTextView = (TextView) view.findViewById(R.id.dobformatlabel);
         phoneNumberEditText = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
 
         firstNameText = (EditText) view.findViewById(R.id.reviewdemogrFirstNameEdit);
@@ -278,11 +270,11 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         firstNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrFirstNameTextInput);
         middleNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrMiddleNameTextInputLayout);
         lastNameLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrLastNameTextInput);
-        doblabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
+        dobLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
         phoneNumberLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
         address1Label = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
         address2Label = (TextInputLayout) view.findViewById(R.id.address2TextInputLayout);
-        zipcodeLabel = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
+        zipCodeLabel = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
         cityLabel = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
         stateLabel = (TextView) view.findViewById(R.id.stateTextInputLayout);
         initializeLabels();
@@ -291,7 +283,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     }
 
 
-    private String[] getOptionsFrom(List<MetadataOptionDTO> options){
+    private String[] getOptionsFrom(List<MetadataOptionDTO> options) {
         List<String> strOptions = new ArrayList<>();
         for (MetadataOptionDTO o : options) {
             strOptions.add(o.getLabel());
@@ -301,53 +293,53 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
     private void initializeOptionsArray() {
 
-        List<MetadataOptionDTO> options = persDetailsMetaDTO.properties.primaryRace.options;
+        List<MetadataOptionDTO> options = persDetailsMetaDTO.getProperties().getPrimaryRace().getOptions();
         race = getOptionsFrom(options);
 
-        options = persDetailsMetaDTO.properties.ethnicity.options;
+        options = persDetailsMetaDTO.getProperties().getEthnicity().getOptions();
         ethnicity = getOptionsFrom(options);
 
-        options = persDetailsMetaDTO.properties.gender.options;
+        options = persDetailsMetaDTO.getProperties().getGender().getOptions();
         gender = getOptionsFrom(options);
 
     }
 
     private void initializeLabels() {
-        firstNameText.setHint(persDetailsMetaDTO.properties.firstName.getLabel());
-        lastNameText.setHint(persDetailsMetaDTO.properties.lastName.getLabel());
-        middleNameText.setHint(persDetailsMetaDTO.properties.middleName.getLabel());
-        updateProfileImageButton.setText(globalLabelsMetaDTO.getDemographicsProfileReCaptureCaption().toUpperCase());
-        reviewTitleTextView.setText(globalLabelsMetaDTO.getDemographicsReviewScreenTitle());
-        reviewSubtitileTextView.setText(globalLabelsMetaDTO.getDemographicsReviewScreenSubtitle());
-        peronalInfoSectionTextview.setText(globalLabelsMetaDTO.getDemographicsReviewPeronsonalinfoSection().toUpperCase());
-        demographicSectionTextView.setText(globalLabelsMetaDTO.getDemographicSectionTitle().toUpperCase());
-        addressSectionTextView.setText(globalLabelsMetaDTO.getDemographicsAddressSection().toUpperCase());
-        optinalLabelTextView.setText(globalLabelsMetaDTO.getDemographicsDetailsOptionalHint());
+        firstNameText.setHint(persDetailsMetaDTO.getProperties().getFirstName().getLabel());
+        lastNameText.setHint(persDetailsMetaDTO.getProperties().getLastName().getLabel());
+        middleNameText.setHint(persDetailsMetaDTO.getProperties().getMiddleName().getLabel());
+        updateProfileImageButton.setText(Label.getLabel("demographics_details_recapture_picture_caption").toUpperCase());
+        reviewTitleTextView.setText(Label.getLabel("demographics_review_screen_title"));
+        reviewSubtitleTextView.setText(Label.getLabel("demographics_review_screen_subtitle"));
+//        personalInfoSectionTextView.setText(Label.getLabel("demographics_review_peronsonalinfo_section").toUpperCase());
+        demographicSectionTextView.setText(Label.getLabel("demographics_section").toUpperCase());
+//        addressSectionTextView.setText(Label.getLabel("demographics_address_section").toUpperCase());
+        optimalLabelTextView.setText(Label.getLabel("demographics_details_optional_hint"));
 
 
-        dateformatLabelTextView.setText(globalLabelsMetaDTO.getDemographicsDetailsDobHint());
-        phoneNumberEditText.setHint(addressMetaDTO.properties.phone.getLabel());
-        dobEditText.setHint(persDetailsMetaDTO.properties.dateOfBirth.getLabel());
-        address1EditText.setHint(addressMetaDTO.properties.address1.getLabel());
-        address2EditText.setHint(addressMetaDTO.properties.address2.getLabel());
-        cityEditText.setHint(addressMetaDTO.properties.city.getLabel());
-        zipCodeEditText.setHint(addressMetaDTO.properties.zipcode.getLabel());
+        dateFormatLabelTextView.setText(Label.getLabel("demographics_details_dob_hint"));
+        phoneNumberEditText.setHint(addressMetaDTO.getProperties().getPhone().getLabel());
+        dobEditText.setHint(persDetailsMetaDTO.getProperties().getDateOfBirth().getLabel());
+        address1EditText.setHint(addressMetaDTO.getProperties().getAddress1().getLabel());
+        address2EditText.setHint(addressMetaDTO.getProperties().getAddress2().getLabel());
+        cityEditText.setHint(addressMetaDTO.getProperties().getCity().getLabel());
+        zipCodeEditText.setHint(addressMetaDTO.getProperties().getZipcode().getLabel());
 
-        selectGender.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
+        selectGender.setText(Label.getLabel("demographics_choose"));
         selectGender.setOnClickListener(this);
 
         ethnicityDataTextView.setOnClickListener(this);
-        ethnicityDataTextView.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
-        ethnicityLabelTextView.setText(persDetailsMetaDTO.properties.ethnicity.getLabel());
+        ethnicityDataTextView.setText(Label.getLabel("demographics_choose"));
+        ethnicityLabelTextView.setText(persDetailsMetaDTO.getProperties().getEthnicity().getLabel());
 
-        genderLabelTextView.setText(persDetailsMetaDTO.properties.gender.getLabel());
+        genderLabelTextView.setText(persDetailsMetaDTO.getProperties().getGender().getLabel());
 
-        raceDataTextView.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
+        raceDataTextView.setText(Label.getLabel("demographics_choose"));
         raceDataTextView.setOnClickListener(this);
 
-        raceLabelTextView.setText(persDetailsMetaDTO.properties.primaryRace.getLabel());
+        raceLabelTextView.setText(persDetailsMetaDTO.getProperties().getPrimaryRace().getLabel());
         buttonConfirmData.setOnClickListener(this);
-        buttonConfirmData.setText(globalLabelsMetaDTO.getDemographicsReviewCorrectButton().toUpperCase());
+        buttonConfirmData.setText(Label.getLabel("demographics_review_correct_button").toUpperCase());
 
         enableButton(isAllFieldsValid());
 
@@ -373,7 +365,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                     firstNameLabel.setError(null);
                     firstNameLabel.setErrorEnabled(false);
                 } else {
-                    final String firstNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.firstName.validations.get(0).getErrorMessage();
+                    final String firstNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getFirstName().getValidations().get(0).getErrorMessage();
                     firstNameLabel.setError(firstNameError);
                     firstNameLabel.setErrorEnabled(true);
                 }
@@ -405,8 +397,8 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             public void afterTextChanged(Editable editable) {
                 String dob = dobEditText.getText().toString();
                 if (!StringUtil.isNullOrEmpty(dob)) {
-                    doblabel.setErrorEnabled(false);
-                    doblabel.setError(null);
+                    dobLabel.setErrorEnabled(false);
+                    dobLabel.setError(null);
                 }
                 StringUtil.autoFormatDateOfBirth(editable, prevLen);
                 checkIfEnableButton();
@@ -454,7 +446,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                     phoneNumberLabel.setError(null);
                     phoneNumberLabel.setErrorEnabled(false);
                 } else {
-                    final String phoneNumberError = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.phone.validations.get(0).getErrorMessage();
+                    final String phoneNumberError = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.getProperties().getPhone().getValidations().get(0).getErrorMessage();
                     phoneNumberLabel.setError(phoneNumberError);
                     phoneNumberLabel.setErrorEnabled(true);
                 }
@@ -481,7 +473,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                     lastNameLabel.setError(null);
                     lastNameLabel.setErrorEnabled(false);
                 } else {
-                    final String lastNameError = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.lastName.validations.get(0).getErrorMessage();
+                    final String lastNameError = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getLastName().getValidations().get(0).getErrorMessage();
                     lastNameLabel.setError(lastNameError);
                     lastNameLabel.setErrorEnabled(true);
                 }
@@ -507,7 +499,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                     address1Label.setError(null);
                     address1Label.setErrorEnabled(false);
                 } else {
-                    final String lastNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.address1.validations.get(0).getErrorMessage();
+                    final String lastNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.getProperties().getAddress1().getValidations().get(0).getErrorMessage();
                     address1Label.setError(lastNameError);
                     address1Label.setErrorEnabled(true);
                 }
@@ -533,12 +525,12 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                 String zip = zipCodeEditText.getText().toString();
                 isZipEmpty = StringUtil.isNullOrEmpty(zip);
                 if (!isZipEmpty) {
-                    zipcodeLabel.setError(null);
-                    zipcodeLabel.setErrorEnabled(false);
+                    zipCodeLabel.setError(null);
+                    zipCodeLabel.setErrorEnabled(false);
                 } else {
-                    final String zipcodeError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.zipcode.validations.get(0).getErrorMessage();
-                    zipcodeLabel.setError(zipcodeError);
-                    zipcodeLabel.setErrorEnabled(true);
+                    final String zipcodeError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.getProperties().getZipcode().getValidations().get(0).getErrorMessage();
+                    zipCodeLabel.setError(zipcodeError);
+                    zipCodeLabel.setErrorEnabled(true);
                 }
 
                 StringUtil.autoFormatZipcode(editable, prevLen);
@@ -564,7 +556,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
                     cityLabel.setError(null);
                     cityLabel.setErrorEnabled(false);
                 } else {
-                    final String lastNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.city.validations.get(0).getErrorMessage();
+                    final String lastNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.getProperties().getCity().getValidations().get(0).getErrorMessage();
                     cityLabel.setError(lastNameError);
                     cityLabel.setErrorEnabled(true);
                 }
@@ -577,7 +569,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         updateProfileImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage(imageCaptureHelper, ImageCaptureHelper.CameraType.DEFAULT_CAMERA);
+                selectImage(imageFront, true, ImageCaptureHelper.CameraType.DEFAULT_CAMERA);
             }
 
         });
@@ -590,20 +582,21 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         }
         // apply validate from backend
         return ValidationHelper.applyPatternValidationToWrappedEdit(zipCodeEditText,
-                zipcodeLabel,
-                addressMetaDTO.properties.zipcode,
+                zipCodeLabel,
+                addressMetaDTO.getProperties().getZipcode(),
                 null);
     }
 
     private boolean isPhoneNumberValid() {
-        final String phoneError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.phone.validations.get(0).getErrorMessage();
-        final String phoneValidation = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : ((String) addressMetaDTO.properties.phone.validations.get(0).value);
+        final String phoneError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.getProperties().getPhone().getValidations().get(0).getErrorMessage();
+        final String phoneValidation = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : ((String) addressMetaDTO.getProperties().getPhone().getValidations().get(0).value);
         if (!isPhoneEmpty) { // check validity only if non-empty
             String phone = phoneNumberEditText.getText().toString();
             if (!StringUtil.isNullOrEmpty(phone)
                     && !ValidationHelper.isValidString(phone.trim(), phoneValidation)) {
                 phoneNumberLabel.setErrorEnabled(true);
                 phoneNumberLabel.setError(phoneError);
+                phoneNumberEditText.requestFocus();
                 return false;
             }
             phoneNumberLabel.setError(null);
@@ -615,12 +608,12 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     }
 
     private boolean isDateOfBirthValid() {
-        final String errorMessage = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.dateOfBirth.validations.get(0).getErrorMessage();
+        final String errorMessage = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getDateOfBirth().getValidations().get(0).getErrorMessage();
         String dob = dobEditText.getText().toString();
         if (!StringUtil.isNullOrEmpty(dob)) {
             boolean isValid = DateUtil.isValidateStringDateOfBirth(dob);
-            doblabel.setErrorEnabled(!isValid);
-            doblabel.setError(isValid ? null : errorMessage);
+            dobLabel.setErrorEnabled(!isValid);
+            dobLabel.setError(isValid ? null : errorMessage);
             return isValid;
         }
         return true;
@@ -646,19 +639,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         return true;
     }
 
-    private boolean isAllFieldsValid() {
-
-        boolean isdobValid = DateUtil.isDateValid(dobEditText.getText().toString());
-        boolean isGenderValid = !globalLabelsMetaDTO.getDemographicsChooseLabel().equals(selectGender.getText().toString());
-        boolean isEthnicityValid = !globalLabelsMetaDTO.getDemographicsChooseLabel().equals(ethnicityDataTextView.getText().toString());
-        boolean isRaceValid = !globalLabelsMetaDTO.getDemographicsChooseLabel().equals(raceDataTextView.getText().toString());
-        boolean isStateValid = !globalLabelsMetaDTO.getDemographicsChooseLabel().equals(stateEditText.getText().toString());
-
-        return !isPhoneEmpty && !isZipEmpty && isdobValid && isRaceValid && isEthnicityValid && isGenderValid && !isAddressEmpty && !isFirstNameEmpty && !isLastNameEmpty && !isCityEmpty && isStateValid;
-
-    }
-
-    private void openNextFragment(){
+    private void openNextFragment() {
         Map<String, String> queries = new HashMap<>();
         queries.put("practice_mgmt", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
         queries.put("practice_id", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeId());
@@ -685,61 +666,48 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             buttonConfirmData.setEnabled(true);
-            ((CheckinDemographicsInterface)getActivity()).navigateToConsentFlow(workflowDTO);
+            ((CheckinDemographicsInterface) getActivity()).navigateToConsentFlow(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             buttonConfirmData.setEnabled(true);
-            SystemUtil.showDefaultFailureDialog(getActivity());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
     @Override
     public void onClick(View view) {
-        String cancelLabel = globalLabelsMetaDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsMetaDTO.getDemographicsCancelLabel();
+        String cancelLabel = Label.getLabel("demographics_cancel_label");
         if (view == buttonConfirmData) {
-            //   openNewFragment();
             if (isAllFieldsValid() && checkFormatedFields()) {
                 buttonConfirmData.setEnabled(false);
-                // update the model
                 updateModels();
-
-                // post the changes
-//                postUpdates();
-
-                // next
                 openNextFragment();
-
-                // hide the keyboard
                 SystemUtil.hideSoftKeyboard(getActivity());
             } else {
-
-                showErrorNotification(globalLabelsMetaDTO.getDemographicsMissingInformation());
-//                CustomPopupNotification popup = new CustomPopupNotification(getActivity(), getActivity().getWindow().getCurrentFocus(),
-//                        globalLabelsMetaDTO.getDemographicsMissingInformation(), CustomPopupNotification.TYPE_ERROR_NOTIFICATION);
-//                    popup.showPopWindow();
+                showErrorNotification(Label.getLabel("demographics_missing_information"));
             }
         } else if (view == selectGender) {
             selectedDataArray = 1;
-            final String title = globalLabelsMetaDTO.getDemographicsTitleSelectGender();
+            final String title = Label.getLabel("demographics_documents_title_select_gender");
             showAlertDialogWithListview(gender, title, cancelLabel);
 
         } else if (view == raceDataTextView) {
             selectedDataArray = 2;
-            final String title = globalLabelsMetaDTO.getDemographicsTitleSelectRace();
+            final String title = Label.getLabel("demographics_documents_title_select_race");
             showAlertDialogWithListview(race, title, cancelLabel);
 
         } else if (view == ethnicityDataTextView) {
             selectedDataArray = 3;
-            final String title = globalLabelsMetaDTO.getDemographicsTitleSelectEthnicity();
+            final String title = Label.getLabel("demographics_documents_title_select_ethnicity");
             showAlertDialogWithListview(ethnicity, title, cancelLabel);
 
         } else if (view == stateEditText) {
             selectedDataArray = 4;
-            final String title = globalLabelsMetaDTO.getDemographicsTitleSelectState();
+            final String title = Label.getLabel("demographics_documents_title_select_state");
             showAlertDialogWithListview(AddressUtil.states, title, cancelLabel);
 
         }
@@ -797,13 +765,14 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
     /**
      * update demographic DTO
+     *
      * @return main demographic DTO
      */
     public DemographicDTO updateModels() {
 
         // save the personal details
         if (demographicPersDetailsPayloadDTO == null) {
-            demographicPersDetailsPayloadDTO = new DemographicPersDetailsPayloadDTO();
+            demographicPersDetailsPayloadDTO = new PatientModel();
         }
         String firstName = firstNameText.getText().toString();
         if (!StringUtil.isNullOrEmpty(firstName)) {
@@ -838,14 +807,16 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         }
         demographicDTO.getPayload().getDemographics().getPayload().setPersonalDetails(demographicPersDetailsPayloadDTO);
 
-        // save id doc
-        if (demographicIdDocPayloadDTO == null) {
-            demographicIdDocPayloadDTO = new DemographicIdDocPayloadDTO();
-        }
+//        // save id doc
+//        if (demographicIdDocPayloadDTO == null) {
+//            demographicIdDocPayloadDTO = new DemographicIdDocPayloadDTO();
+//        }
 
-        List<DemographicIdDocPayloadDTO> ids = new ArrayList<>();
-        ids.add(demographicIdDocPayloadDTO);
-        demographicDTO.getPayload().getDemographics().getPayload().setIdDocuments(ids);
+        if (demographicIdDocPayloadDTO != null && demographicIdDocPayloadDTO.getIdType() != null) {
+            List<DemographicIdDocPayloadDTO> ids = new ArrayList<>();
+            ids.add(demographicIdDocPayloadDTO);
+            demographicDTO.getPayload().getDemographics().getPayload().setIdDocuments(ids);
+        }
 
         // save address
         if (demographicAddressPayloadDTO == null) {
@@ -883,7 +854,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         activityCallback.onDemographicDtoChanged(demographicDTO);
 
 //        if (bitmap != null) {
-//            String imageAsBase64 = SystemUtil.encodeToBase64(bitmap, Bitmap.CompressFormat.JPEG, 90);
+//            String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
 //            demographicPersDetailsPayloadDTO.setProfilePhoto(imageAsBase64);
 //        }
         return demographicDTO;
@@ -891,42 +862,42 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
     private void setEditTexts(View view) {
 
-        firstNameLabel.setTag(persDetailsMetaDTO.properties.firstName.getLabel());
+        firstNameLabel.setTag(persDetailsMetaDTO.getProperties().getFirstName().getLabel());
         firstNameText.setTag(firstNameLabel);
 
 
-        middleNameLabel.setTag(persDetailsMetaDTO.properties.middleName.getLabel());
+        middleNameLabel.setTag(persDetailsMetaDTO.getProperties().getMiddleName().getLabel());
         middleNameText.setTag(middleNameLabel);
 
 
-        lastNameLabel.setTag(persDetailsMetaDTO.properties.lastName.getLabel());
+        lastNameLabel.setTag(persDetailsMetaDTO.getProperties().getLastName().getLabel());
         lastNameText.setTag(lastNameLabel);
 
 
-        doblabel.setTag(persDetailsMetaDTO.properties.dateOfBirth.getLabel());
-        dobEditText.setTag(doblabel);
+        dobLabel.setTag(persDetailsMetaDTO.getProperties().getDateOfBirth().getLabel());
+        dobEditText.setTag(dobLabel);
 
 
-        phoneNumberLabel.setTag(addressMetaDTO.properties.phone.getLabel());
+        phoneNumberLabel.setTag(addressMetaDTO.getProperties().getPhone().getLabel());
         phoneNumberEditText.setTag(phoneNumberLabel);
 
 
-        address1Label.setTag(addressMetaDTO.properties.address1.getLabel());
+        address1Label.setTag(addressMetaDTO.getProperties().getAddress1().getLabel());
         address1EditText.setTag(address1Label);
 
 
-        address2Label.setTag(addressMetaDTO.properties.address2.getLabel());
+        address2Label.setTag(addressMetaDTO.getProperties().getAddress2().getLabel());
         address2EditText.setTag(address2Label);
 
 
-        zipcodeLabel.setTag(addressMetaDTO.properties.zipcode.getLabel());
-        zipCodeEditText.setTag(zipcodeLabel);
+        zipCodeLabel.setTag(addressMetaDTO.getProperties().getZipcode().getLabel());
+        zipCodeEditText.setTag(zipCodeLabel);
 
 
-        cityLabel.setTag(addressMetaDTO.properties.city.getLabel());
+        cityLabel.setTag(addressMetaDTO.getProperties().getCity().getLabel());
         cityEditText.setTag(cityLabel);
 
-        stateLabel.setText(addressMetaDTO.properties.state.getLabel().toUpperCase());
+        stateLabel.setText(addressMetaDTO.getProperties().getState().getLabel().toUpperCase());
 
 
         setChangeFocusListeners();
@@ -1030,15 +1001,26 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     }
 
     private void initViewFromModels() {
-//        activityCallback. ();
-//        activityCallback.initializeInsurancesFragment();
+        String chooseLabel = Label.getLabel("demographics_choose");
         if (demographicPersDetailsPayloadDTO != null) {
             String imageUrl = demographicPersDetailsPayloadDTO.getProfilePhoto();
             if (!StringUtil.isNullOrEmpty(imageUrl)) {
+                Callback callback = new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+                        loadFrontPlaceHolder();
+                    }
+                };
+
                 Picasso.with(getActivity()).load(imageUrl).transform(
-                        new CircleImageTransform()).fit().into(this.profileImageview);
-            }else{
-                profileImageview.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.icn_placeholder_user_profile_png));
+                        new CircleImageTransform()).fit().into(imageFront, callback);
+            } else {
+                loadFrontPlaceHolder();
             }
 
             //Personal Details
@@ -1074,7 +1056,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             if (SystemUtil.isNotEmptyString(getGender)) {
                 selectGender.setText(getGender);
             } else {
-                selectGender.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
+                selectGender.setText(chooseLabel);
 
             }
 
@@ -1082,13 +1064,13 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             if (SystemUtil.isNotEmptyString(getRace)) {
                 raceDataTextView.setText(getRace);
             } else {
-                raceDataTextView.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
+                raceDataTextView.setText(chooseLabel);
             }
             String getethnicity = demographicPersDetailsPayloadDTO.getEthnicity();
             if (SystemUtil.isNotEmptyString(getethnicity)) {
                 ethnicityDataTextView.setText(getethnicity);
             } else {
-                ethnicityDataTextView.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
+                ethnicityDataTextView.setText(chooseLabel);
             }
 
         } else {
@@ -1120,7 +1102,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             if (SystemUtil.isNotEmptyString(state) || !stateEditText.getText().toString().isEmpty()) {
                 stateEditText.setText(state);
             } else {
-                stateEditText.setText(globalLabelsMetaDTO.getDemographicsChooseLabel());
+                stateEditText.setText(chooseLabel);
             }
 
 
@@ -1141,14 +1123,105 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             Log.v(LOG_TAG, "Demographic adress is empty ");
         }
 
-        rootview.requestFocus();
+        rootView.requestFocus();
         hideSoftKeyboard(getActivity());
+        isAllFieldsValid();
+    }
 
+    private boolean isAllFieldsValid() {
+        boolean allFieldsValid = true;
+        if (!StringUtil.isNullOrEmpty(firstNameText.getText().toString())) {
+            firstNameLabel.setError(null);
+            firstNameLabel.setErrorEnabled(false);
+        } else {
+            final String firstNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getFirstName().getValidations().get(0).getErrorMessage();
+            firstNameLabel.setError(firstNameError);
+            firstNameLabel.setErrorEnabled(true);
+            firstNameText.requestFocus();
+            allFieldsValid = false;
+        }
+
+        if (!StringUtil.isNullOrEmpty(lastNameText.getText().toString())) {
+            lastNameLabel.setError(null);
+            lastNameLabel.setErrorEnabled(false);
+        } else {
+            final String lastNameError = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getLastName().getValidations().get(0).getErrorMessage();
+            lastNameLabel.setError(lastNameError);
+            lastNameLabel.setErrorEnabled(true);
+            lastNameText.requestFocus();
+            allFieldsValid = false;
+        }
+
+        if (!isDateOfBirthValid()) {
+            allFieldsValid = false;
+        }
+
+        if (!isPhoneNumberValid()) {
+            allFieldsValid = false;
+        }
+        String chooseLabel = Label.getLabel("demographics_choose");
+        if (chooseLabel.equals(selectGender.getText().toString())) {
+            allFieldsValid = false;
+        }
+
+        if (chooseLabel.equals(ethnicityDataTextView.getText().toString())) {
+            allFieldsValid = false;
+        }
+
+        if (chooseLabel.equals(raceDataTextView.getText().toString())) {
+            allFieldsValid = false;
+        }
+
+        if (demographicDTO.getMetadata().getDataModels().getDemographic().getIdentityDocuments().properties.items.identityDocument.properties.required.size() > 0 &&
+                demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(0).getIdDocPhothos().get(0) == null) {
+            allFieldsValid = false;
+        }
+
+        if (demographicDTO.getMetadata().getDataModels().getDemographic().getInsurances().getProperties().getItems().getInsurance().getProperties().getRequired().size() > 0 &&
+                demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(0).getInsurancePhotos().get(0) == null) {
+            allFieldsValid = false;
+        }
+
+        if (!StringUtil.isNullOrEmpty(address1EditText.getText().toString())) {
+            address1Label.setError(null);
+            address1Label.setErrorEnabled(false);
+        } else {
+            final String lastNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.getProperties().getAddress1().getValidations().get(0).getErrorMessage();
+            address1Label.setError(lastNameError);
+            address1Label.setErrorEnabled(true);
+            address1EditText.requestFocus();
+            allFieldsValid = false;
+        }
+
+        if (!StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString())) {
+            zipCodeLabel.setError(null);
+            zipCodeLabel.setErrorEnabled(false);
+        } else {
+            final String zipcodeError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.getProperties().getZipcode().getValidations().get(0).getErrorMessage();
+            zipCodeLabel.setError(zipcodeError);
+            zipCodeLabel.setErrorEnabled(true);
+            zipCodeEditText.requestFocus();
+            allFieldsValid = false;
+        }
+
+        if (!StringUtil.isNullOrEmpty(cityEditText.getText().toString())) {
+            cityLabel.setError(null);
+            cityLabel.setErrorEnabled(false);
+        } else {
+            final String cityError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.getProperties().getCity().getValidations().get(0).getErrorMessage();
+            cityLabel.setError(cityError);
+            cityLabel.setErrorEnabled(true);
+            cityEditText.requestFocus();
+            allFieldsValid = false;
+        }
+        enableButton(allFieldsValid);
+
+        return allFieldsValid;
     }
 
     protected void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(), reviewTitleTextView);
-        setProximaNovaRegularTypeface(getActivity(), reviewSubtitileTextView);
+        setProximaNovaRegularTypeface(getActivity(), reviewSubtitleTextView);
 
         if (!StringUtil.isNullOrEmpty(firstNameText.getText().toString())) {
             setProximaNovaExtraboldTypefaceInput(getActivity(), firstNameLabel);
@@ -1170,9 +1243,9 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         }
 
         if (!StringUtil.isNullOrEmpty(dobEditText.getText().toString())) {
-            setProximaNovaExtraboldTypefaceInput(getActivity(), doblabel);
+            setProximaNovaExtraboldTypefaceInput(getActivity(), dobLabel);
         } else {
-            setProximaNovaRegularTypefaceLayout(getActivity(), doblabel);
+            setProximaNovaRegularTypefaceLayout(getActivity(), dobLabel);
         }
 
         if (!StringUtil.isNullOrEmpty(phoneNumberEditText.getText().toString())) {
@@ -1195,9 +1268,9 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         }
 
         if (!StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString())) {
-            setProximaNovaExtraboldTypefaceInput(getActivity(), zipcodeLabel);
+            setProximaNovaExtraboldTypefaceInput(getActivity(), zipCodeLabel);
         } else {
-            setProximaNovaRegularTypefaceLayout(getActivity(), zipcodeLabel);
+            setProximaNovaRegularTypefaceLayout(getActivity(), zipCodeLabel);
         }
 
         if (!StringUtil.isNullOrEmpty(cityEditText.getText().toString())) {
@@ -1208,7 +1281,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
         setProximaNovaExtraboldTypeface(getActivity(), stateLabel);
 
-        setProximaNovaSemiboldTypeface(getActivity(), peronalInfoSectionTextview);
         setProximaNovaSemiboldTypeface(getActivity(), demographicSectionTextView);
 
 
@@ -1217,9 +1289,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
         setProximaNovaRegularTypeface(getActivity(), genderLabelTextView);
         setProximaNovaSemiboldTypeface(getActivity(), selectGender);
-
-        setProximaNovaSemiboldTypeface(getActivity(), addressSectionTextView);
-
 
         setProximaNovaRegularTypeface(getActivity(), ethnicityLabelTextView);
         setProximaNovaSemiboldTypeface(getActivity(), ethnicityDataTextView);
@@ -1256,24 +1325,25 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         }.execute(zipcode);
     }
 
-    public void checkIfEnableButton(){
+    public void checkIfEnableButton() {
         checkIfDisableButton(false);
     }
 
-    public void checkIfDisableButton(boolean isDisabled){
+    public void checkIfDisableButton(boolean isDisabled) {
         enableButton(isAllFieldsValid() && !isDisabled);
     }
 
     /**
      * Enable or disable main button
+     *
      * @param isEnabled is Button enabled
      */
-    public void enableButton(boolean isEnabled){
-        if(isPractice){
-            buttonConfirmData.setBackground(ContextCompat.getDrawable(getContext(),isEnabled? R.drawable.bg_green_overlay  : R.drawable.bg_silver_overlay));
+    public void enableButton(boolean isEnabled) {
+        if (isPractice) {
+            buttonConfirmData.setBackground(ContextCompat.getDrawable(getContext(), isEnabled ? R.drawable.bg_green_overlay : R.drawable.bg_silver_overlay));
             buttonConfirmData.setPadding(20, 0, 20, 0);
         } else {
-            buttonConfirmData.setBackground(ContextCompat.getDrawable(getContext(),isEnabled? R.drawable.language_button_selector  : R.drawable.button_light_gray_bg));
+            buttonConfirmData.setBackground(ContextCompat.getDrawable(getContext(), isEnabled ? R.drawable.language_button_selector : R.drawable.button_light_gray_bg));
         }
         buttonConfirmData.setEnabled(isEnabled);
     }
@@ -1284,7 +1354,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     }
 
     @Override
-    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner, Bitmap bitmap) {
+    public void onCapturedSuccess(Bitmap bitmap) {
 
     }
 

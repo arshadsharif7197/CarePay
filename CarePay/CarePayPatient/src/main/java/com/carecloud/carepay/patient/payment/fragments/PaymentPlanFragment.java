@@ -530,7 +530,7 @@ public class PaymentPlanFragment extends BaseFragment {
     }
 
     private void addNewCreditCard() {
-        callback.showAddCard(0);
+        callback.showAddCard(0, paymentsModel);
 //        FragmentManager fragmentmanager = getActivity().getSupportFragmentManager();
 //        PatientAddNewCreditCardFragment fragment = (PatientAddNewCreditCardFragment)
 //                fragmentmanager.findFragmentByTag(PatientAddNewCreditCardFragment.class.getSimpleName());
@@ -587,7 +587,7 @@ public class PaymentPlanFragment extends BaseFragment {
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showDefaultFailureDialog(getActivity());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };

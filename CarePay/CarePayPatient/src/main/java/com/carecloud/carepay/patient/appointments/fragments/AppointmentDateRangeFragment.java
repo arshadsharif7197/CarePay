@@ -1,12 +1,12 @@
 package com.carecloud.carepay.patient.appointments.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +14,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.carecloud.carepay.patient.appointments.activities.AddAppointmentActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
@@ -49,13 +49,20 @@ public class AppointmentDateRangeFragment extends BaseFragment {
     private Date newStartDate;
     private Date newEndDate;
     private VisitTypeDTO selectedVisitTypeDTO;
-    private AppointmentResourcesDTO selectedResourcesDTO;
+    private AppointmentResourcesItemDTO selectedResourcesDTO;
     private AppointmentsResultModel resourcesToScheduleDTO;
-    private String addAppointmentPatientId;
+//    private String addAppointmentPatientId;
+
+    private AppointmentNavigationCallback callback;
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            callback = (AppointmentNavigationCallback) context;
+        } catch (ClassCastException cce) {
+            throw new ClassCastException("Atached context must implement AppointmentNavigationCallback");
+        }
     }
 
     @Override
@@ -65,9 +72,9 @@ public class AppointmentDateRangeFragment extends BaseFragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             previousStartDate = (Date)
-                bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE);
+                    bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE);
             previousEndDate = (Date)
-                bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE);
+                    bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE);
 
             Gson gson = new Gson();
             String appointmentInfoString;
@@ -75,12 +82,12 @@ public class AppointmentDateRangeFragment extends BaseFragment {
             selectedVisitTypeDTO = gson.fromJson(appointmentInfoString, VisitTypeDTO.class);
 
             appointmentInfoString = bundle.getString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE);
-            selectedResourcesDTO = gson.fromJson(appointmentInfoString, AppointmentResourcesDTO.class);
+            selectedResourcesDTO = gson.fromJson(appointmentInfoString, AppointmentResourcesItemDTO.class);
 
             appointmentInfoString = bundle.getString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE);
             resourcesToScheduleDTO = gson.fromJson(appointmentInfoString, AppointmentsResultModel.class);
 
-            addAppointmentPatientId = bundle.getString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID);
+//            addAppointmentPatientId = bundle.getString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID);
         }
     }
 
@@ -92,6 +99,7 @@ public class AppointmentDateRangeFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_appointment_date_range, container, false);
 
         /*inflate toolbar*/
+        hideDefaultActionBar();
         inflateToolbar(view);
         /*inflate other UI components like text view, button etc.*/
         inflateUIComponents(view);
@@ -115,7 +123,7 @@ public class AppointmentDateRangeFragment extends BaseFragment {
         Drawable closeIcon = ContextCompat.getDrawable(getActivity(),
                 R.drawable.icn_patient_mode_nav_close);
         toolbar.setNavigationIcon(closeIcon);
-        ((AddAppointmentActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         CustomGothamRoundedMediumButton todayButton = (CustomGothamRoundedMediumButton)
                 toolbar.findViewById(R.id.today_button);
@@ -132,7 +140,7 @@ public class AppointmentDateRangeFragment extends BaseFragment {
     private void inflateUIComponents(View view) {
         TextView sundayTextView = (TextView) view.findViewById(R.id.sundayTextView);
         sundayTextView.setTextColor(ContextCompat.getColor(getContext(),
-            R.color.medium_jungle_green));
+                R.color.dark_blue));
 
         TextView mondayTextView = (TextView) view.findViewById(R.id.mondayTextView);
         mondayTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
@@ -151,7 +159,7 @@ public class AppointmentDateRangeFragment extends BaseFragment {
 
         TextView saturdayTextView = (TextView) view.findViewById(R.id.saturdayTextView);
         saturdayTextView.setTextColor(ContextCompat.getColor(getContext(),
-            R.color.medium_jungle_green));
+                R.color.dark_blue));
     }
 
     /**
@@ -160,16 +168,16 @@ public class AppointmentDateRangeFragment extends BaseFragment {
      * @param view used as view component
      */
     private void initCalendarView(View view) {
-        calendarPickerView=(CalendarPickerView)view.findViewById(R.id.calendarView);
-        if(previousStartDate!=null && previousEndDate!=null) {
+        calendarPickerView = (CalendarPickerView) view.findViewById(R.id.calendarView);
+        if (previousStartDate != null && previousEndDate != null) {
             /*Instantiate calendar for a date range selected*/
             Collection<Date> selectedDates = new ArrayList<>();
             selectedDates.add(previousStartDate);
             selectedDates.add(previousEndDate);
 
             calendarPickerView.init(new Date(), getNextSixMonthCalendar().getTime())
-                .inMode(CalendarPickerView.SelectionMode.RANGE)
-                .withSelectedDates(selectedDates);
+                    .inMode(CalendarPickerView.SelectionMode.RANGE)
+                    .withSelectedDates(selectedDates);
         } else {
             /*Instantiate calendar by default a week as a date range*/
             Calendar rangeStart = Calendar.getInstance();
@@ -183,14 +191,14 @@ public class AppointmentDateRangeFragment extends BaseFragment {
 
             Date today = new Date();
             calendarPickerView.init(today, getNextSixMonthCalendar().getTime())
-                .inMode(CalendarPickerView.SelectionMode.RANGE);
+                    .inMode(CalendarPickerView.SelectionMode.RANGE);
 //                .withSelectedDates(selectedDates);
         }
 
         calendarPickerView.setOnDateSelectedListener(onDateSelectListener);
         List<CalendarCellDecorator> decorators = new ArrayList<>();
         decorators.add(new CustomCalendarCellDecorator(ContextCompat.getColor(getContext(), R.color.white),
-                                                       ContextCompat.getColor(getContext(), R.color.payne_gray)));
+                ContextCompat.getColor(getContext(), R.color.payne_gray)));
         calendarPickerView.setDecorators(decorators);
 
         applyDateRangeButton = (CustomGothamRoundedMediumButton)
@@ -214,29 +222,7 @@ public class AppointmentDateRangeFragment extends BaseFragment {
     View.OnClickListener navigationOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-        //Launch previous fragment
-        FragmentManager fm = getFragmentManager();
-        String tag = AppointmentDateRangeFragment.class.getSimpleName();
-        AvailableHoursFragment availableHoursFragment = (AvailableHoursFragment)
-                fm.findFragmentByTag(tag);
-
-        if (availableHoursFragment == null) {
-            availableHoursFragment = new AvailableHoursFragment();
-        }
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, previousStartDate);
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, previousEndDate);
-
-        Gson gson = new Gson();
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(selectedResourcesDTO));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(selectedVisitTypeDTO));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(resourcesToScheduleDTO));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID,addAppointmentPatientId);
-        availableHoursFragment.setArguments(bundle);
-
-        fm.beginTransaction().replace(R.id.add_appointments_frag_holder, availableHoursFragment,
-                tag).addToBackStack(tag).commit();
+            getActivity().onBackPressed();
         }
     };
 
@@ -245,40 +231,40 @@ public class AppointmentDateRangeFragment extends BaseFragment {
      */
     CalendarPickerView.OnDateSelectedListener onDateSelectListener =
             new CalendarPickerView.OnDateSelectedListener() {
-        @Override
-        public void onDateSelected(Date date) {
-            List<Date> dateList = calendarPickerView.getSelectedDates();
+                @Override
+                public void onDateSelected(Date date) {
+                    List<Date> dateList = calendarPickerView.getSelectedDates();
 
-            if (dateList.size() > 1) {
-                newStartDate = dateList.get(0);
-                newEndDate = dateList.get(dateList.size() - 1);
-            } else if (dateList.size() == 1) {
-                if(newStartDate != null) {
-                    newEndDate = dateList.get(0);
-                } else {
-                    newStartDate = dateList.get(0);
+                    if (dateList.size() > 1) {
+                        newStartDate = dateList.get(0);
+                        newEndDate = dateList.get(dateList.size() - 1);
+                    } else if (dateList.size() == 1) {
+                        if (newStartDate != null) {
+                            newEndDate = dateList.get(0);
+                        } else {
+                            newStartDate = dateList.get(0);
+                        }
+                    }
+
+                    if (newStartDate != null && newEndDate != null) {
+                        long diff = newEndDate.getTime() - newStartDate.getTime();
+                        long numOfDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+                        if (numOfDays >= 93) {
+                            AppointmentLabelDTO label = resourcesToScheduleDTO.getMetadata().getLabel();
+                            Toast.makeText(getActivity(), label.getAddAppointmentMaxDateRangeMessage(), Toast.LENGTH_LONG).show();
+                        } else {
+                            applyDateRangeButton.setEnabled(true);
+                        }
+                    } else {
+                        applyDateRangeButton.setEnabled(false);
+                    }
                 }
-            }
 
-            if(newStartDate != null && newEndDate != null) {
-                long diff = newEndDate.getTime() - newStartDate.getTime();
-                long numOfDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-                if (numOfDays >= 93) {
-                    AppointmentLabelDTO label = resourcesToScheduleDTO.getMetadata().getLabel();
-                    Toast.makeText(getActivity(), label.getAddAppointmentMaxDateRangeMessage(), Toast.LENGTH_LONG).show();
-                } else {
-                    applyDateRangeButton.setEnabled(true);
+                @Override
+                public void onDateUnselected(Date date) {
+                    clearSelectedDate();
                 }
-            } else {
-                applyDateRangeButton.setEnabled(false);
-            }
-        }
-
-        @Override
-        public void onDateUnselected(Date date) {
-            clearSelectedDate();
-        }
-    };
+            };
 
     /**
      * Click listener for today button on toolbar
@@ -293,8 +279,8 @@ public class AppointmentDateRangeFragment extends BaseFragment {
             nextSixMonths.add(Calendar.MONTH, 5);
 
             calendarPickerView.init(today, nextSixMonths.getTime())
-                .withSelectedDate(today)
-                .inMode(CalendarPickerView.SelectionMode.RANGE);
+                    .withSelectedDate(today)
+                    .inMode(CalendarPickerView.SelectionMode.RANGE);
 
             newStartDate = today;
         }
@@ -306,29 +292,7 @@ public class AppointmentDateRangeFragment extends BaseFragment {
     View.OnClickListener applyButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-                FragmentManager fm = getFragmentManager();
-                AvailableHoursFragment availableHoursFragment = (AvailableHoursFragment)
-                        fm.findFragmentByTag(AppointmentDateRangeFragment.class.getSimpleName());
-
-                if (availableHoursFragment == null) {
-                    availableHoursFragment = new AvailableHoursFragment();
-                }
-
-                Bundle bundle = new Bundle();
-                Gson gson = new Gson();
-                bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE,
-                        newStartDate);
-                bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE,
-                        newEndDate);
-                bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(selectedResourcesDTO));
-                bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(selectedVisitTypeDTO));
-                bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE, gson.toJson(resourcesToScheduleDTO));
-                bundle.putString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID,addAppointmentPatientId);
-                availableHoursFragment.setArguments(bundle);
-
-                fm.beginTransaction().replace(R.id.add_appointments_frag_holder,
-                        availableHoursFragment,
-                        AvailableHoursFragment.class.getSimpleName()).commit();
+            callback.selectTime(newStartDate, newEndDate, selectedVisitTypeDTO, selectedResourcesDTO, resourcesToScheduleDTO);
         }
     };
 

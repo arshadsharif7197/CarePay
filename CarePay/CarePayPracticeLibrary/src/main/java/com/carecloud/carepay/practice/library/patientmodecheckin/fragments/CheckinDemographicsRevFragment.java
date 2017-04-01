@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -16,11 +17,14 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
+import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckinFlowCallback;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
@@ -32,25 +36,24 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPay
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.demographics.fragments.CheckinDemographicsFragment;
+import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.practice.FlowStateInfo;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity.SUBFLOW_DEMOGRAPHICS_INS;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
-
-import com.google.gson.Gson;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 public class CheckinDemographicsRevFragment extends BaseCheckinFragment implements View.OnClickListener {
@@ -75,7 +78,7 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             correctInformationButton.setEnabled(true);
-            SystemUtil.showDefaultFailureDialog(getActivity());
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -129,7 +132,7 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
     private TextView                                insurance3policyNumberLabel;
     private ProgressBar                             demographicProgressBar;
     private DemographicDTO                          demographicDTO;
-    private DemographicPersDetailsPayloadDTO        demographicPersDetailsPayloadDTO;
+    private PatientModel                            demographicPersDetailsPayloadDTO;
     private DemographicAddressPayloadDTO            demographicAddressPayloadDTO;
     private List<DemographicInsurancePayloadDTO>    insurances;
     private DemographicLabelsDTO                    globalLabelsMetaDTO;
@@ -144,7 +147,17 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
     private DemographicIdDocPayloadDTO              demographicIdDocPayloadDTO;
     private TextView                                getDriverLicenseTextView;
 
-    public CheckinDemographicsRevFragment() {
+
+    private CheckinFlowCallback flowCallback;
+
+    @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+        try{
+            flowCallback = (CheckinFlowCallback) context;
+        }catch (ClassCastException cce){
+            throw new ClassCastException("Attached context must implement CheckinFlowCallback");
+        }
     }
 
     @Override
@@ -182,10 +195,10 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
 
         // fetch the metadata
         globalLabelsMetaDTO = demographicDTO.getMetadata().getLabels();
-        addressMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.address;
-        persDetailsMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.personalDetails;
-        idDocsMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.identityDocuments;
-        insurancesMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.insurances;
+        addressMetaDTO = demographicDTO.getMetadata().getDataModels().getDemographic().getAddress();
+        persDetailsMetaDTO = demographicDTO.getMetadata().getDataModels().getDemographic().getPersonalDetails();
+        idDocsMetaDTO = demographicDTO.getMetadata().getDataModels().getDemographic().getIdentityDocuments();
+        insurancesMetaDTO = demographicDTO.getMetadata().getDataModels().getDemographic().getInsurances();
 
         // get the payloads
         DemographicPayloadInfoDTO demographicPayloadInfoDTO = demographicDTO.getPayload().getDemographics();
@@ -328,7 +341,7 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
         correctInformationButton = (Button) view.findViewById(R.id.YesCorrectButton);
         correctInformationButton.setText(globalLabelsMetaDTO.getDemographicsReviewCorrectButton().toUpperCase());
         updateInformationUpdate = (Button) view.findViewById(R.id.needUpdateButton);
-        updateInformationUpdate.setText(globalLabelsMetaDTO.getDemographicsReviewUpdateButton().toUpperCase());
+        updateInformationUpdate.setText(Label.getLabel("demographics_review_update_button").toUpperCase());
         correctInformationButton.setOnClickListener(this);
         updateInformationUpdate.setOnClickListener(this);
         demographicProgressBar = (ProgressBar) view.findViewById(R.id.demographicReviewProgressBar);
@@ -348,7 +361,7 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
         getDriverLicenseTextView = (TextView) view.findViewById(R.id.reviewDriverLicenseTextView);
 
         demographicSectionTextView = (TextView) view.findViewById(R.id.demographicSectionLabel);
-        demographicSectionTextView.setText(globalLabelsMetaDTO.getDemographicSectionTitle().toUpperCase());
+        demographicSectionTextView.setText(Label.getLabel("demographics_section").toUpperCase());
 
         healthInsurance1SecionTextView = (TextView) view.findViewById(R.id.healthInsurance1SubTitle);
         healthInsurance1SecionTextView.setText(globalLabelsMetaDTO.getDemographicsHealthinsurance1Section().toUpperCase());
@@ -371,60 +384,60 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
 
     private void initializePersonalDetailsSectionView() {
         firstNameLabel = (TextView) view.findViewById(R.id.reviewFirstNameLabel);
-        firstNameLabel.setText(persDetailsMetaDTO.properties.firstName.getLabel().toUpperCase());
+        firstNameLabel.setText(persDetailsMetaDTO.getProperties().getFirstName().getLabel().toUpperCase());
         firstnameTextView = (TextView) view.findViewById(R.id.reviewFirstNameTextView);
 
         middleNameLabel = (TextView) view.findViewById(R.id.reviewMiddleNameLabel);
-        middleNameLabel.setText(persDetailsMetaDTO.properties.middleName.getLabel().toUpperCase());
+        middleNameLabel.setText(persDetailsMetaDTO.getProperties().getMiddleName().getLabel().toUpperCase());
         middlenameTextView = (TextView) view.findViewById(R.id.reviewMiddelNameTextView);
 
         lastNameLabel = (TextView) view.findViewById(R.id.reviewLastNameLabel);
-        lastNameLabel.setText(persDetailsMetaDTO.properties.lastName.getLabel().toUpperCase());
+        lastNameLabel.setText(persDetailsMetaDTO.getProperties().getLastName().getLabel().toUpperCase());
         lastNameTextView = (TextView) view.findViewById(R.id.reviewLastNameTextView);
 
         dobLabel = (TextView) view.findViewById(R.id.reviewDOBLabel);
-        dobLabel.setText(persDetailsMetaDTO.properties.dateOfBirth.getLabel().toUpperCase());
+        dobLabel.setText(persDetailsMetaDTO.getProperties().getDateOfBirth().getLabel().toUpperCase());
         dobTExtView = (TextView) view.findViewById(R.id.reviewDOBTextView);
 
         phoneNumberLabel = (TextView) view.findViewById(R.id.reviewPhoneNumberLabel);
-        phoneNumberLabel.setText(addressMetaDTO.properties.phone.getLabel().toUpperCase());
+        phoneNumberLabel.setText(addressMetaDTO.getProperties().getPhone().getLabel().toUpperCase());
         phoneNumberTextView = (TextView) view.findViewById(R.id.reviewPhoneNumberTextView);
 
         ethnicityLabel = (TextView) view.findViewById(R.id.reviewEthnicityLabel);
-        ethnicityLabel.setText(persDetailsMetaDTO.properties.ethnicity.getLabel());
+        ethnicityLabel.setText(persDetailsMetaDTO.getProperties().getEthnicity().getLabel());
         ethnicityTextView = (TextView) view.findViewById(R.id.reviewEthnicityTextView);
 
         raceLabel = (TextView) view.findViewById(R.id.reviewRaceLabel);
-        raceLabel.setText(persDetailsMetaDTO.properties.primaryRace.getLabel());
+        raceLabel.setText(persDetailsMetaDTO.getProperties().getPrimaryRace().getLabel());
         raceTextView = (TextView) view.findViewById(R.id.reviewRaceTextView);
 
         genderLabel = (TextView) view.findViewById(R.id.reviewGenderLabel);
-        genderLabel.setText(persDetailsMetaDTO.properties.gender.getLabel());
+        genderLabel.setText(persDetailsMetaDTO.getProperties().getGender().getLabel());
         genderTextView = (TextView) view.findViewById(R.id.reviewGenderTextView);
 
         driverLicenseLabel = (TextView) view.findViewById(R.id.reviewDriverLicenseLabel);
-        driverLicenseLabel.setText(idDocsMetaDTO.properties.items.identityDocument.properties.identityDocumentType.options.get(0).getLabel().toUpperCase());
+        driverLicenseLabel.setText(idDocsMetaDTO.properties.items.identityDocument.properties.identityDocumentType.getOptions().get(0).getLabel().toUpperCase());
     }
 
     private void initializeAddressSectionView() {
         address1Label = (TextView) view.findViewById(R.id.reviewAddress1label);
-        address1Label.setText(addressMetaDTO.properties.address1.getLabel().toUpperCase());
+        address1Label.setText(addressMetaDTO.getProperties().getAddress1().getLabel().toUpperCase());
         address1TextView = (TextView) view.findViewById(R.id.reviewAddress1TextView);
 
         address2Label = (TextView) view.findViewById(R.id.reviewAddress2label);
-        address2Label.setText(addressMetaDTO.properties.address2.getLabel().toUpperCase());
+        address2Label.setText(addressMetaDTO.getProperties().getAddress2().getLabel().toUpperCase());
         address2TextView = (TextView) view.findViewById(R.id.reviewAddress2TextView);
 
         cityLabel = (TextView) view.findViewById(R.id.reviewCityLabel);
-        cityLabel.setText(addressMetaDTO.properties.city.getLabel().toUpperCase());
+        cityLabel.setText(addressMetaDTO.getProperties().getCity().getLabel().toUpperCase());
         cityTextView = (TextView) view.findViewById(R.id.reviewCityTextView);
 
         stateLabel = (TextView) view.findViewById(R.id.reviewStateLabel);
-        stateLabel.setText(addressMetaDTO.properties.state.getLabel().toUpperCase());
+        stateLabel.setText(addressMetaDTO.getProperties().getState().getLabel().toUpperCase());
         stateTextView = (TextView) view.findViewById(R.id.reviewStateTextView);
 
         zipcodeLabel = (TextView) view.findViewById(R.id.reviewZipcodeLabel);
-        zipcodeLabel.setText(addressMetaDTO.properties.zipcode.getLabel().toUpperCase());
+        zipcodeLabel.setText(addressMetaDTO.getProperties().getZipcode().getLabel().toUpperCase());
         zipcodeTextView = (TextView) view.findViewById(R.id.reviewZipcodeTextView);
     }
 
@@ -465,15 +478,15 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
         insContainers[1].setVisibility(View.GONE);
         insContainers[2].setVisibility(View.GONE);
 
-        insurance1policyNumberLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insuranceMemberId.getLabel().toUpperCase());
-        insurance1planLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insurancePlan.getLabel().toUpperCase());
-        insurance1companyLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insuranceProvider.getLabel().toUpperCase());
-        insurance2planLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insurancePlan.getLabel().toUpperCase());
-        insurance2companyLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insuranceProvider.getLabel().toUpperCase());
-        insurance2policyNumberLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insuranceMemberId.getLabel().toUpperCase());
-        insurance3planLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insurancePlan.getLabel().toUpperCase());
-        insurance3companyLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insuranceProvider.getLabel().toUpperCase());
-        insurance3policyNumberLabel.setText(insurancesMetaDTO.properties.items.insurance.properties.insuranceMemberId.getLabel().toUpperCase());
+        insurance1policyNumberLabel.setText(insurancesMetaDTO.getProperties().getItems().getInsurance().getProperties().getInsuranceMemberId().getLabel().toUpperCase());
+        insurance1planLabel.setText(insurancesMetaDTO.getProperties().getItems().getInsurance().getProperties().getInsurancePlan().getLabel().toUpperCase());
+        insurance1companyLabel.setText(insurancesMetaDTO.getProperties().getItems().getInsurance().getProperties().getInsuranceProvider().getLabel().toUpperCase());
+        insurance2planLabel.setText(insurancesMetaDTO.getProperties().getItems().getInsurance().getProperties().getInsurancePlan().getLabel().toUpperCase());
+        insurance2companyLabel.setText(insurancesMetaDTO.getProperties().getItems().getInsurance().getProperties().getInsuranceProvider().getLabel().toUpperCase());
+        insurance2policyNumberLabel.setText(insurancesMetaDTO.getProperties().getItems().getInsurance().getProperties().getInsuranceMemberId().getLabel().toUpperCase());
+        insurance3planLabel.setText(insurancesMetaDTO.getProperties().getItems().getInsurance().getProperties().getInsurancePlan().getLabel().toUpperCase());
+        insurance3companyLabel.setText(insurancesMetaDTO.getProperties().getItems().getInsurance().getProperties().getInsuranceProvider().getLabel().toUpperCase());
+        insurance3policyNumberLabel.setText(insurancesMetaDTO.getProperties().getItems().getInsurance().getProperties().getInsuranceMemberId().getLabel().toUpperCase());
     }
 
     /**
@@ -594,7 +607,8 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
     public void onStart() {
         super.onStart();
         ((PatientModeCheckinActivity)getActivity()).toggleVisibleBackButton(false);
-        ((PatientModeCheckinActivity)getActivity()).updateSection(flowStateInfo);
+//        ((PatientModeCheckinActivity)getActivity()).updateSection(flowStateInfo);
+        flowCallback.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 0, 0);
     }
 
     @Override

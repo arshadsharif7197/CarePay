@@ -216,27 +216,54 @@ public class ApplicationPreferences {
         editor.apply();
     }
 
+    /**
+     * Save object to Shared Preferences. Object will be stored as a JSON String
+     * @param key preference key
+     * @param object object to save
+     */
     public void writeObjectToSharedPreference(String key, Object object){
         writeStringToSharedPref(key, new Gson().toJson(object));
+    }
+
+    /**
+     * Retrieve a previously saved JSON object from Shared Prefferences
+     * @param key preference key
+     * @param objectClass S Type Object class for deserializing
+     * @param <S> Type
+     * @return S Type object
+     */
+    public <S> S getObjectFromSharedPreferences(String key, Class<S> objectClass){
+        Gson gson = new Gson();
+        try{
+            return gson.fromJson(readStringFromSharedPref(key), objectClass);
+        }catch (Exception ex){
+            return null;
+        }
     }
 
     public String readStringFromSharedPref(String key) {
         return readStringFromSharedPref(key, DEFAULT_STRING_PREFERENCES);
     }
 
-    public String readStringFromSharedPref(String key, String value) {
-        return getSharedPreferences().getString(key, value);
+    public String readStringFromSharedPref(String key, String defaultValue) {
+        return getSharedPreferences().getString(key, defaultValue);
     }
 
     private boolean readBooleanFromSharedPref(String key) {
         return readBooleanFromSharedPref(key, false);
     }
 
-    private boolean readBooleanFromSharedPref(String key, boolean value) {
-        return getSharedPreferences().getBoolean(key, value);
+    private boolean readBooleanFromSharedPref(String key, boolean defaultValue) {
+        return getSharedPreferences().getBoolean(key, defaultValue);
     }
 
     private SharedPreferences getSharedPreferences() {
         return context.getSharedPreferences(PREFERENCE_CAREPAY, Context.MODE_PRIVATE);
     }
+
+    public Context getContext() {
+        return context;
+    }
+
+
 }

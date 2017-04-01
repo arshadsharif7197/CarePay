@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -23,29 +22,27 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPersDetailsPayloadDTO;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.utils.ValidationHelper;
+import com.smartystreets.api.us_zipcode.City;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
-
-import com.carecloud.carepaylibray.utils.ValidationHelper;
-
-import com.smartystreets.api.us_zipcode.City;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,7 +96,7 @@ public class DemographicsAddressFragment extends BaseFragment {
     private boolean isNextVisible = false;
 
     private DemographicAddressPayloadDTO            addressDTO;
-    private DemographicPersDetailsPayloadDTO        persDetailsDTO;
+    private PatientModel                            persDetailsDTO;
     private DemographicMetadataEntityAddressDTO     addressMetaDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
     private DemographicLabelsDTO                    globalLabelsMetaDTO;
@@ -190,56 +187,56 @@ public class DemographicsAddressFragment extends BaseFragment {
 
         String hint;
 
-        hint = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.firstName.getLabel();
+        hint = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getFirstName().getLabel();
         firstNameText = (EditText) view.findViewById(R.id.demogrAddressFirstNameEdit);
         firstNameInputLayout = (TextInputLayout) view.findViewById(R.id.demogrAddressFirstNameTextInput);
         firstNameInputLayout.setTag(hint);
         firstNameText.setTag(firstNameInputLayout);
         firstNameText.setHint(hint);
 
-        hint = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.middleName.getLabel();
+        hint = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getMiddleName().getLabel();
         middleNameText = (EditText) view.findViewById(R.id.demogrAddressMiddleNameEdit);
         middleNameInputLayout = (TextInputLayout) view.findViewById(R.id.demogrAddressMiddleNameTextInput);
         middleNameInputLayout.setTag(hint);
         middleNameText.setTag(middleNameInputLayout);
         middleNameText.setHint(hint);
 
-        hint = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.properties.lastName.getLabel();
+        hint = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getLastName().getLabel();
         lastNameText = (EditText) view.findViewById(R.id.demogrAddressLastNameEdit);
         lastNameInputLayout = (TextInputLayout) view.findViewById(R.id.demogrAddressLastNameTextInput);
         lastNameInputLayout.setTag(hint);
         lastNameText.setTag(lastNameInputLayout);
         lastNameText.setHint(hint);
 
-        hint = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.address1.getLabel();
+        hint = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.getProperties().getAddress1().getLabel();
         address1EditText = (EditText) view.findViewById(R.id.addressEditTextId);
         address1TextInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
         address1TextInputLayout.setTag(hint);
         address1EditText.setTag(address1TextInputLayout);
         address1EditText.setHint(hint);
 
-        hint = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.address2.getLabel();
+        hint = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.getProperties().getAddress2().getLabel();
         address2EditText = (EditText) view.findViewById(R.id.addressEditText2Id);
         address2TextInputLayout = (TextInputLayout) view.findViewById(R.id.address2TextInputLayout);
         address2TextInputLayout.setTag(hint);
         address2EditText.setTag(address2TextInputLayout);
         address2EditText.setHint(hint);
 
-        hint = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.zipcode.getLabel();
+        hint = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.getProperties().getZipcode().getLabel();
         zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeId);
         zipCodeTextInputLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
         zipCodeTextInputLayout.setTag(hint);
         zipCodeEditText.setTag(zipCodeTextInputLayout);
         zipCodeEditText.setHint(hint);
 
-        hint = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.city.getLabel();
+        hint = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.getProperties().getCity().getLabel();
         cityEditText = (EditText) view.findViewById(R.id.cityId);
         cityTextInputLayout = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
         cityTextInputLayout.setTag(hint);
         cityEditText.setTag(cityTextInputLayout);
         cityEditText.setHint(hint);
 
-        hint = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.state.getLabel();
+        hint = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.getProperties().getState().getLabel();
         stateAutoCompleteTextView = (AutoCompleteTextView) view.findViewById(R.id.stateAutoCompleteTextView);
         stateTextInputLayout = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);
         stateTextInputLayout.setTag(hint);
@@ -259,7 +256,7 @@ public class DemographicsAddressFragment extends BaseFragment {
             }
         });
 
-        hint = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.properties.phone.getLabel();
+        hint = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.getProperties().getPhone().getLabel();
         phoneNumberEditText = (EditText) view.findViewById(R.id.phNoEditText);
         phNoTextInputLayout = (TextInputLayout) view.findViewById(R.id.phNoTextInputLayout);
         phNoTextInputLayout.setTag(hint);
@@ -309,9 +306,9 @@ public class DemographicsAddressFragment extends BaseFragment {
     private void getOptions() {
         // init states
         if (addressMetaDTO != null
-                && addressMetaDTO.properties != null
-                && addressMetaDTO.properties.state != null) {
-            List<MetadataOptionDTO> optionDTOs = addressMetaDTO.properties.state.options;
+                && addressMetaDTO.getProperties() != null
+                && addressMetaDTO.getProperties().getState() != null) {
+            List<MetadataOptionDTO> optionDTOs = addressMetaDTO.getProperties().getState().getOptions();
             List<String> statesStrings = new ArrayList<>();
             for (MetadataOptionDTO optionDTO : optionDTOs) {
                 statesStrings.add(optionDTO.getLabel());
@@ -333,7 +330,7 @@ public class DemographicsAddressFragment extends BaseFragment {
         }
         persDetailsDTO = ((DemographicsActivity) getActivity()).getDetailsDTO();
         if (persDetailsDTO == null) {
-            persDetailsDTO = new DemographicPersDetailsPayloadDTO();
+            persDetailsDTO = new PatientModel();
         }
         addressMetaDTO = DtoHelper.getConvertedDTO(DemographicMetadataEntityAddressDTO.class, getArguments());
     }
@@ -785,7 +782,7 @@ public class DemographicsAddressFragment extends BaseFragment {
     private boolean checkState() {
         return ValidationHelper.applyIsInOptionsValidationToWrappedEdit(stateAutoCompleteTextView,
                                                                  stateTextInputLayout,
-                                                                 addressMetaDTO.properties.state,
+                addressMetaDTO.getProperties().getState(),
                                                                  null);
     }
 
@@ -797,7 +794,7 @@ public class DemographicsAddressFragment extends BaseFragment {
         // apply validate from backend
         boolean isValidFormat = ValidationHelper.applyPatternValidationToWrappedEdit(cityEditText,
                                                                                      cityTextInputLayout,
-                                                                                     addressMetaDTO.properties.city,
+                addressMetaDTO.getProperties().getCity(),
                                                                                      null);
         if (!isValidFormat) {
             return false;
@@ -815,7 +812,7 @@ public class DemographicsAddressFragment extends BaseFragment {
         boolean isValidFormat = ValidationHelper.applyPatternValidationToWrappedEdit(
                 phoneNumberEditText,
                 phNoTextInputLayout,
-                addressMetaDTO.properties.phone, null);
+                addressMetaDTO.getProperties().getPhone(), null);
 
         return isValidFormat;
     }
@@ -828,7 +825,7 @@ public class DemographicsAddressFragment extends BaseFragment {
         // apply validate from backend
         boolean isValidFormat = ValidationHelper.applyPatternValidationToWrappedEdit(zipCodeEditText,
                                                                                      zipCodeTextInputLayout,
-                                                                                     addressMetaDTO.properties.zipcode,
+                addressMetaDTO.getProperties().getZipcode(),
                                                                                      null);
         return isValidFormat;
     }

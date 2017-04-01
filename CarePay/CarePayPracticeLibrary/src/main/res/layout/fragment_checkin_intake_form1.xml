@@ -1,49 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    >
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/dimen_10dp"
+        android:foregroundGravity="center_vertical">
+
+        <include layout="@layout/toolbar_no_title"
+                 android:id="@+id/toolbar_layout"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/consent_header"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_30sp"
+                android:gravity="center"
+                android:text="Consent Forms"
+                app:customAssetFont="gotham_rounded_medium"/>
+
+            <RatingBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/progress_indicator"
+                style="@style/RatingBarCircleIndicator"
+                android:layout_margin="@dimen/dimen_10dp"
+                android:layout_gravity="center"
+                android:numStars="5"
+                android:rating="2"
+                android:isIndicator="true"/>
+
+        </LinearLayout>
+    </FrameLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1dp"
+        android:background="@color/light_gray"/>
+
     <ProgressBar
         android:id="@+id/signupProgressBarIntake"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-8dp"
+        android:layout_height="@dimen/dimen_3dp"
         android:indeterminate="true"/>
 
-    <LinearLayout
+
+    <WebView
+        android:id="@+id/activity_main_webview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginTop="@dimen/dimen_20dp"
-        android:id="@+id/checkinIntakeForm1Content"
-        android:orientation="vertical">
+        />
 
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1dp"
+        android:background="@color/light_gray"/>
 
-        <WebView
-            android:id="@+id/activity_main_webview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            />
-    </LinearLayout>
 
-    <LinearLayout
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/checkinIntakeForm1Footer"
-        android:orientation="vertical">
+        android:id="@+id/intakeBtnNext"
+        android:layout_margin="@dimen/dimen_20dp"
+        android:padding="@dimen/dimen_15dp"
+        android:gravity="center"
+        android:background="@drawable/green_rounded_button_selector"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_15"
+        android:text="Load Form"
+        app:customAssetFont="proxima_nova_regular"/>
 
 
-        <Button
-            android:id="@+id/intakeBtnNext"
-            android:enabled="true"
-            android:text=""
-            style="@style/InTakeNextButtonStyle"/>
-
-    </LinearLayout>
 
 </LinearLayout>

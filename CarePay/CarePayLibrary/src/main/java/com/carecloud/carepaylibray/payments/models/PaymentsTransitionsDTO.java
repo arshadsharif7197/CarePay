@@ -25,6 +25,9 @@ public class PaymentsTransitionsDTO {
     @SerializedName("modify_payment_plan")
     @Expose
     private PaymentsModifyPaymentPlanDTO modifyPaymentPlan = new PaymentsModifyPaymentPlanDTO();
+    @SerializedName("logout")
+    @Expose
+    private TransitionDTO logout = new TransitionDTO();
 
     /**
      *
@@ -134,4 +137,19 @@ public class PaymentsTransitionsDTO {
         this.modifyPaymentPlan = modifyPaymentPlan;
     }
 
+    /**
+     *
+     * @return the logout Transition
+     */
+    public TransitionDTO getLogout() {
+        return logout;
+    }
+
+    /**
+     *
+     * @param logout the logout transition
+     */
+    public void setLogout(TransitionDTO logout) {
+        this.logout = logout;
+    }
 }

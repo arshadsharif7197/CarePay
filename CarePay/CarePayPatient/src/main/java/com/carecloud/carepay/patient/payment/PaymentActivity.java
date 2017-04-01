@@ -7,11 +7,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.payment.androidpay.ConfirmationActivity;
-import com.carecloud.carepay.patient.payment.dialogs.PaymentAmountReceiptDialog;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -19,7 +17,10 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
+import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.gms.wallet.MaskedWallet;
 import com.google.android.gms.wallet.WalletConstants;
@@ -137,7 +138,7 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
     protected void handleError(int errorCode) {
         switch (errorCode) {
             case WalletConstants.ERROR_CODE_SPENDING_LIMIT_EXCEEDED:
-                Toast.makeText(this, "Way too much!!", Toast.LENGTH_LONG).show();
+                showErrorNotification(PaymentConstants.ANDROID_PAY_SPENDING_LIMIT_EXCEEDED);
                 break;
             case WalletConstants.ERROR_CODE_INVALID_PARAMETERS:
             case WalletConstants.ERROR_CODE_AUTHENTICATION_FAILURE:
@@ -148,9 +149,9 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
             case WalletConstants.ERROR_CODE_UNKNOWN:
             default:
                 // unrecoverable error
-                String errorMessage = "Android Pay is unavailable" + "\n" +
+                String errorMessage = "<b>Android Pay is unavailable</b>" + "\n" +
                         "Error code: " + errorCode;
-                Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
+                showErrorNotification(errorMessage);
                 break;
         }
     }
@@ -172,12 +173,17 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
     }
 
     @Override
-    public void startPartialPayment() {
+    public void startPaymentProcess(PaymentsModel paymentsModel) {
 
     }
 
     @Override
-    public void onPayButtonClicked(double amount) {
+    public void startPartialPayment(double owedAmount) {
+
+    }
+
+    @Override
+    public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
         PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
 
         Bundle bundle = new Bundle();
@@ -189,33 +195,35 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
     }
 
     @Override
-    public void onPaymentMethodAction(String selectedPaymentMethod, double amount) {
-        if(paymentsDTO.getPaymentPayload().getPatientCreditCards()!=null && !paymentsDTO.getPaymentPayload().getPatientCreditCards().isEmpty()){
-            Gson gson = new Gson();
-            Bundle args = new Bundle();
-            String paymentsDTOString = gson.toJson(paymentsDTO);
-            args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethod);
-            args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
-            args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-            Fragment fragment = new ChooseCreditCardFragment();
-            fragment.setArguments(args);
-
+    public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
+        if (paymentsDTO.getPaymentPayload().getPatientCreditCards() != null && !paymentsDTO.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            Fragment fragment = ChooseCreditCardFragment.newInstance(paymentsDTO, selectedPaymentMethod.getLabel(), amount);
             navigateToFragment(fragment, true);
         } else {
-            showAddCard(amount);
+            showAddCard(amount, paymentsModel);
         }
     }
 
     @Override
-    public void showAddCard(double amount) {
+    public void showAddCard(double amount, PaymentsModel paymentsModel) {
         Gson gson = new Gson();
         Bundle args = new Bundle();
         String paymentsDTOString = gson.toJson(paymentsDTO);
         args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
-        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE,  amount);
+        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
         Fragment fragment = new AddNewCreditCardFragment();
         fragment.setArguments(args);
         navigateToFragment(fragment, true);
+    }
+
+    @Override
+    public void completePaymentProcess(UpdatePatientBalancesDTO updatePatientBalancesDTO) {
+
+    }
+
+    @Override
+    public void cancelPaymentProcess(PaymentsModel paymentsModel) {
+
     }
 
     @Override
@@ -232,9 +240,14 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
     }
 
     @Override
-    public void showReceipt(PaymentsModel paymentsModel) {
-        PaymentAmountReceiptDialog receiptDialog = new PaymentAmountReceiptDialog(this, paymentsModel);
-        receiptDialog.show();
+    public void showPaymentConfirmation(PaymentsModel paymentsModel) {
+        Gson gson = new Gson();
+        Bundle args = new Bundle();
+        String paymentsDTOString = gson.toJson(paymentsModel);
+        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
 
+        PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
+        confirmationFragment.setArguments(args);
+        confirmationFragment.show(getSupportFragmentManager(), confirmationFragment.getClass().getSimpleName());
     }
 }

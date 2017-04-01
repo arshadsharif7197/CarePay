@@ -15,6 +15,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
 
@@ -32,13 +33,16 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
 
         void onCancelAppointmentButtonClicked(AppointmentDTO appointmentDTO, AppointmentsResultModel appointmentInfo);
 
+        void onRescheduleAppointmentClicked(AppointmentDTO appointmentDTO);
+
     }
 
     private CancelAppointmentDialogListener callback;
 
     /**
      * Contractor for   dialog.
-     * @param context the String to evaluate
+     *
+     * @param context        the String to evaluate
      * @param appointmentDTO the DTO to evaluate
      */
     public CancelAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
@@ -46,7 +50,7 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
                                    AppointmentType appointmentType,
                                    CancelAppointmentDialogListener callback) {
 
-        super(context, appointmentDTO,false);
+        super(context, appointmentDTO, false);
         this.context = context;
         this.appointmentDTO = appointmentDTO;
         this.appointmentInfo = appointmentInfo;
@@ -68,13 +72,13 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
         View view = inflater.inflate(R.layout.dialog_canceled_appointment, null);
 
         switch (appointmentType) {
-            case MISSED_APPOINTMENT:
+            case MISSED:
                 initializeOff(view, labelsDto.getAppointmentsMissedHeading(), R.color.lightningyellow, R.drawable.appointment_dialog_dark_gray_bg);
                 break;
-            case CANCELLED_APPOINTMENT:
+            case CANCELLED:
                 initializeOff(view, labelsDto.getAppointmentsCanceledHeading(), R.color.harvard_crimson, R.drawable.appointment_dialog_dark_gray_bg);
                 break;
-            case REQUESTED_APPOINTMENT:
+            case REQUESTED:
                 initializeOff(view, labelsDto.getAppointmentsRequestPendingHeading(), R.color.colorPrimary, R.drawable.appointment_dialog_yellow_bg);
                 break;
             default:
@@ -85,7 +89,7 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
     }
 
     private void initializeOn(View view) {
-        Button cancelAppointmentButton = (Button)view.findViewById(R.id.cancelAppointmentButton);
+        Button cancelAppointmentButton = (Button) view.findViewById(R.id.cancelAppointmentButton);
         cancelAppointmentButton.setVisibility(View.VISIBLE);
         cancelAppointmentButton.setText(labelsDto.getAppointmentsCancelHeading());
         cancelAppointmentButton.setOnClickListener(this);
@@ -107,6 +111,22 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
 
         ((CarePayTextView) findViewById(R.id.appointDateTextView)).setTextColor(ContextCompat.getColor(context, R.color.white));
         ((CarePayTextView) findViewById(R.id.appointTimeTextView)).setTextColor(ContextCompat.getColor(context, R.color.white));
+
+        if (appointmentType == AppointmentType.MISSED) {
+            Button rescheduleButton = (Button) view.findViewById(R.id.rescheduleAppointmentButton);
+            rescheduleButton.setVisibility(View.VISIBLE);
+            rescheduleButton.setText(StringUtil.getLabelForView(labelsDto.getAppointmentRescheduleButton()));
+            rescheduleButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (callback != null) {
+                        callback.onRescheduleAppointmentClicked(appointmentDTO);
+                    }
+                    dismiss();
+                }
+            });
+
+        }
     }
 
     void setCancelledSuccess(boolean cancelSuccess) {
@@ -118,7 +138,7 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
         super.onClick(view);
         int viewId = view.getId();
         if (viewId == R.id.cancelAppointmentButton) {
-            callback.onCancelAppointmentButtonClicked(appointmentDTO, appointmentInfo) ;
+            callback.onCancelAppointmentButtonClicked(appointmentDTO, appointmentInfo);
             cancel();
         } else if (viewId == R.id.dialogAppointHeaderTextView
                 && isCancelSuccess && callback != null) {
@@ -137,4 +157,5 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
             }
         };
     }
+
 }

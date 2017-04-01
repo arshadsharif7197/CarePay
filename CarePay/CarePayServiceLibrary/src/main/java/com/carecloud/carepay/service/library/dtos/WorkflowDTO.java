@@ -1,14 +1,9 @@
 package com.carecloud.carepay.service.library.dtos;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import java.io.Serializable;
 
 /**
  * Created by Jahirul Bhuiyan on 10/24/2016.

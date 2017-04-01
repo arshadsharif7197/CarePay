@@ -1,7 +1,9 @@
 package com.carecloud.carepay.practice.library.checkin.dtos;
 
-import com.carecloud.carepaylibray.payments.models.LocationDTO;
-import com.carecloud.carepaylibray.payments.models.ProviderDTO;
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
+import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
+import com.carecloud.carepaylibray.appointments.models.ProvidersReasonDTO;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -22,7 +24,7 @@ public class AppointmentPayloadDTO {
     private AppointmentStatusDTO appointmentStatus = new AppointmentStatusDTO();
     @SerializedName("patient")
     @Expose
-    private PatientDTO patient = new PatientDTO();
+    private PatientModel patient = new PatientModel();
     @SerializedName("location")
     @Expose
     private LocationDTO location = new LocationDTO();
@@ -108,6 +110,10 @@ public class AppointmentPayloadDTO {
     @Expose
     private ResourceDTO resource = new ResourceDTO();
 
+    @SerializedName("visit_reason")
+    @Expose
+    private ProvidersReasonDTO visitReason = new ProvidersReasonDTO();
+
     /**
      *
      * @return
@@ -149,7 +155,7 @@ public class AppointmentPayloadDTO {
      * @return
      * The patient
      */
-    public PatientDTO getPatient() {
+    public PatientModel getPatient() {
         return patient;
     }
 
@@ -158,7 +164,7 @@ public class AppointmentPayloadDTO {
      * @param patient
      * The patient
      */
-    public void setPatient(PatientDTO patient) {
+    public void setPatient(PatientModel patient) {
         this.patient = patient;
     }
 
@@ -664,6 +670,10 @@ public class AppointmentPayloadDTO {
      */
     public void setResource(ResourceDTO resource) {
         this.resource = resource;
+    }
+
+    public ProvidersReasonDTO getVisitReason() {
+        return visitReason;
     }
 
     @Override

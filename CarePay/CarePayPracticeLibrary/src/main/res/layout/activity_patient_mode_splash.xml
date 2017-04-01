@@ -40,7 +40,8 @@
                 android:layout_height="@dimen/home_spinner_height"
                 android:background="@drawable/bg_blue_overlay"
                 android:paddingEnd="@dimen/home_spinner_padding_righ_left"
-                android:paddingStart="@dimen/home_spinner_padding_righ_left" />
+                android:paddingStart="@dimen/home_spinner_padding_righ_left"
+                android:visibility="gone"/>
         </LinearLayout>
 
         <ImageView
@@ -65,9 +66,10 @@
 
         <ImageView
             android:id="@+id/practicelogo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/checkin_patient_pic_rounded_border" />
+            android:layout_width="@dimen/patient_splash_button_width"
+            android:layout_height="@dimen/patient_splash_button_width"
+            android:src="@drawable/checkin_patient_pic_rounded_border"
+            android:scaleType="centerCrop"/>
     </LinearLayout>
 
     <FrameLayout

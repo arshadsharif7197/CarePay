@@ -16,14 +16,13 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.timessquare.CalendarPickerView;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
-import org.joda.time.DateTime;
 
 public class DateRangePickerDialog extends BaseDialogFragment {
 
@@ -38,7 +37,6 @@ public class DateRangePickerDialog extends BaseDialogFragment {
     private Date maxDate;
 
     private String dialogTitle;
-    private String todayLabel;
     private String cancelString;
     private boolean isCancelable;
 
@@ -67,14 +65,13 @@ public class DateRangePickerDialog extends BaseDialogFragment {
     /**
      * @param dialogTitle title to be shown at the top of the dialog
      * @param closeText label below the close icon
-     * @param todayLabel today in current language
      * @param startDate current start date
      * @param endDate current end date
      * @param minDate minimum date to be picked
      * @param maxDate maximum date to be picked
      * @return new instance of DateRangePickerDialog 
      */
-    public static DateRangePickerDialog newInstance(String dialogTitle, String closeText, String todayLabel,
+    public static DateRangePickerDialog newInstance(String dialogTitle, String closeText,
                                                     boolean isCancelable, Date startDate, Date endDate, Date minDate, Date maxDate,
                                                     DateRangePickerDialogListener callback) {
         // Supply inputs as an argument
@@ -82,7 +79,6 @@ public class DateRangePickerDialog extends BaseDialogFragment {
         args.putBoolean("isCancelable", isCancelable);
         args.putString("cancelString", closeText);
         args.putString("dialogTitle", dialogTitle);
-        args.putString("todayLabel", todayLabel.toUpperCase(Locale.getDefault()));
         args.putSerializable("startDate", startDate);
         args.putSerializable("endDate", endDate);
         args.putSerializable("minDate", minDate);
@@ -102,7 +98,6 @@ public class DateRangePickerDialog extends BaseDialogFragment {
         Bundle arguments = getArguments();
         this.cancelString = arguments.getString("cancelString");
         this.dialogTitle = arguments.getString("dialogTitle");
-        this.todayLabel = arguments.getString("todayLabel");
         this.startDate = (Date) arguments.getSerializable("startDate");
         this.endDate = (Date) arguments.getSerializable("endDate");
         this.minDate = (Date) arguments.getSerializable("minDate");
@@ -155,7 +150,6 @@ public class DateRangePickerDialog extends BaseDialogFragment {
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), dialogTitleTextView);
 
         Button todayButton = (Button) view.findViewById(R.id.dialog_date_range_picker_today_button);
-        todayButton.setText(todayLabel);
         todayButton.setOnClickListener(todayButtonClickListener);
     }
 
@@ -167,8 +161,7 @@ public class DateRangePickerDialog extends BaseDialogFragment {
         public void onClick(View view) {
             Date today = new Date();
             calendarPickerView.selectDate(today);
-            applyDateRangeButton.setEnabled(false);
-            startDate = today;
+            updateSelectedDates();
         }
     };
 
@@ -178,7 +171,7 @@ public class DateRangePickerDialog extends BaseDialogFragment {
         applyDateRangeButton.setEnabled(false);
         applyDateRangeButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view1) {
+            public void onClick(View view) {
                 if (null != callback) {
                     callback.onRangeSelected(startDate, endDate);
                 }
@@ -203,6 +196,7 @@ public class DateRangePickerDialog extends BaseDialogFragment {
         selectedDates.add(endDate);
 
         calendarPickerView = (CalendarPickerView) view.findViewById(com.carecloud.carepaylibrary.R.id.calendarView);
+        calendarPickerView.setOnInvalidDateSelectedListener(null);
         calendarPickerView.init(minDate, maxDate)
                 .inMode(CalendarPickerView.SelectionMode.RANGE)
                 .withSelectedDates(selectedDates);
@@ -210,20 +204,7 @@ public class DateRangePickerDialog extends BaseDialogFragment {
         calendarPickerView.setOnDateSelectedListener(new CalendarPickerView.OnDateSelectedListener() {
             @Override
             public void onDateSelected(Date date) {
-                List<Date> dateList = calendarPickerView.getSelectedDates();
-
-                if (dateList.size() > 1) {
-                    startDate = dateList.get(0);
-                    endDate = dateList.get(dateList.size() - 1);
-                } else if (dateList.size() == 1) {
-                    if (startDate != null) {
-                        endDate = dateList.get(0);
-                    } else {
-                        startDate = dateList.get(0);
-                    }
-                }
-
-                applyDateRangeButton.setEnabled(startDate != null && endDate != null);
+                updateSelectedDates();
             }
 
             @Override
@@ -233,6 +214,22 @@ public class DateRangePickerDialog extends BaseDialogFragment {
         });
     }
 
+    private void updateSelectedDates() {
+        List<Date> dateList = calendarPickerView.getSelectedDates();
+
+        if (dateList.size() > 1) {
+            startDate = dateList.get(0);
+            endDate = dateList.get(dateList.size() - 1);
+        } else if (dateList.size() == 1) {
+            if (startDate != null) {
+                endDate = dateList.get(0);
+            } else {
+                startDate = dateList.get(0);
+            }
+        }
+
+        applyDateRangeButton.setEnabled(startDate != null && endDate != null);
+    }
 
     /**
      * Method to remove selected date
@@ -286,7 +283,7 @@ public class DateRangePickerDialog extends BaseDialogFragment {
 
     @Override
     protected int getCancelImageResource() {
-        return isCancelable ? R.drawable.icn_close : R.drawable.icn_arrow_up;
+        return isCancelable ? R.drawable.icn_close : R.drawable.icn_arrow_left;
     }
 
     @Override

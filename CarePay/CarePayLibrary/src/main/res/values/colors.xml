@@ -13,12 +13,14 @@
     <color name="cadet_gray">#ff90a4ae</color>
     <!--<color name="rich_electric_blue">#ff009bde</color>-->
     <color name="light_gray">#CFD8DC</color>
+    <color name="light_gray_trans">#4BCFD8DC</color>
 
     <color name="glitter">#ccebf9</color>
     <color name="yellowGreen">#FF7ED321</color>
     <color name="slateGray">#607d8b</color>
     <color name="gray">#ffb0bec5</color>
     <color name="button_bright_cerulean">#1F9BDE</color>
+    <color name="light_blue_subtitle">#9FE5ED</color>
 
     <color name="textview_default_textcolor">#37474F</color>
     <!--<color name="bright_cerulean">#ff1f9bde</color>-->
@@ -62,7 +64,8 @@
     <color name="optionl_gray">#90a4ae</color>
     <color name="pastel_blue">#b0bec5</color>
     <color name="yellowGreen_blend">#337ed321</color>
-    <color name="medium_jungle_green">#263238</color>
+    <color name="dark_blue">#263238</color>
+    <color name="dark_blue_transparent">#24263238</color>
     <color name="white_transparent">#26ffffff</color>
     <color name="manatee">#9ba4a9</color>
 
@@ -72,7 +75,12 @@
     <color name="viewfinder_laser">#00cc0000</color>
     <color name="viewfinder_border">#ffafed44</color>
     <color name="gray_white">#80ffffff</color>
+    <color name="gray_divider">#3378909C</color>
 
+    <color name="cardview_header_bg">#253C48</color>
     <!--Android Pay-->
     <color name="android_pay_background_color">#78C257</color>
+
+    <color name="manatee_lite">#4Dd7d7d7</color>
+    <color name="text_color">#575757</color>
 </resources>

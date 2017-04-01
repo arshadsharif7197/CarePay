@@ -1,6 +1,7 @@
 package com.carecloud.carepay.patient.demographics.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,11 +15,16 @@ import com.carecloud.carepay.patient.payment.fragments.SettingAddCreditCardFragm
 import com.carecloud.carepay.patient.payment.fragments.SettingsCreditCardDetailsFragment;
 import com.carecloud.carepay.patient.payment.fragments.SettingsCreditCardListFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraFragment;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraReady;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Main activity for Settings workflow
@@ -26,8 +32,10 @@ import java.util.List;
 public class DemographicsSettingsActivity extends BasePatientActivity implements
         SettingsCreditCardDetailsFragment.IOnCreditCardOperationSuccess,
         SettingsCreditCardListFragment.ISettingsCreditCardListFragmentListener,
-        DemographicsSettingsFragment.IDemographicsSettingsFragmentListener {
+        DemographicsSettingsFragment.IDemographicsSettingsFragmentListener, CarePayCameraReady, CarePayCameraCallback {
+
     DemographicsSettingsDTO demographicsSettingsDTO;
+    private CarePayCameraCallback carePayCameraCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,5 +168,27 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         }
 
         navigateToFragment(fragment,true);
+    }
+
+    @Override
+    public void captureImage(CarePayCameraCallback callback) {
+        this.carePayCameraCallback = callback;
+
+        String tag = CarePayCameraFragment.class.getSimpleName();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+
+        CarePayCameraFragment dialog = new CarePayCameraFragment();
+        dialog.show(ft, tag);
+    }
+
+    @Override
+    public void onCapturedSuccess(Bitmap bitmap) {
+        if (carePayCameraCallback != null) {
+            carePayCameraCallback.onCapturedSuccess(bitmap);
+        }
     }
 }

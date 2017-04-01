@@ -23,6 +23,32 @@ public class CheckInTransitionsDTO {
     @Expose
     private TransitionDTO confirmAppointment = new TransitionDTO();
 
+    @SerializedName("make_appointment")
+    @Expose
+    private TransitionDTO makeAppointment = new TransitionDTO();
+
+    @SerializedName("dismiss_appointment")
+    @Expose
+    private TransitionDTO dismissAppointment = new TransitionDTO();
+
+    /**
+     * Gets dismiss appointment.
+     *
+     * @return the dismiss appointment
+     */
+    public TransitionDTO getDismissAppointment() {
+        return dismissAppointment;
+    }
+
+    /**
+     * Sets dismiss appointment.
+     *
+     * @param dismissAppointment the dismiss appointment
+     */
+    public void setDismissAppointment(TransitionDTO dismissAppointment) {
+        this.dismissAppointment = dismissAppointment;
+    }
+
     /**
      *
      * @return
@@ -79,5 +105,9 @@ public class CheckInTransitionsDTO {
 
     public TransitionDTO getConfirmAppointment() {
         return confirmAppointment;
+    }
+
+    public TransitionDTO getMakeAppointment() {
+        return makeAppointment;
     }
 }

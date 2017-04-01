@@ -2,7 +2,7 @@ package com.carecloud.carepaylibray.base;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
-import com.carecloud.carepay.service.library.cognito.CognitoAppHelper;
+import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 
 /**
@@ -14,7 +14,7 @@ public interface IApplicationSession {
 
     WorkflowServiceHelper getWorkflowServiceHelper();
 
-    CognitoAppHelper getCognitoAppHelper();
+    AppAuthorizationHelper getAppAuthorizationHelper();
 
     ApplicationMode getApplicationMode();
 }

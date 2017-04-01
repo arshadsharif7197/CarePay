@@ -1,16 +1,22 @@
 
 package com.carecloud.carepaylibray.appointments.models;
 
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import org.joda.time.DateTime;
 
+import java.util.Date;
+
 /**
  * Model for appointment payload.
  */
 public class AppointmentsPayloadDTO {
+
+    private static final int ANYTIME_PERIOD = 0;
+    private static final String NEVER_PERIOD = "never";
 
     @SerializedName("id")
     @Expose
@@ -20,10 +26,10 @@ public class AppointmentsPayloadDTO {
     private AppointmentStatusDTO appointmentStatusModel = new AppointmentStatusDTO();
     @SerializedName("patient")
     @Expose
-    private AppointmentPatientDTO patient = new AppointmentPatientDTO();
+    private PatientModel patient = new PatientModel();
     @SerializedName("location")
     @Expose
-    private AppointmentLocationsDTO location = new AppointmentLocationsDTO();
+    private LocationDTO location = new LocationDTO();
     @SerializedName("cancellation_details")
     @Expose
     private AppointmentCancellationDetailsDTO cancellationDetails = new AppointmentCancellationDetailsDTO();
@@ -78,6 +84,9 @@ public class AppointmentsPayloadDTO {
     @SerializedName("visit_reason_id")
     @Expose
     private Integer visitReasonId;
+    @SerializedName("visit_reason")
+    @Expose
+    private VisitTypeDTO visitType;
     @SerializedName("resource_id")
     @Expose
     private Integer resourceId;
@@ -101,7 +110,7 @@ public class AppointmentsPayloadDTO {
     private Object encounterId;
     @SerializedName("provider")
     @Expose
-    private AppointmentProviderDTO provider = new AppointmentProviderDTO();
+    private ProviderDTO provider = new ProviderDTO();
     @SerializedName("resource")
     @Expose
     private AppointmentResourceDTO resource = new AppointmentResourceDTO();
@@ -147,7 +156,7 @@ public class AppointmentsPayloadDTO {
      * @return
      *     The patient
      */
-    public AppointmentPatientDTO getPatient() {
+    public PatientModel getPatient() {
         return patient;
     }
 
@@ -156,7 +165,7 @@ public class AppointmentsPayloadDTO {
      * @param patient
      *     The patient
      */
-    public void setPatient(AppointmentPatientDTO patient) {
+    public void setPatient(PatientModel patient) {
         this.patient = patient;
     }
 
@@ -165,7 +174,7 @@ public class AppointmentsPayloadDTO {
      * @return
      *     The location
      */
-    public AppointmentLocationsDTO getLocation() {
+    public LocationDTO getLocation() {
         return location;
     }
 
@@ -174,7 +183,7 @@ public class AppointmentsPayloadDTO {
      * @param location
      *     The location
      */
-    public void setLocation(AppointmentLocationsDTO location) {
+    public void setLocation(LocationDTO location) {
         this.location = location;
     }
 
@@ -633,7 +642,7 @@ public class AppointmentsPayloadDTO {
      * @return
      *     The provider
      */
-    public AppointmentProviderDTO getProvider() {
+    public ProviderDTO getProvider() {
         return provider;
     }
 
@@ -642,7 +651,7 @@ public class AppointmentsPayloadDTO {
      * @param provider
      *     The provider
      */
-    public void setProvider(AppointmentProviderDTO provider) {
+    public void setProvider(ProviderDTO provider) {
         this.provider = provider;
     }
 
@@ -686,5 +695,67 @@ public class AppointmentsPayloadDTO {
 
         DateTime dateTime = new DateTime(DateUtil.getInstance().setDateRaw(startTime).getDate());
         return dateTime.isBeforeNow();
+    }
+
+    public VisitTypeDTO getVisitType() {
+        return visitType;
+    }
+
+    public void setVisitType(VisitTypeDTO visitType) {
+        this.visitType = visitType;
+    }
+
+    /**
+     * @return true if appointment can check in now
+     */
+    public boolean canCheckInNow(AppointmentsResultModel appointmentInfo) {
+        if (hasAppointmentStarted()) {
+            return true;
+        }
+
+        AppointmentsCheckinDTO checkin = appointmentInfo.getPayload().getAppointmentsSettings().get(0).getCheckin();
+        if (!checkin.getAllowEarlyCheckin()) {
+            return false;
+        }
+
+        DateUtil startDate = DateUtil.getInstance().setDateRaw(startTime);
+        if (!startDate.isToday()) {
+            return false;
+        }
+
+        long earlyCheckInPeriod = Long.parseLong(checkin.getEarlyCheckinPeriod());
+        if (ANYTIME_PERIOD == earlyCheckInPeriod) {
+            return true;
+        }
+
+        long differenceInMinutes = DateUtil.getMinutesElapsed(startDate.getDate(), new Date());
+
+        return differenceInMinutes < earlyCheckInPeriod;
+    }
+
+    /**
+     * @return true if appointment can be canceled
+     */
+    public boolean isAppointmentCancellable(AppointmentsResultModel appointmentInfo) {
+        if (hasAppointmentStarted()) {
+            return false;
+        }
+
+        AppointmentsCheckinDTO checkin = appointmentInfo.getPayload().getAppointmentsSettings().get(0).getCheckin();
+
+        String cancellationNoticePeriodStr = checkin.getCancellationNoticePeriod();
+        if (cancellationNoticePeriodStr.equalsIgnoreCase(NEVER_PERIOD)) {
+            return false;
+        }
+
+        long cancellationNoticePeriod = Long.parseLong(cancellationNoticePeriodStr);
+        if (ANYTIME_PERIOD == cancellationNoticePeriod) {
+            return true;
+        }
+
+        DateUtil startDate = DateUtil.getInstance().setDateRaw(startTime);
+        long differenceInMinutes = DateUtil.getMinutesElapsed(startDate.getDate(), new Date());
+
+        return differenceInMinutes < cancellationNoticePeriod;
     }
 }
