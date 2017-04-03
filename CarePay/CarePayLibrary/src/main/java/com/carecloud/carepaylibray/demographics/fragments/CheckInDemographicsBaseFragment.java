@@ -126,24 +126,17 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         TextView textView = (TextView) view.findViewById(R.id.checkinDemographicsHeaderLabel);
         SystemUtil.setGothamRoundedMediumTypeface(getContext(), textView);
         if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
-            //(view.findViewById(R.id.toolbar_layout)).setVisibility(checkInNavListener.getCurrentStep()>1 ?View.VISIBLE:View.INVISIBLE);
             (view.findViewById(R.id.toolbar_layout)).setVisibility(View.VISIBLE);
             textView.setText(title);
         }else{
             TextView mainHeadingTextView = (TextView) view.findViewById(R.id.demographicsMainHeading);
             TextView subHeadingTextView = (TextView)  view.findViewById(R.id.demographicsSubHeading);
             (view.findViewById(R.id.toolbar_layout)).setVisibility(View.VISIBLE);
-/*
-            setGothamRoundedMediumTypeface(getActivity(), mainHeadingTextView);
-            setProximaNovaRegularTypeface(getActivity(), subHeadingTextView);
-*/
+
             textView.setText(String.format(Label.getLabel("demographics_heading"), checkInNavListener.getCurrentStep(), 5));
             mainHeadingTextView.setText(heading);
             subHeadingTextView.setText(subHeading);
-            //"Donec ullamcorper nulla non metus auctor fringilla. Aenean eu leo quam."
-
         }
-
     }
 
     protected void initNextButton(View.OnClickListener listener, final View view, int visibility) {

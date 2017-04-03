@@ -20,8 +20,6 @@
         app:customAssetFont="proxima_nova_semi_bold"/>
 
 
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
