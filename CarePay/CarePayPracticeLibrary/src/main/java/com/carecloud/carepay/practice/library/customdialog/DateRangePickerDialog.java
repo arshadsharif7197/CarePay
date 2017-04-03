@@ -49,9 +49,6 @@ public class DateRangePickerDialog extends BaseDialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
         try {
             if (null == callback) {
                 callback = (DateRangePickerDialogListener) context;
@@ -147,7 +144,6 @@ public class DateRangePickerDialog extends BaseDialogFragment {
 
         TextView dialogTitleTextView = (TextView) view.findViewById(R.id.dialog_date_range_picker_dialog_title);
         dialogTitleTextView.setText(dialogTitle);
-        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), dialogTitleTextView);
 
         Button todayButton = (Button) view.findViewById(R.id.dialog_date_range_picker_today_button);
         todayButton.setOnClickListener(todayButtonClickListener);
