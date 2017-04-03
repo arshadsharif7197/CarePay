@@ -63,7 +63,7 @@ public class PatientNavigationHelper {
      */
     public void navigateToWorkflow(WorkflowDTO workflowDTO) {
         Bundle bundle = new Bundle();
-        bundle.putString(PatientNavigationHelper.class.getSimpleName(), workflowDTO.toString());
+        bundle.putString(WorkflowDTO.class.getSimpleName(), workflowDTO.toString());
         navigateToWorkflow(workflowDTO.getState(), bundle);
     }
 
@@ -142,7 +142,7 @@ public class PatientNavigationHelper {
         }
 
         if (bundle != null) {
-            intent.putExtra(PatientNavigationHelper.class.getSimpleName(), bundle);
+            intent.putExtra(WorkflowDTO.class.getSimpleName(), bundle);
         }
         context.startActivity(intent);
     }

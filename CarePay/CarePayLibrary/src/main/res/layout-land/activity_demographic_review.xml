@@ -6,8 +6,7 @@
     android:id="@+id/activity_patient_mode_checkin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:baselineAligned="false"
-    tools:context="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity">
+    android:baselineAligned="false">
 
     <RelativeLayout
         android:layout_width="0dp"
@@ -227,7 +226,7 @@
     </RelativeLayout>
 
     <FrameLayout
-        android:id="@+id/checkInContentHolderId"
+        android:id="@+id/root_layout"
         style="@style/CheckinContainerStyle"
         android:layout_width="0dp"
         android:layout_height="match_parent"

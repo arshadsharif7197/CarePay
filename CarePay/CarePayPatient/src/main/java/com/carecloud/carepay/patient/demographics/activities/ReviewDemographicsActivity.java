@@ -18,6 +18,9 @@ import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraFragment;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraReady;
+import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
+import com.carecloud.carepaylibray.demographics.DemographicsPresenterImpl;
+import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
@@ -54,7 +57,8 @@ public class ReviewDemographicsActivity extends BasePatientActivity
         CheckinDemographicsInterface,
         CheckInDemographicsBaseFragment.CheckInNavListener,
         PersonalInfoFragment.UpdateProfilePictureListener,
-        CarePayCameraReady {
+        CarePayCameraReady,
+        DemographicsView {
 
     //demographics nav
     private Map<Integer, CheckInDemographicsBaseFragment> demographicFragMap = new HashMap<>();

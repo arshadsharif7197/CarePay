@@ -29,24 +29,6 @@ public abstract class BasePatientActivity extends BaseActivity {
      * @param <S>      Dynamic class to convert
      * @return Dynamic converted class object
      */
-    public <S> S getConvertedDTO(Class<S> dtoClass) {
-        Bundle bundle = this.getIntent().getBundleExtra(PatientNavigationHelper.class.getSimpleName());
-
-        if (bundle != null) {
-            Gson gson = new Gson();
-            String jsonString = bundle.getString(PatientNavigationHelper.class.getSimpleName());
-            return gson.fromJson(jsonString, dtoClass);
-        }
-        return null;
-    }
-
-    /**
-     * Common WorkflowDTO which will converted to the desire DTO with dtoClass params
-     *
-     * @param dtoClass class to convert
-     * @param <S>      Dynamic class to convert
-     * @return Dynamic converted class object
-     */
     public <S> S getConvertedDTO(Class<S> dtoClass, String jsonString) {
 
         if (!StringUtil.isNullOrEmpty(jsonString)) {
