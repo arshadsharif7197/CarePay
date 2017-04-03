@@ -71,7 +71,8 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
 
     private AppointmentNavigationCallback callback;
 
-    public static AvailableHoursFragment newInstance(AppointmentsResultModel appointmentsResultModel, AppointmentDTO appointmentDTO) {
+    public static AvailableHoursFragment newInstance(AppointmentsResultModel appointmentsResultModel,
+                                                     AppointmentDTO appointmentDTO) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, appointmentsResultModel);
         DtoHelper.bundleDto(args, appointmentDTO);
@@ -113,7 +114,6 @@ public class AvailableHoursFragment extends BaseFragment implements AvailableHou
             startDate = DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime()).getDate();
             endDate = DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getEndTime()).getDate();
             selectedVisitTypeDTO = appointmentDTO.getPayload().getVisitType();
-//            selectedVisitTypeDTO = DtoHelper.getConvertedDTO(VisitTypeDTO.class, bundle);
             selectedResource = new AppointmentResourcesItemDTO();
             selectedResource.setId(appointmentDTO.getPayload().getResourceId());
             selectedResource.setProvider(appointmentDTO.getPayload().getProvider());

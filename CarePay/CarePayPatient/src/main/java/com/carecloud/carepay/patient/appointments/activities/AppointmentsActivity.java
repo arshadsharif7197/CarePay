@@ -195,7 +195,8 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                            AppointmentsResultModel appointmentsResultModel) {
         selectedAppointmentResourcesDTO = appointmentResourcesDTO;
         selectedVisitTypeDTO = visitTypeDTO;
-        AvailableHoursFragment availableHoursFragment = AvailableHoursFragment.newInstance(appointmentsResultModel,
+        AvailableHoursFragment availableHoursFragment = AvailableHoursFragment
+                .newInstance(appointmentsResultModel,
                 appointmentResourcesDTO.getResource(), null, null, visitTypeDTO);
         navigateToFragment(availableHoursFragment, true);
         displayToolbar(false, null);
@@ -204,7 +205,8 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     @Override
     public void selectTime(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource,
                            AppointmentsResultModel appointmentsResultModel) {
-        AvailableHoursFragment availableHoursFragment = AvailableHoursFragment.newInstance(appointmentsResultModel, appointmentResource,
+        AvailableHoursFragment availableHoursFragment = AvailableHoursFragment
+                .newInstance(appointmentsResultModel, appointmentResource,
                 startDate, endDate, visitTypeDTO);
         navigateToFragment(availableHoursFragment, false);
         displayToolbar(false, null);
