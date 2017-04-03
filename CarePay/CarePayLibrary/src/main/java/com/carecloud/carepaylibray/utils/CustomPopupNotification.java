@@ -67,7 +67,6 @@ public class CustomPopupNotification extends PopupWindow {
         this.statusBarColor =  ContextCompat.getColor(context, R.color.colorPrimaryDark) ;
         this.errorColor = ContextCompat.getColor(context, R.color.remove_red);
         this.notificationType = notificationType;
-        this.setAnimationStyle(R.style.notificationPopUpTopToBottomAnimation);
 
         initializeDimensions();
         setOutsideTouchable(true);
@@ -92,7 +91,9 @@ public class CustomPopupNotification extends PopupWindow {
                 popupWindowLayout.setBackgroundResource(R.drawable.error_notification_background);
                 popupMessageLabel.setTextColor(ContextCompat.getColor(context, R.color.white));
                 ApplicationMode.ApplicationType appMode = ((IApplicationSession) context).getApplicationMode().getApplicationType();
-
+                if(popupMessageText ==null) {
+                    popupMessageText = CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE;
+                }
                 this.hasStatusBar = (appMode == ApplicationMode.ApplicationType.PATIENT);
 
                 popupIcon.setImageResource(R.drawable.icn_notification_error);
