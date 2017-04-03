@@ -30,8 +30,9 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialog;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialogFragment;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiAccountsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiMetadataMerchantServiceDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.MerchantServiceMetadataDTO;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsCreditCardBillingInformationDTO;
@@ -40,19 +41,24 @@ import com.carecloud.carepaylibray.payments.models.postmodel.TokenizationService
 import com.carecloud.carepaylibray.payments.utils.CardPattern;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.PayeezyRequestTask;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.carecloud.carepaylibray.utils.payeezysdk.sdk.payeezydirecttransactions.RequestTask;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.payeezy.sdk.payeezytokenised.TransactionDataProvider;
 import com.smartystreets.api.us_zipcode.City;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+//import com.carecloud.carepaylibray.utils.payeezysdk.sdk.payeezydirecttransactions.RequestTask;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public abstract class BaseAddCreditCardFragment extends BaseDialogFragment implements RequestTask.AuthorizeCreditCardCallback, SimpleDatePickerDialog.OnDateSetListener {
+public abstract class BaseAddCreditCardFragment extends BaseDialogFragment implements PayeezyRequestTask.AuthorizeCreditCardCallback, SimpleDatePickerDialog.OnDateSetListener {
 
     public interface IAuthoriseCreditCardResponse {
         void onAuthorizeCreditCardSuccess();
@@ -97,6 +103,7 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
     protected PaymentCreditCardsPayloadDTO creditCardsPayloadDTO;
     protected PaymentsCreditCardBillingInformationDTO billingInformationDTO;
     protected IAuthoriseCreditCardResponse authoriseCreditCardResponseCallback;
+    private List<MerchantServicesDTO> merchantServicesList;
 
     protected PaymentNavigationCallback callback;
     protected PaymentsModel paymentsModel;
@@ -119,13 +126,11 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
                         addressPayloadDTO = gson.fromJson(payloadString, DemographicAddressPayloadDTO.class);
                     }
                 }
-                if (arguments.containsKey(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE)){
-                    payloadString = arguments.getString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE);
-                    papiAccountsDTO = gson.fromJson(payloadString, new TypeToken<List<DemographicsSettingsPapiAccountsDTO>>(){}.getType());
-                }else if(arguments.containsKey(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE)){
+                if(arguments.containsKey(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE)){
                     payloadString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
                     PaymentsModel paymentsModel = gson.fromJson(payloadString, PaymentsModel.class);
                     papiAccountsDTO = paymentsModel.getPaymentPayload().getPapiAccounts();
+                    merchantServicesList = paymentsModel.getPaymentPayload().getMerchantServices();
                 }
                 if (arguments.containsKey(CarePayConstants.PAYMENT_AMOUNT_BUNDLE)) {
                     amountToMakePayment = arguments.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
@@ -444,11 +449,10 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
 //        String amount = String.valueOf((int) amountToMakePayment>0?amountToMakePayment:1);//this is to create an authorization
         String amount = String.valueOf(1);//this is to create an authorization
         String currency = "USD";
-        String paymentMethod = "credit_card";
         String cvv = creditCardsPayloadDTO.getCvv();
         String expiryDate = creditCardsPayloadDTO.getExpireDt();
         String name = creditCardsPayloadDTO.getNameOnCard();
-        String type = creditCardsPayloadDTO.getCardType();
+        String cardType = creditCardsPayloadDTO.getCardType();
         String number = getCardNumber();
         String state = billingInformationDTO.getState();
         String addressline1 = billingInformationDTO.getLine1();
@@ -457,15 +461,34 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
         String city = billingInformationDTO.getCity();
 
         try {
-            DemographicsSettingsPapiMetadataMerchantServiceDTO merchantServiceDTO = null;
-            for (DemographicsSettingsPapiAccountsDTO papiAccountDTO : papiAccountsDTO) {
-                if (papiAccountDTO.getType().contains("payeezy")) {
-                    merchantServiceDTO = papiAccountDTO.getMetadata().getMerchantService();
+            MerchantServiceMetadataDTO merchantServiceDTO = null;
+            for(MerchantServicesDTO merchantService : merchantServicesList){
+                if(merchantService.getName().toLowerCase().contains("payeezy")){
+                    merchantServiceDTO = merchantService.getMetadata();
                     break;
                 }
             }
-            RequestTask requestTask = new RequestTask(getActivity(), BaseAddCreditCardFragment.this, merchantServiceDTO);
-            requestTask.execute("authorize", amount, currency, paymentMethod, cvv, expiryDate, name, type, number, state, addressline1, zip, country, city);
+
+            String tokenUrl = merchantServiceDTO.getBaseUrl()+merchantServiceDTO.getUrlPath();
+            if(!tokenUrl.endsWith("?")){
+                tokenUrl+="?";
+            }
+
+            TransactionDataProvider.tokenUrl = tokenUrl;
+            TransactionDataProvider.appIdCert = merchantServiceDTO.getApiKey();
+            TransactionDataProvider.secureIdCert = merchantServiceDTO.getApiSecret();
+            TransactionDataProvider.tokenCert = merchantServiceDTO.getMasterMerchantToken();
+            TransactionDataProvider.trTokenInt = merchantServiceDTO.getMasterTaToken();
+            TransactionDataProvider.jsSecurityKey = merchantServiceDTO.getMasterJsSecurityKey();
+
+            String tokenType = merchantServiceDTO.getTokenType();
+            String tokenAuth = merchantServiceDTO.getTokenizationAuth();
+            PayeezyRequestTask requestTask = new PayeezyRequestTask(getContext(), this);
+            requestTask.execute("gettokenvisa", tokenAuth, "", currency, tokenType,  cardType, name, number, expiryDate, cvv);
+//            requestTask.execute("posttokenvisa", currency, tokenType, number, name, expiryDate, cvv, cardType, "false", "");
+
+//            RequestTask requestTask = new RequestTask(getActivity(), BaseAddCreditCardFragment.this, merchantServiceDTO);
+//            requestTask.execute("authorize", amount, currency, paymentMethod, cvv, expiryDate, name, type, number, state, addressline1, zip, country, city);
             System.out.println("first authorize call end");
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -565,11 +588,11 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
     };
 
     private void setAddressFieldsEnabled(boolean isEnabled) {
-        address1EditText.setFocusable(isEnabled);
-        address2EditText.setFocusable(isEnabled);
-        zipCodeEditText.setFocusable(isEnabled);
-        cityEditText.setFocusable(isEnabled);
-        stateAutoCompleteTextView.setFocusable(isEnabled);
+        address1EditText.setEnabled(isEnabled);
+        address2EditText.setEnabled(isEnabled);
+        zipCodeEditText.setEnabled(isEnabled);
+        cityEditText.setEnabled(isEnabled);
+        stateAutoCompleteTextView.setEnabled(isEnabled);
         stateAutoCompleteTextView.setClickable(isEnabled);
     }
 
@@ -673,19 +696,27 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
 
     @Override
     public void onAuthorizeCreditCard(String resString) {
+        String valueString = "value";
+        if (resString != null && resString.contains(valueString)) {
 
-        if (resString != null && resString.length() > 800) {
-            int startIndex = resString.indexOf("value");
-            startIndex = resString.indexOf("=", startIndex + 1);
-            int endIndex = resString.indexOf(",", startIndex);
-            String tokenValue = resString.substring(startIndex, endIndex);
-            tokenValue = tokenValue.replace(" ", "");
-            tokenValue = tokenValue.replace(":", "");
-            tokenValue = tokenValue.replace("=", "");
-            tokenValue = tokenValue.replace("}", "");
-            creditCardsPayloadDTO.setToken(tokenValue);
+            String group1 = "(\\\"value\\\":\")";
+            String group2 = "(\\d+)";
+            String regex = group1+group2;
+            String tokenValue = null;
+            Matcher matcher = Pattern.compile(regex).matcher(resString);
+            if(matcher.find()){
+                tokenValue = matcher.group().replaceAll(group1, "");
+            }
 
-            authoriseCreditCardResponseCallback.onAuthorizeCreditCardSuccess();
+            if(tokenValue!=null && tokenValue.matches(group2)){
+                creditCardsPayloadDTO.setToken(tokenValue);
+                authoriseCreditCardResponseCallback.onAuthorizeCreditCardSuccess();
+            }else{
+                nextButton.setEnabled(true);
+                authoriseCreditCardResponseCallback.onAuthorizeCreditCardFailed();
+
+            }
+
         } else {
             nextButton.setEnabled(true);
             authoriseCreditCardResponseCallback.onAuthorizeCreditCardFailed();

@@ -5,7 +5,7 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMerchantServicesDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiAccountsDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
 import com.google.gson.annotations.Expose;
@@ -65,7 +65,7 @@ public class PaymentsPayloadDTO implements Serializable {
     private List<DemographicsSettingsPapiAccountsDTO> papiAccounts = new ArrayList<>();
     @SerializedName("merchant_services")
     @Expose
-    private List<DemographicsSettingsMerchantServicesDTO> merchantServices = new ArrayList<>();
+    private List<MerchantServicesDTO> merchantServices = new ArrayList<>();
     @SerializedName("user_practices")
     @Expose
     private List<UserPracticeDTO> userPractices = new ArrayList<>();
@@ -233,7 +233,7 @@ public class PaymentsPayloadDTO implements Serializable {
      *
      * @return the merchant services
      */
-    public List<DemographicsSettingsMerchantServicesDTO> getMerchantServices() {
+    public List<MerchantServicesDTO> getMerchantServices() {
         return merchantServices;
     }
 
@@ -242,7 +242,7 @@ public class PaymentsPayloadDTO implements Serializable {
      *
      * @param merchantServices the merchant services
      */
-    public void setMerchantServices(List<DemographicsSettingsMerchantServicesDTO> merchantServices) {
+    public void setMerchantServices(List<MerchantServicesDTO> merchantServices) {
         this.merchantServices = merchantServices;
     }
 

@@ -24,6 +24,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentType;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -87,7 +88,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             nextButton.setEnabled(true);
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            SystemUtil.showErrorToast(getContext(), CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -114,7 +115,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             nextButton.setEnabled(true);
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            SystemUtil.showErrorToast(getContext(), CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
@@ -180,8 +181,6 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
     private void postPayment(String paymentModelJson) {
         PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
         Map<String, String> queries = new HashMap<>();
-        queries.put("practice_mgmt", metadata.getPracticeMgmt());
-        queries.put("practice_id", metadata.getPracticeId());
         queries.put("patient_id", metadata.getPatientId());
 
 

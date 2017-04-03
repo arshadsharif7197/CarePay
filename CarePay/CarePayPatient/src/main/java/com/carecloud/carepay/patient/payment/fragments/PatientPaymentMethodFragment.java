@@ -17,7 +17,7 @@ import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.PaymentResponsibilityModel;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiAccountsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPapiMetadataMerchantServiceDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.MerchantServiceMetadataDTO;
 import com.carecloud.carepaylibray.payments.adapter.PaymentMethodAdapter;
 import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
@@ -282,8 +282,8 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         return builder.build();
     }
 
-    private DemographicsSettingsPapiMetadataMerchantServiceDTO getPayeezyMerchantService(){
-        DemographicsSettingsPapiMetadataMerchantServiceDTO merchantServiceDTO = null;
+    private MerchantServiceMetadataDTO getPayeezyMerchantService(){
+        MerchantServiceMetadataDTO merchantServiceDTO = null;
         for (DemographicsSettingsPapiAccountsDTO papiAccountDTO : paymentsModel.getPaymentPayload().getPapiAccounts()) {
             if (papiAccountDTO.getType().contains("payeezy")) {
                 merchantServiceDTO = papiAccountDTO.getMetadata().getMerchantService();
