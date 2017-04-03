@@ -78,10 +78,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
 
     public final static int SUBFLOW_DEMOGRAPHICS_INS = 0;
-    public final static int SUBFLOW_CONSENT = 1;
-    public final static int SUBFLOW_INTAKE = 2;
     public final static int SUBFLOW_PAYMENTS = 3;
-    private static final int NUM_OF_SUBFLOWS = 4;
 
     //demographics nav
     private int currentDemographicStep = 1;

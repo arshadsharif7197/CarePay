@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -16,7 +15,9 @@ import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
-import com.carecloud.carepaylibray.demographics.dialog.InsuranceEditDialog;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraFragment;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraReady;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
@@ -34,10 +35,8 @@ import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterfac
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
-import com.carecloud.carepaylibray.demographics.scanner.InsuranceDocumentScannerFragment;
 import com.carecloud.carepaylibray.demographics.scanner.ProfilePictureFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +53,8 @@ public class ReviewDemographicsActivity extends BasePatientActivity
         HealthInsuranceFragment.InsuranceDocumentScannerListener,
         CheckinDemographicsInterface,
         CheckInDemographicsBaseFragment.CheckInNavListener,
-        PersonalInfoFragment.UpdateProfilePictureListener{
+        PersonalInfoFragment.UpdateProfilePictureListener,
+        CarePayCameraReady {
 
     //demographics nav
     private Map<Integer, CheckInDemographicsBaseFragment> demographicFragMap = new HashMap<>();
@@ -67,7 +67,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity
     private View checkinPayment;
     //
     private DemographicDTO demographicDTO;
-    private InsuranceEditDialog insuranceEditDialog;
+    private CarePayCameraCallback carePayCameraCallback;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -134,7 +134,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity
     public void initializeDocumentFragment(){
 
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, demographicDTO.getMetadata().getDataModels().demographic.identityDocuments);
+        DtoHelper.bundleDto(args, demographicDTO.getMetadata().getDataModels().getDemographic().getIdentityDocuments());
         DtoHelper.bundleDto(args, demographicDTO.getMetadata().getLabels());
         DtoHelper.bundleDto(args, getDemographicIdDocPayloadDTO());
 
@@ -205,7 +205,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity
         DtoHelper.bundleDto(args, getDemographicIdDocPayloadDTO());
 
         DemographicMetadataEntityIdDocsDTO idDocsMetaDTO =
-                demographicDTO.getMetadata().getDataModels().demographic.identityDocuments;
+                demographicDTO.getMetadata().getDataModels().getDemographic().getIdentityDocuments();
 
         if (null != idDocsMetaDTO) {
             DtoHelper.bundleDto(args, idDocsMetaDTO.properties.items.identityDocument);
@@ -244,7 +244,6 @@ public class ReviewDemographicsActivity extends BasePatientActivity
                                                  PatientModel persDetailsDTO) {
 
         ProfilePictureFragment fragment = new ProfilePictureFragment();
-        fragment.setGlobalLabelsDTO(globalLabelDTO);
 
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, persDetailsDTO);
@@ -353,4 +352,18 @@ public class ReviewDemographicsActivity extends BasePatientActivity
         }
     }
 
+    @Override
+    public void captureImage(CarePayCameraCallback callback) {
+        this.carePayCameraCallback = callback;
+
+        String tag = CarePayCameraFragment.class.getSimpleName();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+
+        CarePayCameraFragment dialog = new CarePayCameraFragment();
+        dialog.show(ft, tag);
+    }
 }

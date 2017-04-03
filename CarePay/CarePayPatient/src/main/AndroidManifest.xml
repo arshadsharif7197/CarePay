@@ -48,9 +48,6 @@
             android:screenOrientation="sensorPortrait"
             android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
-            android:name=".demographics.activities.NewReviewDemographicsActivity"
-            android:screenOrientation="sensorPortrait"/>
-        <activity
             android:name=".demographics.activities.ReviewDemographicsActivity"
             android:screenOrientation="sensorPortrait"/>
         <activity
