@@ -13,13 +13,17 @@ import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
  * Created by cocampo on 2/6/17.
  */
 
 public abstract class BaseDialogFragment extends DialogFragment implements ISession {
+    private static final int FULLSCREEN_VALUE = 0x10000000;
+
     private Dialog dialog;
+    private boolean isPracticeAppPatientMode;
 
     @Override
     public void setupDialog(Dialog dialog, int style) {
@@ -27,6 +31,11 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         this.dialog = getDialog();
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         setCancelable(false);
+
+        isPracticeAppPatientMode = ((ISession) getActivity()).getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE;
+        if (isPracticeAppPatientMode) {
+            setNavigationBarVisibility();
+        }
     }
 
     @Override
@@ -106,6 +115,19 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         }
 
         return rootView.findViewById(id);
+    }
+
+    protected void hideKeyboardOnViewTouch(View view){
+        if(isPracticeAppPatientMode){
+            view.setSoundEffectsEnabled(false);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    SystemUtil.hideSoftKeyboard(getContext(), view);
+                }
+            });
+        }
+
     }
 
     @Override
@@ -192,4 +214,15 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
             getDialog().hide();
         }
     }
+
+    private void setNavigationBarVisibility() {
+
+        View decorView = getDialog().getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_IMMERSIVE
+                | FULLSCREEN_VALUE;
+        decorView.setSystemUiVisibility(uiOptions);
+    }
+
 }

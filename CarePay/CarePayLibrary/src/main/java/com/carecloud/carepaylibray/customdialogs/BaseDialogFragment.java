@@ -11,12 +11,17 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public abstract class BaseDialogFragment extends DialogFragment implements View.OnClickListener {
+    private static final int FULLSCREEN_VALUE = 0x10000000;
 
     private View view;
+    private boolean isPracticeAppPatientMode;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -25,6 +30,11 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
 
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+
+        isPracticeAppPatientMode = ((ISession) getActivity()).getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE;
+        if (isPracticeAppPatientMode) {
+            setNavigationBarVisibility();
+        }
 
         setCancelable(getCancelable());
 
@@ -36,6 +46,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
         View contentView = inflater.inflate(getContentLayout(), null);
         ((FrameLayout) view.findViewById(R.id.base_dialog_content_layout)).addView(contentView);
 
+        hideKeyboardOnViewTouch(view);
         return view;
     }
 
@@ -46,6 +57,19 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
         if (R.id.closeViewLayout == viewId) {
             onDialogCancel();
         }
+    }
+
+    protected void hideKeyboardOnViewTouch(View view){
+        if(isPracticeAppPatientMode){
+            view.setSoundEffectsEnabled(false);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    SystemUtil.hideSoftKeyboard(getContext(), view);
+                }
+            });
+        }
+
     }
 
     // if caller want to change on cancel then override this method in extended class
@@ -95,4 +119,16 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
     private View findViewById(int id) {
         return view.findViewById(id);
     }
+
+    private void setNavigationBarVisibility() {
+
+        View decorView = getDialog().getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_IMMERSIVE
+                | FULLSCREEN_VALUE;
+        decorView.setSystemUiVisibility(uiOptions);
+    }
+
+
 }

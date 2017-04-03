@@ -1,7 +1,6 @@
 package com.carecloud.carepay.practice.library.payments.dialogs;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -25,10 +25,12 @@ import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestCreator;
 
 import java.util.List;
+
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class ResponsibilityFragmentDialog extends BaseDialogFragment implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
 
@@ -143,19 +145,28 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
 
         String photoUrl = headerModel.getHeaderPhotoUrl();
         if (!TextUtils.isEmpty(photoUrl)) {
-            Picasso.Builder builder = new Picasso.Builder(getContext());
-            builder.listener(new Picasso.Listener() {
-                @Override
-                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                    shortName.setText(headerModel.getHeaderShortTitle());
-                }
-            });
+            Picasso.with(getContext()).load(photoUrl)
+                    .transform(new CircleImageTransform())
+                    .resize(88, 88)
+                    .into(profilePhoto, new Callback() {
+                        @Override
+                        public void onSuccess() {
 
-            builder.build().load(photoUrl).transform(new CircleImageTransform()).resize(88, 88).into(profilePhoto);
+                        }
 
-            RequestCreator load = builder.build().load(photoUrl);
+                        @Override
+                        public void onError() {
+                            shortName.setText(headerModel.getHeaderShortTitle());
+                        }
+                    });
+
             ImageView bgImage = (ImageView) view.findViewById(R.id.profile_bg_image);
-            load.fit().into(bgImage);
+
+
+            Picasso.with(getContext()).load(photoUrl)
+                    .fit()
+                    .transform(new RoundedCornersTransformation(10, 0, RoundedCornersTransformation.CornerType.TOP))
+                    .into(bgImage);
 
             profilePhoto.setVisibility(View.VISIBLE);
         }
@@ -165,12 +176,23 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
 
     private void initializeBody(View view) {
         if (null != patientBalance && null != patientBalance.getBalances() && !patientBalance.getBalances().isEmpty()) {
+            LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.rowLayout);
             List<PendingBalanceDTO> balances = patientBalance.getBalances();
             initializeOwedAmount(balances);
             if (owedAmount > 0) {
                 initializePaymentLines(view, balances);
+                linearLayout.setVisibility(View.GONE);
+            } else{
+                linearLayout.setVisibility(View.VISIBLE);
+                TextView paymentDetailLabel =(TextView) view.findViewById(R.id.itemNameLabel);
+                TextView paymentDetailAmount =(TextView) view.findViewById(R.id.itemAmountLabel);
+
+                paymentDetailLabel.setText(Label.getLabel("payment_details_patient_balance_label"));
+                paymentDetailAmount.setText("$0.00");
+
             }
         }
+
         initializeOwedAmountTextView(view);
     }
 

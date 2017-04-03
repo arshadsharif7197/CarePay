@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +45,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
         public void onClick(View view) {
 
             showDialog(
-                    getOptionsFrom(persDetailsMetaDTO.getProperties().getGender().options),
+                    getOptionsFrom(persDetailsMetaDTO.getProperties().getGender().getOptions()),
                     Label.getLabel("demographics_documents_title_select_gender"),
                     Label.getLabel("demographics_cancel_label"),
                     (TextView) findViewById(R.id.chooseGenderTextView),
@@ -62,7 +61,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
         public void onClick(View view) {
 
             showDialog(
-                    getOptionsFrom(persDetailsMetaDTO.getProperties().getPrimaryRace().options),
+                    getOptionsFrom(persDetailsMetaDTO.getProperties().getPrimaryRace().getOptions()),
                     Label.getLabel("demographics_documents_title_select_race"),
                     Label.getLabel("demographics_cancel_label"),
                     (TextView) findViewById(R.id.raceListDataTextView),
@@ -78,7 +77,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
         public void onClick(View view) {
 
             showDialog(
-                    getOptionsFrom(persDetailsMetaDTO.getProperties().getEthnicity().options) ,
+                    getOptionsFrom(persDetailsMetaDTO.getProperties().getEthnicity().getOptions()) ,
                     Label.getLabel("demographics_documents_title_select_ethnicity"),
                     Label.getLabel("demographics_cancel_label"),
                     (TextView) findViewById(R.id.ethnicityListDataTextView),
@@ -241,7 +240,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
      * */
     private void initializeDemographicsDTO() {
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
-        persDetailsMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.personalDetails;
+        persDetailsMetaDTO = demographicDTO.getMetadata().getDataModels().getDemographic().getPersonalDetails();
 
         if (demographicDTO.getPayload().getDemographics() != null) {
             demographicPersDetailsPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails();

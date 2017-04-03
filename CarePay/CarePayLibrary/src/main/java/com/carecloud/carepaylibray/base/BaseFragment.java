@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.base;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -9,13 +10,34 @@ import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
  * Created by cocampo on 2/6/17.
  */
 
 public abstract class BaseFragment extends Fragment implements ISession {
+    private boolean isPracticeAppPatientMode;
 
+    @Override
+    public void onCreate(Bundle icicle){
+        super.onCreate(icicle);
+
+        isPracticeAppPatientMode = getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE;
+    }
+
+    protected void hideKeyboardOnViewTouch(View view){
+        if(isPracticeAppPatientMode){
+            view.setSoundEffectsEnabled(false);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    SystemUtil.hideSoftKeyboard(getContext(), view);
+                }
+            });
+        }
+
+    }
 
     public boolean enableViewById(int id) {
         return setEnabledViewById(id, true);

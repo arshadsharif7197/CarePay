@@ -14,6 +14,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.adapter.PatientSearchResultAdapter;
@@ -39,7 +40,7 @@ public class FindPatientDialog extends Dialog {
     private Context context;
     private TransitionDTO transitionDTO;
     private OnItemClickedListener clickedListener;
-    private String hintLabel;
+    private String titleLabel;
     private String query;
 
     /**
@@ -48,11 +49,11 @@ public class FindPatientDialog extends Dialog {
      * @param context       context
      * @param transitionDTO transition dto
      */
-    public FindPatientDialog(Context context, TransitionDTO transitionDTO, String hintLabel) {
+    public FindPatientDialog(Context context, TransitionDTO transitionDTO, String titleLabel) {
         super(context);
         this.context = context;
         this.transitionDTO = transitionDTO;
-        this.hintLabel = hintLabel;
+        this.titleLabel = titleLabel;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -86,6 +87,9 @@ public class FindPatientDialog extends Dialog {
                 dismiss();
             }
         });
+
+        TextView titleView = (TextView) findViewById(R.id.find_patient_title);
+        titleView.setText(titleLabel);
     }
 
     private View.OnKeyListener getKeyListener() {

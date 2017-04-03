@@ -1,16 +1,23 @@
 package com.carecloud.carepaylibray.demographics.scanner;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraReady;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
@@ -23,27 +30,43 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
  * Created by lsoco_user on 9/13/2016.
  * Generic fragment that incorporates camera scanning functionality
  */
-public abstract class DocumentScannerFragment extends BaseCheckinFragment {
+public abstract class DocumentScannerFragment extends BaseCheckinFragment implements CarePayCameraCallback {
 
     protected boolean hasImageChanged;
-    protected ImageCaptureHelper imageCaptureHelper;
-    protected ImageCaptureHelper.CameraType cameraType;
+    protected boolean isFrontScan;
+    private ImageView targetImageView;
+    protected ImageView imageFront;
+    protected ImageView imageBack;
+    private ImageCaptureHelper.CameraType cameraType;
+
+    protected CarePayCameraReady carePayCameraReady;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            carePayCameraReady = (CarePayCameraReady) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement CarePayCameraReady");
+        }
+    }
 
     /**
      * Starts Camera or Gallery to capture/select an image
      *
-     * @param imageCaptureHelper The camera helper used with a particular imageview
+     * @param isFrontScan The camera helper used with a particular imageview
      */
-    public void selectImage(final ImageCaptureHelper imageCaptureHelper, final ImageCaptureHelper.CameraType cameraType) {
-        this.imageCaptureHelper = imageCaptureHelper;
+    public void selectImage(ImageView targetImageView, boolean isFrontScan, ImageCaptureHelper.CameraType cameraType) {
+        this.targetImageView = targetImageView;
+        this.isFrontScan = isFrontScan;
         this.cameraType = cameraType;
         // create the chooser dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(ImageCaptureHelper.chooseActionDlgTitle);
         if (cameraType == ImageCaptureHelper.CameraType.DEFAULT_CAMERA) {
-            builder.setItems(ImageCaptureHelper.chooseActionDlOptions, dialogOnClickListener);
+            builder.setItems(ImageCaptureHelper.getActionDlOptions(), dialogOnClickListener);
         } else {
-            builder.setItems(ImageCaptureHelper.chooseActionDocumentDlOptions, dialogDocumentScanOnClickListener);
+            builder.setItems(ImageCaptureHelper.getActionDocumentDlOptions(), dialogDocumentScanOnClickListener);
         }
 
         builder.show();
@@ -53,11 +76,10 @@ public abstract class DocumentScannerFragment extends BaseCheckinFragment {
         @Override
         public void onClick(DialogInterface dialog, int item) {
             if (item == 0) { // "Take picture" chosen
-                imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[0].toString());
+                ImageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.getActionDlOptions(0));
                 boolean result = PermissionsUtil.checkPermissionCamera(getActivity());
                 if (result) {
-                    // uncomment when camera activity
-                    startActivityForResult(imageCaptureHelper.getCameraIntent(cameraType), ImageCaptureHelper.REQUEST_CAMERA);
+                    carePayCameraReady.captureImage(DocumentScannerFragment.this);
                 }
             } else if (item == 1) { // "Cancel"
                 dialog.dismiss();
@@ -68,22 +90,26 @@ public abstract class DocumentScannerFragment extends BaseCheckinFragment {
     private DialogInterface.OnClickListener dialogOnClickListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int item) {
-            if (item == 0) { // "Take picture" chosen
-                imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[0].toString());
-                boolean result = PermissionsUtil.checkPermissionCamera(getActivity());
-                if (result) {
-                    // uncomment when camera activity
-                    startActivityForResult(imageCaptureHelper.getCameraIntent(cameraType), ImageCaptureHelper.REQUEST_CAMERA);
-                }
-            } else if (item == 1) {  // "Select from Gallery" chosen
-                imageCaptureHelper.setCameraType(null);
-                imageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.chooseActionDlOptions[1].toString());
-                boolean result = PermissionsUtil.checkPermission(getActivity());
-                if (result) {
-                    startActivityForResult(imageCaptureHelper.galleryIntent(), ImageCaptureHelper.SELECT_FILE);
-                }
-            } else if (item == 2) { // "Cancel"
-                dialog.dismiss();
+            switch (item) {
+                case 0:  // "Take picture" chosen
+                    ImageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.getActionDlOptions(0));
+
+                    if (PermissionsUtil.checkPermissionCamera(getActivity())) {
+                        // uncomment when camera activity
+                        carePayCameraReady.captureImage(DocumentScannerFragment.this);
+                    }
+                    break;
+
+                case 1:   // "Select from Gallery" chosen
+                    ImageCaptureHelper.setUserChoosenTask(ImageCaptureHelper.getActionDlOptions(1));
+
+                    if (PermissionsUtil.checkPermission(getActivity())) {
+                        startActivityForResult(ImageCaptureHelper.galleryIntent(), ImageCaptureHelper.SELECT_FILE);
+                    }
+                    break;
+
+                default:  // "Cancel"
+                    dialog.dismiss();
             }
         }
     };
@@ -115,12 +141,12 @@ public abstract class DocumentScannerFragment extends BaseCheckinFragment {
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         Log.v(LOG_TAG, "onReauestPermissionsResult()");
-        String userChoosenTask = imageCaptureHelper.getUserChoosenTask();
+        String userChoosenTask = ImageCaptureHelper.getUserChoosenTask();
         switch (requestCode) {
             case PermissionsUtil.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (userChoosenTask.equals(ImageCaptureHelper.chooseActionDlOptions[1].toString())) {
-                        startActivityForResult(Intent.createChooser(imageCaptureHelper.galleryIntent(),
+                    if (userChoosenTask.equals(ImageCaptureHelper.getActionDlOptions(1))) {
+                        startActivityForResult(Intent.createChooser(ImageCaptureHelper.galleryIntent(),
                                 ImageCaptureHelper.CHOOSER_NAME),
                                 ImageCaptureHelper.SELECT_FILE);
                     }
@@ -132,8 +158,8 @@ public abstract class DocumentScannerFragment extends BaseCheckinFragment {
 
             case PermissionsUtil.MY_PERMISSIONS_CAMERA:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (userChoosenTask.equals(ImageCaptureHelper.chooseActionDlOptions[0].toString())) {
-                        startActivityForResult(imageCaptureHelper.cameraIntent(getContext()), ImageCaptureHelper.REQUEST_CAMERA);
+                    if (userChoosenTask.equals(ImageCaptureHelper.getActionDlOptions(0))) {
+                        ImageCaptureHelper.requestCamera(getActivity(), ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
                     }
                 } else {
                     //code for deny
@@ -149,18 +175,27 @@ public abstract class DocumentScannerFragment extends BaseCheckinFragment {
         if (resultCode == Activity.RESULT_OK) {
             Bitmap bitmap = null;
             if (requestCode == ImageCaptureHelper.SELECT_FILE) {
-                bitmap = imageCaptureHelper.onSelectFromGalleryResult(data, getImageShape());
+                bitmap = ImageCaptureHelper.onSelectFromGalleryResult(getContext(), targetImageView, data, cameraType, getImageShape());
             } else if (requestCode == ImageCaptureHelper.REQUEST_CAMERA) {
                 if (cameraType == ImageCaptureHelper.CameraType.CUSTOM_CAMERA) {
-//                    bitmap = imageCaptureHelper.onCaptureImageResult(getImageShape());
-//                    Log.v(LOG_TAG, "Orientation camera to: " + imageCaptureHelper.getOrientation());
+                    bitmap = ImageCaptureHelper.getImageBitmap();
+                    ImageCaptureHelper.setCapturedImageToTargetView(getContext(), targetImageView, bitmap, cameraType, getImageShape());
                 } else {
-                    bitmap = imageCaptureHelper.onCaptureImageResult(data, getImageShape());
+                    bitmap = ImageCaptureHelper.onCaptureImageResult(getContext(), targetImageView, data, cameraType, getImageShape());
                 }
             }
 
             hasImageChanged = bitmap != null;
-            updateModelAndViewsAfterScan(imageCaptureHelper, bitmap);
+            onCapturedSuccess(bitmap);
+        }
+    }
+
+    protected void loadFrontPlaceHolder() {
+        // if no image to load, simply load the placeholder
+        Drawable drawable = ContextCompat.getDrawable(getActivity(), R.drawable.icn_placeholder_user_profile_png);
+
+        if (imageFront != null) {
+            imageFront.setImageDrawable(drawable);
         }
     }
 
@@ -170,11 +205,6 @@ public abstract class DocumentScannerFragment extends BaseCheckinFragment {
      * @return The shape (ImageCaptureHelper.ImageShape)
      */
     public abstract ImageCaptureHelper.ImageShape getImageShape();
-
-    /**
-     * Updates the number the button label and the number textview accoring to doc scanned (license or insurance)
-     */
-    protected abstract void updateModelAndViewsAfterScan(ImageCaptureHelper scanner, Bitmap bitmap);
 
     /**
      * Populate the views with the date from model

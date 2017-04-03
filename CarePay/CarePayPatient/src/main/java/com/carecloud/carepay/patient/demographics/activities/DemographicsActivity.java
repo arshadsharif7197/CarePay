@@ -26,6 +26,7 @@ import com.carecloud.carepay.patient.demographics.fragments.viewpager.Demographi
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsDocumentsFragmentWthWrapper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CustomViewPager;
@@ -63,27 +64,26 @@ public class DemographicsActivity extends BasePatientActivity
         DemographicsDetailsFragment.DemographicsDetailsFragmentListener,
         DemographicsAddressFragment.DemographicsAddressFragmentListener,
         CheckinDemographicsFragment.CheckinDemographicsFragmentListener,
-        HealthInsuranceFragment.InsuranceDocumentScannerListener{
+        HealthInsuranceFragment.InsuranceDocumentScannerListener {
 
-    private int       currentPageIndex;
+    private int currentPageIndex;
     // views
-    private TextView  titleTextView;
+    private TextView titleTextView;
     private CustomViewPager viewPager;
     private ImageView tabImageView;
     // jsons (payload)
     private DemographicDTO modelGet = null;
-    private DemographicAddressPayloadDTO     addressModel;
+    private DemographicAddressPayloadDTO addressModel;
     private PatientModel detailsModel;
-    private DemographicIdDocPayloadDTO       idDocModel;
+    private DemographicIdDocPayloadDTO idDocModel;
     private List<DemographicInsurancePayloadDTO> insuranceModelList = new ArrayList<>();
     // jsons (metadata)
-    private DemographicMetadataEntityAddressDTO     addressEntityMetaDTO;
+    private DemographicMetadataEntityAddressDTO addressEntityMetaDTO;
     private DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO;
-    private DemographicMetadataEntityIdDocsDTO      idDocsMetaDTO;
-    private DemographicMetadataEntityInsurancesDTO  insurancesMetaDTO;
-    private DemographicLabelsDTO                    labelsDTO;
-    private Toolbar                                 toolbar;
-    private String[]                                fragLabels;
+    private DemographicMetadataEntityIdDocsDTO idDocsMetaDTO;
+    private DemographicLabelsDTO labelsDTO;
+    private Toolbar toolbar;
+    private String[] fragLabels;
 
     /**
      * Updating with info model
@@ -113,10 +113,10 @@ public class DemographicsActivity extends BasePatientActivity
 
         // init frag labels
         fragLabels = new String[4];
-        fragLabels[0] = labelsDTO == null ? CarePayConstants.NOT_DEFINED : labelsDTO.getDemographicsAddressSection();
-        fragLabels[1] = labelsDTO == null ? CarePayConstants.NOT_DEFINED : labelsDTO.getDemographicsDetailsSection();
-        fragLabels[2] = labelsDTO == null ? CarePayConstants.NOT_DEFINED : labelsDTO.getDemographicsDocumentsSection();
-        fragLabels[3] = labelsDTO == null ? CarePayConstants.NOT_DEFINED : labelsDTO.getDemographicsAllSetSection();
+        fragLabels[0] = Label.getLabel("demographics_address_section");
+        fragLabels[1] = Label.getLabel("demographics_details_section");
+        fragLabels[2] = Label.getLabel("demographics_documents_section");
+        fragLabels[3] = Label.getLabel("demographics_allset_section");
 
         toolbar = (Toolbar) findViewById(R.id.demographics_toolbar);
         titleTextView = (TextView) toolbar.findViewById(R.id.demographics_toolbar_title);
@@ -254,10 +254,6 @@ public class DemographicsActivity extends BasePatientActivity
         return insuranceModelList;
     }
 
-    public void setInsuranceModelList(List<DemographicInsurancePayloadDTO> insuranceModelList) {
-        this.insuranceModelList = insuranceModelList;
-    }
-
     /**
      * checking storage permission
      *
@@ -273,23 +269,13 @@ public class DemographicsActivity extends BasePatientActivity
                 return true;
             } else {
                 ActivityCompat.requestPermissions(this,
-                                                  new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                                          Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
                 return false;
             }
         } else { //permission is automatically granted on sdk<23 upon installation
             return true;
         }
-    }
-
-    /**
-     * Returns the fragment in the view pager at a certain index. Used in tests
-     *
-     * @param pos The index
-     * @return The fragments
-     */
-    public Fragment getFragmentAt(int pos) {
-        return ((DemographicPagerAdapter) viewPager.getAdapter()).getItem(pos);
     }
 
     @Override
@@ -305,7 +291,7 @@ public class DemographicsActivity extends BasePatientActivity
         if (currentPageIndex == 0) {
             SystemUtil.hideSoftKeyboard(this);
 
-            if(!HttpConstants.isUseUnifiedAuth()) {
+            if (!HttpConstants.isUseUnifiedAuth()) {
                 // sign-out from Cognito
                 getAppAuthorizationHelper().getPool().getUser().signOut();
                 getAppAuthorizationHelper().setUser(null);
@@ -339,10 +325,9 @@ public class DemographicsActivity extends BasePatientActivity
         // init metadata DTOs
         DemographicMetadataDTO metadataDTO = modelGet.getMetadata();
         labelsDTO = metadataDTO.getLabels();
-        addressEntityMetaDTO = metadataDTO.getDataModels().demographic.address;
-        persDetailsMetaDTO = metadataDTO.getDataModels().demographic.personalDetails;
-        idDocsMetaDTO = metadataDTO.getDataModels().demographic.identityDocuments;
-        insurancesMetaDTO = metadataDTO.getDataModels().demographic.insurances;
+        addressEntityMetaDTO = metadataDTO.getDataModels().getDemographic().getAddress();
+        persDetailsMetaDTO = metadataDTO.getDataModels().getDemographic().getPersonalDetails();
+        idDocsMetaDTO = metadataDTO.getDataModels().getDemographic().getIdentityDocuments();
     }
 
     @Override
@@ -373,10 +358,10 @@ public class DemographicsActivity extends BasePatientActivity
         transaction.commit();
     }
 
-    private void hideShowComponents(boolean isParent){
-        findViewById(R.id.demographics_toolbar).setVisibility(isParent? View.VISIBLE :View.GONE);
-        findViewById(R.id.demogr_content_holder).setVisibility(isParent? View.VISIBLE :View.GONE);
-        findViewById(R.id.insurance_item_holder).setVisibility(isParent? View.GONE :View.VISIBLE);
+    private void hideShowComponents(boolean isParent) {
+        findViewById(R.id.demographics_toolbar).setVisibility(isParent ? View.VISIBLE : View.GONE);
+        findViewById(R.id.demogr_content_holder).setVisibility(isParent ? View.VISIBLE : View.GONE);
+        findViewById(R.id.insurance_item_holder).setVisibility(isParent ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -399,12 +384,12 @@ public class DemographicsActivity extends BasePatientActivity
 
     @Override
     public void updateInsuranceDTO(int index, DemographicInsurancePayloadDTO model) {
-        if (index>=0){
+        if (index >= 0) {
             insuranceModelList.set(index, model);
         } else {
             insuranceModelList.add(model);
         }
-        if(modelGet.getPayload().getDemographics() ==null){
+        if (modelGet.getPayload().getDemographics() == null) {
             modelGet.getPayload().setDemographics(new DemographicPayloadInfoDTO());
             modelGet.getPayload().getDemographics().setPayload(new DemographicPayloadDTO());
             modelGet.getPayload().getDemographics().getPayload().setInsurances(insuranceModelList);
@@ -412,7 +397,6 @@ public class DemographicsActivity extends BasePatientActivity
 
         initializeInsurancesFragment();
     }
-
 
     /**
      * Adapter for the viewpager
@@ -500,7 +484,6 @@ public class DemographicsActivity extends BasePatientActivity
         ProfilePictureFragment fragment = (ProfilePictureFragment) fm.findFragmentByTag(tag);
         if (fragment == null) {
             fragment = new ProfilePictureFragment();
-            fragment.setGlobalLabelsDTO(globalLabelDTO);
 
             Bundle args = new Bundle();
             DtoHelper.bundleDto(args, persDetailsDTO);

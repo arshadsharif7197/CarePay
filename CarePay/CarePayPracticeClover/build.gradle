@@ -41,7 +41,7 @@ android {
             buildConfigField 'String', 'X_API_KEY', '"VMGQTfHsuP5PSi3UbyXWh7xGWMflwZtHa55LZyXr"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
 
-            buildConfigField 'boolean', 'useUnifiedAuth', 'false'
+            buildConfigField 'boolean', 'useUnifiedAuth', 'true'
         }
         clover_sandbox {
             applicationId "com.carecloud.carepay.practice.clover"
@@ -50,7 +50,7 @@ android {
             buildConfigField 'String', 'X_API_KEY', '"PhrvB0D7Bw9EbQ3aEXTCj3FvYtPDzbGr7X71uYJT"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
 
-            buildConfigField 'boolean', 'useUnifiedAuth', 'false'
+            buildConfigField 'boolean', 'useUnifiedAuth', 'true'
         }
         production {
             applicationId "com.carecloud.carepay.practice.clover"
@@ -59,7 +59,7 @@ android {
             buildConfigField 'String', 'X_API_KEY', '"PhrvB0D7Bw9EbQ3aEXTCj3FvYtPDzbGr7X71uYJT"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
 
-            buildConfigField 'boolean', 'useUnifiedAuth', 'false'
+            buildConfigField 'boolean', 'useUnifiedAuth', 'true'
         }
     }
 }

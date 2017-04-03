@@ -25,7 +25,6 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePhotoDTO;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
@@ -60,16 +59,12 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
     private String[] cardTypeDataArray;
 
     private View               view;
-    private ImageCaptureHelper insuranceFrontScanHelper;
-    private ImageCaptureHelper insuranceBackScanHelper;
     private Button             btnScanFrontInsurance;
     private Button             btnScanBackInsurance;
     private EditText           insuranceCardNumEditText;
     private TextView           planTextView;
     private TextView           providerTextView;
     private TextView           cardTypeTextView;
-    private ImageView          frontInsuranceImageView;
-    private ImageView          backInsuranceImageView;
     private TextInputLayout    insuranceCardNumberTextInput;
     private TextView           insurancePlanLabel;
     private TextView           insuranceProviderLabel;
@@ -77,7 +72,6 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
 
     private DemographicInsurancePayloadDTO            insuranceDTO;
     private DemographicMetadataEntityInsurancesDTO insuranceMetadataDTO;
-    private DemographicLabelsDTO                      globalLabelsDTO;
     private DemographicsSettingsDTO demographicsSettingsDTO;
     private String documentsdocumentsScanFirstString = null;
     private String documentsScanBackString = null;
@@ -87,7 +81,6 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
     private String documentsHaveHealthInsuranceString = null;
     private String documentsAddnotherInsuranceString = null;
     private String documentsGoldenCrossString = null;
-    private String languageString = null;
     private String documentsTypeString = null;
     private String documentsCancelString = null;
     private String documentsRemoveString = null;
@@ -95,8 +88,6 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
     private String documentsProviderString = null;
     private String documentsCardTypeString = null;
     private String documentsCardNumberString = null;
-
-    private DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO = null;
 
     @Nullable
     @Override
@@ -155,15 +146,8 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
     }
 
     private void initializeUIFields() {
-        DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO = null;
         getOptions();
 
-        if (demographicsSettingsDTO != null) {
-            DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
-            if (demographicsSettingsMetadataDTO != null) {
-                 demographicsSettingsLabelsDTO = demographicsSettingsMetadataDTO.getLabels();
-            }
-        }
         insurancePlanLabel = (TextView) view.findViewById(R.id.demogr_insurance_plan_label);
         insurancePlanLabel.setText(documentsPlanString);
 
@@ -177,8 +161,7 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
         insuranceCardNumEditText.setHint(documentsCardNumberString);
         insuranceCardNumEditText.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
 
-        frontInsuranceImageView = (ImageView) view.findViewById(R.id.demogr_insurance_frontimage);
-        insuranceFrontScanHelper = new ImageCaptureHelper(getActivity(), frontInsuranceImageView);
+        imageFront = (ImageView) view.findViewById(R.id.demogr_insurance_frontimage);
 
         btnScanFrontInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_frontbtn);
         btnScanFrontInsurance.setText(documentsdocumentsScanFirstString);
@@ -192,12 +175,11 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
         btnScanFrontInsurance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage(insuranceFrontScanHelper, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
+                selectImage(imageFront, true, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
             }
         });
 
-        backInsuranceImageView = (ImageView) view.findViewById(R.id.demogr_insurance_backimage);
-        insuranceBackScanHelper = new ImageCaptureHelper(getActivity(), backInsuranceImageView);
+        imageBack = (ImageView) view.findViewById(R.id.demogr_insurance_backimage);
         btnScanBackInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_backbtn);
         btnScanBackInsurance.setText(documentsScanBackString);
         btnScanBackInsurance.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
@@ -207,7 +189,7 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
             @Override
             public void onClick(View view) {
                 Log.v(LOG_TAG, "scan insurance");
-                selectImage(insuranceBackScanHelper, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
+                selectImage(imageBack, false, ImageCaptureHelper.CameraType.CUSTOM_CAMERA);
 
             }
         });
@@ -261,9 +243,9 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
 
         List<MetadataOptionDTO> optionDTOs;
         // init the providers
-        if (insuranceMetadataDTO.properties.items.insurance.properties.insuranceProvider != null
-                && insuranceMetadataDTO.properties.items.insurance.properties.insuranceProvider.options != null) {
-            optionDTOs = insuranceMetadataDTO.properties.items.insurance.properties.insuranceProvider.options;
+        if (insuranceMetadataDTO.getProperties().getItems().getInsurance().getProperties().getInsuranceProvider() != null
+                && insuranceMetadataDTO.getProperties().getItems().getInsurance().getProperties().getInsuranceProvider().getOptions() != null) {
+            optionDTOs = insuranceMetadataDTO.getProperties().getItems().getInsurance().getProperties().getInsuranceProvider().getOptions();
             List<String> providers = new ArrayList<>();
             for (MetadataOptionDTO o : optionDTOs) {
                 providers.add(o.getLabel());
@@ -275,9 +257,9 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
         }
 
         // init the plans
-        if (insuranceMetadataDTO.properties.items.insurance.properties.insurancePlan != null &&
-                insuranceMetadataDTO.properties.items.insurance.properties.insurancePlan.options != null) {
-            optionDTOs = insuranceMetadataDTO.properties.items.insurance.properties.insurancePlan.options;
+        if (insuranceMetadataDTO.getProperties().getItems().getInsurance().getProperties().getInsurancePlan() != null &&
+                insuranceMetadataDTO.getProperties().getItems().getInsurance().getProperties().getInsurancePlan().getOptions() != null) {
+            optionDTOs = insuranceMetadataDTO.getProperties().getItems().getInsurance().getProperties().getInsurancePlan().getOptions();
             List<String> plans = new ArrayList<>();
             for (MetadataOptionDTO o : optionDTOs) {
                 plans.add(o.getLabel());
@@ -289,9 +271,9 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
         }
 
         // init the type options
-        if (insuranceMetadataDTO.properties.items.insurance.properties.insuranceType != null &&
-                insuranceMetadataDTO.properties.items.insurance.properties.insuranceType.options != null) {
-            optionDTOs = insuranceMetadataDTO.properties.items.insurance.properties.insuranceType.options;
+        if (insuranceMetadataDTO.getProperties().getItems().getInsurance().getProperties().getInsuranceType() != null &&
+                insuranceMetadataDTO.getProperties().getItems().getInsurance().getProperties().getInsuranceType().getOptions() != null) {
+            optionDTOs = insuranceMetadataDTO.getProperties().getItems().getInsurance().getProperties().getInsuranceType().getOptions();
             List<String> cardTypes = new ArrayList<>();
             for (MetadataOptionDTO o : optionDTOs) {
                 cardTypes.add(o.getLabel());
@@ -324,16 +306,16 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
     }
 
     @Override
-    protected void updateModelAndViewsAfterScan(ImageCaptureHelper scanner, Bitmap bitmap) {
+    public void onCapturedSuccess(Bitmap bitmap) {
         if (bitmap != null) {
-            if (scanner == insuranceFrontScanHelper) {
+            if (isFrontScan) {
                 // change button caption to 'rescan'
                 btnScanFrontInsurance.setText(documentsdocumentsScanFirstString);
                 // save from image
                 String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
                 DemographicInsurancePhotoDTO frontDTO = insuranceDTO.getInsurancePhotos().get(0);
                 frontDTO.setInsurancePhoto(imageAsBase64); // create the image dto
-            } else if (scanner == insuranceBackScanHelper) {
+            } else {
                 // change button caption to 'rescan'
                 btnScanBackInsurance.setText(documentsScanBackString);
                 String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
@@ -358,18 +340,18 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
                     URL url = new URL(photoFrontURL);
                     Log.d(LOG_TAG, "valid url: " + url.toString());
                     Picasso.with(getActivity()).load(photoFrontURL)
-                            .resize(insuranceFrontScanHelper.getImgWidth(), insuranceFrontScanHelper.getImgHeight())
-                            .into(frontInsuranceImageView);
+                            .fit().centerCrop()
+                            .into(imageFront);
                     btnScanFrontInsurance.setText(documentsdocumentsScanFirstString);
                 } catch (MalformedURLException e) {
                     Bitmap bitmap;
                     if (!StringUtil.isNullOrEmpty(photoFrontURL) && (bitmap = SystemUtil.convertStringToBitmap(photoFrontURL)) != null) {
                         Log.v(LOG_TAG, "load as base64");
-                        frontInsuranceImageView.setImageBitmap(bitmap);
+                        imageFront.setImageBitmap(bitmap);
                     } else {
                         Log.v(LOG_TAG, "load as the placeholder");
                         // if no, (re)-load the placeholder
-                        backInsuranceImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                        imageBack.setImageDrawable(ContextCompat.getDrawable(getActivity(),
                                 R.drawable.icn_camera));
                     }
                 }
@@ -381,19 +363,19 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
                         URL url = new URL(photoBackURL);
                         Log.d(LOG_TAG, "valid url: " + url.toString());
                         Picasso.with(getActivity()).load(photoBackURL)
-                                .resize(insuranceBackScanHelper.getImgWidth(), insuranceBackScanHelper.getImgHeight())
-                                .into(backInsuranceImageView);
+                                .fit().centerCrop()
+                                .into(imageBack);
                         //String label1 = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsRescanBackLabel();
                         btnScanBackInsurance.setText(documentsScanBackString);
                     } catch (MalformedURLException e) {
                         Bitmap bitmap;
                         if (!StringUtil.isNullOrEmpty(photoBackURL) && (bitmap = SystemUtil.convertStringToBitmap(photoBackURL)) != null) {
                             Log.v(LOG_TAG, "load as base64");
-                            backInsuranceImageView.setImageBitmap(bitmap);
+                            imageBack.setImageBitmap(bitmap);
                         } else {
                             Log.v(LOG_TAG, "load as the placeholder");
                             // if no, (re)-load the placeholder
-                            backInsuranceImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                            imageBack.setImageDrawable(ContextCompat.getDrawable(getActivity(),
                                     R.drawable.icn_camera));
                         }
                     }
@@ -503,10 +485,10 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (imageCaptureHelper == insuranceFrontScanHelper) {
+        if (isFrontScan) {
             btnScanFrontInsurance.setText(documentsdocumentsScanFirstString);
             btnScanFrontInsurance.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
-        } else if (imageCaptureHelper == insuranceBackScanHelper) {
+        } else {
             btnScanBackInsurance.setText(documentsScanBackString);
             btnScanBackInsurance.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
 

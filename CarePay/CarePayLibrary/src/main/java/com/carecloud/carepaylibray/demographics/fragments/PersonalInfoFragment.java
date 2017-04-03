@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -42,8 +41,6 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
     private DemographicDTO demographicDTO;
     private UpdateProfilePictureListener profilePicturelistener;
 
-    private ScrollView scrollView;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
@@ -68,8 +65,6 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         profilePicturelistener.loadPictureFragment();
-        scrollView = (ScrollView) view.findViewById(R.id.reviewdemographicsPersonalContainer);
-        scrollToPosition(0,0);
     }
 
     @Override
@@ -93,13 +88,13 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
     }
 
     private void formatEditText(final View view) {
-        final DemographicMetadataEntityAddressDTO addressMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.address;
-        final DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.personalDetails;
+        final DemographicMetadataEntityAddressDTO addressMetaDTO = demographicDTO.getMetadata().getDataModels().getDemographic().getAddress();
+        final DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO = demographicDTO.getMetadata().getDataModels().getDemographic().getPersonalDetails();
 
-        setTextListener(persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getFirstName().validations.get(0).getErrorMessage(), R.id.reviewdemogrFirstNameTextInput, R.id.reviewdemogrFirstNameEdit, view);
+        setTextListener(persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getFirstName().getValidations().get(0).getErrorMessage(), R.id.reviewdemogrFirstNameTextInput, R.id.reviewdemogrFirstNameEdit, view);
         setTextFocusListener(R.id.reviewdemogrFirstNameEdit, R.id.reviewdemogrFirstNameTextInput, view);
 
-        setTextListener(persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getLastName().validations.get(0).getErrorMessage(), R.id.reviewdemogrLastNameTextInput, R.id.reviewdemogrLastNameEdit, view);
+        setTextListener(persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getLastName().getValidations().get(0).getErrorMessage(), R.id.reviewdemogrLastNameTextInput, R.id.reviewdemogrLastNameEdit, view);
         setTextFocusListener(R.id.reviewdemogrLastNameEdit, R.id.reviewdemogrLastNameTextInput, view);
 
         final TextInputLayout doblabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
@@ -144,8 +139,6 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         setTextFocusListener(R.id.reviewgrdemoPhoneNumberEdit, R.id.reviewdemogrPhoneNumberTextInput, view);
 
 
-
-
         phoneNumberEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -174,7 +167,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
                     phoneNumberLabel.setError(null);
                     phoneNumberLabel.setErrorEnabled(false);
                 } else {
-                    final String phoneNumberError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.getProperties().getPhone().validations.get(0).getErrorMessage();
+                    final String phoneNumberError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.getProperties().getPhone().getValidations().get(0).getErrorMessage();
                     phoneNumberLabel.setError(phoneNumberError);
                     phoneNumberLabel.setErrorEnabled(true);
                 }
@@ -270,10 +263,10 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
     }
 
     private boolean isPhoneNumberValid(TextInputLayout phoneNumberLabel, EditText phoneNumberEditText) {
-        DemographicMetadataEntityAddressDTO addressMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.address;
+        DemographicMetadataEntityAddressDTO addressMetaDTO = demographicDTO.getMetadata().getDataModels().getDemographic().getAddress();
 
-        final String phoneError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.getProperties().getPhone().validations.get(0).getErrorMessage();
-        final String phoneValidation = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : ((String) addressMetaDTO.getProperties().getPhone().validations.get(0).value);
+        final String phoneError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.getProperties().getPhone().getValidations().get(0).getErrorMessage();
+        final String phoneValidation = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : ((String) addressMetaDTO.getProperties().getPhone().getValidations().get(0).value);
 
         String phone = phoneNumberEditText.getText().toString();
         if (!StringUtil.isNullOrEmpty(phone)
@@ -289,8 +282,8 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
     }
 
     private boolean isDateOfBirthValid(TextInputLayout doblabel, EditText dobEditText) {
-        DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO = demographicDTO.getMetadata().getDataModels().demographic.personalDetails;
-        final String errorMessage = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getDateOfBirth().validations.get(0).getErrorMessage();
+        DemographicMetadataEntityPersDetailsDTO persDetailsMetaDTO = demographicDTO.getMetadata().getDataModels().getDemographic().getPersonalDetails();
+        final String errorMessage = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getDateOfBirth().getValidations().get(0).getErrorMessage();
         String dob = dobEditText.getText().toString();
         if (!StringUtil.isNullOrEmpty(dob)) {
             boolean isValid = DateUtil.isValidateStringDateOfBirth(dob);
@@ -310,21 +303,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         }
         TextInputLayout doblabel = (TextInputLayout) view.findViewById( R.id.reviewdemogrDOBTextInput);
         EditText dobEditText = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
-        boolean isdobValid = isDateOfBirthValid(doblabel, dobEditText);
-        if (!isdobValid) {
-            return false;
-        }
-        return true;
-    }
-
-    private void scrollToPosition(final int positionX, final int positionY){
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                scrollView.scrollTo(positionX, positionY);
-            }
-        }, 30);
-
+        return isDateOfBirthValid(doblabel, dobEditText);
     }
 
     @Override

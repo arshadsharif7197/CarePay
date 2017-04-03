@@ -52,6 +52,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
             Gson gson = new Gson();
             String paymentsDTOString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
             paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
+            addressPayloadDTO = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getAddress();
         }
     }
 
@@ -220,12 +221,17 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
 
     @Override
     public void onAuthorizeCreditCardFailed() {
-        new LargeAlertDialog(getActivity(), Label.getLabel("payment_failed_error"), Label.getLabel("payment_change_payment_label"), R.color.Feldgrau, R.drawable.icn_card_error, new LargeAlertDialog.LargeAlertInterface() {
+        new LargeAlertDialog(getActivity(), Label.getLabel("payment_failed_error"), Label.getLabel("payment_change_payment_label"), R.color.Feldgrau, R.drawable.icn_card_error, getLargeAlertInterface()).show();
+    }
+
+    protected LargeAlertDialog.LargeAlertInterface getLargeAlertInterface(){
+        return new LargeAlertDialog.LargeAlertInterface() {
             @Override
             public void onActionButton() {
-                getFragmentManager().popBackStackImmediate();
+                callback.onPayButtonClicked(amountToMakePayment, paymentsModel);
+                dismiss();
             }
-        }).show();
+        };
     }
 
 }

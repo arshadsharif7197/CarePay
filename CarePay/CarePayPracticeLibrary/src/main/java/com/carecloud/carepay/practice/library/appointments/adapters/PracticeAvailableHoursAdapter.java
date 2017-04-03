@@ -108,7 +108,7 @@ public class PracticeAvailableHoursAdapter extends RecyclerView.Adapter<Recycler
     public int getItemViewType(int position) {
         final AppointmentsSlotsDTO slot = filteredTimeSlots.get(position);
 
-        if (null == slot.getLocation().getId()) {
+        if (null == slot.getLocation()) {
             return CELL_HEADER;
         }
 

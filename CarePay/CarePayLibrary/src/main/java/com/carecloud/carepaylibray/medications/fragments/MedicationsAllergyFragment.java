@@ -114,6 +114,9 @@ public class MedicationsAllergyFragment extends BaseFragment implements Medicati
             }
         },30);
 
+        View container = view.findViewById(R.id.container_main);
+        hideKeyboardOnViewTouch(container);
+
     }
 
     private void inflateToolbarViews(View view){

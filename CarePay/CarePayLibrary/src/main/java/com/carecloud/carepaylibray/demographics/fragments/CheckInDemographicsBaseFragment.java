@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
@@ -92,6 +91,9 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         //initializeToolbar(view);
         inflateToolbarViews(view);
 
+        View mainContainer = view.findViewById(R.id.container_main);
+        hideKeyboardOnViewTouch(mainContainer);
+        hideKeyboardOnViewTouch(view);
         return view;
     }
 
