@@ -39,16 +39,19 @@ public class SupportFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(View view, Bundle icicle) {
+        initializeToolbar(view);
+        initializeHelpContent(view);
+        initializeEmailButton(view);
+        initializePhoneButton(view);
+    }
+
+    private void initializeToolbar(View view) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
         title.setText(Label.getLabel("support_label"));
-
-        initializeHelpContent(view);
-        initializeEmailButton(view);
-        initializePhoneButton(view);
     }
 
     private void initializeHelpContent(View view) {
