@@ -83,7 +83,7 @@
             android:src="@drawable/icn_settings_check" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/termsTextView"
+            android:id="@+id/tosTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/dimen_10dp"

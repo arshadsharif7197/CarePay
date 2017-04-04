@@ -1,6 +1,8 @@
 package com.carecloud.carepay.patient.demographics.fragments.settings;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +18,10 @@ import com.carecloud.carepaylibray.base.BaseFragment;
 
 public class HelpFragment extends BaseFragment {
 
+    public static final String URL_FAQ = "https://help.gobreeze.com";
+    public static final String URL_TOS = "https://carecloud.app.box.com/v/breezetou";
+    public static final String URL_PRIVACY = "https://carecloud.app.box.com/v/breezeprivacy";
+    
     private HelpFragmentListener callback;
 
     public interface HelpFragmentListener {
@@ -50,6 +56,9 @@ public class HelpFragment extends BaseFragment {
         title.setText(Label.getLabel("help_label"));
 
         initializeSupportButton(view);
+        initializeFaqButton(view);
+        initializeTosButton(view);
+        initializePrivacyButton(view);
     }
 
     private void initializeSupportButton(View view) {
@@ -62,5 +71,40 @@ public class HelpFragment extends BaseFragment {
                 }
             }
         });
+    }
+
+    private void initializeFaqButton(View view) {
+        TextView textView = (TextView) view.findViewById(R.id.faqTextView);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openUrl(URL_FAQ);
+            }
+        });
+    }
+
+    private void initializeTosButton(View view) {
+        TextView textView = (TextView) view.findViewById(R.id.tosTextView);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openUrl(URL_TOS);
+            }
+        });
+    }
+
+    private void initializePrivacyButton(View view) {
+        TextView textView = (TextView) view.findViewById(R.id.privacyTextView);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openUrl(URL_PRIVACY);
+            }
+        });
+    }
+
+    private void openUrl(String url) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(intent);
     }
 }
