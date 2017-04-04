@@ -21,12 +21,8 @@ public class HelpFragment extends BaseFragment {
     public static final String URL_FAQ = "https://help.gobreeze.com";
     public static final String URL_TOS = "https://carecloud.app.box.com/v/breezetou";
     public static final String URL_PRIVACY = "https://carecloud.app.box.com/v/breezeprivacy";
-    
-    private HelpFragmentListener callback;
 
-    public interface HelpFragmentListener {
-        void showSupportFragment();
-    }
+    private HelpFragmentListener callback;
 
     @Override
     public void onAttach(Context context) {
@@ -106,5 +102,9 @@ public class HelpFragment extends BaseFragment {
     private void openUrl(String url) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(intent);
+    }
+
+    public interface HelpFragmentListener {
+        void showSupportFragment();
     }
 }
