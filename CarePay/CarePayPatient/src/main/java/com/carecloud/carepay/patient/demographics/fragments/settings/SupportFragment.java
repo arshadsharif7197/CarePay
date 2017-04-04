@@ -79,7 +79,7 @@ public class SupportFragment extends BaseFragment {
         Button button = (Button) view.findViewById(R.id.email_us_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 openEmailIntent();
             }
         });
@@ -89,7 +89,7 @@ public class SupportFragment extends BaseFragment {
         Button button = (Button) view.findViewById(R.id.call_us_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(PHONE));
                 startActivity(Intent.createChooser(intent, CHOOSE_LABEL));
             }

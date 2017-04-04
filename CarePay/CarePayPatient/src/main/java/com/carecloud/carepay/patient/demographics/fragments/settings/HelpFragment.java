@@ -64,7 +64,7 @@ public class HelpFragment extends BaseFragment {
         TextView textView = (TextView) view.findViewById(R.id.supportTextView);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 if (callback != null) {
                     callback.showSupportFragment();
                 }
@@ -76,7 +76,7 @@ public class HelpFragment extends BaseFragment {
         TextView textView = (TextView) view.findViewById(R.id.faqTextView);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 openUrl(URL_FAQ);
             }
         });
@@ -86,7 +86,7 @@ public class HelpFragment extends BaseFragment {
         TextView textView = (TextView) view.findViewById(R.id.tosTextView);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 openUrl(URL_TOS);
             }
         });
@@ -96,7 +96,7 @@ public class HelpFragment extends BaseFragment {
         TextView textView = (TextView) view.findViewById(R.id.privacyTextView);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 openUrl(URL_PRIVACY);
             }
         });

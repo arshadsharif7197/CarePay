@@ -155,7 +155,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
         TextView textView = (TextView) view.findViewById(R.id.helpTextView);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 if (callback != null) {
                     callback.showHelpFragment();
                 }
