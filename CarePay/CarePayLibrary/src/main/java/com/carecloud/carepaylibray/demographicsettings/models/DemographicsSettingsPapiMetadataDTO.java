@@ -18,7 +18,7 @@ public class DemographicsSettingsPapiMetadataDTO {
     private String formFinishUrl;
     @SerializedName("merchant_service")
     @Expose
-    private DemographicsSettingsPapiMetadataMerchantServiceDTO merchantService = new DemographicsSettingsPapiMetadataMerchantServiceDTO();
+    private MerchantServiceMetadataDTO merchantService = new MerchantServiceMetadataDTO();
 
     /**
      * Gets form sid.
@@ -97,7 +97,7 @@ public class DemographicsSettingsPapiMetadataDTO {
      *
      * @return the merchant service
      */
-    public DemographicsSettingsPapiMetadataMerchantServiceDTO getMerchantService() {
+    public MerchantServiceMetadataDTO getMerchantService() {
         return merchantService;
     }
 
@@ -106,7 +106,7 @@ public class DemographicsSettingsPapiMetadataDTO {
      *
      * @param merchantService the merchant service
      */
-    public void setMerchantService(DemographicsSettingsPapiMetadataMerchantServiceDTO merchantService) {
+    public void setMerchantService(MerchantServiceMetadataDTO merchantService) {
         this.merchantService = merchantService;
     }
 }

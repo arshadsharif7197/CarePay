@@ -26,7 +26,7 @@ public class DemographicsSettingsPayloadDTO {
     private List<DemographicsSettingsPapiAccountsDTO> papiAccounts = new ArrayList<>();
     @SerializedName("merchant_services")
     @Expose
-    private List<DemographicsSettingsMerchantServicesDTO> merchantServices = new ArrayList<>();
+    private List<MerchantServicesDTO> merchantServices = new ArrayList<>();
 
     /**
      * Gets languages.
@@ -124,7 +124,7 @@ public class DemographicsSettingsPayloadDTO {
      *
      * @return the merchant services
      */
-    public List<DemographicsSettingsMerchantServicesDTO> getMerchantServices() {
+    public List<MerchantServicesDTO> getMerchantServices() {
         return merchantServices;
     }
 
@@ -133,7 +133,7 @@ public class DemographicsSettingsPayloadDTO {
      *
      * @param merchantServices the merchant services
      */
-    public void setMerchantServices(List<DemographicsSettingsMerchantServicesDTO> merchantServices) {
+    public void setMerchantServices(List<MerchantServicesDTO> merchantServices) {
         this.merchantServices = merchantServices;
     }
 }
