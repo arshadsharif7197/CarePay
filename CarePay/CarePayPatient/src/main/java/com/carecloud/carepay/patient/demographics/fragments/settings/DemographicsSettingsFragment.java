@@ -62,7 +62,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
     private CarePayTextView demographicsTextview = null;
     private CarePayTextView documentsTextview = null;
     private CarePayTextView creditCardsTextview;
-    private CarePayTextView messagesTextview = null;
+//    private CarePayTextView messagesTextview = null;
     private ImageView profileImageview = null;
     private IDemographicsSettingsFragmentListener activityCallback;
 
@@ -116,7 +116,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
         documentsTextview = (CarePayTextView) view.findViewById(R.id.documentsTextView);
         creditCardsTextview = (CarePayTextView) view.findViewById(R.id.creditCardsTextView);
         CarePayTextView creditCardsTextview = (CarePayTextView) view.findViewById(R.id.creditCardsTextView);
-        messagesTextview = (CarePayTextView) view.findViewById(R.id.messagesTextView);
+//        messagesTextview = (CarePayTextView) view.findViewById(R.id.messagesTextView);
         editTextview = (CarePayTextView) view.findViewById(R.id.editTextView);
         signOutButton = (Button) view.findViewById(R.id.signOutButton);
         CarePayTextView patientNameTextview = (CarePayTextView) view.findViewById(R.id.patient_name);
@@ -124,7 +124,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
 
         demographicsTextview.setText(demographicsString);
         documentsTextview.setText(documentsString);
-        messagesTextview.setText(messagesString);
+//        messagesTextview.setText(messagesString);
         creditCardsTextview.setText(creditCardsString);
         editTextview.setText(editString);
         signOutButton.setText(signOutString);
