@@ -3,7 +3,6 @@ package com.payeezy.client;
 
 import android.annotation.SuppressLint;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.payeezy.client.domain.v2.Token;
 import com.payeezy.client.domain.v2.TransactionRequest;
 import com.payeezy.client.domain.v2.TransactionResponse;
@@ -12,6 +11,7 @@ import com.payeezy.client.domain.v2.UserTransactionResponse;
 
 import org.codehaus.jackson.JsonEncoding;
 import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig.Feature;
@@ -297,7 +297,7 @@ public class FirstAPIClientV2Helper {
         stream.flush();
         byte[] bytes = byteStream.toByteArray();
         
-        com.fasterxml.jackson.databind.ObjectMapper fasterObjectMapper = new com.fasterxml.jackson.databind.ObjectMapper();
+        ObjectMapper fasterObjectMapper = new ObjectMapper();
         ByteArrayInputStream byteInputStream = new ByteArrayInputStream(bytes);
         java.io.InputStream inputStream = new java.io.BufferedInputStream(byteInputStream);
         @SuppressWarnings("deprecation")

@@ -3,10 +3,3 @@
 local.properties
 *build/
 *.idea/
-*.pro
-CarePayComponentLibrary/.gitignore
-CarePayPatient/.gitignore
-CarePayPracticeClover/.gitignore
-CarePayPracticeLibrary/.gitignore
-CarePayPracticeTablet/.gitignore
-CarePayServiceLibrary/.gitignore
