@@ -154,7 +154,7 @@ public class SplashActivity extends AppCompatActivity {
 //            //DeepstreamClient ds = new DeepstreamClient( "10.21.4.45:6020" );
 //            ds.login();
 //            ds.event.emit( "Clover Account", CloverAccount.getAccount(this).toString() );
-//            ds.event.subscribe("make_payment", new EventListener() {
+//            ds.event.subscribe("make_payment_654654654654", new EventListener() {
 //                // receive any serializable data
 //                public void onEvent(String eventName, Object payment) {
 //                    Gson gson = new Gson();
@@ -196,7 +196,7 @@ public class SplashActivity extends AppCompatActivity {
             DeepstreamFactory factory = DeepstreamFactory.getInstance();
             DeepstreamClient client = null;
             try {
-                client = factory.getClient("10.21.4.45:6020");
+                client = factory.getClient("192.16:6020");
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
