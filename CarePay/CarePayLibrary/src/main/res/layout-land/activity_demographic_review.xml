@@ -46,7 +46,7 @@
                     android:paddingTop="@dimen/dimen_10dp"
                     android:text="Go Back"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_22sp"
+                    android:textSize="@dimen/text_size_22"
                     android:visibility="visible"
                     app:customAssetFont="gotham_rounded_medium" />
 
@@ -127,7 +127,7 @@
                     android:layout_marginBottom="@dimen/dimen_10dp"
                     android:text="Demographics  &amp; Insurance"
                     android:textColor="@color/white_opacity_60"
-                    android:textSize="@dimen/text_size_16sp"
+                    android:textSize="@dimen/text_size_16"
                     app:customAssetFont="gotham_rounded_light" />
 
                 <LinearLayout
@@ -141,7 +141,7 @@
                         android:layout_marginBottom="@dimen/dimen_10dp"
                         android:text="Consent Forms"
                         android:textColor="@color/white_opacity_60"
-                        android:textSize="@dimen/text_size_16sp"
+                        android:textSize="@dimen/text_size_16"
                         app:customAssetFont="gotham_rounded_light" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -170,7 +170,7 @@
                         android:clickable="true"
                         android:text="Patient Intake"
                         android:textColor="@color/white_opacity_60"
-                        android:textSize="@dimen/text_size_16sp"
+                        android:textSize="@dimen/text_size_16"
                         app:customAssetFont="gotham_rounded_light" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -193,7 +193,7 @@
                     android:layout_marginBottom="@dimen/dimen_10dp"
                     android:text="Payment"
                     android:textColor="@color/white_opacity_60"
-                    android:textSize="@dimen/text_size_16sp"
+                    android:textSize="@dimen/text_size_16"
                     app:customAssetFont="gotham_rounded_light" />
 
             </LinearLayout>

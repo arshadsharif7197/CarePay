@@ -4,6 +4,7 @@
     <string name="google_map_api_base_url">https://maps.googleapis.com</string>
     <string name="google_map_api_key">AIzaSyDFrx3OGugrIUQzsoEJVobtQoz6f9MMim</string>
     <string name="Menu">Menu</string>
+    <string name="home_logo">Home Logo</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="respons_title">Responsibility</string>

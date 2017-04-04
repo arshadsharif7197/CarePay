@@ -171,4 +171,6 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         }
         return null;
     }
+
+    public abstract void navigateToWorkflow(WorkflowDTO workflowDTO);
 }

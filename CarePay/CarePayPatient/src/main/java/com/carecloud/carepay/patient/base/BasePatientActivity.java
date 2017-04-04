@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.base;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
@@ -36,5 +37,10 @@ public abstract class BasePatientActivity extends BaseActivity {
             return gson.fromJson(jsonString, dtoClass);
         }
         return null;
+    }
+
+    @Override
+    public void navigateToWorkflow(WorkflowDTO workflowDTO) {
+        PatientNavigationHelper.getInstance(this).navigateToWorkflow(workflowDTO);
     }
 }

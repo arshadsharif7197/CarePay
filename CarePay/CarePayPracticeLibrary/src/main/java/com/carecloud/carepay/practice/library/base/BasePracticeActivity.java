@@ -201,4 +201,9 @@ public abstract class BasePracticeActivity extends BaseActivity
     protected void goToHome(TransitionDTO logOutDto) {
         getWorkflowServiceHelper().execute(logOutDto, homeCall);
     }
+
+    @Override
+    public void navigateToWorkflow(WorkflowDTO workflowDTO) {
+        PracticeNavigationHelper.navigateToWorkflow(this, workflowDTO);
+    }
 }

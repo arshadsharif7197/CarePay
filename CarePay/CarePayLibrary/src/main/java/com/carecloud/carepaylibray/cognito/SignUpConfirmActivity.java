@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserCodeDeliveryDetails;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.GenericHandler;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.VerificationHandler;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
@@ -60,6 +61,11 @@ public class SignUpConfirmActivity extends BaseActivity {
         main_title.setText(signInLablesDTO.getConfirm());
 
         init();
+    }
+
+    @Override
+    public void navigateToWorkflow(WorkflowDTO workflowDTO) {
+
     }
 
     private void init() {

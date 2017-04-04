@@ -193,12 +193,15 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         super.onViewCreated(view, savedInstanceState);
 
         if(hasInsurance()) {
-            findViewById(R.id.edit_insurance_close_button).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View closeButton) {
-                    closeDialog();
-                }
-            });
+            View closeButton = findViewById(R.id.edit_insurance_close_button);
+            if (closeButton != null) {
+                closeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View closeButton) {
+                        closeDialog();
+                    }
+                });
+            }
         }
         View container = view.findViewById(R.id.container_main);
         hideKeyboardOnViewTouch(container);

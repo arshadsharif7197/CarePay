@@ -6,6 +6,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.google.zxing.Result;
@@ -17,15 +19,6 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
  * */
 public class ScannerQRActivity extends BaseActivity implements ZXingScannerView.ResultHandler {
     private ZXingScannerView zXingScannerView;
-    public static final String EXTRA_QR_CODE = "QR_CODE";
-    private String headerTitle;
-
-    public ScannerQRActivity() {
-    }
-
-    public ScannerQRActivity(String title) {
-        headerTitle = title;
-    }
 
     @Override
     public void onCreate(Bundle state) {
@@ -42,6 +35,11 @@ public class ScannerQRActivity extends BaseActivity implements ZXingScannerView.
         super.onResume();
         zXingScannerView.setResultHandler(this);
         zXingScannerView.startCamera();
+    }
+
+    @Override
+    public void navigateToWorkflow(WorkflowDTO workflowDTO) {
+
     }
 
     @Override
