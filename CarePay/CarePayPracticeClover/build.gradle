@@ -43,6 +43,16 @@ android {
 
             buildConfigField 'boolean', 'useUnifiedAuth', 'true'
         }
+        staging {
+            applicationId "com.carecloud.carepay.practice.clover"
+            buildConfigField 'String', 'API_BASE_URL', '"https://breeze-entry-staging.carecloud.com"'
+            buildConfigField 'String', 'API_START_URL', '"https://breeze-entry-staging.carecloud.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
+            buildConfigField 'String', 'X_API_KEY', '"VTmsSR1zld1E8OjCdMDQG8KenNFCFDbm8RpCYmzb"'
+            buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
+
+            buildConfigField 'boolean', 'useUnifiedAuth', 'true'
+        }
+
         clover_sandbox {
             applicationId "com.carecloud.carepay.practice.clover"
             buildConfigField 'String', 'API_BASE_URL', '"https://breeze-entry.development.carecloud.com"'
