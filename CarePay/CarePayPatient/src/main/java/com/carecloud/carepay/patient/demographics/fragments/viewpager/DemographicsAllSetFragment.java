@@ -24,12 +24,10 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressP
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,10 +121,7 @@ public class DemographicsAllSetFragment extends BaseFragment {
 
         DemographicIdDocPayloadDTO idDocPojo = ((DemographicsActivity) getActivity()).getIdDocModel();
         if (idDocPojo != null && idDocPojo.getIdType()!=null) { // add the doc
-            List<DemographicIdDocPayloadDTO> idDocPayloadDTOs = new ArrayList<>();
-            idDocPojo.setIdCountry("USA"); // to remove
-            idDocPayloadDTOs.add(idDocPojo);
-            demographicPayloadDTO.setIdDocuments(idDocPayloadDTOs);
+            demographicPayloadDTO.setIdDocument(idDocPojo);
         }
 
         List<DemographicInsurancePayloadDTO> insuranceModelList = ((DemographicsActivity) getActivity()).getInsuranceModelList();
