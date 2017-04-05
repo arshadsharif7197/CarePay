@@ -20,9 +20,9 @@ public class DemographicPayloadDTO {
     @Expose
     private List<DemographicInsurancePayloadDTO> insurances = new ArrayList<>();
 
-    @SerializedName("identity_documents")
+    @SerializedName("identity_document")
     @Expose
-    private List<DemographicIdDocPayloadDTO> idDocuments = new ArrayList<>();
+    private DemographicIdDocPayloadDTO idDocument = new DemographicIdDocPayloadDTO();
 
     @SerializedName("address")
     @Expose
@@ -65,16 +65,16 @@ public class DemographicPayloadDTO {
      *
      * @return The list of id docs
      */
-    public List<DemographicIdDocPayloadDTO> getIdDocuments() {
-        return idDocuments;
+    public DemographicIdDocPayloadDTO getIdDocument() {
+        return idDocument;
     }
 
     /**
      * Setter
-     * @param idDocuments The id documents
+     * @param idDocument The id documents
      */
-    public void setIdDocuments(List<DemographicIdDocPayloadDTO> idDocuments) {
-        this.idDocuments = idDocuments;
+    public void setIdDocument(DemographicIdDocPayloadDTO idDocument) {
+        this.idDocument = idDocument;
     }
 
     /**

@@ -36,6 +36,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
+
 public class DocScannerFragment extends DocumentScannerFragment {
 
     private static final String LOG_TAG = DocScannerFragment.class.getSimpleName();
@@ -160,12 +162,13 @@ public class DocScannerFragment extends DocumentScannerFragment {
                     URL url = new URL(frontPic);
                     Log.v(LOG_TAG, "valid url: " + url.toString());
                     Picasso.with(getContext()).load(frontPic)
-                            .fit().centerCrop()
+                            .centerCrop()
+                            .transform(new RoundedCornersTransformation(5, 0))
                             .into(imageFront);
                 } catch (MalformedURLException e) {
                     Log.e(LOG_TAG, "invalid url: " + frontPic);
                     imageFront.setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                            R.drawable.icn_camera));
+                            R.drawable.icn_placeholder_document));
                 }
             }
             // add back image
@@ -175,12 +178,13 @@ public class DocScannerFragment extends DocumentScannerFragment {
                     URL url = new URL(backPic);
                     Log.v(LOG_TAG, "valid url: " + url.toString());
                     Picasso.with(getContext()).load(backPic)
-                            .fit().centerCrop()
+                            .centerCrop()
+                            .transform(new RoundedCornersTransformation(5, 0))
                             .into(imageBack);
                 } catch (MalformedURLException e) {
                     Log.e(LOG_TAG, "invalid url: " + backPic);
                     imageBack.setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                            R.drawable.icn_camera));
+                            R.drawable.icn_placeholder_document));
                 }
             }
         }

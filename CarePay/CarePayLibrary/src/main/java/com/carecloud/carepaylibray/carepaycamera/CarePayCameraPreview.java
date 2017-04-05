@@ -22,8 +22,8 @@ import android.view.SurfaceView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
-import com.carecloud.carepaylibray.qrcodescanner.CameraWrapper;
 import com.carecloud.carepaylibray.qrcodescanner.DisplayUtils;
+import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 
 import java.io.IOException;
 import java.util.List;
@@ -46,6 +46,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
     Context context;
     Rect shadowRect = null;
     boolean surfaceCreated;
+    private int displayOrientation;
 
     public CameraType cameraType = CameraType.SCAN_DOC;
 
@@ -315,7 +316,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
 
         try {
             int cameraId = cameraType == CameraType.CAPTURE_PHOTO ? getFrontFaceCamera() : getBackFaceCamera();
-            int displayOrientation = DisplayUtils.getDisplayOrientation(context, cameraId);
+            displayOrientation = DisplayUtils.getDisplayOrientation(context, cameraId);
 
             if (HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE)) {
                 displayOrientation = 180;
@@ -343,7 +344,8 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
 
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-
+            camera.stopPreview();
+            ImageCaptureHelper.setOrientation(displayOrientation);
             generateCroppedBitmap(data);
             releaseCamera();
         }
@@ -355,6 +357,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         if (cameraType == CameraType.SCAN_DOC) {
 
             if (HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE)) {
+                ImageCaptureHelper.setOrientation(270);
                 capturedBitmap = rotateBitmap(capturedBitmap, 270);
             }
             Rect rectFrame = shadowRect;
@@ -373,6 +376,7 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
             capturedBitmap = Bitmap.createBitmap(capturedBitmap, left, top, cropedWidth, cropedHeight);
 
         } else {
+            ImageCaptureHelper.setOrientation(90);
             capturedBitmap = rotateBitmap(capturedBitmap, 90);
         }
 
