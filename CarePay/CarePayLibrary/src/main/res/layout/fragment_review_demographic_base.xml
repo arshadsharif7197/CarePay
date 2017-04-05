@@ -91,7 +91,7 @@
             android:layout_marginEnd="@dimen/dimen_20dp"
             android:layout_marginStart="@dimen/dimen_20dp"
             android:layout_weight="1"
-            android:background="@drawable/bg_green_overlay"
+            android:background="@drawable/button_rounded_gray_selector"
             android:enabled="false"
             android:gravity="center"
             android:textColor="@color/white"

@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
@@ -30,13 +29,18 @@ import com.carecloud.carepaylibray.carepaycamera.CarePayCameraActivity;
 import static com.carecloud.carepaylibray.utils.ImageCaptureHelper.ImageShape.RECTANGULAR;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 
 /**
  * Helper for scan with camera functionality
  */
 public class ImageCaptureHelper {
+
+    public static final String JPF_EXT = ".jpg";
 
     public static final int REQUEST_CAMERA = 0;
     public static final int SELECT_FILE = 1;
@@ -427,4 +431,37 @@ public class ImageCaptureHelper {
             }
         }
     }
+
+    /**
+     * Convenience method for caching a bitmap to cache storage file
+     * @param context context
+     * @param bitmap bitmap
+     * @param fileName file
+     * @return file of saved bitmap or null if i/o error
+     */
+    public static File getBitmapFileUrl(Context context, Bitmap bitmap, String fileName){
+        File fileDirectory = context.getCacheDir();
+        File imageFile = new File(fileDirectory, fileName+ JPF_EXT);
+
+        OutputStream outputStream;
+        try{
+            if(imageFile.exists()){
+                imageFile.delete();
+                imageFile.createNewFile();
+            }
+
+            outputStream = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);
+            outputStream.flush();
+            outputStream.close();
+
+        }catch (IOException ioe){
+            ioe.printStackTrace();
+            return null;
+        }
+
+
+        return imageFile;
+    }
+
 }
