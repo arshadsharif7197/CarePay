@@ -93,9 +93,10 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     private EditText otherProviderEditText;
 
     private List<MetadataInsuranceOptionDTO> providerList;
+    private List<MetadataOptionDTO> typeList;
 
     public interface InsuranceEditDialogListener {
-        void onInsuranceEdited(DemographicDTO demographicDTO);
+        void onInsuranceEdited(DemographicDTO demographicDTO, boolean proceed);
 
         void goOneStepBack();
     }
@@ -306,7 +307,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
             @Override
             public void onClick(View saveChanges) {
                 if (callback != null) {
-                    callback.onInsuranceEdited(null);
+                    callback.onInsuranceEdited(null, true);
                 }
             }
         };
@@ -316,6 +317,9 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     View.OnClickListener saveButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View saveChanges) {
+            boolean hasInsurance = hasInsurance();
+
+
             DemographicInsurancePayloadDTO demographicInsurancePayloadDTO;
             if (editedIndex == NEW_INSURANCE) {
                 demographicInsurancePayloadDTO = new DemographicInsurancePayloadDTO();
@@ -335,7 +339,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
             demographicInsurancePayloadDTO.setInsuranceProvider(selectedProvider);
             demographicInsurancePayloadDTO.setInsurancePlan(selectedPlan);
-            demographicInsurancePayloadDTO.setInsuranceType(selectedType);
+            demographicInsurancePayloadDTO.setInsuranceType(selectedType!=null?selectedType: typeList.get(0).getLabel());
 
             demographicInsurancePayloadDTO.setInsuranceMemberId(cardNumber.getText().toString());
             demographicInsurancePayloadDTO.setInsuranceGroupId(groupNumber.getText().toString());
@@ -349,7 +353,11 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
                 photos.get(1).setInsurancePhoto(backImageAsBase64);
             }
 
-            closeDialog();
+            if(hasInsurance){
+                closeDialog();
+            }else{
+                callback.onInsuranceEdited(demographicDTO, true);
+            }
         }
     };
 
@@ -357,7 +365,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     private void closeDialog() {
         dismiss();
         if (callback != null) {
-            callback.onInsuranceEdited(demographicDTO);
+            callback.onInsuranceEdited(demographicDTO, false);
 
             if (!hadInsurance) {
                 callback.goOneStepBack();
@@ -436,7 +444,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
             });
 
             // Types
-            List<MetadataOptionDTO> typeList = properties.getInsuranceType().getOptions();
+            typeList = properties.getInsuranceType().getOptions();
             final String[] types = new String[typeList.size()];
             for (int i = 0; i < typeList.size(); i++) {
                 types[i] = typeList.get(i).getLabel();
@@ -681,21 +689,21 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
             isValid = false;
         }
 
-        if(StringUtil.isNullOrEmpty(selectedPlan)){
-            isValid = false;
-        }
-
-        if(StringUtil.isNullOrEmpty(selectedType)){
-            isValid = false;
-        }
-
-        if(StringUtil.isNullOrEmpty(cardNumber.getText().toString())){
-            isValid = false;
-        }
-
-        if(StringUtil.isNullOrEmpty(groupNumber.getText().toString())){
-            isValid = false;
-        }
+//        if(StringUtil.isNullOrEmpty(selectedPlan)){
+//            isValid = false;
+//        }
+//
+//        if(StringUtil.isNullOrEmpty(selectedType)){
+//            isValid = false;
+//        }
+//
+//        if(StringUtil.isNullOrEmpty(cardNumber.getText().toString())){
+//            isValid = false;
+//        }
+//
+//        if(StringUtil.isNullOrEmpty(groupNumber.getText().toString())){
+//            isValid = false;
+//        }
 
         saveInsuranceButton.setEnabled(isValid);
     }
