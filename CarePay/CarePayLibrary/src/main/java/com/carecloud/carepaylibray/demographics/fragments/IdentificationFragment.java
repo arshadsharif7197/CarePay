@@ -9,13 +9,10 @@ import android.view.ViewGroup;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemIdDocDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-
-import java.util.List;
 
 
 public class IdentificationFragment extends CheckInDemographicsBaseFragment {
@@ -32,9 +29,8 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment {
         setHeaderTitle(demographicDTO.getMetadata().getLabels().getDemographicsReviewIdentification(), view);
         initNextButton(null, view, View.VISIBLE);
 
-        List<DemographicIdDocPayloadDTO> idDocuments = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments();
-        initialiseChildFragment(idDocuments.size() > 0 ? idDocuments.get(0) : new DemographicIdDocPayloadDTO(),
-                demographicDTO.getMetadata().getDataModels().getDemographic().getIdentityDocuments().properties.items.identityDocument);
+        DemographicIdDocPayloadDTO idDocument = demographicDTO.getPayload().getDemographics().getPayload().getIdDocument();
+        initialiseChildFragment(idDocument, demographicDTO.getMetadata().getDataModels().getDemographic().getIdentityDocuments().properties.items.identityDocument);
         return view;
     }
 
@@ -61,8 +57,7 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment {
         IdDocScannerFragment fragment = (IdDocScannerFragment) getChildFragmentManager().findFragmentById(R.id.revDemographicsIdentificationPicCapturer);
         DemographicDTO updatableDemographicDTO = new DemographicDTO();
         if (fragment != null) {
-            updatableDemographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().clear();
-            updatableDemographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().add(fragment.getModel());
+            updatableDemographicDTO.getPayload().getDemographics().getPayload().setIdDocument(fragment.getPostModel());
         }
         updatableDemographicDTO.getPayload().setAppointmentpayloaddto(demographicDTO.getPayload().getAppointmentpayloaddto());
         updatableDemographicDTO.setMetadata(demographicDTO.getMetadata());

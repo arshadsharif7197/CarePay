@@ -21,10 +21,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemInsuranceDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataInsuranceOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
@@ -36,17 +37,17 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.picasso.Picasso;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTextInputLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lsoco_user on 9/13/2016.
@@ -192,11 +193,10 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
             return;
         }
 
-        List<MetadataOptionDTO> optionDTOs;
         // init the providers
         if (insuranceMetadataDTO.getProperties().getInsuranceProvider() != null
                 && insuranceMetadataDTO.getProperties().getInsuranceProvider().getOptions() != null) {
-            optionDTOs = insuranceMetadataDTO.getProperties().getInsuranceProvider().getOptions();
+            List<MetadataInsuranceOptionDTO> optionDTOs = insuranceMetadataDTO.getProperties().getInsuranceProvider().getOptions();
             List<String> providers = new ArrayList<>();
             for (MetadataOptionDTO o : optionDTOs) {
                 providers.add(o.getLabel());
@@ -210,7 +210,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         // init the plans
         if (insuranceMetadataDTO.getProperties().getInsurancePlan() != null &&
                 insuranceMetadataDTO.getProperties().getInsurancePlan().getOptions() != null) {
-            optionDTOs = insuranceMetadataDTO.getProperties().getInsurancePlan().getOptions();
+            List<MetadataOptionDTO> optionDTOs = insuranceMetadataDTO.getProperties().getInsurancePlan().getOptions();
             List<String> plans = new ArrayList<>();
             for (MetadataOptionDTO o : optionDTOs) {
                 plans.add(o.getLabel());
@@ -224,7 +224,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         // init the type options
         if (insuranceMetadataDTO.getProperties().getInsuranceType() != null &&
                 insuranceMetadataDTO.getProperties().getInsuranceType().getOptions() != null) {
-            optionDTOs = insuranceMetadataDTO.getProperties().getInsuranceType().getOptions();
+            List<MetadataOptionDTO> optionDTOs = insuranceMetadataDTO.getProperties().getInsuranceType().getOptions();
             List<String> cardTypes = new ArrayList<>();
             for (MetadataOptionDTO o : optionDTOs) {
                 cardTypes.add(o.getLabel());
