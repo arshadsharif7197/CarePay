@@ -432,6 +432,13 @@ public class ImageCaptureHelper {
         }
     }
 
+    /**
+     * Convenience method for caching a bitmap to cache storage file
+     * @param context context
+     * @param bitmap bitmap
+     * @param fileName file
+     * @return file of saved bitmap or null if i/o error
+     */
     public static File getBitmapFileUrl(Context context, Bitmap bitmap, String fileName){
         File fileDirectory = context.getCacheDir();
         File imageFile = new File(fileDirectory, fileName+ JPF_EXT);
