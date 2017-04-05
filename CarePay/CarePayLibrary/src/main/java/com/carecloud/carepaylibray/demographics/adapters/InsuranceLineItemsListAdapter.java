@@ -12,8 +12,6 @@ import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 
-import java.util.List;
-
 public class InsuranceLineItemsListAdapter extends
         RecyclerView.Adapter<InsuranceLineItemsListAdapter.InsuranceDetailsListViewHolder> {
 
@@ -54,7 +52,9 @@ public class InsuranceLineItemsListAdapter extends
     @Override
     public void onBindViewHolder(final InsuranceDetailsListViewHolder holder, int position) {
         final DemographicInsurancePayloadDTO lineItem = demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(position);
-        holder.name.setText(lineItem.getInsurancePlan());
+        String plan = lineItem.getInsurancePlan();
+        String provider = lineItem.getInsuranceProvider();
+        holder.name.setText(provider+" "+(plan!=null?plan:""));
         holder.type.setText(lineItem.getInsuranceType());
     }
 

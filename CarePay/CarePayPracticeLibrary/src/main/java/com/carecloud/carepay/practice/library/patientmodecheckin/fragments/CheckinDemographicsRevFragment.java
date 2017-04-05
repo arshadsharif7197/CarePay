@@ -45,15 +45,15 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity.SUBFLOW_DEMOGRAPHICS_INS;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class CheckinDemographicsRevFragment extends BaseCheckinFragment implements View.OnClickListener {
@@ -211,13 +211,8 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
                 demographicAddressPayloadDTO = payload.getAddress();
                 // get id docs
 
-                List<DemographicIdDocPayloadDTO> idDocs = payload.getIdDocuments();
-                if (idDocs != null) {
-                    int size = payload.getIdDocuments().size();
-                    if (size > 0) {
-                        demographicIdDocPayloadDTO = idDocs.get(0);
-                    }
-                }
+                demographicIdDocPayloadDTO = payload.getIdDocument();
+
                 // get insurances
                 insurances = payload.getInsurances();
             }

@@ -49,14 +49,14 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 
 public class DemographicsSettingsDocumentsFragment extends BaseFragment {
@@ -67,7 +67,7 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
     private FrameLayout                            idCardContainer;
     private TextView                               multipleInsClickable;
     private Button                                 nextButton;
-    private List<DemographicIdDocPayloadDTO>       demPayloadIdDocDTO;
+    private DemographicIdDocPayloadDTO             demPayloadIdDocDTO;
     private List<DemographicInsurancePayloadDTO>   insuranceDTOsList;
     private DemographicMetadataEntityIdDocsDTO     idDocsMetaDTO;
     private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
@@ -261,15 +261,8 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
                 DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
                 DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
 
-                demPayloadIdDocDTO = demographicPayload.getIdDocuments();
+                demPayloadIdDocDTO = demographicPayload.getIdDocument();
                 insuranceDTOsList = demographicPayload.getInsurances();
-
-                if (demPayloadIdDocDTO == null) {
-                    demPayloadIdDocDTO = new ArrayList<>();
-                    demPayloadIdDocDTO.add(new DemographicIdDocPayloadDTO());
-                } else if (demPayloadIdDocDTO.size() == 0) {
-                    demPayloadIdDocDTO.add(new DemographicIdDocPayloadDTO());
-                }
 
                 if (insuranceDTOsList == null) {
                     insuranceDTOsList = new ArrayList<>();
@@ -394,7 +387,7 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
         DocScannerFragment idDocFragment = (DocScannerFragment) fm.findFragmentByTag(documentsLicenseString);
         if (idDocFragment == null) {
             idDocFragment = new DocScannerFragment();
-            idDocFragment.setModel(demPayloadIdDocDTO.get(0)); // set the model
+            idDocFragment.setModel(demPayloadIdDocDTO); // set the model
         }
         //fix for random crashes
         if(idDocFragment.getArguments() !=null){

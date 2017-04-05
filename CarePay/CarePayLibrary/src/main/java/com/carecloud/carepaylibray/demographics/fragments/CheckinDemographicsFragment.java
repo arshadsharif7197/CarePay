@@ -60,12 +60,6 @@ import com.smartystreets.api.us_zipcode.City;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
@@ -73,6 +67,12 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtrabo
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class CheckinDemographicsFragment extends DocumentScannerFragment implements View.OnClickListener {
@@ -213,10 +213,9 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         if (demographicDTO.getPayload().getDemographics() != null) {
             demographicPersDetailsPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails();
             demographicAddressPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getAddress();
-            int size = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().size();
-            for (int i = 0; i < size; i++) {
-                demographicIdDocPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(i);
-            }
+
+            demographicIdDocPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getIdDocument();
+
         }
 
         if (demographicIdDocPayloadDTO == null) {
@@ -813,9 +812,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 //        }
 
         if (demographicIdDocPayloadDTO != null && demographicIdDocPayloadDTO.getIdType() != null) {
-            List<DemographicIdDocPayloadDTO> ids = new ArrayList<>();
-            ids.add(demographicIdDocPayloadDTO);
-            demographicDTO.getPayload().getDemographics().getPayload().setIdDocuments(ids);
+            demographicDTO.getPayload().getDemographics().getPayload().setIdDocument(demographicIdDocPayloadDTO);
         }
 
         // save address
@@ -1172,8 +1169,8 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             allFieldsValid = false;
         }
 
-        if (demographicDTO.getMetadata().getDataModels().getDemographic().getIdentityDocuments().properties.items.identityDocument.properties.required.size() > 0 &&
-                demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(0).getIdDocPhothos().get(0) == null) {
+        if (demographicDTO.getMetadata().getDataModels().getDemographic().getIdentityDocuments().properties.items.identityDocument.properties.identityDocumentPhotos.getValidations().get(0).type.contains("required") &&
+                demographicDTO.getPayload().getDemographics().getPayload().getIdDocument().getIdDocPhothos().get(0) == null) {
             allFieldsValid = false;
         }
 

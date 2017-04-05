@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.properties;
 
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.InsuranceMetadataEntityDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataEntityDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -19,7 +20,7 @@ public class DemographicMetadataPropertiesInsuranceDTO {
 
     @SerializedName("insurance_provider")
     @Expose
-    private MetadataEntityDTO insuranceProvider = new MetadataEntityDTO();
+    private InsuranceMetadataEntityDTO insuranceProvider = new InsuranceMetadataEntityDTO();
 
     @SerializedName("insurance_plan")
     @Expose
@@ -49,11 +50,11 @@ public class DemographicMetadataPropertiesInsuranceDTO {
         this.insurancePhotos = insurancePhotos;
     }
 
-    public MetadataEntityDTO getInsuranceProvider() {
+    public InsuranceMetadataEntityDTO getInsuranceProvider() {
         return insuranceProvider;
     }
 
-    public void setInsuranceProvider(MetadataEntityDTO insuranceProvider) {
+    public void setInsuranceProvider(InsuranceMetadataEntityDTO insuranceProvider) {
         this.insuranceProvider = insuranceProvider;
     }
 
