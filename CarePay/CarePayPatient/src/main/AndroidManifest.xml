@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.carecloud.carepay.patient"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.carecloud.carepay.patient">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -23,16 +23,15 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppBaseTheme"
-        tools:replace="android:icon"
-        >
+        tools:replace="android:icon">
         <meta-data
             android:name="com.google.android.gms.wallet.api.enabled"
             android:value="true" />
 
         <activity
             android:name=".patientsplash.SplashActivity"
-            android:theme="@style/Theme.AppCompat.Translucent"
-            android:screenOrientation="sensorPortrait">
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/Theme.AppCompat.Translucent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,7 +39,7 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="com.carecloud.carepay.restart" />
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
@@ -49,10 +48,10 @@
             android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
             android:name=".demographics.activities.NewReviewDemographicsActivity"
-            android:screenOrientation="sensorPortrait"/>
+            android:screenOrientation="sensorPortrait" />
         <activity
             android:name=".selectlanguage.SelectLanguageActivity"
-            android:screenOrientation="sensorPortrait"/>
+            android:screenOrientation="sensorPortrait" />
         <activity
             android:name=".consentforms.ConsentActivity"
             android:screenOrientation="sensorPortrait"
@@ -64,7 +63,7 @@
         <activity
             android:name=".signinsignuppatient.SigninSignupActivity"
             android:screenOrientation="sensorPortrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".payment.PaymentActivity"
             android:parentActivityName=".appointments.activities.AppointmentsActivity"
@@ -75,37 +74,50 @@
         </activity>
         <activity
             android:name=".appointments.activities.AppointmentsActivity"
-            android:screenOrientation="sensorPortrait"/>
+            android:screenOrientation="sensorPortrait" />
         <activity
             android:name=".appointments.activities.AddAppointmentActivity"
-            android:screenOrientation="sensorPortrait"/>
+            android:screenOrientation="sensorPortrait" />
         <activity
             android:name=".payment.activities.ViewPaymentBalanceHistoryActivity"
-            android:screenOrientation="sensorPortrait"/>
+            android:screenOrientation="sensorPortrait" />
         <activity
             android:name=".eligibility.activities.EligibilityActivity"
-            android:screenOrientation="sensorPortrait"/>
+            android:screenOrientation="sensorPortrait" />
         <activity
             android:name=".payment.androidpay.ConfirmationActivity"
-            android:screenOrientation="sensorPortrait"/>
+            android:screenOrientation="sensorPortrait" />
         <activity
             android:name=".demographics.activities.DemographicsSettingsActivity"
             android:label=""
-            android:windowSoftInputMode="stateHidden"
             android:parentActivityName=".appointments.activities.AppointmentsActivity"
-            android:screenOrientation="sensorPortrait">
+            android:screenOrientation="sensorPortrait"
+            android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity" /></activity>
+                android:value="com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity" />
+        </activity>
         <activity
             android:name=".medication.activities.MedicationAllergyActivity"
-            android:screenOrientation="sensorPortrait"/>
+            android:screenOrientation="sensorPortrait" />
         <activity
             android:name=".notifications.activities.NotificationActivity"
-            android:screenOrientation="sensorPortrait"/>
+            android:screenOrientation="sensorPortrait" />
         <activity
             android:name=".purchases.activities.PurchaseActivity"
-            android:screenOrientation="sensorPortrait"/>
+            android:screenOrientation="sensorPortrait" />
+
+        <service android:name="com.carecloud.carepaylibray.fcm.MyFirebaseInstanceIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name="com.carecloud.carepaylibray.fcm.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name="com.carecloud.carepaylibray.fcm.RegistrationIntentService" />
     </application>
 
 </manifest>

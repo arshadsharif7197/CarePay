@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.patientsplash;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -10,6 +11,7 @@ import com.carecloud.carepay.patient.patientsplash.dtos.SelectLanguageDTO;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.fcm.RegistrationIntentService;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.newrelic.agent.android.NewRelic;
@@ -93,6 +95,7 @@ public class SplashActivity extends BasePatientActivity {
                 getString(R.string.new_relic_application_token)
         ).start(this.getApplication());
 
-
+        Intent intent = new Intent(this, RegistrationIntentService.class);
+        startService(intent);
     }
 }

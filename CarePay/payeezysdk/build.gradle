@@ -29,8 +29,7 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:25.2.0'
-//    compile files('libs/com.fasterxml.jackson.core.jar')
+    compile 'com.android.support:support-v4:25.3.1'
     compile files('libs/com.fasterxml.jackson.databind.jar')
     compile files('libs/com.fasterxml.jackson.jsonschema.jar')
     compile files('libs/jackson-annotations-2.5.1.jar')
@@ -41,4 +40,5 @@ dependencies {
     compile files('libs/org.apache.httpcomponents.httpcore_4.2.1.jar')
     compile files('libs/spring-android-core-1.0.0.RELEASE.jar')
     compile files('libs/spring-android-rest-template-1.0.0.RELEASE.jar')
+    testCompile 'junit:junit:4.12'
 }
