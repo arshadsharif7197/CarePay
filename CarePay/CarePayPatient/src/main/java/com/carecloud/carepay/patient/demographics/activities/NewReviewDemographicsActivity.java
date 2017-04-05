@@ -88,9 +88,7 @@ public class NewReviewDemographicsActivity extends BasePatientActivity
                 getSupportFragmentManager().findFragmentById(R.id.demographicsDocsLicense);
 
         if (idDocScannerFragment != null) {
-            demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().clear();
-            demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments()
-                    .add(idDocScannerFragment.getModel());
+            demographicDTO.getPayload().getDemographics().getPayload().setIdDocument(idDocScannerFragment.getPostModel());
         }
     }
 
@@ -174,16 +172,7 @@ public class NewReviewDemographicsActivity extends BasePatientActivity
     }
 
     private DemographicIdDocPayloadDTO getDemographicIdDocPayloadDTO() {
-        DemographicIdDocPayloadDTO demographicIdDocPayloadDTO = new DemographicIdDocPayloadDTO();
-
-        if (demographicDTO.getPayload().getDemographics() != null) {
-            int size = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().size();
-            for (int i = 0; i < size; i++) {
-                demographicIdDocPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getIdDocuments().get(i);
-            }
-        }
-
-        return demographicIdDocPayloadDTO;
+        return demographicDTO.getPayload().getDemographics().getPayload().getIdDocument();
     }
 
 
