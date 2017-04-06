@@ -8,13 +8,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,11 +24,6 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 
 public class SupportFragment extends BaseFragment {
-
-    public static final String EMAIL = "help@gobreeze.com";
-    public static final String SUBJECT = "Android Support";
-    public static final String CHOOSE_LABEL = "Choose an Email client :";
-    public static final String PHONE = "tel:18552044075";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
@@ -90,8 +83,8 @@ public class SupportFragment extends BaseFragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(PHONE));
-                startActivity(Intent.createChooser(intent, CHOOSE_LABEL));
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("tel:" + Label.getLabel("support_phone")));
+                startActivity(Intent.createChooser(intent, Label.getLabel("support_choose_client_label")));
             }
         });
     }
@@ -116,8 +109,8 @@ public class SupportFragment extends BaseFragment {
     }
 
     private void openEmailIntent() {
-        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", EMAIL, null));
-        intent.putExtra(Intent.EXTRA_SUBJECT, SUBJECT);
-        startActivity(Intent.createChooser(intent, CHOOSE_LABEL));
+        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", Label.getLabel("support_email_address"), null));
+        intent.putExtra(Intent.EXTRA_SUBJECT, Label.getLabel("support_email_subject"));
+        startActivity(Intent.createChooser(intent, Label.getLabel("support_choose_client_label")));
     }
 }

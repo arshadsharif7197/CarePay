@@ -19,10 +19,6 @@ import com.carecloud.carepaylibray.base.BaseFragment;
 
 public class HelpFragment extends BaseFragment {
 
-    public static final String URL_FAQ = "https://help.gobreeze.com";
-    public static final String URL_TOS = "https://carecloud.app.box.com/v/breezetou";
-    public static final String URL_PRIVACY = "https://carecloud.app.box.com/v/breezeprivacy";
-
     private HelpFragmentListener callback;
 
     @Override
@@ -79,7 +75,7 @@ public class HelpFragment extends BaseFragment {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openUrl(URL_FAQ);
+                openUrl(Label.getLabel("support_url_faq"));
             }
         });
     }
@@ -89,7 +85,7 @@ public class HelpFragment extends BaseFragment {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openUrl(URL_TOS);
+                openUrl(Label.getLabel("support_url_tos"));
             }
         });
     }
@@ -99,7 +95,7 @@ public class HelpFragment extends BaseFragment {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openUrl(URL_PRIVACY);
+                openUrl(Label.getLabel("support_url_privacy"));
             }
         });
     }
