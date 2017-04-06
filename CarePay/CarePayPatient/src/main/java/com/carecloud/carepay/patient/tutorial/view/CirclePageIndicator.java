@@ -444,7 +444,7 @@ public class CirclePageIndicator extends View implements PageIndicator {
     private static class SavedState extends BaseSavedState {
         int currentPage;
 
-        public SavedState(Parcelable superState) {
+        SavedState(Parcelable superState) {
             super(superState);
         }
 

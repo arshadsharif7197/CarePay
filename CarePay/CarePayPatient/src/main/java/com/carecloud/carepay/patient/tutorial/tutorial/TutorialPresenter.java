@@ -6,19 +6,17 @@ import com.carecloud.carepay.patient.tutorial.TutorialItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TutorialPresenter implements TutorialContract.UserActionsListener {
+class TutorialPresenter implements TutorialContract.UserActionsListener {
     private TutorialContract.View tutorialView;
     private List<TutorialFragment> fragments;
-    private List<TutorialItem> tutorialItems;
 
-    public TutorialPresenter(TutorialContract.View tutorialView) {
+    TutorialPresenter(TutorialContract.View tutorialView) {
         this.tutorialView = tutorialView;
     }
 
     @Override
     public void loadViewPagerFragments(List<TutorialItem> tutorialItems) {
         fragments = new ArrayList<>();
-        this.tutorialItems = tutorialItems;
         for (int i = 0; i < tutorialItems.size(); i++) {
             TutorialFragment helpTutorialImageFragment;
             helpTutorialImageFragment = TutorialFragment.newInstance(tutorialItems.get(i), i);
@@ -39,13 +37,5 @@ public class TutorialPresenter implements TutorialContract.UserActionsListener {
         } else {
             tutorialView.showSkipButton();
         }
-    }
-
-    @Override
-    public int getNumberOfTutorials() {
-        if (tutorialItems != null) {
-            return tutorialItems.size();
-        }
-        return 0;
     }
 }

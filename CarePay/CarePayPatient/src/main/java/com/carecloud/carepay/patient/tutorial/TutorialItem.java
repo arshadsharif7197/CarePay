@@ -2,7 +2,6 @@ package com.carecloud.carepay.patient.tutorial;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,36 +9,26 @@ import android.support.annotation.Nullable;
 import com.carecloud.carepay.service.library.label.Label;
 
 public class TutorialItem implements Parcelable {
-    private String titleText;
-    private String subTitleText;
-    private int foregroundImageRes = -1;
-    private int titleTextRes = -1;
-    private int subTitleTextRes = -1;
+    private String title;
+    private String subTitle;
+    private int imageRes = -1;
 
-    public TutorialItem(@NonNull String titleText, @Nullable String subTitleText, @DrawableRes int foregroundImageRes) {
-        this.titleText = Label.getLabel(titleText);
-        this.subTitleText = Label.getLabel(subTitleText);
-        this.foregroundImageRes = foregroundImageRes;
+    public TutorialItem(@NonNull String title, @Nullable String subTitle, @DrawableRes int imageRes) {
+        this.title = Label.getLabel(title);
+        this.subTitle = Label.getLabel(subTitle);
+        this.imageRes = imageRes;
     }
 
-    public String getTitleText() {
-        return titleText;
+    String getTitle() {
+        return title;
     }
 
-    public String getSubTitleText() {
-        return subTitleText;
+    String getSubTitle() {
+        return subTitle;
     }
 
-    public int getForegroundImageRes() {
-        return foregroundImageRes;
-    }
-
-    public int getTitleTextRes() {
-        return titleTextRes;
-    }
-
-    public int getSubTitleTextRes() {
-        return subTitleTextRes;
+    int getImageRes() {
+        return imageRes;
     }
 
     @Override
@@ -49,19 +38,15 @@ public class TutorialItem implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.titleText);
-        dest.writeString(this.subTitleText);
-        dest.writeInt(this.foregroundImageRes);
-        dest.writeInt(this.titleTextRes);
-        dest.writeInt(this.subTitleTextRes);
+        dest.writeString(this.title);
+        dest.writeString(this.subTitle);
+        dest.writeInt(this.imageRes);
     }
 
-    protected TutorialItem(Parcel in) {
-        this.titleText = in.readString();
-        this.subTitleText = in.readString();
-        this.foregroundImageRes = in.readInt();
-        this.titleTextRes = in.readInt();
-        this.subTitleTextRes = in.readInt();
+    private TutorialItem(Parcel in) {
+        this.title = in.readString();
+        this.subTitle = in.readString();
+        this.imageRes = in.readInt();
     }
 
     public static final Parcelable.Creator<TutorialItem> CREATOR = new Parcelable.Creator<TutorialItem>() {

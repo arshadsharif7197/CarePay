@@ -57,14 +57,6 @@ public class TutorialActivity extends BasePatientActivity implements TutorialCon
     }
 
     @Override
-    public void showNextTutorial() {
-        int currentItem = viewPager.getCurrentItem();
-        if (currentItem < presenter.getNumberOfTutorials()) {
-            viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
-        }
-    }
-
-    @Override
     public void showEndTutorial() {
         setResult(RESULT_OK);
         finish();
@@ -85,10 +77,10 @@ public class TutorialActivity extends BasePatientActivity implements TutorialCon
     @Override
     public void setViewPagerFragments(List<TutorialFragment> tutorialFragments) {
         viewPager.setAdapter(new TutorialAdapter(getSupportFragmentManager(), tutorialFragments));
-        CirclePageIndicator circlePageIndicator = (CirclePageIndicator) findViewById(R.id.tutorial_view_page_indicator);
 
-        circlePageIndicator.setViewPager(viewPager);
-        circlePageIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        CirclePageIndicator indicator = (CirclePageIndicator) findViewById(R.id.tutorial_view_page_indicator);
+        indicator.setViewPager(viewPager);
+        indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i2) {
 

@@ -2,7 +2,6 @@ package com.carecloud.carepay.patient.tutorial;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,16 +24,15 @@ public class TutorialFragment extends Fragment {
         return helpTutorialImageFragment;
     }
 
-    private TutorialItem tutorialItem;
+    private TutorialItem item;
     int page;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle b = getArguments();
-        tutorialItem = b.getParcelable(ARG_TUTORIAL_ITEM);
+        item = b.getParcelable(ARG_TUTORIAL_ITEM);
         page = b.getInt(ARG_PAGE);
-
     }
 
     @Override
@@ -43,22 +41,12 @@ public class TutorialFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_tutorial_image, container, false);
         view.setTag(page);
 
-        ImageView imageViewFront = (ImageView) view.findViewById(R.id.fragment_tutorial_imageview);
-        TextView textViewSubTitle = (TextView) view.findViewById(R.id.fragment_tutorial_subtitle_text);
+        ((TextView) view.findViewById(R.id.tutorial_title_textview)).setText(item.getTitle());
+        ((TextView) view.findViewById(R.id.tutorial_subtitle_textview)).setText(item.getSubTitle());
 
-        TextView textView = (TextView) view.findViewById(R.id.fragment_tutorial_text);
-        if (!TextUtils.isEmpty(tutorialItem.getTitleText())) {
-            textView.setText(tutorialItem.getTitleText());
-        } else if (tutorialItem.getTitleTextRes() != -1) {
-            textView.setText(tutorialItem.getTitleTextRes());
-        }
-        if (!TextUtils.isEmpty(tutorialItem.getSubTitleText())) {
-            textViewSubTitle.setText(tutorialItem.getSubTitleText());
-        } else if (tutorialItem.getSubTitleTextRes() != -1) {
-            textViewSubTitle.setText(tutorialItem.getSubTitleTextRes());
-        }
-        if (tutorialItem.getForegroundImageRes() != -1) {
-            Picasso.with(getContext()).load(tutorialItem.getForegroundImageRes()).into(imageViewFront);
+        if (item.getImageRes() != -1) {
+            ImageView imageViewFront = (ImageView) view.findViewById(R.id.fragment_tutorial_imageview);
+            Picasso.with(getContext()).load(item.getImageRes()).into(imageViewFront);
         }
 
         return view;

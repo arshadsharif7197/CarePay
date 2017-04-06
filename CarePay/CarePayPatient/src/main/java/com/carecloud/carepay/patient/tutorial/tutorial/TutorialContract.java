@@ -5,10 +5,9 @@ import java.util.List;
 import com.carecloud.carepay.patient.tutorial.TutorialFragment;
 import com.carecloud.carepay.patient.tutorial.TutorialItem;
 
-public interface TutorialContract {
+interface TutorialContract {
 
     interface View {
-        void showNextTutorial();
         void showEndTutorial();
         void showDoneButton();
         void showSkipButton();
@@ -19,8 +18,6 @@ public interface TutorialContract {
         void loadViewPagerFragments(List<TutorialItem> tutorialItems);
         void doneOrSkipClick();
         void onPageSelected(int pageNo);
-
-        int getNumberOfTutorials();
     }
 
 }
