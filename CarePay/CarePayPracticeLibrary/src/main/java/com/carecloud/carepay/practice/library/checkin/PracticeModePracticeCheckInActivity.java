@@ -515,7 +515,7 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
         ListIterator<PatientBalanceDTO> iterator = checkInDTO.getPayload().getPatientBalances().listIterator();
         while (iterator.hasNext()) {
             PatientBalanceDTO patientBalanceDTO = iterator.next();
-            if (isObject(patientBalanceDTO, updateBalance)) {
+            if (matchesBalanceDTO(patientBalanceDTO, updateBalance)) {
                 try {
                     double pendingResponsibility = Double.parseDouble(updateBalance.getPendingRepsonsibility());
                     patientBalanceDTO.setPendingRepsonsibility(updateBalance.getPendingRepsonsibility());
@@ -532,7 +532,7 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
         setAdapter();
     }
 
-    private boolean isObject(PatientBalanceDTO paymentsPatientBalance, UpdatePatientBalancesDTO updateBalance) {
+    private boolean matchesBalanceDTO(PatientBalanceDTO paymentsPatientBalance, UpdatePatientBalancesDTO updateBalance) {
         return paymentsPatientBalance.getDemographics().getMetadata().getUserId().equals(updateBalance.getDemographics().getMetadata().getUserId()) &&
                 paymentsPatientBalance.getBalances().get(0).getMetadata().getPatientId().equals(updateBalance.getBalances().get(0).getMetadata().getPatientId());
     }

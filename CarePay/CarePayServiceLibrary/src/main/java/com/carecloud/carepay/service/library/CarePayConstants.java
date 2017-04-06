@@ -21,6 +21,7 @@ public class CarePayConstants {
     public static final String CANCELLED = "C";
     public static final String REQUESTED = "R";
     public static final String CHECKING_IN = "CI";
+    public static final String CHECKED_OUT = "O";
 
     public static final String ATTR_APPOINTMENTS = "appointments";
     public static final String ATTR_APPT_ID = "appointment_id";
