@@ -201,7 +201,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if(hasInsurance()) {
+        if (hasInsurance()) {
             findViewById(R.id.edit_insurance_close_button).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View closeButton) {
@@ -339,7 +339,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
             demographicInsurancePayloadDTO.setInsuranceProvider(selectedProvider);
             demographicInsurancePayloadDTO.setInsurancePlan(selectedPlan);
-            demographicInsurancePayloadDTO.setInsuranceType(selectedType!=null?selectedType: typeList.get(0).getLabel());
+            demographicInsurancePayloadDTO.setInsuranceType(selectedType != null ? selectedType : typeList.get(0).getLabel());
 
             demographicInsurancePayloadDTO.setInsuranceMemberId(cardNumber.getText().toString());
             demographicInsurancePayloadDTO.setInsuranceGroupId(groupNumber.getText().toString());
@@ -353,9 +353,9 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
                 photos.get(1).setInsurancePhoto(backImageAsBase64);
             }
 
-            if(hasInsurance){
+            if (hasInsurance) {
                 closeDialog();
-            }else{
+            } else {
                 callback.onInsuranceEdited(demographicDTO, true);
             }
         }
@@ -458,8 +458,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         }
     }
 
-    private void getInsurancePlans(MetadataInsuranceOptionDTO selectedInsurance){
-        if(selectedInsurance == null){
+    private void getInsurancePlans(MetadataInsuranceOptionDTO selectedInsurance) {
+        if (selectedInsurance == null) {
             return;
         }
 
@@ -478,13 +478,13 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
     }
 
-    private MetadataInsuranceOptionDTO findInsuranceProvider(String name){
-        if(name==null){
+    private MetadataInsuranceOptionDTO findInsuranceProvider(String name) {
+        if (name == null) {
             return null;
         }
-        for(MetadataInsuranceOptionDTO provider : providerList){
-            if(provider.getLabel().toLowerCase().equals(name.toLowerCase()) ||
-               provider.getName().toLowerCase().equals(name.toLowerCase())){
+        for (MetadataInsuranceOptionDTO provider : providerList) {
+            if (provider.getLabel().toLowerCase().equals(name.toLowerCase()) ||
+                    provider.getName().toLowerCase().equals(name.toLowerCase())) {
                 return provider;
             }
         }
@@ -523,7 +523,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
                         otherProviderEditText = (EditText) findViewById(R.id.otherProviderEditText);
                         findViewById(R.id.health_insurance_plans).setVisibility(View.GONE);
 
-                        if(!dataArray[position].equals(selectedProvider)){
+                        if (!dataArray[position].equals(selectedProvider)) {
                             selectedPlan = null;
                             selectedPlanTextView.setText(Label.getLabel("demographics_choose"));
                         }
@@ -682,10 +682,10 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         return !demographicDTO.getPayload().getDemographics().getPayload().getInsurances().isEmpty();
     }
 
-    private void validateForm(){
+    private void validateForm() {
         boolean isValid = true;
 
-        if(StringUtil.isNullOrEmpty(selectedProvider)){
+        if (StringUtil.isNullOrEmpty(selectedProvider)) {
             isValid = false;
         }
 
