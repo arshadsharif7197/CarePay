@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.tutorial.tutorial.TutorialActivity;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 
@@ -38,17 +39,18 @@ public class HelpFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
         return inflater.inflate(R.layout.fragment_help, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         initializeToolbar(view);
         initializeSupportButton(view);
         initializeFaqButton(view);
         initializeTosButton(view);
         initializePrivacyButton(view);
+        initializePlayAgainButton(view);
     }
 
     private void initializeToolbar(View view) {
@@ -102,9 +104,18 @@ public class HelpFragment extends BaseFragment {
         });
     }
 
+    private void initializePlayAgainButton(View view) {
+        TextView textView = (TextView) view.findViewById(R.id.playAgainTextView);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), TutorialActivity.class));
+            }
+        });
+    }
+
     private void openUrl(String url) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        startActivity(intent);
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
     }
 
     public interface HelpFragmentListener {

@@ -107,6 +107,10 @@
         <activity
             android:name=".purchases.activities.PurchaseActivity"
             android:screenOrientation="sensorPortrait"/>
+
+        <activity
+            android:name=".tutorial.tutorial.TutorialActivity"
+            android:screenOrientation="sensorPortrait"/>
     </application>
 
 </manifest>

@@ -147,6 +147,7 @@
             breeze:textKey="tutorial_label" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/playAgainTextView"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/dimen_10dp"
