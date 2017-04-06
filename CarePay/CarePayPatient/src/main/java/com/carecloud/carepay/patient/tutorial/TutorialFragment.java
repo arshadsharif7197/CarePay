@@ -15,6 +15,11 @@ public class TutorialFragment extends Fragment {
     private static final String ARG_TUTORIAL_ITEM = "arg_tut_item";
     private static final String ARG_PAGE = "arg_page";
 
+    /**
+     * @param tutorialItem item to be displayed
+     * @param page the item belongs to
+     * @return Tutorial Fragment
+     */
     public static TutorialFragment newInstance(TutorialItem tutorialItem, int page) {
         TutorialFragment helpTutorialImageFragment = new TutorialFragment();
         Bundle args = new Bundle();

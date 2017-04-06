@@ -27,7 +27,7 @@ public class TutorialActivity extends BasePatientActivity implements TutorialCon
 
     private View.OnClickListener finishTutorialClickListener = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
             presenter.doneOrSkipClick();
         }
     };
@@ -82,18 +82,18 @@ public class TutorialActivity extends BasePatientActivity implements TutorialCon
         indicator.setViewPager(viewPager);
         indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int i, float v, int i2) {
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
             }
 
             @Override
-            public void onPageSelected(int i) {
+            public void onPageSelected(int position) {
                 presenter.onPageSelected(viewPager.getCurrentItem());
 
             }
 
             @Override
-            public void onPageScrollStateChanged(int i) {
+            public void onPageScrollStateChanged(int state) {
 
             }
         });
