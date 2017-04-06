@@ -13,6 +13,11 @@ public class TutorialItem implements Parcelable {
     private String subTitle;
     private int imageRes = -1;
 
+    /**
+     * @param title title text
+     * @param subTitle sub title text
+     * @param imageRes image resource
+     */
     public TutorialItem(@NonNull String title, @Nullable String subTitle, @DrawableRes int imageRes) {
         this.title = Label.getLabel(title);
         this.subTitle = Label.getLabel(subTitle);

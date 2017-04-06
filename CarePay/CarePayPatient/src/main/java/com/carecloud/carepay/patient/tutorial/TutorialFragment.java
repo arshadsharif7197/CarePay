@@ -30,9 +30,9 @@ public class TutorialFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle b = getArguments();
-        item = b.getParcelable(ARG_TUTORIAL_ITEM);
-        page = b.getInt(ARG_PAGE);
+        Bundle bundle = getArguments();
+        item = bundle.getParcelable(ARG_TUTORIAL_ITEM);
+        page = bundle.getInt(ARG_PAGE);
     }
 
     @Override

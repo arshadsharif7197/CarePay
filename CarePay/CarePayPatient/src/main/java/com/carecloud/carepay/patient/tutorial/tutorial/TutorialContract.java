@@ -9,14 +9,19 @@ interface TutorialContract {
 
     interface View {
         void showEndTutorial();
+
         void showDoneButton();
+
         void showSkipButton();
+
         void setViewPagerFragments(List<TutorialFragment> tutorialFragments);
     }
 
     interface UserActionsListener {
         void loadViewPagerFragments(List<TutorialItem> tutorialItems);
+
         void doneOrSkipClick();
+
         void onPageSelected(int pageNo);
     }
 

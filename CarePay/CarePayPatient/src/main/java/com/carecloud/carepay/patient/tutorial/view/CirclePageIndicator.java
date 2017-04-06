@@ -54,13 +54,28 @@ public class CirclePageIndicator extends View implements PageIndicator {
         this(context, null);
     }
 
+    /**
+     * @param context The Context the view is running in, through which it can
+     *        access the current theme, resources, etc.
+     * @param attrs The attributes of the XML tag that is inflating the view.
+     */
     public CirclePageIndicator(Context context, AttributeSet attrs) {
         this(context, attrs, R.attr.vpiCirclePageIndicatorStyle);
     }
 
+    /**
+     * @param context The Context the view is running in, through which it can
+     *        access the current theme, resources, etc.
+     * @param attrs The attributes of the XML tag that is inflating the view.
+     * @param defStyle An attribute in the current theme that contains a
+     *        reference to a style resource that supplies default values for
+     *        the view. Can be 0 to not look for defaults.
+     */
     public CirclePageIndicator(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        if (isInEditMode()) return;
+        if (isInEditMode()) {
+            return;
+        }
 
         //Load defaults from resources
         final Resources res = getResources();
@@ -74,31 +89,34 @@ public class CirclePageIndicator extends View implements PageIndicator {
         final boolean defaultSnap = res.getBoolean(R.bool.default_circle_indicator_snap);
 
         //Retrieve styles attributes
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CirclePageIndicator, defStyle, 0);
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.CirclePageIndicator, defStyle, 0);
 
-        centered = a.getBoolean(R.styleable.CirclePageIndicator_centered, defaultCentered);
-        orientation = a.getInt(R.styleable.CirclePageIndicator_android_orientation, defaultOrientation);
+        centered = array.getBoolean(R.styleable.CirclePageIndicator_centered, defaultCentered);
+        orientation = array.getInt(R.styleable.CirclePageIndicator_android_orientation, defaultOrientation);
         paintPageFill.setStyle(Style.FILL);
-        paintPageFill.setColor(a.getColor(R.styleable.CirclePageIndicator_pageColor, defaultPageColor));
+        paintPageFill.setColor(array.getColor(R.styleable.CirclePageIndicator_pageColor, defaultPageColor));
         paintStroke.setStyle(Style.STROKE);
-        paintStroke.setColor(a.getColor(R.styleable.CirclePageIndicator_strokeColor, defaultStrokeColor));
-        paintStroke.setStrokeWidth(a.getDimension(R.styleable.CirclePageIndicator_strokeWidth, defaultStrokeWidth));
+        paintStroke.setColor(array.getColor(R.styleable.CirclePageIndicator_strokeColor, defaultStrokeColor));
+        paintStroke.setStrokeWidth(array.getDimension(R.styleable.CirclePageIndicator_strokeWidth, defaultStrokeWidth));
         paintFill.setStyle(Style.FILL);
-        paintFill.setColor(a.getColor(R.styleable.CirclePageIndicator_fillColor, defaultFillColor));
-        radius = a.getDimension(R.styleable.CirclePageIndicator_radius, defaultRadius);
-        snap = a.getBoolean(R.styleable.CirclePageIndicator_snap, defaultSnap);
+        paintFill.setColor(array.getColor(R.styleable.CirclePageIndicator_fillColor, defaultFillColor));
+        radius = array.getDimension(R.styleable.CirclePageIndicator_radius, defaultRadius);
+        snap = array.getBoolean(R.styleable.CirclePageIndicator_snap, defaultSnap);
 
-        Drawable background = a.getDrawable(R.styleable.CirclePageIndicator_android_background);
+        Drawable background = array.getDrawable(R.styleable.CirclePageIndicator_android_background);
         if (background != null) {
             setBackgroundDrawable(background);
         }
 
-        a.recycle();
+        array.recycle();
 
         final ViewConfiguration configuration = ViewConfiguration.get(context);
         touchSlop = ViewConfigurationCompat.getScaledPagingTouchSlop(configuration);
     }
 
+    /**
+     * @param orientation new orientation
+     */
     public void setOrientation(int orientation) {
         switch (orientation) {
             case HORIZONTAL:
@@ -156,8 +174,8 @@ public class CirclePageIndicator extends View implements PageIndicator {
             longOffset += ((longSize - longPaddingBefore - longPaddingAfter) / 2.0f) - ((count * fourRadius) / 2.0f);
         }
 
-        float dX;
-        float dY;
+        float denterX;
+        float denterY;
 
         float pageFillRadius = radius;
         if (paintStroke.getStrokeWidth() > 0) {
@@ -165,41 +183,42 @@ public class CirclePageIndicator extends View implements PageIndicator {
         }
 
         //Draw stroked circles
-        for (int iLoop = 0; iLoop < count; iLoop++) {
-            float drawLong = longOffset + (iLoop * fourRadius);
+        for (int i = 0; i < count; i++) {
+            float drawLong = longOffset + (i * fourRadius);
             if (orientation == HORIZONTAL) {
-                dX = drawLong;
-                dY = shortOffset;
+                denterX = drawLong;
+                denterY = shortOffset;
             } else {
-                dX = shortOffset;
-                dY = drawLong;
+                denterX = shortOffset;
+                denterY = drawLong;
             }
             // Only paint fill if not completely transparent
             if (paintPageFill.getAlpha() > 0) {
-                canvas.drawCircle(dX, dY, pageFillRadius, paintPageFill);
+                canvas.drawCircle(denterX, denterY, pageFillRadius, paintPageFill);
             }
 
             // Only paint stroke if a stroke width was non-zero
             if (pageFillRadius != radius) {
-                canvas.drawCircle(dX, dY, radius, paintStroke);
+                canvas.drawCircle(denterX, denterY, radius, paintStroke);
             }
         }
 
         //Draw the filled circle according to the current scroll
-        float cx = (snap ? snapPage : currentPage) * fourRadius;
+        float centerX = (snap ? snapPage : currentPage) * fourRadius;
         if (!snap) {
-            cx += pageOffset * fourRadius;
+            centerX += pageOffset * fourRadius;
         }
         if (orientation == HORIZONTAL) {
-            dX = longOffset + cx;
-            dY = shortOffset;
+            denterX = longOffset + centerX;
+            denterY = shortOffset;
         } else {
-            dX = shortOffset;
-            dY = longOffset + cx;
+            denterX = shortOffset;
+            denterY = longOffset + centerX;
         }
-        canvas.drawCircle(dX, dY, radius, paintFill);
+        canvas.drawCircle(denterX, denterY, radius, paintFill);
     }
 
+    @Override
     public boolean onTouchEvent(@NonNull MotionEvent ev) {
         if (super.onTouchEvent(ev)) {
             return true;
@@ -220,10 +239,8 @@ public class CirclePageIndicator extends View implements PageIndicator {
                 final float x = MotionEventCompat.getX(ev, activePointerIndex);
                 final float deltaX = x - lastMotionX;
 
-                if (!isDragging) {
-                    if (Math.abs(deltaX) > touchSlop) {
-                        isDragging = true;
-                    }
+                if (!isDragging && Math.abs(deltaX) > touchSlop) {
+                    isDragging = true;
                 }
 
                 if (isDragging) {
@@ -259,7 +276,9 @@ public class CirclePageIndicator extends View implements PageIndicator {
 
                 isDragging = false;
                 activePointerId = INVALID_POINTER;
-                if (viewPager.isFakeDragging()) viewPager.endFakeDrag();
+                if (viewPager.isFakeDragging()) {
+                    viewPager.endFakeDrag();
+                }
                 break;
 
             case MotionEventCompat.ACTION_POINTER_DOWN: {
@@ -278,6 +297,9 @@ public class CirclePageIndicator extends View implements PageIndicator {
                 }
                 lastMotionX = MotionEventCompat.getX(ev, MotionEventCompat.findPointerIndex(ev, activePointerId));
                 break;
+
+            default:
+                // Nothing but Code Climate Cares
         }
 
         return true;
