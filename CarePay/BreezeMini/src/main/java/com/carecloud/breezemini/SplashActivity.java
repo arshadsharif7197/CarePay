@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.carecloud.breezemini.payments.postmodel.BreezePaymentDTO;
 import com.carecloud.breezemini.payments.postmodel.PaymentLineItem;
+import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.util.CloverAuth;
 import com.clover.sdk.v1.BindingException;
 import com.clover.sdk.v1.ClientException;
@@ -25,6 +27,7 @@ import com.clover.sdk.v3.order.LineItem;
 import com.clover.sdk.v3.order.Order;
 import com.clover.sdk.v3.order.OrderConnector;
 import com.clover.sdk.v3.payments.Result;
+import com.google.gson.JsonObject;
 
 import java.net.URISyntaxException;
 import java.util.Iterator;
@@ -36,6 +39,8 @@ import io.deepstream.DeepstreamClient;
 import io.deepstream.DeepstreamFactory;
 import io.deepstream.DeepstreamRuntimeErrorHandler;
 import io.deepstream.Event;
+import io.deepstream.EventListener;
+import io.deepstream.LoginResult;
 import io.deepstream.Topic;
 
 /**
@@ -146,8 +151,12 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         mVisible = true;
 
-        LoginTask loginTask = new LoginTask();
-        loginTask.execute();
+        if (account == null)
+                    {
+                        account = CloverAccount.getAccount(SplashActivity.this);
+                        authenticateCloverAccount();
+                    }
+
 
 //        try {
 //            DeepstreamClient ds = new DeepstreamClient("192.168.125.255:6020" );
@@ -180,6 +189,7 @@ public class SplashActivity extends AppCompatActivity {
 //                    if (account == null) {
 //                        Toast.makeText(SplashActivity.this, "No Account", Toast.LENGTH_SHORT).show();
 //                        finish();
+
 //                    }
 //                }
 //
@@ -196,7 +206,7 @@ public class SplashActivity extends AppCompatActivity {
             DeepstreamFactory factory = DeepstreamFactory.getInstance();
             DeepstreamClient client = null;
             try {
-                client = factory.getClient("192.16:6020");
+                client = factory.getClient("192.168.124.180:6020");
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
@@ -207,7 +217,25 @@ public class SplashActivity extends AppCompatActivity {
                 }
             });
 
-            return null;
+            JsonObject authData = new JsonObject();
+            authData.addProperty("device_type", "CloverMini");
+            authData.addProperty("device_id", Build.SERIAL);
+
+            LoginResult result = client.login(authData);
+            client.event.subscribe("startSwipe", new EventListener() {
+                @Override
+                public void onEvent(String s,final Object o) {
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                        new OrderAsyncTask().execute();
+                        }
+                    });
+
+                }
+
+            });
+
+            return result.loggedIn();
         }
     }
 
@@ -235,8 +263,14 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void param) {
                 if (authResult != null && authResult.authToken != null && authResult.baseUrl != null) {
+                    Log.i("Clover Account", account.name);
                     connect();
-                    new OrderAsyncTask().execute();
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            connect();
+                            new LoginTask().execute();
+                        }
+                    });
                 }
             }
         }.execute();
@@ -335,7 +369,13 @@ public class SplashActivity extends AppCompatActivity {
                     if (amountLong != null) {
                         intent.putExtra(Intents.EXTRA_AMOUNT, amountLong);
                     } else {
-                        Toast.makeText(SplashActivity.this, "yada yada", Toast.LENGTH_LONG).show();
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                connect();
+                                Toast.makeText(SplashActivity.this, "yada yada", Toast.LENGTH_LONG).show();
+                            }
+                        });
+
                     }
 
 
@@ -382,7 +422,12 @@ public class SplashActivity extends AppCompatActivity {
                         }
                     }else{
                         setResult(RESULT_CANCELED);
-                        Toast.makeText(SplashActivity.this, "cancelled", Toast.LENGTH_SHORT).show();
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                connect();
+                                Toast.makeText(SplashActivity.this, "cancelled", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                         finish();
                     }
                 }
