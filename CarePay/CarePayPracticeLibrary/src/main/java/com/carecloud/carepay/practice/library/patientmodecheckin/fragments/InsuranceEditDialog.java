@@ -155,7 +155,11 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         hadInsurance = hasInsurance();
         if (hadInsurance) {
-            return inflater.inflate(R.layout.dialog_add_edit_insurance, container, false);
+            View view =  inflater.inflate(R.layout.dialog_add_edit_insurance, container, false);
+
+            hideKeyboardOnViewTouch(view.findViewById(R.id.dialog_content_layout));
+            hideKeyboardOnViewTouch(view.findViewById(R.id.container_main));
+            return view;
         }
 
         View view = inflater.inflate(R.layout.fragment_review_demographic_base, container, false);
