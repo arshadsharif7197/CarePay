@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
+import android.support.v4.os.OperationCanceledException;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -44,7 +45,7 @@ import io.deepstream.LoginResult;
 import io.deepstream.Topic;
 
 /**
- * An example full-screen activity that shows and hides the system UI (i.e.
+ * An full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
 public class SplashActivity extends AppCompatActivity {
@@ -64,6 +65,31 @@ public class SplashActivity extends AppCompatActivity {
      * and a change of the status and navigation bar.
      */
     private static final int UI_ANIMATION_DELAY = 300;
+
+    // private View mControlsView;
+    private final Runnable mShowPart2Runnable = new Runnable() {
+        @Override
+        public void run() {
+            // Delayed display of UI elements
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.show();
+            }
+            //  mControlsView.setVisibility(View.VISIBLE);
+        }
+    };
+    private Account account;
+    private CloverAuth.AuthResult authResult = null;
+    private PaymentLineItem[] paymentLineItems;
+    private BreezePaymentDTO breezePayment;
+    private boolean mVisible;
+    private final Runnable mHideRunnable = new Runnable() {
+        @Override
+        public void run() {
+            hide();
+        }
+    };
+
     private static final String TAG = SplashActivity.class.getName();
     private final Handler mHideHandler = new Handler();
     private final Runnable mHidePart2Runnable = new Runnable() {
@@ -83,18 +109,8 @@ public class SplashActivity extends AppCompatActivity {
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
-    // private View mControlsView;
-    private final Runnable mShowPart2Runnable = new Runnable() {
-        @Override
-        public void run() {
-            // Delayed display of UI elements
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.show();
-            }
-            //  mControlsView.setVisibility(View.VISIBLE);
-        }
-    };
+
+
     /**
      * Touch listener to use for in-layout UI controls to delay hiding the
      * system UI. This is to prevent the jarring behavior of controls going away
@@ -109,40 +125,9 @@ public class SplashActivity extends AppCompatActivity {
             return false;
         }
     };
-    private Account account;
-    private CloverAuth.AuthResult authResult = null;
-    private PaymentLineItem[] paymentLineItems;
-    private BreezePaymentDTO breezePayment;
-    private boolean mVisible;
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
     private OrderConnector orderConnector;
     private Order order;
     private Long amountLong = 0L;
-
-    /**
-     * Dump intent.
-     *
-     * @param intent the intent
-     */
-    public static void dumpIntent(Intent intent) {
-
-        Bundle bundle = intent.getExtras();
-        if (bundle != null) {
-            Set<String> keys = bundle.keySet();
-            Iterator<String> it = keys.iterator();
-            Log.d(TAG, "Dumping Intent start");
-            while (it.hasNext()) {
-                String key = it.next();
-                Log.e(TAG, "[" + key + "=" + bundle.get(key) + "]");
-            }
-            Log.e(TAG, "Dumping Intent end");
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,95 +137,14 @@ public class SplashActivity extends AppCompatActivity {
         mVisible = true;
 
         if (account == null)
-                    {
-                        account = CloverAccount.getAccount(SplashActivity.this);
-                        authenticateCloverAccount();
-                    }
-
-
-//        try {
-//            DeepstreamClient ds = new DeepstreamClient("192.168.125.255:6020" );
-//            //DeepstreamClient ds = new DeepstreamClient( "10.21.4.45:6020" );
-//            ds.login();
-//            ds.event.emit( "Clover Account", CloverAccount.getAccount(this).toString() );
-//            ds.event.subscribe("make_payment_654654654654", new EventListener() {
-//                // receive any serializable data
-//                public void onEvent(String eventName, Object payment) {
-//                    Gson gson = new Gson();
-//                    BreezePaymentDTO breezePayment = gson.fromJson((JsonElement) payment, BreezePaymentDTO.class);
-//
-//                    // BreezePaymentDTO = (BreezePaymentDTO) payment;
-//                    paymentLineItems = breezePayment.getPaymentLineItems();
-//                    amountLong = breezePayment.getAmountLong();
-//
-//                    if (account == null)
-//                    {
-//                        account = CloverAccount.getAccount(SplashActivity.this);
-//                        authenticateCloverAccount();
-//                    }
-//                    else
-//                    {
-//                        connect();
-//                        new OrderAsyncTask().execute();
-//                    }
-//
-//
-//                    // If an account can't be acquired, exit the app
-//                    if (account == null) {
-//                        Toast.makeText(SplashActivity.this, "No Account", Toast.LENGTH_SHORT).show();
-//                        finish();
-
-//                    }
-//                }
-//
-//            });
-//        } catch (URISyntaxException e) {
-//            e.printStackTrace();
-//        }
-    }
-
-    public class LoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            DeepstreamFactory factory = DeepstreamFactory.getInstance();
-            DeepstreamClient client = null;
-            try {
-                client = factory.getClient("192.168.124.180:6020");
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-            client.setRuntimeErrorHandler(new DeepstreamRuntimeErrorHandler() {
-                @Override
-                public void onException(Topic topic, Event event, String s) {
-                    Log.w("dsh", "Error:" + event.toString() + ":" + s);
-                }
-            });
-
-            JsonObject authData = new JsonObject();
-            authData.addProperty("device_type", "CloverMini");
-            authData.addProperty("device_id", Build.SERIAL);
-
-            LoginResult result = client.login(authData);
-            client.event.subscribe("startSwipe", new EventListener() {
-                @Override
-                public void onEvent(String s,final Object o) {
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                        new OrderAsyncTask().execute();
-                        }
-                    });
-
-                }
-
-            });
-
-            return result.loggedIn();
+        {
+            account = CloverAccount.getAccount(SplashActivity.this);
+            authenticateCloverAccount();
         }
     }
 
     private void authenticateCloverAccount() {
-        new AsyncTask<Void, String, Void>() {
+        new AsyncTask<Void, String, CloverAuth.AuthResult>() {
 
             @Override
             protected void onProgressUpdate(String... values) {
@@ -249,25 +153,33 @@ public class SplashActivity extends AppCompatActivity {
             }
 
             @Override
-            protected Void doInBackground(Void... params) {
+            protected CloverAuth.AuthResult doInBackground(Void... params) {
                 try {
                     publishProgress("Requesting auth token");
                     authResult = CloverAuth.authenticate(SplashActivity.this, account);
-                    publishProgress("Successfully authenticated as " + account + ".  authToken=" + authResult.authToken + ", authData=" + authResult.authData);
-                } catch (Exception e) {
+                    if (authResult == null) {
+                        Log.e(TAG, "Null AuthResult");
+                    } else if (authResult.authToken == null) {
+                        Log.e(TAG, "No auth token in AuthResult");
+                    }
+
+                    return authResult;
+                }
+                catch (OperationCanceledException e) {
+                    Log.e(TAG, "Authentication cancelled", e);
+                }
+                catch (Exception e) {
                     publishProgress("Error retrieving merchant info from server" + e);
                 }
                 return null;
             }
 
             @Override
-            protected void onPostExecute(Void param) {
+            protected void onPostExecute(CloverAuth.AuthResult authResult) {
+                super.onPostExecute(authResult);
                 if (authResult != null && authResult.authToken != null && authResult.baseUrl != null) {
-                    Log.i("Clover Account", account.name);
-                    connect();
                     runOnUiThread(new Runnable() {
                         public void run() {
-                            connect();
                             new LoginTask().execute();
                         }
                     });
@@ -276,12 +188,39 @@ public class SplashActivity extends AppCompatActivity {
         }.execute();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (account == null) {
+            {
+                account = CloverAccount.getAccount(this);
+                authenticateCloverAccount();
+            }
+
+            // If an account can't be acquired, exit the app
+            if (account == null) {
+                Toast.makeText(this, "no account", Toast.LENGTH_SHORT).show();
+                finish();
+                return;
+            }
+        }
+
+    }
+
     private void connect() {
         disconnect();
         if (account != null) {
             orderConnector = new OrderConnector(this, account, null);
             orderConnector.connect();
         }
+    }
+
+    @Override
+    protected void onPause() {
+        disconnect();
+        super.onPause();
+
     }
 
     // Disconnects from the connectors
@@ -345,18 +284,6 @@ public class SplashActivity extends AppCompatActivity {
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
-    private List<LineItem> getLineItems() {
-        List<LineItem> lineItems = new LinkedList<>();
-        for (PaymentLineItem paymentLineItem : paymentLineItems) {
-            LineItem item = new LineItem();
-            item.setName(paymentLineItem.getDescription());
-            item.setPrice((long) (paymentLineItem.getAmount() * 100));
-            item.setNote(paymentLineItem.getMetadata().toString());
-            lineItems.add(item);
-        }
-        return lineItems;
-    }
-
     private void startSecurePaymentIntent() {
 
         new AsyncTask<Void, Void, Result>() {
@@ -368,17 +295,7 @@ public class SplashActivity extends AppCompatActivity {
                 try {
                     if (amountLong != null) {
                         intent.putExtra(Intents.EXTRA_AMOUNT, amountLong);
-                    } else {
-                        runOnUiThread(new Runnable() {
-                            public void run() {
-                                connect();
-                                Toast.makeText(SplashActivity.this, "yada yada", Toast.LENGTH_LONG).show();
-                            }
-                        });
-
                     }
-
-
                     String orderId = order.getId();
 
                     if (orderId != null) {
@@ -403,6 +320,56 @@ public class SplashActivity extends AppCompatActivity {
         }.execute();
     }
 
+    public class LoginTask extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            DeepstreamFactory factory = DeepstreamFactory.getInstance();
+            DeepstreamClient client = null;
+            try {
+                client = factory.getClient("192.168.124.180:6020");
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+            client.setRuntimeErrorHandler(new DeepstreamRuntimeErrorHandler() {
+                @Override
+                public void onException(Topic topic, Event event, String s) {
+                    Log.w("dsh", "Error:" + event.toString() + ":" + s);
+                }
+            });
+
+            JsonObject authData = new JsonObject();
+            authData.addProperty("device_type", "CloverMini");
+            authData.addProperty("device_id", Build.SERIAL);
+
+            LoginResult result = client.login(authData);
+            client.event.subscribe("startSwipe", new EventListener() {
+                @Override
+                public void onEvent(String s,final Object o) {
+                    Log.i("startSwipe event", s );
+                    Log.i("startSwipe event", o.toString() );
+
+//                    amountLong = o.amount ;
+//
+
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(SplashActivity.this, o.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    if (authResult != null && authResult.authToken != null && authResult.baseUrl != null) {
+                        connect();
+                        new OrderAsyncTask().execute();
+                    }
+                }
+
+            });
+
+            return result.loggedIn();
+        }
+    }
+
     private class OrderAsyncTask extends AsyncTask<Void, Void, Order> {
 
         @Override
@@ -424,11 +391,9 @@ public class SplashActivity extends AppCompatActivity {
                         setResult(RESULT_CANCELED);
                         runOnUiThread(new Runnable() {
                             public void run() {
-                                connect();
                                 Toast.makeText(SplashActivity.this, "cancelled", Toast.LENGTH_SHORT).show();
                             }
                         });
-                        finish();
                     }
                 }
 
@@ -453,10 +418,43 @@ public class SplashActivity extends AppCompatActivity {
             // Enables the pay buttons if the order is valid
             if (!isFinishing()) {
                 SplashActivity.this.order = order;
+                disconnect();
                 startSecurePaymentIntent();
 
             }
         }
+
     }
 
+    private List<LineItem> getLineItems() {
+        List<LineItem> lineItems = new LinkedList<>();
+        for (PaymentLineItem paymentLineItem : paymentLineItems) {
+            LineItem item = new LineItem();
+            item.setName(paymentLineItem.getDescription());
+            item.setPrice((long) (paymentLineItem.getAmount() * 100));
+            item.setNote(paymentLineItem.getMetadata().toString());
+            lineItems.add(item);
+        }
+        return lineItems;
+    }
+
+    /**
+     * Dump intent.
+     *
+     * @param intent the intent
+     */
+    public static void dumpIntent(Intent intent) {
+
+        Bundle bundle = intent.getExtras();
+        if (bundle != null) {
+            Set<String> keys = bundle.keySet();
+            Iterator<String> it = keys.iterator();
+            Log.d(TAG, "Dumping Intent start");
+            while (it.hasNext()) {
+                String key = it.next();
+                Log.e(TAG, "[" + key + "=" + bundle.get(key) + "]");
+            }
+            Log.e(TAG, "Dumping Intent end");
+        }
+    }
 }
