@@ -15,8 +15,7 @@ public class CloverSplashActivity extends SplashActivity {
         super.onCreate(savedInstanceState);
 
         NewRelic.withApplicationToken(
-
-                "AA35b4f8a06cf80fa183849e8159ae58f2a9c8a0b0"
+                getString(R.string.new_relic_application_token)
         ).start(this.getApplication());
 
     }
