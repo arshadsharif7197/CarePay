@@ -633,7 +633,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onInsuranceEdited(DemographicDTO demographicDTO) {
+    public void onInsuranceEdited(DemographicDTO demographicDTO, boolean proceed) {
         if (demographicDTO != null) {
             this.demographicDTO = demographicDTO;
         }
@@ -646,10 +646,10 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         String tag = HealthInsuranceFragment.class.getSimpleName();
         HealthInsuranceFragment healthInsuranceFragment = (HealthInsuranceFragment) fm.findFragmentByTag(tag);
 
-        if (demographicDTO != null) {
-            healthInsuranceFragment.updateInsuranceList(demographicDTO);
-        } else {
+        if (demographicDTO == null || proceed) {
             healthInsuranceFragment.openNextFragment(this.demographicDTO);
+        } else {
+            healthInsuranceFragment.updateInsuranceList(demographicDTO);
         }
     }
 

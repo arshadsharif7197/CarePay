@@ -24,7 +24,6 @@ import com.carecloud.carepay.patient.demographics.fragments.viewpager.Demographi
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsAllSetFragment;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsDetailsFragment;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsDocumentsFragmentWthWrapper;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
@@ -34,7 +33,6 @@ import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.DemographicMetadataDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemIdDocDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
@@ -311,10 +309,7 @@ public class DemographicsActivity extends BasePatientActivity
             // init payload DTOs
             addressModel = infoModel.getAddress();
             detailsModel = infoModel.getPersonalDetails();
-            List<DemographicIdDocPayloadDTO> idDocDTOs = infoModel.getIdDocuments();
-            if (idDocDTOs != null && idDocDTOs.size() > 0) {
-                idDocModel = infoModel.getIdDocuments().get(0);
-            }
+            idDocModel = infoModel.getIdDocument();
             insuranceModelList = infoModel.getInsurances();
         } else {
             addressModel = new DemographicAddressPayloadDTO();

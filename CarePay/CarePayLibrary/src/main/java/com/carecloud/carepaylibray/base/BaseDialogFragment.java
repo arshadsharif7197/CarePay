@@ -39,6 +39,15 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        if(dialog!=null) {
+            View decorView = dialog.getWindow().getDecorView();
+            hideKeyboardOnViewTouch(decorView);
+        }
+    }
+
+    @Override
     public int getTheme(){
 //        return android.R.style.Theme_DeviceDefault_Dialog_NoActionBar_MinWidth;
         return R.style.Base_Dialog_MinWidth;
@@ -118,7 +127,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     }
 
     protected void hideKeyboardOnViewTouch(View view){
-        if(isPracticeAppPatientMode){
+        if(isPracticeAppPatientMode && view!=null){
             view.setSoundEffectsEnabled(false);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
