@@ -88,6 +88,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         private final CarePayTextView appointmentStatusCheckedIn;
         private final CarePayTextView appointmentStatusRequested;
         private final CarePayTextView appointmentStatusCanceled;
+        private final CarePayTextView appointmentStatusCheckedOut;
         private final CarePayTextView appointmentPlaceName;
         private final CarePayTextView appointmentPlaceAddress;
         private CarePayTextView shortName;
@@ -111,6 +112,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
             appointmentStatusCheckedIn = (CarePayTextView) view.findViewById(R.id.appointment_status_checked_in);
             appointmentStatusRequested = (CarePayTextView) view.findViewById(R.id.appointment_status_requested);
             appointmentStatusCanceled = (CarePayTextView) view.findViewById(R.id.appointment_status_canceled);
+            appointmentStatusCheckedOut = (CarePayTextView) view.findViewById(R.id.appointment_status_checked_out);
             appointmentPlaceName = (CarePayTextView) view.findViewById(R.id.appointment_place_name);
             appointmentPlaceAddress = (CarePayTextView) view.findViewById(R.id.appointment_place_address);
             profileImage = (ImageView) view.findViewById(R.id.appointment_picture_image_view);
@@ -145,6 +147,12 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
                 case CarePayConstants.REQUESTED:
                     headerBackground.setColor(context.getResources().getColor(R.color.colorPrimary));
                     appointmentStatusRequested.setVisibility(View.VISIBLE);
+
+                    break;
+
+                case CarePayConstants.CHECKED_OUT:
+                    headerBackground.setColor(context.getResources().getColor(R.color.slateGray));
+                    appointmentStatusCheckedOut.setVisibility(View.VISIBLE);
 
                     break;
 

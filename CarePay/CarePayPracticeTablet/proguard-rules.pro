@@ -15,6 +15,53 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-dontobfuscate
+-keepclassmembers class * extends java.lang.Enum {
+    <fields>;
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
 -keep class com.newrelic.** { *; }
 -dontwarn com.newrelic.**
 -keepattributes Exceptions, Signature, InnerClasses, LineNumberTable
+
+-keep class org.apache.** { *; }
+-dontwarn org.apache.**
+
+-keep class com.fasterxml.** { *; }
+-dontwarn com.fasterxml.**
+
+-keep class com.squareup.okhttp.** { *; }
+-dontwarn com.squareup.okhttp.**
+
+-keep class java.nio.** { *; }
+-dontwarn okio.**
+
+-keep class org.joda.** { *; }
+-dontwarn org.joda.**
+
+-keep class java.lang.management.** { *; }
+-dontwarn org.junit.**
+
+-keep class com.google.code.rome.android.repackaged.com.sun.syndication.** { *; }
+-keep class org.simpleframework.xml.** { *; }
+-dontwarn org.springframework.http.converter.**
+
+-keep class java.lang.invoke.** { *; }
+-dontwarn retrofit2.**
+
+-keep class junit.framework.** { *; }
+-dontwarn android.test.**
+
+-keep class edu.umd.cs.findbugs.annotations.** { *; }
+-dontwarn com.clover.core.internal.calc.**
+
+-keep class android.util.** { *; }
+-dontwarn com.viewpagerindicator.**
+
+-keep class org.w3c.dom.bootstrap.** { *; }
+-dontwarn org.codehaus.jackson.**
+
+
+
