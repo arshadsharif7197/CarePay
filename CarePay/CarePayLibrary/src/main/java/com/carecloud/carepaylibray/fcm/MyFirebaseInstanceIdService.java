@@ -2,6 +2,8 @@ package com.carecloud.carepaylibray.fcm;
 
 import android.util.Log;
 
+import com.carecloud.carepay.service.library.platform.AndroidPlatform;
+import com.carecloud.carepay.service.library.platform.Platform;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
@@ -22,7 +24,7 @@ public class MyFirebaseInstanceIdService extends FirebaseInstanceIdService {
     }
 
     private void sendRegistrationToServer(String refreshedToken) {
-
+        ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences().edit().putString("deviceToken", refreshedToken).apply();
     }
 
 }
