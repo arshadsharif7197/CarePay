@@ -350,8 +350,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
                 demographicInsurancePayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(editedIndex);
             }
 
-            List<DemographicInsurancePhotoDTO> photos = demographicInsurancePayloadDTO.getInsurancePhotos();
-
             demographicInsurancePayloadDTO.setInsuranceProvider(selectedProvider);
             demographicInsurancePayloadDTO.setInsurancePlan(selectedPlan);
             demographicInsurancePayloadDTO.setInsuranceType(selectedType != null ? selectedType : typeList.get(0).getLabel());
@@ -359,7 +357,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
             demographicInsurancePayloadDTO.setInsuranceMemberId(cardNumber.getText().toString());
             demographicInsurancePayloadDTO.setInsuranceGroupId(groupNumber.getText().toString());
 
-            photos = demographicInsurancePayloadDTO.getInsurancePhotos();
+            List<DemographicInsurancePhotoDTO> photos = demographicInsurancePayloadDTO.getInsurancePhotos();
             if (frontInsurancePhotoDTO != null) {
                 photos.add(frontInsurancePhotoDTO);
             }
