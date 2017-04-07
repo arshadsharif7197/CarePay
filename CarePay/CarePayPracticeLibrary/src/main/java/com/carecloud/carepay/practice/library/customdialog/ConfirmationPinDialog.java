@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
@@ -158,12 +159,19 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
 
     private void validatePin() {
         String pin = pinEditText.getText().toString();
-        if (pin.length() == 4) {
-            Map<String, String> queryMap = new HashMap<>();
-            queryMap.put("pin", pin);
-            queryMap.put("practice_mgmt", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
-            queryMap.put("practice_id", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeId());
-            ((ISession) context).getWorkflowServiceHelper().execute(this.transitionDTOPinLink, commonTransitionCallback, queryMap);
+        String storedPin = "1643"; //TODO this is hardcoded... needs to be set and saved somewhere
+
+        if (pin.length() == 4 ) {
+           if(pin.equals(storedPin)) {
+               Map<String, String> queryMap = new HashMap<>();
+               queryMap.put("pin", pin);
+               queryMap.put("practice_mgmt", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+               queryMap.put("practice_id", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeId());
+               ((ISession) context).getWorkflowServiceHelper().execute(this.transitionDTOPinLink, commonTransitionCallback, queryMap);
+           }else{
+               Toast.makeText(getContext(), "Pin Error", Toast.LENGTH_SHORT).show();//Todo this is also hardcoded, Should come from labels
+               pinEditText.setText("");
+           }
         }
     }
 
