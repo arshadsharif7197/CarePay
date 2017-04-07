@@ -132,7 +132,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     @Override
     public void editInsurance(DemographicDTO demographicDTO, Integer editedIndex, boolean showAsDialog) {
         this.demographicDTO = demographicDTO;
-        insuranceEditDialog = InsuranceEditDialog.newInstance(demographicDTO, editedIndex);
+        insuranceEditDialog = InsuranceEditDialog.newInstance(demographicDTO, editedIndex, isPatientMode);
 
         if (showAsDialog && isPatientMode) {
             String tag = "InsuranceEditFloatingDialog";

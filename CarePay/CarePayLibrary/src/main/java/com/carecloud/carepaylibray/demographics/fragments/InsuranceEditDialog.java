@@ -66,6 +66,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     private static final ImageCaptureHelper.CameraType CAMERA_TYPE = ImageCaptureHelper.CameraType.CUSTOM_CAMERA;
     private static final ImageCaptureHelper.ImageShape IMAGE_SHAPE = ImageCaptureHelper.ImageShape.RECTANGULAR;
     public static final String EDITED_INDEX = "EditedIndex";
+    public static final String IS_PATIENT_MODE = "IsPatientMode";
     public static final int NEW_INSURANCE = -1;
     private static final int PROVIDERS = 0;
     private static final int PLANS = 1;
@@ -93,6 +94,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     private boolean isGroupNumberEmpty;
     private boolean isFrontScan;
     private boolean hadInsurance;
+    private boolean isPatientMode;
 
     private DemographicInsurancePhotoDTO frontInsurancePhotoDTO;
     private DemographicInsurancePhotoDTO backInsurancePhotoDTO;
@@ -125,10 +127,12 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
      * @param editedIndex    index of the insurance being modified
      */
     public static InsuranceEditDialog newInstance(DemographicDTO demographicDTO,
-                                                  Integer editedIndex) {
+                                                  Integer editedIndex,
+                                                  boolean isPatientMode) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
         args.putInt(EDITED_INDEX, editedIndex == null ? NEW_INSURANCE : editedIndex);
+        args.putBoolean(IS_PATIENT_MODE, isPatientMode);
         DtoHelper.bundleDto(args, demographicDTO);
 
         InsuranceEditDialog dialog = new InsuranceEditDialog();
@@ -173,6 +177,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
         Bundle arguments = getArguments();
         editedIndex = arguments.getInt(EDITED_INDEX);
+        isPatientMode = arguments.getBoolean(IS_PATIENT_MODE);
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, arguments);
 
         handler = new Handler();
@@ -392,7 +397,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         if (callback != null) {
             callback.onInsuranceEdited(demographicDTO, false);
 
-            if (!hadInsurance) {
+            if (!hadInsurance || !isPatientMode) {
                 callback.goOneStepBack();
             }
         }

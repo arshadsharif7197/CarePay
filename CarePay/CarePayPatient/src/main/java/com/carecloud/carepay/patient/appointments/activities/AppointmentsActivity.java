@@ -165,7 +165,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     @Override
     public void newAppointment() {
         Bundle args = new Bundle();
-        DtoHelper.bundleBaseDTO(args, getIntent(), CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, PatientNavigationHelper.class.getSimpleName());
+        DtoHelper.bundleBaseDTO(args, getIntent(), CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, WorkflowDTO.class.getSimpleName());
 
         ChooseProviderFragment chooseProviderFragment = new ChooseProviderFragment();
         chooseProviderFragment.setArguments(args);

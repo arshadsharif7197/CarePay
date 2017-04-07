@@ -73,8 +73,8 @@ public class ConsentActivity extends BasePatientActivity {
             }
         });
 
-        Bundle bundle = this.getIntent().getBundleExtra(PatientNavigationHelper.class.getSimpleName());
-        String jsonString = bundle.getString(PatientNavigationHelper.class.getSimpleName());
+        Bundle bundle = this.getIntent().getExtras();
+        String jsonString = bundle.getString(WorkflowDTO.class.getSimpleName());
 
         try {
 
@@ -111,9 +111,7 @@ public class ConsentActivity extends BasePatientActivity {
         toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.icn_nav_back));
         setSupportActionBar(toolbar);
         initWebView();
-       // numberofforms = SignatureActivity.numOfLaunches;
     }
-
 
     /**
      * Init web view
