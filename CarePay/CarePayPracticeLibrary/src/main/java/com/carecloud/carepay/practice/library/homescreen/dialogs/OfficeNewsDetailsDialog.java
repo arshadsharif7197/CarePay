@@ -12,11 +12,9 @@ import android.view.Window;
 import android.webkit.WebView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenOfficeNewsDTO;
-import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
@@ -68,8 +66,7 @@ public class OfficeNewsDetailsDialog extends Dialog {
     @SuppressWarnings("deprecation")
     @SuppressLint("SetJavaScriptEnabled")
     private void initializeView() {
-        ((TextView) findViewById(R.id.office_news_details_cancel_label)).setText(Label.getLabel("news_cancel_label"));
-        ((TextView) findViewById(R.id.office_news_details_header)).setText(Label.getLabel("news_title"));
+//        ((TextView) findViewById(R.id.office_news_details_header)).setText(Label.getLabel("news_title"));
 
         if (officeNewsList != null && !officeNewsList.isEmpty()) {
             NewsPagerAdapter adapter = new NewsPagerAdapter();
