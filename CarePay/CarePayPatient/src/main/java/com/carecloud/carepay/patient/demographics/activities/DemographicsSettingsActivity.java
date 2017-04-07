@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsSettingsFragment;
+import com.carecloud.carepay.patient.demographics.fragments.settings.HelpFragment;
+import com.carecloud.carepay.patient.demographics.fragments.settings.SupportFragment;
 import com.carecloud.carepay.patient.payment.fragments.SettingAddCreditCardFragment;
 import com.carecloud.carepay.patient.payment.fragments.SettingsCreditCardDetailsFragment;
 import com.carecloud.carepay.patient.payment.fragments.SettingsCreditCardListFragment;
@@ -32,7 +34,8 @@ import java.util.regex.Pattern;
 public class DemographicsSettingsActivity extends BasePatientActivity implements
         SettingsCreditCardDetailsFragment.IOnCreditCardOperationSuccess,
         SettingsCreditCardListFragment.ISettingsCreditCardListFragmentListener,
-        DemographicsSettingsFragment.IDemographicsSettingsFragmentListener, CarePayCameraReady, CarePayCameraCallback {
+        DemographicsSettingsFragment.IDemographicsSettingsFragmentListener,
+        HelpFragment.HelpFragmentListener, CarePayCameraReady, CarePayCameraCallback {
 
     DemographicsSettingsDTO demographicsSettingsDTO;
     private CarePayCameraCallback carePayCameraCallback;
@@ -42,7 +45,6 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demographics_settings);
 
-        Intent intent = getIntent();
         demographicsSettingsDTO = getConvertedDTO(DemographicsSettingsDTO.class);
         Bundle bundle = new Bundle();
 
@@ -73,8 +75,6 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
             fm.beginTransaction().add(R.id.activity_demographics_settings, fragment,
                     DemographicsSettingsFragment.class.getSimpleName()).commit();
         }
-
-
     }
 
     @Override
@@ -190,5 +190,15 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         if (carePayCameraCallback != null) {
             carePayCameraCallback.onCapturedSuccess(bitmap);
         }
+    }
+
+    @Override
+    public void showHelpFragment() {
+        navigateToFragment(new HelpFragment(), true);
+    }
+
+    @Override
+    public void showSupportFragment() {
+        navigateToFragment(new SupportFragment(), true);
     }
 }

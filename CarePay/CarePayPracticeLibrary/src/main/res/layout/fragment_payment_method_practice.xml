@@ -58,7 +58,7 @@
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/swipeCreditCarNowButton"
-            style="@style/PaymentButtonStyle"
+            style="@style/BreezeButtonStyleDark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dimen_100dp"
