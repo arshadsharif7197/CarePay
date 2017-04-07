@@ -20,6 +20,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
@@ -180,10 +181,13 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            checkInNavListener = (CheckInNavListener) context;
+            if (context instanceof DemographicsView) {
+                checkInNavListener = ((DemographicsView) context).getPresenter();
+            } else {
+                checkInNavListener = (CheckInNavListener) context;
+            }
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " must implement CheckInNavListener");
+            throw new ClassCastException(context.toString() + " must implement CheckInNavListener");
         }
     }
 

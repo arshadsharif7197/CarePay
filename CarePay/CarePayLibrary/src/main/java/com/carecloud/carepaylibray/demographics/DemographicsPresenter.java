@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographics;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
@@ -17,10 +18,6 @@ import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearch
 import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
 
-/**
- * Created by cocampo on 4/3/17.
- */
-
 public interface DemographicsPresenter extends DemographicsReviewLabelsHolder,
         DemographicsLabelsHolder,
         HealthInsuranceFragment.InsuranceDocumentScannerListener,
@@ -32,6 +29,8 @@ public interface DemographicsPresenter extends DemographicsReviewLabelsHolder,
         CarePayCameraCallback,
         CarePayCameraReady,
         InsuranceEditDialog.InsuranceEditDialogListener {
+
+    void onSaveInstanceState(Bundle icicle);
 
     void onStop();
 

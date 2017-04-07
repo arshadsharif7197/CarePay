@@ -2,7 +2,6 @@ package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
@@ -11,12 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ScrollView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
@@ -39,7 +38,7 @@ import com.carecloud.carepaylibray.utils.ValidationHelper;
 public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
 
     private DemographicDTO demographicDTO;
-    private UpdateProfilePictureListener profilePicturelistener;
+    private UpdateProfilePictureListener callback;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,7 +61,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
 
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
-        profilePicturelistener.loadPictureFragment();
+        callback.loadPictureFragment();
     }
 
     @Override
@@ -78,7 +77,11 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         super.onAttach(context);
 
         try {
-            profilePicturelistener = (UpdateProfilePictureListener) context;
+            if (context instanceof DemographicsView) {
+                callback = ((DemographicsView) context).getPresenter();
+            } else {
+                callback = (UpdateProfilePictureListener) context;
+            }
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement UpdateProfilePictureListener");
@@ -355,7 +358,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
             demographicPersDetailsPayloadDTO.setDateOfBirth(DateUtil.getInstance().setDateRaw(dateOfBirth).toStringWithFormatYyyyDashMmDashDd());
         }
 
-        String profileImage = profilePicturelistener.getProfilePicture();
+        String profileImage = callback.getProfilePicture();
         if (!StringUtil.isNullOrEmpty(profileImage)){
             demographicPersDetailsPayloadDTO.setProfilePhoto(profileImage);
         }

@@ -17,11 +17,9 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinMedicationsAllergyFragment;
-import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.InsuranceEditDialog;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.IntakeFormsFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.PracticeFormsFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckInFragment;
-import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckinFlowCallback;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentPlanFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
@@ -44,6 +42,7 @@ import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBas
 import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
 import com.carecloud.carepaylibray.demographics.fragments.IdentificationFragment;
+import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
 import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterface;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
@@ -70,7 +69,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         DemographicsReviewLabelsHolder, DemographicsLabelsHolder,
         HealthInsuranceFragment.InsuranceDocumentScannerListener, MedicationsAllergyFragment.MedicationAllergyCallback,
         CheckinDemographicsInterface, MedicationAllergySearchFragment.MedicationAllergySearchCallback,
-        PaymentNavigationCallback, CheckinFlowCallback,
+        PaymentNavigationCallback,
         CheckInDemographicsBaseFragment.CheckInNavListener,
         PersonalInfoFragment.UpdateProfilePictureListener,
         CarePayCameraCallback,

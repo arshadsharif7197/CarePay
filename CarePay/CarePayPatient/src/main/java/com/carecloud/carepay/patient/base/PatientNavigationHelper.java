@@ -142,7 +142,7 @@ public class PatientNavigationHelper {
         }
 
         if (bundle != null) {
-            intent.putExtra(WorkflowDTO.class.getSimpleName(), bundle);
+            intent.putExtras(bundle);
         }
         context.startActivity(intent);
     }

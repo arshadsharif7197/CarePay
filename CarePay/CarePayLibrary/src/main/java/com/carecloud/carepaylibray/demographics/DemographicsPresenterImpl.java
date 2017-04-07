@@ -3,12 +3,10 @@ package com.carecloud.carepaylibray.demographics;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.View;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -32,17 +30,9 @@ import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearch
 import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
-import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
-import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
-
-/**
- * Created by cocampo on 4/3/17.
- */
 
 public class DemographicsPresenterImpl implements DemographicsPresenter {
 
@@ -56,12 +46,22 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
     //demographics nav
     private int currentDemographicStep = 1;
+    private static final String SAVED_STEP_KEY = "save_step";
 
-    public DemographicsPresenterImpl(DemographicsView demographicsView) {
+    public DemographicsPresenterImpl(DemographicsView demographicsView, Bundle savedInstanceState) {
         this.demographicsView = demographicsView;
         demographicDTO = demographicsView.getConvertedDTO(DemographicDTO.class);
 
-        navigateToDemographicFragment(1);
+        if (savedInstanceState != null) {
+            currentDemographicStep = savedInstanceState.getInt(SAVED_STEP_KEY, 1);
+        }
+
+        navigateToDemographicFragment(currentDemographicStep);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle icicle) {
+        icicle.putInt(SAVED_STEP_KEY, currentDemographicStep);
     }
 
     @Override
@@ -86,46 +86,12 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         return null;
     }
 
-    @Override
-    public void onCapturedSuccess(Bitmap bitmap) {
-        if (carePayCameraCallback != null) {
-            carePayCameraCallback.onCapturedSuccess(bitmap);
-        }
-    }
-
-    @Override
-    public void captureImage(CarePayCameraCallback callback) {
-        this.carePayCameraCallback = callback;
-
-        String tag = CarePayCameraFragment.class.getSimpleName();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        Fragment prev = fragmentManager.findFragmentByTag(tag);
-        if (prev != null) {
-            ft.remove(prev);
-        }
-
-        CarePayCameraFragment dialog = new CarePayCameraFragment();
-        dialog.show(ft, tag);
-    }
-
     /**
-     * Navigate to fragment
+     * Helper method to replace fragments
      *
-     * @param step fragment
+     * @param fragment       The fragment
+     * @param addToBackStack Whether to add the transaction to back-stack
      */
-    public void navigateToDemographicFragment(Integer step) {
-        CheckInDemographicsBaseFragment fragment = getDemographicFragment(step);
-        if(fragment!=null) {
-            Bundle args = new Bundle();
-            DtoHelper.bundleDto(args, demographicDTO);
-            fragment.setArguments(args);
-
-            navigateToFragment(fragment, currentDemographicStep != 1);
-        }
-    }
-
-
     @Override
     public void navigateToFragment(Fragment fragment, boolean addToBackStack) {
         String tag = fragment.getClass().getSimpleName();
@@ -142,70 +108,6 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             transaction.addToBackStack(null);
         }
         transaction.commitAllowingStateLoss();
-    }
-
-    private CheckInDemographicsBaseFragment getDemographicFragment(int step){
-        switch (step){
-            case 1:
-                return new PersonalInfoFragment();
-            case 2:
-                return new AddressFragment();
-            case 3:
-                return new DemographicsFragment();
-            case 4:
-                return new IdentificationFragment();
-            case 5:
-                return new HealthInsuranceFragment();
-            default:
-                return null;
-        }
-    }
-
-    @Override
-    public void onInsuranceEdited(DemographicDTO demographicDTO) {
-        if (demographicDTO != null) {
-            this.demographicDTO = demographicDTO;
-        }
-
-        SystemUtil.hideSoftKeyboard((Activity) demographicsView.getContext());
-
-        FragmentManager fm = getSupportFragmentManager();
-
-        // Update Health Insurance Fragment
-        String tag = HealthInsuranceFragment.class.getSimpleName();
-        HealthInsuranceFragment healthInsuranceFragment = (HealthInsuranceFragment) fm.findFragmentByTag(tag);
-
-        if (demographicDTO != null) {
-            healthInsuranceFragment.updateInsuranceList(demographicDTO);
-        } else {
-            healthInsuranceFragment.openNextFragment(this.demographicDTO);
-        }
-    }
-
-    @Override
-    public void goOneStepBack() {
-        if (demographicsView != null) {
-            demographicsView.onBackPressed();
-        }
-    }
-
-    @Override
-    public void applyChangesAndNavTo(DemographicDTO demographicDTO, Integer step) {
-        currentDemographicStep = step;
-        this.demographicDTO = demographicDTO;
-        navigateToDemographicFragment(step);
-    }
-
-    @Override
-    public Integer getCurrentStep() {
-        return currentDemographicStep;
-    }
-
-    @Override
-    public void setCurrentStep(Integer step) {
-        if (step > 0) {
-            currentDemographicStep = step;
-        }
     }
 
     @Override
@@ -313,6 +215,25 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     @Override
+    public void applyChangesAndNavTo(DemographicDTO demographicDTO, Integer step) {
+        currentDemographicStep = step;
+        this.demographicDTO = demographicDTO;
+        navigateToDemographicFragment(currentDemographicStep);
+    }
+
+    @Override
+    public Integer getCurrentStep() {
+        return currentDemographicStep;
+    }
+
+    @Override
+    public void setCurrentStep(Integer step) {
+        if (step > 0) {
+            currentDemographicStep = step;
+        }
+    }
+
+    @Override
     public void loadPictureFragment() {
         ProfilePictureFragment fragment = new ProfilePictureFragment();
 
@@ -326,6 +247,22 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
                 .commit();
     }
 
+    /**
+     * Navigate to fragment
+     *
+     * @param step fragment
+     */
+    public void navigateToDemographicFragment(Integer step) {
+        CheckInDemographicsBaseFragment fragment = getDemographicFragment(step);
+        if(fragment!=null) {
+            Bundle args = new Bundle();
+            DtoHelper.bundleDto(args, demographicDTO);
+            fragment.setArguments(args);
+
+            navigateToFragment(fragment, currentDemographicStep != 1);
+        }
+    }
+
     @Override
     public DemographicDTO getDemographicDTO() {
         return demographicDTO;
@@ -334,5 +271,73 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     @Override
     public void setMedicationsAllergiesDto(MedicationsAllergiesResultsModel dto) {
         medicationsAllergiesDTO = dto;
+    }
+
+    @Override
+    public void onCapturedSuccess(Bitmap bitmap) {
+        if (carePayCameraCallback != null) {
+            carePayCameraCallback.onCapturedSuccess(bitmap);
+        }
+    }
+
+    @Override
+    public void onInsuranceEdited(DemographicDTO demographicDTO, boolean proceed) {
+        if (demographicDTO != null) {
+            this.demographicDTO = demographicDTO;
+        }
+
+        SystemUtil.hideSoftKeyboard((Activity) demographicsView.getContext());
+
+        FragmentManager fm = getSupportFragmentManager();
+
+        // Update Health Insurance Fragment
+        String tag = HealthInsuranceFragment.class.getSimpleName();
+        HealthInsuranceFragment healthInsuranceFragment = (HealthInsuranceFragment) fm.findFragmentByTag(tag);
+
+        if (demographicDTO == null || proceed) {
+            healthInsuranceFragment.openNextFragment(this.demographicDTO);
+        } else {
+            healthInsuranceFragment.updateInsuranceList(demographicDTO);
+        }
+    }
+
+    @Override
+    public void goOneStepBack() {
+        if (demographicsView != null) {
+            demographicsView.onBackPressed();
+        }
+    }
+
+    @Override
+    public void captureImage(CarePayCameraCallback callback) {
+        this.carePayCameraCallback = callback;
+
+        String tag = CarePayCameraFragment.class.getSimpleName();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        Fragment prev = fragmentManager.findFragmentByTag(tag);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+
+        CarePayCameraFragment dialog = new CarePayCameraFragment();
+        dialog.show(ft, tag);
+    }
+
+    private CheckInDemographicsBaseFragment getDemographicFragment(int step){
+        switch (step){
+            case 1:
+                return new PersonalInfoFragment();
+            case 2:
+                return new AddressFragment();
+            case 3:
+                return new DemographicsFragment();
+            case 4:
+                return new IdentificationFragment();
+            case 5:
+                return new HealthInsuranceFragment();
+            default:
+                return null;
+        }
     }
 }

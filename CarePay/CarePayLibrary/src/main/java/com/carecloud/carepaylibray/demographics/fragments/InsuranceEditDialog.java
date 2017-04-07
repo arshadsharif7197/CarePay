@@ -33,6 +33,7 @@ import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraReady;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataInsuranceOptionDTO;
@@ -140,13 +141,21 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            callback = (InsuranceEditDialogListener) context;
+            if (context instanceof DemographicsView) {
+                callback = ((DemographicsView) context).getPresenter();
+            } else {
+                callback = (InsuranceEditDialogListener) context;
+            }
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement InsuranceEditDialogListener");
         }
 
         try {
-            carePayCameraReady = (CarePayCameraReady) context;
+            if (context instanceof DemographicsView) {
+                callback = ((DemographicsView) context).getPresenter();
+            } else {
+                carePayCameraReady = (CarePayCameraReady) context;
+            }
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement CarePayCameraReady");
         }
@@ -594,7 +603,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long listener) {
                 switch (index) {
                     case PROVIDERS:
-                        otherProviderEditText = (EditText) findViewById(R.id.otherProviderEditText);
                         findViewById(R.id.health_insurance_plans).setVisibility(View.GONE);
 
                         if (!dataArray[position].equals(selectedProvider)) {

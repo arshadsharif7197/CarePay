@@ -12,6 +12,7 @@ import android.widget.Button;
 
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.adapters.InsuranceLineItemsListAdapter;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
@@ -39,7 +40,11 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            callback = (InsuranceDocumentScannerListener) context;
+            if (context instanceof DemographicsView) {
+                callback = ((DemographicsView) context).getPresenter();
+            } else {
+                callback = (InsuranceDocumentScannerListener) context;
+            }
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement InsuranceDocumentScannerListener");
         }
