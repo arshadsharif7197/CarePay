@@ -49,6 +49,11 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     private int currentDemographicStep = 1;
     private static final String SAVED_STEP_KEY = "save_step";
 
+    /**
+     * @param demographicsView Demographics View
+     * @param savedInstanceState Bundle
+     * @param isPatientMode true if Practice App - Patient Mode
+     */
     public DemographicsPresenterImpl(DemographicsView demographicsView, Bundle savedInstanceState, boolean isPatientMode) {
         this.demographicsView = demographicsView;
         demographicDTO = demographicsView.getConvertedDTO(DemographicDTO.class);

@@ -356,8 +356,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     View.OnClickListener saveButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View saveChanges) {
-            boolean hasInsurance = hasInsurance();
-
+            final boolean hasInsurance = hasInsurance();
 
             DemographicInsurancePayloadDTO demographicInsurancePayloadDTO;
             if (editedIndex == NEW_INSURANCE) {
