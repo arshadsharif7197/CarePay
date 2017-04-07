@@ -352,7 +352,8 @@ public class SigninFragment extends BaseFragment {
         UnifiedSignInUser user = new UnifiedSignInUser();
         user.setEmail(userName);
         user.setPassword(password);
-        user.setDeviceToken(((AndroidPlatform) Platform.get()).openDefaultSharedPreferences().getString("deviceToken", null));
+        user.setDeviceToken(((AndroidPlatform) Platform.get()).openDefaultSharedPreferences()
+                .getString(CarePayConstants.FCM_TOKEN, null));
 
         UnifiedSignInDTO signInDTO = new UnifiedSignInDTO();
         signInDTO.setUser(user);
@@ -363,7 +364,8 @@ public class SigninFragment extends BaseFragment {
 
         if (signInDTO.isValidUser()) {
             Gson gson = new Gson();
-            getWorkflowServiceHelper().execute(signIn, unifiedLoginCallback, gson.toJson(signInDTO), queryParams, headers);
+            getWorkflowServiceHelper().execute(signIn, unifiedLoginCallback, gson.toJson(signInDTO),
+                    queryParams, headers);
             getAppAuthorizationHelper().setUser(userName);
         }
     }

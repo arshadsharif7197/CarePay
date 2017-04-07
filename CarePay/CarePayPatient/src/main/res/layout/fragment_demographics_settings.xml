@@ -1,88 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/settings_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix">
 
     <include layout="@layout/toolbar_demographics_settings" />
 
-
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/no_apt_place_holder_icon_margin_top"
-        android:orientation="horizontal"
         android:layout_marginLeft="@dimen/dimen_17dp"
         android:layout_marginTop="@dimen/dimen_10dp"
-        >
-        <RelativeLayout
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/providerPicImageView"
             android:layout_width="@dimen/signup_clickable_textview_height"
             android:layout_height="@dimen/signup_clickable_textview_height"
-            android:gravity="center">
+            android:layout_marginEnd="@dimen/textview_margin"
+            android:src="@drawable/icn_placeholder_user_profile" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:id="@+id/providerPicImageView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:src="@drawable/icn_placeholder_user_profile" />
-
-
-            </RelativeLayout>
-        </RelativeLayout>
-        <LinearLayout
-            android:layout_width="@dimen/apt_dl_zero_ht_wdh"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/textview_margin"
-            android:layout_marginTop="@dimen/dimen_10dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/patient_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/textview_default_textsize"
-                android:textStyle="bold"
-                app:customAssetFont="proxima_nova_semi_bold" />
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/patient_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/lightSlateGray"
-                android:textSize="@dimen/textview_textsize"
-                app:customAssetFont="proxima_nova_regular" />
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/editButtonlayout"
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/patient_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_toEndOf="@id/providerPicImageView"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/textview_default_textsize"
+            android:textStyle="bold"
+            app:customAssetFont="proxima_nova_semi_bold" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/patient_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/patient_name"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_toEndOf="@id/providerPicImageView"
+            android:textColor="@color/lightSlateGray"
+            android:textSize="@dimen/textview_textsize"
+            app:customAssetFont="proxima_nova_regular" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/editTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/dimen_12dp"
             android:paddingEnd="@dimen/dimen_17dp"
             android:paddingStart="0dp"
-            >
+            android:textColor="@color/emerald"
+            android:textSize="@dimen/button_textsize_medium"
+            app:customAssetFont="gotham_rounded_bold"
+            breeze:textKey="edit_button_label" />
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/editTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/divider_margin_bottom"
-                android:text="Edit"
-                android:textSize="@dimen/button_textsize_medium"
-                android:textColor="@color/emerald"
-                app:customAssetFont="gotham_rounded_bold" />
-        </LinearLayout>
+    </RelativeLayout>
 
-    </LinearLayout>
     <View
         android:id="@+id/main_item_divider"
         android:layout_width="match_parent"
@@ -90,34 +69,36 @@
         android:layout_marginLeft="@dimen/list_apt_padding_right"
         android:layout_marginRight="@dimen/list_apt_padding_right"
         android:background="@color/gray" />
+
     <LinearLayout
+        android:id="@+id/demographicsLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/signup_clickable_textview_height"
         android:layout_marginStart="@dimen/dimen_10dp"
         android:layout_marginTop="@dimen/dimen_36dp"
-        android:id="@+id/demographicsLayout"
         android:orientation="horizontal">
+
         <ImageView
             android:id="@+id/demographicsImageView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/icn_settings_demo"
             android:layout_marginStart="@dimen/dimen_10dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            />
+            android:src="@drawable/icn_settings_demo" />
+
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/demographicsTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="left|center_vertical"
             android:layout_marginLeft="@dimen/dimen_10dp"
+            android:gravity="left|center_vertical"
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/textview_default_textsize"
             android:textStyle="bold"
-            app:customAssetFont="proxima_nova_regular" />
+            app:customAssetFont="proxima_nova_regular"
+            breeze:textKey="demographics_label" />
 
     </LinearLayout>
+
     <View
         android:id="@+id/demoItemDivider"
         android:layout_width="match_parent"
@@ -125,34 +106,36 @@
         android:layout_marginLeft="@dimen/list_apt_padding_right"
         android:layout_marginRight="@dimen/list_apt_padding_right"
         android:background="@color/gray" />
+
     <LinearLayout
+        android:id="@+id/documentsLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/signup_clickable_textview_height"
         android:layout_marginStart="@dimen/dimen_10dp"
         android:layout_marginTop="@dimen/dimen_8dp"
-        android:id="@+id/documentsLayout"
         android:orientation="horizontal">
+
         <ImageView
             android:id="@+id/documentsImageView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/icn_settings_docs"
             android:layout_marginStart="@dimen/dimen_10dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            />
+            android:src="@drawable/icn_settings_docs" />
+
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/documentsTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="left|center_vertical"
             android:layout_marginLeft="@dimen/dimen_10dp"
+            android:gravity="left|center_vertical"
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/textview_default_textsize"
             android:textStyle="bold"
-            app:customAssetFont="proxima_nova_regular" />
+            app:customAssetFont="proxima_nova_regular"
+            breeze:textKey="documents_label" />
 
     </LinearLayout>
+
     <View
         android:id="@+id/docsItemDivider"
         android:layout_width="match_parent"
@@ -160,34 +143,36 @@
         android:layout_marginLeft="@dimen/list_apt_padding_right"
         android:layout_marginRight="@dimen/list_apt_padding_right"
         android:background="@color/gray" />
+
     <LinearLayout
+        android:id="@+id/creditCardLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/signup_clickable_textview_height"
         android:layout_marginStart="@dimen/dimen_10dp"
         android:layout_marginTop="@dimen/dimen_8dp"
-        android:id="@+id/creditCardLayout"
         android:orientation="horizontal">
+
         <ImageView
             android:id="@+id/creaditCardImageView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/icn_payment_credit_card_default"
             android:layout_marginStart="@dimen/dimen_10dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            />
+            android:src="@drawable/icn_payment_credit_card_default" />
+
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/creditCardsTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="left|center_vertical"
             android:layout_marginLeft="@dimen/dimen_10dp"
+            android:gravity="left|center_vertical"
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/textview_default_textsize"
             android:textStyle="bold"
-            app:customAssetFont="proxima_nova_regular" />
+            app:customAssetFont="proxima_nova_regular"
+            breeze:textKey="credit_cards_label" />
 
     </LinearLayout>
+
     <View
         android:id="@+id/creditCarditemDivider"
         android:layout_width="match_parent"
@@ -197,33 +182,34 @@
         android:background="@color/gray" />
 
     <LinearLayout
+        android:id="@+id/messagesLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/signup_clickable_textview_height"
         android:layout_marginStart="@dimen/dimen_10dp"
         android:layout_marginTop="@dimen/dimen_36dp"
-        android:id="@+id/messagesLayout"
         android:orientation="horizontal">
+
         <ImageView
             android:id="@+id/messagesImageView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/icn_settings_messaging_cell"
             android:layout_marginStart="@dimen/dimen_10dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            />
+            android:src="@drawable/icn_settings_messaging_cell" />
+
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/messagesTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="left|center_vertical"
             android:layout_marginLeft="@dimen/dimen_10dp"
+            android:gravity="left|center_vertical"
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/textview_default_textsize"
             android:textStyle="bold"
-            app:customAssetFont="proxima_nova_regular" />
+            app:customAssetFont="proxima_nova_regular"
+            breeze:textKey="settings_messages" />
 
     </LinearLayout>
+
     <View
         android:id="@+id/messagesDivider"
         android:layout_width="match_parent"
@@ -236,18 +222,19 @@
         android:id="@+id/signOutLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dimen_20dp"
-        >
+        android:layout_marginBottom="@dimen/dimen_20dp">
+
         <Button
             android:id="@+id/signOutButton"
             style="@style/PaymentButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/dimen_20dp"
+            android:layout_marginBottom="@dimen/dimen_36dp"
             android:background="@drawable/button_green_border"
             android:textColor="@color/colorPrimary"
-            android:layout_marginBottom="@dimen/dimen_36dp"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="@dimen/dimen_20dp"/>
+            breeze:textKey="signout_button_label" />
 
     </RelativeLayout>
 

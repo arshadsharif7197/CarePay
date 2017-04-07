@@ -22,6 +22,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
@@ -29,24 +30,19 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadD
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMetadataDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsTransitionsDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,175 +50,106 @@ import java.util.Map;
 public class EditProfileFragment extends DocumentScannerFragment {
     private static final String LOG_TAG = DemographicsSettingsFragment.class.getSimpleName();
     private DemographicsSettingsDTO demographicsSettingsDTO = null;
-    private String profileString = null;
     private String firstNameValString = null;
     private String lastNameValString = null;
     private String middleNameValString = null;
-    private String changeNameString = null;
-    private String changeEmailString = null;
-    private String changePasswordString = null;
-    private String changePhotoString = null;
-    private String saveChangesString = null;
 
-    private DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO = null;
-    private ImageView profileImageview;
+    private ImageView profileImageView;
+
+    private EditProfileFragment() {
+    }
+
+    public static EditProfileFragment newInstance(DemographicsSettingsDTO demographicsSettingsDTO) {
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, demographicsSettingsDTO);
+        EditProfileFragment editProfileFragment = new EditProfileFragment();
+        editProfileFragment.setArguments(args);
+        return editProfileFragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        demographicsSettingsDTO = DtoHelper.getConvertedDTO(DemographicsSettingsDTO.class, getArguments());
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_profile_update, container, false);
+        return inflater.inflate(R.layout.fragment_profile_update, container, false);
+    }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         final Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
-
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
-        setGothamRoundedMediumTypeface(appCompatActivity, title);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(appCompatActivity, R.drawable.icn_nav_back));
         appCompatActivity.setSupportActionBar(toolbar);
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            Gson gson = new Gson();
-            bundle = getArguments();
-            String demographicsSettingsDTOString = bundle.getString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE);
-            demographicsSettingsDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsDTO.class);
-        }
-        getEditProfileLabels();
-
-        Button changeProfilePictureButton = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
-        changeProfilePictureButton.setText(changePhotoString);
-        Button updateProfileButton = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
-        updateProfileButton.setText(saveChangesString);
-
-        profileImageview = (ImageView) view.findViewById(R.id.providerPicImageView);
-
-        if (demographicsSettingsDTO != null) {
-            DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
-            demographicsSettingsLabelsDTO = demographicsSettingsMetadataDTO.getLabels();
-        }
 
         getPersonalDetails();
-        title.setText(profileString);
+        title.setText(Label.getLabel("profile_heading"));
 
         DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
         DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
         DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
         PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
         String imageUrl = demographicsPersonalDetails.getProfilePhoto();
+        profileImageView = (ImageView) view.findViewById(R.id.providerPicImageView);
         if (!StringUtil.isNullOrEmpty(imageUrl)) {
             Picasso.with(appCompatActivity).load(imageUrl).transform(
-                    new CircleImageTransform()).resize(160, 160).into(profileImageview);
+                    new CircleImageTransform()).resize(160, 160).into(profileImageView);
         }
         String userId;
 
         userId = getAppAuthorizationHelper().getCurrUser();
-
         CarePayTextView patientNameValue = (CarePayTextView) view.findViewById(R.id.patientNameTextView);
-        patientNameValue.setText(StringUtil.capitalize(firstNameValString + " " + middleNameValString+" " + lastNameValString));
+        patientNameValue.setText(StringUtil.capitalize(firstNameValString + " " + middleNameValString + " " + lastNameValString));
 
         CarePayTextView patientEmailValue = (CarePayTextView) view.findViewById(R.id.patientEmailTextView);
         patientEmailValue.setText(userId);
 
-        CarePayTextView patientNameLabel = (CarePayTextView) view.findViewById(R.id.patientChangeNameTextView);
-        patientNameLabel.setText(changeNameString);
 
-        CarePayTextView patientEmailLabel = (CarePayTextView) view.findViewById(R.id.patientChangeEmailTextView);
-        patientEmailLabel.setText(changeEmailString);
-
-        CarePayTextView patientPasswordLabel = (CarePayTextView) view.findViewById(R.id.patientChangePasswordTextView);
-        patientPasswordLabel.setText(changePasswordString);
-
-        setClickables(patientNameLabel, patientEmailLabel, patientPasswordLabel, changeProfilePictureButton, updateProfileButton);
-
-        return view;
-
-    }
-
-    /**
-     * demographics Edit Profile labels
-     */
-    public void getEditProfileLabels() {
-        if (demographicsSettingsDTO != null) {
-            DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
-            if (demographicsSettingsMetadataDTO != null) {
-                demographicsSettingsLabelsDTO = demographicsSettingsMetadataDTO.getLabels();
-                if (demographicsSettingsLabelsDTO != null) {
-                    profileString = demographicsSettingsLabelsDTO.getProfileHeadingLabel();
-                    changeNameString = demographicsSettingsLabelsDTO.getDemographicsChangeNameLabel();
-                    changeEmailString = demographicsSettingsLabelsDTO.getDemographicsChangeEmailLabel();
-                    changePasswordString = demographicsSettingsLabelsDTO.getSettingschangePasswordLabel();
-                    changePhotoString = demographicsSettingsLabelsDTO.getDemographicsChangePhotoLabel();
-                    saveChangesString = demographicsSettingsLabelsDTO.getDemographicsSaveChangesLabel();
-
-                }
-            }
-        }
+        setClickListeners(view);
 
     }
 
     private void getPersonalDetails() {
-
-        if (demographicsSettingsDTO != null) {
-            DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
-            if (demographicsSettingsPayloadDTO != null) {
-                DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-                DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
-                PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
-                firstNameValString = demographicsPersonalDetails.getFirstName();
-                lastNameValString = demographicsPersonalDetails.getLastName();
-                middleNameValString = demographicsPersonalDetails.getMiddleName();
-                hideSoftKeyboard(getActivity());
-            }
-        }
-
+        PatientModel demographicsPersonalDetails = demographicsSettingsDTO.getPayload().getDemographics()
+                .getPayload().getPersonalDetails();
+        firstNameValString = demographicsPersonalDetails.getFirstName();
+        lastNameValString = demographicsPersonalDetails.getLastName();
+        middleNameValString = demographicsPersonalDetails.getMiddleName();
+        hideSoftKeyboard(getActivity());
     }
 
-    private void setClickables(CarePayTextView patientNameLabel, CarePayTextView patientEmailLabel, CarePayTextView patientPasswordLabel, Button changeProfilePictureButton, final Button updateProfileButton) {
+    private void setClickListeners(View view) {
+        Button changeProfilePictureButton = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
         changeProfilePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage(imageFront,true, ImageCaptureHelper.CameraType.DEFAULT_CAMERA);
+                selectImage(imageFront, true, ImageCaptureHelper.CameraType.DEFAULT_CAMERA);
             }
 
         });
 
-        updateProfileButton.setOnClickListener(new View.OnClickListener() {
+        Button saveChangesButton = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
+        saveChangesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                updateProfileButton.setEnabled(false);
-                try{
-                    if (demographicsSettingsDTO != null) {
-                        DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
-                        if (demographicsSettingsMetadataDTO != null) {
-                            DemographicsSettingsTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
-                            TransitionDTO demographicsSettingsUpdateDemographicsDTO = demographicsSettingsTransitionsDTO.getUpdateDemographics();
-                            Map<String, String> header = null;
-                            try {
-                                if (demographicsSettingsDTO != null) {
-                                    DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
-                                    if (demographicsSettingsPayloadDTO != null) {
-                                        DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-                                        DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
-
-                                        Gson gson = new Gson();
-                                        String jsonInString = gson.toJson(demographicPayload);
-                                        getWorkflowServiceHelper().execute(demographicsSettingsUpdateDemographicsDTO, updateProfileCallback, jsonInString, header);
-                                    }
-                                }
-                                header = new HashMap<>();
-                                header.put("transition", "true");
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-
+                TransitionDTO demographicsSettingsUpdateDemographicsDTO = demographicsSettingsDTO
+                        .getDemographicsSettingsMetadataDTO().getTransitions().getUpdateDemographics();
+                DemographicPayloadDTO demographicPayload = demographicsSettingsDTO.getPayload().getDemographics()
+                        .getPayload();
+                Gson gson = new Gson();
+                String jsonInString = gson.toJson(demographicPayload);
+                getWorkflowServiceHelper().execute(demographicsSettingsUpdateDemographicsDTO,
+                        updateProfileCallback, jsonInString, null);
             }
-
         });
 
+        CarePayTextView patientNameLabel = (CarePayTextView) view.findViewById(R.id.patientChangeNameTextView);
         patientNameLabel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -252,6 +179,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
 
         });
 
+        CarePayTextView patientEmailLabel = (CarePayTextView) view.findViewById(R.id.patientChangeEmailTextView);
         patientEmailLabel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -281,6 +209,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
 
         });
 
+        CarePayTextView patientPasswordLabel = (CarePayTextView) view.findViewById(R.id.patientChangePasswordTextView);
         patientPasswordLabel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -354,7 +283,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
                             .load(profilePicURL)
                             .transform(new CircleImageTransform())
                             .fit().centerCrop()
-                            .into(profileImageview);
+                            .into(profileImageView);
                     // successfully load a profile image
                     return;
                 } catch (MalformedURLException e) {
@@ -364,8 +293,8 @@ public class EditProfileFragment extends DocumentScannerFragment {
             }
         }
         // if no image to load, simply load the placeholder
-        profileImageview.setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                        R.drawable.icn_placeholder_user_profile_png));
+        profileImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                R.drawable.icn_placeholder_user_profile_png));
     }
 
     @Override
