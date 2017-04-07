@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -17,7 +19,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.webkit.URLUtil;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,12 +45,22 @@ import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.marcok.stepprogressbar.StepProgressBar;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
+import static com.carecloud.carepaylibray.utils.ImageCaptureHelper.getBitmapFileUrl;
+
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
+
 public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCameraCallback {
+    private static final int FRONT_PIC = 1;
+    private static final int BACK_PIC = 2;
+    private static final String HTTP = "http";
 
     private static final ImageCaptureHelper.CameraType CAMERA_TYPE = ImageCaptureHelper.CameraType.CUSTOM_CAMERA;
     private static final ImageCaptureHelper.ImageShape IMAGE_SHAPE = ImageCaptureHelper.ImageShape.RECTANGULAR;
@@ -67,6 +78,9 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     private EditText groupNumber;
     private Button saveInsuranceButton;
 
+    private Button scanFrontButton;
+    private Button scanBackButton;
+
     private CarePayTextView selectedProviderTextView;
     private CarePayTextView selectedPlanTextView;
     private CarePayTextView selectedTypeTextView;
@@ -79,8 +93,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     private boolean isFrontScan;
     private boolean hadInsurance;
 
-    private String frontImageAsBase64;
-    private String backImageAsBase64;
+    private DemographicInsurancePhotoDTO frontInsurancePhotoDTO;
+    private DemographicInsurancePhotoDTO backInsurancePhotoDTO;
 
     private InsuranceEditDialogListener callback;
     private CarePayCameraReady carePayCameraReady;
@@ -94,6 +108,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
     private List<MetadataInsuranceOptionDTO> providerList;
     private List<MetadataOptionDTO> typeList;
+
+    private Handler handler;
 
     public interface InsuranceEditDialogListener {
         void onInsuranceEdited(DemographicDTO demographicDTO, boolean proceed);
@@ -149,13 +165,19 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         Bundle arguments = getArguments();
         editedIndex = arguments.getInt(EDITED_INDEX);
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, arguments);
+
+        handler = new Handler();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         hadInsurance = hasInsurance();
         if (hadInsurance) {
-            return inflater.inflate(R.layout.dialog_add_edit_insurance, container, false);
+            View view =  inflater.inflate(R.layout.dialog_add_edit_insurance, container, false);
+
+            hideKeyboardOnViewTouch(view.findViewById(R.id.dialog_content_layout));
+            hideKeyboardOnViewTouch(view.findViewById(R.id.container_main));
+            return view;
         }
 
         View view = inflater.inflate(R.layout.fragment_review_demographic_base, container, false);
@@ -201,7 +223,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if(hasInsurance()) {
+        if (hasInsurance()) {
             findViewById(R.id.edit_insurance_close_button).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View closeButton) {
@@ -273,7 +295,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
             selectedPlan = demographicInsurancePayload.getInsurancePlan();
             selectedPlanTextView.setText(selectedPlan);
             selectedPlanTextView.setVisibility(View.VISIBLE);
-            ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(selectedPlan);
+            ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(selectedProvider+(selectedPlan!=null?" "+selectedPlan:""));
             findViewById(R.id.health_insurance_plans).setVisibility(View.GONE);
 
             selectedType = demographicInsurancePayload.getInsuranceType();
@@ -328,34 +350,25 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
                 demographicInsurancePayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(editedIndex);
             }
 
-            List<DemographicInsurancePhotoDTO> photos = demographicInsurancePayloadDTO.getInsurancePhotos();
-            if (photos.isEmpty()) {
-                photos.add(new DemographicInsurancePhotoDTO());
-            }
-
-            if (photos.size() == 1) {
-                photos.add(new DemographicInsurancePhotoDTO());
-            }
-
             demographicInsurancePayloadDTO.setInsuranceProvider(selectedProvider);
             demographicInsurancePayloadDTO.setInsurancePlan(selectedPlan);
-            demographicInsurancePayloadDTO.setInsuranceType(selectedType!=null?selectedType: typeList.get(0).getLabel());
+            demographicInsurancePayloadDTO.setInsuranceType(selectedType != null ? selectedType : typeList.get(0).getLabel());
 
             demographicInsurancePayloadDTO.setInsuranceMemberId(cardNumber.getText().toString());
             demographicInsurancePayloadDTO.setInsuranceGroupId(groupNumber.getText().toString());
 
-            photos = demographicInsurancePayloadDTO.getInsurancePhotos();
-            if (frontImageAsBase64 != null) {
-                photos.get(0).setInsurancePhoto(frontImageAsBase64);
+            List<DemographicInsurancePhotoDTO> photos = demographicInsurancePayloadDTO.getInsurancePhotos();
+            if (frontInsurancePhotoDTO != null) {
+                photos.add(frontInsurancePhotoDTO);
             }
 
-            if (backImageAsBase64 != null) {
-                photos.get(1).setInsurancePhoto(backImageAsBase64);
+            if (backInsurancePhotoDTO != null) {
+                photos.add(backInsurancePhotoDTO);
             }
 
-            if(hasInsurance){
+            if (hasInsurance) {
                 closeDialog();
-            }else{
+            } else {
                 callback.onInsuranceEdited(demographicDTO, true);
             }
         }
@@ -376,19 +389,47 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     private void initializeScanArea() {
         healthInsuranceFrontPhotoView = (ImageView) findViewById(R.id.health_insurance_front_photo);
         healthInsuranceBackPhotoView = (ImageView) findViewById(R.id.health_insurance_back_photo);
+        healthInsuranceFrontPhotoView.measure(0,0);
+        healthInsuranceBackPhotoView.measure(0,0);
 
         if (editedIndex != NEW_INSURANCE) {
-            List<DemographicInsurancePhotoDTO> photos = demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(editedIndex).getInsurancePhotos();
-            if (!photos.isEmpty()) {
-                setInsurancePhoto(healthInsuranceFrontPhotoView, photos.get(0));
-
-                if (photos.size() > 1) {
-                    setInsurancePhoto(healthInsuranceBackPhotoView, photos.get(1));
+            String frontPic = null;
+            String backPic = null;
+            List<DemographicInsurancePhotoDTO> insurancePhotoDTOs = demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(editedIndex).getInsurancePhotos();
+            if(insurancePhotoDTOs!=null && !insurancePhotoDTOs.isEmpty()){
+                for(DemographicInsurancePhotoDTO photoDTO: insurancePhotoDTOs){
+                    if(photoDTO.getPage() == FRONT_PIC){
+                        frontPic = photoDTO.getInsurancePhoto();
+                    }
+                    if(photoDTO.getPage() == BACK_PIC){
+                        backPic = photoDTO.getInsurancePhoto();
+                    }
                 }
             }
+
+            if (!StringUtil.isNullOrEmpty(frontPic)) {
+                if(frontPic.startsWith(HTTP)) {
+                    setInsurancePhoto(healthInsuranceFrontPhotoView, frontPic);
+                }else{//must be BASE64
+                    Bitmap bitmap = SystemUtil.convertStringToBitmap(frontPic);
+                    File file = ImageCaptureHelper.getBitmapFileUrl(getContext(), bitmap, "idFront");
+                    setInsurancePhoto(healthInsuranceFrontPhotoView, file, healthInsuranceFrontPhotoView.getMeasuredWidth(), healthInsuranceFrontPhotoView.getMeasuredHeight());
+                }
+            }
+
+            if (!StringUtil.isNullOrEmpty(backPic)) {
+                if(backPic.startsWith(HTTP)) {
+                    setInsurancePhoto(healthInsuranceBackPhotoView, backPic);
+                }else{//must be BASE64
+                    Bitmap bitmap = SystemUtil.convertStringToBitmap(backPic);
+                    File file = ImageCaptureHelper.getBitmapFileUrl(getContext(), bitmap, "idBack");
+                    setInsurancePhoto(healthInsuranceBackPhotoView, file, healthInsuranceBackPhotoView.getMeasuredWidth(), healthInsuranceBackPhotoView.getMeasuredHeight());
+                }
+            }
+
         }
 
-        Button scanFrontButton = (Button) findViewById(R.id.take_front_photo_button);
+        scanFrontButton = (Button) findViewById(R.id.take_front_photo_button);
         scanFrontButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View frontButtonView) {
@@ -399,7 +440,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
             }
         });
 
-        Button scanBackButton = (Button) findViewById(R.id.take_back_photo_button);
+        scanBackButton = (Button) findViewById(R.id.take_back_photo_button);
         scanBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View frontButtonView) {
@@ -411,18 +452,48 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         });
     }
 
-    private void setInsurancePhoto(ImageView imageView, DemographicInsurancePhotoDTO photoDTO) {
-        if (photoDTO == null || photoDTO.getInsurancePhoto() == null) {
-            return;
-        }
+    private void setInsurancePhoto(final ImageView imageView, String photoUrl){
+        imageView.measure(0,0);
+        final int width = imageView.getMeasuredWidth();
+        final int height = imageView.getMeasuredHeight();
 
-        String photo = photoDTO.getInsurancePhoto();
-        if (URLUtil.isValidUrl(photo)) {
-            Picasso.with(getContext()).load(photo).fit().centerCrop().into(imageView);
-        } else {
-            imageView.setImageBitmap(SystemUtil.convertStringToBitmap(photo));
-        }
+        Picasso.with(getContext()).load(photoUrl)
+                .resize(width, height)
+                .centerInside()
+                .memoryPolicy(MemoryPolicy.NO_CACHE)
+                .transform(new RoundedCornersTransformation(8, 0))
+                .into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                    }
+
+                    @Override
+                    public void onError() {
+                        imageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                                R.drawable.icn_placeholder_document));
+                    }
+                });
     }
+
+    private void setInsurancePhoto(final ImageView imageView, File file, int width, int height){
+        Picasso.with(getContext()).load(file)
+                .resize(width, height)
+                .centerInside()
+                .memoryPolicy(MemoryPolicy.NO_CACHE)
+                .transform(new RoundedCornersTransformation(8, 0))
+                .into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                    }
+
+                    @Override
+                    public void onError() {
+                        imageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                                R.drawable.icn_placeholder_document));
+                    }
+                });
+    }
+
 
     private void getInsuranceDropdownLists() {
         DemographicMetadataEntityInsurancesDTO insurancesMetaDTO = demographicDTO.getMetadata().getDataModels().getDemographic().getInsurances();
@@ -458,8 +529,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         }
     }
 
-    private void getInsurancePlans(MetadataInsuranceOptionDTO selectedInsurance){
-        if(selectedInsurance == null){
+    private void getInsurancePlans(MetadataInsuranceOptionDTO selectedInsurance) {
+        if (selectedInsurance == null) {
             return;
         }
 
@@ -478,13 +549,13 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
     }
 
-    private MetadataInsuranceOptionDTO findInsuranceProvider(String name){
-        if(name==null){
+    private MetadataInsuranceOptionDTO findInsuranceProvider(String name) {
+        if (name == null) {
             return null;
         }
-        for(MetadataInsuranceOptionDTO provider : providerList){
-            if(provider.getLabel().toLowerCase().equals(name.toLowerCase()) ||
-               provider.getName().toLowerCase().equals(name.toLowerCase())){
+        for (MetadataInsuranceOptionDTO provider : providerList) {
+            if (provider.getLabel().toLowerCase().equals(name.toLowerCase()) ||
+                    provider.getName().toLowerCase().equals(name.toLowerCase())) {
                 return provider;
             }
         }
@@ -523,7 +594,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
                         otherProviderEditText = (EditText) findViewById(R.id.otherProviderEditText);
                         findViewById(R.id.health_insurance_plans).setVisibility(View.GONE);
 
-                        if(!dataArray[position].equals(selectedProvider)){
+                        if (!dataArray[position].equals(selectedProvider)) {
                             selectedPlan = null;
                             selectedPlanTextView.setText(Label.getLabel("demographics_choose"));
                         }
@@ -664,28 +735,64 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
      */
     @Override
     public void onCapturedSuccess(Bitmap bitmap) {
-        String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
-        ImageView target;
+        if (bitmap != null) {
+            final Bitmap rotateBitmap = ImageCaptureHelper.rotateBitmap(bitmap, ImageCaptureHelper.getOrientation());
 
-        if (isFrontScan) {
-            frontImageAsBase64 = imageAsBase64;
-            target = healthInsuranceFrontPhotoView;
-        } else {
-            backImageAsBase64 = imageAsBase64;
-            target = healthInsuranceBackPhotoView;
+
+            final ImageView imageView;
+            String tempFile;
+            final int page;
+
+            if(isFrontScan){
+                scanFrontButton.setText(Label.getLabel("demographics_insurance_retake_front_photo"));
+                imageView = healthInsuranceFrontPhotoView;
+                tempFile = "idFront";
+                page = FRONT_PIC;
+            }else{
+                scanBackButton.setText(Label.getLabel("demographics_insurance_retake_back_photo"));
+                imageView = healthInsuranceBackPhotoView;
+                tempFile = "idBack";
+                page = BACK_PIC;
+            }
+
+            int width = imageView.getWidth();
+            int height = imageView.getHeight();
+            imageView.getLayoutParams().width = width;
+            imageView.getLayoutParams().height = height;
+
+            File file = getBitmapFileUrl(getContext(), rotateBitmap, tempFile);
+            setInsurancePhoto(imageView, file, width, height);
+
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    // save from image
+                    String imageAsBase64 = SystemUtil.convertBitmapToString(rotateBitmap, Bitmap.CompressFormat.JPEG, 90);
+                    DemographicInsurancePhotoDTO photoDTO = new DemographicInsurancePhotoDTO();
+                    photoDTO.setInsurancePhoto(imageAsBase64); // create the image dto
+                    photoDTO.setPage(page);
+                    photoDTO.setDelete(false);
+                    if(isFrontScan){
+                        frontInsurancePhotoDTO = photoDTO;
+                    }else{
+                        backInsurancePhotoDTO = photoDTO;
+                    }
+                }
+            });
+
+
         }
 
-        ImageCaptureHelper.setCapturedImageToTargetView(getContext(), target, bitmap, CAMERA_TYPE, IMAGE_SHAPE);
     }
 
     private boolean hasInsurance() {
         return !demographicDTO.getPayload().getDemographics().getPayload().getInsurances().isEmpty();
     }
 
-    private void validateForm(){
+    private void validateForm() {
         boolean isValid = true;
 
-        if(StringUtil.isNullOrEmpty(selectedProvider)){
+        if (StringUtil.isNullOrEmpty(selectedProvider)) {
             isValid = false;
         }
 
