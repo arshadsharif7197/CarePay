@@ -87,7 +87,7 @@ public class CustomMessageToast extends Toast {
                     ((BaseActivity) context).getWindow().setStatusBarColor(ContextCompat.getColor(context, R.color.colorPrimary));
                 }
             }
-        }, getDuration()==LENGTH_SHORT?5000:1000);//this should correspond to Toast LENGTH_SHORT & LENGTH_LONG
+        }, getDuration()==LENGTH_SHORT?1000:5000);//this should correspond to Toast LENGTH_SHORT & LENGTH_LONG
 
     }
 }

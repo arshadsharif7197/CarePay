@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -19,6 +20,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -122,11 +124,16 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         try {
             if (null == errorNotification) {
 
-                errorNotification = new CustomPopupNotification(getContext(), getCurrentFocus(), getWindow(), errorMessage, CustomPopupNotification.TYPE_ERROR_NOTIFICATION, errorNotificationSwipeListener());
+                if(!StringUtil.isNullOrEmpty(errorMessage)){
+                    errorNotification = new CustomPopupNotification(getContext(), getCurrentFocus(), getWindow(), errorMessage, CustomPopupNotification.TYPE_ERROR_NOTIFICATION, errorNotificationSwipeListener());
+                }else{
+                    errorNotification = new CustomPopupNotification(getContext(), getCurrentFocus(), getWindow(), CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE, CustomPopupNotification.TYPE_ERROR_NOTIFICATION, errorNotificationSwipeListener());
+                }
+
             }
             errorNotification.showPopWindow();
         } catch (Exception e) {
-            Log.e("Base Activity", e.getMessage());
+                Log.e("Base Activity", e.getMessage());
         }
     }
 

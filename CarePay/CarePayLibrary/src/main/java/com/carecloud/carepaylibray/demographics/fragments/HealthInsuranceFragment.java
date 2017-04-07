@@ -22,6 +22,14 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment implements
         InsuranceLineItemsListAdapter.OnInsuranceEditClickListener {
 
+    public interface InsuranceDocumentScannerListener {
+        void editInsurance(DemographicDTO demographicDTO, Integer editedIndex, boolean showAsDialog);
+
+        void navigateToParentFragment();
+
+        void updateInsuranceDTO(int index, DemographicInsurancePayloadDTO model);
+    }
+
     private DemographicDTO demographicDTO;
 
     private InsuranceLineItemsListAdapter adapter;
@@ -41,14 +49,6 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     public void onDetach() {
         super.onDetach();
         callback = null;
-    }
-
-    public interface InsuranceDocumentScannerListener {
-        void editInsurance(DemographicDTO demographicDTO, Integer editedIndex, boolean showAsDialog);
-
-        void navigateToParentFragment();
-
-        void updateInsuranceDTO(int index, DemographicInsurancePayloadDTO model);
     }
 
     @Override

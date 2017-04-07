@@ -27,7 +27,7 @@ public abstract class BaseFragment extends Fragment implements ISession {
     }
 
     protected void hideKeyboardOnViewTouch(View view){
-        if(isPracticeAppPatientMode){
+        if(isPracticeAppPatientMode && view!=null){
             view.setSoundEffectsEnabled(false);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override

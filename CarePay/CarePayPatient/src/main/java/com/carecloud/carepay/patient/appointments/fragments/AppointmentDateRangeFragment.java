@@ -51,7 +51,6 @@ public class AppointmentDateRangeFragment extends BaseFragment {
     private VisitTypeDTO selectedVisitTypeDTO;
     private AppointmentResourcesItemDTO selectedResourcesDTO;
     private AppointmentsResultModel resourcesToScheduleDTO;
-//    private String addAppointmentPatientId;
 
     private AppointmentNavigationCallback callback;
 

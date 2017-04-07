@@ -12,11 +12,13 @@ public class DemographicIdDocPhotoDTO {
     @SerializedName("identity_document_photo") @Expose
     private String idDocPhoto;
 
-    @SerializedName("page") @Expose
+    @SerializedName("page")
+    @Expose
     private int page;
 
-    @SerializedName("delete") @Expose
-    private boolean delete;
+    @SerializedName("delete")
+    @Expose
+    private boolean delete = false;
 
     public String getIdDocPhoto() {
         return idDocPhoto;

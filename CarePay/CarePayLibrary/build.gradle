@@ -35,39 +35,33 @@ configurations {
 }
 dependencies {
     //compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile files('libs/com.fasterxml.jackson.databind.jar')
-    compile files('libs/spring-android-rest-template-1.0.0.RELEASE.jar')
-    compile files('libs/jackson-mapper-asl-1.8.8.jar')
-    compile files('libs/jackson-core-asl-1.8.8.jar')
-    compile files('libs/jackson-annotations-2.5.1.jar')
-    compile files('libs/jxl-2.6.12.jar')
-    compile files('libs/org.apache.httpclient.jar')
-    compile files('libs/spring-android-core-1.0.0.RELEASE.jar')
-    compile files('libs/org.apache.httpcomponents.httpcore_4.2.1.jar')
-    compile files('libs/com.fasterxml.jackson.jsonschema.jar')
+    //    compile files('libs/com.fasterxml.jackson.databind.jar')
+    //    compile files('libs/spring-android-rest-template-1.0.0.RELEASE.jar')
+    //    compile files('libs/jackson-mapper-asl-1.8.8.jar')
+    //    compile files('libs/jackson-core-asl-1.8.8.jar')
+    //    compile files('libs/jackson-annotations-2.5.1.jar')
+    //    compile files('libs/jxl-2.6.12.jar')
+    //    compile files('libs/org.apache.httpclient.jar')
+    //    compile files('libs/spring-android-core-1.0.0.RELEASE.jar')
+    //    compile files('libs/org.apache.httpcomponents.httpcore_4.2.1.jar')
+    //    compile files('libs/com.fasterxml.jackson.jsonschema.jar')
     // support library
     compile 'com.android.support:appcompat-v7:25.2.0'
     compile 'com.android.support:support-v4:25.2.0'
     compile 'com.android.support:cardview-v7:25.2.0'
     compile 'com.android.support:design:25.2.0'
     compile 'com.android.support:multidex:1.0.1'
-
     // apache utils
     compile 'org.apache.commons:commons-lang3:3.5'
-
     //datetime
     compile 'joda-time:joda-time:2.9.4'
-
     compile project(path: ':CarePayServiceLibrary')
-
     // Using for image loading
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'jp.wasabeef:picasso-transformations:2.1.2'
-
     compile 'com.mcxiaoke.viewpagerindicator:library:2.4.1@aar'
     compile 'com.github.gcacace:signature-pad:1.2.0'
     compile 'com.smartystreets.api:smartystreets-java-sdk:1.0.7'
-
     compile 'com.squareup:android-times-square:1.6.4@aar'
     compile 'com.google.zxing:core:3.2.1'
     compile 'me.dm7.barcodescanner:zxing:1.9'
@@ -76,5 +70,5 @@ dependencies {
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
-
+    compile project(':payeezysdk')
 }

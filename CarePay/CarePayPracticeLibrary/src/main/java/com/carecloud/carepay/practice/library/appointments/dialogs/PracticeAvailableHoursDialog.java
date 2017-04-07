@@ -233,7 +233,6 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
             if (null != callback) {
                 callback.selectDateRange(startDate, endDate, visitTypeDTO, appointmentResourcesDTO, appointmentsResultModel);
             }
-
             dismiss();
         }
     };
