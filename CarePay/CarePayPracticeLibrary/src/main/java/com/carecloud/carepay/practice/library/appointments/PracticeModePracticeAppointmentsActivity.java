@@ -689,7 +689,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         ft.addToBackStack(null);
 
         PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
-                .newInstance(paymentsModel, paymentLineItem);
+                .newInstance(paymentsModel, paymentLineItem, true);
         dialog.show(ft, tag);
     }
 }

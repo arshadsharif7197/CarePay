@@ -166,7 +166,7 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
         ft.addToBackStack(null);
 
         PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
-                .newInstance(paymentDTO, paymentLineItem);
+                .newInstance(paymentDTO, paymentLineItem, false);
         dialog.show(ft, tag);
     }
 }
