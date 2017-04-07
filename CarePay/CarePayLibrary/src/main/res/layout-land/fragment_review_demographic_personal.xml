@@ -20,14 +20,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-
-        <!--<TextView-->
-        <!--android:id="@+id/reviewdemogrPersonalInfoLabel"-->
-        <!--style="@style/reviewDemographicBlue."-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginTop="36dp" />-->
-
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/reviewdemogrFirstNameTextInput"
             style="@style/TextInputLayoutStyle"

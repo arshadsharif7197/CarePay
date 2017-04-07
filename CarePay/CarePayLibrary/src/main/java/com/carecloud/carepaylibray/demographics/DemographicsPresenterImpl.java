@@ -42,15 +42,17 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     private InsuranceEditDialog insuranceEditDialog;
 
     private DemographicDTO demographicDTO;
+    private final boolean isPatientMode;
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
 
     //demographics nav
     private int currentDemographicStep = 1;
     private static final String SAVED_STEP_KEY = "save_step";
 
-    public DemographicsPresenterImpl(DemographicsView demographicsView, Bundle savedInstanceState) {
+    public DemographicsPresenterImpl(DemographicsView demographicsView, Bundle savedInstanceState, boolean isPatientMode) {
         this.demographicsView = demographicsView;
         demographicDTO = demographicsView.getConvertedDTO(DemographicDTO.class);
+        this.isPatientMode = isPatientMode;
 
         if (savedInstanceState != null) {
             currentDemographicStep = savedInstanceState.getInt(SAVED_STEP_KEY, 1);
@@ -132,7 +134,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         this.demographicDTO = demographicDTO;
         insuranceEditDialog = InsuranceEditDialog.newInstance(demographicDTO, editedIndex);
 
-        if (showAsDialog) {
+        if (showAsDialog && isPatientMode) {
             String tag = "InsuranceEditFloatingDialog";
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction ft = fragmentManager.beginTransaction();
@@ -145,16 +147,6 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         } else {
             navigateToFragment(insuranceEditDialog, true);
         }
-    }
-
-    @Override
-    public void navigateToParentFragment() {
-
-    }
-
-    @Override
-    public void updateInsuranceDTO(int index, DemographicInsurancePayloadDTO model) {
-
     }
 
     @Override

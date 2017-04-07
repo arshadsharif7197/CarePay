@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenterImpl;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
@@ -18,7 +19,8 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
         super.onCreate(savedInstanceState);
         setContentView(com.carecloud.carepaylibrary.R.layout.activity_demographic_review);
 
-        presenter = new DemographicsPresenterImpl(this, savedInstanceState);
+        boolean isPatientMode = getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE;
+        presenter = new DemographicsPresenterImpl(this, savedInstanceState, isPatientMode);
     }
 
     @Override

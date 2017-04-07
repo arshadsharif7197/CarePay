@@ -364,34 +364,34 @@ public class DemographicsActivity extends BasePatientActivity
 
     }
 
-    @Override
-    public void navigateToParentFragment() {
-        hideShowComponents(true);
-        //setCurrentItem(2, true);
-        /*CheckinDemographicsFragment fragment = new CheckinDemographicsFragment();
-        Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, modelGet);
-        fragment.setArguments(args);
-
-        navigateToFragment(fragment, false);
-        Log.v(NewReviewDemographicsActivity.class.getSimpleName(), "NewReviewDemographicsActivity");*/
-    }
-
-    @Override
-    public void updateInsuranceDTO(int index, DemographicInsurancePayloadDTO model) {
-        if (index >= 0) {
-            insuranceModelList.set(index, model);
-        } else {
-            insuranceModelList.add(model);
-        }
-        if (modelGet.getPayload().getDemographics() == null) {
-            modelGet.getPayload().setDemographics(new DemographicPayloadInfoDTO());
-            modelGet.getPayload().getDemographics().setPayload(new DemographicPayloadDTO());
-            modelGet.getPayload().getDemographics().getPayload().setInsurances(insuranceModelList);
-        }
-
-        initializeInsurancesFragment();
-    }
+//    @Override
+//    public void navigateToParentFragment() {
+//        hideShowComponents(true);
+//        //setCurrentItem(2, true);
+//        /*CheckinDemographicsFragment fragment = new CheckinDemographicsFragment();
+//        Bundle args = new Bundle();
+//        DtoHelper.bundleDto(args, modelGet);
+//        fragment.setArguments(args);
+//
+//        navigateToFragment(fragment, false);
+//        Log.v(NewReviewDemographicsActivity.class.getSimpleName(), "NewReviewDemographicsActivity");*/
+//    }
+//
+//    @Override
+//    public void updateInsuranceDTO(int index, DemographicInsurancePayloadDTO model) {
+//        if (index >= 0) {
+//            insuranceModelList.set(index, model);
+//        } else {
+//            insuranceModelList.add(model);
+//        }
+//        if (modelGet.getPayload().getDemographics() == null) {
+//            modelGet.getPayload().setDemographics(new DemographicPayloadInfoDTO());
+//            modelGet.getPayload().getDemographics().setPayload(new DemographicPayloadDTO());
+//            modelGet.getPayload().getDemographics().getPayload().setInsurances(insuranceModelList);
+//        }
+//
+//        initializeInsurancesFragment();
+//    }
 
     /**
      * Adapter for the viewpager

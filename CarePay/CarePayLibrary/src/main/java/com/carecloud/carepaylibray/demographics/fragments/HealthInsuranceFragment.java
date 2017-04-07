@@ -15,7 +15,6 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.adapters.InsuranceLineItemsListAdapter;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -25,10 +24,6 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
 
     public interface InsuranceDocumentScannerListener {
         void editInsurance(DemographicDTO demographicDTO, Integer editedIndex, boolean showAsDialog);
-
-        void navigateToParentFragment();
-
-        void updateInsuranceDTO(int index, DemographicInsurancePayloadDTO model);
     }
 
     private DemographicDTO demographicDTO;
@@ -139,9 +134,6 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
                 Label.getLabel("demographics_health_insurance_subheading"),
                 view);
         initNextButton(null, view, View.VISIBLE);
-
-//        Button nextButton = (Button) view.findViewById(R.id.checkinDemographicsNextButton);
-//        nextButton.setText(Label.getLabel("demographics_review_go_to_consent"));
     }
 
     @Override

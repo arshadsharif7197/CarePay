@@ -409,16 +409,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void navigateToParentFragment() {
-
-    }
-
-    @Override
-    public void updateInsuranceDTO(int index, DemographicInsurancePayloadDTO model) {
-
-    }
-
-    @Override
     public void editInsurance(DemographicDTO demographicDTO, Integer editedIndex, boolean showAsDialog) {
         this.demographicDTO = demographicDTO;
         insuranceEditDialog = InsuranceEditDialog.newInstance(demographicDTO, editedIndex);

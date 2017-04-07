@@ -238,18 +238,12 @@
     <string name="check_in_now">CHECK-IN \nNOW</string>
 
     <!-- Review Screen -->
-    <string name="review_screen_header">Review Information</string>
-    <string name="review_subtitle">Please review your demographic and health insurance information below.</string>
-    <string name="review_screen_demographic">DEMOGRAPHIC</string>
-    <string name="review_race_label">Race</string>
-    <string name="review_ethnicity_label">Ethnicity</string>
     <string name="review_screen_healthinsurance">HEALTH INSURANCE</string>
     <string name="review_screen_company_lable">COMPANY</string>
     <string name="review_plan_label">PLAN</string>
     <string name="review_screen_insurancepolicy_number_lable">INSURANCE MEMBER ID</string>
     <string name="review_screen_agreebutton">YES, THESE ARE CORRECT</string>
     <string name="review_screen_disagreebutton">I NEED TO UPDATE THIS INFORMATION</string>
-    <string name="review_PersonalInforamation_label">PERSONAL INFO</string>
     <string name="review_firstname_label">FIRST NAME</string>
     <string name="review_lastname_label">LAST NAME</string>
     <string name="review_middlename_label">MIDDLE NAME</string>
