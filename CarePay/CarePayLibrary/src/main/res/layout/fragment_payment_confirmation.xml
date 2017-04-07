@@ -221,7 +221,7 @@
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/button_ok"
-            style="@style/PaymentButtonStyle"
+            style="@style/BreezeButtonStyleDark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             breeze:textKey="button_ok"

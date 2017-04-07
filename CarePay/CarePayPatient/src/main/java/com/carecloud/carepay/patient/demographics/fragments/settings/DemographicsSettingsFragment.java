@@ -39,12 +39,16 @@ import com.squareup.picasso.Picasso;
  */
 public class DemographicsSettingsFragment extends BaseFragment {
 
+
     private DemographicsSettingsDTO demographicsSettingsDTO;
     private Button signOutButton;
     private IDemographicsSettingsFragmentListener activityCallback;
+    private IDemographicsSettingsFragmentListener callback;
 
     public interface IDemographicsSettingsFragmentListener {
         void initializeCreditCardListFragment();
+
+        void showHelpFragment();
     }
 
     private DemographicsSettingsFragment() {
@@ -62,7 +66,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            activityCallback = (IDemographicsSettingsFragmentListener) context;
+            callback = (IDemographicsSettingsFragmentListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement IDemographicsSettingsFragmentListener");
@@ -90,11 +94,13 @@ public class DemographicsSettingsFragment extends BaseFragment {
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_close));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
+
         CarePayTextView patientNameTextView = (CarePayTextView) view.findViewById(R.id.patient_name);
         patientNameTextView.setText(getCapitalizedUserName());
         CarePayTextView patientIdTextView = (CarePayTextView) view.findViewById(R.id.patient_id);
         patientIdTextView.setText(getAppAuthorizationHelper().getCurrUser());
 
+        initializeHelpButton(view);
         PatientModel demographicsPersonalDetails = demographicsSettingsDTO.getPayload().getDemographics()
                 .getPayload().getPersonalDetails();
         String imageUrl = demographicsPersonalDetails.getProfilePhoto();
@@ -106,10 +112,23 @@ public class DemographicsSettingsFragment extends BaseFragment {
         setClickListeners(view);
     }
 
+
     @Override
     public void onDetach() {
         super.onDetach();
         activityCallback = null;
+    }
+
+    private void initializeHelpButton(View view) {
+        TextView textView = (TextView) view.findViewById(R.id.helpTextView);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (callback != null) {
+                    callback.showHelpFragment();
+                }
+            }
+        });
     }
 
     private void setClickListeners(View view) {
