@@ -1,4 +1,4 @@
-package com.carecloud.breezemini.payments.postmodel;
+package com.carecloud.breezemini.payments.postmodel.processpayment;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;

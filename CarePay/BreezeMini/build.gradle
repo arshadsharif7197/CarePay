@@ -8,8 +8,8 @@ android {
         applicationId "com.carecloud.breezemini"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 3
-        versionName "0.0.3"
+        versionCode 1
+        versionName "0.0.1"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -20,8 +20,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {
+        development {
+            applicationId "com.carecloud.breezemini"
+            buildConfigField 'String', 'DEEPSTREAM_URL', '"192.168.124.180:6020"'
+            buildConfigField 'String', 'START_SECUREPAYMENT_TOPIC', '"startSwipe"'
+            buildConfigField 'String', 'PAYMENT_CONFIRMATION_TOPIC', '"paymentProcessed"'
+        }
+    }
 }
-
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {

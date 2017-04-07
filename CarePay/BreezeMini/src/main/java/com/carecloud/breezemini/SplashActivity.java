@@ -1,23 +1,21 @@
 package com.carecloud.breezemini;
 
 import android.accounts.Account;
-import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.RemoteException;
 import android.support.v4.os.OperationCanceledException;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
-import com.carecloud.breezemini.payments.postmodel.BreezePaymentDTO;
-import com.carecloud.breezemini.payments.postmodel.PaymentLineItem;
+import com.carecloud.breezemini.payments.postmodel.cloverpayment.CloverPaymentDTO;
+import com.carecloud.breezemini.payments.postmodel.credittransaction.CreditTransactionDTO;
+import com.carecloud.breezemini.payments.postmodel.processpayment.PaymentLineItem;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.util.CloverAuth;
 import com.clover.sdk.v1.BindingException;
@@ -27,8 +25,13 @@ import com.clover.sdk.v1.ServiceException;
 import com.clover.sdk.v3.order.LineItem;
 import com.clover.sdk.v3.order.Order;
 import com.clover.sdk.v3.order.OrderConnector;
+import com.clover.sdk.v3.payments.Payment;
 import com.clover.sdk.v3.payments.Result;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.net.URISyntaxException;
 import java.util.Iterator;
@@ -45,147 +48,41 @@ import io.deepstream.LoginResult;
 import io.deepstream.Topic;
 
 /**
- * An full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
+ * Created by Kavin Kannan on
+ * An full-screen activity that processes clover payments through
+ * ACTION_SECURE_PAY intent.
  */
 public class SplashActivity extends AppCompatActivity {
+    /**
+     * The constant creditCardIntentID.
+     */
     public static final int creditCardIntentID = 555;
-    /**
-     * Whether or not the system UI should be auto-hidden after
-     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-     */
-    private static final boolean AUTO_HIDE = false;
-    /**
-     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
-     * user interaction before hiding the system UI.
-     */
-    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
-    /**
-     * Some older devices needs a small delay between UI widget updates
-     * and a change of the status and navigation bar.
-     */
-    private static final int UI_ANIMATION_DELAY = 300;
-
-    // private View mControlsView;
-    private final Runnable mShowPart2Runnable = new Runnable() {
-        @Override
-        public void run() {
-            // Delayed display of UI elements
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.show();
-            }
-            //  mControlsView.setVisibility(View.VISIBLE);
-        }
-    };
-    private Account account;
-    private CloverAuth.AuthResult authResult = null;
-    private PaymentLineItem[] paymentLineItems;
-    private BreezePaymentDTO breezePayment;
-    private boolean mVisible;
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
-
-    private static final String TAG = SplashActivity.class.getName();
-    private final Handler mHideHandler = new Handler();
-    private final Runnable mHidePart2Runnable = new Runnable() {
-        @SuppressLint("InlinedApi")
-        @Override
-        public void run() {
-            // Delayed removal of status and navigation bar
-
-            // Note that some of these constants are new as of API 16 (Jelly Bean)
-            // and API 19 (KitKat). It is safe to use them, as they are inlined
-            // at compile-time and do nothing on earlier devices.
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-        }
-    };
-
-
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (AUTO_HIDE) {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS);
-            }
-            return false;
-        }
-    };
     private OrderConnector orderConnector;
     private Order order;
     private Long amountLong = 0L;
+    private Account account;
+    private CloverAuth.AuthResult authResult = null;
+    private DeepstreamClient client = null;
+    private PaymentLineItem[] paymentLineItems;
+    private static final String TAG = SplashActivity.class.getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_splash);
-        mVisible = true;
+        setSystemUiVisibility();
 
-        if (account == null)
-        {
+        if (account == null) {
             account = CloverAccount.getAccount(SplashActivity.this);
             authenticateCloverAccount();
         }
     }
 
-    private void authenticateCloverAccount() {
-        new AsyncTask<Void, String, CloverAuth.AuthResult>() {
-
-            @Override
-            protected void onProgressUpdate(String... values) {
-                String logString = values[0];
-                Log.d(TAG, logString);
-            }
-
-            @Override
-            protected CloverAuth.AuthResult doInBackground(Void... params) {
-                try {
-                    publishProgress("Requesting auth token");
-                    authResult = CloverAuth.authenticate(SplashActivity.this, account);
-                    if (authResult == null) {
-                        Log.e(TAG, "Null AuthResult");
-                    } else if (authResult.authToken == null) {
-                        Log.e(TAG, "No auth token in AuthResult");
-                    }
-
-                    return authResult;
-                }
-                catch (OperationCanceledException e) {
-                    Log.e(TAG, "Authentication cancelled", e);
-                }
-                catch (Exception e) {
-                    publishProgress("Error retrieving merchant info from server" + e);
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(CloverAuth.AuthResult authResult) {
-                super.onPostExecute(authResult);
-                if (authResult != null && authResult.authToken != null && authResult.baseUrl != null) {
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            new LoginTask().execute();
-                        }
-                    });
-                }
-            }
-        }.execute();
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        setSystemUiVisibility();
     }
 
     @Override
@@ -200,10 +97,90 @@ public class SplashActivity extends AppCompatActivity {
 
             // If an account can't be acquired, exit the app
             if (account == null) {
-                Toast.makeText(this, "no account", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.no_account_string, Toast.LENGTH_SHORT).show();
                 finish();
                 return;
             }
+        }
+
+    }
+
+    @Override
+    protected void onPause() {
+        disconnect();
+        super.onPause();
+
+    }
+
+    private void  setSystemUiVisibility(){
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+    }
+
+    /**
+     * The type Login task.
+     */
+    public class LoginTask extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            DeepstreamFactory factory = DeepstreamFactory.getInstance();
+            try {
+                client = factory.getClient(BuildConfig.DEEPSTREAM_URL);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+            client.setRuntimeErrorHandler(new DeepstreamRuntimeErrorHandler() {
+                @Override
+                public void onException(Topic topic, Event event, String s) {
+                    Log.w("dsh", "Error:" + event.toString() + ":" + s);
+                }
+            });
+
+            JsonObject authData = new JsonObject();
+            authData.addProperty("device_type", "CloverMini");
+            authData.addProperty("device_id", Build.SERIAL);
+
+            LoginResult result = client.login(authData);
+            client.event.subscribe(BuildConfig.START_SECUREPAYMENT_TOPIC, new EventListener() {
+                @Override
+                public void onEvent(String topic, final Object paymentRequestInfo) {
+                    setTransactionInfo(topic, paymentRequestInfo);
+
+                    if (authResult != null && authResult.authToken != null && authResult.baseUrl != null) {
+                        connect();
+                        new OrderAsyncTask().execute();
+                    }
+                }
+
+            });
+
+            return result.loggedIn();
+        }
+    }
+
+    private void setTransactionInfo(String topic, final Object paymentRequestInfo) {
+        Log.i("startSwipe event", topic);
+        Log.i("Payment Info", toPrettyFormat(paymentRequestInfo.toString()));
+
+        try {
+            Gson gson = new Gson();
+            CreditTransactionDTO creditTransaction = gson.fromJson((JsonElement) paymentRequestInfo, CreditTransactionDTO.class);
+            if (creditTransaction.getAmount().equalsIgnoreCase("0")) {
+                MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.pacman_die);
+                mp.start();
+            } else {
+                amountLong = (long) (Double.parseDouble(creditTransaction.getAmount()) * 100) ;
+                MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.coins);
+                mp.start();
+            }
+            paymentLineItems = new PaymentLineItem[]{};
+        } catch (Exception e) {
+            Log.e("Payment Info", e.getMessage());
         }
 
     }
@@ -216,72 +193,12 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onPause() {
-        disconnect();
-        super.onPause();
-
-    }
-
     // Disconnects from the connectors
     private void disconnect() {
         if (orderConnector != null) {
             orderConnector.disconnect();
             orderConnector = null;
         }
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
-        delayedHide(100);
-    }
-
-    private void toggle() {
-        if (mVisible) {
-            hide();
-        } else {
-            show();
-        }
-    }
-
-    private void hide() {
-        // Hide UI first
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
-//        mControlsView.setVisibility(View.GONE);
-        mVisible = false;
-
-        // Schedule a runnable to remove the status and navigation bar after a delay
-        mHideHandler.removeCallbacks(mShowPart2Runnable);
-        mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
-    }
-
-    @SuppressLint("InlinedApi")
-    private void show() {
-//        // Show the system bar
-//        mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-//                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-        mVisible = true;
-
-        // Schedule a runnable to display UI elements after a delay
-        mHideHandler.removeCallbacks(mHidePart2Runnable);
-        mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
-    }
-
-    /**
-     * Schedules a call to hide() in [delay] milliseconds, canceling any
-     * previously scheduled calls.
-     */
-    private void delayedHide(int delayMillis) {
-        mHideHandler.removeCallbacks(mHideRunnable);
-        mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
     private void startSecurePaymentIntent() {
@@ -320,54 +237,41 @@ public class SplashActivity extends AppCompatActivity {
         }.execute();
     }
 
-    public class LoginTask extends AsyncTask<Void, Void, Boolean> {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == creditCardIntentID) {
 
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            DeepstreamFactory factory = DeepstreamFactory.getInstance();
-            DeepstreamClient client = null;
-            try {
-                client = factory.getClient("192.168.124.180:6020");
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
+            if (resultCode == RESULT_OK) {
+                try {
+                    Payment payment = data.getParcelableExtra(Intents.EXTRA_PAYMENT);
+
+
+                    Gson gson = new Gson();
+                    String jsonString = payment.getJSONObject().toString();
+                    CloverPaymentDTO cloverPayment = gson.fromJson(jsonString, CloverPaymentDTO.class);
+
+                    client.event.emit(BuildConfig.PAYMENT_CONFIRMATION_TOPIC, cloverPayment);
+                } catch (Exception e) {
+                    Log.e("CloverPaymentResponse", e.getMessage());
+                }
+
+
             }
-            client.setRuntimeErrorHandler(new DeepstreamRuntimeErrorHandler() {
-                @Override
-                public void onException(Topic topic, Event event, String s) {
-                    Log.w("dsh", "Error:" + event.toString() + ":" + s);
-                }
-            });
-
-            JsonObject authData = new JsonObject();
-            authData.addProperty("device_type", "CloverMini");
-            authData.addProperty("device_id", Build.SERIAL);
-
-            LoginResult result = client.login(authData);
-            client.event.subscribe("startSwipe", new EventListener() {
-                @Override
-                public void onEvent(String s,final Object o) {
-                    Log.i("startSwipe event", s );
-                    Log.i("startSwipe event", o.toString() );
-
-//                    amountLong = o.amount ;
-//
-
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            Toast.makeText(SplashActivity.this, o.toString(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-                    if (authResult != null && authResult.authToken != null && authResult.baseUrl != null) {
-                        connect();
-                        new OrderAsyncTask().execute();
-                    }
-                }
-
-            });
-
-            return result.loggedIn();
+        } else if (resultCode == RESULT_CANCELED) {
+            String manufacturer = Build.MANUFACTURER;
+            if (BuildConfig.DEBUG && manufacturer.equals("unknown")) {
+            } else {
+                Toast.makeText(getApplicationContext(), "Payment Cancelled", Toast.LENGTH_SHORT).show();
+                setResult(resultCode);
+            }
+        } else {
+            Toast.makeText(getApplicationContext(), "Payment Failed", Toast.LENGTH_SHORT).show();
+            setResult(resultCode);
         }
+
+        reset();
+
     }
 
     private class OrderAsyncTask extends AsyncTask<Void, Void, Order> {
@@ -380,14 +284,13 @@ public class SplashActivity extends AppCompatActivity {
                 // Create a new order
                 order = orderConnector.createOrder(new Order());
 
-                if(amountLong != null )
-                {
-                    if(paymentLineItems!=null && paymentLineItems.length > 0){
+                if (amountLong != null) {
+                    if (paymentLineItems != null && paymentLineItems.length > 0) {
                         List<LineItem> lineItems = getLineItems();
                         for (LineItem lineItem : lineItems) {
                             orderConnector.addCustomLineItem(order.getId(), lineItem, false);
                         }
-                    }else{
+                    } else {
                         setResult(RESULT_CANCELED);
                         runOnUiThread(new Runnable() {
                             public void run() {
@@ -419,11 +322,12 @@ public class SplashActivity extends AppCompatActivity {
             if (!isFinishing()) {
                 SplashActivity.this.order = order;
                 disconnect();
-                startSecurePaymentIntent();
+                if (amountLong != null && amountLong  > 0) {
+                    startSecurePaymentIntent();
+                }
 
             }
         }
-
     }
 
     private List<LineItem> getLineItems() {
@@ -436,6 +340,50 @@ public class SplashActivity extends AppCompatActivity {
             lineItems.add(item);
         }
         return lineItems;
+    }
+
+
+    private void authenticateCloverAccount() {
+        new AsyncTask<Void, String, CloverAuth.AuthResult>() {
+
+            @Override
+            protected void onProgressUpdate(String... values) {
+                String logString = values[0];
+                Log.d(TAG, logString);
+            }
+
+            @Override
+            protected CloverAuth.AuthResult doInBackground(Void... params) {
+                try {
+                    publishProgress("Requesting auth token");
+                    authResult = CloverAuth.authenticate(SplashActivity.this, account);
+                    if (authResult == null) {
+                        Log.e(TAG, "Null AuthResult");
+                    } else if (authResult.authToken == null) {
+                        Log.e(TAG, "No auth token in AuthResult");
+                    }
+
+                    return authResult;
+                } catch (OperationCanceledException e) {
+                    Log.e(TAG, "Authentication cancelled", e);
+                } catch (Exception e) {
+                    publishProgress("Error retrieving merchant info from server" + e);
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(CloverAuth.AuthResult authResult) {
+                super.onPostExecute(authResult);
+                if (authResult != null && authResult.authToken != null && authResult.baseUrl != null) {
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            new LoginTask().execute();
+                        }
+                    });
+                }
+            }
+        }.execute();
     }
 
     /**
@@ -457,4 +405,25 @@ public class SplashActivity extends AppCompatActivity {
             Log.e(TAG, "Dumping Intent end");
         }
     }
+
+    /**
+     * To pretty format string.
+     *
+     * @param jsonString the json string
+     * @return the string
+     */
+    private String toPrettyFormat(String jsonString) {
+        JsonParser parser = new JsonParser();
+        JsonObject json = parser.parse(jsonString).getAsJsonObject();
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String prettyJson = gson.toJson(json);
+
+        return prettyJson;
+    }
+
+    private void reset(){
+        amountLong = null;
+    }
+
 }
