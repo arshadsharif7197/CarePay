@@ -122,10 +122,6 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                 page = BACK_PIC;
             }
 
-
-//            if (isFrontScan) {
-                // change button caption to 'rescan'
-
                 int width = imageView.getWidth();
                 int height = imageView.getHeight();
                 imageView.getLayoutParams().width = width;
@@ -165,44 +161,6 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                 });
 
 
-//            }
-
-//            else {
-//                // change button caption to 'rescan'
-//                String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
-//                DemographicIdDocPhotoDTO backDTO = currentModel.getIdDocPhothos().get(1);
-//                backDTO.setIdDocPhoto(imageAsBase64); // create the image dto
-//                backDTO.setPage(2);
-//                backDTO.setDelete(false);
-//
-//                final int width = imageBack.getWidth();
-//                final int height = imageBack.getHeight();
-//                imageBack.getLayoutParams().width = width;
-//                imageBack.getLayoutParams().height = height;
-//
-//                File file = ImageCaptureHelper.getBitmapFileUrl(getContext(), bitmap, "idBack");
-//                Picasso.with(getContext()).load(file)
-//                        .rotate(ImageCaptureHelper.getOrientation())
-//                        .resize(width, height)
-//                        .centerInside()
-//                        .memoryPolicy(MemoryPolicy.NO_CACHE)
-//                        .transform(new RoundedCornersTransformation(10, 0))
-//                        .into(imageBack, new Callback() {
-//                            @Override
-//                            public void onSuccess() {
-//                                imageBack.setScaleType(ImageView.ScaleType.FIT_XY);
-//                            }
-//
-//                            @Override
-//                            public void onError() {
-//
-//                            }
-//                        });
-//
-//
-//
-////                imageBack.setImageBitmap(bitmap);
-//            }
         }
     }
 
@@ -223,54 +181,12 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
 
 
         if (!StringUtil.isNullOrEmpty(frontPic)) {
-            imageFront.measure(0,0);
-            final int width = imageFront.getMeasuredWidth();
-            final int height = imageFront.getMeasuredHeight();
-
-            Picasso.with(getContext()).load(frontPic)
-                    .rotate(ImageCaptureHelper.getOrientation())
-                    .resize(width, height)
-                    .centerInside()
-                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-                    .transform(new RoundedCornersTransformation(10, 0))
-                    .into(imageFront, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            imageFront.setScaleType(ImageView.ScaleType.FIT_XY);
-                        }
-
-                        @Override
-                        public void onError() {
-                            imageFront.setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                                    R.drawable.icn_placeholder_document));
-                        }
-                    });
+            setPhotoView(imageFront, frontPic);
         }
 
 
         if (!StringUtil.isNullOrEmpty(backPic)) {
-            imageBack.measure(0,0);
-            final int width = imageBack.getMeasuredWidth();
-            final int height = imageBack.getMeasuredHeight();
-
-            Picasso.with(getContext()).load(backPic)
-                    .rotate(ImageCaptureHelper.getOrientation())
-                    .resize(width, height)
-                    .centerInside()
-                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-                    .transform(new RoundedCornersTransformation(10, 0))
-                    .into(imageBack, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            imageBack.setScaleType(ImageView.ScaleType.FIT_XY);
-                        }
-
-                        @Override
-                        public void onError() {
-                            imageBack.setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                                    R.drawable.icn_placeholder_document));
-                        }
-                    });
+            setPhotoView(imageBack, backPic);
         }
 
     }
@@ -307,25 +223,31 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         postModel.getIdDocPhothos().add(docPhotoDTO);
     }
 
+    private void setPhotoView(final ImageView imageView, String photoUrl){
+        imageView.measure(0,0);
+        final int width = imageView.getMeasuredWidth();
+        final int height = imageView.getMeasuredHeight();
 
-//    private void initializePhotos() {
-//        List<DemographicIdDocPhotoDTO> photoDTOs = currentModel.getIdDocPhothos();
-//        if (photoDTOs == null) { // create the list of photos (front and back) if null
-//            photoDTOs = new ArrayList<>();
-//            // create two empty photos DTOs
-//            photoDTOs.add(new DemographicIdDocPhotoDTO());
-//            photoDTOs.add(new DemographicIdDocPhotoDTO());
-//            this.currentModel.setIdDocPhothos(photoDTOs);
-//        } else {
-//            if (photoDTOs.size() == 0) {
-//                // create two empty photos DTOs
-//                photoDTOs.add(new DemographicIdDocPhotoDTO());
-//                photoDTOs.add(new DemographicIdDocPhotoDTO());
-//            } else if (photoDTOs.size() == 1) {
-//                photoDTOs.add(1, new DemographicIdDocPhotoDTO()); // create the second
-//            }
-//        }
-//    }
+        Picasso.with(getContext()).load(photoUrl)
+                .resize(width, height)
+                .centerInside()
+                .memoryPolicy(MemoryPolicy.NO_CACHE)
+                .transform(new RoundedCornersTransformation(10, 0))
+                .into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                    }
+
+                    @Override
+                    public void onError() {
+                        imageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                                R.drawable.icn_placeholder_document));
+                    }
+                });
+    }
+
+
 
     @Override
     public void setInsuranceDTO(DemographicInsurancePayloadDTO insuranceDTO, String placeholderBase64) {

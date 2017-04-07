@@ -203,6 +203,7 @@
                 android:layout_width="@dimen/dimen_230dp"
                 android:layout_height="@dimen/dimen_138dp"
                 android:layout_gravity="center"
+                android:adjustViewBounds="true"
                 android:src="@drawable/icn_camera"
                 tools:ignore="ContentDescription" />
 
@@ -232,6 +233,7 @@
                 android:id="@+id/health_insurance_back_photo"
                 android:layout_width="@dimen/dimen_230dp"
                 android:layout_height="@dimen/dimen_138dp"
+                android:adjustViewBounds="true"
                 android:layout_gravity="center"
                 android:src="@drawable/icn_camera"
                 tools:ignore="ContentDescription" />
