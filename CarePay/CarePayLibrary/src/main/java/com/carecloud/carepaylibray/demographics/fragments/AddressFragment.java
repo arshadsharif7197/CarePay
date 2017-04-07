@@ -95,7 +95,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         View mainView  = super.onCreateView(inflater, container, savedInstanceState);
         initialiseUIFields(mainView);
         formatEditText(mainView);
-//        setTypefaces(mainView);
 
         initViewFromModels(mainView);
         return mainView;
@@ -375,46 +374,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
                         checkIfEnableButton(getView());
                     }
                 });
-    }
-
-    /**
-     * Show alert dialog
-     */
-    private void showAlertDialogWithListview(final String[] dataArray, String title, String cancelLabel, final int selectedDataArray) {
-
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-        dialog.setTitle(title);
-        dialog.setNegativeButton(cancelLabel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int listener) {
-                dialogInterface.dismiss();
-            }
-        });
-        View customView = LayoutInflater.from(getActivity()).inflate(
-                R.layout.alert_list_layout, (ViewGroup) getView(), false);
-        ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
-        CustomAlertAdapter alertAdapter = new CustomAlertAdapter(getActivity(), Arrays.asList(dataArray));
-        listView.setAdapter(alertAdapter);
-        dialog.setView(customView);
-        final AlertDialog alert = dialog.create();
-        alert.show();
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long listener) {
-                switch (selectedDataArray) {
-
-                    case 4:
-                        stateAbbr = dataArray[position];
-                        ((TextView) findViewById(R.id.reviewDemographicsStateAutoCompleteTextView)).setText(stateAbbr);
-                        break;
-                    default:
-                        break;
-                }
-                checkIfEnableButton(view);
-                alert.dismiss();
-            }
-        });
     }
 
     /**

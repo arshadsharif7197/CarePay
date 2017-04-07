@@ -120,7 +120,6 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             TextView subHeadingTextView = (TextView)  view.findViewById(R.id.demographicsSubHeading);
             (view.findViewById(R.id.toolbar_layout)).setVisibility(View.VISIBLE);
 
-            textView.setText(String.format(Label.getLabel("demographics_heading"), checkinFlowCallback.getCurrentStep(), 5));
             mainHeadingTextView.setText(heading);
             subHeadingTextView.setText(subHeading);
         }

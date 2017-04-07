@@ -2,9 +2,11 @@ package com.carecloud.carepay.patient.demographics.activities;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.widget.TextView;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenterImpl;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
@@ -43,7 +45,13 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
 
     @Override
     public void updateCheckInFlow(CheckinFlowState flowState, int totalPages, int currentPage) {
-
+        TextView textView = (TextView) findViewById(com.carecloud.carepaylibrary.R.id.checkinDemographicsHeaderLabel);
+        switch (flowState) {
+            case DEMOGRAPHICS:
+                textView.setText(String.format(Label.getLabel("demographics_heading"), currentPage, totalPages));
+                break;
+            default:
+        }
     }
 
     @Override
