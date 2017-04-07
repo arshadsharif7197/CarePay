@@ -163,7 +163,7 @@ public class ImageCaptureHelper {
      * @param degrees degrees to be rotated
      * @return rotated picture
      */
-    private static Bitmap rotateBitmap(Bitmap bitmap, int degrees) {
+    public static Bitmap rotateBitmap(Bitmap bitmap, int degrees) {
         Matrix matrix = new Matrix();
         matrix.postRotate(degrees);
 

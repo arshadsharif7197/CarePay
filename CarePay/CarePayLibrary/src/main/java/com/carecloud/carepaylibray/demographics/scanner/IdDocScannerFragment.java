@@ -101,8 +101,11 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
     }
 
     @Override
-    public void onCapturedSuccess(final Bitmap bitmap) { // license has been scanned
+    public void onCapturedSuccess(Bitmap bitmap) { // license has been scanned
         if (bitmap != null) {
+            final Bitmap rotateBitmap = ImageCaptureHelper.rotateBitmap(bitmap, ImageCaptureHelper.getOrientation());
+
+
             final ImageView imageView;
             String tempFile;
             final int page;
@@ -128,9 +131,9 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                 imageView.getLayoutParams().width = width;
                 imageView.getLayoutParams().height = height;
 
-                File file = ImageCaptureHelper.getBitmapFileUrl(getContext(), bitmap, tempFile);
+                File file = ImageCaptureHelper.getBitmapFileUrl(getContext(), rotateBitmap, tempFile);
                 Picasso.with(getContext()).load(file)
-                        .rotate(ImageCaptureHelper.getOrientation())
+//                        .rotate(ImageCaptureHelper.getOrientation())
                         .resize(width, height)
                         .centerInside()
                         .memoryPolicy(MemoryPolicy.NO_CACHE)
@@ -152,7 +155,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                     @Override
                     public void run() {
                         // save from image
-                        String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
+                        String imageAsBase64 = SystemUtil.convertBitmapToString(rotateBitmap, Bitmap.CompressFormat.JPEG, 90);
                         DemographicIdDocPhotoDTO photoDTO = new DemographicIdDocPhotoDTO();
                         photoDTO.setIdDocPhoto(imageAsBase64); // create the image dto
                         photoDTO.setPage(page);
