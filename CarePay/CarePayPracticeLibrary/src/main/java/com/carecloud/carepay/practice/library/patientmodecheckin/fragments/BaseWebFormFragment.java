@@ -22,10 +22,10 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
-import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckinFlowCallback;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.google.gson.JsonObject;
@@ -47,10 +47,8 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
     private TextView header;
     private StepProgressBar progressIndicator;
 
-
     private int totalForms;
     private int displayedFormsIndex;
-
 
     private CheckinFlowCallback flowCallback;
 

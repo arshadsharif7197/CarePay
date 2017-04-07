@@ -22,7 +22,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
+import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -41,19 +41,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     StepProgressBar stepProgressBar;
 
-    protected CheckInNavListener checkInNavListener;
-
-    public interface CheckInNavListener {
-        void applyChangesAndNavTo(DemographicDTO demographicDTO, Integer step);
-
-        Integer getCurrentStep();
-
-        void setCurrentStep(Integer step);
-
-        void setCheckinFlow(CheckinFlowState flowState, int totalPages, int currentPage);
-
-        void navigateToConsentFlow(WorkflowDTO workflowDTO);
-    }
+    protected CheckinFlowCallback checkinFlowCallback;
 
     private WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
         @Override
@@ -66,10 +54,10 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             hideProgressDialog();
             DemographicDTO demographicDTO = new Gson().fromJson(workflowDTO.toString(), DemographicDTO.class);
 
-            if (checkInNavListener.getCurrentStep() == 5) {
-                checkInNavListener.navigateToConsentFlow(workflowDTO);
+            if (checkinFlowCallback.getCurrentStep() == 5) {
+                checkinFlowCallback.navigateToConsentFlow(workflowDTO);
             } else {
-                checkInNavListener.applyChangesAndNavTo(demographicDTO, checkInNavListener.getCurrentStep() + 1);
+                checkinFlowCallback.applyChangesAndNavTo(demographicDTO, checkinFlowCallback.getCurrentStep() + 1);
             }
 
         }
@@ -134,7 +122,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             TextView subHeadingTextView = (TextView)  view.findViewById(R.id.demographicsSubHeading);
             (view.findViewById(R.id.toolbar_layout)).setVisibility(View.VISIBLE);
 
-            textView.setText(String.format(Label.getLabel("demographics_heading"), checkInNavListener.getCurrentStep(), 5));
+            textView.setText(String.format(Label.getLabel("demographics_heading"), checkinFlowCallback.getCurrentStep(), 5));
             mainHeadingTextView.setText(heading);
             subHeadingTextView.setText(subHeading);
         }
@@ -148,7 +136,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                 public void onClick(View buttonView) {
                     if (passConstraints(view)) {
                         DemographicDTO demographicDTO = updateDemographicDTO(view);
-                        openNextFragment(demographicDTO, (checkInNavListener.getCurrentStep() + 1) > 5);
+                        openNextFragment(demographicDTO, (checkinFlowCallback.getCurrentStep() + 1) > 5);
                     }
                 }
             };
@@ -182,12 +170,12 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         // the callback interface. If not, it throws an exception
         try {
             if (context instanceof DemographicsView) {
-                checkInNavListener = ((DemographicsView) context).getPresenter();
+                checkinFlowCallback = ((DemographicsView) context).getPresenter();
             } else {
-                checkInNavListener = (CheckInNavListener) context;
+                checkinFlowCallback = (CheckinFlowCallback) context;
             }
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement CheckInNavListener");
+            throw new ClassCastException(context.toString() + " must implement CheckinFlowCallback");
         }
     }
 

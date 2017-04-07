@@ -101,8 +101,8 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     public void onResume() {
         super.onResume();
         stepProgressBar.setCurrentProgressDot(4);
-        checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 5);
-        checkInNavListener.setCurrentStep(5);
+        checkinFlowCallback.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 5);
+        checkinFlowCallback.setCurrentStep(5);
     }
 
     @Override

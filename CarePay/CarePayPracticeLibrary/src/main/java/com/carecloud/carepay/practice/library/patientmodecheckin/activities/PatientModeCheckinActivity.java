@@ -44,6 +44,7 @@ import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragmen
 import com.carecloud.carepaylibray.demographics.fragments.IdentificationFragment;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
+import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterface;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
@@ -70,7 +71,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         HealthInsuranceFragment.InsuranceDocumentScannerListener, MedicationsAllergyFragment.MedicationAllergyCallback,
         CheckinDemographicsInterface, MedicationAllergySearchFragment.MedicationAllergySearchCallback,
         PaymentNavigationCallback,
-        CheckInDemographicsBaseFragment.CheckInNavListener,
+        CheckinFlowCallback,
         PersonalInfoFragment.UpdateProfilePictureListener,
         CarePayCameraCallback,
         InsuranceEditDialog.InsuranceEditDialogListener,
@@ -108,7 +109,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_patient_mode_checkin);
+        setContentView(R.layout.activity_demographic_review);
         demographicDTO = getConvertedDTO(DemographicDTO.class);
 
         instantiateViewsRefs();
@@ -218,7 +219,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             transaction.remove(prev);
         }
 
-        transaction.replace(R.id.checkInContentHolderId, fragment, tag);
+        transaction.replace(R.id.root_layout, fragment, tag);
         if (addToBackStack) {
             transaction.addToBackStack(null);
         }
@@ -320,7 +321,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void addMedicationAllergyItem(MedicationsAllergiesObject item) {
-        MedicationsAllergyFragment medicationsAllergyFragment = (MedicationsAllergyFragment) getSupportFragmentManager().findFragmentById(R.id.checkInContentHolderId);
+        MedicationsAllergyFragment medicationsAllergyFragment = (MedicationsAllergyFragment) getSupportFragmentManager().findFragmentById(R.id.root_layout);
         medicationsAllergyFragment.addItem(item);
     }
 
@@ -507,7 +508,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     public void onBackPressed() {
         try {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            BaseCheckinFragment fragment = (BaseCheckinFragment) fragmentManager.findFragmentById(R.id.checkInContentHolderId);
+            BaseCheckinFragment fragment = (BaseCheckinFragment) fragmentManager.findFragmentById(R.id.root_layout);
             if (fragment == null || !fragment.navigateBack()) {
                 super.onBackPressed();
             }

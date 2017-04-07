@@ -110,8 +110,8 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
     public void onResume(){
         super.onResume();
         stepProgressBar.setCurrentProgressDot(1);
-        checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 2);
-        checkInNavListener.setCurrentStep(2);
+        checkinFlowCallback.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 2);
+        checkinFlowCallback.setCurrentStep(2);
     }
 
 

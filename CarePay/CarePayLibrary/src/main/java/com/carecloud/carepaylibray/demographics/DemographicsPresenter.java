@@ -7,10 +7,10 @@ import android.support.v4.app.FragmentManager;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraReady;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
+import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterface;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHolder;
@@ -24,7 +24,7 @@ public interface DemographicsPresenter extends DemographicsReviewLabelsHolder,
         MedicationsAllergyFragment.MedicationAllergyCallback,
         CheckinDemographicsInterface,
         MedicationAllergySearchFragment.MedicationAllergySearchCallback,
-        CheckInDemographicsBaseFragment.CheckInNavListener,
+        CheckinFlowCallback,
         PersonalInfoFragment.UpdateProfilePictureListener,
         CarePayCameraCallback,
         CarePayCameraReady,

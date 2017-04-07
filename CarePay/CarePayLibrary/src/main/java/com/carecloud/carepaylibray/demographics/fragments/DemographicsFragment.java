@@ -118,8 +118,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
     public void onResume(){
         super.onResume();
         stepProgressBar.setCurrentProgressDot(2);
-        checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 3);
-        checkInNavListener.setCurrentStep(3);
+        checkinFlowCallback.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 3);
+        checkinFlowCallback.setCurrentStep(3);
     }
 
     /**
