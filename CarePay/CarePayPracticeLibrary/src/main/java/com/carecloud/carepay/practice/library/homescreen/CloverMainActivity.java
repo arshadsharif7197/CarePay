@@ -255,7 +255,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 //        }
         setViewsDisabled((ViewGroup) findViewById(R.id.homeCheckoutClickable));
         setViewsDisabled((ViewGroup) findViewById(R.id.homeShopClickable));
-        setViewsDisabled((ViewGroup) findViewById(R.id.homeNewsClickable));
+//        setViewsDisabled((ViewGroup) findViewById(R.id.homeNewsClickable));
     }
 
     private void setViewsDisabled(ViewGroup viewGroup) {
