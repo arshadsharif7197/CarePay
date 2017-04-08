@@ -191,7 +191,7 @@ public class DemographicsDocumentsFragmentWthWrapper extends BaseFragment {
 
     private void setCardContainers() {
 
-        activityCallback.initializeIdDocScannerFragment(demPayloadIdDocDTO, idDocsMetaDTO == null ? null : idDocsMetaDTO.properties.items.identityDocument);
+        activityCallback.initializeIdDocScannerFragment(demPayloadIdDocDTO, idDocsMetaDTO == null ? null : idDocsMetaDTO.getProperties().getItems().getIdentityDocument());
 
     }
 

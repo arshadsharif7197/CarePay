@@ -163,7 +163,7 @@ public class NewReviewDemographicsActivity extends BasePatientActivity
                 demographicDTO.getMetadata().getDataModels().getDemographic().getIdentityDocuments();
 
         if (null != idDocsMetaDTO) {
-            DtoHelper.bundleDto(args, idDocsMetaDTO.properties.items.identityDocument);
+            DtoHelper.bundleDto(args, idDocsMetaDTO.getProperties().getItems().getIdentityDocument());
         }
         String tag = "license";
         FragmentManager fm = getSupportFragmentManager();

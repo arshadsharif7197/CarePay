@@ -411,7 +411,7 @@ public class CheckinDemographicsRevFragment extends BaseCheckinFragment implemen
         genderTextView = (TextView) view.findViewById(R.id.reviewGenderTextView);
 
         driverLicenseLabel = (TextView) view.findViewById(R.id.reviewDriverLicenseLabel);
-        driverLicenseLabel.setText(idDocsMetaDTO.properties.items.identityDocument.properties.identityDocumentType.getOptions().get(0).getLabel().toUpperCase());
+        driverLicenseLabel.setText(idDocsMetaDTO.getProperties().getItems().getIdentityDocument().getProperties().getIdentityDocumentType().getOptions().get(0).getLabel().toUpperCase());
     }
 
     private void initializeAddressSectionView() {

@@ -2,7 +2,6 @@ package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
@@ -11,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ScrollView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
@@ -260,7 +258,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         DemographicMetadataEntityAddressDTO addressMetaDTO = demographicDTO.getMetadata().getDataModels().getDemographic().getAddress();
 
         final String phoneError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.getProperties().getPhone().getValidations().get(0).getErrorMessage();
-        final String phoneValidation = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : ((String) addressMetaDTO.getProperties().getPhone().getValidations().get(0).value);
+        final String phoneValidation = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : ((String) addressMetaDTO.getProperties().getPhone().getValidations().get(0).getValue());
 
         String phone = phoneNumberEditText.getText().toString();
         if (!StringUtil.isNullOrEmpty(phone)

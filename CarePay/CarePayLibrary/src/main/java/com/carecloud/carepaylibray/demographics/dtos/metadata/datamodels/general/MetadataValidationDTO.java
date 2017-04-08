@@ -11,10 +11,10 @@ import com.google.gson.annotations.SerializedName;
  */
 public class MetadataValidationDTO {
     @SerializedName("type") @Expose
-    public String type;
+    private String type;
 
     @SerializedName("value") @Expose
-    public Object value;
+    private Object value;
 
     @SerializedName("error_message") @Expose
     private String errorMessage;
@@ -25,5 +25,21 @@ public class MetadataValidationDTO {
 
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Object getValue() {
+        return value;
+    }
+
+    public void setValue(Object value) {
+        this.value = value;
     }
 }

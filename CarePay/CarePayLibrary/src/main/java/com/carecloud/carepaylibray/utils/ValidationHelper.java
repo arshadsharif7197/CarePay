@@ -50,7 +50,7 @@ public class ValidationHelper {
 
         // there is a 'pattern' validate; match against
         final String phoneError = patternValidation.getErrorMessage();
-        final String phoneValidationRegex = (String) patternValidation.value;
+        final String phoneValidationRegex = (String) patternValidation.getValue();
         if (!isValidString(string, phoneValidationRegex)) {
             wrappingTextInputLayout.setErrorEnabled(true);
             wrappingTextInputLayout.setError(phoneError);
@@ -116,7 +116,7 @@ public class ValidationHelper {
             List<MetadataValidationDTO> validations = addressMetaDTO.getValidations();
             for (int i = 0; i < validations.size(); i++) {
                 MetadataValidationDTO metadataValidationDTO = validations.get(i);
-                if (metadataValidationDTO.type.equals(type)) {
+                if (metadataValidationDTO.getType().equals(type)) {
                     return metadataValidationDTO;
                 }
             }

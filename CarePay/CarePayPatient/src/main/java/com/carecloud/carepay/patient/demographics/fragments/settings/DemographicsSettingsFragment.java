@@ -192,26 +192,12 @@ public class DemographicsSettingsFragment extends BaseFragment {
         documentsTextview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Bundle bundle = new Bundle();
-                Gson gson = new Gson();
-                String demographicsSettingsDTOString = gson.toJson(demographicsSettingsDTO);
-                bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
-
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 DemographicsSettingsDocumentsFragment fragment = (DemographicsSettingsDocumentsFragment)
                         fm.findFragmentByTag(DemographicsSettingsDocumentsFragment.class.getSimpleName());
                 if (fragment == null) {
                     fragment = DemographicsSettingsDocumentsFragment.newInstance(demographicsSettingsDTO);
                 }
-
-                //fix for random crashes
-                if (fragment.getArguments() != null) {
-                    fragment.getArguments().putAll(bundle);
-                } else {
-                    fragment.setArguments(bundle);
-                }
-
                 fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
                         DemographicsSettingsDocumentsFragment.class.getSimpleName()).addToBackStack(null).commit();
 
