@@ -32,6 +32,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.models.PatientModel;
@@ -47,7 +48,6 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDetailsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsEthnicityDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsGenderDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLanguageDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMetadataDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMetadataPropertiesDTO;
@@ -63,16 +63,11 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsZipDTO;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.smartystreets.api.us_zipcode.City;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
-import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 import org.json.JSONObject;
 
@@ -82,16 +77,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypefaceInput;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
+import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class DemographicsInformationFragment extends BaseFragment {
-    private static final String LOG_TAG = DemographicsSettingsFragment.class.getSimpleName();
-    private AppCompatActivity appCompatActivity;
+
     private DemographicsSettingsDTO demographicsSettingsDTO = null;
-    private String demographicsString = null;
     private String personalInfoString = null;
     private String driverLicenseString = null;
     private String addressString = null;
@@ -177,45 +174,58 @@ public class DemographicsInformationFragment extends BaseFragment {
     private String stateAbbr = null;
     private City smartyStreetsResponse;
 
-    private View view;
     private DemographicsSettingsMetadataPropertiesDTO demographicsSettingsDetailsDTO = null;
     private DemographicsSettingsPersonalDetailsDTO demographicsSettingsPersonalDetailsDTO1 = null;
     private ProgressBar progressBar = null;
 
+    private DemographicsInformationFragment() {
+    }
+
+    public static DemographicsInformationFragment newInstance(DemographicsSettingsDTO demographicsSettingsDTO) {
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, demographicsSettingsDTO);
+        DemographicsInformationFragment fragment = new DemographicsInformationFragment();
+        fragment.setArguments(args);
+        return fragment;
+
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        appCompatActivity = (AppCompatActivity) getActivity();
+        demographicsSettingsDTO = DtoHelper.getConvertedDTO(DemographicsSettingsDTO.class, getArguments());
     }
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_demographics_information, container, false);
+        return inflater.inflate(R.layout.fragment_demographics_information, container, false);
+    }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         final Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
-        setGothamRoundedMediumTypeface(appCompatActivity, title);
-
-        rootview = (LinearLayout) view.findViewById(R.id.demographicsReviewRootLayout);
-        progressBar = (ProgressBar) view.findViewById(R.id.demographicReviewProgressBar);
-        progressBar.setVisibility(View.GONE);
+        title.setText(Label.getLabel("demographics_label"));
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            Gson gson = new Gson();
-            bundle = getArguments();
-            String demographicsSettingsDTOString = bundle.getString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE);
-            demographicsSettingsDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsDTO.class);
-        }
+
+        rootview = (LinearLayout) view.findViewById(R.id.demographicsReviewRootLayout);
+
 
         getDemographicDetails();
-        getDemographicsInformationLabels();
 
-        title.setText(demographicsString);
+        personalInfoString = Label.getLabel("demographics_personal_info_label");
+        driverLicenseString = Label.getLabel("demographics_drivers_license_label");
+        demographicsHeaderString = Label.getLabel("demographics_demographics_label");
+        addressHeaderString = Label.getLabel("demographics_address_label");
+        genderTitleString = Label.getLabel("demographics_gender_label");
+        ethnicityTitleString = Label.getLabel("demographics_ethnicity_label");
+        raceTitleString = Label.getLabel("demographics_race_label");
+        languageString = Label.getLabel("demographics_preferred_language_label");
+
 
         raceDataTextView = (TextView) view.findViewById(R.id.raceListDataTextView);
         raceLabelTextView = (TextView) view.findViewById(R.id.raceDataTextView);
@@ -263,31 +273,31 @@ public class DemographicsInformationFragment extends BaseFragment {
             dobEditText.setText(dateOfBirthString);
             dobEditText.requestFocus();
         }
-        if(SystemUtil.isNotEmptyString(phoneValString)){
+        if (SystemUtil.isNotEmptyString(phoneValString)) {
             phoneNumberEditext.setText(StringUtil.formatPhoneNumber(phoneValString));
             phoneNumberEditext.requestFocus();
         }
-        if(SystemUtil.isNotEmptyString(licenceValString)){
+        if (SystemUtil.isNotEmptyString(licenceValString)) {
             driverLicenseEditText.setText(licenceValString);
             driverLicenseEditText.requestFocus();
         }
-        if(SystemUtil.isNotEmptyString(address1ValString)){
-           addressLine1Editext.setText(address1ValString);
-           addressLine1Editext.requestFocus();
+        if (SystemUtil.isNotEmptyString(address1ValString)) {
+            addressLine1Editext.setText(address1ValString);
+            addressLine1Editext.requestFocus();
         }
-        if(SystemUtil.isNotEmptyString(address2ValString)){
+        if (SystemUtil.isNotEmptyString(address2ValString)) {
             addressLine2Editext.setText(address2ValString);
             addressLine2Editext.requestFocus();
         }
-        if(SystemUtil.isNotEmptyString(zipCodeValString)){
+        if (SystemUtil.isNotEmptyString(zipCodeValString)) {
             zipCodeEditext.setText(StringUtil.formatZipCode(zipCodeValString));
             zipCodeEditext.requestFocus();
         }
-        if(SystemUtil.isNotEmptyString(cityValString)){
+        if (SystemUtil.isNotEmptyString(cityValString)) {
             cityEditext.setText(cityValString);
             cityEditext.requestFocus();
         }
-        if(SystemUtil.isNotEmptyString(stateValString)){
+        if (SystemUtil.isNotEmptyString(stateValString)) {
             stateEditText.setText(stateValString);
             stateEditText.requestFocus();
         }
@@ -322,15 +332,13 @@ public class DemographicsInformationFragment extends BaseFragment {
         peronalInfoSectionTextview.setTextSize(14);
         addressSectionTextView.setTextSize(14);
 
-        updateProfileButton =  (Button) view.findViewById(R.id.buttonAddDemographicInfo);
+        updateProfileButton = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
         setTypefaces(view);
         setClickables(view);
         formatEditText();
-        return view;
-
     }
 
-    private void getValidations(){
+    private void getValidations() {
         if (demographicsSettingsDTO != null) {
             DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
             if (demographicsSettingsMetadataDTO != null) {
@@ -346,7 +354,7 @@ public class DemographicsInformationFragment extends BaseFragment {
     }
 
     private boolean isPhoneNumberValid() {
-       getValidations();
+        getValidations();
         final String phoneError = demographicsSettingsDetailsDTO.getPhone().getValidations().get(0).getErrorMessage();
         final boolean phoneValidation = demographicsSettingsDetailsDTO.getPhone().getValidations().get(0).getValue();
         if (!isPhoneEmpty) { // check validity only if non-empty
@@ -390,33 +398,8 @@ public class DemographicsInformationFragment extends BaseFragment {
         }
 
 
-        return isPhoneValid && isdobValid && !isAddressEmpty &&  !isCityEmpty && !isStateEmtpy;
+        return isPhoneValid && isdobValid && !isAddressEmpty && !isCityEmpty && !isStateEmtpy;
 
-    }
-
-
-    /**
-     * demographics Information labels
-     */
-    public void getDemographicsInformationLabels() {
-        if (demographicsSettingsDTO != null) {
-            DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
-            if (demographicsSettingsMetadataDTO != null) {
-                DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO = demographicsSettingsMetadataDTO.getLabels();
-                if (demographicsSettingsLabelsDTO != null) {
-                    demographicsString = demographicsSettingsLabelsDTO.getDemographicsLabel();
-                    personalInfoString = demographicsSettingsLabelsDTO.getDemographics_personal_info_Label();
-                    driverLicenseString = demographicsSettingsLabelsDTO.getDemographics_driver_license_Label();
-                    demographicsHeaderString = demographicsSettingsLabelsDTO.getDemographicSctionLabel();
-                    addressHeaderString = demographicsSettingsLabelsDTO.getDemographicsAddressLabel();
-                    genderTitleString = demographicsSettingsLabelsDTO.getDemographicsGenderLabel();
-                    ethnicityTitleString = demographicsSettingsLabelsDTO.getDemographicsEthnicityLabel();
-                    raceTitleString = demographicsSettingsLabelsDTO.getDemographicsRaceLabel();
-                    languageString = demographicsSettingsLabelsDTO.getDemographicsLanguageLabel();
-
-                }
-            }
-        }
     }
 
     private void formatEditText() {
@@ -466,7 +449,6 @@ public class DemographicsInformationFragment extends BaseFragment {
                 if (inputType == EditorInfo.IME_ACTION_NEXT || inputType == EditorInfo.IME_ACTION_DONE) {
                     SystemUtil.hideSoftKeyboard(getActivity());
                     dobEditText.clearFocus();
-                    view.requestFocus();
                     return true;
                 }
                 return false;
@@ -494,7 +476,7 @@ public class DemographicsInformationFragment extends BaseFragment {
             }
         });
 
-            ethnicityDataTextView.setOnClickListener(new View.OnClickListener() {
+        ethnicityDataTextView.setOnClickListener(new View.OnClickListener() {
             String cancelLabel = "Cancel";
 
             @Override
@@ -659,9 +641,9 @@ public class DemographicsInformationFragment extends BaseFragment {
         List<DemographicsSettingsLanguageDTO> languages = null;
         if (demographicsSettingsDTO != null) {
             DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
-            if(demographicsSettingsPayloadDTO!=null) {
+            if (demographicsSettingsPayloadDTO != null) {
 
-                languages  = demographicsSettingsPayloadDTO.getLanguages();
+                languages = demographicsSettingsPayloadDTO.getLanguages();
             }
         }
         if (demographicsSettingsDTO != null) {
@@ -913,14 +895,14 @@ public class DemographicsInformationFragment extends BaseFragment {
         }.execute(zipcode);
     }
 
-    public void getProfileProperties(){
+    public void getProfileProperties() {
         if (demographicsSettingsDTO != null) {
             DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
             if (demographicsSettingsMetadataDTO != null) {
                 DemographicsSettingsDataModelsDTO demographicsSettingsDataModelsDTO = demographicsSettingsMetadataDTO.getDataModels();
                 if (demographicsSettingsDataModelsDTO != null) {
                     DemographicsSettingsDetailsDTO demographicsSettingsDetailsDTO = demographicsSettingsDataModelsDTO.getDemographic();
-                    if(demographicsSettingsDetailsDTO !=null) {
+                    if (demographicsSettingsDetailsDTO != null) {
                         DemographicsSettingsPersonalDetailsPropertiesDTO demographicsSettingsPersonalDetailsPreopertiesDTO = demographicsSettingsDetailsDTO.getPersonalDetails();
                         DemographicsSettingsAddressInfoDTO demographicsSettingsAddressDTO = demographicsSettingsDetailsDTO.getAddress();
                         addressString = demographicsSettingsAddressDTO.getLabel();
@@ -941,7 +923,7 @@ public class DemographicsInformationFragment extends BaseFragment {
                         address1String = demographicsSettingsAddressDTO1.getLabel();
                         DemographicsSettingsAddressDTO demographicsSettingsAddressDTO2 = demographicsSettingsAddressDTO.getProperties().getAddress2();
                         address2String = demographicsSettingsAddressDTO2.getLabel();
-                        DemographicsSettingsZipDTO  demographicsSettingsZipDTO= demographicsSettingsAddressDTO.getProperties().getZipcode();
+                        DemographicsSettingsZipDTO demographicsSettingsZipDTO = demographicsSettingsAddressDTO.getProperties().getZipcode();
                         zipString = demographicsSettingsZipDTO.getLabel();
                         DemographicsSettingsCityDTO demographicsSettingsCityDTO = demographicsSettingsAddressDTO.getProperties().getCity();
                         cityString = demographicsSettingsCityDTO.getLabel();
@@ -953,10 +935,10 @@ public class DemographicsInformationFragment extends BaseFragment {
         }
     }
 
-    private void getDemographicDetails(){
+    private void getDemographicDetails() {
         if (demographicsSettingsDTO != null) {
             DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
-            if(demographicsSettingsPayloadDTO!=null){
+            if (demographicsSettingsPayloadDTO != null) {
                 DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
                 DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
                 PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
@@ -1028,7 +1010,6 @@ public class DemographicsInformationFragment extends BaseFragment {
                 }
             }
         });
-
 
 
     }

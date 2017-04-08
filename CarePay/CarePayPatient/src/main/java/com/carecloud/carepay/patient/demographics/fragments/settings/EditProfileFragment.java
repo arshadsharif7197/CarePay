@@ -183,23 +183,11 @@ public class EditProfileFragment extends DocumentScannerFragment {
         patientEmailLabel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                Gson gson = new Gson();
-                String demographicsSettingsDTOString = gson.toJson(demographicsSettingsDTO);
-                bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
-
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 DemographicsSettingUpdateEmailFragment fragment = (DemographicsSettingUpdateEmailFragment)
                         fm.findFragmentByTag(DemographicsSettingUpdateEmailFragment.class.getSimpleName());
                 if (fragment == null) {
-                    fragment = new DemographicsSettingUpdateEmailFragment();
-                }
-
-                //fix for random crashes
-                if (fragment.getArguments() != null) {
-                    fragment.getArguments().putAll(bundle);
-                } else {
-                    fragment.setArguments(bundle);
+                    fragment = DemographicsSettingUpdateEmailFragment.newInstance(demographicsSettingsDTO);
                 }
 
                 fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
@@ -249,7 +237,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            SystemUtil.showSuccessToast(getContext(), demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getLabels().getSettingsSavedSuccessMessage());
+            SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
             PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
         }
 

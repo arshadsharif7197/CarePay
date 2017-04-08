@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +22,7 @@ import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
@@ -30,7 +32,9 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 
 
@@ -42,8 +46,9 @@ public class DemographicsSettingsFragment extends BaseFragment {
 
     private DemographicsSettingsDTO demographicsSettingsDTO;
     private Button signOutButton;
-    private IDemographicsSettingsFragmentListener activityCallback;
     private IDemographicsSettingsFragmentListener callback;
+    private CheckBox pushNotificationCheckBox;
+    private CheckBox emailNotificationCheckBox;
 
     public interface IDemographicsSettingsFragmentListener {
         void initializeCreditCardListFragment();
@@ -94,13 +99,18 @@ public class DemographicsSettingsFragment extends BaseFragment {
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_close));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
+        setUpUi(view);
+        setClickListeners(view);
+    }
 
+    private void setUpUi(View view) {
         CarePayTextView patientNameTextView = (CarePayTextView) view.findViewById(R.id.patient_name);
         patientNameTextView.setText(getCapitalizedUserName());
         CarePayTextView patientIdTextView = (CarePayTextView) view.findViewById(R.id.patient_id);
         patientIdTextView.setText(getAppAuthorizationHelper().getCurrUser());
 
         initializeHelpButton(view);
+
         PatientModel demographicsPersonalDetails = demographicsSettingsDTO.getPayload().getDemographics()
                 .getPayload().getPersonalDetails();
         String imageUrl = demographicsPersonalDetails.getProfilePhoto();
@@ -109,14 +119,18 @@ public class DemographicsSettingsFragment extends BaseFragment {
             Picasso.with(getActivity()).load(imageUrl).transform(
                     new CircleImageTransform()).resize(160, 160).into(profileImageview);
         }
-        setClickListeners(view);
+
+        pushNotificationCheckBox = (CheckBox) view.findViewById(R.id.pushNotificationCheckBox);
+        pushNotificationCheckBox.setChecked(demographicsSettingsDTO.getPayload().getDemographicSettingsNotificationDTO().getPayload().isPush());
+        emailNotificationCheckBox = (CheckBox) view.findViewById(R.id.emailNotificationCheckBox);
+        emailNotificationCheckBox.setChecked(demographicsSettingsDTO.getPayload().getDemographicSettingsNotificationDTO().getPayload().isEmail());
     }
 
 
     @Override
     public void onDetach() {
         super.onDetach();
-        activityCallback = null;
+        callback = null;
     }
 
     private void initializeHelpButton(View view) {
@@ -162,26 +176,12 @@ public class DemographicsSettingsFragment extends BaseFragment {
         demographicsTextview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Bundle bundle = new Bundle();
-                Gson gson = new Gson();
-                String demographicsSettingsDTOString = gson.toJson(demographicsSettingsDTO);
-                bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
-
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 DemographicsInformationFragment fragment = (DemographicsInformationFragment)
                         fm.findFragmentByTag(DemographicsInformationFragment.class.getSimpleName());
                 if (fragment == null) {
-                    fragment = new DemographicsInformationFragment();
+                    fragment = DemographicsInformationFragment.newInstance(demographicsSettingsDTO);
                 }
-
-                //fix for random crashes
-                if (fragment.getArguments() != null) {
-                    fragment.getArguments().putAll(bundle);
-                } else {
-                    fragment.setArguments(bundle);
-                }
-
                 fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
                         DemographicsInformationFragment.class.getSimpleName()).addToBackStack(null).commit();
 
@@ -222,9 +222,27 @@ public class DemographicsSettingsFragment extends BaseFragment {
         creditCardsTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                activityCallback.initializeCreditCardListFragment();
+                callback.initializeCreditCardListFragment();
             }
         });
+
+        View.OnClickListener CheckBoxClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateNotificationPreferences();
+            }
+        };
+        pushNotificationCheckBox.setOnClickListener(CheckBoxClickListener);
+        emailNotificationCheckBox.setOnClickListener(CheckBoxClickListener);
+    }
+
+    private void updateNotificationPreferences() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("push", pushNotificationCheckBox.isChecked());
+        jsonObject.addProperty("email", emailNotificationCheckBox.isChecked());
+        TransitionDTO transitionDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO()
+                .getTransitions().getUpdateNotifications();
+        getWorkflowServiceHelper().execute(transitionDTO, updateNotificationPreferencesCallback, jsonObject.toString());
     }
 
     private String getCapitalizedUserName() {
@@ -258,6 +276,32 @@ public class DemographicsSettingsFragment extends BaseFragment {
             hideProgressDialog();
             signOutButton.setEnabled(true);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+    WorkflowServiceCallback updateNotificationPreferencesCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            SystemUtil.showSuccessToast(getContext(), Label.getLabel("success_notifications_settings_update_message"));
+            demographicsSettingsDTO.getPayload().getDemographicSettingsNotificationDTO()
+                    .getPayload().setPush(pushNotificationCheckBox.isChecked());
+            demographicsSettingsDTO.getPayload().getDemographicSettingsNotificationDTO()
+                    .getPayload().setEmail(emailNotificationCheckBox.isChecked());
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            pushNotificationCheckBox.setChecked(demographicsSettingsDTO.getPayload()
+                    .getDemographicSettingsNotificationDTO().getPayload().isPush());
+            emailNotificationCheckBox.setChecked(demographicsSettingsDTO.getPayload()
+                    .getDemographicSettingsNotificationDTO().getPayload().isEmail());
+
         }
     };
 

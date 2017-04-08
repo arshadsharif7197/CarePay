@@ -162,6 +162,7 @@ public class DocScannerFragment extends DocumentScannerFragment {
                     URL url = new URL(frontPic);
                     Log.v(LOG_TAG, "valid url: " + url.toString());
                     Picasso.with(getContext()).load(frontPic)
+                            .fit()
                             .centerCrop()
                             .transform(new RoundedCornersTransformation(5, 0))
                             .into(imageFront);
@@ -178,6 +179,7 @@ public class DocScannerFragment extends DocumentScannerFragment {
                     URL url = new URL(backPic);
                     Log.v(LOG_TAG, "valid url: " + url.toString());
                     Picasso.with(getContext()).load(backPic)
+                            .fit()
                             .centerCrop()
                             .transform(new RoundedCornersTransformation(5, 0))
                             .into(imageBack);
