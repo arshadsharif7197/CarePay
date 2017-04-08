@@ -213,19 +213,8 @@ public class DemographicsInformationFragment extends BaseFragment {
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         rootview = (LinearLayout) view.findViewById(R.id.demographicsReviewRootLayout);
-
-
         getDemographicDetails();
-
-        personalInfoString = Label.getLabel("demographics_personal_info_label");
-        driverLicenseString = Label.getLabel("demographics_drivers_license_label");
-        demographicsHeaderString = Label.getLabel("demographics_demographics_label");
-        addressHeaderString = Label.getLabel("demographics_address_label");
-        genderTitleString = Label.getLabel("demographics_gender_label");
-        ethnicityTitleString = Label.getLabel("demographics_ethnicity_label");
-        raceTitleString = Label.getLabel("demographics_race_label");
-        languageString = Label.getLabel("demographics_preferred_language_label");
-
+        getLabels();
 
         raceDataTextView = (TextView) view.findViewById(R.id.raceListDataTextView);
         raceLabelTextView = (TextView) view.findViewById(R.id.raceDataTextView);
@@ -336,6 +325,17 @@ public class DemographicsInformationFragment extends BaseFragment {
         setTypefaces(view);
         setClickables(view);
         formatEditText();
+    }
+
+    private void getLabels() {
+        personalInfoString = Label.getLabel("demographics_personal_info_label");
+        driverLicenseString = Label.getLabel("demographics_drivers_license_label");
+        demographicsHeaderString = Label.getLabel("demographics_demographics_label");
+        addressHeaderString = Label.getLabel("demographics_address_label");
+        genderTitleString = Label.getLabel("demographics_gender_label");
+        ethnicityTitleString = Label.getLabel("demographics_ethnicity_label");
+        raceTitleString = Label.getLabel("demographics_race_label");
+        languageString = Label.getLabel("demographics_preferred_language_label");
     }
 
     private void getValidations() {

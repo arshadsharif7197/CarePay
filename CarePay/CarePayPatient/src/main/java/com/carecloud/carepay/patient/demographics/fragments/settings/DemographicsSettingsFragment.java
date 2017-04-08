@@ -202,7 +202,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
                 DemographicsSettingsDocumentsFragment fragment = (DemographicsSettingsDocumentsFragment)
                         fm.findFragmentByTag(DemographicsSettingsDocumentsFragment.class.getSimpleName());
                 if (fragment == null) {
-                    fragment = new DemographicsSettingsDocumentsFragment();
+                    fragment = DemographicsSettingsDocumentsFragment.newInstance(demographicsSettingsDTO);
                 }
 
                 //fix for random crashes
