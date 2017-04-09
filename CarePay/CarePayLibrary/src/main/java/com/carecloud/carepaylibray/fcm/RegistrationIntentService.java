@@ -10,6 +10,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 /**
  * Created by pjohnson on 4/04/17.
+ * DOC: http://stackoverflow.com/questions/37711082/how-to-handle-notification-when-app-in-background-in-firebase
  */
 public class RegistrationIntentService extends IntentService {
     private static final String TAG = "Breeze";
