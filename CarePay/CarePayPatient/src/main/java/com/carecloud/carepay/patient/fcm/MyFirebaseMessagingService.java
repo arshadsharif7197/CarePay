@@ -31,11 +31,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
             Gson gson = new Gson();
             NotificationModel notificationModel = gson.fromJson(remoteMessage.getData().get("payload"), NotificationModel.class);
-            NotificationCompat.Builder mBuilder =
+            NotificationCompat.Builder builder =
                     new NotificationCompat.Builder(this)
                             .setAutoCancel(true)
                             .setSmallIcon(R.mipmap.ic_launcher)
-                            .setContentTitle("My notification")
+                            .setContentTitle("Breeze")
                             .setContentText(notificationModel.getAlert());
             Intent resultIntent = new Intent(this, SplashActivity.class);
             PendingIntent resultPendingIntent =
@@ -45,13 +45,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             resultIntent,
                             PendingIntent.FLAG_UPDATE_CURRENT
                     );
-            mBuilder.setContentIntent(resultPendingIntent);
+            builder.setContentIntent(resultPendingIntent);
             // Sets an ID for the notification
-            int mNotificationId = 001;
+            int notificationId = 001;
             // Gets an instance of the NotificationManager service
-            NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             // Builds the notification and issues it.
-            mNotifyMgr.notify(mNotificationId, mBuilder.build());
+            notificationManager.notify(notificationId, builder.build());
         }
 
         // Check if message contains a notification payload.

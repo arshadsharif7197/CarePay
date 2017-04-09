@@ -10,7 +10,6 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.List;
@@ -28,10 +27,9 @@ public class SettingsCreditCardListAdapter extends RecyclerView.Adapter<Settings
     /**
      * Instantiates a new Settings credit card list adapter.
      *
-     * @param context           the context
-     * @param creditCardList    the credit card list
-     * @param settingsLabelsDTO the settings labels dto
-     * @param callback          the callback
+     * @param context        the context
+     * @param creditCardList the credit card list
+     * @param callback       the callback
      */
     public SettingsCreditCardListAdapter(Context context, List<DemographicsSettingsCreditCardsPayloadDTO> creditCardList,
                                          IOnCreditCardDetailClickListener callback) {
@@ -71,7 +69,7 @@ public class SettingsCreditCardListAdapter extends RecyclerView.Adapter<Settings
 
     @Override
     public int getItemCount() {
-        return creditCardList != null ? creditCardList.size() : 0 ;
+        return creditCardList != null ? creditCardList.size() : 0;
     }
 
     class SettingsCreditCardListViewHolder extends RecyclerView.ViewHolder {

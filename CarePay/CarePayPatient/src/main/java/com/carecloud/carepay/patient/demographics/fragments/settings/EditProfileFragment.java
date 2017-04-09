@@ -59,6 +59,11 @@ public class EditProfileFragment extends DocumentScannerFragment {
     private EditProfileFragment() {
     }
 
+    /**
+     *
+     * @param demographicsSettingsDTO the model
+     * @return an instance of EditProfileFragment
+     */
     public static EditProfileFragment newInstance(DemographicsSettingsDTO demographicsSettingsDTO) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, demographicsSettingsDTO);
@@ -84,12 +89,12 @@ public class EditProfileFragment extends DocumentScannerFragment {
         super.onViewCreated(view, savedInstanceState);
         final Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
+        title.setText(Label.getLabel("profile_heading"));
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
         toolbar.setNavigationIcon(ContextCompat.getDrawable(appCompatActivity, R.drawable.icn_nav_back));
         appCompatActivity.setSupportActionBar(toolbar);
 
         getPersonalDetails();
-        title.setText(Label.getLabel("profile_heading"));
 
         DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
         DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();

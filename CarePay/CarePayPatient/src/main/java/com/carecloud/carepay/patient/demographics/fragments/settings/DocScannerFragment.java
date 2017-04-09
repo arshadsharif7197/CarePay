@@ -46,6 +46,11 @@ public class DocScannerFragment extends DocumentScannerFragment {
     private DocScannerFragment() {
     }
 
+    /**
+     *
+     * @param model an instance of DemographicIdDocPayloadDTO
+     * @return a DocScannerFragment instance
+     */
     public static DocScannerFragment newInstance(DemographicIdDocPayloadDTO model) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, model);

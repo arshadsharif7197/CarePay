@@ -57,7 +57,11 @@ public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
     private DemographicsSettingUpdateEmailFragment() {
     }
 
-
+    /**
+     *
+     * @param demographicsSettingsDTO the DemographicsSettingsDTO model
+     * @return an instance of DemographicsSettingUpdateEmailFragment
+     */
     public static DemographicsSettingUpdateEmailFragment newInstance(DemographicsSettingsDTO demographicsSettingsDTO) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, demographicsSettingsDTO);
@@ -217,8 +221,8 @@ public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
                     DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
                     if (demographicsSettingsPayloadDTO != null) {
                         getWorkflowServiceHelper().execute(demographicsSettingsDTO
-                                        .getDemographicsSettingsMetadataDTO().getTransitions().getChangeLoginEmail()
-                                , updateEmailCallback, null, null, header);
+                                        .getDemographicsSettingsMetadataDTO().getTransitions().getChangeLoginEmail(),
+                                updateEmailCallback, null, null, header);
                     }
                 }
             }

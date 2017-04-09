@@ -86,6 +86,11 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
     private DemographicsSettingsDocumentsFragment() {
     }
 
+    /**
+     *
+     * @param demographicsSettingsDTO the model
+     * @return an instance of DemographicsSettingsDocumentsFragment
+     */
     public static DemographicsSettingsDocumentsFragment newInstance(DemographicsSettingsDTO demographicsSettingsDTO) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, demographicsSettingsDTO);
@@ -113,13 +118,13 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         final Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
+        title.setText(documentsString);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         getDocumentsLabels();
         // fetch the models
         getPayloadDTOs();
-        title.setText(documentsString);
 
         // fetch the scroll view
         mainScrollView = (ScrollView) view.findViewById(R.id.demographicsDocsScroll);

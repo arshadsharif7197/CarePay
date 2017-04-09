@@ -211,14 +211,14 @@ public class DemographicsSettingsFragment extends BaseFragment {
             }
         });
 
-        View.OnClickListener CheckBoxClickListener = new View.OnClickListener() {
+        View.OnClickListener checkBoxClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 updateNotificationPreferences();
             }
         };
-        pushNotificationCheckBox.setOnClickListener(CheckBoxClickListener);
-        emailNotificationCheckBox.setOnClickListener(CheckBoxClickListener);
+        pushNotificationCheckBox.setOnClickListener(checkBoxClickListener);
+        emailNotificationCheckBox.setOnClickListener(checkBoxClickListener);
     }
 
     private void updateNotificationPreferences() {
