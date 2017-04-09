@@ -107,9 +107,7 @@
         <activity
             android:name=".purchases.activities.PurchaseActivity"
             android:screenOrientation="sensorPortrait" />
-        <activity
-            android:name=".tutorial.tutorial.TutorialActivity"
-            android:screenOrientation="sensorPortrait" />
+
         <service android:name="com.carecloud.carepaylibray.fcm.MyFirebaseInstanceIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
@@ -121,6 +119,10 @@
             </intent-filter>
         </service>
         <service android:name="com.carecloud.carepaylibray.fcm.RegistrationIntentService" />
+
+        <activity
+            android:name=".tutorial.tutorial.TutorialActivity"
+            android:screenOrientation="sensorPortrait" />
     </application>
 
 </manifest>

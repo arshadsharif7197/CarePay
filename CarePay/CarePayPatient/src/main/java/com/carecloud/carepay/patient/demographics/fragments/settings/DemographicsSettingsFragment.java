@@ -33,7 +33,6 @@ import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 
@@ -118,6 +117,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
             ImageView profileImageview = (ImageView) view.findViewById(R.id.providerPicImageView);
             Picasso.with(getActivity()).load(imageUrl).transform(
                     new CircleImageTransform()).resize(160, 160).into(profileImageview);
+
         }
 
         pushNotificationCheckBox = (CheckBox) view.findViewById(R.id.pushNotificationCheckBox);
@@ -125,7 +125,6 @@ public class DemographicsSettingsFragment extends BaseFragment {
         emailNotificationCheckBox = (CheckBox) view.findViewById(R.id.emailNotificationCheckBox);
         emailNotificationCheckBox.setChecked(demographicsSettingsDTO.getPayload().getDemographicSettingsNotificationDTO().getPayload().isEmail());
     }
-
 
     @Override
     public void onDetach() {
