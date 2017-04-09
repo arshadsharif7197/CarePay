@@ -17,6 +17,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinMedicationsAllergyFragment;
+import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.InsuranceEditDialog;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.IntakeFormsFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.PracticeFormsFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckInFragment;
@@ -35,7 +36,6 @@ import com.carecloud.carepaylibray.carepaycamera.CarePayCameraFragment;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraReady;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
@@ -61,6 +61,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
+import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -85,6 +86,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     //demographics nav
     private int currentDemographicStep = 1;
+    private static final String SAVED_STEP_KEY = "save_step";
 
     private DemographicDTO demographicDTO;
     private CarePayTextView backButton;
@@ -115,7 +117,17 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
         initializeCheckinViews();
 
-        navigateToDemographicFragment(1);
+        if(savedInstanceState!=null){
+            currentDemographicStep = savedInstanceState.getInt(SAVED_STEP_KEY, 1);
+        }
+
+        navigateToDemographicFragment(currentDemographicStep);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle icicle){
+        icicle.putInt(SAVED_STEP_KEY, currentDemographicStep);
+        super.onSaveInstanceState(icicle);
     }
 
     @Override
@@ -492,19 +504,19 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
 
-//    @Override
-//    public void onBackPressed() {
-//        try {
-//            FragmentManager fragmentManager = getSupportFragmentManager();
-//            BaseCheckinFragment fragment = (BaseCheckinFragment) fragmentManager.findFragmentById(R.id.checkInContentHolderId);
-//            if (fragment != null && !fragment.navigateBack()) {
-//                super.onBackPressed();
-//            }
-//        } catch (ClassCastException cce) {
-//            cce.printStackTrace();
-//            super.onBackPressed();
-//        }
-//    }
+    @Override
+    public void onBackPressed() {
+        try {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            BaseCheckinFragment fragment = (BaseCheckinFragment) fragmentManager.findFragmentById(R.id.checkInContentHolderId);
+            if (fragment == null || !fragment.navigateBack()) {
+                super.onBackPressed();
+            }
+        } catch (ClassCastException cce) {
+            cce.printStackTrace();
+            super.onBackPressed();
+        }
+    }
 
     /**
      * Launch intake forms
@@ -580,7 +592,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     public void applyChangesAndNavTo(DemographicDTO demographicDTO, Integer step) {
         currentDemographicStep = step;
         this.demographicDTO = demographicDTO;
-        navigateToDemographicFragment(step);
+        navigateToDemographicFragment(currentDemographicStep);
     }
 
     @Override

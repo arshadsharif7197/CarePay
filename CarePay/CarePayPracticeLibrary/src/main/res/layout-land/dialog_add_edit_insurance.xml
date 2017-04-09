@@ -10,7 +10,6 @@
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/dimen_26dp"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -126,7 +125,6 @@
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen_26dp"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="invisible">

@@ -222,7 +222,7 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
         ft.addToBackStack(null);
 
         PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
-                .newInstance(paymentsModel, paymentLineItem);
+                .newInstance(paymentsModel, paymentLineItem, false);
         dialog.show(ft, tag);
     }
 

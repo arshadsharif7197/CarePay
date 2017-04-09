@@ -52,10 +52,10 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/appointment_card_footer_height"
-            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
             android:layout_gravity="bottom"
             android:background="@drawable/background_bottom_rounded_white_border"
             android:gravity="bottom"
@@ -63,11 +63,30 @@
             android:paddingLeft="@dimen/dimen_20dp"
             android:paddingRight="@dimen/dimen_20dp">
 
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/placeNameTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="The\n Manchester\n Clinic"
+                android:maxLines="3"
+                android:ellipsize="end"
+                android:textColor="@color/lightning_yellow"
+                android:textSize="@dimen/text_size_24sp"
+                app:customAssetFont="proxima_nova_semi_bold" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:background="@color/divider_color" />
+
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/payButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_marginBottom="@dimen/dimen_10dp"
                 android:layout_marginTop="@dimen/dimen_10dp"
                 android:background="@drawable/bg_green_overlay"
@@ -78,27 +97,6 @@
                 android:textSize="@dimen/text_size_22sp"
                 breeze:textKey="payment_pay_button" />
 
-            <View
-                android:id="@+id/divider"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_above="@id/payButton"
-                android:layout_marginBottom="@dimen/dimen_20dp"
-                android:layout_marginTop="@dimen/dimen_20dp"
-                android:background="@color/divider_color" />
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/placeNameTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/divider"
-                android:layout_marginTop="@dimen/dimen_30dp"
-                android:gravity="center"
-                android:text="The Manchester Clinic"
-                android:textColor="@color/lightning_yellow"
-                android:textSize="@dimen/text_size_24sp"
-                app:customAssetFont="proxima_nova_semi_bold" />
-
-        </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
 </FrameLayout>

@@ -13,6 +13,15 @@ public class DemographicInsurancePhotoDTO {
     @Expose
     private String insurancePhoto;
 
+    @SerializedName("page")
+    @Expose
+    private int page;
+
+    @SerializedName("delete")
+    @Expose
+    private boolean delete = false;
+
+
     /**
      *
      * @return
@@ -29,5 +38,21 @@ public class DemographicInsurancePhotoDTO {
      */
     public void setInsurancePhoto(String insurancePhoto) {
         this.insurancePhoto = insurancePhoto;
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public boolean isDelete() {
+        return delete;
+    }
+
+    public void setDelete(boolean delete) {
+        this.delete = delete;
     }
 }
