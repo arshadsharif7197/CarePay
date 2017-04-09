@@ -58,6 +58,11 @@ public class DemographicsSettingsFragment extends BaseFragment {
     private DemographicsSettingsFragment() {
     }
 
+    /**
+     *
+     * @param demographicsSettingsDTO the model
+     * @return an instance of DemographicsSettingsFragment
+     */
     public static DemographicsSettingsFragment newInstance(DemographicsSettingsDTO demographicsSettingsDTO) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, demographicsSettingsDTO);
