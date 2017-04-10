@@ -18,7 +18,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 
 public class TwoColumnPatientListView extends RecyclerView {
     TwoColumnPatientListViewListener callback;
-    private PatientListAdapter paymentsAdapter;
+    private PatientListAdapter listAdapter;
 
     public TwoColumnPatientListView(Context context) {
         super(context);
@@ -67,7 +67,7 @@ public class TwoColumnPatientListView extends RecyclerView {
     }
 
     private void setPatientAdapter(PatientListAdapter paymentsAdapter) {
-        this.paymentsAdapter = paymentsAdapter;
+        this.listAdapter = paymentsAdapter;
         paymentsAdapter.setTapListener(new PatientListAdapter.OnItemTappedListener() {
             @Override
             public void onItemTap(Object dto) {
@@ -78,23 +78,31 @@ public class TwoColumnPatientListView extends RecyclerView {
         });
 
         setAdapter(paymentsAdapter);
+        scrollToNearestTime();
     }
 
     public void applyFilter(FilterModel filterModel) {
-         paymentsAdapter.applyFilter(new MapFilterModel(filterModel));
+         listAdapter.applyFilter(new MapFilterModel(filterModel));
     }
 
     /**
      * @return number of pending and non-pending patients after filtering
      */
     public int getSizeFilteredPatients() {
-        return paymentsAdapter.getSizeFilteredPatients();
+        return listAdapter.getSizeFilteredPatients();
     }
 
     /**
      * @return number of pending patients after filtering
      */
     public int getSizeFilteredPendingPatients() {
-        return paymentsAdapter.getSizeFilteredPendingPatients();
+        return listAdapter.getSizeFilteredPendingPatients();
+    }
+
+    /**
+     * Scroll to the nearest previous appointment time slot to the current time
+     */
+    private void scrollToNearestTime() {
+        scrollToPosition(listAdapter.getNearestTimeItemPosition());
     }
 }

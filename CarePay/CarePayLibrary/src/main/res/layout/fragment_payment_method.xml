@@ -29,7 +29,7 @@
 
         <Button
             android:id="@+id/swipeCreditCarNowButton"
-            style="@style/PaymentButtonStyle"
+            style="@style/BreezeButtonStyleDark"
             android:layout_width="@dimen/dimen_500dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -125,7 +125,7 @@
 
     <Button
         android:id="@+id/paymentChoiceButton"
-        style="@style/PaymentButtonStyle"
+        style="@style/BreezeButtonStyleDark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/paymentMethodsRadioGroup"
@@ -144,7 +144,7 @@
 
     <Button
         android:id="@+id/createPaymentPlanButton"
-        style="@style/PaymentButtonStyle"
+        style="@style/BreezeButtonStyleDark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
