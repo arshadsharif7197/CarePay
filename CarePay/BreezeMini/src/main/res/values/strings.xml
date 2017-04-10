@@ -12,4 +12,7 @@
     <string name="amount_must_not_be_null_string">amount must not be null</string>
     <string name="cancelled_string">cancelled</string>
     <string name="amount_greater_than_0_string">Payment Amount should be greater than $0</string>
+    <string name="uknown_manufacturer_string">Unknown Manufacturer</string>
+    <string name="payment_cancelled_string">Payment Cancelled</string>
+    <string name="payment_failed_string">Payment Failed</string>
 </resources>

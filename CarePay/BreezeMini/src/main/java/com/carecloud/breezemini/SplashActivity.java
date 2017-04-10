@@ -135,8 +135,8 @@ public class SplashActivity extends AppCompatActivity {
             }
             client.setRuntimeErrorHandler(new DeepstreamRuntimeErrorHandler() {
                 @Override
-                public void onException(Topic topic, Event event, String s) {
-                    Log.w("dsh", "Error:" + event.toString() + ":" + s);
+                public void onException(Topic topic, Event event, String errorString) {
+                    Log.w("dsh", "Error:" + event.toString() + ":" + errorString);
                 }
             });
 
@@ -266,12 +266,14 @@ public class SplashActivity extends AppCompatActivity {
         } else if (resultCode == RESULT_CANCELED) {
             String manufacturer = Build.MANUFACTURER;
             if (BuildConfig.DEBUG && manufacturer.equals("unknown")) {
+                Toast.makeText(getApplicationContext(), R.string.uknown_manufacturer_string, Toast.LENGTH_SHORT).show();
+                setResult(resultCode);
             } else {
-                Toast.makeText(getApplicationContext(), "Payment Cancelled", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.payment_cancelled_string, Toast.LENGTH_SHORT).show();
                 setResult(resultCode);
             }
         } else {
-            Toast.makeText(getApplicationContext(), "Payment Failed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.payment_failed_string, Toast.LENGTH_SHORT).show();
             setResult(resultCode);
         }
 
