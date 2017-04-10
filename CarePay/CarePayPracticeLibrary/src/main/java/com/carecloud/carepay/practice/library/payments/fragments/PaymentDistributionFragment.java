@@ -56,6 +56,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     private TextView patientName;
     private TextView balance;
     private TextView paymentTotal;
+    private TextView unapplied;
+    private View unappliedLayout;
     private RecyclerView balanceDetailsRecycler;
     private Button payButton;
 
@@ -80,6 +82,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     private ProviderDTO defaultProvider;
 
     private boolean hasPaymentError = false;
+    private boolean shouldAutoApply = false;
+    private boolean resetAutoApplyOnError = false;
 
 
     @Override
@@ -119,6 +123,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
         patientName = (TextView) view.findViewById(R.id.patient_name);
         balance = (TextView) view.findViewById(R.id.balance_value);
+        unapplied = (TextView) view.findViewById(R.id.unapplied_value);
+
+        unappliedLayout = view.findViewById(R.id.unapplied_layout);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         balanceDetailsRecycler = (RecyclerView) view.findViewById(R.id.balances_recycler);
@@ -172,10 +179,18 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             @Override
             public void onClick(View view) {
                 if(validateBalanceItems()) {
+                    if(shouldAutoApply){
+                        resetAutoApplyOnError = true;
+                        distributeAmountOverBalanceItems(paymentAmount);
+                    }
+
                     generatePaymentsModel();
                     if(!hasPaymentError) {
                         callback.onPayButtonClicked(paymentAmount, paymentsModel);
                         hideDialog();
+                        if(resetAutoApplyOnError){
+                            shouldAutoApply = true;
+                        }
                     }
                 }
             }
@@ -201,6 +216,22 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
             String patientNameString = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getPersonalDetails().getFullName();
             patientName.setText(StringUtil.getLabelForView(patientNameString));
+
+            double unappliedCredit = 0D;
+            try {
+                unappliedCredit = Double.parseDouble(paymentsModel.getPaymentPayload().getPatientBalances().get(0).getUnappliedCredit());
+            }catch (NumberFormatException nfe){
+                nfe.printStackTrace();
+            }
+
+            if(unappliedCredit < 0D){
+                unappliedLayout.setVisibility(View.VISIBLE);
+                setCurrency(unapplied, unappliedCredit);
+                shouldAutoApply = true;
+            }else{
+                unappliedLayout.setVisibility(View.GONE);
+                shouldAutoApply = false;
+            }
         }
     }
 
@@ -250,6 +281,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
                 }
             }
         }
+
         return total;
     }
 
@@ -399,6 +431,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         paymentAmount = amount;
         setCurrency(paymentTotal, amount);
         distributeAmountOverBalanceItems(amount);
+        setAdapter();
     }
 
     @Override
@@ -427,7 +460,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         for (BalanceItemDTO balanceItem : balanceItems){
             double balance = balanceItem.getBalance();
             if(amount>=balance){
-                amount-=balance;
+                amount = (double) Math.round((amount-balance)*100)/100;
             }else{
                 balance = amount;
                 balanceItem.setBalance(balance);
@@ -437,7 +470,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             }
         }
 
-        setAdapter();
+        shouldAutoApply=false;
     }
 
     private boolean validateBalanceItems(){
@@ -509,6 +542,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         }else if(balanceItem.getBalance()<0){
             SystemUtil.showErrorToast(getContext(), Label.getLabel("negative_payment_amount_error"));
             hasPaymentError = true;
+            if(resetAutoApplyOnError){
+                shouldAutoApply = true;
+            }
         }
     }
 

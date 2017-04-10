@@ -53,6 +53,8 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
 
     @Override
     public void onBindViewHolder(final PaymentDistributionViewHolder holder, int position) {
+        resetSwipedLayoutView(holder);
+
         final BalanceItemDTO balanceItem = balanceItems.get(position);
         holder.getDescription().setText(StringUtil.getLabelForView(balanceItem.getDescription()));
 
@@ -107,20 +109,6 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
                     .into(holder.getProviderPhoto());
         }
 
-        holder.getPickProviderButton().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.pickProvider(view, balanceItem);
-            }
-        });
-
-        holder.getPickLocationButton().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.pickLocation(view, balanceItem);
-            }
-        });
-
         amountTextView.setFocusable(false);
         amountTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,27 +152,46 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
         holder.getClearButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                View rowLayout = holder.getRowLayout();
-                ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) rowLayout.getLayoutParams();
-                layoutParams.leftMargin = 0;
-                rowLayout.setLayoutParams(layoutParams);
+                resetSwipedLayoutView(holder);
                 callback.editAmount(0D, balanceItem);
             }
         });
 
-        holder.pickProviderButton.setOnClickListener(new View.OnClickListener() {
+        holder.getPickProviderButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 callback.pickProvider(view, balanceItem);
             }
         });
 
-        holder.pickLocationButton.setOnClickListener(new View.OnClickListener() {
+        holder.getPickLocationButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 callback.pickLocation(view, balanceItem);
             }
         });
+
+        holder.getProviderName().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.pickProvider(view, balanceItem);
+            }
+        });
+
+        holder.getLocationName().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.pickLocation(view, balanceItem);
+            }
+        });
+
+        holder.getProviderInitials().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.pickProvider(view, balanceItem);
+            }
+        });
+
 
     }
 
@@ -195,6 +202,14 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
 
     public void setBalanceItems(List<BalanceItemDTO> balanceItems) {
         this.balanceItems = balanceItems;
+    }
+
+    private void resetSwipedLayoutView(PaymentDistributionViewHolder holder){
+        View rowLayout = holder.getRowLayout();
+        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) rowLayout.getLayoutParams();
+        layoutParams.leftMargin = 0;
+        rowLayout.setLayoutParams(layoutParams);
+
     }
 
     public class PaymentDistributionViewHolder extends RecyclerView.ViewHolder{

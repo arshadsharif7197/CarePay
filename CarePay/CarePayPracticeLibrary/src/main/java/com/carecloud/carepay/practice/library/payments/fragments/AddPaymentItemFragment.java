@@ -53,7 +53,7 @@ public class AddPaymentItemFragment extends BaseDialogFragment implements AddPay
             simpleChargeItems = Arrays.asList(balanceItemArray);
         }
 
-        //getBaseTemplateItems();
+        getBaseTemplateItems();
     }
 
     @Override
@@ -124,8 +124,8 @@ public class AddPaymentItemFragment extends BaseDialogFragment implements AddPay
 
     private void getBaseTemplateItems(){
         addTemplateItem(PendingBalancePayloadDTO.CO_PAY_TYPE, 0, ResponsibilityType.co_pay);
-        addTemplateItem(PendingBalancePayloadDTO.CO_INSURANCE_TYPE, 0, ResponsibilityType.co_insurance);
-        addTemplateItem(PendingBalancePayloadDTO.DEDUCTIBLE_TYPE, 0, ResponsibilityType.deductable);
+//        addTemplateItem(PendingBalancePayloadDTO.CO_INSURANCE_TYPE, 0, ResponsibilityType.co_insurance);
+//        addTemplateItem(PendingBalancePayloadDTO.DEDUCTIBLE_TYPE, 0, ResponsibilityType.deductable);
 
     }
 

@@ -72,7 +72,8 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:gravity="end">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -133,7 +134,7 @@
                             android:layout_marginStart="@dimen/dimen_8dp"
                             android:textColor="@color/light_gray"
                             android:textSize="@dimen/text_size_16sp"
-                            breeze:textKey="payment_total_paid_label"
+                            breeze:textKey="payment_total_unapplied"
                             app:customAssetFont="proxima_nova_regular"/>
 
                         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -162,12 +163,12 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@color/dark_blue"
                     android:orientation="horizontal"
-                    android:gravity="end"
-                    android:padding="@dimen/dimen_8dp">
+                    android:layout_marginTop="@dimen/dimen_8dp"
+                    android:gravity="end">
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/payment_label"
