@@ -357,7 +357,8 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
      */
     public int getNearestTimeItemPosition() {
         int position = 0;
-        Date bestTime = null, now = new Date();
+        Date bestTime = null;
+        Date now = new Date();
         for (int i = 0; i < filteredPatients.size(); i++) {
             CardViewPatient patient = filteredPatients.get(i);
             if (patient.appointmentStartTime != null) {
