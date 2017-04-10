@@ -446,9 +446,4 @@ public class PersonalInformationActivity extends BasePracticeActivity {
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
-
-    @Override
-    public void onDateSelected(int year, int month, int dayOfMonth) {
-
-    }
 }
