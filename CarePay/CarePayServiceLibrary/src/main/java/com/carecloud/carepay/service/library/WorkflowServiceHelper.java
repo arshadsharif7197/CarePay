@@ -335,7 +335,15 @@ public class WorkflowServiceHelper {
 
             private void onResponseUnauthorized(Response<WorkflowDTO> response) throws IOException {
                 String message = response.message().toLowerCase();
-                if (!(message.contains(TOKEN) && message.contains(EXPIRED)) && !message.contains(UNAUTHORIZED)) {
+                String errorBodyString = "";
+                try {
+                    errorBodyString = response.errorBody().string();
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
+
+                if (!(message.contains(TOKEN) && message.contains(EXPIRED)) && !message.contains(UNAUTHORIZED) &&
+                        !(errorBodyString.contains(TOKEN) && errorBodyString.contains(EXPIRED))) {
                     onFailure(response);
                 } else if (!HttpConstants.isUseUnifiedAuth() && !appAuthorizationHelper.refreshToken(getCognitoActionCallback(transitionDTO, callback, jsonBody, queryMap, headers))) {
                     callback.onFailure("No User found to refresh token");
