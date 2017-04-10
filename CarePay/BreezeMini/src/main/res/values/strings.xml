@@ -6,4 +6,9 @@
 
     <string name="title_activity_splash_screen">SplashScreenActivity</string>
     <string name="no_account_string">no account</string>
+    <string name="stationpay_application_missing_string">Unable to find StationPay Application on this Clover device</string>
+    <string name="no_activity_found_string">No Activity found to respond to intent:</string>
+    <string name="valid_amount_required_string">Valid amount is required</string>
+    <string name="amount_must_not_be_null_string">amount must not be null</string>
+    <string name="cancelled_string">cancelled</string>
 </resources>

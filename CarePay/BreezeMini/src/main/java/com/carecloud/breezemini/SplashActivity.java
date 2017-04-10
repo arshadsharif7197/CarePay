@@ -212,7 +212,11 @@ public class SplashActivity extends AppCompatActivity {
                 try {
                     if (amountLong != null) {
                         intent.putExtra(Intents.EXTRA_AMOUNT, amountLong);
+                    }else {
+                        Toast.makeText(SplashActivity.this, R.string.valid_amount_required_string, Toast.LENGTH_LONG);
+                        throw new IllegalArgumentException(getString(R.string.amount_must_not_be_null_string));
                     }
+
                     String orderId = order.getId();
 
                     if (orderId != null) {
@@ -221,15 +225,16 @@ public class SplashActivity extends AppCompatActivity {
                     }
 
                     intent.putExtra(Intents.EXTRA_CARD_ENTRY_METHODS, Intents.CARD_ENTRY_METHOD_ALL);
-                    intent.putExtra(Intents.EXTRA_CARD_DATA_MESSAGE, "Please swipe your card");
-
                     dumpIntent(intent);
-                    startActivityForResult(intent, creditCardIntentID);
+                    if(intent.resolveActivity(getPackageManager()) != null){
+                        startActivityForResult(intent, creditCardIntentID);
+                    }else{
+                        Toast.makeText(SplashActivity.this, R.string.stationpay_application_missing_string, Toast.LENGTH_LONG);
+                        throw new IllegalArgumentException(getString(R.string.no_activity_found_string)+Intents.ACTION_SECURE_PAY);
+                    }
 
                 } catch (Exception e) {
-
                     e.printStackTrace();
-                    //  Toast.makeText(SplashActivity.this, "Error", Toast.LENGTH_LONG).show();
                 }
 
                 return null;
@@ -294,7 +299,7 @@ public class SplashActivity extends AppCompatActivity {
                         setResult(RESULT_CANCELED);
                         runOnUiThread(new Runnable() {
                             public void run() {
-                                Toast.makeText(SplashActivity.this, "cancelled", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SplashActivity.this, R.string.cancelled_string, Toast.LENGTH_SHORT).show();
                             }
                         });
                     }

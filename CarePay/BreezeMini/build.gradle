@@ -23,7 +23,7 @@ android {
     productFlavors {
         development {
             applicationId "com.carecloud.breezemini"
-            buildConfigField 'String', 'DEEPSTREAM_URL', '"192.168.124.180:6020"'
+            buildConfigField 'String', 'DEEPSTREAM_URL', '"192.168.124.251:6020"'
             buildConfigField 'String', 'START_SECUREPAYMENT_TOPIC', '"startSwipe"'
             buildConfigField 'String', 'PAYMENT_CONFIRMATION_TOPIC', '"paymentProcessed"'
         }
