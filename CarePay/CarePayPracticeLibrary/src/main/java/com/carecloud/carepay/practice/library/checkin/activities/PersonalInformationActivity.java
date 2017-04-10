@@ -24,7 +24,6 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerFragmentDialog;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -38,7 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PersonalInformationActivity extends BasePracticeActivity implements SimpleDatePickerFragmentDialog.DatePickerInterface {
+public class PersonalInformationActivity extends BasePracticeActivity {
     private TextView selectDateButton;
     private EditText firstNameEditText;
     private EditText lastNameEditText;
