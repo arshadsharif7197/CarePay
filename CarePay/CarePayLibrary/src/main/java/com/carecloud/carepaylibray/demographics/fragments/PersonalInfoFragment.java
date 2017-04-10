@@ -60,7 +60,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         stepProgressBar.setCurrentProgressDot(0);
         checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 1);
@@ -174,7 +174,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
 
     }
 
-    private void setTextListener(final String message, final int layOutTextLabel, final int textEditableId, final View view){
+    private void setTextListener(final String message, final int layOutTextLabel, final int textEditableId, final View view) {
         final TextInputLayout textLayout = (TextInputLayout) view.findViewById(layOutTextLabel);
         final EditText editText = (EditText) view.findViewById(textEditableId);
         editText.addTextChangedListener(new TextWatcher() {
@@ -204,7 +204,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
 
     }
 
-    private void setTextFocusListener(int textEditableId, int inputLayoutId, View view){
+    private void setTextFocusListener(int textEditableId, int inputLayoutId, View view) {
         View editText = view.findViewById(textEditableId);
         TextInputLayout inputLayout = (TextInputLayout) view.findViewById(inputLayoutId);
         editText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(inputLayout, null));
@@ -212,10 +212,10 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
 
     private void initViewFromModels(View view) {
         DemographicAddressPayloadDTO demographicAddressPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getAddress();
-        if (demographicAddressPayloadDTO != null){
+        if (demographicAddressPayloadDTO != null) {
 
             String phonenumber = demographicAddressPayloadDTO.getPhone();
-            if(SystemUtil.isNotEmptyString(phonenumber)) {
+            if (SystemUtil.isNotEmptyString(phonenumber)) {
                 phonenumber = StringUtil.formatPhoneNumber(phonenumber);
             }
             initTextInputLayoutValue(phonenumber, R.id.reviewgrdemoPhoneNumberEdit, view);
@@ -246,7 +246,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
 
     }
 
-    private void initTextInputLayoutValue(String value, int textEditableId, View view){
+    private void initTextInputLayoutValue(String value, int textEditableId, View view) {
         EditText editText = (EditText) view.findViewById(textEditableId);
         if (SystemUtil.isNotEmptyString(value)) {
             editText.setText(value);
@@ -257,8 +257,10 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
     private boolean isPhoneNumberValid(TextInputLayout phoneNumberLabel, EditText phoneNumberEditText) {
         DemographicMetadataEntityAddressDTO addressMetaDTO = demographicDTO.getMetadata().getDataModels().getDemographic().getAddress();
 
-        final String phoneError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.getProperties().getPhone().getValidations().get(0).getErrorMessage();
-        final String phoneValidation = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : ((String) addressMetaDTO.getProperties().getPhone().getValidations().get(0).getValue());
+        final String phoneError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED :
+                addressMetaDTO.getProperties().getPhone().getValidations().get(0).getErrorMessage();
+        final String phoneValidation = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED :
+                addressMetaDTO.getProperties().getPhone().getValidations().get(0).getValue();
 
         String phone = phoneNumberEditText.getText().toString();
         if (!StringUtil.isNullOrEmpty(phone)
@@ -293,7 +295,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         if (!isPhoneValid) {
             return false;
         }
-        TextInputLayout doblabel = (TextInputLayout) view.findViewById( R.id.reviewdemogrDOBTextInput);
+        TextInputLayout doblabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
         EditText dobEditText = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
         return isDateOfBirthValid(doblabel, dobEditText);
     }
@@ -350,7 +352,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         }
 
         String profileImage = profilePicturelistener.getProfilePicture();
-        if (!StringUtil.isNullOrEmpty(profileImage)){
+        if (!StringUtil.isNullOrEmpty(profileImage)) {
             demographicPersDetailsPayloadDTO.setProfilePhoto(profileImage);
         }
 
@@ -373,7 +375,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         return updatableDemographicDTO;
     }
 
-    public interface UpdateProfilePictureListener{
+    public interface UpdateProfilePictureListener {
         String getProfilePicture();
 
         void loadPictureFragment();

@@ -14,7 +14,7 @@ public class MetadataValidationDTO {
     private String type;
 
     @SerializedName("value") @Expose
-    private Object value;
+    private String value;
 
     @SerializedName("error_message") @Expose
     private String errorMessage;
@@ -35,11 +35,11 @@ public class MetadataValidationDTO {
         this.type = type;
     }
 
-    public Object getValue() {
+    public String getValue() {
         return value;
     }
 
-    public void setValue(Object value) {
+    public void setValue(String value) {
         this.value = value;
     }
 }
