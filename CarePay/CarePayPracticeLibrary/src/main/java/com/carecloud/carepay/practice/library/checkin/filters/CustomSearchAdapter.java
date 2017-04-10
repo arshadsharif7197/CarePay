@@ -16,6 +16,7 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.picasso.Picasso;
@@ -132,8 +133,11 @@ public class CustomSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if(!StringUtil.isNullOrEmpty(filterDataDTO.getImageURL())) {
                 Picasso.with(context)
                         .load(filterDataDTO.getImageURL())
+                        .transform(new CircleImageTransform())
                         .placeholder(R.drawable.icn_placeholder_user_profile_png)
                         .into(patientImageView);
+            }else{
+                patientImageView.setImageResource(R.drawable.icn_placeholder_user_profile_png);
             }
         }
     }
