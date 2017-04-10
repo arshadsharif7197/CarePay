@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.carecloud.carepay.practice.clover.BuildConfig;
 import com.carecloud.carepay.practice.clover.R;
@@ -27,6 +26,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentType;
 import com.carecloud.carepaylibray.payments.models.postmodel.TokenizationService;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.util.CloverAuth;
 import com.clover.sdk.v1.BindingException;
@@ -115,7 +115,7 @@ public class CloverPaymentActivity extends BaseActivity {
 
                 // If an account can't be acquired, exit the app
                 if (account == null) {
-                    Toast.makeText(this, getString(R.string.no_account), Toast.LENGTH_SHORT).show();
+                    SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.no_account));
                     finish();
                 }
             }
@@ -141,7 +141,7 @@ public class CloverPaymentActivity extends BaseActivity {
 
             // If an account can't be acquired, exit the app
             if (account == null) {
-                Toast.makeText(this, getString(R.string.no_account), Toast.LENGTH_SHORT).show();
+                SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.no_account));
                 finish();
                 return;
             }
@@ -155,15 +155,6 @@ public class CloverPaymentActivity extends BaseActivity {
         disconnect();
         finish();
     }
-    private boolean isPaymentComplete = false;
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        if(!isPaymentComplete) {
-//            disconnect();
-//            finish();
-//        }
-//    }
 
     // Establishes a connection with the connectors
     private void connect() {
@@ -239,7 +230,7 @@ public class CloverPaymentActivity extends BaseActivity {
                         }
                     }else{
                         setResult(RESULT_CANCELED);
-                        Toast.makeText(getApplicationContext(), getString(R.string.payment_cancelled), Toast.LENGTH_SHORT).show();
+                        SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.payment_cancelled));
                         finish();
                     }
                 }
@@ -265,7 +256,6 @@ public class CloverPaymentActivity extends BaseActivity {
             // Enables the pay buttons if the order is valid
             if (!isFinishing()) {
                 CloverPaymentActivity.this.order = order;
-                isPaymentComplete = true;
                 startSecurePaymentIntent();
 
             }
@@ -284,7 +274,8 @@ public class CloverPaymentActivity extends BaseActivity {
                     if (amountLong != null) {
                         intent.putExtra(Intents.EXTRA_AMOUNT, amountLong);
                     } else {
-                        Toast.makeText(getApplicationContext(), getString(R.string.amount_required), Toast.LENGTH_LONG).show();
+                        SystemUtil.showErrorToast(getApplicationContext(), getString(R.string.amount_required));
+                        throw new IllegalArgumentException("amount must not be null");
                     }
 
 
@@ -299,12 +290,21 @@ public class CloverPaymentActivity extends BaseActivity {
                     intent.putExtra(Intents.EXTRA_CARD_DATA_MESSAGE, "Please swipe your card to complete check in");
 
                     dumpIntent(intent);
-                    startActivityForResult(intent, creditCardIntentID);
 
-                } catch (Exception e) {
+                    if(intent.resolveActivity(getPackageManager()) != null){
+                        startActivityForResult(intent, creditCardIntentID);
+                    }else{
+                        SystemUtil.showErrorToast(CloverPaymentActivity.this, "Unable to find StationPay Application on this Clover device");
+                        throw new IllegalArgumentException("No Activity found to respont to intent: "+Intents.ACTION_SECURE_PAY);
+                    }
+
+                }catch (IllegalArgumentException iae){
+                    iae.printStackTrace();
+                }
+                catch (Exception e) {
 
                     e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
+                    SystemUtil.showErrorToast(CloverPaymentActivity.this, "An unknown error has occured while launching the Payment Intent");
                 }
 
                 return null;
@@ -320,7 +320,6 @@ public class CloverPaymentActivity extends BaseActivity {
 
                 Payment payment = data.getParcelableExtra(Intents.EXTRA_PAYMENT);
                 if (payment != null) {
-                    isPaymentComplete = true;
                     if(postModel!=null){
                         processPayment(payment, postModel);
                     }else {
@@ -332,12 +331,12 @@ public class CloverPaymentActivity extends BaseActivity {
                 if(BuildConfig.DEBUG && manufacturer.equals("unknown")) {
                     fakePaymentResponse();
                 }else {
-                    Toast.makeText(getApplicationContext(), getString(R.string.payment_cancelled), Toast.LENGTH_SHORT).show();
+                    SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.payment_cancelled));
                     setResult(resultCode);
                     finish();
                 }
             } else {
-                Toast.makeText(getApplicationContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
+                SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.payment_failed));
                 setResult(resultCode);
                 finish();
             }
@@ -370,7 +369,7 @@ public class CloverPaymentActivity extends BaseActivity {
         if(paymentPostModel.isPaymentModelValid()){
             postPayment(gson.toJson(paymentPostModel));
         }else{
-            Toast.makeText(getApplicationContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
+            SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.payment_failed));
             finish();
         }
     }
@@ -398,7 +397,7 @@ public class CloverPaymentActivity extends BaseActivity {
         if(postModel.isPaymentModelValid()){
             postPayment(gson.toJson(postModel));
         }else{
-            Toast.makeText(getApplicationContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
+            SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.payment_failed));
             finish();
         }
 
@@ -469,7 +468,7 @@ public class CloverPaymentActivity extends BaseActivity {
         if(paymentPostModel.isPaymentModelValid()){
             postPayment(gson.toJson(paymentPostModel));
         }else{
-            Toast.makeText(getApplicationContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
+            SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.payment_failed));
             finish();
         }
 
@@ -501,7 +500,7 @@ public class CloverPaymentActivity extends BaseActivity {
             hideProgressDialog();
             setResult(RESULT_CANCELED);
             System.out.print(exceptionMessage);
-            Toast.makeText(getApplicationContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
+            SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.payment_failed));
             finish();
         }
     };
