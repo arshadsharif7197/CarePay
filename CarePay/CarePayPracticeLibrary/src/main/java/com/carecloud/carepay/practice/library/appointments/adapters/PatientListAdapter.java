@@ -352,6 +352,30 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return sizeFilteredPendingPatients;
     }
 
+    /**
+     * @return position of the nearest previous appointment time slot to the current time
+     */
+    public int getNearestTimeItemPosition() {
+        int position = 0;
+        Date bestTime = null;
+        Date now = new Date();
+        for (int i = 0; i < filteredPatients.size(); i++) {
+            CardViewPatient patient = filteredPatients.get(i);
+            if (patient.appointmentStartTime != null) {
+                if (patient.appointmentStartTime.compareTo(now) > 0) {
+                    break;
+                }
+
+                if (bestTime == null || bestTime.compareTo(patient.appointmentStartTime) <= 0) {
+                    bestTime = patient.appointmentStartTime;
+                    position = i;
+                }
+            }
+        }
+
+        return position;
+    }
+
     class CardViewHolder extends RecyclerView.ViewHolder {
 
         CarePayTextView initials;
