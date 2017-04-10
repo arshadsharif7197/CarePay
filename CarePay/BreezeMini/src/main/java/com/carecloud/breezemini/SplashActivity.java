@@ -2,7 +2,6 @@ package com.carecloud.breezemini;
 
 import android.accounts.Account;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -171,12 +170,13 @@ public class SplashActivity extends AppCompatActivity {
             Gson gson = new Gson();
             CreditTransactionDTO creditTransaction = gson.fromJson((JsonElement) paymentRequestInfo, CreditTransactionDTO.class);
             if (creditTransaction.getAmount().equalsIgnoreCase("0")) {
-                MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.pacman_die);
-                mp.start();
+                Toast.makeText(SplashActivity.this, R.string.amount_greater_than_0_string, Toast.LENGTH_LONG);
+//                MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.pacman_die);
+//                mp.start();
             } else {
                 amountLong = (long) (Double.parseDouble(creditTransaction.getAmount()) * 100) ;
-                MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.coins);
-                mp.start();
+//                MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.coins);
+//                mp.start();
             }
             paymentLineItems = new PaymentLineItem[]{};
         } catch (Exception e) {

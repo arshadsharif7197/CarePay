@@ -11,4 +11,5 @@
     <string name="valid_amount_required_string">Valid amount is required</string>
     <string name="amount_must_not_be_null_string">amount must not be null</string>
     <string name="cancelled_string">cancelled</string>
+    <string name="amount_greater_than_0_string">Payment Amount should be greater than $0</string>
 </resources>
