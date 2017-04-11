@@ -3,10 +3,13 @@ package com.carecloud.carepay.practice.library.payments.fragments;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -56,6 +59,10 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     private TextView patientName;
     private TextView balance;
     private TextView paymentTotal;
+    private TextView unapplied;
+    private View unappliedLayout;
+
+    private NestedScrollView scrollView;
     private RecyclerView balanceDetailsRecycler;
     private Button payButton;
 
@@ -69,6 +76,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
     private double paymentAmount;
     private double balanceAmount;
+    private double overPaymentAmount;
 
     private NumberFormat currencyFormatter;
 
@@ -80,6 +88,10 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     private ProviderDTO defaultProvider;
 
     private boolean hasPaymentError = false;
+    private boolean shouldAutoApply = false;
+    private boolean resetAutoApplyOnError = false;
+
+    private Handler handler;
 
 
     @Override
@@ -96,6 +108,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     public void onCreate(Bundle icicle){
         super.onCreate(icicle);
         currencyFormatter = NumberFormat.getCurrencyInstance();
+        handler = new Handler();
 
         Bundle args = getArguments();
         if(args!=null){
@@ -119,10 +132,28 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
         patientName = (TextView) view.findViewById(R.id.patient_name);
         balance = (TextView) view.findViewById(R.id.balance_value);
+        unapplied = (TextView) view.findViewById(R.id.unapplied_value);
+
+        unappliedLayout = view.findViewById(R.id.unapplied_layout);
+
+        scrollView = (NestedScrollView) view.findViewById(R.id.nested_scroller);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         balanceDetailsRecycler = (RecyclerView) view.findViewById(R.id.balances_recycler);
         balanceDetailsRecycler.setLayoutManager(layoutManager);
+        balanceDetailsRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                clearLastSwipeView();
+                clearPickers();
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
 
         ItemTouchHelper touchHelper = new ItemTouchHelper(new SwipeHelperCallback());
         touchHelper.attachToRecyclerView(balanceDetailsRecycler);
@@ -131,6 +162,16 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         setAdapter();
         setupPickerWindows();
         setDefaultProviderLocation();
+
+        View container = view.findViewById(R.id.container_main);
+        container.setSoundEffectsEnabled(false);
+        container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clearPickers();
+                clearLastSwipeView();
+            }
+        });
 
     }
 
@@ -172,10 +213,18 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             @Override
             public void onClick(View view) {
                 if(validateBalanceItems()) {
+                    if(shouldAutoApply){
+                        resetAutoApplyOnError = true;
+                        distributeAmountOverBalanceItems(paymentAmount);
+                    }
+
                     generatePaymentsModel();
                     if(!hasPaymentError) {
                         callback.onPayButtonClicked(paymentAmount, paymentsModel);
                         hideDialog();
+                        if(resetAutoApplyOnError){
+                            shouldAutoApply = true;
+                        }
                     }
                 }
             }
@@ -201,6 +250,22 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
             String patientNameString = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getPersonalDetails().getFullName();
             patientName.setText(StringUtil.getLabelForView(patientNameString));
+
+            double unappliedCredit = 0D;
+            try {
+                unappliedCredit = Double.parseDouble(paymentsModel.getPaymentPayload().getPatientBalances().get(0).getUnappliedCredit());
+            }catch (NumberFormatException nfe){
+                nfe.printStackTrace();
+            }
+
+            if(unappliedCredit < 0D){
+                unappliedLayout.setVisibility(View.VISIBLE);
+                setCurrency(unapplied, unappliedCredit);
+                shouldAutoApply = true;
+            }else{
+                unappliedLayout.setVisibility(View.GONE);
+                shouldAutoApply = false;
+            }
         }
     }
 
@@ -213,6 +278,14 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             adapter.setBalanceItems(balanceItems);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    private void scrollAdapterToItem(BalanceItemDTO balanceItemDTO){
+        final int position = balanceItems.indexOf(balanceItemDTO);
+        int locationY = (int) balanceDetailsRecycler.getChildAt(position).getY();
+        Log.d("RecyclerView", "Scroll to Position: "+position+" at: "+locationY);
+        scrollView.smoothScrollTo(0, locationY+10);
+
     }
 
     private void setupPickerWindows(){
@@ -250,6 +323,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
                 }
             }
         }
+
         return total;
     }
 
@@ -398,7 +472,13 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     public void applyNewDistributionAmount(double amount) {
         paymentAmount = amount;
         setCurrency(paymentTotal, amount);
+
+        balanceItems.clear();
+        calculateTotalBalance();
+
         distributeAmountOverBalanceItems(amount);
+
+        setAdapter();
     }
 
     @Override
@@ -421,13 +501,14 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
 
     private void distributeAmountOverBalanceItems(double amount){
-        balanceItems.clear();
-        calculateTotalBalance();
 
         for (BalanceItemDTO balanceItem : balanceItems){
             double balance = balanceItem.getBalance();
+            if(balance <= 0){//this should be skipped and cleared
+                balanceItem.setBalance(0);
+            }
             if(amount>=balance){
-                amount-=balance;
+                amount = (double) Math.round((amount-balance)*100)/100;
             }else{
                 balance = amount;
                 balanceItem.setBalance(balance);
@@ -437,21 +518,31 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             }
         }
 
-        setAdapter();
+        if(amount > 0){//there is some amount left over for the payment
+            overPaymentAmount = amount;
+        }
+        shouldAutoApply=false;
     }
 
     private boolean validateBalanceItems(){
         boolean isValid = true;
+        BalanceItemDTO firstInvalidItem = null;
         for(BalanceItemDTO balanceItem : balanceItems){
             if(balanceItem.getBalance() > 0) {
                 if (balanceItem.getLocation() == null || balanceItem.getLocation().getId() == null) {
                     isValid = false;
+                    if(firstInvalidItem == null){
+                        firstInvalidItem = balanceItem;
+                    }
                     if (balanceItem.getLocation() != null) {
                         balanceItem.getLocation().setError(true);
                     }
                 }
                 if (balanceItem.getProvider() == null || balanceItem.getProvider().getId() == null) {
                     isValid = false;
+                    if(firstInvalidItem == null){
+                        firstInvalidItem = balanceItem;
+                    }
                     if (balanceItem.getProvider() != null) {
                         balanceItem.getProvider().setError(true);
                     }
@@ -462,6 +553,10 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         if(!isValid){
             setAdapter();
         }
+
+        if(firstInvalidItem!=null){
+            scrollAdapterToItem(firstInvalidItem);
+        }
         return isValid;
     }
 
@@ -471,6 +566,14 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         postModel.setAmount(paymentAmount);
         for(BalanceItemDTO balanceItemDTO : balanceItems){
             addPaymentObject(balanceItemDTO, postModel);
+        }
+
+        if(overPaymentAmount > 0){
+            PaymentObject paymentObject = new PaymentObject();
+            paymentObject.setAmount(overPaymentAmount);
+            paymentObject.setDescription("Unapplied Amount");
+
+            postModel.addPaymentMethod(paymentObject);
         }
 
         paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
@@ -509,6 +612,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         }else if(balanceItem.getBalance()<0){
             SystemUtil.showErrorToast(getContext(), Label.getLabel("negative_payment_amount_error"));
             hasPaymentError = true;
+            if(resetAutoApplyOnError){
+                shouldAutoApply = true;
+            }
         }
     }
 
