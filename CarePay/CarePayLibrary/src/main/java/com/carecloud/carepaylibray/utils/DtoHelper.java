@@ -105,7 +105,7 @@ public class DtoHelper {
     }
 
     /**
-     * Convenience method to repackage a DTO from activity to Fragment withoug having to serialize it
+     * Convenience method to repackage a DTO from activity to Fragment without having to serialize it
      * @param args Output Bundle
      * @param intent Original Intent
      * @param saveKey key to forward the extra

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.OrientationEventListener;
 import android.widget.FrameLayout;
 
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
@@ -42,6 +43,11 @@ public class CarePayCameraActivity extends BaseActivity implements CarePayCamera
             Log.v(LOG_TAG,"Cannot detect orientation");
             orientationListener.disable();
         }
+    }
+
+    @Override
+    public void navigateToWorkflow(WorkflowDTO workflowDTO) {
+
     }
 
     @Override

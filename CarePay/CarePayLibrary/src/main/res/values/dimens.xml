@@ -314,8 +314,11 @@
     <dimen name="apt_skicky_header_height">35dp</dimen>
     <dimen name="optional_text_edit">-20dp</dimen>
 
+    <dimen name="checkin_main_panel_start_padding">30dp</dimen>
     <dimen name="checkbox_padding_left_right">3dp</dimen>
     <dimen name="checkbox_padding_top_bottom">3dp</dimen>
+    <dimen name="checkin_logo_height">46dp</dimen>
+    <dimen name="checkin_separator_width">116dp</dimen>
 
     <dimen name="no_apt_place_holder_icon_margin_top">72dp</dimen>
     <dimen name="no_apt_message_title_margin_top">23dp</dimen>
@@ -425,4 +428,6 @@
     <dimen name="button_delete_key_height">27dp</dimen>
     <dimen name="keypad_width">600dp</dimen>
     <dimen name="keypad_height">700dp</dimen>
+
+    <dimen name="home_logo_width">174dp</dimen>
 </resources>

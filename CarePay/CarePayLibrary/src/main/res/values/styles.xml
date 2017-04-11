@@ -527,6 +527,14 @@
         <item name="android:layout_marginLeft">@dimen/review_textview_leftmargin</item>
     </style>
 
+    <style name="reviewDemographicsButtonStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:background">@drawable/button_default_background</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
@@ -894,5 +902,17 @@
         <item name="android:indeterminateDrawable">@drawable/rating_circle_selector</item>
         <item name="android:minHeight">10dip</item>
         <item name="android:maxHeight">20dip</item>
+    </style>
+
+    <style name="health_insurance_screen">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+    </style>
+
+    <style name="CheckinContainerStyle">
+        <item name="android:background">@color/white</item>
     </style>
 </resources>

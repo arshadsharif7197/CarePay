@@ -53,4 +53,9 @@
         <item name="android:foregroundTint">@color/colorPrimary</item>
     </style>
 
+    <style name="CheckinContainerStyle">
+        <item name="android:background">@color/white</item>
+        <item name="android:elevation">@dimen/dimen_33dp</item>
+    </style>
+
 </resources>

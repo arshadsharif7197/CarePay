@@ -15,6 +15,7 @@ import android.widget.FrameLayout;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.demographics.DemographicsView;
 
 /**
  * Created by cocampo on 3/28/17.
@@ -28,7 +29,11 @@ public class CarePayCameraFragment extends BaseDialogFragment implements CarePay
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            callback = (CarePayCameraCallback) context;
+            if (context instanceof DemographicsView) {
+                callback = ((DemographicsView) context).getPresenter();
+            } else {
+                callback = (CarePayCameraCallback) context;
+            }
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement CarePayCameraCallback");
         }

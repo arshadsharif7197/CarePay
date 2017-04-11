@@ -49,7 +49,7 @@
             android:screenOrientation="sensorPortrait"
             android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
-            android:name=".demographics.activities.NewReviewDemographicsActivity"
+            android:name=".demographics.activities.ReviewDemographicsActivity"
             android:screenOrientation="sensorPortrait"/>
         <activity
             android:name=".selectlanguage.SelectLanguageActivity"
@@ -76,9 +76,6 @@
         </activity>
         <activity
             android:name=".appointments.activities.AppointmentsActivity"
-            android:screenOrientation="sensorPortrait"/>
-        <activity
-            android:name=".appointments.activities.AddAppointmentActivity"
             android:screenOrientation="sensorPortrait"/>
         <activity
             android:name=".payment.activities.ViewPaymentBalanceHistoryActivity"

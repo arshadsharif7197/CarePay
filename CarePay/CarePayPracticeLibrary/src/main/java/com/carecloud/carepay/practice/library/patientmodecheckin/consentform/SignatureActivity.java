@@ -129,6 +129,11 @@ public class SignatureActivity extends BaseActivity {
         onClickListeners();
     }
 
+    @Override
+    public void navigateToWorkflow(WorkflowDTO workflowDTO) {
+
+    }
+
     /**
      * Initializing the view
      */

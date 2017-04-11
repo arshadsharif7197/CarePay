@@ -8,7 +8,7 @@ import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivit
 import com.carecloud.carepay.patient.consentforms.ConsentActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
-import com.carecloud.carepay.patient.demographics.activities.NewReviewDemographicsActivity;
+import com.carecloud.carepay.patient.demographics.activities.ReviewDemographicsActivity;
 import com.carecloud.carepay.patient.intakeforms.activities.InTakeWebViewActivity;
 import com.carecloud.carepay.patient.medication.activities.MedicationAllergyActivity;
 import com.carecloud.carepay.patient.notifications.activities.NotificationActivity;
@@ -63,7 +63,7 @@ public class PatientNavigationHelper {
      */
     public void navigateToWorkflow(WorkflowDTO workflowDTO) {
         Bundle bundle = new Bundle();
-        bundle.putString(PatientNavigationHelper.class.getSimpleName(), workflowDTO.toString());
+        bundle.putString(WorkflowDTO.class.getSimpleName(), workflowDTO.toString());
         navigateToWorkflow(workflowDTO.getState(), bundle);
     }
 
@@ -95,7 +95,7 @@ public class PatientNavigationHelper {
                 break;
             }
             case PatientNavigationStateConstants.DEMOGRAPHIC_VERIFY: {
-                intent = new Intent(context, NewReviewDemographicsActivity.class);
+                intent = new Intent(context, ReviewDemographicsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }
@@ -142,7 +142,7 @@ public class PatientNavigationHelper {
         }
 
         if (bundle != null) {
-            intent.putExtra(PatientNavigationHelper.class.getSimpleName(), bundle);
+            intent.putExtras(bundle);
         }
         context.startActivity(intent);
     }

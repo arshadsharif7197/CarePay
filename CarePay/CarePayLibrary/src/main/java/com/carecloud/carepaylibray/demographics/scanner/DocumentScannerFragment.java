@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraReady;
+import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
@@ -45,7 +46,11 @@ public abstract class DocumentScannerFragment extends BaseCheckinFragment implem
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            carePayCameraReady = (CarePayCameraReady) context;
+            if (context instanceof DemographicsView) {
+                carePayCameraReady = ((DemographicsView) context).getPresenter();
+            } else {
+                carePayCameraReady = (CarePayCameraReady) context;
+            }
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement CarePayCameraReady");
         }

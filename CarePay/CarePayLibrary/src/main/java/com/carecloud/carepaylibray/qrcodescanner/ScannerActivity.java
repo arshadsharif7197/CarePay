@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.ViewGroup;
 
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.google.zxing.Result;
@@ -26,6 +27,11 @@ public class ScannerActivity extends BaseActivity implements ZXingScannerView.Re
         super.onResume();
         zxingcannerView.setResultHandler(this);
         zxingcannerView.startCamera();
+    }
+
+    @Override
+    public void navigateToWorkflow(WorkflowDTO workflowDTO) {
+
     }
 
     @Override
