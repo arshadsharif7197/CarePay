@@ -182,6 +182,11 @@ public class PracticeAppSignatureActivity extends BaseActivity {
         });
     }
 
+    @Override
+    public void navigateToWorkflow(WorkflowDTO workflowDTO) {
+
+    }
+
     /**
      * Initializing the view
      */

@@ -1,4 +1,4 @@
-package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
+package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -26,13 +26,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraReady;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataInsuranceOptionDTO;
@@ -65,6 +66,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     private static final ImageCaptureHelper.CameraType CAMERA_TYPE = ImageCaptureHelper.CameraType.CUSTOM_CAMERA;
     private static final ImageCaptureHelper.ImageShape IMAGE_SHAPE = ImageCaptureHelper.ImageShape.RECTANGULAR;
     public static final String EDITED_INDEX = "EditedIndex";
+    public static final String IS_PATIENT_MODE = "IsPatientMode";
     public static final int NEW_INSURANCE = -1;
     private static final int PROVIDERS = 0;
     private static final int PLANS = 1;
@@ -92,6 +94,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     private boolean isGroupNumberEmpty;
     private boolean isFrontScan;
     private boolean hadInsurance;
+    private boolean isPatientMode;
 
     private DemographicInsurancePhotoDTO frontInsurancePhotoDTO;
     private DemographicInsurancePhotoDTO backInsurancePhotoDTO;
@@ -124,10 +127,12 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
      * @param editedIndex    index of the insurance being modified
      */
     public static InsuranceEditDialog newInstance(DemographicDTO demographicDTO,
-                                                  Integer editedIndex) {
+                                                  Integer editedIndex,
+                                                  boolean isPatientMode) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
         args.putInt(EDITED_INDEX, editedIndex == null ? NEW_INSURANCE : editedIndex);
+        args.putBoolean(IS_PATIENT_MODE, isPatientMode);
         DtoHelper.bundleDto(args, demographicDTO);
 
         InsuranceEditDialog dialog = new InsuranceEditDialog();
@@ -140,13 +145,21 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            callback = (InsuranceEditDialogListener) context;
+            if (context instanceof DemographicsView) {
+                callback = ((DemographicsView) context).getPresenter();
+            } else {
+                callback = (InsuranceEditDialogListener) context;
+            }
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement InsuranceEditDialogListener");
         }
 
         try {
-            carePayCameraReady = (CarePayCameraReady) context;
+            if (context instanceof DemographicsView) {
+                callback = ((DemographicsView) context).getPresenter();
+            } else {
+                carePayCameraReady = (CarePayCameraReady) context;
+            }
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement CarePayCameraReady");
         }
@@ -164,6 +177,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
         Bundle arguments = getArguments();
         editedIndex = arguments.getInt(EDITED_INDEX);
+        isPatientMode = arguments.getBoolean(IS_PATIENT_MODE);
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, arguments);
 
         handler = new Handler();
@@ -223,13 +237,16 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (hasInsurance()) {
-            findViewById(R.id.edit_insurance_close_button).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View closeButton) {
-                    closeDialog();
-                }
-            });
+        if(hasInsurance()) {
+            View closeButton = findViewById(R.id.edit_insurance_close_button);
+            if (closeButton != null) {
+                closeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View closeButton) {
+                        closeDialog();
+                    }
+                });
+            }
         }
         View container = view.findViewById(R.id.container_main);
         hideKeyboardOnViewTouch(container);
@@ -339,8 +356,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     View.OnClickListener saveButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View saveChanges) {
-            boolean hasInsurance = hasInsurance();
-
+            final boolean hasInsurance = hasInsurance();
 
             DemographicInsurancePayloadDTO demographicInsurancePayloadDTO;
             if (editedIndex == NEW_INSURANCE) {
@@ -380,7 +396,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         if (callback != null) {
             callback.onInsuranceEdited(demographicDTO, false);
 
-            if (!hadInsurance) {
+            if (!hadInsurance || !isPatientMode) {
                 callback.goOneStepBack();
             }
         }
@@ -591,7 +607,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long listener) {
                 switch (index) {
                     case PROVIDERS:
-                        otherProviderEditText = (EditText) findViewById(R.id.otherProviderEditText);
                         findViewById(R.id.health_insurance_plans).setVisibility(View.GONE);
 
                         if (!dataArray[position].equals(selectedProvider)) {

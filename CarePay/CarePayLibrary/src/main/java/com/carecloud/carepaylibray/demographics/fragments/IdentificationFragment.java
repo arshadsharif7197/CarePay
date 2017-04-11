@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemIdDocDTO;
@@ -26,7 +27,11 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment {
         checkIfEnableButton(view);
         view.findViewById(R.id.toolbar_layout).setVisibility(View.INVISIBLE);
 
-        setHeaderTitle(demographicDTO.getMetadata().getLabels().getDemographicsReviewIdentification(), view);
+        setHeaderTitle(demographicDTO.getMetadata().getLabels().getDemographicsReviewIdentification(),
+                Label.getLabel("demographics_identity_heading"),
+                Label.getLabel("demographics_identity_subheading"),
+                view);
+
         initNextButton(null, view, View.VISIBLE);
 
         DemographicIdDocPayloadDTO idDocument = demographicDTO.getPayload().getDemographics().getPayload().getIdDocument();
@@ -38,8 +43,8 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment {
     public void onResume() {
         super.onResume();
         stepProgressBar.setCurrentProgressDot(3);
-        checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 4);
-        checkInNavListener.setCurrentStep(4);
+        checkinFlowCallback.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 4);
+        checkinFlowCallback.setCurrentStep(4);
     }
 
     @Override

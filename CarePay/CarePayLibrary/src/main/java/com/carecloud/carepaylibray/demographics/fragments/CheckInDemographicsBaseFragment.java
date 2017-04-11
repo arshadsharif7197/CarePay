@@ -15,14 +15,16 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
+import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.marcok.stepprogressbar.StepProgressBar;
 
@@ -38,19 +40,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     StepProgressBar stepProgressBar;
 
-    protected CheckInNavListener checkInNavListener;
-
-    public interface CheckInNavListener {
-        void applyChangesAndNavTo(DemographicDTO demographicDTO, Integer step);
-
-        Integer getCurrentStep();
-
-        void setCurrentStep(Integer step);
-
-        void setCheckinFlow(CheckinFlowState flowState, int totalPages, int currentPage);
-
-        void navigateToConsentFlow(WorkflowDTO workflowDTO);
-    }
+    protected CheckinFlowCallback checkinFlowCallback;
 
     private WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
         @Override
@@ -63,10 +53,10 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             hideProgressDialog();
             DemographicDTO demographicDTO = new Gson().fromJson(workflowDTO.toString(), DemographicDTO.class);
 
-            if (checkInNavListener.getCurrentStep() == 5) {
-                checkInNavListener.navigateToConsentFlow(workflowDTO);
+            if (checkinFlowCallback.getCurrentStep() == 5) {
+                checkinFlowCallback.navigateToConsentFlow(workflowDTO);
             } else {
-                checkInNavListener.applyChangesAndNavTo(demographicDTO, checkInNavListener.getCurrentStep() + 1);
+                checkinFlowCallback.applyChangesAndNavTo(demographicDTO, checkinFlowCallback.getCurrentStep() + 1);
             }
 
         }
@@ -120,11 +110,19 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         ((FrameLayout) view.findViewById(R.id.checkinDemographicsContentLayout)).addView(childview);
     }
 
-    protected void setHeaderTitle(String title, View view) {
+    protected void setHeaderTitle(String title, String heading, String subHeading, View view){
         TextView textView = (TextView) view.findViewById(R.id.checkinDemographicsHeaderLabel);
-        textView.setText(title);
-        SystemUtil.setGothamRoundedMediumTypeface(getContext(), textView);
-        (view.findViewById(R.id.toolbar_layout)).setVisibility(View.VISIBLE);
+        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            (view.findViewById(R.id.toolbar_layout)).setVisibility(View.VISIBLE);
+            textView.setText(title);
+        }else{
+            TextView mainHeadingTextView = (TextView) view.findViewById(R.id.demographicsMainHeading);
+            TextView subHeadingTextView = (TextView)  view.findViewById(R.id.demographicsSubHeading);
+            (view.findViewById(R.id.toolbar_layout)).setVisibility(View.VISIBLE);
+
+            mainHeadingTextView.setText(heading);
+            subHeadingTextView.setText(subHeading);
+        }
     }
 
     protected void initNextButton(View.OnClickListener listener, final View view, int visibility) {
@@ -135,7 +133,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                 public void onClick(View buttonView) {
                     if (passConstraints(view)) {
                         DemographicDTO demographicDTO = updateDemographicDTO(view);
-                        openNextFragment(demographicDTO, (checkInNavListener.getCurrentStep() + 1) > 5);
+                        openNextFragment(demographicDTO, (checkinFlowCallback.getCurrentStep() + 1) > 5);
                     }
                 }
             };
@@ -150,7 +148,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         nextButton.setEnabled(isEnabled);
         nextButton.setClickable(isEnabled);
         Context context = getActivity();
-        if (context != null) {
+        if (context != null && getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             nextButton.setBackground(ContextCompat.getDrawable(context, isEnabled ? R.drawable.bg_green_overlay : R.drawable.bg_silver_overlay));
         }
     }
@@ -168,10 +166,13 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            checkInNavListener = (CheckInNavListener) context;
+            if (context instanceof DemographicsView) {
+                checkinFlowCallback = ((DemographicsView) context).getPresenter();
+            } else {
+                checkinFlowCallback = (CheckinFlowCallback) context;
+            }
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " must implement CheckInNavListener");
+            throw new ClassCastException(context.toString() + " must implement CheckinFlowCallback");
         }
     }
 

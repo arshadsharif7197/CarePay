@@ -1,146 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
-    <FrameLayout
-        android:id="@+id/headerContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:foregroundGravity="center_vertical"
-        android:paddingTop="@dimen/dimen_10dp">
 
-        <include
-            android:id="@+id/toolbar_layout"
-            layout="@layout/toolbar_no_title" />
+    <include layout="@layout/toolbar_demographics_review_patient"/>
 
-        <LinearLayout
-            android:id="@+id/checkinDemographicsHeaderLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/checkinDemographicsHeaderLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_30"
-                app:customAssetFont="gotham_rounded_medium" />
-        </LinearLayout>
-    </FrameLayout>
 
     <com.marcok.stepprogressbar.StepProgressBar
         android:id="@+id/stepProgressBarCheckin"
         style="@style/InTakeDottedProgressBarStyle"
-        android:layout_below="@id/headerContainer"
-        android:layout_marginTop="0dp"
-        app:activeDotColor="@color/colorPrimary"
-        app:activeDotIcon="@drawable/circle_indicator_blue"
         app:activeDotIndex="-1"
-        app:dotSize="10dp"
+        app:activeDotColor="@color/colorPrimary"
         app:inactiveDotColor="@color/colorPrimary"
+        app:activeDotIcon="@drawable/circle_indicator_blue"
         app:inactiveDotIcon="@drawable/circle_indicator_gray"
         app:numberDots="5"
-        app:spacing="12dp" />
+        app:dotSize="10dp"
+        app:spacing="12dp"
+        android:layout_marginTop="10dp"
+        />
 
-    <View
-        android:id="@+id/headerDivider"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/demo_view_height"
-        android:layout_below="@id/stepProgressBarCheckin"
-        android:background="@color/light_gray"
-        android:focusable="true"
-        android:focusableInTouchMode="true" />
 
     <LinearLayout
-        android:id="@+id/footerContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="@dimen/dimen_20dp">
+        style="@style/DemographicsDocsHeaderStyle"
+        android:layout_marginBottom="@dimen/demographics_docs_header_top_margin"
+        android:layout_marginTop="@dimen/dimen_8dp"
+        android:orientation="vertical">
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayButton
-            android:id="@+id/check_in_demographics_left_button"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/dimen_48dp"
-            android:layout_marginBottom="@dimen/dimen_20dp"
-            android:layout_marginStart="@dimen/dimen_20dp"
-            android:layout_weight="1"
-            android:background="@drawable/round_border_button_bg"
-            android:gravity="center"
-            android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/text_size_22"
-            android:visibility="gone"
-            app:customAssetFont="gotham_rounded_medium"
-            breeze:textKey="practice_checkin_demogr_ins_dont_have_one_button_label" />
+        <TextView
+            android:id="@+id/demographicsMainHeading"
+            style="@style/DemographicsDocsHeaderTitleStyle"/>
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayButton
-            android:id="@+id/checkinDemographicsNextButton"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/dimen_48dp"
-            android:layout_marginBottom="@dimen/dimen_20dp"
-            android:layout_marginEnd="@dimen/dimen_20dp"
-            android:layout_marginStart="@dimen/dimen_20dp"
-            android:layout_weight="1"
-            android:background="@drawable/button_rounded_gray_selector"
-            android:enabled="false"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_22"
-            app:customAssetFont="gotham_rounded_medium"
-            breeze:textKey="demographics_review_next_button" />
+        <TextView
+            android:id="@+id/demographicsSubHeading"
+            style="@style/DemographicsDocsHeaderSubtitleStyle"/>
+
 
     </LinearLayout>
 
-    <View
-        android:id="@+id/footerDivider"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/demo_view_height"
-        android:layout_above="@id/footerContainer"
-        android:background="@color/light_gray" />
 
-    <android.support.v4.widget.NestedScrollView
+
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/footerDivider"
-        android:layout_below="@id/headerDivider"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:padding="0dp">
 
-        <LinearLayout
-            android:id="@+id/container_main"
+
+
+
+        <FrameLayout
+            android:id="@+id/checkinDemographicsContentLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/dimen_20dp"
+            android:layout_marginRight="@dimen/dimen_20dp"
+            android:orientation="vertical">
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight=".20" />
-
-            <FrameLayout
-                android:id="@+id/checkinDemographicsContentLayout"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/dimen_10dp"
-                android:layout_weight="1"
-                android:orientation="vertical" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight=".20" />
-
-        </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+        </FrameLayout>
+    </ScrollView>
 
 
-</RelativeLayout>
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
+        android:id="@+id/checkinDemographicsNextButton"
+        android:enabled="true"
+        breeze:textKey="demographics_review_next_button"
+        style="@style/InTakeNextButtonStyle"/>
+
+
+
+
+</LinearLayout>

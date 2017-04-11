@@ -95,7 +95,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         View mainView  = super.onCreateView(inflater, container, savedInstanceState);
         initialiseUIFields(mainView);
         formatEditText(mainView);
-//        setTypefaces(mainView);
 
         initViewFromModels(mainView);
         return mainView;
@@ -110,8 +109,8 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
     public void onResume(){
         super.onResume();
         stepProgressBar.setCurrentProgressDot(1);
-        checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 2);
-        checkInNavListener.setCurrentStep(2);
+        checkinFlowCallback.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 2);
+        checkinFlowCallback.setCurrentStep(2);
     }
 
 
@@ -378,50 +377,13 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
     }
 
     /**
-     * Show alert dialog
-     */
-    private void showAlertDialogWithListview(final String[] dataArray, String title, String cancelLabel, final int selectedDataArray) {
-
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-        dialog.setTitle(title);
-        dialog.setNegativeButton(cancelLabel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int listener) {
-                dialogInterface.dismiss();
-            }
-        });
-        View customView = LayoutInflater.from(getActivity()).inflate(
-                R.layout.alert_list_layout, (ViewGroup) getView(), false);
-        ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
-        CustomAlertAdapter alertAdapter = new CustomAlertAdapter(getActivity(), Arrays.asList(dataArray));
-        listView.setAdapter(alertAdapter);
-        dialog.setView(customView);
-        final AlertDialog alert = dialog.create();
-        alert.show();
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long listener) {
-                switch (selectedDataArray) {
-
-                    case 4:
-                        stateAbbr = dataArray[position];
-                        ((TextView) findViewById(R.id.reviewDemographicsStateAutoCompleteTextView)).setText(stateAbbr);
-                        break;
-                    default:
-                        break;
-                }
-                checkIfEnableButton(view);
-                alert.dismiss();
-            }
-        });
-    }
-
-    /**
      * Initialize ui fields
      */
     private void initialiseUIFields(View view) {
-        setHeaderTitle(Label.getLabel("demographics_address_section"), view);
+        setHeaderTitle(Label.getLabel("demographics_address_section"),
+                Label.getLabel("demographics_address_heading"),
+                Label.getLabel("demographics_address_subheading"),
+                view);
         initNextButton(null, view, View.VISIBLE);
 
         cityEditText = (EditText) view.findViewById(R.id.cityId);

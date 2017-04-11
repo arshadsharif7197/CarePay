@@ -22,10 +22,11 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
-import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckinFlowCallback;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.demographics.DemographicsView;
+import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.google.gson.JsonObject;
@@ -47,18 +48,20 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
     private TextView header;
     private StepProgressBar progressIndicator;
 
-
     private int totalForms;
     private int displayedFormsIndex;
 
-
-    private CheckinFlowCallback flowCallback;
+    private CheckinFlowCallback callback;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try{
-            flowCallback = (CheckinFlowCallback) context;
+            if (context instanceof DemographicsView) {
+                callback = ((DemographicsView) context).getPresenter();
+            } else {
+                callback = (CheckinFlowCallback) context;
+            }
         }catch (ClassCastException cce){
             throw new ClassCastException("Attached context must implement CheckinFlowCallback");
         }
@@ -74,7 +77,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
     public void onViewCreated(View view, Bundle icicle){
         inflateToolbarViews(view);
 
-        flowCallback.setCheckinFlow(getCheckinFlowState(), totalForms, displayedFormsIndex);
+        callback.setCheckinFlow(getCheckinFlowState(), totalForms, displayedFormsIndex);
 
         nextButton = (Button) view.findViewById(com.carecloud.carepaylibrary.R.id.consentButtonNext);
         nextButton.setOnClickListener(new View.OnClickListener() {
@@ -195,7 +198,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         nextButton.setEnabled(true);
         progressIndicator.setCurrentProgressDot(displayedFormsIndex);
 
-        flowCallback.setCheckinFlow(getCheckinFlowState(), totalForms, displayedFormsIndex+1);//adjust for zero index
+        callback.setCheckinFlow(getCheckinFlowState(), totalForms, displayedFormsIndex+1);//adjust for zero index
     }
 
     public void setTotalForms(int totalForms) {

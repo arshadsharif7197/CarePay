@@ -15,6 +15,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
@@ -37,7 +38,7 @@ import com.carecloud.carepaylibray.utils.ValidationHelper;
 public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
 
     private DemographicDTO demographicDTO;
-    private UpdateProfilePictureListener profilePicturelistener;
+    private UpdateProfilePictureListener callback;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,26 +46,30 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
 
         initNextButton(null, view, View.VISIBLE);
-        setHeaderTitle(Label.getLabel("demographics_review_peronsonalinfo_section"), view);
+        setHeaderTitle(
+                Label.getLabel("demographics_review_peronsonalinfo_section"),
+                Label.getLabel("demographics_personal_info_heading"),
+                Label.getLabel("demographics_personal_info_subheading"),
+                view);
 
         formatEditText(view);
         initViewFromModels(view);
         checkIfEnableButton(view);
-        (view.findViewById(R.id.toolbar_layout)).setVisibility(View.INVISIBLE);
+        //(view.findViewById(R.id.toolbar_layout)).setVisibility(View.INVISIBLE);
         return view;
     }
 
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
-        profilePicturelistener.loadPictureFragment();
+        callback.loadPictureFragment();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         stepProgressBar.setCurrentProgressDot(0);
-        checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 1);
-        checkInNavListener.setCurrentStep(1);
+        checkinFlowCallback.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 1);
+        checkinFlowCallback.setCurrentStep(1);
     }
 
     @Override
@@ -72,7 +77,11 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         super.onAttach(context);
 
         try {
-            profilePicturelistener = (UpdateProfilePictureListener) context;
+            if (context instanceof DemographicsView) {
+                callback = ((DemographicsView) context).getPresenter();
+            } else {
+                callback = (UpdateProfilePictureListener) context;
+            }
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement UpdateProfilePictureListener");
@@ -351,7 +360,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
             demographicPersDetailsPayloadDTO.setDateOfBirth(DateUtil.getInstance().setDateRaw(dateOfBirth).toStringWithFormatYyyyDashMmDashDd());
         }
 
-        String profileImage = profilePicturelistener.getProfilePicture();
+        String profileImage = callback.getProfilePicture();
         if (!StringUtil.isNullOrEmpty(profileImage)) {
             demographicPersDetailsPayloadDTO.setProfilePhoto(profileImage);
         }
