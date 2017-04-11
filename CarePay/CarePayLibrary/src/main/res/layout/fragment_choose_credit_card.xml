@@ -9,12 +9,10 @@
         android:id="@+id/toolbar_layout"
         layout="@layout/toolbar_responsibility" />
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/payment_method_parent_layout_padding">
-
 
         <ListView
             android:id="@+id/list_credit_cards"
@@ -25,7 +23,6 @@
             android:elevation="17dp"
             android:padding="@dimen/payment_method_parent_layout_padding"
             android:visibility="visible" />
-
 
         <ScrollView
             android:layout_width="match_parent"
