@@ -215,28 +215,26 @@ public class CloverPaymentActivity extends BaseActivity {
 
         @Override
         protected final Order doInBackground(Void... params) {
-            Order order;
+            Order order = null;
 
             try {
-                // Create a new order
-                order = orderConnector.createOrder(new Order());
 
                 if(amountLong != null )
                 {
+                    // Create a new order
+                    order = orderConnector.createOrder(new Order());
                     if(paymentLineItems!=null && paymentLineItems.length > 0){
                         List<LineItem> lineItems = getLineItems();
                         for (LineItem lineItem : lineItems) {
                             orderConnector.addCustomLineItem(order.getId(), lineItem, false);
                         }
                     }else{
-                        setResult(RESULT_CANCELED);
-                        SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.payment_cancelled));
-                        finish();
+                        return null;
                     }
+                    // Update local representation of the order
+                    order = orderConnector.getOrder(order.getId());
                 }
 
-                // Update local representation of the order
-                order = orderConnector.getOrder(order.getId());
 
                 return order;
             } catch (RemoteException e) {
@@ -253,6 +251,12 @@ public class CloverPaymentActivity extends BaseActivity {
 
         @Override
         protected final void onPostExecute(Order order) {
+            if(order==null){
+                setResult(RESULT_CANCELED);
+                SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.payment_cancelled));
+                finish();
+            }
+
             // Enables the pay buttons if the order is valid
             if (!isFinishing()) {
                 CloverPaymentActivity.this.order = order;
