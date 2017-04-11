@@ -167,7 +167,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         container.setSoundEffectsEnabled(false);
         container.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 clearPickers();
                 clearLastSwipeView();
             }
@@ -282,9 +282,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
     private void scrollAdapterToItem(BalanceItemDTO balanceItemDTO){
         final int position = balanceItems.indexOf(balanceItemDTO);
-        int y = (int) balanceDetailsRecycler.getChildAt(position).getY();
-        Log.d("RecyclerView", "Scroll to Position: "+position+" at: "+y);
-        scrollView.smoothScrollTo(0, y+10);
+        int locationY = (int) balanceDetailsRecycler.getChildAt(position).getY();
+        Log.d("RecyclerView", "Scroll to Position: "+position+" at: "+locationY);
+        scrollView.smoothScrollTo(0, locationY+10);
 
     }
 
