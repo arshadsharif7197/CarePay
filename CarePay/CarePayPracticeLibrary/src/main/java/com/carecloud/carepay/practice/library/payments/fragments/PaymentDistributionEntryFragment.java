@@ -39,7 +39,9 @@ public class PaymentDistributionEntryFragment extends PartialPaymentBaseDialogFr
         if (chargeItem != null) {
             apply.setText(Label.getLabel("payment_add_item"));
             header.setText(chargeItem.getDescription());
-            amountText.setText(String.valueOf(chargeItem.getAmount()));
+            if(chargeItem.getAmount() > 0) {
+                amountText.setText(String.valueOf(chargeItem.getAmount()));
+            }
         }
     }
 

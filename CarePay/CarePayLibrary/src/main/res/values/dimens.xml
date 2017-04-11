@@ -55,6 +55,7 @@
     <dimen name="text_size_17">17sp</dimen>
     <dimen name="text_size_24sp">24sp</dimen>
     <dimen name="text_size_20">20sp</dimen>
+    <dimen name="text_size_21">21sp</dimen>
     <dimen name="text_size_38">38sp</dimen>
     <dimen name="text_size_22">22sp</dimen>
     <dimen name="text_size_30">30sp</dimen>

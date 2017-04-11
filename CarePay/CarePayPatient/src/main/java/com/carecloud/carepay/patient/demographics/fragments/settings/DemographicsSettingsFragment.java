@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
@@ -38,9 +37,6 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 /**
@@ -56,18 +52,19 @@ public class DemographicsSettingsFragment extends BaseFragment {
     private String signOutString = null;
     private String editString = null;
     private String settingsString = null;
-    private String messagesString = null;
     private CarePayTextView editTextview = null;
     private Button signOutButton = null;
     private CarePayTextView demographicsTextview = null;
     private CarePayTextView documentsTextview = null;
     private CarePayTextView creditCardsTextview;
-    private CarePayTextView messagesTextview = null;
+//    private CarePayTextView messagesTextview = null;
     private ImageView profileImageview = null;
-    private IDemographicsSettingsFragmentListener activityCallback;
+    private IDemographicsSettingsFragmentListener callback;
 
     public interface IDemographicsSettingsFragmentListener {
         void initializeCreditCardListFragment();
+
+        void showHelpFragment();
     }
 
     @Override
@@ -77,7 +74,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            activityCallback = (IDemographicsSettingsFragmentListener) context;
+            callback = (IDemographicsSettingsFragmentListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement IDemographicsSettingsFragmentListener");
@@ -116,7 +113,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
         documentsTextview = (CarePayTextView) view.findViewById(R.id.documentsTextView);
         creditCardsTextview = (CarePayTextView) view.findViewById(R.id.creditCardsTextView);
         CarePayTextView creditCardsTextview = (CarePayTextView) view.findViewById(R.id.creditCardsTextView);
-        messagesTextview = (CarePayTextView) view.findViewById(R.id.messagesTextView);
+//        messagesTextview = (CarePayTextView) view.findViewById(R.id.messagesTextView);
         editTextview = (CarePayTextView) view.findViewById(R.id.editTextView);
         signOutButton = (Button) view.findViewById(R.id.signOutButton);
         CarePayTextView patientNameTextview = (CarePayTextView) view.findViewById(R.id.patient_name);
@@ -124,7 +121,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
 
         demographicsTextview.setText(demographicsString);
         documentsTextview.setText(documentsString);
-        messagesTextview.setText(messagesString);
+//        messagesTextview.setText(messagesString);
         creditCardsTextview.setText(creditCardsString);
         editTextview.setText(editString);
         signOutButton.setText(signOutString);
@@ -133,6 +130,8 @@ public class DemographicsSettingsFragment extends BaseFragment {
 
         CarePayTextView patientIdTextview = (CarePayTextView) view.findViewById(R.id.patient_id);
         patientIdTextview.setText(getAppAuthorizationHelper().getCurrUser());
+
+        initializeHelpButton(view);
 
         try {
             DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
@@ -144,12 +143,24 @@ public class DemographicsSettingsFragment extends BaseFragment {
                 Picasso.with(getActivity()).load(imageUrl).transform(
                         new CircleImageTransform()).resize(160, 160).into(this.profileImageview);
             }
-            setClickables(view);
+            setClickables();
         }catch(Exception e){
             e.printStackTrace();
         }
         return view;
 
+    }
+
+    private void initializeHelpButton(View view) {
+        TextView textView = (TextView) view.findViewById(R.id.helpTextView);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (callback != null) {
+                    callback.showHelpFragment();
+                }
+            }
+        });
     }
 
     /**
@@ -167,16 +178,9 @@ public class DemographicsSettingsFragment extends BaseFragment {
                     signOutString = demographicsSettingsLabelsDTO.getSignOutLabel();
                     editString = demographicsSettingsLabelsDTO.getEditButtonLabel();
                     settingsString = demographicsSettingsLabelsDTO.getSettingsHeading();
-                    messagesString = demographicsSettingsLabelsDTO.getSettingsMessagesLabel();
-
                 }
             }
         }
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
     }
 
     /**
@@ -188,7 +192,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
         appCompatActivity = activity;
     }
 
-    private void setClickables(View view) {
+    private void setClickables() {
         signOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -289,7 +293,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
                 try {
 //                    if (demographicsSettingsDTO.getPayload().getPatientCreditCards() != null &&
 //                            !demographicsSettingsDTO.getPayload().getPatientCreditCards().isEmpty()) {
-                    activityCallback.initializeCreditCardListFragment();
+                    callback.initializeCreditCardListFragment();
 //                    } else {
 //                        ((DemographicsSettingsActivity) getActivity()).initializeAddNewCreditCardFragment();
 //                    }

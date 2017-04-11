@@ -60,7 +60,7 @@ public class PaymentPostModel {
         }
         double payAmount = 0;
         for(PaymentObject paymentObject : paymentObjects){
-            payAmount += paymentObject.getAmount();
+            payAmount = (double) Math.round((payAmount+paymentObject.getAmount())*100)/100;
             if(!paymentObject.isPaymentMethodValid()){
                 return false;
             }

@@ -25,9 +25,12 @@ import com.carecloud.carepay.patient.demographics.fragments.viewpager.Demographi
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsDetailsFragment;
 import com.carecloud.carepay.patient.demographics.fragments.viewpager.DemographicsDocumentsFragmentWthWrapper;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraReady;
 import com.carecloud.carepaylibray.customcomponents.CustomViewPager;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.DemographicMetadataDTO;
@@ -41,8 +44,10 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPay
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
+import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckinDemographicsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
+import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
 import com.carecloud.carepaylibray.demographics.scanner.ProfilePictureFragment;
@@ -62,7 +67,9 @@ public class DemographicsActivity extends BasePatientActivity
         DemographicsDetailsFragment.DemographicsDetailsFragmentListener,
         DemographicsAddressFragment.DemographicsAddressFragmentListener,
         CheckinDemographicsFragment.CheckinDemographicsFragmentListener,
-        HealthInsuranceFragment.InsuranceDocumentScannerListener {
+        HealthInsuranceFragment.InsuranceDocumentScannerListener,
+        CheckInDemographicsBaseFragment.CheckInNavListener,
+        CarePayCameraReady {
 
     private int currentPageIndex;
     // views
@@ -487,5 +494,35 @@ public class DemographicsActivity extends BasePatientActivity
         fm.beginTransaction()
                 .replace(R.id.demographicsAddressPicCapturer, fragment, tag)
                 .commit();
+    }
+
+    @Override
+    public void captureImage(CarePayCameraCallback callback) {
+
+    }
+
+    @Override
+    public void applyChangesAndNavTo(DemographicDTO demographicDTO, Integer step) {
+
+    }
+
+    @Override
+    public Integer getCurrentStep() {
+        return null;
+    }
+
+    @Override
+    public void setCurrentStep(Integer step) {
+
+    }
+
+    @Override
+    public void setCheckinFlow(CheckinFlowState flowState, int totalPages, int currentPage) {
+
+    }
+
+    @Override
+    public void navigateToConsentFlow(WorkflowDTO workflowDTO) {
+
     }
 }

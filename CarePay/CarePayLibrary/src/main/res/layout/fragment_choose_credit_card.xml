@@ -9,12 +9,10 @@
         android:id="@+id/toolbar_layout"
         layout="@layout/toolbar_responsibility" />
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/payment_method_parent_layout_padding">
-
 
         <ListView
             android:id="@+id/list_credit_cards"
@@ -25,7 +23,6 @@
             android:elevation="17dp"
             android:padding="@dimen/payment_method_parent_layout_padding"
             android:visibility="visible" />
-
 
         <ScrollView
             android:layout_width="match_parent"
@@ -44,7 +41,7 @@
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/addNewCardButton"
-            style="@style/PaymentButtonStyle"
+            style="@style/BreezeButtonStyleDark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -56,7 +53,7 @@
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/nextButton"
-            style="@style/PaymentButtonStyle"
+            style="@style/BreezeButtonStyleDark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/addNewCardButton"

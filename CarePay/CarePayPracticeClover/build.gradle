@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'newrelic'
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -78,4 +78,5 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':CarePayPracticeLibrary')
     compile 'com.clover.sdk:clover-android-sdk:latest.release'
+    compile 'com.newrelic.agent.android:android-agent:5.12.2'
 }
