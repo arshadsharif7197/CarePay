@@ -15,25 +15,73 @@ import java.util.List;
 public class DemographicMetadataPropertiesIdDocDTO {
     @SerializedName("identity_document_photos")
     @Expose
-    public MetadataEntityDTO identityDocumentPhotos = new MetadataEntityDTO();
+    private MetadataEntityDTO identityDocumentPhotos = new MetadataEntityDTO();
 
     @SerializedName("identity_document_number")
     @Expose
-    public MetadataEntityDTO identityDocumentNumber = new MetadataEntityDTO();
+    private MetadataEntityDTO identityDocumentNumber = new MetadataEntityDTO();
 
     @SerializedName("identity_document_country")
     @Expose
-    public MetadataEntityDTO identityDocumentCountry = new MetadataEntityDTO();
+    private MetadataEntityDTO identityDocumentCountry = new MetadataEntityDTO();
 
     @SerializedName("identity_document_state")
     @Expose
-    public MetadataEntityDTO identityDocumentState = new MetadataEntityDTO();
+    private MetadataEntityDTO identityDocumentState = new MetadataEntityDTO();
 
     @SerializedName("identity_document_type")
     @Expose
-    public MetadataEntityDTO identityDocumentType = new MetadataEntityDTO();
+    private MetadataEntityDTO identityDocumentType = new MetadataEntityDTO();
 
     @SerializedName("required")
     @Expose
-    public List<MetadataEntityDTO> required = new ArrayList<>();
+    private List<MetadataEntityDTO> required = new ArrayList<>();
+
+    public MetadataEntityDTO getIdentityDocumentPhotos() {
+        return identityDocumentPhotos;
+    }
+
+    public void setIdentityDocumentPhotos(MetadataEntityDTO identityDocumentPhotos) {
+        this.identityDocumentPhotos = identityDocumentPhotos;
+    }
+
+    public MetadataEntityDTO getIdentityDocumentNumber() {
+        return identityDocumentNumber;
+    }
+
+    public void setIdentityDocumentNumber(MetadataEntityDTO identityDocumentNumber) {
+        this.identityDocumentNumber = identityDocumentNumber;
+    }
+
+    public MetadataEntityDTO getIdentityDocumentCountry() {
+        return identityDocumentCountry;
+    }
+
+    public void setIdentityDocumentCountry(MetadataEntityDTO identityDocumentCountry) {
+        this.identityDocumentCountry = identityDocumentCountry;
+    }
+
+    public MetadataEntityDTO getIdentityDocumentState() {
+        return identityDocumentState;
+    }
+
+    public void setIdentityDocumentState(MetadataEntityDTO identityDocumentState) {
+        this.identityDocumentState = identityDocumentState;
+    }
+
+    public MetadataEntityDTO getIdentityDocumentType() {
+        return identityDocumentType;
+    }
+
+    public void setIdentityDocumentType(MetadataEntityDTO identityDocumentType) {
+        this.identityDocumentType = identityDocumentType;
+    }
+
+    public List<MetadataEntityDTO> getRequired() {
+        return required;
+    }
+
+    public void setRequired(List<MetadataEntityDTO> required) {
+        this.required = required;
+    }
 }

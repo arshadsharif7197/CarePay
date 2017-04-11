@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -16,24 +15,20 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPhotoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMetadataDTO;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
@@ -45,13 +40,37 @@ public class DocScannerFragment extends DocumentScannerFragment {
     private Button scanFrontButton;
     private Button scanBackButton;
     private DemographicIdDocPayloadDTO model;
-    private DemographicsSettingsDTO demographicsSettingsDTO;
     private String documentsdocumentsScanFirstString = null;
     private String documentsScanBackString = null;
+
+    private DocScannerFragment() {
+    }
+
+    /**
+     *
+     * @param model an instance of DemographicIdDocPayloadDTO
+     * @return a DocScannerFragment instance
+     */
+    public static DocScannerFragment newInstance(DemographicIdDocPayloadDTO model) {
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, model);
+        DocScannerFragment fragment = new DocScannerFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        model = DtoHelper.getConvertedDTO(DemographicIdDocPayloadDTO.class, getArguments());
+        List<DemographicIdDocPhotoDTO> photoDTOs = model.getIdDocPhothos();
+        if (photoDTOs.size() == 0) {
+            // create two empty photos DTOs
+            photoDTOs.add(new DemographicIdDocPhotoDTO());
+            photoDTOs.add(new DemographicIdDocPhotoDTO());
+        } else if (photoDTOs.size() == 1) {
+            photoDTOs.add(1, new DemographicIdDocPhotoDTO()); // create the second
+        }
     }
 
     @Nullable
@@ -61,13 +80,6 @@ public class DocScannerFragment extends DocumentScannerFragment {
         // create the view
         view = inflater.inflate(getLayoutRes(), container, false);
 
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            Gson gson = new Gson();
-            bundle = getArguments();
-            String demographicsSettingsDTOString = bundle.getString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE);
-            demographicsSettingsDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsDTO.class);
-        }
         getDocumentsLabels();
         initializeUIFields();
         return view;
@@ -77,16 +89,8 @@ public class DocScannerFragment extends DocumentScannerFragment {
      * documents labels
      */
     public void getDocumentsLabels() {
-        if (demographicsSettingsDTO != null) {
-            DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
-            if (demographicsSettingsMetadataDTO != null) {
-                DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO = demographicsSettingsMetadataDTO.getLabels();
-                if (demographicsSettingsLabelsDTO != null) {
-                    documentsdocumentsScanFirstString = demographicsSettingsLabelsDTO.getDocumentsScanFirstLabel();
-                    documentsScanBackString = demographicsSettingsLabelsDTO.getDocumentsScanBackLabel();
-                }
-            }
-        }
+        documentsdocumentsScanFirstString = Label.getLabel("documents_scan_front_label");
+        documentsScanBackString = Label.getLabel("documents_scan_back_label");
     }
 
     protected int getLayoutRes() {
@@ -101,7 +105,7 @@ public class DocScannerFragment extends DocumentScannerFragment {
         scanFrontButton.setText(documentsdocumentsScanFirstString);
         GradientDrawable shape = new GradientDrawable();
         shape.setShape(GradientDrawable.RECTANGLE);
-        shape.setCornerRadii(new float[] { 8, 8, 8, 8, 8, 8, 8, 8 });
+        shape.setCornerRadii(new float[]{8, 8, 8, 8, 8, 8, 8, 8});
         shape.setStroke(3, ContextCompat.getColor(getActivity(), R.color.colorPrimary));
         scanFrontButton.setBackgroundDrawable(shape);
 
@@ -162,6 +166,7 @@ public class DocScannerFragment extends DocumentScannerFragment {
                     URL url = new URL(frontPic);
                     Log.v(LOG_TAG, "valid url: " + url.toString());
                     Picasso.with(getContext()).load(frontPic)
+                            .fit()
                             .centerCrop()
                             .transform(new RoundedCornersTransformation(5, 0))
                             .into(imageFront);
@@ -178,6 +183,7 @@ public class DocScannerFragment extends DocumentScannerFragment {
                     URL url = new URL(backPic);
                     Log.v(LOG_TAG, "valid url: " + url.toString());
                     Picasso.with(getContext()).load(backPic)
+                            .fit()
                             .centerCrop()
                             .transform(new RoundedCornersTransformation(5, 0))
                             .into(imageBack);
@@ -215,31 +221,6 @@ public class DocScannerFragment extends DocumentScannerFragment {
 
     public DemographicIdDocPayloadDTO getModel() {
         return model;
-    }
-
-    /**
-     * Sets the DTO for this fragment; it creates the required child DTO if they are null
-     *
-     * @param model The model
-     */
-    public void setModel(@NonNull DemographicIdDocPayloadDTO model) {
-        this.model = model;
-        List<DemographicIdDocPhotoDTO> photoDTOs = model.getIdDocPhothos();
-        if (photoDTOs == null) { // create the list of photos (front and back) if null
-            photoDTOs = new ArrayList<>();
-            // create two empty photos DTOs
-            photoDTOs.add(new DemographicIdDocPhotoDTO());
-            photoDTOs.add(new DemographicIdDocPhotoDTO());
-            this.model.setIdDocPhothos(photoDTOs);
-        } else {
-            if (photoDTOs.size() == 0) {
-                // create two empty photos DTOs
-                photoDTOs.add(new DemographicIdDocPhotoDTO());
-                photoDTOs.add(new DemographicIdDocPhotoDTO());
-            } else if (photoDTOs.size() == 1) {
-                photoDTOs.add(1, new DemographicIdDocPhotoDTO()); // create the second
-            }
-        }
     }
 
     @Override

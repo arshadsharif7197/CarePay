@@ -13,6 +13,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
 import com.carecloud.carepaylibray.payments.fragments.BaseAddCreditCardFragment;
@@ -28,7 +29,6 @@ import java.util.Map;
 public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment implements BaseAddCreditCardFragment.IAuthoriseCreditCardResponse {
 
     private DemographicsSettingsDTO demographicsSettingsDTO = null;
-    private DemographicsSettingsLabelsDTO settingsLabelsDTO;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,7 +38,6 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
             Gson gson = new Gson();
             String demographicsSettingsDTOString = arguments.getString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE);
             demographicsSettingsDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsDTO.class);
-            settingsLabelsDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getLabels();
         }
     }
 
@@ -52,47 +51,47 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
     @Override
     public void onResume() {
         super.onResume();
-        title.setText(settingsLabelsDTO.getNewCreditCardHeadingLabel());
+        title.setText(Label.getLabel("new_credit_card_heading"));
         initilizeViews();
     }
 
     private void initilizeViews() {
-        creditCardNoTextInput.setTag(settingsLabelsDTO.getCreditCardNumberLabel());
-        creditCardNoEditText.setHint(settingsLabelsDTO.getCreditCardNumberLabel());
+        creditCardNoTextInput.setTag(Label.getLabel("credit_card_number_label"));
+        creditCardNoEditText.setHint(Label.getLabel("credit_card_number_label"));
 
-        nameOnCardTextInputLayout.setTag(settingsLabelsDTO.getCreditCardNameLabel());
-        nameOnCardEditText.setHint(settingsLabelsDTO.getCreditCardNameLabel());
+        nameOnCardTextInputLayout.setTag(Label.getLabel("credit_card_name_label"));
+        nameOnCardEditText.setHint(Label.getLabel("credit_card_name_label"));
 
-        verificationCodeTextInput.setTag(settingsLabelsDTO.getCreditCardCvcLabel());
-        verificationCodeEditText.setHint(settingsLabelsDTO.getCreditCardCvcLabel());
+        verificationCodeTextInput.setTag(Label.getLabel("credit_card_cvc_label"));
+        verificationCodeEditText.setHint(Label.getLabel("credit_card_cvc_label"));
 
-        expirationDateTextView.setText(settingsLabelsDTO.getCreditCardExpirationLabel());
-        pickDateTextView.setText(settingsLabelsDTO.getCreditCardPickDateLabel());
+        expirationDateTextView.setText(Label.getLabel("credit_card_expiration_label"));
+        pickDateTextView.setText(Label.getLabel("credit_card_pick_date_label"));
 
         saveCardOnFileCheckBox.setVisibility(View.GONE);
         saveCardOnFileCheckBox.setEnabled(true);
-        setAsDefaultCheckBox.setText(settingsLabelsDTO.getEditCreditCardDefaultLabel());
+        setAsDefaultCheckBox.setText(Label.getLabel("edit_credit_card_default_label"));
         setAsDefaultCheckBox.setEnabled(true);
 
-        billingAddressTextView.setText(settingsLabelsDTO.getCreditCardBillingAddressLabel());
-        useProfileAddressCheckBox.setText(settingsLabelsDTO.getSettingUseProfileAddressLabel());
+        billingAddressTextView.setText(Label.getLabel("credit_card_billing_address_label"));
+        useProfileAddressCheckBox.setText(Label.getLabel("setting_use_profile_address"));
 
-        address1TextInput.setTag(settingsLabelsDTO.getAddress1Label());
-        address1EditText.setHint(settingsLabelsDTO.getAddress1Label());
+        address1TextInput.setTag(Label.getLabel("address1_label"));
+        address1EditText.setHint(Label.getLabel("address1_label"));
 
-        address2TextInput.setTag(settingsLabelsDTO.getAddress2Label());
-        address2EditText.setHint(settingsLabelsDTO.getAddress2Label());
+        address2TextInput.setTag(Label.getLabel("address2_label"));
+        address2EditText.setHint(Label.getLabel("address2_label"));
 
-        zipCodeTextInput.setTag(settingsLabelsDTO.getZipcodeLabel());
-        zipCodeEditText.setHint(settingsLabelsDTO.getZipcodeLabel());
+        zipCodeTextInput.setTag(Label.getLabel("zipcode_label"));
+        zipCodeEditText.setHint(Label.getLabel("zipcode_label"));
 
-        cityTextInput.setTag(settingsLabelsDTO.getCityLabel());
-        cityEditText.setHint(settingsLabelsDTO.getCityLabel());
+        cityTextInput.setTag(Label.getLabel("city_label"));
+        cityEditText.setHint(Label.getLabel("city_label"));
 
-        stateTextInput.setTag(settingsLabelsDTO.getStateLabel());
-        stateAutoCompleteTextView.setHint(settingsLabelsDTO.getStateLabel());
+        stateTextInput.setTag(Label.getLabel("state_label"));
+        stateAutoCompleteTextView.setHint(Label.getLabel("state_label"));
 
-        nextButton.setText(settingsLabelsDTO.getCreditCardAddNew());
+        nextButton.setText(Label.getLabel("credit_card_add_new"));
     }
 
     private WorkflowServiceCallback addNewCreditCardCallback = new WorkflowServiceCallback() {

@@ -134,7 +134,7 @@ public class DemographicsCheckInDocumentsFragment extends BaseFragment {
         }
         // init doc types
         List<String> docTypesStrings = new ArrayList<>();
-        for (MetadataOptionDTO o : idDocsMetaDTO.properties.items.identityDocument.properties.identityDocumentType.getOptions()) {
+        for (MetadataOptionDTO o : idDocsMetaDTO.getProperties().getItems().getIdentityDocument().getProperties().getIdentityDocumentType().getOptions()) {
             docTypesStrings.add(o.getLabel());
         }
         docTypes = docTypesStrings.toArray(new String[0]);

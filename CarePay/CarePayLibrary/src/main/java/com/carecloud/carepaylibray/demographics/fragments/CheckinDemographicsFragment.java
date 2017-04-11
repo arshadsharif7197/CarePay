@@ -60,6 +60,12 @@ import com.smartystreets.api.us_zipcode.City;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
@@ -67,12 +73,6 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtrabo
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 public class CheckinDemographicsFragment extends DocumentScannerFragment implements View.OnClickListener {
@@ -587,8 +587,10 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     }
 
     private boolean isPhoneNumberValid() {
-        final String phoneError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.getProperties().getPhone().getValidations().get(0).getErrorMessage();
-        final String phoneValidation = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : ((String) addressMetaDTO.getProperties().getPhone().getValidations().get(0).value);
+        final String phoneError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED :
+                addressMetaDTO.getProperties().getPhone().getValidations().get(0).getErrorMessage();
+        final String phoneValidation = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED :
+                addressMetaDTO.getProperties().getPhone().getValidations().get(0).getValue();
         if (!isPhoneEmpty) { // check validity only if non-empty
             String phone = phoneNumberEditText.getText().toString();
             if (!StringUtil.isNullOrEmpty(phone)
@@ -1043,7 +1045,8 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             }
             String datetime = demographicPersDetailsPayloadDTO.getDateOfBirth();
             if (datetime != null) {
-                String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).toStringWithFormatMmSlashDdSlashYyyy();
+                String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime)
+                        .toStringWithFormatMmSlashDdSlashYyyy();
                 dobEditText.setText(dateOfBirthString);
                 dobEditText.requestFocus();
             } else {
@@ -1131,7 +1134,8 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             firstNameLabel.setError(null);
             firstNameLabel.setErrorEnabled(false);
         } else {
-            final String firstNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getFirstName().getValidations().get(0).getErrorMessage();
+            final String firstNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED :
+                    persDetailsMetaDTO.getProperties().getFirstName().getValidations().get(0).getErrorMessage();
             firstNameLabel.setError(firstNameError);
             firstNameLabel.setErrorEnabled(true);
             firstNameText.requestFocus();
@@ -1142,7 +1146,8 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             lastNameLabel.setError(null);
             lastNameLabel.setErrorEnabled(false);
         } else {
-            final String lastNameError = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getLastName().getValidations().get(0).getErrorMessage();
+            final String lastNameError = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED :
+                    persDetailsMetaDTO.getProperties().getLastName().getValidations().get(0).getErrorMessage();
             lastNameLabel.setError(lastNameError);
             lastNameLabel.setErrorEnabled(true);
             lastNameText.requestFocus();
@@ -1169,8 +1174,11 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             allFieldsValid = false;
         }
 
-        if (demographicDTO.getMetadata().getDataModels().getDemographic().getIdentityDocuments().properties.items.identityDocument.properties.identityDocumentPhotos.getValidations().get(0).type.contains("required") &&
-                demographicDTO.getPayload().getDemographics().getPayload().getIdDocument().getIdDocPhothos().get(0) == null) {
+        if (demographicDTO.getMetadata().getDataModels().getDemographic().getIdentityDocuments().getProperties()
+                .getItems().getIdentityDocument().getProperties().getIdentityDocumentPhotos().getValidations()
+                .get(0).getType().contains("required") &&
+                demographicDTO.getPayload().getDemographics().getPayload().getIdDocument().getIdDocPhothos()
+                        .get(0) == null) {
             allFieldsValid = false;
         }
 

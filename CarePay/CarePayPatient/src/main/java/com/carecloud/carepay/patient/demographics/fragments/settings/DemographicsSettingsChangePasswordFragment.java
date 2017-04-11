@@ -26,9 +26,9 @@ import com.carecloud.carepay.service.library.dtos.DemographicsSettingsHeaderDTO;
 import com.carecloud.carepay.service.library.dtos.DemographicsSettingsMaintainanceDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMetadataDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsTransitionsDTO;
@@ -38,12 +38,12 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.api.client.util.Base64;
 import com.google.gson.Gson;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -132,22 +132,12 @@ public class DemographicsSettingsChangePasswordFragment extends BaseFragment {
      * demographics settings labels
      */
     public void getSettingsLabels() {
-        if (demographicsSettingsDTO != null) {
-            DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
-            if (demographicsSettingsMetadataDTO != null) {
-                DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO = demographicsSettingsMetadataDTO.getLabels();
-                if (demographicsSettingsLabelsDTO != null) {
-
-                    changePasswordString = demographicsSettingsLabelsDTO.getSettingschangePasswordLabel();
-                    passwordHelpString = demographicsSettingsLabelsDTO.getPasswordHelpLabel();
-                    saveChangesString = demographicsSettingsLabelsDTO.getDemographicsSaveChangesLabel();
-                    currentPasswordString = demographicsSettingsLabelsDTO.getSettingsCurrentPasswordLabel();
-                    newPasswordString = demographicsSettingsLabelsDTO.getSettingsNewPasswordLabel();
-                    repeatPasswordString = demographicsSettingsLabelsDTO.getSettingRepeatNewPasswordLabel();
-
-                }
-            }
-        }
+        changePasswordString = Label.getLabel("settings_change_password");
+        passwordHelpString = Label.getLabel("settings_password_help_text");
+        saveChangesString = Label.getLabel("demographics_save_changes_label");
+        currentPasswordString = Label.getLabel("settings_current_password");
+        newPasswordString = Label.getLabel("settings_new_password");
+        repeatPasswordString = Label.getLabel("settings_repeat_new_password");
     }
 
     @Override
@@ -250,7 +240,7 @@ public class DemographicsSettingsChangePasswordFragment extends BaseFragment {
         if (!isCurrentPasswordValid) {
             currentPasswordEditText.requestFocus();
         }
-        return !isCurrentPasswordEmpty ;
+        return !isCurrentPasswordEmpty;
     }
 
     private boolean isNewPasswordValid() {
@@ -258,7 +248,7 @@ public class DemographicsSettingsChangePasswordFragment extends BaseFragment {
         if (!isNewPasswordValid) {
             newPasswordEditText.requestFocus();
         }
-        return !isNewPasswordEmpty ;
+        return !isNewPasswordEmpty;
     }
 
     private boolean isRepeatPasswordValid() {
@@ -266,7 +256,7 @@ public class DemographicsSettingsChangePasswordFragment extends BaseFragment {
         if (!isRepeatPasswordValid) {
             repeatPasswordEditText.requestFocus();
         }
-        return !isRepeatPasswordEmpty ;
+        return !isRepeatPasswordEmpty;
     }
 
     /**
@@ -304,46 +294,46 @@ public class DemographicsSettingsChangePasswordFragment extends BaseFragment {
                 @Override
                 public void onClick(View view) {
                     try {
-                        if (isCurrentPasswordValid() && demographicsSettingsDTO != null ) {
-                                DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
-                                    DemographicsSettingsTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
-                                    TransitionDTO demographicsSettingsUpdatePasswordDTO = demographicsSettingsTransitionsDTO.getChangePassword();
-                                    DemographicsSettingsHeaderDTO demographicsSettingsHeaderDTO =  demographicsSettingsUpdatePasswordDTO.getHeader();
-                                    DemographicsSettingsMaintainanceDTO demographicsSettingsMaintainanceDTO = demographicsSettingsHeaderDTO.getMaintenance();
-                                    DemographicsSettingsEmailProperties demographicsSettingsEmailProperties = demographicsSettingsMaintainanceDTO.getProperties();
-                                    DemographicSettingsCurrentPasswordDTO demographicSettingsCurrentPasswordDTO = demographicsSettingsEmailProperties.getCurrentPassword();
+                        if (isCurrentPasswordValid() && demographicsSettingsDTO != null) {
+                            DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
+                            DemographicsSettingsTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
+                            TransitionDTO demographicsSettingsUpdatePasswordDTO = demographicsSettingsTransitionsDTO.getChangePassword();
+                            DemographicsSettingsHeaderDTO demographicsSettingsHeaderDTO = demographicsSettingsUpdatePasswordDTO.getHeader();
+                            DemographicsSettingsMaintainanceDTO demographicsSettingsMaintainanceDTO = demographicsSettingsHeaderDTO.getMaintenance();
+                            DemographicsSettingsEmailProperties demographicsSettingsEmailProperties = demographicsSettingsMaintainanceDTO.getProperties();
+                            DemographicSettingsCurrentPasswordDTO demographicSettingsCurrentPasswordDTO = demographicsSettingsEmailProperties.getCurrentPassword();
 
-                                    Map<String, String> properties = null;
-                                    properties = new HashMap<>();
+                            Map<String, String> properties = null;
+                            properties = new HashMap<>();
 
-                                    properties.put("login_email",getCurrentEmail());
-                                    properties.put("current_password", currentPasswordEditText.getText().toString());
-                                    properties.put("proposed_password",newPasswordEditText.getText().toString());
-                                    JSONObject attributes = new JSONObject( properties );
-                                    String encodedAttributes = new String(Base64.encodeBase64( attributes.toString().getBytes()));
-                                    Map<String, String> header = null;
-                                    header = new HashMap<>();
-                                    header.put("maintenance", encodedAttributes);
+                            properties.put("login_email", getCurrentEmail());
+                            properties.put("current_password", currentPasswordEditText.getText().toString());
+                            properties.put("proposed_password", newPasswordEditText.getText().toString());
+                            JSONObject attributes = new JSONObject(properties);
+                            String encodedAttributes = new String(Base64.encodeBase64(attributes.toString().getBytes()));
+                            Map<String, String> header = null;
+                            header = new HashMap<>();
+                            header.put("maintenance", encodedAttributes);
 
-                                    try {
-                                        if (demographicsSettingsDTO != null) {
-                                            DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
-                                            if (demographicsSettingsPayloadDTO != null) {
-                                                //DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-                                                //DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload().;
-                                                //PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
+                            try {
+                                if (demographicsSettingsDTO != null) {
+                                    DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
+                                    if (demographicsSettingsPayloadDTO != null) {
+                                        //DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
+                                        //DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload().;
+                                        //PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
 
-                                                Gson gson = new Gson();
-                                                String jsonInString = gson.toJson(demographicsSettingsPayloadDTO);
-                                                getWorkflowServiceHelper().execute(demographicsSettingsUpdatePasswordDTO, updatePasswordCallback,null, null, header);
-                                            }
-                                        }
-
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
+                                        Gson gson = new Gson();
+                                        String jsonInString = gson.toJson(demographicsSettingsPayloadDTO);
+                                        getWorkflowServiceHelper().execute(demographicsSettingsUpdatePasswordDTO, updatePasswordCallback, null, null, header);
                                     }
                                 }
-                    }catch (Exception e){
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -351,7 +341,7 @@ public class DemographicsSettingsChangePasswordFragment extends BaseFragment {
         }
     }
 
-    private String getCurrentEmail(){
+    private String getCurrentEmail() {
         String currentEmail = null;
         if (demographicsSettingsDTO != null) {
             DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();

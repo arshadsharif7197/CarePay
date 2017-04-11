@@ -6,9 +6,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class DemographicsSettingsMetadataDTO {
 
-    @SerializedName("labels")
-    @Expose
-    private DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO = new DemographicsSettingsLabelsDTO();
     @SerializedName("links")
     @Expose
     private DemographicsSettingsLinksDTO demographicsSettingsLinksDTO = new DemographicsSettingsLinksDTO();
@@ -18,14 +15,6 @@ public class DemographicsSettingsMetadataDTO {
     @SerializedName("data_models")
     @Expose
     private DemographicsSettingsDataModelsDTO dataModels = new DemographicsSettingsDataModelsDTO();
-
-    public DemographicsSettingsLabelsDTO getLabels() {
-        return demographicsSettingsLabelsDTO;
-    }
-
-    public void setLabels(DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO) {
-        this.demographicsSettingsLabelsDTO = demographicsSettingsLabelsDTO;
-    }
 
     public DemographicsSettingsLinksDTO getLinks() {
         return demographicsSettingsLinksDTO;

@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataInsuranceOptionDTO;
@@ -32,13 +33,17 @@ import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDataModelsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDetailsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMetadataDTO;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
@@ -47,11 +52,6 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegular
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTextInputLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class ScanInsuranceFragment extends DocumentScannerFragment {
 
@@ -59,19 +59,19 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
     private String[] providerDataArray;
     private String[] cardTypeDataArray;
 
-    private View               view;
-    private Button             btnScanFrontInsurance;
-    private Button             btnScanBackInsurance;
-    private EditText           insuranceCardNumEditText;
-    private TextView           planTextView;
-    private TextView           providerTextView;
-    private TextView           cardTypeTextView;
-    private TextInputLayout    insuranceCardNumberTextInput;
-    private TextView           insurancePlanLabel;
-    private TextView           insuranceProviderLabel;
-    private TextView           insuranceTypeLabel;
+    private View view;
+    private Button btnScanFrontInsurance;
+    private Button btnScanBackInsurance;
+    private EditText insuranceCardNumEditText;
+    private TextView planTextView;
+    private TextView providerTextView;
+    private TextView cardTypeTextView;
+    private TextInputLayout insuranceCardNumberTextInput;
+    private TextView insurancePlanLabel;
+    private TextView insuranceProviderLabel;
+    private TextView insuranceTypeLabel;
 
-    private DemographicInsurancePayloadDTO            insuranceDTO;
+    private DemographicInsurancePayloadDTO insuranceDTO;
     private DemographicMetadataEntityInsurancesDTO insuranceMetadataDTO;
     private DemographicsSettingsDTO demographicsSettingsDTO;
     private String documentsdocumentsScanFirstString = null;
@@ -115,35 +115,21 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
      * documents labels
      */
     public void getInsuranceLabels() {
-        try{
-            if (demographicsSettingsDTO != null) {
-            DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
-            if (demographicsSettingsMetadataDTO != null) {
-                DemographicsSettingsLabelsDTO demographicsSettingsLabelsDTO = demographicsSettingsMetadataDTO.getLabels();
-                if (demographicsSettingsLabelsDTO != null) {
-                    documentsdocumentsScanFirstString = demographicsSettingsLabelsDTO.getDocumentsScanFirstLabel();
-                    documentsScanBackString = demographicsSettingsLabelsDTO.getDocumentsScanBackLabel();
-                    documentsDlNumberString = demographicsSettingsLabelsDTO.getDocumentsDlNumberLabel();
-                    documentsDlStateString = demographicsSettingsLabelsDTO.getDocumentsDlStateLabel();
-                    documentsHealthInsuranceString = demographicsSettingsLabelsDTO.getDocumentsHealthInsuranceLabel();
-                    documentsHaveHealthInsuranceString = demographicsSettingsLabelsDTO.getDocumentsHaveHealthInsuranceLabel();
-                    documentsAddnotherInsuranceString = demographicsSettingsLabelsDTO.getDocumentsAddnotherInsuranceLabel();
-                    documentsGoldenCrossString = demographicsSettingsLabelsDTO.getDocumentsGoldenCrossLabel();
-                    documentsTypeString = demographicsSettingsLabelsDTO.getDocumentsTypeLabel();
-                    documentsCancelString = demographicsSettingsLabelsDTO.getDemographicsCancelLabel();
-                    documentsRemoveString = demographicsSettingsLabelsDTO.getDemographicsRemoveLabel();
-                    documentsPlanString = demographicsSettingsLabelsDTO.getDemographicsPlanLabel();
-                    documentsProviderString = demographicsSettingsLabelsDTO.getDemographicsProviderLabel();
-                    documentsCardNumberString = demographicsSettingsLabelsDTO.getDemographicsCardNumberLabel();
-                    documentsCardTypeString = demographicsSettingsLabelsDTO.getDemographicsCardTypeLabel();
-
-                }
-            }
-          }
-        }catch(Exception e)
-        {
-            e.printStackTrace();
-        }
+        documentsdocumentsScanFirstString = Label.getLabel("documents_scan_front_label");
+        documentsScanBackString = Label.getLabel("documents_scan_back_label");
+        documentsDlNumberString = Label.getLabel("documents_dl_number_label");
+        documentsDlStateString = Label.getLabel("documents_dl_state_label");
+        documentsHealthInsuranceString = Label.getLabel("documents_health_insurance_label");
+        documentsHaveHealthInsuranceString = Label.getLabel("documents_have_health_insurance_label");
+        documentsAddnotherInsuranceString = Label.getLabel("demographics_add_another_insurance_link");
+        documentsGoldenCrossString = Label.getLabel("demographics_golden_cross_Premium");
+        documentsTypeString = Label.getLabel("documents_document_type_label");
+        documentsCancelString = Label.getLabel("demographics_cancel_label");
+        documentsRemoveString = Label.getLabel("remove_link");
+        documentsPlanString = Label.getLabel("demographics_plan_label");
+        documentsProviderString = Label.getLabel("demographics_provider_label");
+        documentsCardNumberString = Label.getLabel("demographics_card_number_label");
+        documentsCardTypeString = Label.getLabel("demographics_card_type_label");
     }
 
     private void initializeUIFields() {
@@ -169,7 +155,7 @@ public class ScanInsuranceFragment extends DocumentScannerFragment {
         btnScanFrontInsurance.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
         GradientDrawable shape = new GradientDrawable();
         shape.setShape(GradientDrawable.RECTANGLE);
-        shape.setCornerRadii(new float[] { 8, 8, 8, 8, 8, 8, 8, 8 });
+        shape.setCornerRadii(new float[]{8, 8, 8, 8, 8, 8, 8, 8});
         shape.setStroke(3, ContextCompat.getColor(getActivity(), R.color.colorPrimary));
         btnScanFrontInsurance.setBackgroundDrawable(shape);
 
