@@ -43,18 +43,18 @@ import java.util.Map;
 
 public class HowToCheckInActivity extends BasePracticeActivity {
 
-    private SigninPatientModeDTO            signinPatientModeDTO;
+    private SigninPatientModeDTO signinPatientModeDTO;
     private CustomGothamRoundedMediumButton goBackButton;
-    private CustomGothamRoundedMediumLabel  howToCheckInTextView;
-    private CustomGothamRoundedBookButton   carePayLoginButton;
-    private CustomGothamRoundedBookButton   scanQRCodeButton;
-    private CustomGothamRoundedBookButton   manualSearchButton;
-    private ProgressDialog                  dialog;
+    private CustomGothamRoundedMediumLabel howToCheckInTextView;
+    private CustomGothamRoundedBookButton carePayLoginButton;
+    private CustomGothamRoundedBookButton scanQRCodeButton;
+    private CustomGothamRoundedBookButton manualSearchButton;
+    private ProgressDialog dialog;
 
 
     static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
-    private static final int QR_SCAN_REQUEST_CODE =0;
-    private static final int QR_RESULT_CODE_TABLET=1;
+    private static final int QR_SCAN_REQUEST_CODE = 0;
+    private static final int QR_RESULT_CODE_TABLET = 1;
     private static final int CAMERA_PERMISSION = 1;
 
     @Override
@@ -231,14 +231,14 @@ public class HowToCheckInActivity extends BasePracticeActivity {
      * @param resultCode  resultCode
      * @param intent      result intent
      */
-        public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (requestCode== QR_SCAN_REQUEST_CODE && resultCode == RESULT_OK) {
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == QR_SCAN_REQUEST_CODE && resultCode == RESULT_OK) {
             try {
                 /*Process scanned QR code*/
                 String scanResult = intent.getStringExtra("SCAN_RESULT");
                 processScannedQRCOde(scanResult);
             } catch (JsonSyntaxException ex) {
-                String errorMessage = signinPatientModeDTO.getMetadata().getLabels().getInvalidQRCodeTitle()+", "+ signinPatientModeDTO.getMetadata().getLabels().getInvalidQRCodeMessage();
+                String errorMessage = signinPatientModeDTO.getMetadata().getLabels().getInvalidQRCodeTitle() + ", " + signinPatientModeDTO.getMetadata().getLabels().getInvalidQRCodeMessage();
                 SystemUtil.doDefaultFailureBehavior((BaseActivity) getContext(), errorMessage);
                 dismissDialog();
             }
@@ -246,30 +246,28 @@ public class HowToCheckInActivity extends BasePracticeActivity {
     }
 
     /**
-     *
-     * @param qrCodeData
-     *  the QR code data
+     * @param qrCodeData the QR code data
      */
     private void processScannedQRCOde(String qrCodeData) {
         instantiateProgressDialog();
         Gson gson = new Gson();
         QRCodeScanResultDTO scanQRCodeResultDTO = gson.fromJson(qrCodeData, QRCodeScanResultDTO.class);
 
-        if(scanQRCodeResultDTO!=null && scanQRCodeResultDTO.getPracticeMgmt()
+        if (scanQRCodeResultDTO != null && scanQRCodeResultDTO.getPracticeMgmt()
                 .equals(getApplicationMode().getUserPracticeDTO().getPracticeMgmt())
                 && scanQRCodeResultDTO.getPracticeId()
-                .equals(getApplicationMode().getUserPracticeDTO().getPracticeId())){
+                .equals(getApplicationMode().getUserPracticeDTO().getPracticeId())) {
 
             getAppAuthorizationHelper().setUser(scanQRCodeResultDTO.getUserName());
 
-           // getApplicationMode().getUserPracticeDTO().setUserName(scanQRCodeResultDTO.getUserName());
+            // getApplicationMode().getUserPracticeDTO().setUserName(scanQRCodeResultDTO.getUserName());
             Map<String, String> queryMap = new HashMap<String, String>();
             queryMap.put("appointment_id", scanQRCodeResultDTO.getAppointmentId());
             getWorkflowServiceHelper().execute(signinPatientModeDTO.getMetadata()
-                            .getTransitions().getAction(), appointmentCallBack, queryMap);
+                    .getTransitions().getAction(), appointmentCallBack, queryMap);
 
-        }else{
-            String errorMessage = signinPatientModeDTO.getMetadata().getLabels().getInvalidQRCodeTitle()+", "+ signinPatientModeDTO.getMetadata().getLabels().getInvalidQRCodeMessage();
+        } else {
+            String errorMessage = signinPatientModeDTO.getMetadata().getLabels().getInvalidQRCodeTitle() + ", " + signinPatientModeDTO.getMetadata().getLabels().getInvalidQRCodeMessage();
             SystemUtil.doDefaultFailureBehavior((BaseActivity) getContext(), errorMessage);
         }
     }
@@ -327,14 +325,14 @@ public class HowToCheckInActivity extends BasePracticeActivity {
      * Method to dismiss progress dialog.
      */
     private void dismissDialog() {
-        if(dialog != null){
+        if (dialog != null) {
             dialog.dismiss();
         }
     }
 
     /**
      * Launch activity for scanning qr code if permission is granted
-     * */
+     */
     public void launchActivity() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -343,17 +341,17 @@ public class HowToCheckInActivity extends BasePracticeActivity {
                     new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION);
         } else {
             Intent intent = new Intent(this, ScannerQRActivity.class);
-            startActivityForResult(intent,QR_SCAN_REQUEST_CODE);
+            startActivityForResult(intent, QR_SCAN_REQUEST_CODE);
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,  String permissions[], int grantResults[]) {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int grantResults[]) {
         switch (requestCode) {
             case CAMERA_PERMISSION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        Intent intent = new Intent(this, ScannerQRActivity.class);
-                        startActivityForResult(intent,QR_SCAN_REQUEST_CODE);
+                    Intent intent = new Intent(this, ScannerQRActivity.class);
+                    startActivityForResult(intent, QR_SCAN_REQUEST_CODE);
                 } else {
                     Toast.makeText(this, "Please grant camera permission to use the QR Scanner", Toast.LENGTH_SHORT).show();
                 }

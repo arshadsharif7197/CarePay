@@ -11,6 +11,7 @@ import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,13 +64,16 @@ public class CustomMessageToast extends Toast {
         }
 
         View container = layout.findViewById(R.id.success_message_toast_layout);
+        ImageView icon = (ImageView) layout.findViewById(R.id.success_icon);
         switch(notificationType){
             case NOTIFICATION_TYPE_ERROR:
+                icon.setImageResource(R.drawable.icn_notification_error);
                 container.setBackgroundResource(R.drawable.error_notification_background);
                 setDuration(Toast.LENGTH_LONG);
                 break;
             case NOTIFICATION_TYPE_SUCCESS:
             default:
+                icon.setImageResource(R.drawable.icn_notification_basic_white_check);
                 container.setBackgroundResource(R.drawable.success_notification_background);
                 setDuration(Toast.LENGTH_SHORT);
                 break;
