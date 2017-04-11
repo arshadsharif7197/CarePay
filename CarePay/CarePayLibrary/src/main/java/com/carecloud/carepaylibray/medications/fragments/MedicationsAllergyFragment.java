@@ -22,6 +22,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.ISession;
+import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.medications.adapters.MedicationAllergiesAdapter;
 import com.carecloud.carepaylibray.medications.models.MedicationAllergiesAction;
 import com.carecloud.carepaylibray.medications.models.MedicationAllergiesLabelsDTO;
@@ -59,7 +60,7 @@ public class MedicationsAllergyFragment extends BaseFragment implements Medicati
     private RecyclerView allergyRecycler;
     private RecyclerView medicationRecycler;
 
-    private MedicationAllergyCallback callback;
+    protected MedicationAllergyCallback callback;
 
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
     private MedicationAllergiesLabelsDTO labels;
@@ -74,7 +75,11 @@ public class MedicationsAllergyFragment extends BaseFragment implements Medicati
     public void onAttach(Context context){
         super.onAttach(context);
         try{
-            callback = (MedicationAllergyCallback) context;
+            if (context instanceof DemographicsView) {
+                callback = ((DemographicsView) context).getPresenter();
+            } else {
+                callback = (MedicationAllergyCallback) context;
+            }
         }catch (ClassCastException cce){
             throw new ClassCastException("Attached Context must implement MedicationAllergyCallback");
         }

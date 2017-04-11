@@ -152,7 +152,7 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
     public void onStart() {
         super.onStart();
 //        ((PatientModeCheckinActivity) getActivity()).updateSection(flowStateInfo);
-        flowCallback.setCheckinFlow(CheckinFlowState.PAYMENT, 0, 0);
+        flowCallback.setCheckinFlow(CheckinFlowState.PAYMENT, 1, 1);
     }
 
     @Override
