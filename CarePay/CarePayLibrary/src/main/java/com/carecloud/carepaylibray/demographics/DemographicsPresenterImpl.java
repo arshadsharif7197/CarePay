@@ -16,7 +16,6 @@ import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraFragment;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
 import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
