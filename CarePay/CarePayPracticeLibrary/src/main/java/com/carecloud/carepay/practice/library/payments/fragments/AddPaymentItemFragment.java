@@ -15,7 +15,6 @@ import com.carecloud.carepay.practice.library.payments.adapter.AddPaymentItemAda
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
-import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.ResponsibilityType;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -53,7 +52,7 @@ public class AddPaymentItemFragment extends BaseDialogFragment implements AddPay
             simpleChargeItems = Arrays.asList(balanceItemArray);
         }
 
-        //getBaseTemplateItems();
+        getBaseTemplateItems();
     }
 
     @Override
@@ -123,9 +122,9 @@ public class AddPaymentItemFragment extends BaseDialogFragment implements AddPay
     };
 
     private void getBaseTemplateItems(){
-        addTemplateItem(PendingBalancePayloadDTO.CO_PAY_TYPE, 0, ResponsibilityType.co_pay);
-        addTemplateItem(PendingBalancePayloadDTO.CO_INSURANCE_TYPE, 0, ResponsibilityType.co_insurance);
-        addTemplateItem(PendingBalancePayloadDTO.DEDUCTIBLE_TYPE, 0, ResponsibilityType.deductable);
+        addTemplateItem(Label.getLabel("practice_payments_detail_dialog_insurance_copay"), 0, ResponsibilityType.co_pay);
+//        addTemplateItem(PendingBalancePayloadDTO.CO_INSURANCE_TYPE, 0, ResponsibilityType.co_insurance);
+//        addTemplateItem(PendingBalancePayloadDTO.DEDUCTIBLE_TYPE, 0, ResponsibilityType.deductable);
 
     }
 
