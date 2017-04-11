@@ -47,6 +47,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadI
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckinDemographicsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
+import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.demographics.scanner.IdDocScannerFragment;
@@ -68,7 +69,7 @@ public class DemographicsActivity extends BasePatientActivity
         DemographicsAddressFragment.DemographicsAddressFragmentListener,
         CheckinDemographicsFragment.CheckinDemographicsFragmentListener,
         HealthInsuranceFragment.InsuranceDocumentScannerListener,
-        CheckInDemographicsBaseFragment.CheckInNavListener,
+        CheckinFlowCallback,
         CarePayCameraReady {
 
     private int currentPageIndex;

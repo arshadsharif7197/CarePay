@@ -21,8 +21,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
         super.onCreate(savedInstanceState);
         setContentView(com.carecloud.carepaylibrary.R.layout.activity_demographic_review);
 
-        boolean isPatientMode = getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE;
-        presenter = new DemographicsPresenterImpl(this, savedInstanceState, isPatientMode);
+        presenter = new DemographicsPresenterImpl(this, savedInstanceState, false);
     }
 
     @Override
