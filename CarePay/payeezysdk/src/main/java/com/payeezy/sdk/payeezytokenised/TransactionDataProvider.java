@@ -104,6 +104,7 @@ public class TransactionDataProvider {
 
 	public static String jsSecurityKey="js-6125e57ce5c46e10087a545b9e9d7354c23e1a1670d9e9c7";
 	public static String tokenUrl="https://api-cert.payeezy.com/v1/securitytokens?";
+	public static String taToken ="NOIW";
 
 
 }

@@ -10,7 +10,6 @@ import java.util.List;
 
 public class PendingBalancePayloadDTO {
 
-    public static final String PATIENT_BALANCE_TYPE = "Patient Balance";
     public static final String CO_PAY_TYPE = "Insurance CoPay";
     public static final String CO_INSURANCE_TYPE = "Co-Insurance";
     public static final String DEDUCTIBLE_TYPE = "Insurance Deductible";

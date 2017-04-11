@@ -9,8 +9,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by kkannan on 9/13/16.
@@ -73,6 +71,10 @@ public class DateUtil {
      * @return The current DateUtil object
      */
     public DateUtil setDateRaw(String dateString) {
+        if(dateString == null){
+            Log.e(TAG, "Date string is NULL");
+            return this;
+        }
         for (String format: formats) {
             try {
                 SimpleDateFormat formatter = new SimpleDateFormat(format, Locale.getDefault());

@@ -2,6 +2,7 @@ package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.practice.library.base.PracticeNavigationStateConstants;
 import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckinFlowCallback;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -324,9 +326,21 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         }
 
         @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
+        public void onPostExecute(final WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            PracticeNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
+            if(workflowDTO.getState().equals(PracticeNavigationStateConstants.PATIENT_APPOINTMENTS)){
+                //display confirmaton
+                CheckinCompletedDialogFragment successFragment = new CheckinCompletedDialogFragment();
+                successFragment.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        PracticeNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
+                    }
+                });
+                successFragment.show(getFragmentManager(), successFragment.getClass().getName());
+            }else {
+                PracticeNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
+            }
         }
 
         @Override
