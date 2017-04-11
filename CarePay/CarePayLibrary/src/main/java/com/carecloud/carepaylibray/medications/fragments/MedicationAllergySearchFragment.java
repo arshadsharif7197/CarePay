@@ -60,17 +60,17 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
 
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
-        try{
+        try {
             callback = (MedicationAllergySearchCallback) context;
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Attached Context must implement MedicationAllergyCallback");
         }
     }
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
         Gson gson = new Gson();
@@ -83,22 +83,22 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
         return inflater.inflate(R.layout.fragment_search, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         inflateToolbarViews(view);
         initViews(view);
 
         setAdapters();
     }
 
-    private void inflateToolbarViews(View view){
+    private void inflateToolbarViews(View view) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.search_toolbar);
         toolbar.setTitle("");
-        if(getDialog()==null) {
+        if (getDialog() == null) {
             toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.icn_nav_back));
             toolbar.setNavigationOnClickListener(navigationClickListener);
 //            ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
@@ -110,20 +110,20 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
         SystemUtil.showSoftKeyboard(getActivity());
 
         TextView title = (TextView) view.findViewById(R.id.toolbar_title);
-        if(title!=null){
+        if (title != null) {
             title.setText(medicationsAllergiesDTO.getMetadata().getLabels().getMedicationsTitle());
             title.setGravity(Gravity.CENTER_HORIZONTAL);
         }
     }
 
-    private void initViews(View view){
+    private void initViews(View view) {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         searchRecycler = (RecyclerView) view.findViewById(R.id.search_recycler);
         searchRecycler.setLayoutManager(layoutManager);
 
-        if(getDialog()!=null){
+        if (getDialog() != null) {
             View closeButton = view.findViewById(R.id.closeViewLayout);
-            if(closeButton!= null){
+            if (closeButton != null) {
                 closeButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -135,13 +135,13 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
         }
     }
 
-    private void setAdapters(){
+    private void setAdapters() {
         MedicationAllergySearchAdapter adapter = new MedicationAllergySearchAdapter(getContext(), resultsList, this);
         searchRecycler.setAdapter(adapter);
     }
 
 
-    private void submitMedicatonSearch(String searchQuery){
+    private void submitMedicatonSearch(String searchQuery) {
         MedicationAllergiesLinkDTO searchDTO = medicationsAllergiesDTO.getMetadata().getLinks().getSearch();
         TransitionDTO transitionDTO = new TransitionDTO();
         transitionDTO.setMethod(searchDTO.getMethod());
@@ -160,9 +160,9 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
 
     @Override
     public void searchItemSelected(MedicationsAllergiesObject item) {
-        if(item instanceof MedicationsObject){
+        if (item instanceof MedicationsObject) {
             callback.addMedicationAllergyItem(item);
-            if(getDialog()!=null){
+            if (getDialog() != null) {
                 dismiss();
             }
         }
@@ -180,11 +180,11 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
         public boolean onQueryTextSubmit(String query) {
             searchView.clearFocus();
             SystemUtil.hideSoftKeyboard(getActivity());
-            switch (searchMode){
+            switch (searchMode) {
                 case MEDICATION:
                     submitMedicatonSearch(query);
                     break;
-                case  ALLERGY:
+                case ALLERGY:
                     submitMedicatonSearch(query);
                     break;
                 default:
@@ -195,6 +195,11 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
 
         @Override
         public boolean onQueryTextChange(String newText) {
+            if (newText.length() > 3) {
+                ((ISession) getContext()).getWorkflowServiceHelper().interrupt();
+
+                submitMedicatonSearch(newText);
+            }
             return false;
         }
     };
@@ -202,7 +207,7 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
     private WorkflowServiceCallback medicationSearchCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ((ISession) getContext()).showProgressDialog();
+
         }
 
         @Override
