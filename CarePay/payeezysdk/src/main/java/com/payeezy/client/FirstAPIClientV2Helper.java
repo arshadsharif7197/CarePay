@@ -60,6 +60,7 @@ public class FirstAPIClientV2Helper {
     private String trToken;
     private String merchantid ;
     private String urltoken;
+	private String taToken;
 
 	private String tokenurl;
 	private String jsSecurityKey;
@@ -839,5 +840,12 @@ private TransactionResponse doPurchaseVoidAVSGD(TransactionRequest trans) throws
 
 }
 
+	public String getTaToken() {
+		return taToken;
+	}
+
+	public void setTaToken(String taToken) {
+		this.taToken = taToken;
+	}
 }
 	
