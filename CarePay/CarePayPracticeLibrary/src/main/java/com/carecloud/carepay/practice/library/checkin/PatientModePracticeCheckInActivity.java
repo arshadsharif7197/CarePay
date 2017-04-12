@@ -22,11 +22,9 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.updatebalance.PaymentUpdateBalanceDTO;
-import com.carecloud.carepaylibray.utils.DateUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +34,6 @@ public class PatientModePracticeCheckInActivity extends BasePracticeActivity imp
 
     private RecyclerView appointmentsRecyclerView;
     private AppointmentsResultModel appointmentsResultModel;
-    private ProgressBar appointmentProgressBar;
     private List<AppointmentDTO> appointmentsItems;
 
     @Override
@@ -47,12 +44,10 @@ public class PatientModePracticeCheckInActivity extends BasePracticeActivity imp
         appointmentsRecyclerView = (RecyclerView) findViewById(R.id.appointments_recycler_view);
         appointmentsRecyclerView.setHasFixedSize(true);
 
-        appointmentProgressBar = (ProgressBar) findViewById(R.id.appointmentProgressBar);
+        ProgressBar appointmentProgressBar = (ProgressBar) findViewById(R.id.appointmentProgressBar);
         appointmentProgressBar.setVisibility(View.GONE);
         findViewById(R.id.logoutTextview).setOnClickListener(this);
         findViewById(R.id.btnHome).setOnClickListener(this);
-        appointmentProgressBar = (ProgressBar) findViewById(R.id.appointmentProgressBar);
-        appointmentProgressBar.setVisibility(View.GONE);
         try {
             appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
             getAppointmentList();
@@ -60,29 +55,6 @@ public class PatientModePracticeCheckInActivity extends BasePracticeActivity imp
             showErrorNotification(null);
             ex.printStackTrace();
         }
-    }
-
-    private String getToday(String appointmentRawDate) {
-        // Current date
-        String currentDate = DateUtil.getInstance().setToCurrent().toStringWithFormatMmDashDdDashYyyy();
-        Date currentConvertedDate = DateUtil.getInstance().setDateRaw(currentDate).getDate();
-
-        // Appointment date
-        String appointmentDate = DateUtil.getInstance().setDateRaw(appointmentRawDate).toStringWithFormatMmDashDdDashYyyy();
-        Date convertedAppointmentDate = DateUtil.getInstance().setDateRaw(appointmentDate).getDate();
-
-        String strDay;
-        if (convertedAppointmentDate.after(currentConvertedDate)
-                && !appointmentDate.equalsIgnoreCase(currentDate)) {
-            strDay = CarePayConstants.DAY_UPCOMING;
-
-        } else if (convertedAppointmentDate.before(currentConvertedDate)) {
-            strDay = CarePayConstants.DAY_TODAY;
-        } else {
-            strDay = CarePayConstants.DAY_TODAY;
-        }
-
-        return strDay;
     }
 
     @Override
@@ -161,14 +133,6 @@ public class PatientModePracticeCheckInActivity extends BasePracticeActivity imp
             findViewById(R.id.no_appointment_layout).setVisibility(View.GONE);
             appointmentsItems = appointmentsResultModel.getPayload().getAppointments();
 
-//            List<AppointmentDTO> appointmentListWithToday = new ArrayList<>();
-//            for (AppointmentDTO appointmentDTO : appointmentsItems) {
-//                String title = getToday(appointmentDTO.getPayload().getStartTime());
-//                if (title.equalsIgnoreCase(CarePayConstants.DAY_TODAY)) {
-//                    appointmentListWithToday.add(appointmentDTO);
-//                }
-//            }
-
             AppointmentsListAdapter appointmentsListAdapter = new AppointmentsListAdapter(
                     PatientModePracticeCheckInActivity.this, appointmentsItems, appointmentsResultModel);
             appointmentsRecyclerView.setAdapter(appointmentsListAdapter);
@@ -195,45 +159,6 @@ public class PatientModePracticeCheckInActivity extends BasePracticeActivity imp
             });
         }
     }
-
-    private void refreshAppointmentList() {
-
-        if (appointmentsItems != null) {
-            appointmentsItems.clear();
-        }
-
-        // API call to fetch latest appointments
-        TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getLinks().getAppointments();
-        getWorkflowServiceHelper().execute(transitionDTO, pageRefreshCallback);
-    }
-
-    WorkflowServiceCallback pageRefreshCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-            appointmentProgressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            appointmentProgressBar.setVisibility(View.GONE);
-            if (appointmentsResultModel != null) {
-                Gson gson = new Gson();
-                appointmentsResultModel = gson.fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
-                getAppointmentList();
-            }
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            appointmentProgressBar.setVisibility(View.GONE);
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
-
 
     @Override
     protected void processExternalPayment(PaymentExecution execution, Intent data) {
