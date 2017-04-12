@@ -216,6 +216,7 @@ public void initialize()
 	clientHelper.setToken(TransactionDataProvider.tokenCert);
 	clientHelper.setTrToken(TransactionDataProvider.trTokenInt);
 	clientHelper.setUrl(TransactionDataProvider.urlCert);
+	clientHelper.setTaToken(TransactionDataProvider.taToken);
 
 }
 	//Method added for GET token August 3rd//Do not delete
@@ -231,7 +232,7 @@ public void initialize()
 			clientHelper.setTokenurl(TransactionDataProvider.tokenUrl);
 			clientHelper.setJsSecurityKey(TransactionDataProvider.jsSecurityKey);
 
-			String url = clientHelper.getTokenurl() +"ta_token=NOIW"+"&auth=" + uri[1] + "&apikey=" + clientHelper.getAppId() + "&js_security_key=" +
+			String url = clientHelper.getTokenurl() +"ta_token="+clientHelper.getTaToken()+"&auth=" + uri[1] + "&apikey=" + clientHelper.getAppId() + "&js_security_key=" +
 					clientHelper.getJsSecurityKey() + "&callback=" + uri[2] + "&currency=" + uri[3] + "&type=" + uri[4] + "&credit_card.type=" + uri[5]
 					+ "&credit_card.cardholder_name=" + uri[6] + "&credit_card.card_number=" + uri[7] + "&credit_card.exp_date=" + uri[8]
 					+ "&credit_card.cvv=" + uri[9];

@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.base;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
@@ -25,6 +26,9 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     private Dialog dialog;
     private boolean isPracticeAppPatientMode;
 
+    private DialogInterface.OnDismissListener onDismissListener;
+    private DialogInterface.OnCancelListener onCancelListener;
+
     @Override
     public void setupDialog(Dialog dialog, int style) {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -35,6 +39,15 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         isPracticeAppPatientMode = ((ISession) getActivity()).getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE;
         if (isPracticeAppPatientMode) {
             setNavigationBarVisibility();
+        }
+
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialogInterface){
+        super.onDismiss(dialogInterface);
+        if(onDismissListener!=null){
+            onDismissListener.onDismiss(dialogInterface);
         }
     }
 
@@ -58,9 +71,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
      * @param dismissListener listener
      */
     public void setOnDismissListener(Dialog.OnDismissListener dismissListener){
-        if(dialog!=null) {
-            dialog.setOnDismissListener(dismissListener);
-        }
+        this.onDismissListener = dismissListener;
     }
 
     /**
@@ -68,9 +79,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
      * @param cancelListener listener
      */
     public void setOnCancelListener(Dialog.OnCancelListener cancelListener){
-        if(dialog!=null) {
-            dialog.setOnCancelListener(cancelListener);
-        }
+        this.onCancelListener = cancelListener;
     }
 
 

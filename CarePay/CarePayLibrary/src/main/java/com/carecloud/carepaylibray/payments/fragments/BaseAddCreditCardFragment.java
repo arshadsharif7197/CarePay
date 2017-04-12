@@ -480,6 +480,7 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
             TransactionDataProvider.tokenCert = merchantServiceDTO.getMasterMerchantToken();
             TransactionDataProvider.trTokenInt = merchantServiceDTO.getMasterTaToken();
             TransactionDataProvider.jsSecurityKey = merchantServiceDTO.getMasterJsSecurityKey();
+            TransactionDataProvider.taToken = merchantServiceDTO.getMasterTaToken();
 
             String tokenType = merchantServiceDTO.getTokenType();
             String tokenAuth = merchantServiceDTO.getTokenizationAuth();

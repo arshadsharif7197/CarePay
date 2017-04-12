@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.practice.library.base.PracticeNavigationStateConstants;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -329,7 +330,11 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            PracticeNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
+            if(workflowDTO.getState().equals(PracticeNavigationStateConstants.PATIENT_APPOINTMENTS)){
+                callback.displayCheckinSuccess(workflowDTO);
+            }else {
+                PracticeNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
+            }
         }
 
         @Override
