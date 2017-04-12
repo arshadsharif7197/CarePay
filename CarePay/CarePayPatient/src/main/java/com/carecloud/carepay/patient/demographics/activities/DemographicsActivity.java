@@ -1,6 +1,7 @@
 package com.carecloud.carepay.patient.demographics.activities;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -44,7 +45,6 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPay
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
-import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckinDemographicsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
@@ -524,6 +524,11 @@ public class DemographicsActivity extends BasePatientActivity
 
     @Override
     public void navigateToConsentFlow(WorkflowDTO workflowDTO) {
+
+    }
+
+    @Override
+    public void displayCheckinSuccess(WorkflowDTO workflowDTO, DialogInterface.OnDismissListener dismissListener) {
 
     }
 }

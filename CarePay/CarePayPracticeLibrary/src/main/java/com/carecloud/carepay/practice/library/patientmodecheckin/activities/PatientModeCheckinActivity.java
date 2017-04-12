@@ -1,6 +1,5 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -12,8 +11,6 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
-import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
-import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinCompletedDialogFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinMedicationsAllergyFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.IntakeFormsFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.PracticeFormsFragment;
@@ -273,20 +270,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         }
     }
 
-    @Override
-    public void displayCheckinSuccess(final WorkflowDTO workflowDTO) {
-        //display confirmation
-        CheckinCompletedDialogFragment successFragment = new CheckinCompletedDialogFragment();
-        successFragment.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
-            }
-        });
-        successFragment.show(getSupportFragmentManager(), successFragment.getClass().getName());
-    }
-
-    @Override
+     @Override
     public void onBackPressed() {
         try {
             FragmentManager fragmentManager = getSupportFragmentManager();

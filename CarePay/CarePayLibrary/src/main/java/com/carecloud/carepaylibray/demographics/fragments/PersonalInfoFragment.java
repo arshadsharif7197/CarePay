@@ -269,7 +269,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         final String phoneError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED :
                 addressMetaDTO.getProperties().getPhone().getValidations().get(0).getErrorMessage();
         final String phoneValidation = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED :
-                addressMetaDTO.getProperties().getPhone().getValidations().get(0).getValue();
+                (String) addressMetaDTO.getProperties().getPhone().getValidations().get(0).getValue();
 
         String phone = phoneNumberEditText.getText().toString();
         if (!StringUtil.isNullOrEmpty(phone)

@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.demographics;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,7 @@ import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
+import com.carecloud.carepaylibray.demographics.fragments.CheckinCompletedDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
 import com.carecloud.carepaylibray.demographics.fragments.IdentificationFragment;
@@ -127,6 +129,15 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     public void navigateToConsentFlow(WorkflowDTO workflowDTO) {
         demographicsView.navigateToWorkflow(workflowDTO);
     }
+
+    @Override
+    public void displayCheckinSuccess(final WorkflowDTO workflowDTO, DialogInterface.OnDismissListener dismissListener) {
+        //display confirmation
+        CheckinCompletedDialogFragment successFragment = new CheckinCompletedDialogFragment();
+        successFragment.setOnDismissListener(dismissListener);
+        successFragment.show(getSupportFragmentManager(), successFragment.getClass().getName());
+    }
+
 
     @Override
     public DemographicLabelsDTO getLabelsDTO() {
