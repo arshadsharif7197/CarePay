@@ -12,6 +12,9 @@ public class DemographicsSettingsPayloadDTO {
     @SerializedName("languages")
     @Expose
     private List<DemographicsSettingsLanguageDTO> demographicsSettingsLanguageDTOs = new ArrayList<>();
+    @SerializedName("notifications")
+    @Expose
+    private DemographicSettingsNotificationDTO demographicSettingsNotificationDTO = new DemographicSettingsNotificationDTO();
     @SerializedName("patient_credit_cards")
     @Expose
     private List<DemographicsSettingsCreditCardsPayloadDTO> patientCreditCards = new ArrayList<>();
@@ -46,6 +49,21 @@ public class DemographicsSettingsPayloadDTO {
         this.demographicsSettingsLanguageDTOs = demographicsSettingsLanguageDTOs;
     }
 
+    public List<DemographicsSettingsLanguageDTO> getDemographicsSettingsLanguageDTOs() {
+        return demographicsSettingsLanguageDTOs;
+    }
+
+    public void setDemographicsSettingsLanguageDTOs(List<DemographicsSettingsLanguageDTO> demographicsSettingsLanguageDTOs) {
+        this.demographicsSettingsLanguageDTOs = demographicsSettingsLanguageDTOs;
+    }
+
+    public DemographicSettingsNotificationDTO getDemographicSettingsNotificationDTO() {
+        return demographicSettingsNotificationDTO;
+    }
+
+    public void setDemographicSettingsNotificationDTO(DemographicSettingsNotificationDTO demographicSettingsNotificationDTO) {
+        this.demographicSettingsNotificationDTO = demographicSettingsNotificationDTO;
+    }
 
     /**
      * Gets demographics.

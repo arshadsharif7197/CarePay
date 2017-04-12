@@ -11,5 +11,13 @@ import com.google.gson.annotations.SerializedName;
 public class DemographicMetadataItemIdDocDTO {
     @SerializedName("identity_document")
     @Expose
-    public DemographicMetadataEntityItemIdDocDTO identityDocument = new DemographicMetadataEntityItemIdDocDTO();
+    private DemographicMetadataEntityItemIdDocDTO identityDocument = new DemographicMetadataEntityItemIdDocDTO();
+
+    public DemographicMetadataEntityItemIdDocDTO getIdentityDocument() {
+        return identityDocument;
+    }
+
+    public void setIdentityDocument(DemographicMetadataEntityItemIdDocDTO identityDocument) {
+        this.identityDocument = identityDocument;
+    }
 }

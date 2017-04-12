@@ -21,7 +21,7 @@ public class DemographicMetadataEntitiesDTO {
     @Expose
     private DemographicMetadataEntityPersDetailsDTO personalDetails = new DemographicMetadataEntityPersDetailsDTO();
 
-    @SerializedName("identity_documents")
+    @SerializedName("identity_document")
     @Expose
     private DemographicMetadataEntityIdDocsDTO identityDocuments = new DemographicMetadataEntityIdDocsDTO();
 

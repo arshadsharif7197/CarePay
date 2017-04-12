@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 public class ValidationHelper {
 
     public static String VALIDATION_TYPE_IS_OPTION = "is_in_options";
-    public static String VALIDATION_TYPE_PATTERN   = "pattern";
+    public static String VALIDATION_TYPE_PATTERN = "pattern";
 
     /**
      * Applies a pattern validate to an edit text wrapped into textinput layout
@@ -50,7 +50,7 @@ public class ValidationHelper {
 
         // there is a 'pattern' validate; match against
         final String phoneError = patternValidation.getErrorMessage();
-        final String phoneValidationRegex = (String) patternValidation.value;
+        final String phoneValidationRegex = (String) patternValidation.getValue();
         if (!isValidString(string, phoneValidationRegex)) {
             wrappingTextInputLayout.setErrorEnabled(true);
             wrappingTextInputLayout.setError(phoneError);
@@ -64,10 +64,11 @@ public class ValidationHelper {
 
     /**
      * Applies validation
-     * @param editText The edit text
-     * @param wrapperLayout The wrapping input text
+     *
+     * @param editText          The edit text
+     * @param wrapperLayout     The wrapping input text
      * @param metadataEntityDTO The metadta
-     * @param extraValidation The extra validation
+     * @param extraValidation   The extra validation
      * @return Whether value in edit passes the validation
      */
     public static boolean applyIsInOptionsValidationToWrappedEdit(EditText editText,
@@ -103,7 +104,7 @@ public class ValidationHelper {
 
         final String stateError = isInOptionsValidation.getErrorMessage();
         wrapperLayout.setErrorEnabled(isInOptions);
-        if(!isInOptions) {
+        if (!isInOptions) {
             wrapperLayout.setError(stateError);
             return false;
         }
@@ -116,7 +117,7 @@ public class ValidationHelper {
             List<MetadataValidationDTO> validations = addressMetaDTO.getValidations();
             for (int i = 0; i < validations.size(); i++) {
                 MetadataValidationDTO metadataValidationDTO = validations.get(i);
-                if (metadataValidationDTO.type.equals(type)) {
+                if (metadataValidationDTO.getType().equals(type)) {
                     return metadataValidationDTO;
                 }
             }

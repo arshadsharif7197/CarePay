@@ -29,6 +29,8 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepay.service.library.platform.AndroidPlatform;
+import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
@@ -350,6 +352,8 @@ public class SigninFragment extends BaseFragment {
         UnifiedSignInUser user = new UnifiedSignInUser();
         user.setEmail(userName);
         user.setPassword(password);
+        user.setDeviceToken(((AndroidPlatform) Platform.get()).openDefaultSharedPreferences()
+                .getString(CarePayConstants.FCM_TOKEN, null));
 
         UnifiedSignInDTO signInDTO = new UnifiedSignInDTO();
         signInDTO.setUser(user);
@@ -360,7 +364,8 @@ public class SigninFragment extends BaseFragment {
 
         if (signInDTO.isValidUser()) {
             Gson gson = new Gson();
-            getWorkflowServiceHelper().execute(signIn, unifiedLoginCallback, gson.toJson(signInDTO), queryParams, headers);
+            getWorkflowServiceHelper().execute(signIn, unifiedLoginCallback, gson.toJson(signInDTO),
+                    queryParams, headers);
             getAppAuthorizationHelper().setUser(userName);
         }
     }

@@ -267,7 +267,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         }
     }
 
-    @Override
+     @Override
     public void onBackPressed() {
         try {
             FragmentManager fragmentManager = getSupportFragmentManager();

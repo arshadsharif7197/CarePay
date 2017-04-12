@@ -1,6 +1,5 @@
 package com.carecloud.carepay.patient.demographics.activities;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,8 +24,6 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Main activity for Settings workflow
@@ -46,23 +43,20 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         setContentView(R.layout.activity_demographics_settings);
 
         demographicsSettingsDTO = getConvertedDTO(DemographicsSettingsDTO.class);
-        Bundle bundle = new Bundle();
 
-        Gson gson = new Gson();
-        String demographicsSettingsDTOString = gson.toJson(demographicsSettingsDTO);
-        bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
+        getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE,
+                demographicsSettingsDTO.getPayload().getDemographics().getPayload().getAddress());
 
-        try {
-            getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE,
-                    demographicsSettingsDTO.getPayload().getDemographics().getPayload().getAddress());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         FragmentManager fm = getSupportFragmentManager();
         DemographicsSettingsFragment fragment = (DemographicsSettingsFragment)
                 fm.findFragmentByTag(DemographicsSettingsFragment.class.getSimpleName());
+
+        Bundle bundle = new Bundle();
         if (fragment == null) {
-            fragment = new DemographicsSettingsFragment();
+            Gson gson = new Gson();
+            String demographicsSettingsDTOString = gson.toJson(demographicsSettingsDTO);
+            bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, demographicsSettingsDTOString);
+            fragment = DemographicsSettingsFragment.newInstance(demographicsSettingsDTO);
         }
         if (fragment.getArguments() != null) {
             fragment.getArguments().putAll(bundle);
@@ -70,8 +64,10 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
             fragment.setArguments(bundle);
         }
 
-        Fragment demographicsSettingsFragment = fm.findFragmentByTag(DemographicsSettingsFragment.class.getSimpleName());
-        if (!(null != demographicsSettingsFragment && demographicsSettingsFragment instanceof DemographicsSettingsFragment)) {
+        Fragment demographicsSettingsFragment = fm
+                .findFragmentByTag(DemographicsSettingsFragment.class.getSimpleName());
+        if (!(demographicsSettingsFragment != null
+                && demographicsSettingsFragment instanceof DemographicsSettingsFragment)) {
             fm.beginTransaction().add(R.id.activity_demographics_settings, fragment,
                     DemographicsSettingsFragment.class.getSimpleName()).commit();
         }
@@ -107,7 +103,7 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
                     ((SettingsCreditCardListFragment) fragment).loadCreditCardsList(demographicsSettingsDTO);
                 } else if (fragment.getClass().getName().equalsIgnoreCase(DemographicsSettingsFragment.class.getName())) {
                     this.demographicsSettingsDTO = demographicsSettingsDTO;
-                    ((DemographicsSettingsFragment) fragment).updateCreditCardsList(demographicsSettingsDTO );
+                    ((DemographicsSettingsFragment) fragment).updateCreditCardsList(demographicsSettingsDTO);
                 }
             }
         }
@@ -143,7 +139,7 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         bundle.putString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE, gson.toJson(demographicsSettingsDTO));
         bundle.putString(CarePayConstants.PAYEEZY_MERCHANT_SERVICE_BUNDLE, gson.toJson(demographicsSettingsDTO.getPayload().getPapiAccounts()));
         fragment.setArguments(bundle);
-        navigateToFragment(fragment,true);
+        navigateToFragment(fragment, true);
     }
 
     @Override
@@ -167,7 +163,7 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
             fragment.setArguments(bundle);
         }
 
-        navigateToFragment(fragment,true);
+        navigateToFragment(fragment, true);
     }
 
     @Override

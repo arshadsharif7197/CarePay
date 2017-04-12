@@ -24,7 +24,7 @@ public class DemographicsSettingsTransitionsDTO {
     private TransitionDTO demographicsSettingsUpdateDemographicsDTO = new TransitionDTO();
     @SerializedName("update_notifications")
     @Expose
-    private DemographicsSettingsUpdateNotificationsDTO demographicsSettingsUpdateNotificationsDTO = new DemographicsSettingsUpdateNotificationsDTO();
+    private TransitionDTO demographicsSettingsUpdateNotificationsDTO = new TransitionDTO();
     @SerializedName("update_credit_card")
     @Expose
     private TransitionDTO updateCreditCard = new TransitionDTO();
@@ -76,11 +76,11 @@ public class DemographicsSettingsTransitionsDTO {
         this.demographicsSettingsUpdateDemographicsDTO = demographicsSettingsUpdateDemographicsDTO;
     }
 
-    public DemographicsSettingsUpdateNotificationsDTO getUpdateNotifications() {
+    public TransitionDTO getUpdateNotifications() {
         return demographicsSettingsUpdateNotificationsDTO;
     }
 
-    public void setUpdateNotifications(DemographicsSettingsUpdateNotificationsDTO demographicsSettingsUpdateNotificationsDTO) {
+    public void setUpdateNotifications(TransitionDTO demographicsSettingsUpdateNotificationsDTO) {
         this.demographicsSettingsUpdateNotificationsDTO = demographicsSettingsUpdateNotificationsDTO;
     }
 

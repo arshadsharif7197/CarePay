@@ -20,10 +20,10 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.adapters.SettingsCreditCardListAdapter;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -37,7 +37,6 @@ public class SettingsCreditCardListFragment extends BaseFragment implements Sett
     private RecyclerView creditCardsListRecyclerView;
     private LinearLayout noCreditCardsView;
     private DemographicsSettingsDTO demographicsSettingsDTO = null;
-    private DemographicsSettingsLabelsDTO settingsLabelsDTO;
     private ISettingsCreditCardListFragmentListener activityCallback;
 
     public interface ISettingsCreditCardListFragmentListener {
@@ -66,7 +65,6 @@ public class SettingsCreditCardListFragment extends BaseFragment implements Sett
             Gson gson = new Gson();
             String demographicsSettingsDTOString = arguments.getString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE);
             demographicsSettingsDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsDTO.class);
-            settingsLabelsDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO().getLabels();
         }
     }
 
@@ -77,7 +75,7 @@ public class SettingsCreditCardListFragment extends BaseFragment implements Sett
         View view = inflater.inflate(R.layout.fragment_settings_credit_cards_list, container, false);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
-        title.setText(settingsLabelsDTO.getCreditCardsLabel());
+        title.setText(Label.getLabel("credit_cards_label"));
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setTitle("");
 
@@ -94,12 +92,12 @@ public class SettingsCreditCardListFragment extends BaseFragment implements Sett
         creditCardsListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         noCreditCardsView = (LinearLayout) view.findViewById(R.id.no_credit_cards_view);
-        ((TextView) view.findViewById(R.id.no_credit_cards_label)).setText(settingsLabelsDTO.getNoCreditCardLabel());
-        ((TextView) view.findViewById(R.id.no_credit_cards_info)).setText(settingsLabelsDTO.getNoCreditCardInfo());
+        ((TextView) view.findViewById(R.id.no_credit_cards_label)).setText(Label.getLabel("no_credit_card_label"));
+        ((TextView) view.findViewById(R.id.no_credit_cards_info)).setText(Label.getLabel("no_credit_card_info"));
 
         Button addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
         addNewCardButton.setOnClickListener(addNewCardButtonListener);
-        addNewCardButton.setText(settingsLabelsDTO.getCreditCardAddNew());
+        addNewCardButton.setText(Label.getLabel("credit_card_add_new"));
 
         loadCreditCardsList(demographicsSettingsDTO);
     }
@@ -119,7 +117,7 @@ public class SettingsCreditCardListFragment extends BaseFragment implements Sett
                 noCreditCardsView.setVisibility(View.VISIBLE);
             } else {
                 creditCardsListRecyclerView.setAdapter(new SettingsCreditCardListAdapter(getActivity(),
-                        creditCardList, settingsLabelsDTO, this));
+                        creditCardList, this));
             }
         }
     }
