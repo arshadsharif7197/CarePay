@@ -498,7 +498,7 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
     }
 
     private void setDefaultBillingAddressTexts() {
-        if(addressPayloadDTO!=null) {
+        if(addressPayloadDTO!=null && !StringUtil.isNullOrEmpty(addressPayloadDTO.getAddress1())) {
             address1EditText.setText(addressPayloadDTO.getAddress1());
             address1EditText.getOnFocusChangeListener().onFocusChange(address1EditText, !StringUtil.isNullOrEmpty(addressPayloadDTO.getAddress1()));
 
@@ -513,6 +513,10 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
 
             stateAutoCompleteTextView.setText(addressPayloadDTO.getState());
             stateAutoCompleteTextView.getOnFocusChangeListener().onFocusChange(stateAutoCompleteTextView, !StringUtil.isNullOrEmpty(addressPayloadDTO.getState()));
+        }else{
+            useProfileAddressCheckBox.setChecked(false);
+            useProfileAddressCheckBox.setEnabled(false);
+            setAddressFieldsEnabled(true);
         }
     }
 

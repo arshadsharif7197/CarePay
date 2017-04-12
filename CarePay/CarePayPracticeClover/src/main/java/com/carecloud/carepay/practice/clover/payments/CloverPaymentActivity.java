@@ -435,8 +435,13 @@ public class CloverPaymentActivity extends BaseActivity {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, 1);
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMyy");
-        creditCardModel.setExpiryDate(transactionInfo.getVaultedCard().getExpirationDate(dateFormat.format(calendar.getTime())));
-        creditCardModel.setNameOnCard(transactionInfo.getVaultedCard().getCardholderName(patientBalance.getDemographics().getPayload().getPersonalDetails().getFullName()));
+        if(transactionInfo.getVaultedCard()!=null) {
+            creditCardModel.setExpiryDate(transactionInfo.getVaultedCard().getExpirationDate(dateFormat.format(calendar.getTime())));
+            creditCardModel.setNameOnCard(transactionInfo.getVaultedCard().getCardholderName(patientBalance.getDemographics().getPayload().getPersonalDetails().getFullName()));
+        }else{
+            creditCardModel.setExpiryDate(dateFormat.format(calendar.getTime()));
+            creditCardModel.setNameOnCard(patientBalance.getDemographics().getPayload().getPersonalDetails().getFullName());
+        }
 
         PaymentsCreditCardBillingInformationDTO billingInformation = new PaymentsCreditCardBillingInformationDTO();
         billingInformation.setSameAsPatient(true);
