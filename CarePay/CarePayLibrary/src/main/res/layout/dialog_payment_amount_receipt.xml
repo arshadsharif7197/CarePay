@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -47,7 +48,8 @@
                 android:gravity="start"
                 android:textColor="@color/manatee"
                 android:textSize="@dimen/text_size_11"
-                app:customAssetFont="proxima_nova_semi_bold" />
+                app:customAssetFont="proxima_nova_semi_bold"
+                breeze:textKey="payment_receipt_no_label"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/payment_receipt_type_label"
@@ -59,7 +61,8 @@
                 android:gravity="center"
                 android:textColor="@color/manatee"
                 android:textSize="@dimen/text_size_11"
-                app:customAssetFont="proxima_nova_semi_bold" />
+                app:customAssetFont="proxima_nova_semi_bold"
+                breeze:textKey="payment_receipt_payment_type"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/payment_receipt_date_label"
@@ -79,12 +82,13 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/payment_receipt_header" />
 
-        <Button
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/payment_receipt_save_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:background="@drawable/button_payment_receipt_save"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            breeze:textKey="payment_receipt_save_receipt"/>
     </RelativeLayout>
 </LinearLayout>

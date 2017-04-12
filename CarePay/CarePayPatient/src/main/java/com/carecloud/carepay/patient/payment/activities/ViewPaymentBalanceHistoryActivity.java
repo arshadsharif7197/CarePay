@@ -21,6 +21,7 @@ import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragm
 import com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
@@ -67,7 +68,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         patientId = paymentsDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPatientId();
 
         toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.balance_history_toolbar);
-        toolBarTitle = paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPatientBalanceToolbar();
+        toolBarTitle = Label.getLabel("payment_patient_balance_toolbar");
         displayToolbar(true, toolBarTitle);
         inflateDrawer();
         FragmentManager fm = getSupportFragmentManager();
@@ -163,9 +164,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     private void launchConfirmationPage(MaskedWallet maskedWallet) {
-        //setTitle("");
-        Intent intent = ConfirmationActivity.newIntent(this, maskedWallet, paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPendingRepsonsibility(), "CERT", bundle, new Gson().toJson(paymentsDTO.getPaymentsMetadata().getPaymentsLabel()));// .getPayload().get(0).getTotal(), "CERT");
-        // intent.putExtra(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, paymentsDTOString);
+        Intent intent = ConfirmationActivity.newIntent(this, maskedWallet, paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPendingRepsonsibility(), "CERT", bundle,
+                Label.getLabel("payment_patient_balance_toolbar"));
         startActivity(intent);
     }
 

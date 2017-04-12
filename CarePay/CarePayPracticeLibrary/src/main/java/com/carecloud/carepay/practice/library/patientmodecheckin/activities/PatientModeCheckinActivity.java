@@ -155,8 +155,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     public void getPaymentInformation(final String workflowJson) {
         ResponsibilityCheckInFragment responsibilityFragment = new ResponsibilityCheckInFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(CarePayConstants.INTAKE_BUNDLE, workflowJson);
-        bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, workflowJson);
+        bundle.putString(PaymentsModel.class.getSimpleName(), workflowJson);
         responsibilityFragment.setArguments(bundle);
         presenter.navigateToFragment(responsibilityFragment, true);
 
@@ -188,12 +187,10 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         PracticePaymentMethodDialogFragment fragment = PracticePaymentMethodDialogFragment
                 .newInstance(paymentDTO, amount);
         fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
-//        navigateToFragment(fragment, true);
     }
 
     @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
-//        boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
         if (paymentDTO.getPaymentPayload().getPatientCreditCards() != null && !paymentDTO.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             DialogFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel,
                     selectedPaymentMethod.getLabel(), amount);

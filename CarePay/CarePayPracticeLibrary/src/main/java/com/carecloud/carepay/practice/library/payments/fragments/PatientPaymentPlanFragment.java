@@ -23,12 +23,12 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPayloadPlansDTO;
@@ -55,7 +55,6 @@ public class PatientPaymentPlanFragment extends BaseCheckinFragment {
     private double maxMonthlyPayment = 9999999999.99;
 
     private PaymentsModel paymentsModel;
-    private PaymentsLabelDTO paymentsLabel;
 
     private Button createPlanButton;
     private TextView addedCreditCard;
@@ -120,14 +119,13 @@ public class PatientPaymentPlanFragment extends BaseCheckinFragment {
         paymentsModel = gson.fromJson(paymentDTOString, PaymentsModel.class);
 
         if (paymentsModel != null) {
-            paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
-            setLabels(view);
+            setLabels();
             setEditTexts(view);
         }
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
-        title.setText(paymentsLabel.getPaymentPlanHeading());
+        title.setText(Label.getLabel("payment_plan_heading"));
 
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
         toolbar.setTitle("");
@@ -189,19 +187,19 @@ public class PatientPaymentPlanFragment extends BaseCheckinFragment {
 
     private void setEditTexts(View view) {
         TextInputLayout paymentPlanNameInput = (TextInputLayout) view.findViewById(R.id.payment_plan_name_input);
-        String nameLabel = paymentsLabel.getPaymentPlanName();
+        String nameLabel = Label.getLabel("payment_plan_name");
         paymentPlanNameInput.setTag(nameLabel);
         paymentPlanName.setHint(nameLabel);
         paymentPlanName.setTag(paymentPlanNameInput);
 
         paymentPlanMonthInput = (TextInputLayout) view.findViewById(R.id.payment_plan_month_no_input);
-        String monthNumber = paymentsLabel.getPaymentNumberOfMonths();
+        String monthNumber = Label.getLabel("payment_number_of_months");
         paymentPlanMonthInput.setTag(monthNumber);
         paymentPlanMonthNo.setHint(monthNumber);
         paymentPlanMonthNo.setTag(paymentPlanMonthInput);
 
         paymentPlanMonthlyInput = (TextInputLayout) view.findViewById(R.id.payment_plan_monthly_payment_input);
-        String monthlyPayment = paymentsLabel.getPaymentMonthlyPayment();
+        String monthlyPayment = Label.getLabel("payment_monthly_payment");
         paymentPlanMonthlyInput.setTag(monthlyPayment);
         paymentPlanMonthlyPayment.setHint(monthlyPayment);
         paymentPlanMonthlyPayment.setTag(paymentPlanMonthlyInput);
@@ -214,19 +212,7 @@ public class PatientPaymentPlanFragment extends BaseCheckinFragment {
         paymentPlanMonthlyPayment.clearFocus();
     }
 
-    private void setLabels(View view) {
-        ((TextView) view.findViewById(R.id.payment_plan_optional_hint))
-                .setText(paymentsLabel.getPaymentOptionalHint());
-        ((TextView) view.findViewById(R.id.payment_plan_total_label))
-                .setText(paymentsLabel.getPaymentLetsEstablishPaymentPlan());
-        ((TextView) view.findViewById(R.id.payment_plan_month_day_label))
-                .setText(paymentsLabel.getPaymentDayOfTheMonth());
-        ((TextView) view.findViewById(R.id.payment_plan_prev_balance_label))
-                .setText(paymentsLabel.getPaymentPreviousBalance());
-        ((TextView) view.findViewById(R.id.payment_plan_copay_label))
-                .setText(paymentsLabel.getPaymentInsuranceCopay());
-
-        createPlanButton.setText(paymentsLabel.getPaymentCreatePlan());
+    private void setLabels() {
         createPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view1) {
@@ -235,7 +221,7 @@ public class PatientPaymentPlanFragment extends BaseCheckinFragment {
         });
 
         List<PaymentsPatientsCreditCardsPayloadListDTO> payload = paymentsModel.getPaymentPayload().getPatientCreditCards();
-        if (payload.size()>0){
+        if (payload.size() > 0) {
             if (payload != null && payload.size() > 0) {
                 // Get default credit card
                 PaymentCreditCardsPayloadDTO creditCard = payload.get(0).getPayload();
@@ -244,15 +230,15 @@ public class PatientPaymentPlanFragment extends BaseCheckinFragment {
                         creditCardName, creditCard.getCardNumber()));
                 addedCreditCard.setVisibility(View.VISIBLE);
 
-                addChangeCreditCard.setText(paymentsLabel.getPaymentChangeCard());
+                addChangeCreditCard.setText(Label.getLabel("payment_change_card"));
                 isEmptyCreditCard = false;
             } else {
                 isEmptyCreditCard = true;
-                addChangeCreditCard.setText(paymentsLabel.getPaymentAddCardButton());
+                addChangeCreditCard.setText(Label.getLabel("payment_add_card_button"));
             }
         } else {
             isEmptyCreditCard = true;
-            addChangeCreditCard.setText(paymentsLabel.getPaymentAddCardButton());
+            addChangeCreditCard.setText(Label.getLabel("payment_add_card_button"));
         }
 
         addChangeCreditCard.setTextColor(getActivity().getResources().getColor(R.color.colorPrimary));
@@ -272,7 +258,7 @@ public class PatientPaymentPlanFragment extends BaseCheckinFragment {
                 String creditCardName = creditCard.getCardType();
                 addedCreditCard.setText(StringUtil.getEncodedCardNumber(creditCardName, creditCard.getCardNumber()));
                 addedCreditCard.setVisibility(View.VISIBLE);
-                addChangeCreditCard.setText(paymentsLabel.getPaymentChangeCard());
+                addChangeCreditCard.setText(Label.getLabel("payment_change_card"));
                 isEmptyCreditCard = false;
             }
         }
@@ -482,19 +468,18 @@ public class PatientPaymentPlanFragment extends BaseCheckinFragment {
             }
         }
 
-        PaymentsLabelDTO paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
         try {
             int noOfMonths = Integer.parseInt(paymentPlanMonthNo.getText().toString());
             if (noOfMonths < minNumberOfMonths) {
                 //minimum number of month should be 2
                 paymentPlanMonthInput.setError(String.format(
-                        paymentsLabel.getPaymentPlanMinMonthsError(), minNumberOfMonths));
+                        Label.getLabel("payment_plan_min_months_error"), minNumberOfMonths));
                 paymentPlanMonthNo.requestFocus();
                 return false;
             } else if (noOfMonths > maxNumberOfMonths) {
                 //maximum number of months should be 120 (10 yrs)
                 paymentPlanMonthInput.setError(String.format(
-                        paymentsLabel.getPaymentPlanMaxMonthsError(), maxNumberOfMonths));
+                        Label.getLabel("payment_plan_max_months_error"), maxNumberOfMonths));
                 paymentPlanMonthNo.requestFocus();
                 return false;
             }
@@ -503,14 +488,14 @@ public class PatientPaymentPlanFragment extends BaseCheckinFragment {
             if (payment < minMonthlyPayment) {
                 //Minimum monthly payment amount = $10.00
                 paymentPlanMonthlyInput.setError(String.format(
-                        paymentsLabel.getPaymentPlanMinAmountError(),
+                        Label.getLabel("payment_plan_min_amount_error"),
                         StringUtil.getFormattedBalanceAmount(minMonthlyPayment)));
                 paymentPlanMonthlyPayment.requestFocus();
                 return false;
             } else if (payment > maxMonthlyPayment) {
                 //maximum monthly payment amount = $9999999999.99
                 paymentPlanMonthlyInput.setError(String.format(
-                        paymentsLabel.getPaymentPlanMaxAmountError(),
+                        Label.getLabel("payment_plan_max_amount_error"),
                         StringUtil.getFormattedBalanceAmount(maxMonthlyPayment)));
                 paymentPlanMonthlyPayment.requestFocus();
                 return false;

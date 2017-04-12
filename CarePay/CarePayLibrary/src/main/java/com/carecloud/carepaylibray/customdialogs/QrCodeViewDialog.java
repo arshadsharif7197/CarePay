@@ -114,7 +114,7 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
         return queryMap;
     }
 
-    WorkflowServiceCallback qrCodeCallBack = new WorkflowServiceCallback() {
+    private WorkflowServiceCallback qrCodeCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             ((ISession) context).showProgressDialog();
@@ -138,10 +138,7 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
      * @param workflowDTO workflow model returned by server.
      */
     private void updateUI(WorkflowDTO workflowDTO) {
-        JsonObject jsonObject = workflowDTO.getPayload();
-
-        Gson gson = new Gson();
-        QRCodePayloadDTO scanQRCodeDTO = gson.fromJson(jsonObject, QRCodePayloadDTO.class);
+        QRCodePayloadDTO scanQRCodeDTO = workflowDTO.getPayload(QRCodePayloadDTO.class);
 
         if (scanQRCodeDTO != null) {
             Picasso.with(context).load(scanQRCodeDTO.getQrCode()).into(qrCodeImageView);

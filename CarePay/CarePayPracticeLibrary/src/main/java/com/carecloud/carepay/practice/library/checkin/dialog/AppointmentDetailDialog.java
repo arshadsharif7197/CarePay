@@ -406,8 +406,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
      * @param workflowDTO workflow model returned by server.
      */
     private void updateQueueStatus(WorkflowDTO workflowDTO) {
-        Gson gson = new Gson();
-        QueueStatusPayloadDTO queueStatusPayloadDTO = gson.fromJson(workflowDTO.getPayload(), QueueStatusPayloadDTO.class);
+        QueueStatusPayloadDTO queueStatusPayloadDTO = workflowDTO.getPayload(QueueStatusPayloadDTO.class);
         List<QueueDTO> queueList = queueStatusPayloadDTO.getQueueStatus().getQueueStatusInnerPayload().getQueueList();
 
         Map<Integer, QueueDTO> queueMap = new HashMap<>();
@@ -505,38 +504,14 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
                 }
             }
         }
-
-//            int maxIndex = queueList.size() - 1;
-//            int index = maxIndex;
-//            QueueDTO queue;
-//            CheckBox checkBox;
-//
-//            for (int checkIndex = Math.min(index, 3); checkIndex >= 0; checkIndex--) {
-//                queue = queueList.get(index);
-//                checkBox = checkBoxes.get(checkIndex);
-//                if (index == maxIndex) {
-//                    checkBox.setChecked(true);
-//                    checkBox.setText(ordinal(queue.getRank(), sufixes) + " " + metadata.getLabel().getPracticeCheckinDetailDialogQueue());
-//                    checkBox.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
-//                    checkBox.setTypeface(checkBox.getTypeface(), Typeface.BOLD);
-//                } else {
-//                    checkBox.setText(ordinal(queue.getRank(), sufixes) + " " + queue.getFirstName());
-//                }
-//
-//                Log.d(this.getClass().getSimpleName(), "queue practice id: " + queue.getFirstName());
-//                index--;
-//            }
     }
 
     /**
      * @param workflowDTO workflow model returned by server.
      */
     private void updateUI(WorkflowDTO workflowDTO) {
-        JsonObject jsonObject = workflowDTO.getPayload();
-
-        Gson gson = new Gson();
         try {
-            CheckInStatusPayloadDTO checkInStatusPayloadDTO = gson.fromJson(jsonObject, CheckInStatusPayloadDTO.class);
+            CheckInStatusPayloadDTO checkInStatusPayloadDTO = workflowDTO.getPayload(CheckInStatusPayloadDTO.class);
 
             if (checkInStatusPayloadDTO != null) {
                 CheckInStatusDataPayloadValueDTO payloadValueDTO = checkInStatusPayloadDTO

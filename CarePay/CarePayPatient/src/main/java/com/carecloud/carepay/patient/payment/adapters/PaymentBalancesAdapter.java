@@ -16,27 +16,20 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by jorge on 31/12/16.
- */
-
 public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalancesAdapter.PaymentHistoryViewHolder> {
     private Context context;
     private List<PendingBalancePayloadDTO> paymentsPatientBalances = new ArrayList<>();
-    OnBalanceListItemClickListener listener;
-    PaymentsModel paymentDTO;
+    private OnBalanceListItemClickListener listener;
 
     /**
-     *
-     * @param context The context
-     * @param paymentDTO    The payment DTO
-     * @param listener the listener
+     * @param context    The context
+     * @param paymentDTO The payment DTO
+     * @param listener   the listener
      */
     public PaymentBalancesAdapter(Context context, PaymentsModel paymentDTO, OnBalanceListItemClickListener listener) {
-        this.paymentDTO = paymentDTO;
         this.context = context;
-        if (paymentDTO.getPaymentPayload().getPatientBalances().size()>0 &&
-                paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().size()>0) {
+        if (paymentDTO.getPaymentPayload().getPatientBalances().size() > 0 &&
+                paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().size() > 0) {
             this.paymentsPatientBalances = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
         }
         this.listener = listener;
@@ -52,11 +45,10 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
     @Override
     public void onBindViewHolder(final PaymentBalancesAdapter.PaymentHistoryViewHolder holder, int position) {
         final PendingBalancePayloadDTO charge = paymentsPatientBalances.get(position);
-        String locationName= CarePayConstants.NOT_DEFINED;
+        String locationName = CarePayConstants.NOT_DEFINED;
         holder.shortName.setText(StringUtil.getShortName(locationName));
         holder.locationName.setText(locationName);
         holder.amount.setText(StringUtil.getFormattedBalanceAmount(charge.getAmount()));
-        holder.payNow.setText(paymentDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentDetailsPayNow());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,19 +68,15 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
         private CarePayTextView shortName;
         private CarePayTextView locationName;
         private CarePayTextView amount;
-        private CarePayTextView payNow;
 
         PaymentHistoryViewHolder(View itemView) {
             super(itemView);
 
             locationName = (CarePayTextView) itemView.findViewById(com.carecloud.carepaylibrary.R.id.balancesLocation);
             amount = (CarePayTextView) itemView.findViewById(com.carecloud.carepaylibrary.R.id.balancesTotalAmount);
-            payNow = (CarePayTextView) itemView.findViewById(com.carecloud.carepaylibrary.R.id.balancesPayNowTextView);
             shortName = (CarePayTextView) itemView.findViewById(com.carecloud.carepaylibrary.R.id.balancesAvatarTextView);
-
         }
     }
-
 
     public interface OnBalanceListItemClickListener {
         void onBalanceListItemClickListener(int position);

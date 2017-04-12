@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
@@ -14,7 +15,8 @@
         android:gravity="center"
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/text_size_20"
-        app:customAssetFont="proxima_nova_semi_bold" />
+        app:customAssetFont="proxima_nova_semi_bold"
+        breeze:textKey="payment_receipt_title"/>
 
     <View
         android:layout_width="match_parent"
@@ -43,7 +45,8 @@
             android:gravity="start"
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/text_size_17"
-            app:customAssetFont="proxima_nova_regular" />
+            app:customAssetFont="proxima_nova_regular"
+            breeze:textKey="payment_receipt_total_paid_label"/>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/payment_receipt_total_value"
