@@ -185,7 +185,8 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     @Override
     public void selectTime(VisitTypeDTO visitTypeDTO, AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel) {
         this.visitTypeDTO = visitTypeDTO;
-        new PracticeAvailableHoursDialog(getContext(), Label.getLabel("available_hours_back"), appointmentResourcesDTO.getResource(), appointmentsResultModel, visitTypeDTO, getLinks().getAppointmentAvailability(), this).show();
+//        new PracticeAvailableHoursDialog(getContext(), Label.getLabel("available_hours_back"), appointmentResourcesDTO.getResource(), appointmentsResultModel, visitTypeDTO, getLinks().getAppointmentAvailability(), this).show();
+
     }
 
     @Override

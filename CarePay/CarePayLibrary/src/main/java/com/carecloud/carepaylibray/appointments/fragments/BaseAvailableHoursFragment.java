@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.appointments.fragments;
+package com.carecloud.carepaylibray.appointments.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -52,7 +52,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class AvailableHoursFragment extends BaseDialogFragment implements AvailableHoursAdapter.SelectAppointmentTimeSlotCallback, AvailableLocationsAdapter.SelectLocationCallback {
+public class BaseAvailableHoursFragment extends BaseDialogFragment implements AvailableHoursAdapter.SelectAppointmentTimeSlotCallback, AvailableLocationsAdapter.SelectLocationCallback {
 
     private Date startDate;
     private Date endDate;

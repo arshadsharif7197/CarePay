@@ -39,9 +39,9 @@
             android:visibility="gone"/>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/location_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/location_text"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/dimen_16dp"
             android:layout_marginEnd="@dimen/dimen_8dp"
@@ -56,16 +56,16 @@
             android:visibility="visible"/>
 
         <FrameLayout
+            android:id="@+id/appointment_available_single_location"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/appointment_available_single_location"
             android:visibility="gone">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/available_single_location_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center_vertical"
-                android:id="@+id/available_single_location_text"
                 android:layout_marginRight="@dimen/dimen_8dp"
                 android:text="Location"
                 android:ellipsize="end"
@@ -76,15 +76,43 @@
 
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/available_hours_recycler_view"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"
-        android:paddingLeft="@dimen/apt_available_hours_list_padding"
-        android:paddingRight="@dimen/apt_available_hours_list_padding" />
+        android:layout_weight="4">
 
-    <Button
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/available_hours_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/apt_available_hours_list_padding"
+            android:paddingRight="@dimen/apt_available_hours_list_padding" />
+
+        <FrameLayout
+            android:id="@+id/progressview"
+            android:layout_width="@dimen/dimen_60dp"
+            android:layout_height="@dimen/dimen_60dp"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/bg_progress_spinner" />
+
+            <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/dimen_8dp"
+                android:indeterminate="true"
+                android:indeterminateDrawable="@drawable/progress_indeterminate_custom" />
+
+        </FrameLayout>
+
+
+    </FrameLayout>
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/edit_date_range_button"
         android:layout_width="match_parent"
         android:layout_height="@dimen/add_apt_available_hours_edit_range_height"
