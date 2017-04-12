@@ -13,6 +13,7 @@ import com.carecloud.carepay.patient.payment.androidpay.ConfirmationActivity;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
@@ -21,6 +22,7 @@ import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragmen
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.gms.wallet.MaskedWallet;
 import com.google.android.gms.wallet.WalletConstants;
@@ -39,7 +41,6 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
         //Intent intent = getIntent();
         paymentsDTO = getConvertedDTO(PaymentsModel.class);
 
-
         FragmentManager fm = getSupportFragmentManager();
         ResponsibilityFragment fragment = (ResponsibilityFragment)
                 fm.findFragmentByTag(ResponsibilityFragment.class.getSimpleName());
@@ -50,7 +51,7 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
 
         Gson gson = new Gson();
         paymentsDTOString = gson.toJson(paymentsDTO);
-        bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
+        DtoHelper.bundleDto(bundle, paymentsDTO);
         //fix for random crashes
         if (fragment.getArguments() != null) {
             fragment.getArguments().putAll(bundle);
@@ -60,8 +61,6 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
 
         fm.beginTransaction().replace(R.id.payment_frag_holder, fragment,
                 ResponsibilityFragment.class.getSimpleName()).commit();
-
-
     }
 
     @Override
@@ -128,9 +127,8 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
     }
 
     private void launchConfirmationPage(MaskedWallet maskedWallet) {
-        //setTitle("");
-        Intent intent = ConfirmationActivity.newIntent(this, maskedWallet, paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPendingRepsonsibility(), "CERT", bundle, new Gson().toJson(paymentsDTO.getPaymentsMetadata().getPaymentsLabel()));// .getPayload().get(0).getTotal(), "CERT");
-        // intent.putExtra(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, paymentsDTOString);
+        Intent intent = ConfirmationActivity.newIntent(this, maskedWallet, paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPendingRepsonsibility(), "CERT", bundle,
+                Label.getLabel("payment_patient_balance_toolbar"));
         startActivity(intent);
     }
 

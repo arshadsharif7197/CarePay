@@ -25,7 +25,6 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.payments.models.PaymentDetailsItemDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
@@ -86,20 +85,8 @@ public class PaymentAmountReceiptDialog extends Dialog implements View.OnClickLi
         Button saveReceiptButton = (Button) findViewById(R.id.payment_receipt_save_button);
         saveReceiptButton.setOnClickListener(this);
 
-        PaymentsLabelDTO paymentsLabel = paymentReceiptModel.getPaymentsMetadata().getPaymentsLabel();
-        if (paymentsLabel != null) {
-            ((TextView) findViewById(R.id.receipt_no_label)).setText(paymentsLabel.getPaymentReceiptNoLabel());
-            ((TextView) findViewById(R.id.payment_receipt_type_label)).setText(paymentsLabel.getPaymentReceiptPaymentType());
-
-            String receiptDate = DateUtil.getInstance().setDateRaw(new Date().toString()).toStringWithFormatMmSlashDdSlashYyyy();
-            ((TextView) findViewById(R.id.payment_receipt_date_label)).setText(receiptDate);
-
-            ((TextView) findViewById(R.id.payment_receipt_title)).setText(paymentsLabel.getPaymentReceiptTitle());
-            ((TextView) findViewById(R.id.payment_receipt_total_label)).setText(paymentsLabel.getPaymentReceiptTotalPaidLabel());
-            ((TextView) findViewById(R.id.payment_receipt_total_value)).setText("");
-
-            saveReceiptButton.setText(paymentsLabel.getPaymentReceiptSaveReceipt());
-        }
+        String receiptDate = DateUtil.getInstance().setDateRaw(new Date().toString()).toStringWithFormatMmSlashDdSlashYyyy();
+        ((TextView) findViewById(R.id.payment_receipt_date_label)).setText(receiptDate);
 
         // Temporary added till endpoint gets ready
         String[] labels = {"Deluxe Frame", "Sph Cyl Bif Pl To 400", "Eye Exam. New Patient", "Refraction"};
