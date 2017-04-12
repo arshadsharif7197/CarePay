@@ -63,5 +63,10 @@
 -keep class org.w3c.dom.bootstrap.** { *; }
 -dontwarn org.codehaus.jackson.**
 
+-keep class com.smartystreets.api.** { *; }
+-keep class com.smartystreets.api.us_zipcode.** { *; }
+-keep class com.smartystreets.api.us_street.** { *; }
+-keep class com.smartystreets.api.exceptions.** { *; }
+
 
 
