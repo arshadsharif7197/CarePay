@@ -27,19 +27,15 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.marcok.stepprogressbar.StepProgressBar;
 import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-
 
 public class ConsentActivity extends BasePatientActivity {
 
@@ -73,15 +69,11 @@ public class ConsentActivity extends BasePatientActivity {
             }
         });
 
-        Bundle bundle = this.getIntent().getExtras();
-        String jsonString = bundle.getString(WorkflowDTO.class.getSimpleName());
-
         try {
-
-            JSONObject consentPayload = new JSONObject(jsonString);
-            JSONArray jsonArray = consentPayload.getJSONObject("metadata").getJSONObject("data_models").getJSONArray("practice_forms");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject payload = ((JSONObject) jsonArray.get(i)).getJSONObject("payload");
+            WorkflowDTO consentPayload = getConvertedDTO(WorkflowDTO.class);
+            JsonArray jsonArray = consentPayload.getMetadata().getAsJsonObject("data_models").getAsJsonArray("practice_forms");
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JsonObject payload = ((JsonObject) jsonArray.get(i)).getAsJsonObject("payload");
                 String payloadString = payload.toString();
                 payloadString = payloadString.replaceAll("\'", Matcher.quoteReplacement("\\\'"));
                 jsonAnswers[i] = payloadString;
@@ -90,7 +82,6 @@ public class ConsentActivity extends BasePatientActivity {
             ee.printStackTrace();
             nextButton.setEnabled(true);
         }
-
 
         stepProgressBar = (StepProgressBar) findViewById(com.carecloud.carepaylibrary.R.id.stepProgressBarConsent);
         stepProgressBar.setCumulativeDots(true);

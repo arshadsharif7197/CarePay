@@ -78,20 +78,6 @@ public class InTakeWebViewActivity extends BasePatientActivity {
         }
     }
 
-
-    private void getIntakeFormData() {
-
-        Map<String, String> header = new HashMap<>();
-
-        header.put("patient_id", inTakeForm.getPayload().getFindings().getMetadata().getPatientId());
-        header.put("practice_id", inTakeForm.getPayload().getFindings().getMetadata().getPracticeId());
-        header.put("appointment_id", inTakeForm.getPayload().getFindings().getMetadata().getAppointmentId());
-        header.put("practice_mgmt", inTakeForm.getPayload().getFindings().getMetadata().getPracticeMgmt());
-
-        getWorkflowServiceHelper().execute(inTakeForm.getMetadata().getLinks().getIntake(), intakeFormCallback, header);
-    }
-
-
     public void initForm() {
         labelsModel = inTakeForm.getMetadata().getLabel();
 
@@ -138,10 +124,6 @@ public class InTakeWebViewActivity extends BasePatientActivity {
                 nextIntakeFormDisplayed();
             }
         });
-
-
-
-
     }
 
     /**
@@ -177,7 +159,7 @@ public class InTakeWebViewActivity extends BasePatientActivity {
                 }
             }
         });
-        mWebView.loadUrl("file:///android_asset/intake-forms-webview/web-view.html");
+        mWebView.loadUrl("file:///android_asset/breeze-intake-forms/dist/index.html");
 
     }
 

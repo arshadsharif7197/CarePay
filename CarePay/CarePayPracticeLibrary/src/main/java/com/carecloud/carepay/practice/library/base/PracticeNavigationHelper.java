@@ -17,6 +17,7 @@ import com.carecloud.carepay.practice.library.payments.PatientModePracticePaymen
 import com.carecloud.carepay.practice.library.payments.PaymentsActivity;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -160,9 +161,9 @@ public class PracticeNavigationHelper {
             }
         }
 
-        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+        WorkFlowRecord workFlowRecord = new WorkFlowRecord(workflowDTO);
         Bundle bundle = new Bundle();
-        bundle.putSerializable(WorkflowDTO.class.getSimpleName(), workflowDTO.toString());
+        bundle.putLong(WorkflowDTO.class.getSimpleName(), workFlowRecord.save());
         if (intent != null) {
             intent.putExtras(bundle);
             if (shouldExpectResult && context instanceof Activity) {

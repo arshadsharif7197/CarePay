@@ -17,6 +17,7 @@ import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistor
 import com.carecloud.carepay.patient.purchases.activities.PurchaseActivity;
 import com.carecloud.carepay.patient.selectlanguage.SelectLanguageActivity;
 import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
+import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 
 /**
@@ -62,8 +63,9 @@ public class PatientNavigationHelper {
      * @param workflowDTO workflowdto
      */
     public void navigateToWorkflow(WorkflowDTO workflowDTO) {
+        WorkFlowRecord workFlowRecord = new WorkFlowRecord(workflowDTO);
         Bundle bundle = new Bundle();
-        bundle.putString(WorkflowDTO.class.getSimpleName(), workflowDTO.toString());
+        bundle.putLong(WorkflowDTO.class.getSimpleName(), workFlowRecord.save());
         navigateToWorkflow(workflowDTO.getState(), bundle);
     }
 

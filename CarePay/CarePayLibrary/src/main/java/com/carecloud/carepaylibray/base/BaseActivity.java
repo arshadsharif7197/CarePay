@@ -16,6 +16,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.utils.CustomPopupNotification;
@@ -23,6 +24,7 @@ import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
+import com.google.gson.internal.Primitives;
 
 public abstract class BaseActivity extends AppCompatActivity implements ISession {
 
@@ -171,13 +173,65 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
      */
     public <S> S getConvertedDTO(Class<S> dtoClass) {
         Bundle bundle = this.getIntent().getExtras();
+        if (bundle == null) {
+            return null;
+        }
 
-        if (bundle != null) {
-            Gson gson = new Gson();
+        Object rawWorkflowDTO = bundle.get(WorkflowDTO.class.getSimpleName());
+        if (rawWorkflowDTO == null) {
+            return null;
+        }
+
+        Gson gson = new Gson();
+        try {
+            long id = (Long) rawWorkflowDTO;
+            WorkflowDTO workflowDTO = new WorkflowDTO(WorkFlowRecord.findById(WorkFlowRecord.class, id));
+
+            if (dtoClass.equals(WorkflowDTO.class)) {
+                return Primitives.wrap(dtoClass).cast(workflowDTO);
+            }
+
+            return gson.fromJson(workflowDTO.toString(), dtoClass);
+        } catch (ClassCastException e) {
+            // Object is set as String and not in DB
             return gson.fromJson(bundle.getString(WorkflowDTO.class.getSimpleName()), dtoClass);
+        }
+    }
+
+    /**
+     * Common WorkflowDTO which will converted to the desire DTO with dtoClass params
+     *
+     * @param dtoClass class to convert
+     * @param <S>      Dynamic class to convert
+     * @return Dynamic converted class object
+     */
+    public static <S> S getConvertedDTO(Class<S> dtoClass, String jsonString) {
+
+        if (!StringUtil.isNullOrEmpty(jsonString)) {
+            Gson gson = new Gson();
+            return gson.fromJson(jsonString, dtoClass);
         }
         return null;
     }
 
     public abstract void navigateToWorkflow(WorkflowDTO workflowDTO);
+
+    @Override
+    protected void onDestroy() {
+        Bundle bundle = this.getIntent().getExtras();
+
+        if (bundle != null) {
+            Object rawWorkflowDTO = bundle.get(WorkflowDTO.class.getSimpleName());
+            if (rawWorkflowDTO != null) {
+                try {
+                    long id = (Long) rawWorkflowDTO;
+                    WorkFlowRecord.findById(WorkFlowRecord.class, id).delete();
+                } catch (ClassCastException e) {
+                    // Do nothing
+                }
+            }
+        }
+
+        super.onDestroy();
+    }
 }
