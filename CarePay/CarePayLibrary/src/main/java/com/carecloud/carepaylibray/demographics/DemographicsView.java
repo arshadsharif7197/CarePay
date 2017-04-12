@@ -22,4 +22,6 @@ public interface DemographicsView {
     void updateCheckInFlow(CheckinFlowState flowState, int totalPages, int currentPage);
 
     DemographicsPresenter getPresenter();
+
+    void finish();
 }

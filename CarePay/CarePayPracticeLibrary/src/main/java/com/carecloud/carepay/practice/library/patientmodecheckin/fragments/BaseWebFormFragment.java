@@ -329,16 +329,11 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         }
 
         @Override
-        public void onPostExecute(final WorkflowDTO workflowDTO) {
+        public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             if(workflowDTO.getState().equals(PracticeNavigationStateConstants.PATIENT_APPOINTMENTS)){
-                callback.displayCheckinSuccess(workflowDTO, new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        PracticeNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
-                    }
-                });
-            }else {
+                callback.displayCheckInSuccess(workflowDTO);
+            } else {
                 PracticeNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
             }
         }

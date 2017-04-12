@@ -528,7 +528,7 @@ public class DemographicsActivity extends BasePatientActivity
     }
 
     @Override
-    public void displayCheckinSuccess(WorkflowDTO workflowDTO, DialogInterface.OnDismissListener dismissListener) {
+    public void displayCheckInSuccess(WorkflowDTO workflowDTO, DialogInterface.OnDismissListener dismissListener) {
 
     }
 }

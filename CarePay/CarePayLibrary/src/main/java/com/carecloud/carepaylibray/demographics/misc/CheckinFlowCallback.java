@@ -16,6 +16,6 @@ public interface CheckinFlowCallback {
 
     void navigateToConsentFlow(WorkflowDTO workflowDTO);
 
-    void displayCheckinSuccess(WorkflowDTO workflowDTO, DialogInterface.OnDismissListener dismissListener);
+    void displayCheckInSuccess(WorkflowDTO workflowDTO);
 
 }

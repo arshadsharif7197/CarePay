@@ -131,13 +131,18 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     @Override
-    public void displayCheckinSuccess(final WorkflowDTO workflowDTO, DialogInterface.OnDismissListener dismissListener) {
+    public void displayCheckInSuccess(final WorkflowDTO workflowDTO) {
         //display confirmation
         CheckinCompletedDialogFragment successFragment = new CheckinCompletedDialogFragment();
-        successFragment.setOnDismissListener(dismissListener);
+        successFragment.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                demographicsView.finish();
+                demographicsView.navigateToWorkflow(workflowDTO);
+            }
+        });
         successFragment.show(getSupportFragmentManager(), successFragment.getClass().getName());
     }
-
 
     @Override
     public DemographicLabelsDTO getLabelsDTO() {
