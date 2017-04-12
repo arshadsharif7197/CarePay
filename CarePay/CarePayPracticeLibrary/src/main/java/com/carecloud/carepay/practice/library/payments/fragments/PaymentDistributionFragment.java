@@ -54,7 +54,7 @@ import java.util.List;
  */
 
 public class PaymentDistributionFragment extends BaseDialogFragment implements PaymentDistributionAdapter.PaymentDistributionCallback, PopupPickerAdapter.PopupPickCallback,
-                                                                                AddPaymentItemFragment.AddItemCallback, PaymentDistributionEntryFragment.PaymentDistributionAmountCallback {
+        AddPaymentItemFragment.AddItemCallback, PaymentDistributionEntryFragment.PaymentDistributionAmountCallback {
 
     private TextView patientName;
     private TextView balance;
@@ -308,7 +308,10 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
                     total+=pendingBalancePayload.getAmount();
 //                    total-=pendingBalancePayload.getUnappliedCredit();
                     switch (pendingBalancePayload.getType()){
-                        case PendingBalancePayloadDTO.CO_PAY_TYPE:{
+                        case PendingBalancePayloadDTO.CO_PAY_TYPE:
+                        case PendingBalancePayloadDTO.CO_INSURANCE_TYPE:
+                        case PendingBalancePayloadDTO.DEDUCTIBLE_TYPE:
+                        {
                             BalanceItemDTO balanceItemDTO = new BalanceItemDTO();
                             balanceItemDTO.setBalance(pendingBalancePayload.getAmount());
                             balanceItemDTO.setDescription(pendingBalancePayload.getType());

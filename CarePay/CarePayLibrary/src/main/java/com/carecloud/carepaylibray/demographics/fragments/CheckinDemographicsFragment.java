@@ -60,12 +60,6 @@ import com.smartystreets.api.us_zipcode.City;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtraboldTypeface;
@@ -73,6 +67,12 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaExtrabo
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypeface;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaRegularTypefaceLayout;
 import static com.carecloud.carepaylibray.utils.SystemUtil.setProximaNovaSemiboldTypeface;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class CheckinDemographicsFragment extends DocumentScannerFragment implements View.OnClickListener {
@@ -590,7 +590,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         final String phoneError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED :
                 addressMetaDTO.getProperties().getPhone().getValidations().get(0).getErrorMessage();
         final String phoneValidation = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED :
-                addressMetaDTO.getProperties().getPhone().getValidations().get(0).getValue();
+                (String) addressMetaDTO.getProperties().getPhone().getValidations().get(0).getValue();
         if (!isPhoneEmpty) { // check validity only if non-empty
             String phone = phoneNumberEditText.getText().toString();
             if (!StringUtil.isNullOrEmpty(phone)

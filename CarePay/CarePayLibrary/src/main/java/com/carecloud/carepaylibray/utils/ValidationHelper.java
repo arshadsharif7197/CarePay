@@ -50,7 +50,7 @@ public class ValidationHelper {
 
         // there is a 'pattern' validate; match against
         final String phoneError = patternValidation.getErrorMessage();
-        final String phoneValidationRegex = patternValidation.getValue();
+        final String phoneValidationRegex = (String) patternValidation.getValue();
         if (!isValidString(string, phoneValidationRegex)) {
             wrappingTextInputLayout.setErrorEnabled(true);
             wrappingTextInputLayout.setError(phoneError);
