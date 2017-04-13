@@ -22,7 +22,6 @@
         app:numberDots="5"
         app:spacing="12dp" />
 
-
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_1dp"
@@ -42,23 +41,10 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_1dp"
-        android:background="@color/light_gray" />
-
-
     <com.carecloud.carepaylibray.customcomponents.CarePayButton
         android:id="@+id/consentButtonNext"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_48dp"
-        android:layout_margin="@dimen/dimen_20dp"
-        android:background="@drawable/green_rounded_button_selector"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_size_22"
-        app:customAssetFont="gotham_rounded_medium"
+        style="@style/InTakeNextButtonStyle"
+        android:enabled="true"
         breeze:textKey="demographics_review_next_button" />
 
 </LinearLayout>

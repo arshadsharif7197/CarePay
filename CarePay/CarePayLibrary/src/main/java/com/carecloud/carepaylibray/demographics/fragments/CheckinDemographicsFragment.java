@@ -37,6 +37,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
@@ -664,7 +665,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             buttonConfirmData.setEnabled(true);
-            ((DemographicsView) getActivity()).navigateToWorkflow(workflowDTO);
+            ((BaseActivity) getActivity()).navigateToWorkflow(workflowDTO);
         }
 
         @Override

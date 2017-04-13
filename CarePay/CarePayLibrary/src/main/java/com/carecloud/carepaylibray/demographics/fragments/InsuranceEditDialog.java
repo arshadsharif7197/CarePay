@@ -191,6 +191,11 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
             hideKeyboardOnViewTouch(view.findViewById(R.id.dialog_content_layout));
             hideKeyboardOnViewTouch(view.findViewById(R.id.container_main));
+
+            if (!isPatientMode) {
+                inflateToolbarViews(view);
+            }
+
             return view;
         }
 
