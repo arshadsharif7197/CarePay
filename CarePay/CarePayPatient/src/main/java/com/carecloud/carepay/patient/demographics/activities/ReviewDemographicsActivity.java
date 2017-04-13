@@ -60,13 +60,23 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
 
     @Override
     public void updateCheckInFlow(CheckinFlowState flowState, int totalPages, int currentPage) {
-        TextView textView = (TextView) findViewById(R.id.toolbar_title);
         switch (flowState) {
             case DEMOGRAPHICS:
-                textView.setText(String.format(Label.getLabel("demographics_heading"), currentPage, totalPages));
+                updateCheckInFlow("demographics_heading", totalPages, currentPage);
+                break;
+            case CONSENT:
+                updateCheckInFlow("consent_form_heading", totalPages, currentPage);
+                break;
+            case INTAKE:
+                updateCheckInFlow("intake_form_heading", totalPages, currentPage);
                 break;
             default:
         }
+    }
+
+    public void updateCheckInFlow(String key, int totalPages, int currentPage) {
+        TextView textView = (TextView) findViewById(R.id.toolbar_title);
+        textView.setText(String.format(Label.getLabel(key), currentPage, totalPages));
     }
 
     @Override

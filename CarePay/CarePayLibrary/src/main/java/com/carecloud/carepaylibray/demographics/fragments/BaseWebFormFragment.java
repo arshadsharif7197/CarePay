@@ -100,9 +100,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         progressBar = (ProgressBar) view.findViewById(com.carecloud.carepaylibrary.R.id.progressBarConsent);
         progressBar.setVisibility(View.VISIBLE);
         initWebView();
-
     }
-
 
     protected void setHeader(String text){
         header.setText(text);

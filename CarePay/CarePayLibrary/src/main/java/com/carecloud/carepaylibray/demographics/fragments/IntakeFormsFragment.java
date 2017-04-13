@@ -30,7 +30,6 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
     private List<IntakeForm> intakeFormList;
     private IntakeFindings intakeFindings;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +47,6 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
         super.onViewCreated(view, icicle);
         setHeader(Label.getLabel("practice_chekin_section_intake_forms"));
     }
-
 
     @Override
     protected void displayNextForm() {
