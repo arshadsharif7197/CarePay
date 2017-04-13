@@ -12,7 +12,7 @@
     <com.marcok.stepprogressbar.StepProgressBar
         android:id="@+id/progress_indicator"
         style="@style/InTakeDottedProgressBarStyle"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="10dp"
         app:activeDotColor="@color/colorPrimary"
         app:activeDotIcon="@drawable/circle_indicator_blue"
         app:activeDotIndex="-1"
@@ -21,11 +21,6 @@
         app:inactiveDotIcon="@drawable/circle_indicator_gray"
         app:numberDots="5"
         app:spacing="12dp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_1dp"
-        android:background="@color/light_gray" />
 
     <ProgressBar
         android:id="@+id/progressBarConsent"
