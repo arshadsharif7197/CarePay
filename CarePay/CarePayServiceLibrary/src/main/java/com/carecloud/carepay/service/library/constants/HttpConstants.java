@@ -1,6 +1,7 @@
 package com.carecloud.carepay.service.library.constants;
 
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 /**
  * Created by Jahirul Bhuiyan on 10/12/2016.
@@ -23,6 +24,8 @@ public class HttpConstants {
     private static  String pushNotificationWebclientUrl;
 
     private static boolean useUnifiedAuth = false;
+
+    private static MixpanelAPI mixpanelAPI;
 
 
     private static DeviceIdentifierDTO deviceInformation;
@@ -74,5 +77,13 @@ public class HttpConstants {
 
     public static void setUseUnifiedAuth(boolean useUnifiedAuth) {
         HttpConstants.useUnifiedAuth = useUnifiedAuth;
+    }
+
+    public static MixpanelAPI getMixpanelAPI() {
+        return mixpanelAPI;
+    }
+
+    public static void setMixpanelAPI(MixpanelAPI mixpanelAPI) {
+        HttpConstants.mixpanelAPI = mixpanelAPI;
     }
 }

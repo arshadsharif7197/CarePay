@@ -15,7 +15,7 @@ public class PracticeTabletSplashActivity extends SplashActivity {
         super.onCreate(savedInstanceState);
 
         NewRelic.withApplicationToken(
-            getString(R.string.R_string_new_relic_application_token)
+            getString(R.string.new_relic_application_token)
         ).start(this.getApplication());
 
     }
