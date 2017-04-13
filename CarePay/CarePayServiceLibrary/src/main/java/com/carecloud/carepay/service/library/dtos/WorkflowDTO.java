@@ -24,6 +24,9 @@ public class WorkflowDTO{
     @Expose
     private String state;
 
+    /**
+     * @param workFlowRecord WorkFlow Record
+     */
     public WorkflowDTO(WorkFlowRecord workFlowRecord) {
         Gson gson = new Gson();
         metadata = gson.fromJson(workFlowRecord.getMetadata(), JsonObject.class);

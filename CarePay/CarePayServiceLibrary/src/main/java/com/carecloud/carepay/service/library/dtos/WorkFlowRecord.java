@@ -7,10 +7,16 @@ public class WorkFlowRecord extends SugarRecord {
     private String payload;
     private String state;
 
+    /**
+     * Do not delete - SugarRecord needs it
+     */
     public WorkFlowRecord() {
 
     }
 
+    /**
+     * @param dto Workflow DTO
+     */
     public WorkFlowRecord(WorkflowDTO dto) {
         metadata = dto.getMetadata().toString();
         payload = dto.getPayload().toString();
