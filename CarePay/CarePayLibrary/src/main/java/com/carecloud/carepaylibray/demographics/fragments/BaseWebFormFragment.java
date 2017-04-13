@@ -1,8 +1,7 @@
-package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
+package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,12 +20,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
-import com.carecloud.carepay.practice.library.base.PracticeNavigationStateConstants;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
@@ -72,7 +70,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_checkin_consent_form_dynamic, container, false);
+        return inflater.inflate(R.layout.fragment_web_form, container, false);
     }
 
     @Override
@@ -102,9 +100,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         progressBar = (ProgressBar) view.findViewById(com.carecloud.carepaylibrary.R.id.progressBarConsent);
         progressBar.setVisibility(View.VISIBLE);
         initWebView();
-
     }
-
 
     protected void setHeader(String text){
         header.setText(text);
@@ -125,7 +121,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         });
 
 
-        header = (TextView) view.findViewById(R.id.consent_header);
+        header = (TextView) view.findViewById(R.id.toolbar_title);
     }
 
 
@@ -331,10 +327,10 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            if(workflowDTO.getState().equals(PracticeNavigationStateConstants.PATIENT_APPOINTMENTS)){
+            if(workflowDTO.getState().equals(NavigationStateConstants.APPOINTMENTS)){
                 callback.displayCheckInSuccess(workflowDTO);
             } else {
-                PracticeNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
+                callback.navigateToWorkflow(workflowDTO);
             }
         }
 

@@ -24,7 +24,9 @@ import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
 import com.carecloud.carepaylibray.demographics.fragments.IdentificationFragment;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
+import com.carecloud.carepaylibray.demographics.fragments.IntakeFormsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
+import com.carecloud.carepaylibray.demographics.fragments.FormsFragment;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.demographics.scanner.ProfilePictureFragment;
 import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearchFragment;
@@ -119,6 +121,39 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     @Override
+    public void navigateToConsentForms(WorkflowDTO workflowDTO) {
+        Bundle bundle = new Bundle();
+        bundle.putString(CarePayConstants.INTAKE_BUNDLE, workflowDTO.toString());
+
+        FormsFragment fragment = new FormsFragment();
+        fragment.setArguments(bundle);
+
+        navigateToFragment(fragment, true);
+    }
+
+    @Override
+    public void navigateToIntakeForms(WorkflowDTO workflowDTO) {
+        Bundle bundle = new Bundle();
+        bundle.putString(CarePayConstants.INTAKE_BUNDLE, workflowDTO.toString());
+
+        IntakeFormsFragment fragment = new IntakeFormsFragment();
+        fragment.setArguments(bundle);
+        navigateToFragment(fragment, true);
+    }
+
+    @Override
+    public void navigateToMedicationsAllergy(WorkflowDTO workflowDTO) {
+        medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class, workflowDTO);
+
+        Bundle bundle = new Bundle();
+        bundle.putString(CarePayConstants.MEDICATION_ALLERGIES_DTO_EXTRA, workflowDTO.toString());
+
+        MedicationsAllergyFragment fragment = new MedicationsAllergyFragment();
+        fragment.setArguments(bundle);
+        navigateToFragment(fragment, true);
+    }
+
+    @Override
     public void setCheckinFlow(CheckinFlowState flowState, int totalPages, int currentPage) {
         if (demographicsView != null) {
             demographicsView.updateCheckInFlow(flowState, totalPages, currentPage);
@@ -126,7 +161,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     @Override
-    public void navigateToConsentFlow(WorkflowDTO workflowDTO) {
+    public void navigateToWorkflow(WorkflowDTO workflowDTO) {
         demographicsView.navigateToWorkflow(workflowDTO);
     }
 
@@ -278,11 +313,6 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     @Override
     public DemographicDTO getDemographicDTO() {
         return demographicDTO;
-    }
-
-    @Override
-    public void setMedicationsAllergiesDto(MedicationsAllergiesResultsModel dto) {
-        medicationsAllergiesDTO = dto;
     }
 
     @Override

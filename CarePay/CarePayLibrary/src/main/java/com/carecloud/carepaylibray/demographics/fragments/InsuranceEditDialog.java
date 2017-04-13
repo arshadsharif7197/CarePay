@@ -191,6 +191,11 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
             hideKeyboardOnViewTouch(view.findViewById(R.id.dialog_content_layout));
             hideKeyboardOnViewTouch(view.findViewById(R.id.container_main));
+
+            if (!isPatientMode) {
+                inflateToolbarViews(view);
+            }
+
             return view;
         }
 
@@ -229,7 +234,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
             }
         });
 
-        TextView textView = (TextView) view.findViewById(R.id.checkinDemographicsHeaderLabel);
+        TextView textView = (TextView) view.findViewById(R.id.toolbar_title);
         textView.setText(Label.getLabel("demographics_insurance_label"));
     }
 

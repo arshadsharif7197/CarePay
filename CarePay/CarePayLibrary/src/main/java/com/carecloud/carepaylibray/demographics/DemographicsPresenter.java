@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraReady;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
@@ -11,7 +12,6 @@ import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragmen
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
-import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterface;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
 import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHolder;
 import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearchFragment;
@@ -22,7 +22,6 @@ public interface DemographicsPresenter extends DemographicsReviewLabelsHolder,
         DemographicsLabelsHolder,
         HealthInsuranceFragment.InsuranceDocumentScannerListener,
         MedicationsAllergyFragment.MedicationAllergyCallback,
-        CheckinDemographicsInterface,
         MedicationAllergySearchFragment.MedicationAllergySearchCallback,
         CheckinFlowCallback,
         PersonalInfoFragment.UpdateProfilePictureListener,
@@ -46,7 +45,16 @@ public interface DemographicsPresenter extends DemographicsReviewLabelsHolder,
      * @param fragment       The fragment
      * @param addToBackStack Whether to add the transaction to back-stack
      */
-    void navigateToFragment(Fragment fragment, boolean addToBackStack) ;
+    void navigateToFragment(Fragment fragment, boolean addToBackStack);
 
-    void setMedicationsAllergiesDto(MedicationsAllergiesResultsModel dto);
+    /**
+     * Consent form navigation
+     *
+     * @param workflowDTO consent DTO
+     */
+    void navigateToConsentForms(WorkflowDTO workflowDTO);
+
+    void navigateToIntakeForms(WorkflowDTO workflowDTO);
+
+    void navigateToMedicationsAllergy(WorkflowDTO workflowDTO);
 }

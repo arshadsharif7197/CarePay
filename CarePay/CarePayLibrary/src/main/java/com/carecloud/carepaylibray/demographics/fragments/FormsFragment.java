@@ -1,4 +1,4 @@
-package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
+package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.os.Bundle;
 import android.view.View;
@@ -22,7 +22,7 @@ import java.util.regex.Matcher;
  * Created by lmenendez on 3/23/17.
  */
 
-public class PracticeFormsFragment extends BaseWebFormFragment {
+public class FormsFragment extends BaseWebFormFragment {
 
     private ConsentFormDTO consentFormDTO;
     private List<JsonObject> jsonFormSaveResponseArray = new ArrayList<>();

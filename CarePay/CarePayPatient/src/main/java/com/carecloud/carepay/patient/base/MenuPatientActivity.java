@@ -16,8 +16,8 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -158,7 +158,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             PatientNavigationHelper.setAccessPaymentsBalances(true);
-            PatientNavigationHelper.getInstance(MenuPatientActivity.this).navigateToWorkflow(workflowDTO);
+            navigateToWorkflow(workflowDTO);
         }
 
         @Override
@@ -180,7 +180,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
 
             hideProgressDialog();
 
-            PatientNavigationHelper.getInstance(MenuPatientActivity.this).navigateToWorkflow(workflowDTO);
+            navigateToWorkflow(workflowDTO);
         }
 
         @Override
@@ -202,7 +202,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            PatientNavigationHelper.getInstance(MenuPatientActivity.this).navigateToWorkflow(workflowDTO);
+            navigateToWorkflow(workflowDTO);
         }
 
         @Override
@@ -223,8 +223,8 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             //need to manually redirect this response to the notifications screen temporarily
-            workflowDTO.setState(PatientNavigationStateConstants.PURCHASE);
-            PatientNavigationHelper.getInstance(MenuPatientActivity.this).navigateToWorkflow(workflowDTO);
+            workflowDTO.setState(NavigationStateConstants.PURCHASE);
+            navigateToWorkflow(workflowDTO);
         }
 
         @Override
@@ -244,8 +244,8 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             //need to manually redirect this response to the notifications screen temporarily
-            workflowDTO.setState(PatientNavigationStateConstants.NOTIFICATION);
-            PatientNavigationHelper.getInstance(MenuPatientActivity.this).navigateToWorkflow(workflowDTO);
+            workflowDTO.setState(NavigationStateConstants.NOTIFICATION);
+            navigateToWorkflow(workflowDTO);
         }
 
         @Override

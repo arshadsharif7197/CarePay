@@ -11,9 +11,6 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
-import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckinMedicationsAllergyFragment;
-import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.IntakeFormsFragment;
-import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.PracticeFormsFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckInFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentPlanFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
@@ -21,6 +18,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseC
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePartialPaymentDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
@@ -28,8 +26,6 @@ import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenterImpl;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
-import com.carecloud.carepaylibray.intake.models.IntakeResponseModel;
-import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
@@ -130,21 +126,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             View view = checkInFlowViews[i];
             ((TextView) view.findViewById(R.id.checkin_flow_title)).setText(labels[i]);
         }
-    }
-
-    /**
-     * Consent form navigation
-     *
-     * @param workflowJson consent DTO
-     */
-    public void getConsentFormInformation(String workflowJson) {
-        Bundle bundle = new Bundle();
-        bundle.putString(CarePayConstants.INTAKE_BUNDLE, workflowJson);
-
-        PracticeFormsFragment fragment = new PracticeFormsFragment();
-        fragment.setArguments(bundle);
-
-        presenter.navigateToFragment(fragment, true);
     }
 
     /**
@@ -281,22 +262,19 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         }
     }
 
-    /**
-     * Launch intake forms
-     *
-     * @param workflowJson workflowJson
-     */
-    public void startIntakeForms(String workflowJson) {
-        IntakeResponseModel intakeResponseModel = getConvertedDTO(IntakeResponseModel.class, workflowJson);
+    @Override
+    public void navigateToConsentForms(WorkflowDTO workflowDTO) {
+        presenter.navigateToConsentForms(workflowDTO);
+    }
 
-        Gson gson = new Gson();
-        String intakeFormDTO = gson.toJson(intakeResponseModel);
-        Bundle bundle = new Bundle();
-        bundle.putString(CarePayConstants.INTAKE_BUNDLE, intakeFormDTO);
+    @Override
+    public void navigateToIntakeForms(WorkflowDTO workflowDTO) {
+        presenter.navigateToIntakeForms(workflowDTO);
+    }
 
-        IntakeFormsFragment fragment = new IntakeFormsFragment();
-        fragment.setArguments(bundle);
-        presenter.navigateToFragment(fragment, true);
+    @Override
+    public void navigateToMedicationsAllergy(WorkflowDTO workflowDTO) {
+        presenter.navigateToMedicationsAllergy(workflowDTO);
     }
 
     @Override
@@ -315,20 +293,5 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 //nothing
                 return;
         }
-    }
-
-    /**
-     * Entry point for navigating to medication fragment
-     *
-     * @param workflowDTO navigation dto
-     */
-    public void loadMedicationsAllergy(String workflowDTO) {
-        CheckinMedicationsAllergyFragment medicationsAllergyFragment = new CheckinMedicationsAllergyFragment();
-        presenter.setMedicationsAllergiesDto(DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class, workflowDTO));
-        Bundle args = new Bundle();
-        args.putString(CarePayConstants.MEDICATION_ALLERGIES_DTO_EXTRA, workflowDTO);
-
-        medicationsAllergyFragment.setArguments(args);
-        presenter.navigateToFragment(medicationsAllergyFragment, true);
     }
 }

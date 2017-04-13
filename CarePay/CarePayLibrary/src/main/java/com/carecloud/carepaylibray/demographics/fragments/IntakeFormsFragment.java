@@ -1,4 +1,4 @@
-package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
+package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.os.Bundle;
 import android.view.View;
@@ -30,7 +30,6 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
     private List<IntakeForm> intakeFormList;
     private IntakeFindings intakeFindings;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +47,6 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
         super.onViewCreated(view, icicle);
         setHeader(Label.getLabel("practice_chekin_section_intake_forms"));
     }
-
 
     @Override
     protected void displayNextForm() {
