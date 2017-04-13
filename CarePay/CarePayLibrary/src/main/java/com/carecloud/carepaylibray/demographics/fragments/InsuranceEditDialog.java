@@ -31,8 +31,8 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
-import com.carecloud.carepaylibray.carepaycamera.CarePayCameraReady;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
@@ -63,8 +63,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     private static final int BACK_PIC = 2;
     private static final String HTTP = "http";
 
-    private static final ImageCaptureHelper.CameraType CAMERA_TYPE = ImageCaptureHelper.CameraType.CUSTOM_CAMERA;
-    private static final ImageCaptureHelper.ImageShape IMAGE_SHAPE = ImageCaptureHelper.ImageShape.RECTANGULAR;
     public static final String EDITED_INDEX = "EditedIndex";
     public static final String IS_PATIENT_MODE = "IsPatientMode";
     public static final int NEW_INSURANCE = -1;
@@ -99,8 +97,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     private DemographicInsurancePhotoDTO frontInsurancePhotoDTO;
     private DemographicInsurancePhotoDTO backInsurancePhotoDTO;
 
-    private InsuranceEditDialogListener callback;
-    private CarePayCameraReady carePayCameraReady;
+    private DemographicsPresenter callback;
     private int editedIndex;
 
     private String selectedProvider;
@@ -148,20 +145,10 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
             if (context instanceof DemographicsView) {
                 callback = ((DemographicsView) context).getPresenter();
             } else {
-                callback = (InsuranceEditDialogListener) context;
+                callback = (DemographicsPresenter) context;
             }
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement InsuranceEditDialogListener");
-        }
-
-        try {
-            if (context instanceof DemographicsView) {
-                callback = ((DemographicsView) context).getPresenter();
-            } else {
-                carePayCameraReady = (CarePayCameraReady) context;
-            }
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement CarePayCameraReady");
         }
     }
 
@@ -456,7 +443,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
             public void onClick(View frontButtonView) {
                 if (callback != null) {
                     isFrontScan = true;
-                    carePayCameraReady.captureImage(InsuranceEditDialog.this);
+                    callback.captureImage(InsuranceEditDialog.this);
                 }
             }
         });
@@ -467,7 +454,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
             public void onClick(View frontButtonView) {
                 if (callback != null) {
                     isFrontScan = false;
-                    carePayCameraReady.captureImage(InsuranceEditDialog.this);
+                    callback.captureImage(InsuranceEditDialog.this);
                 }
             }
         });
