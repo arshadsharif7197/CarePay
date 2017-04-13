@@ -22,7 +22,9 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.ISession;
+import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
+import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.medications.adapters.MedicationAllergiesAdapter;
 import com.carecloud.carepaylibray.medications.models.MedicationAllergiesAction;
 import com.carecloud.carepaylibray.medications.models.MedicationAllergiesLabelsDTO;
@@ -55,12 +57,10 @@ public class MedicationsAllergyFragment extends BaseFragment implements Medicati
         void medicationSubmitFail(String message);
     }
 
-    private EditText unlistedAllergies;
-    private EditText unlistedMedication;
     private RecyclerView allergyRecycler;
     private RecyclerView medicationRecycler;
 
-    protected MedicationAllergyCallback callback;
+    protected DemographicsPresenter callback;
 
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
     private MedicationAllergiesLabelsDTO labels;
@@ -78,10 +78,10 @@ public class MedicationsAllergyFragment extends BaseFragment implements Medicati
             if (context instanceof DemographicsView) {
                 callback = ((DemographicsView) context).getPresenter();
             } else {
-                callback = (MedicationAllergyCallback) context;
+                callback = (DemographicsPresenter) context;
             }
         }catch (ClassCastException cce){
-            throw new ClassCastException("Attached Context must implement MedicationAllergyCallback");
+            throw new ClassCastException("Attached Context must implement DemographicsPresenter");
         }
     }
 
@@ -121,7 +121,7 @@ public class MedicationsAllergyFragment extends BaseFragment implements Medicati
 
         View container = view.findViewById(R.id.container_main);
         hideKeyboardOnViewTouch(container);
-
+        callback.setCheckinFlow(CheckinFlowState.MEDICATIONS_AND_ALLERGIES, 1, 1);
     }
 
     private void inflateToolbarViews(View view){
@@ -171,12 +171,12 @@ public class MedicationsAllergyFragment extends BaseFragment implements Medicati
         Button continueButton = (Button) view.findViewById(R.id.medication_allergies_continue_button);
         continueButton.setOnClickListener(continueClickListener);
 
-        unlistedAllergies = (EditText) view.findViewById(R.id.allergy_none_placeholder_text);
+        EditText unlistedAllergies = (EditText) view.findViewById(R.id.allergy_none_placeholder_text);
         unlistedAllergies.setHint(StringUtil.getLabelForView(labels.getAllergyNonePlaceholderText()));
         unlistedAllergies.setOnFocusChangeListener(getOnFocusChangeListener(StringUtil.getLabelForView(labels.getAllergyNonePlaceholderText())));
         unlistedAllergies.setEnabled(false);
 
-        unlistedMedication = (EditText) view.findViewById(R.id.medication_none_placeholder_text);
+        EditText unlistedMedication = (EditText) view.findViewById(R.id.medication_none_placeholder_text);
         unlistedMedication.setOnEditorActionListener(addUnlistedMedicationListener);
         unlistedMedication.setHint(StringUtil.getLabelForView(labels.getMedicationNonePlaceholderText()));
         unlistedMedication.setOnFocusChangeListener(getOnFocusChangeListener(StringUtil.getLabelForView(labels.getMedicationNonePlaceholderText())));

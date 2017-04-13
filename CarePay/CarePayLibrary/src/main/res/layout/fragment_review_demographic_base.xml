@@ -40,7 +40,6 @@
             android:id="@+id/demographicsSubHeading"
             style="@style/DemographicsDocsHeaderSubtitleStyle" />
 
-
     </LinearLayout>
 
 

@@ -20,7 +20,6 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.Demographic
 import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckinCompletedDialogFragment;
-import com.carecloud.carepaylibray.demographics.fragments.CheckinMedicationsAllergyFragment;
 import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
 import com.carecloud.carepaylibray.demographics.fragments.IdentificationFragment;
@@ -149,7 +148,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         Bundle bundle = new Bundle();
         bundle.putString(CarePayConstants.MEDICATION_ALLERGIES_DTO_EXTRA, workflowDTO.toString());
 
-        CheckinMedicationsAllergyFragment fragment = new CheckinMedicationsAllergyFragment();
+        MedicationsAllergyFragment fragment = new MedicationsAllergyFragment();
         fragment.setArguments(bundle);
         navigateToFragment(fragment, true);
     }

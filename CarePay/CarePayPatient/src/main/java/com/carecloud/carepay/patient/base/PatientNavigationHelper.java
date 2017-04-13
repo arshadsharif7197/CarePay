@@ -9,8 +9,6 @@ import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivit
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.patient.demographics.activities.ReviewDemographicsActivity;
-import com.carecloud.carepay.patient.intakeforms.activities.InTakeWebViewActivity;
-import com.carecloud.carepay.patient.medication.activities.MedicationAllergyActivity;
 import com.carecloud.carepay.patient.notifications.activities.NotificationActivity;
 import com.carecloud.carepay.patient.payment.PaymentActivity;
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
