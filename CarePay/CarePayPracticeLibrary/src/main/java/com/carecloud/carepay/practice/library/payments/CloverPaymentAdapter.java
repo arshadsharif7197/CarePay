@@ -84,6 +84,7 @@ public class CloverPaymentAdapter {
             metadata.setPracticeID(paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getMetadata().getPracticeId());
             metadata.setLocationID(paymentObject.getLocationID());
             metadata.setProviderID(paymentObject.getProviderID());
+            paymentLineItem.setMetadata(metadata);
 
             paymentLineItems.add(paymentLineItem);
 
