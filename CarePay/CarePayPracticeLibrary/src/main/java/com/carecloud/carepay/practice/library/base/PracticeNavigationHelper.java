@@ -20,72 +20,60 @@ import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.ISession;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
-
-/**
- * Created by Jahirul Bhuiyan on 10/10/2016.
- * Dynamic screen navigation helper
- * Singleton
- * initialize from application class
- */
-
 public class PracticeNavigationHelper {
-
-    private static boolean shouldExpectResult = false;
-    private static int expectRequestCode = -1;
 
     /**
      * Navigation using application context
      *
      * @param context       activity context
      * @param workflowDTO   response DTO
-     * @param expectsResult should launch with startActivityForResult
-     * @param requestCode   RequestCode for activity Result
      */
-    public static void navigateToWorkflow(Context context, WorkflowDTO workflowDTO, boolean expectsResult, int requestCode) {
-        shouldExpectResult = expectsResult;
-        expectRequestCode = requestCode;
-        navigateToWorkflow(context, workflowDTO);
+    public static void navigateToWorkflow(Context context, WorkflowDTO workflowDTO) {
+        navigateToWorkflow(context, workflowDTO, false, 0);
     }
 
     /**
      * Navigation using application context
      *
      * @param context     activity context
+     * @param expectsResult should launch with startActivityForResult
+     * @param requestCode   RequestCode for activity Result
      * @param workflowDTO WorkflowDTO
      */
-    public static void navigateToWorkflow(Context context, WorkflowDTO workflowDTO) {
+    public static void navigateToWorkflow(Context context, WorkflowDTO workflowDTO, boolean expectsResult, int requestCode) {
         Intent intent = null;
         if (workflowDTO == null || StringUtil.isNullOrEmpty(workflowDTO.getState())) {
             return;
         }
         switch (workflowDTO.getState()) {
-            case PracticeNavigationStateConstants.PRACTICE_MODE_SIGNIN: {
+            case NavigationStateConstants.PRACTICE_MODE_SIGNIN: {
                 intent = new Intent(context, SigninActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             }
 
-            case PracticeNavigationStateConstants.PRACTICE_HOME: {
+            case NavigationStateConstants.PRACTICE_HOME: {
                 intent = new Intent(context, CloverMainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 break;
             }
 
-            case PracticeNavigationStateConstants.PATIENT_HOME: {
+            case NavigationStateConstants.PATIENT_HOME: {
                 intent = new Intent(context, CloverMainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 break;
             }
 
-            case PracticeNavigationStateConstants.PRACTICE_APPOINTMENTS: {
+            case NavigationStateConstants.PRACTICE_APPOINTMENTS: {
                 intent = new Intent(context, PracticeModePracticeAppointmentsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             }
 
-            case PracticeNavigationStateConstants.PATIENT_APPOINTMENTS: {
+            case NavigationStateConstants.APPOINTMENTS: {
                 ApplicationPreferences applicationPreferences = ((ISession) context).getApplicationPreferences();
                 intent = new Intent(context,  applicationPreferences.isNavigatingToAppointments()
                                 ? PatientModePracticeAppointmentActivity.class : PatientModePracticeCheckInActivity.class);
@@ -93,50 +81,50 @@ public class PracticeNavigationHelper {
                 break;
             }
 
-            case PracticeNavigationStateConstants.PATIENT_MODE_SPLASH: {
+            case NavigationStateConstants.PATIENT_MODE_SPLASH: {
                 intent = new Intent(context, PatientModeSplashActivity.class);
                 break;
             }
 
-            case PracticeNavigationStateConstants.PRACTICE_CHECKIN: {
+            case NavigationStateConstants.PRACTICE_CHECKIN: {
                 intent = new Intent(context, PracticeModePracticeCheckInActivity.class);
                 break;
             }
 
-            case PracticeNavigationStateConstants.PATIENT_MODE_SIGNIN: {
+            case NavigationStateConstants.PATIENT_MODE_SIGNIN: {
                 intent = new Intent(context, HowToCheckInActivity.class);
                 break;
             }
 
-            case PracticeNavigationStateConstants.PATIENT_MODE_CHECKIN_SUBFLOW: {
+            case NavigationStateConstants.DEMOGRAPHIC_VERIFY: {
                 intent = new Intent(context, PatientModeCheckinActivity.class);
 //                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
             }
-            case PracticeNavigationStateConstants.MEDICATION_ALLERGIES:{
+            case NavigationStateConstants.MEDICATION_ALLERGIES:{
                 if (context instanceof PatientModeCheckinActivity) {
-                    ((PatientModeCheckinActivity) context).loadMedicationsAllergy(workflowDTO.toString());
+                    ((PatientModeCheckinActivity) context).navigateToMedicationsAllergy(workflowDTO);
                     return;
                 }
                 break;
             }
-            case PracticeNavigationStateConstants.CONSENT_FORMS: {
+            case NavigationStateConstants.CONSENT_FORMS: {
                 if (context instanceof PatientModeCheckinActivity) {
-                    ((PatientModeCheckinActivity) context).getConsentFormInformation(workflowDTO.toString());
-                    return;
-                }
-                break;
-            }
-
-            case PracticeNavigationStateConstants.INTAKE_FORMS: {
-                if (context instanceof PatientModeCheckinActivity) {
-                    ((PatientModeCheckinActivity) context).startIntakeForms(workflowDTO.toString());
+                    ((PatientModeCheckinActivity) context).navigateToConsentForms(workflowDTO);
                     return;
                 }
                 break;
             }
 
-            case PracticeNavigationStateConstants.PAYMENTS: {
+            case NavigationStateConstants.INTAKE_FORMS: {
+                if (context instanceof PatientModeCheckinActivity) {
+                    ((PatientModeCheckinActivity) context).navigateToIntakeForms(workflowDTO);
+                    return;
+                }
+                break;
+            }
+
+            case NavigationStateConstants.PAYMENTS: {
                 if (context instanceof PatientModeCheckinActivity) {
                     ((PatientModeCheckinActivity) context).getPaymentInformation(workflowDTO.toString());
                     return;
@@ -147,7 +135,7 @@ public class PracticeNavigationHelper {
                 break;
             }
 
-            case PracticeNavigationStateConstants.PRACTICE_PAYMENT: {
+            case NavigationStateConstants.PRACTICE_PAYMENT: {
                 intent = new Intent(context, PaymentsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 break;
@@ -166,10 +154,8 @@ public class PracticeNavigationHelper {
         bundle.putLong(WorkflowDTO.class.getSimpleName(), workFlowRecord.save());
         if (intent != null) {
             intent.putExtras(bundle);
-            if (shouldExpectResult && context instanceof Activity) {
-                ((Activity) context).startActivityForResult(intent, expectRequestCode);
-                shouldExpectResult = false;
-                expectRequestCode = -1;
+            if (expectsResult && context instanceof Activity) {
+                ((Activity) context).startActivityForResult(intent, requestCode);
             } else {
                 context.startActivity(intent);
             }

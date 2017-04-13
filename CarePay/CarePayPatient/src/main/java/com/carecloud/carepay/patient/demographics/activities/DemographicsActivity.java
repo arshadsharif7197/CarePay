@@ -344,11 +344,6 @@ public class DemographicsActivity extends BasePatientActivity
     }
 
     @Override
-    public void initializeDocumentFragment() {
-
-    }
-
-    @Override
     public void initializeInsurancesFragment() {
         String tag = HealthInsuranceFragment.class.getSimpleName();
         HealthInsuranceFragment fragment = new HealthInsuranceFragment();
@@ -523,7 +518,7 @@ public class DemographicsActivity extends BasePatientActivity
     }
 
     @Override
-    public void navigateToConsentFlow(WorkflowDTO workflowDTO) {
+    public void navigateToWorkflow(WorkflowDTO workflowDTO) {
 
     }
 

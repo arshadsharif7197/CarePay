@@ -7,6 +7,6 @@ public abstract class BasePatientActivity extends BaseActivity {
 
     @Override
     public void navigateToWorkflow(WorkflowDTO workflowDTO) {
-        PatientNavigationHelper.getInstance(this).navigateToWorkflow(workflowDTO);
+        PatientNavigationHelper.navigateToWorkflow(this, workflowDTO);
     }
 }

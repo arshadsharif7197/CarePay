@@ -265,7 +265,7 @@ public class InTakeWebViewActivity extends BasePatientActivity {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             PatientNavigationHelper.setAccessPaymentsBalances(false);
-            PatientNavigationHelper.getInstance(InTakeWebViewActivity.this).navigateToWorkflow(workflowDTO);
+            navigateToWorkflow(workflowDTO);
         }
 
         @Override

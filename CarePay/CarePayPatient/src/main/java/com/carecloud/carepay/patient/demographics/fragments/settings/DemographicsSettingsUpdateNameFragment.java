@@ -430,7 +430,7 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
             hideProgressDialog();
             updateProfileButton.setEnabled(true);
 
-            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+            PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
         }
 
         @Override

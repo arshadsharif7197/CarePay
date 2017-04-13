@@ -14,8 +14,7 @@ public interface CheckinFlowCallback {
 
     void setCheckinFlow(CheckinFlowState flowState, int totalPages, int currentPage);
 
-    void navigateToConsentFlow(WorkflowDTO workflowDTO);
+    void navigateToWorkflow(WorkflowDTO workflowDTO);
 
     void displayCheckInSuccess(WorkflowDTO workflowDTO);
-
 }

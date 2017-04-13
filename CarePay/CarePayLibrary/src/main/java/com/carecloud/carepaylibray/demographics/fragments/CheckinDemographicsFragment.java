@@ -38,6 +38,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
@@ -45,7 +46,6 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
-import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterface;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
@@ -73,7 +73,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 public class CheckinDemographicsFragment extends DocumentScannerFragment implements View.OnClickListener {
 
@@ -146,8 +145,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
     public interface CheckinDemographicsFragmentListener {
         void onDemographicDtoChanged(DemographicDTO demographicDTO);
-
-        void initializeDocumentFragment();
 
         void initializeInsurancesFragment();
     }
@@ -667,7 +664,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             buttonConfirmData.setEnabled(true);
-            ((CheckinDemographicsInterface) getActivity()).navigateToConsentFlow(workflowDTO);
+            ((DemographicsView) getActivity()).navigateToWorkflow(workflowDTO);
         }
 
         @Override

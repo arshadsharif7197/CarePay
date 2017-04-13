@@ -1,11 +1,11 @@
 package com.carecloud.carepay.patient.base;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepay.patient.consentforms.ConsentActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.patient.demographics.activities.ReviewDemographicsActivity;
@@ -19,36 +19,12 @@ import com.carecloud.carepay.patient.selectlanguage.SelectLanguageActivity;
 import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
-/**
- * Created by Jahirul Bhuiyan on 10/10/2016.
- * Will be move to patient application module
- */
 public class PatientNavigationHelper {
 
-    private Context context;
-
     private static boolean accessPaymentsBalances;
-
-    private PatientNavigationHelper() {
-
-    }
-
-    /**
-     * Get the customized instance of the helper
-     *
-     * @param context The context from which the helper has been invoked
-     * @return The instance holding the fresh context
-     */
-    public static PatientNavigationHelper getInstance(Context context) {
-        PatientNavigationHelper instance = new PatientNavigationHelper();
-        instance.context = context;
-        return instance;
-    }
-
-    public void navigateToWorkflow(String state) {
-        navigateToWorkflow(state, null);
-    }
 
     /**
      * Access pending payments and history payments from menu.
@@ -60,80 +36,93 @@ public class PatientNavigationHelper {
     }
 
     /**
-     * @param workflowDTO workflowdto
+     * Navigation using application context
+     *
+     * @param context       activity context
+     * @param workflowDTO   response DTO
      */
-    public void navigateToWorkflow(WorkflowDTO workflowDTO) {
-        WorkFlowRecord workFlowRecord = new WorkFlowRecord(workflowDTO);
-        Bundle bundle = new Bundle();
-        bundle.putLong(WorkflowDTO.class.getSimpleName(), workFlowRecord.save());
-        navigateToWorkflow(workflowDTO.getState(), bundle);
+    public static void navigateToWorkflow(Context context, WorkflowDTO workflowDTO) {
+        navigateToWorkflow(context, workflowDTO, false, 0);
     }
 
     /**
-     * @param state  state
-     * @param bundle bundle
+     * Navigation using application context
+     *
+     * @param context     activity context
+     * @param expectsResult should launch with startActivityForResult
+     * @param requestCode   RequestCode for activity Result
+     * @param workflowDTO WorkflowDTO
      */
-    private void navigateToWorkflow(String state, Bundle bundle) {
-        Intent intent;
-        switch (state) {
-            case PatientNavigationStateConstants.LANGUAGE_SELECTION:
+    public static void navigateToWorkflow(Context context, WorkflowDTO workflowDTO, boolean expectsResult, int requestCode) {
+        Intent intent = null;
+        if (workflowDTO == null || StringUtil.isNullOrEmpty(workflowDTO.getState())) {
+            return;
+        }
+        switch (workflowDTO.getState()) {
+            case NavigationStateConstants.LANGUAGE_SELECTION:
                 intent = new Intent(context, SelectLanguageActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
 
-            case PatientNavigationStateConstants.APPOINTMENTS: {
+            case NavigationStateConstants.APPOINTMENTS: {
                 intent = new Intent(context, AppointmentsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }
-            case PatientNavigationStateConstants.SIGNIN_SIGNUP: {
+            case NavigationStateConstants.PATIENT_APP_SIGNIN: {
                 intent = new Intent(context, SigninSignupActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }
-            case PatientNavigationStateConstants.DEMOGRAPHICS: {
+            case NavigationStateConstants.DEMOGRAPHICS: {
                 intent = new Intent(context, DemographicsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }
-            case PatientNavigationStateConstants.DEMOGRAPHIC_VERIFY: {
+            case NavigationStateConstants.DEMOGRAPHIC_VERIFY: {
                 intent = new Intent(context, ReviewDemographicsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }
-            case PatientNavigationStateConstants.CONSENT_FORMS: {
-                intent = new Intent(context, ConsentActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            case NavigationStateConstants.CONSENT_FORMS: {
+                if (context instanceof ReviewDemographicsActivity) {
+                    ((ReviewDemographicsActivity) context).navigateToConsentForms(workflowDTO);
+                    return;
+                }
                 break;
             }
-            case PatientNavigationStateConstants.INTAKE_FORMS: {
-                intent = new Intent(context, InTakeWebViewActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            case NavigationStateConstants.INTAKE_FORMS: {
+                if (context instanceof ReviewDemographicsActivity) {
+                    ((ReviewDemographicsActivity) context).navigateToIntakeForms(workflowDTO);
+                    return;
+                }
                 break;
             }
-            case PatientNavigationStateConstants.PAYMENTS: {
+            case NavigationStateConstants.PAYMENTS: {
                 intent = new Intent(context, accessPaymentsBalances ? ViewPaymentBalanceHistoryActivity.class : PaymentActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }
-            case PatientNavigationStateConstants.PROFILE_UPDATE: {
+            case NavigationStateConstants.PROFILE_UPDATE: {
                 intent = new Intent(context, DemographicsSettingsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }
-            case PatientNavigationStateConstants.PURCHASE: {
+            case NavigationStateConstants.PURCHASE: {
                 intent = new Intent(context, PurchaseActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }
-            case PatientNavigationStateConstants.NOTIFICATION: {
+            case NavigationStateConstants.NOTIFICATION: {
                 intent = new Intent(context, NotificationActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }
-            case PatientNavigationStateConstants.MEDICATION_ALLERGIES: {
-                intent = new Intent(context, MedicationAllergyActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            case NavigationStateConstants.MEDICATION_ALLERGIES: {
+                if (context instanceof ReviewDemographicsActivity) {
+                    ((ReviewDemographicsActivity) context).navigateToMedicationsAllergy(workflowDTO);
+                    return;
+                }
                 break;
             }
             default: {
@@ -143,9 +132,16 @@ public class PatientNavigationHelper {
             }
         }
 
-        if (bundle != null) {
+        WorkFlowRecord workFlowRecord = new WorkFlowRecord(workflowDTO);
+        Bundle bundle = new Bundle();
+        bundle.putLong(WorkflowDTO.class.getSimpleName(), workFlowRecord.save());
+        if (intent != null) {
             intent.putExtras(bundle);
+            if (expectsResult && context instanceof Activity) {
+                ((Activity) context).startActivityForResult(intent, requestCode);
+            } else {
+                context.startActivity(intent);
+            }
         }
-        context.startActivity(intent);
     }
 }

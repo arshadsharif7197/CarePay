@@ -135,7 +135,7 @@ public class PaymentAmountReceiptDialog extends Dialog implements View.OnClickLi
             ((ISession) context).hideProgressDialog();
             ViewPaymentBalanceHistoryActivity.setIsPaymentDone(true);
             PatientNavigationHelper.setAccessPaymentsBalances(true);
-            PatientNavigationHelper.getInstance(context).navigateToWorkflow(workflowDTO);
+            PatientNavigationHelper.navigateToWorkflow(context, workflowDTO);
         }
 
         @Override

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
@@ -9,22 +9,21 @@
     android:orientation="vertical">
 
 
-    <include layout="@layout/toolbar_demographics_review_patient"/>
+    <include layout="@layout/toolbar_demographics_review_patient" />
 
 
     <com.marcok.stepprogressbar.StepProgressBar
         android:id="@+id/stepProgressBarCheckin"
         style="@style/InTakeDottedProgressBarStyle"
-        app:activeDotIndex="-1"
+        android:layout_marginTop="10dp"
         app:activeDotColor="@color/colorPrimary"
-        app:inactiveDotColor="@color/colorPrimary"
         app:activeDotIcon="@drawable/circle_indicator_blue"
+        app:activeDotIndex="-1"
+        app:dotSize="10dp"
+        app:inactiveDotColor="@color/colorPrimary"
         app:inactiveDotIcon="@drawable/circle_indicator_gray"
         app:numberDots="5"
-        app:dotSize="10dp"
-        app:spacing="12dp"
-        android:layout_marginTop="10dp"
-        />
+        app:spacing="12dp" />
 
 
     <LinearLayout
@@ -35,16 +34,14 @@
 
         <TextView
             android:id="@+id/demographicsMainHeading"
-            style="@style/DemographicsDocsHeaderTitleStyle"/>
+            style="@style/DemographicsDocsHeaderTitleStyle" />
 
         <TextView
             android:id="@+id/demographicsSubHeading"
-            style="@style/DemographicsDocsHeaderSubtitleStyle"/>
+            style="@style/DemographicsDocsHeaderSubtitleStyle" />
 
 
     </LinearLayout>
-
-
 
 
     <ScrollView
@@ -52,8 +49,6 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:padding="0dp">
-
-
 
 
         <FrameLayout
@@ -68,14 +63,11 @@
     </ScrollView>
 
 
-
     <com.carecloud.carepaylibray.customcomponents.CarePayButton
         android:id="@+id/checkinDemographicsNextButton"
+        style="@style/InTakeNextButtonStyle"
         android:enabled="true"
-        breeze:textKey="demographics_review_next_button"
-        style="@style/InTakeNextButtonStyle"/>
-
-
+        breeze:textKey="demographics_review_next_button" />
 
 
 </LinearLayout>

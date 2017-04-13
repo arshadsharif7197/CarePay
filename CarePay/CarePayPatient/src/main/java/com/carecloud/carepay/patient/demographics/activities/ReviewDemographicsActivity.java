@@ -4,8 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
-import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenterImpl;
@@ -19,7 +20,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.carecloud.carepaylibrary.R.layout.activity_demographic_review);
+        setContentView(R.layout.activity_demographic_review);
 
         presenter = new DemographicsPresenterImpl(this, savedInstanceState, false);
     }
@@ -43,8 +44,23 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     }
 
     @Override
+    public void navigateToConsentForms(WorkflowDTO workflowDTO) {
+        presenter.navigateToConsentForms(workflowDTO);
+    }
+
+    @Override
+    public void navigateToIntakeForms(WorkflowDTO workflowDTO) {
+        presenter.navigateToIntakeForms(workflowDTO);
+    }
+
+    @Override
+    public void navigateToMedicationsAllergy(WorkflowDTO workflowDTO) {
+        presenter.navigateToMedicationsAllergy(workflowDTO);
+    }
+
+    @Override
     public void updateCheckInFlow(CheckinFlowState flowState, int totalPages, int currentPage) {
-        TextView textView = (TextView) findViewById(com.carecloud.carepaylibrary.R.id.checkinDemographicsHeaderLabel);
+        TextView textView = (TextView) findViewById(R.id.checkinDemographicsHeaderLabel);
         switch (flowState) {
             case DEMOGRAPHICS:
                 textView.setText(String.format(Label.getLabel("demographics_heading"), currentPage, totalPages));

@@ -239,7 +239,7 @@ public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             updateEmailButton.setEnabled(true);
-            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+            PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
         }
 

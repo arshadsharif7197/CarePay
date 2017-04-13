@@ -570,7 +570,7 @@ public class AppointmentsListFragment extends BaseFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            PatientNavigationHelper.getInstance(getContext()).navigateToWorkflow(workflowDTO);
+            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
 
         @Override

@@ -13,6 +13,17 @@ public interface DemographicsView {
 
     void navigateToWorkflow(WorkflowDTO workflowDTO);
 
+    /**
+     * Consent form navigation
+     *
+     * @param workflowDTO consent DTO
+     */
+    void navigateToConsentForms(WorkflowDTO workflowDTO);
+
+    void navigateToIntakeForms(WorkflowDTO workflowDTO);
+
+    void navigateToMedicationsAllergy(WorkflowDTO workflowDTO);
+
     FragmentManager getSupportFragmentManager();
 
     Context getContext();

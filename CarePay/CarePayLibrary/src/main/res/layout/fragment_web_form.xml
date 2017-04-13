@@ -29,7 +29,7 @@
                 android:layout_height="match_parent"
                 android:id="@+id/consent_header"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_30sp"
+                android:textSize="@dimen/text_size_30"
                 android:gravity="center"
                 app:customAssetFont="gotham_rounded_medium"/>
 
@@ -59,7 +59,7 @@
         android:id="@+id/progressBarConsent"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_3dp"
+        android:layout_height="3dp"
         android:indeterminate="true"/>
 
 

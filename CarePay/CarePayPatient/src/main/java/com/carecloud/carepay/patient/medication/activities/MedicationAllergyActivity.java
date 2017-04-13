@@ -90,7 +90,7 @@ public class MedicationAllergyActivity extends BasePatientActivity implements Me
 
     @Override
     public void medicationSubmitSuccess(WorkflowDTO workflowDTO) {
-        PatientNavigationHelper.getInstance(getContext()).navigateToWorkflow(workflowDTO);
+        PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
     }
 
     @Override
