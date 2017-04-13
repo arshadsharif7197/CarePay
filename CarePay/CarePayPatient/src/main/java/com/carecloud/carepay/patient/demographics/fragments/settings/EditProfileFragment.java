@@ -56,9 +56,6 @@ public class EditProfileFragment extends DocumentScannerFragment {
 
     private ImageView profileImageView;
 
-    private EditProfileFragment() {
-    }
-
     /**
      *
      * @param demographicsSettingsDTO the model

@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.demographics.fragments.viewpager;
+package com.carecloud.carepay.patient.demographics.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,34 +10,18 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.base.BaseFragment;
-import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
-import com.google.gson.Gson;
+import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-
-/**
- * Created by lsoco_user on 9/2/2016.
- * Screen for demographics onboarding confirmation
- */
-public class DemographicsAllSetFragment extends BaseFragment {
+public class DemographicsAllSetFragment extends CheckInDemographicsBaseFragment {
 
     private View                 view;
     private Button               gotoCarePay;
@@ -68,14 +52,29 @@ public class DemographicsAllSetFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // fetch the global labels
-        globalLabelsDTO = ((DemographicsActivity) getActivity()).getLabelsDTO();
-        demographicDTO = ((DemographicsActivity) getActivity()).getModel();
+//        globalLabelsDTO = ((NewDemographicsActivity) getActivity()).getLabelsDTO();
+//        demographicDTO = ((NewDemographicsActivity) getActivity()).getModel();
 
         // create the view
         view = inflater.inflate(R.layout.fragment_demographics_moredetails, container, false);
         initializeUIFields();
 
         return view;
+    }
+
+    @Override
+    protected boolean passConstraints(View view) {
+        return true;
+    }
+
+    @Override
+    protected int getContentId() {
+        return R.layout.fragment_demographics_moredetails;
+    }
+
+    @Override
+    protected DemographicDTO updateDemographicDTO(View view) {
+        return null;
     }
 
     private void initializeUIFields() {
@@ -109,34 +108,34 @@ public class DemographicsAllSetFragment extends BaseFragment {
         DemographicPayloadDTO demographicPayloadDTO = new DemographicPayloadDTO();
 
         // obtain the updated models from the pager fragments
-        DemographicAddressPayloadDTO addressModel = ((DemographicsActivity) getActivity()).getAddressModel();
-        if (addressModel != null) {
-            demographicPayloadDTO.setAddress(addressModel);
-        }
-
-        PatientModel detailsModel = ((DemographicsActivity) getActivity()).getDetailsDTO();
-        if (detailsModel != null) {
-            demographicPayloadDTO.setPersonalDetails(detailsModel);
-        }
-
-        DemographicIdDocPayloadDTO idDocPojo = ((DemographicsActivity) getActivity()).getIdDocModel();
-        if (idDocPojo != null && idDocPojo.getIdType()!=null) { // add the doc
-            demographicPayloadDTO.setIdDocument(idDocPojo);
-        }
-
-        List<DemographicInsurancePayloadDTO> insuranceModelList = ((DemographicsActivity) getActivity()).getInsuranceModelList();
-        if (insuranceModelList != null) {
-            demographicPayloadDTO.setInsurances(insuranceModelList);
-        }
-
-        Map<String, String> queries = new HashMap<>();
-
-        // dynamic transition
-        Gson gson = new Gson();
-        String body = gson.toJson(demographicPayloadDTO);
-        TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getConfirmDemographics();
-
-        getWorkflowServiceHelper().execute(transitionDTO, confirmDemWorkflowCallback, body,queries,getWorkflowServiceHelper().getPreferredLanguageHeader());
+//        DemographicAddressPayloadDTO addressModel = ((NewDemographicsActivity) getActivity()).getAddressModel();
+//        if (addressModel != null) {
+//            demographicPayloadDTO.setAddress(addressModel);
+//        }
+//
+//        PatientModel detailsModel = ((NewDemographicsActivity) getActivity()).getDetailsDTO();
+//        if (detailsModel != null) {
+//            demographicPayloadDTO.setPersonalDetails(detailsModel);
+//        }
+//
+//        DemographicIdDocPayloadDTO idDocPojo = ((NewDemographicsActivity) getActivity()).getIdDocModel();
+//        if (idDocPojo != null && idDocPojo.getIdType()!=null) { // add the doc
+//            demographicPayloadDTO.setIdDocument(idDocPojo);
+//        }
+//
+//        List<DemographicInsurancePayloadDTO> insuranceModelList = ((NewDemographicsActivity) getActivity()).getInsuranceModelList();
+//        if (insuranceModelList != null) {
+//            demographicPayloadDTO.setInsurances(insuranceModelList);
+//        }
+//
+//        Map<String, String> queries = new HashMap<>();
+//
+//        // dynamic transition
+//        Gson gson = new Gson();
+//        String body = gson.toJson(demographicPayloadDTO);
+//        TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getConfirmDemographics();
+//
+//        getWorkflowServiceHelper().execute(transitionDTO, confirmDemWorkflowCallback, body,queries,getWorkflowServiceHelper().getPreferredLanguageHeader());
 
     }
 }

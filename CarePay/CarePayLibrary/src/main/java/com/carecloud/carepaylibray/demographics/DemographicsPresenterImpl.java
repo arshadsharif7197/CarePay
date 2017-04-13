@@ -299,7 +299,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
      *
      * @param step fragment
      */
-    public void navigateToDemographicFragment(Integer step) {
+    private void navigateToDemographicFragment(Integer step) {
         CheckInDemographicsBaseFragment fragment = getDemographicFragment(step);
         if(fragment!=null) {
             Bundle args = new Bundle();
@@ -366,7 +366,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         dialog.show(ft, tag);
     }
 
-    private CheckInDemographicsBaseFragment getDemographicFragment(int step){
+    protected CheckInDemographicsBaseFragment getDemographicFragment(int step){
         switch (step){
             case 1:
                 return new PersonalInfoFragment();

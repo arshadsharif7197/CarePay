@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepay.patient.demographics.activities.DemographicsActivity;
+import com.carecloud.carepay.patient.demographics.activities.NewDemographicsActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.patient.demographics.activities.ReviewDemographicsActivity;
 import com.carecloud.carepay.patient.notifications.activities.NotificationActivity;
@@ -73,7 +73,7 @@ public class PatientNavigationHelper {
                 break;
             }
             case NavigationStateConstants.DEMOGRAPHICS: {
-                intent = new Intent(context, DemographicsActivity.class);
+                intent = new Intent(context, NewDemographicsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             }
