@@ -63,5 +63,6 @@
 -keep class org.w3c.dom.bootstrap.** { *; }
 -dontwarn org.codehaus.jackson.**
 
+-keep class com.smartystreets.api.** { *; }
 
 
