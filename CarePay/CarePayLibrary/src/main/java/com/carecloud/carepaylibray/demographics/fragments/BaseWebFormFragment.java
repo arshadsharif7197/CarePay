@@ -123,7 +123,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         });
 
 
-        header = (TextView) view.findViewById(R.id.consent_header);
+        header = (TextView) view.findViewById(R.id.toolbar_title);
     }
 
 

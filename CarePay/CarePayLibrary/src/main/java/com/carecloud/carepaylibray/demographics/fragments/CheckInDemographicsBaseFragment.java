@@ -110,7 +110,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     }
 
     protected void setHeaderTitle(String title, String heading, String subHeading, View view){
-        TextView textView = (TextView) view.findViewById(R.id.checkinDemographicsHeaderLabel);
+        TextView textView = (TextView) view.findViewById(R.id.toolbar_title);
         if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             (view.findViewById(R.id.toolbar_layout)).setVisibility(View.VISIBLE);
             textView.setText(title);

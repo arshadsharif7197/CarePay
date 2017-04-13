@@ -8,9 +8,7 @@
     android:background="@android:color/white"
     android:orientation="vertical">
 
-
-    <include layout="@layout/toolbar_demographics_review_patient" />
-
+    <include layout="@layout/toolbar_title_only" />
 
     <com.marcok.stepprogressbar.StepProgressBar
         android:id="@+id/stepProgressBarCheckin"

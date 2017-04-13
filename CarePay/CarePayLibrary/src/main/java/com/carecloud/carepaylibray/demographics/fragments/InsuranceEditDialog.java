@@ -229,7 +229,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
             }
         });
 
-        TextView textView = (TextView) view.findViewById(R.id.checkinDemographicsHeaderLabel);
+        TextView textView = (TextView) view.findViewById(R.id.toolbar_title);
         textView.setText(Label.getLabel("demographics_insurance_label"));
     }
 

@@ -60,7 +60,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
 
     @Override
     public void updateCheckInFlow(CheckinFlowState flowState, int totalPages, int currentPage) {
-        TextView textView = (TextView) findViewById(R.id.checkinDemographicsHeaderLabel);
+        TextView textView = (TextView) findViewById(R.id.toolbar_title);
         switch (flowState) {
             case DEMOGRAPHICS:
                 textView.setText(String.format(Label.getLabel("demographics_heading"), currentPage, totalPages));
