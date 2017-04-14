@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/screen_background"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/dimen_21dp"
+    android:paddingBottom="@dimen/dimen_20dp"
     android:paddingLeft="@dimen/dimen_20dp"
     android:paddingRight="@dimen/dimen_20dp"
     android:paddingTop="@dimen/dimen_18dp"
@@ -232,11 +232,11 @@
                 android:layout_width="@dimen/dimen_500dp"
                 android:layout_height="@dimen/dimen_57dp"
                 android:layout_marginTop="@dimen/dimen_20dp"
-                android:background="@drawable/button_selector_green"
+                android:background="@drawable/green_rounded_button_selector"
                 android:enabled="false"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_18sp"
+                android:textSize="@dimen/text_size_22sp"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="personal_info_find_patient" />
 

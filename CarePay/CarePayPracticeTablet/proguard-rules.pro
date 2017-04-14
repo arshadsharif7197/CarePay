@@ -65,4 +65,7 @@
 
 -keep class com.smartystreets.api.** { *; }
 
+-keep class com.google.android.gms.measurement.** { *; }
+-dontwarn com.google.firebase.messaging.**
+
 
