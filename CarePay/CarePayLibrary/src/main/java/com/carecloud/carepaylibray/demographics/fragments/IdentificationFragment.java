@@ -27,7 +27,7 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment {
         checkIfEnableButton(view);
         view.findViewById(R.id.toolbar_layout).setVisibility(View.INVISIBLE);
 
-        setHeaderTitle(demographicDTO.getMetadata().getLabels().getDemographicsReviewIdentification(),
+        setHeaderTitle(Label.getLabel("demographics_review_identification"),
                 Label.getLabel("demographics_identity_heading"),
                 Label.getLabel("demographics_identity_subheading"),
                 view);

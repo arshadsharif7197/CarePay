@@ -12,12 +12,18 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
+import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.google.gson.Gson;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
@@ -25,7 +31,6 @@ public class DemographicsAllSetFragment extends CheckInDemographicsBaseFragment 
 
     private View                 view;
     private Button               gotoCarePay;
-    private DemographicLabelsDTO globalLabelsDTO;
     private DemographicDTO       demographicDTO;
     private TextView             header;
     private WorkflowServiceCallback confirmDemWorkflowCallback = new WorkflowServiceCallback() {
@@ -51,12 +56,10 @@ public class DemographicsAllSetFragment extends CheckInDemographicsBaseFragment 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // fetch the global labels
-//        globalLabelsDTO = ((NewDemographicsActivity) getActivity()).getLabelsDTO();
-//        demographicDTO = ((NewDemographicsActivity) getActivity()).getModel();
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+        demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
 
         // create the view
-        view = inflater.inflate(R.layout.fragment_demographics_moredetails, container, false);
         initializeUIFields();
 
         return view;
@@ -78,14 +81,11 @@ public class DemographicsAllSetFragment extends CheckInDemographicsBaseFragment 
     }
 
     private void initializeUIFields() {
-        String label;
         header = (TextView) view.findViewById(R.id.moreDetailsHeading);
-        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsAllSetHeader();
-        header.setText(label);
+        header.setText(Label.getLabel("demographics_allset_header"));
 
         gotoCarePay = (Button) view.findViewById(R.id.demographicsGoToCarePayButton);
-        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsAllSetGoButton();
-        gotoCarePay.setText(label);
+        gotoCarePay.setText(Label.getLabel("demographics_allset_go_button"));
         gotoCarePay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,37 +105,13 @@ public class DemographicsAllSetFragment extends CheckInDemographicsBaseFragment 
      * Request to back-end for transition
      */
     public void confirmDemographicInformation() {
-        DemographicPayloadDTO demographicPayloadDTO = new DemographicPayloadDTO();
+        Map<String, String> queries = new HashMap<>();
 
-        // obtain the updated models from the pager fragments
-//        DemographicAddressPayloadDTO addressModel = ((NewDemographicsActivity) getActivity()).getAddressModel();
-//        if (addressModel != null) {
-//            demographicPayloadDTO.setAddress(addressModel);
-//        }
-//
-//        PatientModel detailsModel = ((NewDemographicsActivity) getActivity()).getDetailsDTO();
-//        if (detailsModel != null) {
-//            demographicPayloadDTO.setPersonalDetails(detailsModel);
-//        }
-//
-//        DemographicIdDocPayloadDTO idDocPojo = ((NewDemographicsActivity) getActivity()).getIdDocModel();
-//        if (idDocPojo != null && idDocPojo.getIdType()!=null) { // add the doc
-//            demographicPayloadDTO.setIdDocument(idDocPojo);
-//        }
-//
-//        List<DemographicInsurancePayloadDTO> insuranceModelList = ((NewDemographicsActivity) getActivity()).getInsuranceModelList();
-//        if (insuranceModelList != null) {
-//            demographicPayloadDTO.setInsurances(insuranceModelList);
-//        }
-//
-//        Map<String, String> queries = new HashMap<>();
-//
-//        // dynamic transition
-//        Gson gson = new Gson();
-//        String body = gson.toJson(demographicPayloadDTO);
-//        TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getConfirmDemographics();
-//
-//        getWorkflowServiceHelper().execute(transitionDTO, confirmDemWorkflowCallback, body,queries,getWorkflowServiceHelper().getPreferredLanguageHeader());
+        // dynamic transition
+        Gson gson = new Gson();
+        String body = gson.toJson(demographicDTO.getPayload().getDemographics().getPayload());
+        TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getConfirmDemographics();
 
+      //  getWorkflowServiceHelper().execute(transitionDTO, confirmDemWorkflowCallback, body,queries, getWorkflowServiceHelper().getPreferredLanguageHeader());
     }
 }

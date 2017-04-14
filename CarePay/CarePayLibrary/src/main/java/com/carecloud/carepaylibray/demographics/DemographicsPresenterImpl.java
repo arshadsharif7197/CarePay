@@ -16,7 +16,6 @@ import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraFragment;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckinCompletedDialogFragment;
@@ -177,11 +176,6 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             }
         });
         successFragment.show(getSupportFragmentManager(), successFragment.getClass().getName());
-    }
-
-    @Override
-    public DemographicLabelsDTO getLabelsDTO() {
-        return demographicDTO.getMetadata().getLabels();
     }
 
     @Override

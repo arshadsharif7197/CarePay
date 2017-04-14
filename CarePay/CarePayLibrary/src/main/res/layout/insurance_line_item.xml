@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -48,7 +49,8 @@
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_16"
             app:customAssetFont="proxima_nova_semi_bold"
-            tools:ignore="RelativeOverlap" />
+            tools:ignore="RelativeOverlap"
+            breeze:textKey="practice_checin_edit_clickable_label"/>
     </RelativeLayout>
 
     <View

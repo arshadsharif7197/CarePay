@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 
 public class InsuranceLineItemsListAdapter extends
@@ -90,9 +89,6 @@ public class InsuranceLineItemsListAdapter extends
                     listener.onEditInsuranceClicked(getAdapterPosition());
                 }
             });
-
-            DemographicLabelsDTO labels = demographicDTO.getMetadata().getLabels();
-            edit.setText(labels.getPracticeCheckinEditClickableLabel());
         }
     }
 }

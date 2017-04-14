@@ -8,6 +8,7 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.demographics.NewDemographicsPresenterImpl;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
@@ -59,17 +60,30 @@ public class NewDemographicsActivity extends BasePatientActivity implements Demo
 
     @Override
     public void updateCheckInFlow(CheckinFlowState flowState, int totalPages, int currentPage) {
-        TextView textView = (TextView) findViewById(R.id.toolbar_title);
         switch (currentPage) {
             case 1:
-                textView.setText("Page 1");
+                updateCheckInFlow("demographics_review_peronsonalinfo_section");
                 break;
             case 2:
-                textView.setText("Page 2");
+                updateCheckInFlow("demographics_address_section");
+                break;
+            case 3:
+                updateCheckInFlow("demographics_review_demographics");
+                break;
+            case 4:
+                updateCheckInFlow("demographics_review_identification");
+                break;
+            case 5:
+                updateCheckInFlow("demographics_insurance_label");
                 break;
             default:
-                textView.setText("default");
+                updateCheckInFlow("demographics_allset_header");
         }
+    }
+
+    public void updateCheckInFlow(String key) {
+        TextView textView = (TextView) findViewById(R.id.toolbar_title);
+        textView.setText(Label.getLabel(key));
     }
 
     public DemographicsPresenter getPresenter() {
