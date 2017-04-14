@@ -332,7 +332,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
             }
 
             DatePickerDialog datePickerDialog = new DatePickerDialog(PersonalInformationActivity.this,
-                    android.R.style.Theme_Holo_Dialog,
+                    android.R.style.Theme_Holo_Light_Dialog_MinWidth,
                     new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
@@ -399,11 +399,12 @@ public class PersonalInformationActivity extends BasePracticeActivity {
             TransitionDTO transitionDTO;
             Gson gson = new Gson();
             SigninPatientModeDTO signinPatientModeDTOLocal = gson.fromJson(workflowDTO.toString(), SigninPatientModeDTO.class);
+            getApplicationMode().setPatientId(signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getPatientId());
             if (signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getPersonalInfoCheckSuccessful()) {
                 queryMap.put("language", getApplicationPreferences().getUserLanguage());
                 queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
                 queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
-                queryMap.put("patient_id", signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getPatientId());
+                queryMap.put("patient_id", getApplicationMode().getPatientId());
                 Map<String, String> headers = new HashMap<>();
 
                 getAppAuthorizationHelper().setUser(signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getUsername());

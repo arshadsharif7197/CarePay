@@ -52,7 +52,7 @@ public class SelectLanguageFragment extends BaseFragment implements LanguageList
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             languageConfirmButton.setEnabled(true);
-            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+            PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
 
         }
 

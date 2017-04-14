@@ -417,7 +417,7 @@ public class SigninFragment extends BaseFragment {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             signInButton.setEnabled(true);
-            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+            PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
         }
 
         @Override

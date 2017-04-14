@@ -9,17 +9,15 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
-import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsMetadataModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
-import com.google.gson.Gson;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.util.List;
 
@@ -28,20 +26,14 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
 
     protected static final String LOG_TAG = ResponsibilityBaseFragment.class.getSimpleName();
     protected AppCompatActivity appCompatActivity;
-//    protected String copayStr = "";
-//    protected String previousBalanceStr = "";
 
     protected PaymentsModel paymentDTO = null;
     protected String totalResponsibilityString;
-    protected String paymentDetailsString;
-    protected String previousBalanceString;
-    protected String insuranceCopayString;
     protected String payTotalAmountString;
     protected String payPartialAmountString;
     protected String paymentsTitleString;
     protected String payLaterString;
     protected double total;
-    protected String paymentInfo;
 
     protected PaymentNavigationCallback actionCallback;
 
@@ -71,11 +63,8 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
     protected void getPaymentInformation() {
         Bundle arguments = getArguments();
         if (arguments != null) {
-            Gson gson = new Gson();
-            paymentInfo = arguments.getString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO);
-            String paymentsDTOString = arguments.getString(CarePayConstants.INTAKE_BUNDLE);
             try {
-                paymentDTO = gson.fromJson(paymentsDTOString, PaymentsModel.class);
+                paymentDTO = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
             } catch (Exception e) {
                 Log.e("PAYMENT_ERROR", e.getMessage());
             }
@@ -86,25 +75,12 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
      * payment labels
      */
     protected void getPaymentLabels() {
-        if (paymentDTO != null) {
-            PaymentsMetadataModel paymentsMetadataDTO = paymentDTO.getPaymentsMetadata();
-            if (paymentsMetadataDTO != null) {
-                PaymentsLabelDTO paymentsLabelsDTO = paymentsMetadataDTO.getPaymentsLabel();
-                if (paymentsLabelsDTO != null) {
-                    paymentDetailsString = paymentsLabelsDTO.getPaymentResponsibilityDetails();
-                    totalResponsibilityString = paymentsLabelsDTO.getPaymentTotalResponsibility();
-                    previousBalanceString = paymentsLabelsDTO.getPaymentPreviousBalance();
-                    insuranceCopayString = paymentsLabelsDTO.getPaymentInsuranceCopay();
-
-                    payTotalAmountString = paymentsLabelsDTO.getPaymentPayTotalAmountButton();
-                    payPartialAmountString = paymentsLabelsDTO.getPaymentPartialAmountButton();
-                    payLaterString = paymentsLabelsDTO.getPaymentResponsibilityPayLater();
-                    paymentsTitleString = paymentsLabelsDTO.getPaymentButtonLabel();
-                }
-            }
-        }
+        totalResponsibilityString = Label.getLabel("your_total_patient_responsibility");
+        payTotalAmountString = Label.getLabel("payment_pay_total_amount_button");
+        payPartialAmountString = Label.getLabel("payment_partial_amount_button");
+        payLaterString = Label.getLabel("payment_responsibility_pay_later");
+        paymentsTitleString = Label.getLabel("payment_button");
     }
-
 
     /**
      * For tests

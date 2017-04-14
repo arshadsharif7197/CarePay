@@ -53,9 +53,6 @@ public class AppointmentLabelDTO implements Serializable {
     @SerializedName("appointments_checked_in_label")
     @Expose
     private String appointmentsCheckedInLabel;
-    @SerializedName("appointments_check_in_early")
-    @Expose
-    private String appointmentsCheckInEarly;
     @SerializedName("today_appointments_heading")
     @Expose
     private String todayAppointmentsHeading;
@@ -68,21 +65,6 @@ public class AppointmentLabelDTO implements Serializable {
     @SerializedName("appointments_description")
     @Expose
     private String appointmentsDescription;
-    @SerializedName("add_appointment_title")
-    @Expose
-    private String addAppointmentTitle;
-    @SerializedName("cancel_request_title")
-    @Expose
-    private String cancelRequestTitle;
-    @SerializedName("empty_appointment_card_today_text")
-    @Expose
-    private String emptyAppointmentCardTodayText;
-    @SerializedName("empty_appointment_card_upcoming_text")
-    @Expose
-    private String emptyAppointmentCardUpcomingText;
-    @SerializedName("empty_appointment_card_history_text")
-    @Expose
-    private String emptyAppointmentCardHistoryText;
     @SerializedName("empty_appointment_card_random_text")
     @Expose
     private String emptyAppointmentCardRandomText;
@@ -143,12 +125,6 @@ public class AppointmentLabelDTO implements Serializable {
     @SerializedName("practice_app_logout_text")
     @Expose
     private String appointmentsBtnLogout;
-    @SerializedName("practice_app_appointment_heading")
-    @Expose
-    private String appointmentsMainHeading;
-    @SerializedName("practice_app_appointment_subheading")
-    @Expose
-    private String appointmentsSubHeading;
     @SerializedName("practice_app_check_in_text")
     @Expose
     private String appointmentsPracticeCheckin;
@@ -185,9 +161,6 @@ public class AppointmentLabelDTO implements Serializable {
     @SerializedName("add_appointment_from_to_text")
     @Expose
     private String addAppointmentFromToText;
-    @SerializedName("add_appointment_tomorrow")
-    @Expose
-    private String addAppointmentTomorrow;
     @SerializedName("add_appointment_max_date_range_message")
     @Expose
     private String addAppointmentMaxDateRangeMessage;
@@ -206,22 +179,6 @@ public class AppointmentLabelDTO implements Serializable {
     @SerializedName("no_notifications_message_text")
     @Expose
     private String noNotificationsMessageText;
-    @SerializedName("appointment_select_range_button")
-    @Expose
-    private String appointmentSelectRangeButton;
-    @SerializedName("appointment_next_days_title")
-    @Expose
-    private String appointmentNextDaysTitle;
-    @SerializedName("appointment_locations_label")
-    @Expose
-    private String appointmentLocationsLabel;
-    @SerializedName("appoitment_edit_date_range_button")
-    @Expose
-    private String appointmentEditDateRangeButton;
-
-    @SerializedName("datepicker_cancel_option")
-    @Expose
-    private String datepickerCancelOption;
 
     @SerializedName("appointments_pre_register")
     @Expose
@@ -239,18 +196,6 @@ public class AppointmentLabelDTO implements Serializable {
     @Expose
     private String appointmentRescheduleButton;
 
-    @SerializedName("appointment_schedule_new_button")
-    @Expose
-    private String appointmentScheduleNewButton;
-
-    @SerializedName("practice_list_select_a_provider")
-    @Expose
-    private String practiceListSelectProvider;
-
-    @SerializedName("practice_list_continue")
-    @Expose
-    private String practiceListContinue;
-
     public String getAppointmentRequestCheckoutNow() {
         return StringUtil.getLabelForView(appointmentRequestCheckoutNow);
     }
@@ -261,26 +206,6 @@ public class AppointmentLabelDTO implements Serializable {
 
     public String getAppointmentCancellationSuccessMessage() {
         return appointmentCancellationSuccessMessage;
-    }
-
-    public void setAppointmentCancellationSuccessMessage(String appointmentCancellationSuccessMessage) {
-        this.appointmentCancellationSuccessMessage = appointmentCancellationSuccessMessage;
-    }
-
-    public String getAppointmentSelectRangeButton() {
-        return appointmentSelectRangeButton;
-    }
-
-    public void setAppointmentSelectRangeButton(String appointmentSelectRangeButton) {
-        this.appointmentSelectRangeButton = appointmentSelectRangeButton;
-    }
-
-    public String getAppointmentNextDaysTitle() {
-        return appointmentNextDaysTitle;
-    }
-
-    public void setAppointmentNextDaysTitle(String appointmentNextDaysTitle) {
-        this.appointmentNextDaysTitle = appointmentNextDaysTitle;
     }
 
     public String getNoShopMessageTitle() {
@@ -328,27 +253,6 @@ public class AppointmentLabelDTO implements Serializable {
     }
 
     /**
-     * @return The pickDateHeading
-     */
-    public String getPickDateHeading() {
-        return StringUtil.getLabelForView(pickDateHeading);
-    }
-
-    /**
-     * @return The availableHoursHeading
-     */
-    public String getAvailableHoursHeading() {
-        return StringUtil.getLabelForView(availableHoursHeading);
-    }
-
-    /**
-     * @return The appointmentsCheckInEarly
-     */
-    public String getAppointmentsCheckInEarly() {
-        return StringUtil.getLabelForView(appointmentsCheckInEarly);
-    }
-
-    /**
      * @return The todayAppointmentsHeading;
      */
     public String getTodayAppointmentsHeading() {
@@ -391,55 +295,6 @@ public class AppointmentLabelDTO implements Serializable {
     }
 
     /**
-     * @param appointmentsCheckInNow The appointments_check_in_now
-     */
-    public void setAppointmentsCheckInNow(String appointmentsCheckInNow) {
-        this.appointmentsCheckInNow = appointmentsCheckInNow;
-    }
-
-    /**
-     * @return The appointmentsPlaceNameHeading
-     */
-    public String getAppointmentsPlaceNameHeading() {
-        return StringUtil.getLabelForView(appointmentsPlaceNameHeading);
-    }
-
-    /**
-     * @param appointmentsPlaceNameHeading The appointments_place_name_heading
-     */
-    public void setAppointmentsPlaceNameHeading(String appointmentsPlaceNameHeading) {
-        this.appointmentsPlaceNameHeading = appointmentsPlaceNameHeading;
-    }
-
-    /**
-     * @return The appointmentsReasonForVisitHeading
-     */
-    public String getAppointmentsReasonForVisitHeading() {
-        return StringUtil.getLabelForView(appointmentsReasonForVisitHeading);
-    }
-
-    /**
-     * @param appointmentsReasonForVisitHeading The appointments_reason_for_visit_heading
-     */
-    public void setAppointmentsReasonForVisitHeading(String appointmentsReasonForVisitHeading) {
-        this.appointmentsReasonForVisitHeading = appointmentsReasonForVisitHeading;
-    }
-
-    /**
-     * @return The appointmentsOptionalHeading
-     */
-    public String getAppointmentsOptionalHeading() {
-        return StringUtil.getLabelForView(appointmentsOptionalHeading);
-    }
-
-    /**
-     * @param appointmentsOptionalHeading The appointments_optional_heading
-     */
-    public void setAppointmentsOptionalHeading(String appointmentsOptionalHeading) {
-        this.appointmentsOptionalHeading = appointmentsOptionalHeading;
-    }
-
-    /**
      * @return The appointmentsQueueHeading
      */
     public String getAppointmentsQueueHeading() {
@@ -461,27 +316,6 @@ public class AppointmentLabelDTO implements Serializable {
     }
 
     /**
-     * @param appointmentsCanceledHeading The appointments_canceled_heading
-     */
-    public void setAppointmentsCanceledHeading(String appointmentsCanceledHeading) {
-        this.appointmentsCanceledHeading = appointmentsCanceledHeading;
-    }
-
-    /**
-     * @return The appointmentsRequestHeading
-     */
-    public String getAppointmentsRequestHeading() {
-        return StringUtil.getLabelForView(appointmentsRequestHeading);
-    }
-
-    /**
-     * @param appointmentsRequestHeading The appointments_request_heading
-     */
-    public void setAppointmentsRequestHeading(String appointmentsRequestHeading) {
-        this.appointmentsRequestHeading = appointmentsRequestHeading;
-    }
-
-    /**
      * @return The appointmentsRequestPendingHeading
      */
     public String getAppointmentsRequestPendingHeading() {
@@ -489,24 +323,10 @@ public class AppointmentLabelDTO implements Serializable {
     }
 
     /**
-     * @param appointmentsRequestPendingHeading The appointments_request_pending_heading
-     */
-    public void setAppointmentsRequestPendingHeading(String appointmentsRequestPendingHeading) {
-        this.appointmentsRequestPendingHeading = appointmentsRequestPendingHeading;
-    }
-
-    /**
      * @return The appointmentsMissedHeading
      */
     public String getAppointmentsMissedHeading() {
         return StringUtil.getLabelForView(appointmentsMissedHeading);
-    }
-
-    /**
-     * @param appointmentsMissedHeading The appointments_missed_heading
-     */
-    public void setAppointmentsMissedHeading(String appointmentsMissedHeading) {
-        this.appointmentsMissedHeading = appointmentsMissedHeading;
     }
 
     /**
@@ -524,24 +344,10 @@ public class AppointmentLabelDTO implements Serializable {
     }
 
     /**
-     * @param noAppointmentsPlaceholderLabel The no_appointments_placeholder_label
-     */
-    public void setNoAppointmentsPlaceholderLabel(String noAppointmentsPlaceholderLabel) {
-        this.noAppointmentsPlaceholderLabel = noAppointmentsPlaceholderLabel;
-    }
-
-    /**
      * @return The noAppointmentsMessageTitle
      */
     public String getNoAppointmentsMessageTitle() {
         return StringUtil.getLabelForView(noAppointmentsMessageTitle);
-    }
-
-    /**
-     * @param noAppointmentsMessageTitle The no_appointments_message_title
-     */
-    public void setNoAppointmentsMessageTitle(String noAppointmentsMessageTitle) {
-        this.noAppointmentsMessageTitle = noAppointmentsMessageTitle;
     }
 
     /**
@@ -552,66 +358,10 @@ public class AppointmentLabelDTO implements Serializable {
     }
 
     /**
-     * @param noAppointmentsMessageText The no_appointments_message_text
-     */
-    public void setNoAppointmentsMessageText(String noAppointmentsMessageText) {
-        this.noAppointmentsMessageText = noAppointmentsMessageText;
-    }
-
-    /**
      * @return The appointmentsBtnLogout
      */
     public String getAppointmentsBtnLogout() {
         return StringUtil.getLabelForView(appointmentsBtnLogout);
-    }
-
-    /**
-     * @param appointmentsBtnLogout The appointmentsBtnLogout
-     */
-    public void setAppointmentsBtnLogout(String appointmentsBtnLogout) {
-        this.appointmentsBtnLogout = appointmentsBtnLogout;
-    }
-
-    /**
-     * @return The appointmentsMainHeading
-     */
-    public String getAppointmentsMainHeading() {
-        return StringUtil.getLabelForView(appointmentsMainHeading);
-    }
-
-    /**
-     * @param appointmentsMainHeading The appointmentsMainHeading
-     */
-    public void setAppointmentsMainHeading(String appointmentsMainHeading) {
-        this.appointmentsMainHeading = appointmentsMainHeading;
-    }
-
-    /**
-     * @return The appointmentsSubHeading
-     */
-    public String getAppointmentsSubHeading() {
-        return StringUtil.getLabelForView(appointmentsSubHeading);
-    }
-
-    /**
-     * @param appointmentsSubHeading The appointmentsSubHeading
-     */
-    public void setAppointmentsSubHeading(String appointmentsSubHeading) {
-        this.appointmentsSubHeading = appointmentsSubHeading;
-    }
-
-    /**
-     * @return The appointmentsPracticeCheckin
-     */
-    public String getAppointmentsPracticeCheckin() {
-        return StringUtil.getLabelForView(appointmentsPracticeCheckin);
-    }
-
-    /**
-     * @param appointmentsPracticeCheckin The appointmentsPracticeCheckin
-     */
-    public void setAppointmentsPracticeCheckin(String appointmentsPracticeCheckin) {
-        this.appointmentsPracticeCheckin = appointmentsPracticeCheckin;
     }
 
     /**
@@ -622,38 +372,10 @@ public class AppointmentLabelDTO implements Serializable {
     }
 
     /**
-     * @param qrCodeErrorMessage The qrCodeErrorMessage
-     */
-    public void setQrCodeErrorMessage(String qrCodeErrorMessage) {
-        this.qrCodeErrorMessage = qrCodeErrorMessage;
-    }
-
-    /**
      * @return The cancelAppointmentReasonsTitle
      */
     public String getCancelAppointmentReasonsTitle() {
         return StringUtil.getLabelForView(cancelAppointmentReasonsTitle);
-    }
-
-    /**
-     * @param cancelAppointmentReasonsTitle The cancel_appointment_reasons_title
-     */
-    public void setCancelAppointmentReasonsTitle(String cancelAppointmentReasonsTitle) {
-        this.cancelAppointmentReasonsTitle = cancelAppointmentReasonsTitle;
-    }
-
-    /**
-     * @return The cancelAppointmentOtherReasonLabel
-     */
-    public String getCancelAppointmentOtherReasonLabel() {
-        return StringUtil.getLabelForView(cancelAppointmentOtherReasonLabel);
-    }
-
-    /**
-     * @param cancelAppointmentOtherReasonLabel The cancel_appointment_other_reason_label
-     */
-    public void setCancelAppointmentOtherReasonLabel(String cancelAppointmentOtherReasonLabel) {
-        this.cancelAppointmentOtherReasonLabel = cancelAppointmentOtherReasonLabel;
     }
 
     /**
@@ -674,14 +396,6 @@ public class AppointmentLabelDTO implements Serializable {
 
     /**
      *
-     * @param providerListHeader providerListHeader
-     */
-    public void setProviderListHeader(String providerListHeader) {
-        this.providerListHeader = providerListHeader;
-    }
-
-    /**
-     *
      * @return providerListSubHeader
      */
     public String getProviderListSubHeader() {
@@ -690,96 +404,10 @@ public class AppointmentLabelDTO implements Serializable {
 
     /**
      *
-     * @param providerListSubHeader providerListSubHeader
-     */
-    public void setProviderListSubHeader(String providerListSubHeader) {
-        this.providerListSubHeader = providerListSubHeader;
-    }
-
-    /**
-     *
      * @return providerListScheduleAppointmentButton
      */
     public String getProviderListScheduleAppointmentButton() {
         return StringUtil.getLabelForView(providerListScheduleAppointmentButton);
-    }
-
-    /**
-     *
-     * @param providerListScheduleAppointmentButton providerListScheduleAppointmentButton
-     */
-    public void setProviderListScheduleAppointmentButton(String providerListScheduleAppointmentButton) {
-        this.providerListScheduleAppointmentButton = providerListScheduleAppointmentButton;
-    }
-
-    /**
-     *
-     * @return appointmentsTodayHeadingSmall
-     */
-    public String getAppointmentsTodayHeadingSmall() {
-        return StringUtil.getLabelForView(appointmentsTodayHeadingSmall);
-    }
-
-    /**
-     *
-     * @param appointmentsTodayHeadingSmall appointmentsTodayHeadingSmall
-     */
-    public void setAppointmentsTodayHeadingSmall(String appointmentsTodayHeadingSmall) {
-        this.appointmentsTodayHeadingSmall = appointmentsTodayHeadingSmall;
-    }
-
-    /**
-     * Gets available hours back.
-     *
-     * @return the available hours back
-     */
-    public String getAvailableHoursBack() {
-        return StringUtil.getLabelForView(availableHoursBack);
-    }
-
-    /**
-     * Sets available hours back.
-     *
-     * @param availableHoursBack the available hours back
-     */
-    public void setAvailableHoursBack(String availableHoursBack) {
-        this.availableHoursBack = availableHoursBack;
-    }
-
-    /**
-     * Gets request appointment new patient.
-     *
-     * @return the request appointment new patient
-     */
-    public String getRequestAppointmentNewPatient() {
-        return StringUtil.getLabelForView(requestAppointmentNewPatient);
-    }
-
-    /**
-     * Sets request appointment new patient.
-     *
-     * @param requestAppointmentNewPatient the request appointment new patient
-     */
-    public void setRequestAppointmentNewPatient(String requestAppointmentNewPatient) {
-        this.requestAppointmentNewPatient = requestAppointmentNewPatient;
-    }
-
-    /**
-     * Gets add appointment from to text.
-     *
-     * @return the add appointment from to text
-     */
-    public String getAddAppointmentFromToText() {
-        return StringUtil.getLabelForView(addAppointmentFromToText);
-    }
-
-    /**
-     * Gets add appointment tomorrow.
-     *
-     * @return the add appointment tomorrow
-     */
-    public String getAddAppointmentTomorrow() {
-        return StringUtil.getLabelForView(addAppointmentTomorrow);
     }
 
     /**
@@ -794,31 +422,11 @@ public class AppointmentLabelDTO implements Serializable {
         return StringUtil.getLabelForView(appointmentRequestSuccessMessage);
     }
 
-    public String getAppointmentLocationsLabel() {
-        return appointmentLocationsLabel;
-    }
-
-    public String getAppointmentEditDateRangeButton() {
-        return appointmentEditDateRangeButton;
-    }
-
-    public String getDatepickerCancelOption() {
-        return datepickerCancelOption;
-    }
-
     public String getAppointmentsPreRegister() {
         return appointmentsPreRegister;
     }
 
     public String getAppointmentRescheduleButton() {
         return appointmentRescheduleButton;
-    }
-
-    public String getPracticeListSelectProvider() {
-        return StringUtil.getLabelForView(practiceListSelectProvider);
-    }
-
-    public String getPracticeListContinue() {
-        return StringUtil.getLabelForView(practiceListContinue);
     }
 }

@@ -4,10 +4,12 @@ import android.os.Build;
 import android.provider.Settings;
 
 import com.carecloud.carepay.patient.BuildConfig;
+import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
 import com.carecloud.carepaylibray.CarePayApplication;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 
 /**
@@ -17,10 +19,13 @@ import com.carecloud.carepaylibray.CarePayApplication;
 public class CarePayPatientApplication extends CarePayApplication {
 
     private ApplicationMode applicationMode;
+    private MixpanelAPI mixpanelAPI;
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+        mixpanelAPI = MixpanelAPI.getInstance(this, getString(R.string.mixpanel_application_token));
         setHttpConstants();
         registerActivityLifecycleCallbacks(new CarePayActivityLifecycleCallbacks());
     }
@@ -39,6 +44,7 @@ public class CarePayPatientApplication extends CarePayApplication {
         HttpConstants.setApiStartKey(BuildConfig.X_API_KEY);
         HttpConstants.setPushNotificationWebclientUrl(BuildConfig.WEBCLIENT_URL);
         HttpConstants.setUseUnifiedAuth(BuildConfig.useUnifiedAuth);
+        HttpConstants.setMixpanelAPI(mixpanelAPI);
     }
 
 

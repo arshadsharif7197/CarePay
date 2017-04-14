@@ -38,7 +38,7 @@ public class SplashActivity extends BasePatientActivity {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            PatientNavigationHelper.getInstance(SplashActivity.this).navigateToWorkflow(workflowDTO);
+            navigateToWorkflow(workflowDTO);
             // end-splash activity and transition
             SplashActivity.this.finish();
         }
@@ -60,7 +60,7 @@ public class SplashActivity extends BasePatientActivity {
         public void onPostExecute(WorkflowDTO workflowDTO) {
 
             if (!SystemUtil.isNotEmptyString(getApplicationPreferences().getUserLanguage())) {
-                PatientNavigationHelper.getInstance(SplashActivity.this).navigateToWorkflow(workflowDTO);
+                navigateToWorkflow(workflowDTO);
             } else if (SystemUtil.isNotEmptyString(getApplicationPreferences().getUserLanguage())) {
               String languageid=  getApplicationPreferences().getUserLanguage();
 

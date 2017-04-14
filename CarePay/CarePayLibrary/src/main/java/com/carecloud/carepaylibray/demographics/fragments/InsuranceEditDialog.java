@@ -63,8 +63,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     private static final int BACK_PIC = 2;
     private static final String HTTP = "http";
 
-    private static final ImageCaptureHelper.CameraType CAMERA_TYPE = ImageCaptureHelper.CameraType.CUSTOM_CAMERA;
-    private static final ImageCaptureHelper.ImageShape IMAGE_SHAPE = ImageCaptureHelper.ImageShape.RECTANGULAR;
     public static final String EDITED_INDEX = "EditedIndex";
     public static final String IS_PATIENT_MODE = "IsPatientMode";
     public static final int NEW_INSURANCE = -1;
@@ -156,7 +154,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
         try {
             if (context instanceof DemographicsView) {
-                callback = ((DemographicsView) context).getPresenter();
+                carePayCameraReady = ((DemographicsView) context).getPresenter();
             } else {
                 carePayCameraReady = (CarePayCameraReady) context;
             }
@@ -191,6 +189,11 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
             hideKeyboardOnViewTouch(view.findViewById(R.id.dialog_content_layout));
             hideKeyboardOnViewTouch(view.findViewById(R.id.container_main));
+
+            if (!isPatientMode) {
+                inflateToolbarViews(view);
+            }
+
             return view;
         }
 
@@ -229,7 +232,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
             }
         });
 
-        TextView textView = (TextView) view.findViewById(R.id.checkinDemographicsHeaderLabel);
+        TextView textView = (TextView) view.findViewById(R.id.toolbar_title);
         textView.setText(Label.getLabel("demographics_insurance_label"));
     }
 

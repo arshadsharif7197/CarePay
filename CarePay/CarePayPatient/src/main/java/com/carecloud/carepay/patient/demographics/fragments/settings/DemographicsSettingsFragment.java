@@ -258,7 +258,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
                 getAppAuthorizationHelper().getPool().getUser().signOut();
                 getAppAuthorizationHelper().setUser(null);
             }
-            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+            PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
         }
 
         @Override
