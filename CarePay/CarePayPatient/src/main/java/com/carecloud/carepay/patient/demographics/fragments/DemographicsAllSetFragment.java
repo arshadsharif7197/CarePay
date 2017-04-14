@@ -87,7 +87,7 @@ public class DemographicsAllSetFragment extends CheckInDemographicsBaseFragment 
 
         setGothamRoundedMediumTypeface(getActivity(), header);
 
-        disappearViewById(R.id.stepProgressBarCheckin);
+        view.findViewById(R.id.stepProgressBarCheckin).setVisibility(View.GONE);
     }
 
     @Override
