@@ -133,7 +133,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
                 Label.getLabel("demographics_health_insurance_heading"),
                 Label.getLabel("demographics_health_insurance_subheading"),
                 view);
-        initNextButton(null, view, View.VISIBLE);
+        initNextButton(view);
     }
 
     @Override

@@ -381,7 +381,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
                 Label.getLabel("demographics_address_heading"),
                 Label.getLabel("demographics_address_subheading"),
                 view);
-        initNextButton(null, view, View.VISIBLE);
+        initNextButton(view);
 
         cityEditText = (EditText) view.findViewById(R.id.cityId);
         stateEditText = (TextView) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView);

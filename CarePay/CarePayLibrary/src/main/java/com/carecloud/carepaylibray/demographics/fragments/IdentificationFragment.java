@@ -32,7 +32,7 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment {
                 Label.getLabel("demographics_identity_subheading"),
                 view);
 
-        initNextButton(null, view, View.VISIBLE);
+        initNextButton(view);
 
         DemographicIdDocPayloadDTO idDocument = demographicDTO.getPayload().getDemographics().getPayload().getIdDocument();
         initialiseChildFragment(idDocument, demographicDTO.getMetadata().getDataModels().getDemographic().getIdentityDocuments().getProperties().getItems().getIdentityDocument());

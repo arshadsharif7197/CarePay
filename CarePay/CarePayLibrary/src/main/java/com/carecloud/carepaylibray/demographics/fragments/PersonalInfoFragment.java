@@ -45,7 +45,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
 
-        initNextButton(null, view, View.VISIBLE);
+        initNextButton(view);
         setHeaderTitle(
                 Label.getLabel("demographics_review_peronsonalinfo_section"),
                 Label.getLabel("demographics_personal_info_heading"),

@@ -77,7 +77,6 @@ public class NewDemographicsActivity extends BasePatientActivity implements Demo
                 updateCheckInFlow("demographics_insurance_label");
                 break;
             default:
-                updateCheckInFlow("demographics_allset_header");
         }
     }
 

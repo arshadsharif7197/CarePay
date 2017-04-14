@@ -17,7 +17,6 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
@@ -29,10 +28,8 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediu
 
 public class DemographicsAllSetFragment extends CheckInDemographicsBaseFragment {
 
-    private View                 view;
-    private Button               gotoCarePay;
-    private DemographicDTO       demographicDTO;
-    private TextView             header;
+    private DemographicDTO demographicDTO;
+
     private WorkflowServiceCallback confirmDemWorkflowCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -59,8 +56,7 @@ public class DemographicsAllSetFragment extends CheckInDemographicsBaseFragment 
         View view = super.onCreateView(inflater, container, savedInstanceState);
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
 
-        // create the view
-        initializeUIFields();
+        initializeViews(view);
 
         return view;
     }
@@ -77,34 +73,25 @@ public class DemographicsAllSetFragment extends CheckInDemographicsBaseFragment 
 
     @Override
     protected DemographicDTO updateDemographicDTO(View view) {
-        return null;
+        return demographicDTO;
     }
 
-    private void initializeUIFields() {
-        header = (TextView) view.findViewById(R.id.moreDetailsHeading);
+    private void initializeViews(View view) {
+        initNextButton(view);
+
+        TextView header = (TextView) view.findViewById(R.id.moreDetailsHeading);
         header.setText(Label.getLabel("demographics_allset_header"));
 
-        gotoCarePay = (Button) view.findViewById(R.id.demographicsGoToCarePayButton);
+        Button gotoCarePay = (Button) view.findViewById(R.id.checkinDemographicsNextButton);
         gotoCarePay.setText(Label.getLabel("demographics_allset_go_button"));
-        gotoCarePay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                confirmDemographicInformation(); // post the updates
-            }
-        });
 
-        setTypefaces(view);
-    }
-
-    private void setTypefaces(View view) {
         setGothamRoundedMediumTypeface(getActivity(), header);
-        setGothamRoundedMediumTypeface(getActivity(), gotoCarePay);
+
+        disappearViewById(R.id.stepProgressBarCheckin);
     }
 
-    /**
-     * Request to back-end for transition
-     */
-    public void confirmDemographicInformation() {
+    @Override
+    protected void openNextFragment(DemographicDTO demographicDTO, boolean transition) {
         Map<String, String> queries = new HashMap<>();
 
         // dynamic transition
@@ -112,6 +99,6 @@ public class DemographicsAllSetFragment extends CheckInDemographicsBaseFragment 
         String body = gson.toJson(demographicDTO.getPayload().getDemographics().getPayload());
         TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getConfirmDemographics();
 
-      //  getWorkflowServiceHelper().execute(transitionDTO, confirmDemWorkflowCallback, body,queries, getWorkflowServiceHelper().getPreferredLanguageHeader());
+        getWorkflowServiceHelper().execute(transitionDTO, confirmDemWorkflowCallback, body, queries, getWorkflowServiceHelper().getPreferredLanguageHeader());
     }
 }
