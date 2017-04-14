@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.clover;
 import android.os.Bundle;
 
 import com.carecloud.carepay.practice.library.splash.SplashActivity;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.newrelic.agent.android.NewRelic;
 
 /**
@@ -18,5 +19,6 @@ public class CloverSplashActivity extends SplashActivity {
                 getString(R.string.new_relic_application_token)
         ).start(this.getApplication());
 
+        MixPanelUtil.logEvent("Clover App Start");
     }
 }

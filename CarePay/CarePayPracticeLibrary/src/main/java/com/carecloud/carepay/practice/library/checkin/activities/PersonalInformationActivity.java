@@ -332,7 +332,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
             }
 
             DatePickerDialog datePickerDialog = new DatePickerDialog(PersonalInformationActivity.this,
-                    android.R.style.Theme_Holo_Dialog,
+                    android.R.style.Theme_Holo_Light_Dialog_MinWidth,
                     new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker datePicker, int year, int month, int day) {

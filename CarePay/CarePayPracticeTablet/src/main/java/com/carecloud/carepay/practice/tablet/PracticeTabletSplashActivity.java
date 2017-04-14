@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.tablet;
 import android.os.Bundle;
 
 import com.carecloud.carepay.practice.library.splash.SplashActivity;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.newrelic.agent.android.NewRelic;
 
 /**
@@ -15,8 +16,9 @@ public class PracticeTabletSplashActivity extends SplashActivity {
         super.onCreate(savedInstanceState);
 
         NewRelic.withApplicationToken(
-            getString(R.string.R_string_new_relic_application_token)
+            getString(R.string.new_relic_application_token)
         ).start(this.getApplication());
 
+        MixPanelUtil.logEvent("Practice App Start");
     }
 }
