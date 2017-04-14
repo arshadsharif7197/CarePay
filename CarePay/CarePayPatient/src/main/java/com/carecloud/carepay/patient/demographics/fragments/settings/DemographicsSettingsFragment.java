@@ -55,9 +55,6 @@ public class DemographicsSettingsFragment extends BaseFragment {
         void showHelpFragment();
     }
 
-    private DemographicsSettingsFragment() {
-    }
-
     /**
      *
      * @param demographicsSettingsDTO the model

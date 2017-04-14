@@ -15,12 +15,9 @@ import android.widget.TextView;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemInsuranceDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.scanner.InsuranceScannerFragment;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsLabelsDTO;
-import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMetadataDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -37,14 +34,12 @@ public class InsuranceWrapper {
     /**
      * Ctor
      * @param context The context
-     * @param labels Tghe labels from remote
      * @param metadata The metadata
      * @param payload The payload
      * @param parentView The parent view (holfing the wrapppers)
      * @param clickListener  OnClick log-back
      */
     public InsuranceWrapper(AppCompatActivity context,
-                            DemographicLabelsDTO labels,
                             DemographicMetadataEntityItemInsuranceDTO metadata,
                             DemographicInsurancePayloadDTO payload,
                             LinearLayout parentView,
@@ -65,7 +60,7 @@ public class InsuranceWrapper {
         removeClickable.setGravity(Gravity.CENTER);
         removeClickable.setClickable(true);
         removeClickable.setPadding(0, 8, 0, 8);
-        removeClickable.setText(labels == null ? CarePayConstants.NOT_DEFINED : labels.getDocumentsRemove());
+        removeClickable.setText(Label.getLabel("demographics_documents_remove"));
         removeClickable.setTextSize(14);
         removeClickable.setTextColor(ContextCompat.getColor(context, com.carecloud.carepaylibrary.R.color.harvard_crimson));
         clickListener.setInsuranceWrapper(this);

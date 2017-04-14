@@ -16,7 +16,6 @@ import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraFragment;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckinCompletedDialogFragment;
@@ -180,11 +179,6 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     @Override
-    public DemographicLabelsDTO getLabelsDTO() {
-        return demographicDTO.getMetadata().getLabels();
-    }
-
-    @Override
     public void editInsurance(DemographicDTO demographicDTO, Integer editedIndex, boolean showAsDialog) {
         this.demographicDTO = demographicDTO;
         insuranceEditDialog = InsuranceEditDialog.newInstance(demographicDTO, editedIndex, isPatientMode);
@@ -299,7 +293,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
      *
      * @param step fragment
      */
-    public void navigateToDemographicFragment(Integer step) {
+    private void navigateToDemographicFragment(Integer step) {
         CheckInDemographicsBaseFragment fragment = getDemographicFragment(step);
         if(fragment!=null) {
             Bundle args = new Bundle();
@@ -333,7 +327,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         FragmentManager fm = getSupportFragmentManager();
 
         // Update Health Insurance Fragment
-        String tag = HealthInsuranceFragment.class.getSimpleName();
+        String tag = getHealthInsuranceFragmentTag();
         HealthInsuranceFragment healthInsuranceFragment = (HealthInsuranceFragment) fm.findFragmentByTag(tag);
 
         if (demographicDTO == null || proceed) {
@@ -341,6 +335,10 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         } else {
             healthInsuranceFragment.updateInsuranceList(demographicDTO);
         }
+    }
+
+    protected String getHealthInsuranceFragmentTag() {
+        return HealthInsuranceFragment.class.getSimpleName();
     }
 
     @Override
@@ -366,7 +364,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         dialog.show(ft, tag);
     }
 
-    private CheckInDemographicsBaseFragment getDemographicFragment(int step){
+    protected CheckInDemographicsBaseFragment getDemographicFragment(int step){
         switch (step){
             case 1:
                 return new PersonalInfoFragment();

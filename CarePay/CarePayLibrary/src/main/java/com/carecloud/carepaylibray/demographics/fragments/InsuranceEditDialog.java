@@ -202,9 +202,12 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         StepProgressBar stepProgressBar = (StepProgressBar) view.findViewById(R.id.stepProgressBarCheckin);
         stepProgressBar.setCumulativeDots(true);
         stepProgressBar.setNumDots(5);
+        stepProgressBar.setCurrentProgressDot(4);
 
         View child = inflater.inflate(R.layout.add_edit_insurance_view, null);
         ((ViewGroup) view.findViewById(R.id.checkinDemographicsContentLayout)).addView(child);
+
+        view.findViewById(R.id.demographicsHeading).setVisibility(View.GONE);
 
         inflateToolbarViews(view);
 

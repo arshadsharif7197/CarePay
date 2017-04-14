@@ -12,15 +12,10 @@ import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragmen
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
-import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
-import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHolder;
 import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearchFragment;
 import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
-import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
 
-public interface DemographicsPresenter extends DemographicsReviewLabelsHolder,
-        DemographicsLabelsHolder,
-        HealthInsuranceFragment.InsuranceDocumentScannerListener,
+public interface DemographicsPresenter extends HealthInsuranceFragment.InsuranceDocumentScannerListener,
         MedicationsAllergyFragment.MedicationAllergyCallback,
         MedicationAllergySearchFragment.MedicationAllergySearchCallback,
         CheckinFlowCallback,

@@ -184,7 +184,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
                 Label.getLabel("demographics_demographics_heading"),
                 Label.getLabel("demographics_demographics_subheading"),
                 view);
-        initNextButton(null, view, View.VISIBLE);
+        initNextButton(view);
 
         ((TextView) view.findViewById(R.id.raceListDataTextView)).setText(Label.getLabel("demographics_choose"));
         ((TextView) view.findViewById(R.id.raceDataTextView)).setText(persDetailsMetaDTO.getProperties().getPrimaryRace().getLabel());
