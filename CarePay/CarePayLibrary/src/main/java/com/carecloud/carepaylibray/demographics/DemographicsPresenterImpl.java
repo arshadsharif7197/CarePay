@@ -333,7 +333,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         FragmentManager fm = getSupportFragmentManager();
 
         // Update Health Insurance Fragment
-        String tag = HealthInsuranceFragment.class.getSimpleName();
+        String tag = getHealthInsuranceFragmentTag();
         HealthInsuranceFragment healthInsuranceFragment = (HealthInsuranceFragment) fm.findFragmentByTag(tag);
 
         if (demographicDTO == null || proceed) {
@@ -341,6 +341,10 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         } else {
             healthInsuranceFragment.updateInsuranceList(demographicDTO);
         }
+    }
+
+    protected String getHealthInsuranceFragmentTag() {
+        return HealthInsuranceFragment.class.getSimpleName();
     }
 
     @Override

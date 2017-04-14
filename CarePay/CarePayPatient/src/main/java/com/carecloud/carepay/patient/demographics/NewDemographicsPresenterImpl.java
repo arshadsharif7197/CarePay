@@ -24,6 +24,11 @@ public class NewDemographicsPresenterImpl extends DemographicsPresenterImpl {
     }
 
     @Override
+    protected String getHealthInsuranceFragmentTag() {
+        return NewHealthInsuranceFragment.class.getSimpleName();
+    }
+
+    @Override
     protected CheckInDemographicsBaseFragment getDemographicFragment(int step) {
         switch (step){
             case 1:
@@ -35,7 +40,7 @@ public class NewDemographicsPresenterImpl extends DemographicsPresenterImpl {
             case 4:
                 return new NewIdentificationFragment();
             case 5:
-                return new HealthInsuranceFragment();
+                return new NewHealthInsuranceFragment();
             default:
                 return new DemographicsAllSetFragment();
         }
@@ -66,6 +71,13 @@ public class NewDemographicsPresenterImpl extends DemographicsPresenterImpl {
         @Override
         protected void openNextFragment(DemographicDTO demographicDTO, boolean transition) {
             checkinFlowCallback.applyChangesAndNavTo(demographicDTO, 5);
+        }
+    }
+
+    public static class NewHealthInsuranceFragment extends HealthInsuranceFragment {
+        @Override
+        protected void openNextFragment(DemographicDTO demographicDTO, boolean transition) {
+            checkinFlowCallback.applyChangesAndNavTo(demographicDTO, 6);
         }
     }
 }
