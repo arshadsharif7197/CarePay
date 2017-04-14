@@ -525,7 +525,6 @@ public class CloverPaymentActivity extends BaseActivity {
             LineItem item = new LineItem();
             item.setName(paymentLineItem.getDescription());
             item.setPrice((long) (paymentLineItem.getAmount() * 100));
-            item.setNote(paymentLineItem.getMetadata().toString());
             lineItems.add(item);
         }
         return lineItems;
