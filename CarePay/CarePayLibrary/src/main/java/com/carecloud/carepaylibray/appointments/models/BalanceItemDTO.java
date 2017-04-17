@@ -57,6 +57,9 @@ public class BalanceItemDTO {
     @SerializedName("new_charge")
     @Expose
     private boolean newCharge = false;
+    @SerializedName("max_amount")
+    @Expose(serialize = false)
+    private double maxAmount;
 
     public Long getId() {
         return id;
@@ -184,5 +187,13 @@ public class BalanceItemDTO {
 
     public void setNewCharge(boolean newCharge) {
         this.newCharge = newCharge;
+    }
+
+    public double getMaxAmount() {
+        return maxAmount;
+    }
+
+    public void setMaxAmount(double maxAmount) {
+        this.maxAmount = maxAmount;
     }
 }

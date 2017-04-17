@@ -308,7 +308,7 @@ public class CloverPaymentActivity extends BaseActivity {
                 catch (Exception e) {
 
                     e.printStackTrace();
-                    SystemUtil.showErrorToast(CloverPaymentActivity.this, "An unknown error has occured while launching the Payment Intent");
+                    SystemUtil.showErrorToast(CloverPaymentActivity.this, "An unknown error has occurred while launching the Payment Intent");
                 }
 
                 return null;

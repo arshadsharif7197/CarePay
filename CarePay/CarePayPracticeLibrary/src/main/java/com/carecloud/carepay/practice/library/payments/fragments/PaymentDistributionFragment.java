@@ -266,6 +266,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
                 unappliedLayout.setVisibility(View.GONE);
                 shouldAutoApply = false;
             }
+
+            setMaxAmounts();
         }
     }
 
@@ -312,8 +314,10 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
                         case PendingBalancePayloadDTO.CO_INSURANCE_TYPE:
                         case PendingBalancePayloadDTO.DEDUCTIBLE_TYPE:
                         {
+                            double amount = pendingBalancePayload.getAmount();
                             BalanceItemDTO balanceItemDTO = new BalanceItemDTO();
-                            balanceItemDTO.setBalance(pendingBalancePayload.getAmount());
+                            balanceItemDTO.setBalance(amount);
+                            balanceItemDTO.setAmount(amount);
                             balanceItemDTO.setDescription(pendingBalancePayload.getType());
 
                             balanceItems.add(balanceItemDTO);
@@ -328,6 +332,18 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         }
 
         return total;
+    }
+
+    private void setMaxAmounts(){
+        for(BalanceItemDTO balanceItemDTO : balanceItems){
+            balanceItemDTO.setMaxAmount(balanceItemDTO.getBalance());
+        }
+    }
+
+    private void resetInitialAmounts(){
+        for(BalanceItemDTO balanceItemDTO : balanceItems){
+            balanceItemDTO.setBalance(balanceItemDTO.getMaxAmount());
+        }
     }
 
     private void setDefaultProviderLocation(){
@@ -453,6 +469,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         balanceItemDTO.setDescription(chargeItem.getDescription());
         balanceItemDTO.setAmount(amount);
         balanceItemDTO.setBalance(amount);
+        balanceItemDTO.setMaxAmount(amount);
         balanceItemDTO.setResponsibilityType(chargeItem.getResponsibilityType());
         if(defaultProvider!=null){
             balanceItemDTO.setProvider(defaultProvider);
@@ -476,6 +493,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         paymentAmount = amount;
         setCurrency(paymentTotal, amount);
 
+        resetInitialAmounts();
         balanceItems.clear();
         calculateTotalBalance();
 
@@ -509,14 +527,15 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             double balance = balanceItem.getBalance();
             if(balance <= 0){//this should be skipped and cleared
                 balanceItem.setBalance(0);
-            }
-            if(amount>=balance){
-                amount = (double) Math.round((amount-balance)*100)/100;
-            }else{
-                balance = amount;
-                balanceItem.setBalance(balance);
-                if(amount > 0) {
-                    amount -= balance;
+            }else {
+                if (amount >= balance) {
+                    amount = (double) Math.round((amount - balance) * 100) / 100;
+                } else {
+                    balance = amount;
+                    balanceItem.setBalance(balance);
+                    if (amount > 0) {
+                        amount -= balance;
+                    }
                 }
             }
         }
@@ -586,7 +605,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     private void addPaymentObject(BalanceItemDTO balanceItem, PaymentPostModel postModel){
         if(balanceItem.getBalance()>0){
             PaymentObject paymentObject = new PaymentObject();
-            paymentObject.setAmount(balanceItem.getBalance());
             paymentObject.setDescription(balanceItem.getDescription());
 
             if(balanceItem.getResponsibilityType()!=null){
@@ -610,6 +628,13 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             if(balanceItem.getProvider()!=null){
                 paymentObject.setProviderID(balanceItem.getProvider().getGuid());
             }
+
+            double paymentAmount = balanceItem.getBalance();
+            if(paymentAmount > balanceItem.getMaxAmount()){
+                overPaymentAmount = overPaymentAmount + (balanceItem.getMaxAmount() - paymentAmount);
+                paymentAmount = balanceItem.getMaxAmount();
+            }
+            paymentObject.setAmount(paymentAmount);
 
             postModel.addPaymentMethod(paymentObject);
         }else if(balanceItem.getBalance()<0){
