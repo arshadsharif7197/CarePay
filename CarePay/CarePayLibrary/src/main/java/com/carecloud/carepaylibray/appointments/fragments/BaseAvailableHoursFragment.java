@@ -16,8 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.appointments.adapters.AvailableHoursAdapter;
-import com.carecloud.carepay.patient.appointments.adapters.AvailableLocationsAdapter;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -25,6 +23,8 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
+import com.carecloud.carepaylibray.appointments.adapters.AvailableHoursAdapter;
+import com.carecloud.carepaylibray.appointments.adapters.AvailableLocationsAdapter;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -73,29 +73,29 @@ public class BaseAvailableHoursFragment extends BaseDialogFragment implements Av
 
     private AppointmentNavigationCallback callback;
 
-    public static AvailableHoursFragment newInstance(AppointmentsResultModel appointmentsResultModel,
-                                                     AppointmentDTO appointmentDTO) {
-        Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, appointmentsResultModel);
-        DtoHelper.bundleDto(args, appointmentDTO);
-        AvailableHoursFragment availableHoursFragment = new AvailableHoursFragment();
-        availableHoursFragment.setArguments(args);
-        return availableHoursFragment;
-    }
-
-    public static AvailableHoursFragment newInstance(AppointmentsResultModel appointmentsResultModel,
-                                                     AppointmentResourcesItemDTO appointmentResource, Date startDate, Date endDate,
-                                                     VisitTypeDTO visitTypeDTO) {
-        Bundle args = new Bundle();
-        args.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, startDate);
-        args.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, endDate);
-        DtoHelper.bundleDto(args, appointmentResource);
-        DtoHelper.bundleDto(args, visitTypeDTO);
-        DtoHelper.bundleDto(args, appointmentsResultModel);
-        AvailableHoursFragment availableHoursFragment = new AvailableHoursFragment();
-        availableHoursFragment.setArguments(args);
-        return availableHoursFragment;
-    }
+//    public static AvailableHoursFragment newInstance(AppointmentsResultModel appointmentsResultModel,
+//                                                     AppointmentDTO appointmentDTO) {
+//        Bundle args = new Bundle();
+//        DtoHelper.bundleDto(args, appointmentsResultModel);
+//        DtoHelper.bundleDto(args, appointmentDTO);
+//        AvailableHoursFragment availableHoursFragment = new AvailableHoursFragment();
+//        availableHoursFragment.setArguments(args);
+//        return availableHoursFragment;
+//    }
+//
+//    public static AvailableHoursFragment newInstance(AppointmentsResultModel appointmentsResultModel,
+//                                                     AppointmentResourcesItemDTO appointmentResource, Date startDate, Date endDate,
+//                                                     VisitTypeDTO visitTypeDTO) {
+//        Bundle args = new Bundle();
+//        args.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, startDate);
+//        args.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, endDate);
+//        DtoHelper.bundleDto(args, appointmentResource);
+//        DtoHelper.bundleDto(args, visitTypeDTO);
+//        DtoHelper.bundleDto(args, appointmentsResultModel);
+//        AvailableHoursFragment availableHoursFragment = new AvailableHoursFragment();
+//        availableHoursFragment.setArguments(args);
+//        return availableHoursFragment;
+//    }
 
     @Override
     public void onAttach(Context context) {
@@ -210,6 +210,9 @@ public class BaseAvailableHoursFragment extends BaseDialogFragment implements Av
         String range = Label.getLabel("appoitment_edit_date_range_button");
         editRangeButton.setText(range != null ? range : getString(R.string.edit_date_range_button_label));
         editRangeButton.setOnClickListener(dateRangeClickListener);
+
+        progressView = view.findViewById(R.id.progressview);
+        progressView.setVisibility(View.VISIBLE);
     }
 
     private void setAdapters() {
@@ -217,7 +220,7 @@ public class BaseAvailableHoursFragment extends BaseDialogFragment implements Av
 
         if (availableHoursRecycleView.getAdapter() == null) {
             availableHoursRecycleView.setAdapter(new AvailableHoursAdapter(getActivity(),
-                    getAvailableHoursListWithHeader(), AvailableHoursFragment.this, locations.size() > 1));
+                    getAvailableHoursListWithHeader(), this, locations.size() > 1));
         } else {
             AvailableHoursAdapter availableHoursAdapter = (AvailableHoursAdapter) availableHoursRecycleView.getAdapter();
             availableHoursAdapter.setItems(getAvailableHoursListWithHeader());

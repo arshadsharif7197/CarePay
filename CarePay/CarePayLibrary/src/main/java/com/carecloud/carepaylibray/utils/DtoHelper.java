@@ -91,24 +91,4 @@ public class DtoHelper {
         intent.putExtra(WorkflowDTO.class.getSimpleName(), getStringDTO(dto));
     }
 
-    /**
-     * Convenience method to repackage a DTO from activity to Fragment without having to serialize it
-     * @param args Output Bundle
-     * @param intent Original Intent
-     * @param saveKey key to forward the extra
-     * @param getKey key to retrieve the extra
-     */
-    public static void bundleBaseDTO(Bundle args, Intent intent, String saveKey, String getKey){
-        Bundle bundle = intent.getExtras();
-        if (bundle != null && bundle.containsKey(getKey)) {
-            try{
-                if(bundle.containsKey(getKey)){
-                    args.putString(saveKey, bundle.getString(getKey));
-                }
-            }catch (Exception e){
-                args.putString(saveKey, bundle.getString(getKey));
-            }
-        }
-    }
-
 }

@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.appointments.adapters;
+package com.carecloud.carepaylibray.appointments.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
