@@ -3,12 +3,10 @@ package com.carecloud.carepay.practice.clover.payments;
 import android.accounts.Account;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.util.Log;
 
-import com.carecloud.carepay.practice.clover.BuildConfig;
 import com.carecloud.carepay.practice.clover.R;
 import com.carecloud.carepay.practice.clover.models.CloverCardTransactionInfo;
 import com.carecloud.carepay.practice.clover.models.CloverPaymentDTO;
@@ -40,6 +38,7 @@ import com.clover.sdk.v3.payments.Payment;
 import com.clover.sdk.v3.payments.Result;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.newrelic.agent.android.NewRelic;
 
 import java.text.SimpleDateFormat;
@@ -117,7 +116,7 @@ public class CloverPaymentActivity extends BaseActivity {
                 // If an account can't be acquired, exit the app
                 if (account == null) {
                     SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.no_account));
-                    logPaymentFail(getString(R.string.no_account));
+                    logPaymentFail(getString(R.string.no_account), false);
                     finish();
                 }
             }
@@ -144,7 +143,7 @@ public class CloverPaymentActivity extends BaseActivity {
             // If an account can't be acquired, exit the app
             if (account == null) {
                 SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.no_account));
-                logPaymentFail(getString(R.string.no_account));
+                logPaymentFail(getString(R.string.no_account), false);
                 finish();
                 return;
             }
@@ -324,7 +323,6 @@ public class CloverPaymentActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == creditCardIntentID) {
             if (resultCode == RESULT_OK) {
-
                 Payment payment = data.getParcelableExtra(Intents.EXTRA_PAYMENT);
                 if (payment != null) {
                     if(postModel!=null){
@@ -332,19 +330,17 @@ public class CloverPaymentActivity extends BaseActivity {
                     }else {
                         processPayment(payment);
                     }
+                }else{
+                    logPaymentFail("Payment object is null, unable to obtain payment results but received a Success Result for payment intent", true);
                 }
             } else if(resultCode == RESULT_CANCELED) {
-                String manufacturer = Build.MANUFACTURER;
-                if(BuildConfig.DEBUG && manufacturer.equals("unknown")) {
-                    fakePaymentResponse();
-                }else {
-                    SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.payment_cancelled));
-                    setResult(resultCode);
-                    finish();
-                }
+                SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.payment_cancelled));
+                setResult(resultCode);
+                finish();
+
             } else {
                 SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.payment_failed));
-                logPaymentFail("Clover payment was not successfully processed");
+                logPaymentFail("Clover payment was not successfully processed", false);
                 setResult(resultCode);
                 finish();
             }
@@ -352,51 +348,50 @@ public class CloverPaymentActivity extends BaseActivity {
     }
 
     private void processPayment(Payment payment){
-        Gson gson = new Gson();
-        String jsonString = payment.getJSONObject().toString();
-        CloverPaymentDTO cloverPayment = gson.fromJson(jsonString, CloverPaymentDTO.class);
-        CloverCardTransactionInfo transactionInfo = cloverPayment.getCloverCardTransactionInfo();
+        try {
+            Gson gson = new Gson();
+            String jsonString = payment.getJSONObject().toString();
+            CloverPaymentDTO cloverPayment = gson.fromJson(jsonString, CloverPaymentDTO.class);
+            CloverCardTransactionInfo transactionInfo = cloverPayment.getCloverCardTransactionInfo();
 
-        PaymentObject paymentObject = new PaymentObject();
-        paymentObject.setType(PaymentType.credit_card);
-        paymentObject.setExecution(PaymentExecution.clover);
-        paymentObject.setAmount(amountDouble);
-        paymentObject.setCreditCard(getCreditCardModel(transactionInfo));
+            PaymentObject paymentObject = new PaymentObject();
+            paymentObject.setType(PaymentType.credit_card);
+            paymentObject.setExecution(PaymentExecution.clover);
+            paymentObject.setAmount(amountDouble);
+            paymentObject.setCreditCard(getCreditCardModel(transactionInfo));
 
-//        paymentObject.setBankAccountToken(paymentTransition.getMetadata());//TODO
+            PaymentPostModel paymentPostModel = new PaymentPostModel();
+            paymentPostModel.setAmount(amountDouble);
+            paymentPostModel.addPaymentMethod(paymentObject);
 
-        PaymentPostModel paymentPostModel = new PaymentPostModel();
-        paymentPostModel.setAmount(amountDouble);
-        paymentPostModel.addPaymentMethod(paymentObject);
+            postModel.setTransactionResponse(gson.fromJson(jsonString, JsonObject.class));
 
-//        TransactionResponse transactionResponse = new TransactionResponse();
-//        transactionResponse.setTransactionID(cloverPayment.getId());
-//        transactionResponse.setResponse(payment.getJSONObject());
-        postModel.setTransactionResponse(gson.fromJson(jsonString, JsonObject.class));
-
-        postPayment(gson.toJson(paymentPostModel));
+            postPayment(gson.toJson(paymentPostModel));
+        }catch (JsonSyntaxException jsx){
+            logPaymentFail("Unable to parse Payment", true, payment.getJSONObject(), jsx.getMessage());
+        }
     }
 
     private void processPayment(Payment payment, PaymentPostModel postModel){
-        Gson gson = new Gson();
-        String jsonString = payment.getJSONObject().toString();
-        CloverPaymentDTO cloverPayment = gson.fromJson(jsonString, CloverPaymentDTO.class);
-        CloverCardTransactionInfo transactionInfo = cloverPayment.getCloverCardTransactionInfo();
-        CreditCardModel creditCardModel = getCreditCardModel(transactionInfo);
+        try {
+            Gson gson = new Gson();
+            String jsonString = payment.getJSONObject().toString();
+            CloverPaymentDTO cloverPayment = gson.fromJson(jsonString, CloverPaymentDTO.class);
+            CloverCardTransactionInfo transactionInfo = cloverPayment.getCloverCardTransactionInfo();
+            CreditCardModel creditCardModel = getCreditCardModel(transactionInfo);
 
-//        TransactionResponse transactionResponse = new TransactionResponse();
-//        transactionResponse.setTransactionID(cloverPayment.getId());
-//        transactionResponse.setResponse(payment.getJSONObject());
+            postModel.setTransactionResponse(gson.fromJson(jsonString, JsonObject.class));
 
-        postModel.setTransactionResponse(gson.fromJson(jsonString, JsonObject.class));
+            for (PaymentObject paymentObject : postModel.getPaymentObjects()) {
+                paymentObject.setType(PaymentType.credit_card);
+                paymentObject.setExecution(PaymentExecution.clover);
+                paymentObject.setCreditCard(creditCardModel);
+            }
 
-        for(PaymentObject paymentObject : postModel.getPaymentObjects()){
-            paymentObject.setType(PaymentType.credit_card);
-            paymentObject.setExecution(PaymentExecution.clover);
-            paymentObject.setCreditCard(creditCardModel);
+            postPayment(gson.toJson(postModel));
+        }catch (JsonSyntaxException jsx){
+            logPaymentFail("Unable to parse Payment", true, payment.getJSONObject(), jsx.getMessage());
         }
-
-        postPayment(gson.toJson(postModel));
     }
 
     private void postPayment(String paymentModelJson){
@@ -437,39 +432,6 @@ public class CloverPaymentActivity extends BaseActivity {
         return creditCardModel;
     }
 
-    private void fakePaymentResponse(){
-        CreditCardModel creditCardModel = new CreditCardModel();
-        creditCardModel.setCardType("MASTERCARD");
-        creditCardModel.setCardNumber("1212");
-        creditCardModel.setExpiryDate("1020");
-        creditCardModel.setNameOnCard("Leo Menendez");
-        creditCardModel.setToken("FDLKN4LN44KBJL4"+ System.currentTimeMillis()%5);
-
-        PaymentsCreditCardBillingInformationDTO billingInformation = new PaymentsCreditCardBillingInformationDTO();
-        billingInformation.setSameAsPatient(true);
-        creditCardModel.setBillingInformation(billingInformation);
-
-        PaymentObject paymentObject = new PaymentObject();
-        paymentObject.setType(PaymentType.credit_card);
-        paymentObject.setExecution(PaymentExecution.clover);
-        paymentObject.setAmount(5.00);
-        paymentObject.setCreditCard(creditCardModel);
-
-
-        PaymentPostModel paymentPostModel = new PaymentPostModel();
-        paymentPostModel.setAmount(5.00);
-        paymentPostModel.addPaymentMethod(paymentObject);
-
-//        TransactionResponse transactionResponse = new TransactionResponse();
-//        transactionResponse.setTransactionID(String.valueOf(System.currentTimeMillis()));
-//        transactionResponse.setResponse(new JSONObject());
-//        paymentPostModel.setTransactionResponse(new JSONObject());
-
-        Gson gson = new Gson();
-        postPayment(gson.toJson(paymentPostModel));
-
-    }
-
 
     /**
      * The Make payment callback.
@@ -487,7 +449,6 @@ public class CloverPaymentActivity extends BaseActivity {
             intent.putExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA, workflowDTO.toString());
             setResult(RESULT_OK, intent);
             finish();
-//            PracticeNavigationHelper.navigateToWorkflow(CloverPaymentActivity.this, workflowDTO);
         }
 
         @Override
@@ -495,7 +456,7 @@ public class CloverPaymentActivity extends BaseActivity {
             hideProgressDialog();
             setResult(RESULT_CANCELED);
             System.out.print(exceptionMessage);
-            logPaymentFail(exceptionMessage);
+            logPaymentFail(exceptionMessage, true);
             SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.payment_failed));
             finish();
         }
@@ -532,10 +493,33 @@ public class CloverPaymentActivity extends BaseActivity {
         }
     }
 
-    private void logPaymentFail(String message){
+    private void logPaymentFail(String message, boolean paymentSuccess){
+        logPaymentFail(message, paymentSuccess, null, null);
+    }
+
+    private void logPaymentFail(String message, boolean paymentSuccess, Object paymentJson, String error) {
         Map<String, Object> eventMap = new HashMap<>();
-        eventMap.put("reason", message);
+        eventMap.put("Successful Payment", paymentSuccess);
+        eventMap.put("Fail Reason", message);
+
+        if(paymentJson == null){
+            paymentJson = "";
+        }else{
+            eventMap.put("Payment Object", paymentJson);
+        }
+
+        if(error == null){
+            error = "";
+        }else{
+            eventMap.put("Error Message", error);
+        }
+
         NewRelic.recordCustomEvent("CloverPaymentFail", eventMap);
+
+        if(paymentSuccess){
+            //sent to Pay Fail API endpoint
+
+        }
     }
 
 }
