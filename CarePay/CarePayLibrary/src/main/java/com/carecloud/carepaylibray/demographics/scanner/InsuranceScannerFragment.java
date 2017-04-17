@@ -27,11 +27,8 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemInsuranceDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataInsuranceOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePhotoDTO;
-import com.carecloud.carepaylibray.demographics.misc.DemographicsLabelsHolder;
-import com.carecloud.carepaylibray.demographics.misc.DemographicsReviewLabelsHolder;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -75,22 +72,12 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
 
     private DemographicInsurancePayloadDTO            insuranceDTO;
     private DemographicMetadataEntityItemInsuranceDTO insuranceMetadataDTO;
-    private DemographicLabelsDTO                      globalLabelsDTO;
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
-        // fetch global labels
-        Activity activity = getActivity();
-        if (activity instanceof DemographicsLabelsHolder) {
-            globalLabelsDTO = ((DemographicsLabelsHolder) getActivity()).getLabelsDTO();
-        } else if (activity instanceof DemographicsReviewLabelsHolder) {
-            // init global labels DTO here
-            globalLabelsDTO = ((DemographicsReviewLabelsHolder) getActivity()).getLabelsDTO();
-        }
 
         // create the view
         view = inflater.inflate(R.layout.fragment_demographics_scan_insurance, container, false);
@@ -114,7 +101,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         insuranceProviderLabel.setText(label);
 
         insuranceTypeLabel = (TextView) view.findViewById(R.id.demogr_insurance_card_type_abel);
-        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsTitleCardType();
+        label = Label.getLabel("demographics_documents_title_card_type");
         insuranceTypeLabel.setText(label);
 
         insuranceCardNumEditText = (EditText) view.findViewById(R.id.reviewinsurncecardnum);
@@ -124,7 +111,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         imageFront = (ImageView) view.findViewById(R.id.demogr_insurance_frontimage);
 
         btnScanFrontInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_frontbtn);
-        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsScanFrontLabel();
+        label = Label.getLabel("demographics_documents_scan_front");
         btnScanFrontInsurance.setText(label);
         btnScanFrontInsurance.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,7 +122,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
 
         imageBack = (ImageView) view.findViewById(R.id.demogr_insurance_backimage);
         btnScanBackInsurance = (Button) view.findViewById(R.id.demogr_insurance_scan_insurance_backbtn);
-        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsScanBackLabel();
+        label = Label.getLabel("demographics_documents_scan_back");
         btnScanBackInsurance.setText(label);
         btnScanBackInsurance.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,13 +134,13 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
         });
 
         // 'Cancel' label
-        final String cancelLabel = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsCancelLabel();
+        final String cancelLabel = Label.getLabel("demographics_cancel_label");
         // 'Choose' label
         label = Label.getLabel("demographics_choose");
 
         providerTextView = (TextView) view.findViewById(R.id.demogr_docs_provider);
         providerTextView.setText(label);
-        final String selectProviderTitle = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsTitleSelectProvider();
+        final String selectProviderTitle = Label.getLabel("demographics_documents_title_select_provider");
         providerTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -163,7 +150,7 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
 
         cardTypeTextView = (TextView) view.findViewById(R.id.demogr_insurance_card_type_textview);
         cardTypeTextView.setText(label);
-        final String selectTypeTitle = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsTitleCardType();
+        final String selectTypeTitle = Label.getLabel("demographics_documents_title_card_type");
         cardTypeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -173,9 +160,9 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
 
         planTextView = (TextView) view.findViewById(R.id.demogr_docs_plan);
         enablePlanClickable(false);
-        label = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsDocumentsChoosePlanLabel();
+        label = Label.getLabel("demographics_documents_choose_plan");
         planTextView.setText(label);
-        final String selectPlanTitle = globalLabelsDTO == null ? CarePayConstants.NOT_DEFINED : globalLabelsDTO.getDemographicsTitleSelectPlan();
+        final String selectPlanTitle = Label.getLabel("demographics_documents_title_select_plan");
         planTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

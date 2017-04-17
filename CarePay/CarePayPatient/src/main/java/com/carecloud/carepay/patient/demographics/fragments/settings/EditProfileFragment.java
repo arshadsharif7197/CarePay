@@ -56,9 +56,6 @@ public class EditProfileFragment extends DocumentScannerFragment {
 
     private ImageView profileImageView;
 
-    private EditProfileFragment() {
-    }
-
     /**
      *
      * @param demographicsSettingsDTO the model
@@ -243,7 +240,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
-            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+            PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
         }
 
         @Override

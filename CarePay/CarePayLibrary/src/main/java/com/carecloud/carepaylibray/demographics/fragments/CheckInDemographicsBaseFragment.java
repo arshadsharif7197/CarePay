@@ -18,7 +18,6 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
@@ -54,7 +53,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             DemographicDTO demographicDTO = new Gson().fromJson(workflowDTO.toString(), DemographicDTO.class);
 
             if (checkinFlowCallback.getCurrentStep() == 5) {
-                checkinFlowCallback.navigateToConsentFlow(workflowDTO);
+                checkinFlowCallback.navigateToWorkflow(workflowDTO);
             } else {
                 checkinFlowCallback.applyChangesAndNavTo(demographicDTO, checkinFlowCallback.getCurrentStep() + 1);
             }
@@ -111,7 +110,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     }
 
     protected void setHeaderTitle(String title, String heading, String subHeading, View view){
-        TextView textView = (TextView) view.findViewById(R.id.checkinDemographicsHeaderLabel);
+        TextView textView = (TextView) view.findViewById(R.id.toolbar_title);
         if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             (view.findViewById(R.id.toolbar_layout)).setVisibility(View.VISIBLE);
             textView.setText(title);
@@ -125,21 +124,18 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         }
     }
 
-    protected void initNextButton(View.OnClickListener listener, final View view, int visibility) {
+    protected void initNextButton(final View view) {
         Button nextButton = (Button) view.findViewById(R.id.checkinDemographicsNextButton);
-        if (listener == null) {
-            listener = new View.OnClickListener() {
-                @Override
-                public void onClick(View buttonView) {
-                    if (passConstraints(view)) {
-                        DemographicDTO demographicDTO = updateDemographicDTO(view);
-                        openNextFragment(demographicDTO, (checkinFlowCallback.getCurrentStep() + 1) > 5);
-                    }
+        nextButton.setVisibility(View.VISIBLE);
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View buttonView) {
+                if (passConstraints(view)) {
+                    DemographicDTO demographicDTO = updateDemographicDTO(view);
+                    openNextFragment(demographicDTO, (checkinFlowCallback.getCurrentStep() + 1) > 5);
                 }
-            };
-        }
-        nextButton.setVisibility(visibility);
-        nextButton.setOnClickListener(listener);
+            }
+        });
     }
 
     protected void checkIfEnableButton(View view) {

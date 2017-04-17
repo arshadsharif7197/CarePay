@@ -17,9 +17,7 @@
         android:paddingEnd="@dimen/dimen_10dp"
         android:paddingStart="@dimen/dimen_10dp">
 
-        <include
-            android:id="@+id/edit_insurance_toolbar"
-            layout="@layout/toolbar_title_only" />
+        <include layout="@layout/toolbar_title_only" />
 
     </FrameLayout>
 

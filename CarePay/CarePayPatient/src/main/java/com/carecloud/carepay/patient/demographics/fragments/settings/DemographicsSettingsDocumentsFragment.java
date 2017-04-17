@@ -83,9 +83,6 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
 
     private AppCompatActivity appCompatActivity;
 
-    private DemographicsSettingsDocumentsFragment() {
-    }
-
     /**
      *
      * @param demographicsSettingsDTO the model
@@ -226,7 +223,7 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             nextButton.setEnabled(true);
-            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+            PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
         }
 
         @Override

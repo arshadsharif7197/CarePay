@@ -55,9 +55,6 @@ public class DemographicsSettingsFragment extends BaseFragment {
         void showHelpFragment();
     }
 
-    private DemographicsSettingsFragment() {
-    }
-
     /**
      *
      * @param demographicsSettingsDTO the model
@@ -258,7 +255,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
                 getAppAuthorizationHelper().getPool().getUser().signOut();
                 getAppAuthorizationHelper().setUser(null);
             }
-            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+            PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
         }
 
         @Override

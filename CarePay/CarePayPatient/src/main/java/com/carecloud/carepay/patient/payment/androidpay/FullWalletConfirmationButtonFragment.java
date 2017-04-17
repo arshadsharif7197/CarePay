@@ -122,7 +122,6 @@ public class FullWalletConfirmationButtonFragment extends BaseFragment
     private RetryHandler retryHandler;
     //    private ItemInfo mItemInfo;
     private Button confirmButton;
-    private CarePayTextView responsePreviousBalance ;
     private MaskedWallet maskedWallet;
     private int retryLoadFullWalletCount = 0;
     private Intent activityLaunchIntent;
@@ -130,12 +129,9 @@ public class FullWalletConfirmationButtonFragment extends BaseFragment
     private String payeezyEnvironment;
     private String totalAmount;
 
-    private FirstDataService service;
     private PaymentsModel paymentsModel;
     private PaymentsModel intakePaymentModel;
 
-    private double amountToMakePayment;
-    private String paymentsDTOString;
     private MerchantServiceMetadataDTO payeezyMerchantService = null;
 
     /**
@@ -198,14 +194,13 @@ public class FullWalletConfirmationButtonFragment extends BaseFragment
         Bundle arguments = activityLaunchIntent.getParcelableExtra(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
         if (arguments != null) {
             Gson gson = new Gson();
-            paymentsDTOString = arguments.getString(CarePayConstants.INTAKE_BUNDLE);
+            String paymentsDTOString = arguments.getString(CarePayConstants.INTAKE_BUNDLE);
 
            // intent.putExtra(PaymentConstants.EXTRA_AMOUNT, amount);
 
            // paymentsDTOString = arguments.getString(CarePayConstants.EXTRA_AMOUNT);
             intakePaymentModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
             paymentsModel = gson.fromJson(paymentsDTOString, PaymentsModel.class);
-            amountToMakePayment = arguments.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
         }
 
         payeezyMerchantService= getPayeezyMerchantService();
@@ -251,8 +246,7 @@ public class FullWalletConfirmationButtonFragment extends BaseFragment
                 confirmPurchase();
             }
         });
-        confirmButton.setText(paymentsModel.getPaymentsMetadata().getPaymentsLabel().getPaymentPayText());
-        responsePreviousBalance = (CarePayTextView) view.findViewById(R.id.respons_prev_balance);
+        CarePayTextView responsePreviousBalance = (CarePayTextView) view.findViewById(R.id.respons_prev_balance);
         responsePreviousBalance.setText(CarePayConstants.DOLLAR.concat(totalAmount));
 
         return view;
@@ -582,7 +576,7 @@ public class FullWalletConfirmationButtonFragment extends BaseFragment
                     .addConverterFactory(GsonConverterFactory.create())
                     //.addConverterFactory(ScalarsConverterFactory.create())
                     .build();
-            service = retrofit.create(FirstDataService.class);
+            FirstDataService service = retrofit.create(FirstDataService.class);
             RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),payloadString);
 
 

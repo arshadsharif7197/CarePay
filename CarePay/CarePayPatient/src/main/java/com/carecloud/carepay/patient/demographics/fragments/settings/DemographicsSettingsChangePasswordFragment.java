@@ -276,7 +276,7 @@ public class DemographicsSettingsChangePasswordFragment extends BaseFragment {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+            PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
         }
 
         @Override

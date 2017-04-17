@@ -1,6 +1,5 @@
 package com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels;
 
-import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.links.DemographicLinksDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.transitions.DemographicTransitionsDTO;
 import com.google.gson.annotations.Expose;
@@ -11,10 +10,6 @@ import com.google.gson.annotations.SerializedName;
  * Master DTO for demographics meta-data
  */
 public class DemographicMetadataDTO {
-    @SerializedName("labels")
-    @Expose
-    private DemographicLabelsDTO labels = new DemographicLabelsDTO();
-
     @SerializedName("links")
     @Expose
     private DemographicLinksDTO links = new DemographicLinksDTO();
@@ -26,22 +21,6 @@ public class DemographicMetadataDTO {
     @SerializedName("data_models")
     @Expose
     private DemographicMetadataDataModelsDTO dataModels = new DemographicMetadataDataModelsDTO();
-
-    /**
-     *
-     * @return The labels
-     */
-    public DemographicLabelsDTO getLabels() {
-        return labels;
-    }
-
-    /**
-     *
-     * @param labels The labels
-     */
-    public void setLabels(DemographicLabelsDTO labels) {
-        this.labels = labels;
-    }
 
     /**
      *

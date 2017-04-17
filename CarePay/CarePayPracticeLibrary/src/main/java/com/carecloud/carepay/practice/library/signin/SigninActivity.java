@@ -1,7 +1,6 @@
 package com.carecloud.carepay.practice.library.signin;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
@@ -16,7 +15,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -69,26 +67,20 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
     }
 
     private TextView forgotPasswordButton;
-    private TextView signinTitle;
     private CarePayButton gobackButton;
     private TextInputLayout signInEmailTextInputLayout;
     private TextInputLayout passwordTextInputLayout;
     private EditText emailEditText;
     private EditText passwordEditText;
-    private ProgressBar progressBar;
     private boolean isEmptyEmail;
     private boolean isEmptyPassword;
     private ImageView homeButton;
     private Button signInButton;
-    private String emailLabel;
-    private String passwordLabel;
     private List<String> languages = new ArrayList<>();
     private SigninDTO signinDTO;
     private SigninPatientModeDTO signinPatientModeDTO;
     private Spinner langSpinner;
     private View showPasswordButton;
-
-    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,12 +116,10 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
         initViews(signinScreenMode);
         setEditTexts();
         setClickables();
-//        setTypeFace();
 
         changeScreenMode(signinScreenMode);
         isEmptyEmail = true;
         isEmptyPassword = true;
-
     }
 
     /**
@@ -146,7 +136,7 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
         langSpinner = (Spinner) findViewById(R.id.signinLangSpinner);
         signInEmailTextInputLayout = (TextInputLayout) findViewById(R.id.signInEmailTextInputLayout);
         passwordTextInputLayout = (TextInputLayout) findViewById(R.id.passwordTextInputLayout);
-        signinTitle = (TextView) findViewById(R.id.signinTitleTextview);
+        TextView signinTitle = (TextView) findViewById(R.id.signinTitleTextview);
         showPasswordButton = findViewById(R.id.show_password_button);
 
         if (signInScreenMode == SignInScreenMode.PRACTICE_MODE_SIGNIN

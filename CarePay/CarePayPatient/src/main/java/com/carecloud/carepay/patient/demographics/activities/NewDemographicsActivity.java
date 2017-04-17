@@ -6,14 +6,14 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
+import com.carecloud.carepay.patient.demographics.NewDemographicsPresenterImpl;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
-import com.carecloud.carepaylibray.demographics.DemographicsPresenterImpl;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 
-public class ReviewDemographicsActivity extends BasePatientActivity implements DemographicsView {
+public class NewDemographicsActivity extends BasePatientActivity implements DemographicsView {
 
     private DemographicsPresenter presenter;
 
@@ -22,7 +22,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demographic_review);
 
-        presenter = new DemographicsPresenterImpl(this, savedInstanceState, false);
+        presenter = new NewDemographicsPresenterImpl(this, savedInstanceState, false);
     }
 
     @Override
@@ -60,26 +60,31 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
 
     @Override
     public void updateCheckInFlow(CheckinFlowState flowState, int totalPages, int currentPage) {
-        switch (flowState) {
-            case DEMOGRAPHICS:
-                updateCheckInFlow("demographics_heading", totalPages, currentPage);
+        switch (currentPage) {
+            case 1:
+                updateCheckInFlow("demographics_review_peronsonalinfo_section");
                 break;
-            case CONSENT:
-                updateCheckInFlow("consent_form_heading", totalPages, currentPage);
+            case 2:
+                updateCheckInFlow("demographics_address_section");
                 break;
-            case INTAKE:
-                updateCheckInFlow("intake_form_heading", totalPages, currentPage);
+            case 3:
+                updateCheckInFlow("demographics_review_demographics");
+                break;
+            case 4:
+                updateCheckInFlow("demographics_review_identification");
+                break;
+            case 5:
+                updateCheckInFlow("demographics_insurance_label");
                 break;
             default:
         }
     }
 
-    public void updateCheckInFlow(String key, int totalPages, int currentPage) {
+    public void updateCheckInFlow(String key) {
         TextView textView = (TextView) findViewById(R.id.toolbar_title);
-        textView.setText(String.format(Label.getLabel(key), currentPage, totalPages));
+        textView.setText(Label.getLabel(key));
     }
 
-    @Override
     public DemographicsPresenter getPresenter() {
         return presenter;
     }
