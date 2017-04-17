@@ -148,13 +148,13 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         addAppointmentTextView.setOnClickListener(getFindPatientListener(false));
 
         if (checkInLabelDTO != null) {
-            setTextViewById(R.id.practice_go_back, checkInLabelDTO.getGoBack());
-            setTextViewById(R.id.activity_practice_appointments_change_date_range_label, checkInLabelDTO.getChangeDateRangeLabel());
-            setTextViewById(R.id.activity_practice_appointments_show_all_appointments_label, checkInLabelDTO.getAllAppointmentsLabel());
-            setTextViewById(R.id.practice_patient_count_label, checkInLabelDTO.getTodayLabel());
-            setTextViewById(R.id.practice_pending_count_label, checkInLabelDTO.getPendingLabel());
-            setTextViewById(R.id.practice_filter_label, checkInLabelDTO.getPracticeCheckinFilter());
-            findPatientTextView.setText(checkInLabelDTO.getPracticeCheckinFilterFindPatient());
+            setTextViewById(R.id.practice_go_back, Label.getLabel("go_back"));
+            setTextViewById(R.id.activity_practice_appointments_change_date_range_label, Label.getLabel("change_date_range_label"));
+            setTextViewById(R.id.activity_practice_appointments_show_all_appointments_label, Label.getLabel("all_appointments_label"));
+            setTextViewById(R.id.practice_patient_count_label, Label.getLabel("today_label"));
+            setTextViewById(R.id.practice_pending_count_label, Label.getLabel("pending_label"));
+            setTextViewById(R.id.practice_filter_label, Label.getLabel("practice_checkin_filter"));
+            findPatientTextView.setText(Label.getLabel("practice_checkin_filter_find_patient"));
         }
 
         findViewById(R.id.practice_go_back).setOnClickListener(new View.OnClickListener() {
