@@ -40,6 +40,7 @@ import com.clover.sdk.v3.payments.Payment;
 import com.clover.sdk.v3.payments.Result;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.newrelic.agent.android.NewRelic;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -116,6 +117,7 @@ public class CloverPaymentActivity extends BaseActivity {
                 // If an account can't be acquired, exit the app
                 if (account == null) {
                     SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.no_account));
+                    logPaymentFail(getString(R.string.no_account));
                     finish();
                 }
             }
@@ -142,6 +144,7 @@ public class CloverPaymentActivity extends BaseActivity {
             // If an account can't be acquired, exit the app
             if (account == null) {
                 SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.no_account));
+                logPaymentFail(getString(R.string.no_account));
                 finish();
                 return;
             }
@@ -341,6 +344,7 @@ public class CloverPaymentActivity extends BaseActivity {
                 }
             } else {
                 SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.payment_failed));
+                logPaymentFail("Clover payment was not successfully processed");
                 setResult(resultCode);
                 finish();
             }
@@ -370,12 +374,7 @@ public class CloverPaymentActivity extends BaseActivity {
 //        transactionResponse.setResponse(payment.getJSONObject());
         postModel.setTransactionResponse(gson.fromJson(jsonString, JsonObject.class));
 
-        if(paymentPostModel.isPaymentModelValid()){
-            postPayment(gson.toJson(paymentPostModel));
-        }else{
-            SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.payment_failed));
-            finish();
-        }
+        postPayment(gson.toJson(paymentPostModel));
     }
 
     private void processPayment(Payment payment, PaymentPostModel postModel){
@@ -397,14 +396,7 @@ public class CloverPaymentActivity extends BaseActivity {
             paymentObject.setCreditCard(creditCardModel);
         }
 
-
-        if(postModel.isPaymentModelValid()){
-            postPayment(gson.toJson(postModel));
-        }else{
-            SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.payment_failed));
-            finish();
-        }
-
+        postPayment(gson.toJson(postModel));
     }
 
     private void postPayment(String paymentModelJson){
@@ -474,13 +466,7 @@ public class CloverPaymentActivity extends BaseActivity {
 //        paymentPostModel.setTransactionResponse(new JSONObject());
 
         Gson gson = new Gson();
-        if(paymentPostModel.isPaymentModelValid()){
-            postPayment(gson.toJson(paymentPostModel));
-        }else{
-            SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.payment_failed));
-            finish();
-        }
-
+        postPayment(gson.toJson(paymentPostModel));
 
     }
 
@@ -509,6 +495,7 @@ public class CloverPaymentActivity extends BaseActivity {
             hideProgressDialog();
             setResult(RESULT_CANCELED);
             System.out.print(exceptionMessage);
+            logPaymentFail(exceptionMessage);
             SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.payment_failed));
             finish();
         }
@@ -543,6 +530,12 @@ public class CloverPaymentActivity extends BaseActivity {
             }
             Log.e(TAG, "Dumping Intent end");
         }
+    }
+
+    private void logPaymentFail(String message){
+        Map<String, Object> eventMap = new HashMap<>();
+        eventMap.put("reason", message);
+        NewRelic.recordCustomEvent("CloverPaymentFail", eventMap);
     }
 
 }
