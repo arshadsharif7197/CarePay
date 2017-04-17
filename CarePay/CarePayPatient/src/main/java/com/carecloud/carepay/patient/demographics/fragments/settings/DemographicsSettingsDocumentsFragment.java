@@ -83,9 +83,6 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
 
     private AppCompatActivity appCompatActivity;
 
-    private DemographicsSettingsDocumentsFragment() {
-    }
-
     /**
      *
      * @param demographicsSettingsDTO the model

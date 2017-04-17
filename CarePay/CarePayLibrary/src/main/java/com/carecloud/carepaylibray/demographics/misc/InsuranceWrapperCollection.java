@@ -4,7 +4,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemInsuranceDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.labels.DemographicLabelsDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 
@@ -22,7 +21,6 @@ import java.util.List;
     private LinearLayout      parent;
     private List<InsuranceWrapper> wrappers = new ArrayList<>();
     private DemographicMetadataEntityItemInsuranceDTO                metadata;
-    private DemographicLabelsDTO                                     labels;
     private OnClickRemoveOrAddCallback callback;
     private DemographicsSettingsDTO demographicsSettingsDTO;
 
@@ -31,19 +29,16 @@ import java.util.List;
      * @param context The context
      * @param parent The parent view (holding the view of the cards)
      * @param metadata The metadata (common to all insurance screens)
-     * @param labels The global labels
      * @param callback A call back to be executed when performing add/remove insurance card
      */
     public InsuranceWrapperCollection(AppCompatActivity context,
                                       LinearLayout parent,
                                       DemographicMetadataEntityItemInsuranceDTO metadata,
-                                      DemographicLabelsDTO labels,
                                       OnClickRemoveOrAddCallback callback) {
         this.wrapperContext = context;
         this.parent = parent;
         this.metadata = metadata;
         this.callback = callback;
-        this.labels = labels;
     }
 
     public InsuranceWrapperCollection(AppCompatActivity context,
@@ -66,7 +61,6 @@ import java.util.List;
         int count = wrappers.size();
         if (count < MAX_CARDS) {
             InsuranceWrapper insuranceWrapper = new InsuranceWrapper(wrapperContext,
-                                                                     labels,
                                                                      metadata,
                                                                      payloadDTO,
                                                                      parent,

@@ -45,7 +45,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".demographics.activities.DemographicsActivity"
+            android:name=".demographics.activities.NewDemographicsActivity"
             android:screenOrientation="sensorPortrait"
             android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity

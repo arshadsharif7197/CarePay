@@ -23,8 +23,8 @@
         app:numberDots="5"
         app:spacing="12dp" />
 
-
     <LinearLayout
+        android:id="@+id/demographicsHeading"
         style="@style/DemographicsDocsHeaderStyle"
         android:layout_marginBottom="@dimen/demographics_docs_header_top_margin"
         android:layout_marginTop="@dimen/dimen_8dp"
@@ -59,12 +59,32 @@
         </FrameLayout>
     </ScrollView>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <com.carecloud.carepaylibray.customcomponents.CarePayButton
-        android:id="@+id/checkinDemographicsNextButton"
-        style="@style/InTakeNextButtonStyle"
-        android:enabled="true"
-        breeze:textKey="demographics_review_next_button" />
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/check_in_demographics_left_button"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dimen_48dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:gravity="center"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/demographics_docs_button_text_size"
+            android:visibility="gone"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="practice_checkin_demogr_ins_dont_have_one_button_label" />
 
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/checkinDemographicsNextButton"
+            style="@style/InTakeNextButtonStyle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="@dimen/dimen_48dp"
+            android:enabled="true"
+            breeze:textKey="demographics_review_next_button" />
+
+    </LinearLayout>
 
 </LinearLayout>

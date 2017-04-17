@@ -124,21 +124,18 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         }
     }
 
-    protected void initNextButton(View.OnClickListener listener, final View view, int visibility) {
+    protected void initNextButton(final View view) {
         Button nextButton = (Button) view.findViewById(R.id.checkinDemographicsNextButton);
-        if (listener == null) {
-            listener = new View.OnClickListener() {
-                @Override
-                public void onClick(View buttonView) {
-                    if (passConstraints(view)) {
-                        DemographicDTO demographicDTO = updateDemographicDTO(view);
-                        openNextFragment(demographicDTO, (checkinFlowCallback.getCurrentStep() + 1) > 5);
-                    }
+        nextButton.setVisibility(View.VISIBLE);
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View buttonView) {
+                if (passConstraints(view)) {
+                    DemographicDTO demographicDTO = updateDemographicDTO(view);
+                    openNextFragment(demographicDTO, (checkinFlowCallback.getCurrentStep() + 1) > 5);
                 }
-            };
-        }
-        nextButton.setVisibility(visibility);
-        nextButton.setOnClickListener(listener);
+            }
+        });
     }
 
     protected void checkIfEnableButton(View view) {
