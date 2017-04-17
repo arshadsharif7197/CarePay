@@ -33,7 +33,9 @@ public class ApplicationMode {
      */
     public void setUserPracticeDTO(AppAuthorizationHelper appAuthorizationHelper, UserPracticeDTO userPracticeDTO) {
         this.userPracticeDTO = userPracticeDTO;
-        this.userPracticeDTO.setUserName(appAuthorizationHelper.getCurrUser());
+        if(userPracticeDTO != null){
+            this.userPracticeDTO.setUserName(appAuthorizationHelper.getCurrUser());
+        }
     }
 
     /**
