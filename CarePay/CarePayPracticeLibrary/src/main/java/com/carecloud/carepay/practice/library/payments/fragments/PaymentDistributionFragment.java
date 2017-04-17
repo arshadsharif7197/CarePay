@@ -631,7 +631,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
             double paymentAmount = balanceItem.getBalance();
             if(paymentAmount > balanceItem.getMaxAmount()){
-                overPaymentAmount = overPaymentAmount + (balanceItem.getMaxAmount() - paymentAmount);
+                overPaymentAmount = overPaymentAmount + (paymentAmount - balanceItem.getMaxAmount());
                 paymentAmount = balanceItem.getMaxAmount();
             }
             paymentObject.setAmount(paymentAmount);
