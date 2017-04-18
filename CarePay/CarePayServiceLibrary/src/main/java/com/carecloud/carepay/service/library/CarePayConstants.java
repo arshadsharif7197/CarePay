@@ -120,6 +120,8 @@ public class CarePayConstants {
     public static final String CLOVER_PAYMENT_POST_MODEL = "clover_payment_post_model";
     public static final String CLOVER_PAYMENT_SUCCESS_INTENT_DATA = "clover_payment_success_intent_data";
 
+    public static final String CLOVER_QUEUE_PAYMENT_TRANSITION = "clover_queue_payment_transition";
+    public static final int PAYMENT_RETRY_PENDING_RESULT_CODE = 0x777;
 
     //Shared Preference Keys
     public static final String KEY_PRACTICE_PATIENT_IDS = "practice_patient_ids";

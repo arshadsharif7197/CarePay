@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.checkin;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +14,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.adapters.AppointmentsListAdapter;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
@@ -252,6 +254,24 @@ public class PatientModePracticeCheckInActivity extends BasePracticeActivity imp
                 return;
         }
     }
+
+    @Override
+    protected void processExternalPaymentFailure(PaymentExecution paymentExecution, int resultCode) {
+        if(resultCode == CarePayConstants.PAYMENT_RETRY_PENDING_RESULT_CODE){
+            //Display a success notification and do some cleanup
+            PaymentQueuedDialogFragment dialogFragment = new PaymentQueuedDialogFragment();
+            DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    goToHome(appointmentsResultModel.getMetadata().getTransitions().getLogout());
+                }
+            };
+            dialogFragment.setOnDismissListener(dismissListener);
+            dialogFragment.show(getSupportFragmentManager(), dialogFragment.getClass().getName());
+
+        }
+    }
+
 
     private void updateAppointments(List<AppointmentDTO> updateAppointments) {
         appointmentsItems = updateAppointments;
