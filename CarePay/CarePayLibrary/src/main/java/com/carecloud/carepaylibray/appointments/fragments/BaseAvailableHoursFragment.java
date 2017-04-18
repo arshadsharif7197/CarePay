@@ -1,13 +1,9 @@
 package com.carecloud.carepaylibray.appointments.fragments;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -52,7 +48,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class BaseAvailableHoursFragment extends BaseDialogFragment implements AvailableHoursAdapter.SelectAppointmentTimeSlotCallback, AvailableLocationsAdapter.SelectLocationCallback {
+public abstract class BaseAvailableHoursFragment extends BaseDialogFragment implements AvailableHoursAdapter.SelectAppointmentTimeSlotCallback, AvailableLocationsAdapter.SelectLocationCallback {
 
     private Date startDate;
     private Date endDate;
@@ -63,39 +59,16 @@ public class BaseAvailableHoursFragment extends BaseDialogFragment implements Av
 
     private RecyclerView availableHoursRecycleView;
     private RecyclerView availableLocationsRecycleView;
-    private TextView titleView;
     private View singleLocation;
     private TextView singleLocationText;
     private View progressView;
+    protected TextView titleView;
 
     private List<LocationDTO> selectedLocations = new LinkedList<>();
     private SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
 
     private AppointmentNavigationCallback callback;
 
-//    public static AvailableHoursFragment newInstance(AppointmentsResultModel appointmentsResultModel,
-//                                                     AppointmentDTO appointmentDTO) {
-//        Bundle args = new Bundle();
-//        DtoHelper.bundleDto(args, appointmentsResultModel);
-//        DtoHelper.bundleDto(args, appointmentDTO);
-//        AvailableHoursFragment availableHoursFragment = new AvailableHoursFragment();
-//        availableHoursFragment.setArguments(args);
-//        return availableHoursFragment;
-//    }
-//
-//    public static AvailableHoursFragment newInstance(AppointmentsResultModel appointmentsResultModel,
-//                                                     AppointmentResourcesItemDTO appointmentResource, Date startDate, Date endDate,
-//                                                     VisitTypeDTO visitTypeDTO) {
-//        Bundle args = new Bundle();
-//        args.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, startDate);
-//        args.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, endDate);
-//        DtoHelper.bundleDto(args, appointmentResource);
-//        DtoHelper.bundleDto(args, visitTypeDTO);
-//        DtoHelper.bundleDto(args, appointmentsResultModel);
-//        AvailableHoursFragment availableHoursFragment = new AvailableHoursFragment();
-//        availableHoursFragment.setArguments(args);
-//        return availableHoursFragment;
-//    }
 
     @Override
     public void onAttach(Context context) {
@@ -131,20 +104,17 @@ public class BaseAvailableHoursFragment extends BaseDialogFragment implements Av
 
     }
 
-    @SuppressLint("DefaultLocale")
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View availableHoursListView = inflater.inflate(R.layout.fragment_available_hours_list,
-                container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_available_hours_list, container, false);
+    }
 
-        hideDefaultActionBar();
-        inflateToolbar(availableHoursListView);
-        inflateUIComponents(availableHoursListView);
+    @Override
+    public void onViewCreated(View view, Bundle icicle){
+        inflateToolbar(view);
+        inflateUIComponents(view);
+        setupEditDateButton(view);
         updateDateRange();
-
-        return availableHoursListView;
     }
 
     @Override
@@ -162,25 +132,13 @@ public class BaseAvailableHoursFragment extends BaseDialogFragment implements Av
         });
     }
 
-    private void inflateToolbar(View view) {
-        Toolbar toolbar = (Toolbar)
-                view.findViewById(R.id.add_appointment_toolbar);
+    protected void inflateToolbar(View view) {
+        hideDefaultActionBar();
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.add_appointment_toolbar);
+
         titleView = (TextView) toolbar.findViewById(R.id.add_appointment_toolbar_title);
         titleView.setText(R.string.apt_available_hours_title);
-        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), titleView);
         toolbar.setTitle("");
-
-        TextView titleOther = (TextView) toolbar.findViewById(R.id.add_appointment_toolbar_other);
-        titleOther.setText(Label.getLabel("appointment_select_range_button"));
-        titleOther.setVisibility(View.VISIBLE);
-        titleOther.setOnClickListener(dateRangeClickListener);
-
-        Drawable closeIcon = ContextCompat.getDrawable(getActivity(),
-                R.drawable.icn_nav_back);
-        toolbar.setNavigationIcon(closeIcon);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
-        toolbar.setNavigationOnClickListener(navigationOnClickListener);
     }
 
 
@@ -206,14 +164,10 @@ public class BaseAvailableHoursFragment extends BaseDialogFragment implements Av
         TextView locationsLabel = (TextView) view.findViewById(R.id.location_text);
         locationsLabel.setText(Label.getLabel("appointment_locations_label"));
 
-        TextView editRangeButton = (TextView) view.findViewById(R.id.edit_date_range_button);
-        String range = Label.getLabel("appoitment_edit_date_range_button");
-        editRangeButton.setText(range != null ? range : getString(R.string.edit_date_range_button_label));
-        editRangeButton.setOnClickListener(dateRangeClickListener);
-
         progressView = view.findViewById(R.id.progressview);
         progressView.setVisibility(View.VISIBLE);
     }
+
 
     private void setAdapters() {
         List<LocationDTO> locations = extractAvailableLocations(availabilityDTO);
@@ -254,36 +208,22 @@ public class BaseAvailableHoursFragment extends BaseDialogFragment implements Av
             startDate = Calendar.getInstance().getTime();//today
             endDate = startDate;
         }
-        String today = Label.getLabel("today_label");
-        String tomorrow = Label.getLabel("add_appointment_tomorrow");
-        String thisMonth = Label.getLabel("this_month_label");
-        String nextDay = Label.getLabel("next_days_label");
 
-        String formattedDate = DateUtil.getFormattedDate(startDate, endDate, today, tomorrow, thisMonth, nextDay);
-        titleView.setText(formattedDate);
+        if(titleView != null) {
+            String today = Label.getLabel("today_label");
+            String tomorrow = Label.getLabel("add_appointment_tomorrow");
+            String thisMonth = Label.getLabel("this_month_label");
+            String nextDay = Label.getLabel("next_days_label");
+
+            String formattedDate = DateUtil.getFormattedDate(startDate, endDate, today, tomorrow, thisMonth, nextDay);
+            titleView.setText(formattedDate);
+        }
     }
 
 
-    /**
-     * Click listener for toolbar navigation
-     */
-    View.OnClickListener navigationOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            getActivity().onBackPressed();
-        }
-    };
-
-
-    /**
-     * Click listener for edit range and edit date range button
-     */
-    private View.OnClickListener dateRangeClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            callback.selectDateRange(startDate, endDate, selectedVisitTypeDTO, selectedResource, resourcesToScheduleDTO);
-        }
-    };
+    protected void selectDateRange(){
+        callback.selectDateRange(startDate, endDate, selectedVisitTypeDTO, selectedResource, resourcesToScheduleDTO);
+    }
 
     private void resetLocationSelections(boolean clearAll) {
         RecyclerView.LayoutManager layoutManager = availableLocationsRecycleView.getLayoutManager();
@@ -505,4 +445,6 @@ public class BaseAvailableHoursFragment extends BaseDialogFragment implements Av
     private boolean isLocationSelected(LocationDTO locationDTO) {
         return selectedLocations.isEmpty() || selectedLocations.contains(locationDTO);
     }
+
+    protected abstract void setupEditDateButton(View view);
 }
