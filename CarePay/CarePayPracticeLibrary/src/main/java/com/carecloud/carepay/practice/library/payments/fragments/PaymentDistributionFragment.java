@@ -77,6 +77,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     private double paymentAmount;
     private double balanceAmount;
     private double overPaymentAmount;
+    private double unappliedCredit = 0D;
 
     private NumberFormat currencyFormatter;
 
@@ -251,14 +252,13 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             String patientNameString = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getPersonalDetails().getFullName();
             patientName.setText(StringUtil.getLabelForView(patientNameString));
 
-            double unappliedCredit = 0D;
             try {
-                unappliedCredit = Double.parseDouble(paymentsModel.getPaymentPayload().getPatientBalances().get(0).getUnappliedCredit());
+                unappliedCredit = Double.parseDouble(paymentsModel.getPaymentPayload().getPatientBalances().get(0).getUnappliedCredit()) *-1;
             }catch (NumberFormatException nfe){
                 nfe.printStackTrace();
             }
 
-            if(unappliedCredit < 0D){
+            if(unappliedCredit > 0D){
                 unappliedLayout.setVisibility(View.VISIBLE);
                 setCurrency(unapplied, unappliedCredit);
                 shouldAutoApply = true;
@@ -394,6 +394,14 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
                     double currentAmount = balanceItem.getBalance();
 
                     difference = currentAmount-updateAmount;
+                    if(unappliedCredit > 0) {
+                        if(difference > unappliedCredit){
+                            difference -= unappliedCredit;
+                            unappliedCredit = 0;
+                        }else{
+                            unappliedCredit -= difference;
+                        }
+                    }
                     balanceItem.setBalance(updateAmount);
                     paymentAmount-=difference;
                     setCurrency(paymentTotal, paymentAmount);
