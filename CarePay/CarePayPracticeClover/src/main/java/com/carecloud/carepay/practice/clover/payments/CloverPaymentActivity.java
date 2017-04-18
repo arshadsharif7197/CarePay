@@ -501,6 +501,10 @@ public class CloverPaymentActivity extends BaseActivity {
         Map<String, Object> eventMap = new HashMap<>();
         eventMap.put("Successful Payment", paymentSuccess);
         eventMap.put("Fail Reason", message);
+        eventMap.put("Amount", amountDouble);
+        eventMap.put("Post Model", postModel);
+        eventMap.put("Patient Id", patientBalance.getBalances().get(0).getMetadata().getPatientId());
+        eventMap.put("Practice Id", patientBalance.getBalances().get(0).getMetadata().getPracticeId());
 
         if(paymentJson == null){
             paymentJson = "";
