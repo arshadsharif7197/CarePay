@@ -111,10 +111,15 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             int day = DateUtil.getInstance().getDay();
 
             String sectionHeaderTitle = getSectionHeaderTitle(appointmentStartTime, item.getEndTime());
-            boolean isPending = item.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.PENDING);
-            boolean isCheckedIn = item.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.CHECKED_IN);
-            boolean isCanceled = item.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.CANCELLED);
-            final boolean isRequested = item.getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.REQUESTED);
+            String status = item.getAppointmentStatusModel().getCode();
+
+            boolean isPending = status.equalsIgnoreCase(CarePayConstants.PENDING) ||
+                    status.equalsIgnoreCase(CarePayConstants.CHECKING_IN);
+            boolean isCheckedIn = status.equalsIgnoreCase(CarePayConstants.CHECKED_IN) ||
+                    status.equalsIgnoreCase(CarePayConstants.IN_PROGRESS_IN_ROOM) ||
+                    status.equalsIgnoreCase(CarePayConstants.IN_PROGRESS_OUT_ROOM);
+            boolean isCanceled = status.equalsIgnoreCase(CarePayConstants.CANCELLED);
+            final boolean isRequested = status.equalsIgnoreCase(CarePayConstants.REQUESTED);
 
             if (sectionHeaderTitle.equals(appointmentLabels.getUpcomingAppointmentsHeading())) {
                 if (isCheckedIn) {

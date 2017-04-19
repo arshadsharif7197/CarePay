@@ -22,6 +22,10 @@ public class CarePayConstants {
     public static final String REQUESTED = "R";
     public static final String CHECKING_IN = "CI";
     public static final String CHECKED_OUT = "O";
+    public static final String BILLED = "B";
+    public static final String MANUALLY_BILLED = "M";
+    public static final String IN_PROGRESS_IN_ROOM = "PR";
+    public static final String IN_PROGRESS_OUT_ROOM = "PH";
 
     public static final String ATTR_APPOINTMENTS = "appointments";
     public static final String ATTR_APPT_ID = "appointment_id";
