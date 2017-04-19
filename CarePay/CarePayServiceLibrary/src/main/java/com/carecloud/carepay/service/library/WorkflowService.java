@@ -18,7 +18,7 @@ import retrofit2.http.Url;
  * Workflow service interface that handle all possible HTTP request using Retrofit
  */
 
-interface WorkflowService {
+public interface WorkflowService {
 
     @GET
     Call<WorkflowDTO> executeGet(@Url String url);

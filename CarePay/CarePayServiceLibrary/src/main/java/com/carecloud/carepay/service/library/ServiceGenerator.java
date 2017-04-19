@@ -21,7 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Default Base URL created from HttpConstants.
  */
 
-class ServiceGenerator {
+public class ServiceGenerator {
 
     private static String API_BASE_URL = HttpConstants.getApiBaseUrl();
 
@@ -36,7 +36,7 @@ class ServiceGenerator {
     private ServiceGenerator() {
     }
 
-    static ServiceGenerator getInstance() {
+    public static ServiceGenerator getInstance() {
         if (instance == null) {
             instance = new ServiceGenerator();
         }
@@ -48,11 +48,11 @@ class ServiceGenerator {
      *
      * @param serviceClass Specific service class for converting in to retrofit service model
      */
-    <S> S createService(Class<S> serviceClass) {
+    public <S> S createService(Class<S> serviceClass) {
         return createService(serviceClass, null);
     }
 
-    <S> S createService(Class<S> serviceClass, Map<String, String> headers) {
+    public <S> S createService(Class<S> serviceClass, Map<String, String> headers) {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.readTimeout(HttpConstants.READ_TIMEOUT_MS, TimeUnit.MILLISECONDS);
         httpClient.connectTimeout(HttpConstants.CONNECT_TIMEOUT_MS, TimeUnit.MILLISECONDS);

@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.clover;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.carecloud.carepay.practice.library.splash.SplashActivity;
@@ -21,4 +22,13 @@ public class CloverSplashActivity extends SplashActivity {
 
         MixPanelUtil.logEvent("Clover App Start");
     }
+
+    @Override
+    public void onStop(){
+        Intent intent = new Intent(getContext(), CloverQueueUploadService.class);
+        startService(intent);
+
+        super.onStop();
+    }
+
 }
