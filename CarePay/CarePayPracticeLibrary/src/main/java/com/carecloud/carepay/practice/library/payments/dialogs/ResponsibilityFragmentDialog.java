@@ -212,7 +212,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
     }
 
     private void initializeOwedAmountTextView(View view) {
-        String text = Label.getLabel("payment_balance_owed_label") + ": " +
+        String text = Label.getLabel("responsibility_balance_title") + ": " +
                 StringUtil.getFormattedBalanceAmount(owedAmount);
         ((TextView) view.findViewById(R.id.payment_responsibility_balance)).setText(text);
     }
@@ -251,7 +251,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment implements 
     }
 
     public void setLeftButtonEnabled(boolean enabled) {
-        isLeftButtonEnabled = true;
+        isLeftButtonEnabled = enabled;
     }
 
     public interface PayResponsibilityCallback {
