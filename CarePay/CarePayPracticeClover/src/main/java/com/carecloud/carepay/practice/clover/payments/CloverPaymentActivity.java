@@ -15,7 +15,6 @@ import com.carecloud.carepay.practice.clover.models.CloverPaymentDTO;
 import com.carecloud.carepay.practice.clover.models.CloverQueuePaymentRecord;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
@@ -29,6 +28,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentType;
 import com.carecloud.carepaylibray.payments.models.postmodel.TokenizationService;
 import com.carecloud.carepaylibray.utils.EncryptionUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.clover.sdk.util.CloverAccount;
 import com.clover.sdk.util.CloverAuth;
@@ -64,7 +64,6 @@ public class CloverPaymentActivity extends BaseActivity {
      * The constant creditCardIntentID.
      */
     public static final int creditCardIntentID = 555;
-    public static final int MAX_ATTEMPTS = 3;
 
     private static final String TAG = CloverPaymentActivity.class.getName();
     private Account account;
@@ -415,7 +414,7 @@ public class CloverPaymentActivity extends BaseActivity {
         header.put("transition", "true");
 
         TransitionDTO transitionDTO = gson.fromJson(paymentTransitionString, TransitionDTO.class);
-        transitionDTO.setUrl(transitionDTO.getUrl()+"FAIL");
+//        transitionDTO.setUrl(transitionDTO.getUrl()+"FAIL");
         getWorkflowServiceHelper().execute(transitionDTO, getMakePaymentCallback(payment), paymentModelJson, queries, header);
 
     }
@@ -513,15 +512,17 @@ public class CloverPaymentActivity extends BaseActivity {
         eventMap.put("Successful Payment", paymentSuccess);
         eventMap.put("Fail Reason", message);
         eventMap.put("Amount", amountDouble);
-        eventMap.put("Post Model", postModel);
         eventMap.put("Patient Id", patientBalance.getBalances().get(0).getMetadata().getPatientId());
         eventMap.put("Practice Id", patientBalance.getBalances().get(0).getMetadata().getPracticeId());
         eventMap.put("Practice Mgmt", patientBalance.getBalances().get(0).getMetadata().getPracticeMgmt());
 
+        Gson gson = new Gson();
+        eventMap.put("Post Model", gson.toJson(postModel));
+
         if(paymentJson == null){
             paymentJson = "";
         }else{
-            eventMap.put("Payment Object", paymentJson);
+            eventMap.put("Payment Object", paymentJson.toString());
         }
 
         if(error == null){
@@ -534,15 +535,14 @@ public class CloverPaymentActivity extends BaseActivity {
 
         if(paymentSuccess){
             //sent to Pay Queue API endpoint
-            scheduleDelayedRetry(
+            queuePayment(
                     amountDouble,
                     postModel,
                     patientBalance.getBalances().get(0).getMetadata().getPatientId(),
                     patientBalance.getBalances().get(0).getMetadata().getPracticeId(),
                     patientBalance.getBalances().get(0).getMetadata().getPracticeMgmt(),
                     paymentJson.toString(),
-                    error,
-                    0);
+                    error);
 
             setResult(CarePayConstants.PAYMENT_RETRY_PENDING_RESULT_CODE);
             finish();
@@ -550,24 +550,7 @@ public class CloverPaymentActivity extends BaseActivity {
         }
     }
 
-    private void scheduleDelayedRetry(final double amount, final PaymentPostModel postModel, final String patientID, final String practiceId, final String practiceMgmt, final String paymentJson, final String errorMessage, final int attempt){
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                queuePayment(
-                        amountDouble,
-                        postModel,
-                        patientID,
-                        practiceId,
-                        practiceMgmt,
-                        paymentJson.toString(),
-                        errorMessage,
-                        attempt);
-            }
-        }, 1000 * 30 * attempt);
-    }
-
-    private void queuePayment(final double amount, final PaymentPostModel postModel, final String patientID, final String practiceId, final String practiceMgmt, final String paymentJson, final String errorMessage, final int attempt){
+    private void queuePayment(double amount, PaymentPostModel postModel, String patientID, String practiceId, String practiceMgmt, String paymentJson, String errorMessage){
         if(postModel!=null){
             for (PaymentObject paymentObject : postModel.getPaymentObjects()) {
                 if(paymentObject.getType() == null) {
@@ -600,13 +583,6 @@ public class CloverPaymentActivity extends BaseActivity {
             }
         }
 
-        Map<String, String> queries = new HashMap<>();
-        queries.put("patient_id", patientID);
-        queries.put("practice_id", practiceId);
-        queries.put("practice_mgmt", practiceMgmt);
-
-        Map<String, String> header = new HashMap<>();
-        header.put("x-api-key", HttpConstants.getApiStartKey());
 
         Gson gson = new Gson();
         String paymentModelJson = paymentJson;
@@ -616,48 +592,27 @@ public class CloverPaymentActivity extends BaseActivity {
             ex.printStackTrace();
         }
 
-        final String paymentModelJsonUpload = paymentModelJson;
-        TransitionDTO transitionDTO = gson.fromJson(queueTransitionString, TransitionDTO.class);
-        WorkflowServiceCallback queueCallback = new WorkflowServiceCallback() {
-            @Override
-            public void onPreExecute() {
-                //do nothing
-            }
 
-            @Override
-            public void onPostExecute(WorkflowDTO workflowDTO) {
-                //do nothing this will end the retry process
-                Log.i(TAG, "Payment successfully queued");
-            }
 
-            @Override
-            public void onFailure(String exceptionMessage) {
-                //this needs to continue to retry
-                if(attempt < MAX_ATTEMPTS) {
-                    scheduleDelayedRetry(amount, postModel, patientID, practiceId, practiceMgmt, paymentJson, errorMessage, attempt + 1);
-                }else{
-                    //store in local DB
-                    CloverQueuePaymentRecord paymentRecord = new CloverQueuePaymentRecord();
-                    paymentRecord.setPatientID(patientID);
-                    paymentRecord.setPracticeID(practiceId);
-                    paymentRecord.setPracticeMgmt(practiceMgmt);
-                    paymentRecord.setQueueTransition(queueTransitionString);
+        //store in local DB
+        CloverQueuePaymentRecord paymentRecord = new CloverQueuePaymentRecord();
+        paymentRecord.setPatientID(patientID);
+        paymentRecord.setPracticeID(practiceId);
+        paymentRecord.setPracticeMgmt(practiceMgmt);
+        paymentRecord.setQueueTransition(queueTransitionString);
+        paymentRecord.setUsername(getApplicationMode().getUserPracticeDTO().getUserName());
 
-                    String paymentModelJsonEnc = EncryptionUtil.encrypt(paymentModelJsonUpload, practiceId);
-                    paymentRecord.setPaymentModelJsonEnc(paymentModelJsonEnc);
+        String paymentModelJsonEnc = EncryptionUtil.encrypt(getContext(), paymentModelJson, practiceId);
+        paymentRecord.setPaymentModelJsonEnc(paymentModelJsonEnc);
 
-                    if(paymentModelJsonEnc == null){
-                        paymentRecord.setPaymentModelJson(paymentModelJsonUpload);
-                    }
-                    paymentRecord.save();
+        if(StringUtil.isNullOrEmpty(paymentModelJsonEnc)){
+            paymentRecord.setPaymentModelJson(paymentModelJson);
+        }
+        paymentRecord.save();
 
-                    Intent intent = new Intent(getContext(), CloverQueueUploadService.class);
-                    startService(intent);
-                }
-            }
-        };
+        Intent intent = new Intent(getContext(), CloverQueueUploadService.class);
+        startService(intent);
 
-        getWorkflowServiceHelper().execute(transitionDTO, queueCallback, paymentModelJsonUpload, queries, header);
 
     }
 

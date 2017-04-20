@@ -13,6 +13,7 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.utils.EncryptionUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -51,12 +52,12 @@ public class CloverQueueUploadService extends IntentService {
             queryMap.put("practice_id", queueRecord.getPracticeID());
             queryMap.put("practice_mgmt", queueRecord.getPracticeMgmt());
 
-            String jsonBody = EncryptionUtil.decrypt(queueRecord.getPaymentModelJsonEnc(), queueRecord.getPracticeID());
+            String jsonBody = EncryptionUtil.decrypt(this, queueRecord.getPaymentModelJsonEnc(), queueRecord.getPracticeID());
             if(jsonBody == null){
                 jsonBody = queueRecord.getPaymentModelJson();
             }
 
-            boolean isSubmitted = executeWebCall(transitionDTO, jsonBody, queryMap);
+            boolean isSubmitted = executeWebCall(transitionDTO, jsonBody, queryMap, queueRecord.getUsername());
             if(isSubmitted){
                 queueRecord.delete();
             }
@@ -71,9 +72,14 @@ public class CloverQueueUploadService extends IntentService {
 
     }
 
-    private boolean executeWebCall(TransitionDTO transitionDTO, String jsonBody, Map<String, String> queryMap){
+    private boolean executeWebCall(TransitionDTO transitionDTO, String jsonBody, Map<String, String> queryMap, String username){
+        if(StringUtil.isNullOrEmpty(jsonBody)){
+            return false;
+        }
+
         Map<String, String> header = new HashMap<>();
         header.put("x-api-key", HttpConstants.getApiStartKey());
+        header.put("username", username);
 
         WorkflowService workflowService = ServiceGenerator.getInstance().createService(WorkflowService.class, header);
         Call<WorkflowDTO> call = workflowService.executePost(transitionDTO.getUrl(), jsonBody, queryMap);

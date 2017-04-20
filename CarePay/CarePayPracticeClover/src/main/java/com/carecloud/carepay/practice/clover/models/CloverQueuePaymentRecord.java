@@ -14,6 +14,7 @@ public class CloverQueuePaymentRecord extends SugarRecord {
     private String queueTransition;
     private String paymentModelJsonEnc;
     private String paymentModelJson;
+    private String username;
 
     public CloverQueuePaymentRecord(){
 
@@ -66,5 +67,13 @@ public class CloverQueuePaymentRecord extends SugarRecord {
 
     public void setPaymentModelJson(String paymentModelJson) {
         this.paymentModelJson = paymentModelJson;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

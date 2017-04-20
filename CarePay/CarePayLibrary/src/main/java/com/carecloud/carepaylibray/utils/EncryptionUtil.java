@@ -1,5 +1,9 @@
 package com.carecloud.carepaylibray.utils;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Base64;
+
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -14,18 +18,21 @@ import javax.crypto.spec.SecretKeySpec;
  */
 
 public class EncryptionUtil {
+
     private static final String AES_ALGORITHM = "AES";
     private static final int KEY_LENGTH = 256;
     private final static String HEX_VALUES = "0123456789ABCDEF";
 
-    public static String encrypt(String plainText, String seed) {
+    public static String encrypt(Context context, String plainText, String seed) {
         if(plainText == null){
             return null;
         }
 
         try {
-            byte[] encryptionKey = getEncryptionKey(seed.getBytes());
+            byte[] encryptionKey = getEncryptionKey(context, seed);
             byte[] encryptionResult = encrypt(encryptionKey, plainText.getBytes());
+
+//            return Base64.encodeToString(encryptionResult, Base64.DEFAULT);
             return getHexString(encryptionResult);
         }catch (GeneralSecurityException gse){
            gse.printStackTrace();
@@ -33,14 +40,15 @@ public class EncryptionUtil {
         }
     }
 
-    public static String decrypt(String encrypted, String seed){
+    public static String decrypt(Context context, String encrypted, String seed){
         if(encrypted == null){
             return null;
         }
 
         try {
-            byte[] encryptionKey = getEncryptionKey(seed.getBytes());
+            byte[] encryptionKey = getEncryptionKey(context, seed);
             byte[] encryptedBytes = getHexBytes(encrypted);
+//            byte[] encryptedBytes = Base64.decode(encrypted, Base64.DEFAULT);
             return new String(decrypt(encryptionKey, encryptedBytes));
         }catch (GeneralSecurityException gse){
             gse.printStackTrace();
@@ -48,9 +56,23 @@ public class EncryptionUtil {
         }
     }
 
-    private static byte[] getEncryptionKey(byte[] seed) throws NoSuchAlgorithmException {
+
+    private static byte[] getEncryptionKey(Context context, String seed) throws NoSuchAlgorithmException {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("EK", Context.MODE_PRIVATE);
+        String keyString =  sharedPreferences.getString(seed, null);
+        if(keyString == null){
+            byte[] bytes = generateNewKey(seed.getBytes());
+            keyString = Base64.encodeToString(bytes, Base64.DEFAULT);
+            sharedPreferences.edit().putString(seed, keyString).apply();
+        }
+        return Base64.decode(keyString, Base64.DEFAULT);
+    }
+
+
+    private static byte[] generateNewKey(byte[] seed) throws NoSuchAlgorithmException {
         KeyGenerator keyGen = KeyGenerator.getInstance(AES_ALGORITHM);
         SecureRandom secureRandom = new SecureRandom();
+        secureRandom.setSeed(seed);
         keyGen.init(KEY_LENGTH, secureRandom);
         SecretKey secretKey = keyGen.generateKey();
         return secretKey.getEncoded();
@@ -87,7 +109,7 @@ public class EncryptionUtil {
         }
 
         StringBuffer buffer = new StringBuffer(encrypted.length *2);
-        for(int i = 0; i < buffer.length(); i++){
+        for(int i = 0; i < encrypted.length; i++){
             appendHex(buffer, encrypted[i]);
         }
         return buffer.toString();
