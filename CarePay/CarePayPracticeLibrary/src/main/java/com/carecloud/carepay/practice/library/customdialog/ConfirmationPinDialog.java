@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
@@ -23,7 +22,10 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -159,19 +161,12 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
 
     private void validatePin() {
         String pin = pinEditText.getText().toString();
-        String storedPin = "1643"; //TODO this is hardcoded... needs to be set and saved somewhere
-
         if (pin.length() == 4 ) {
-           if(pin.equals(storedPin)) {
-               Map<String, String> queryMap = new HashMap<>();
-               queryMap.put("pin", pin);
-               queryMap.put("practice_mgmt", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
-               queryMap.put("practice_id", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeId());
-               ((ISession) context).getWorkflowServiceHelper().execute(this.transitionDTOPinLink, commonTransitionCallback, queryMap);
-           }else{
-               Toast.makeText(getContext(), "Pin Error", Toast.LENGTH_SHORT).show();//Todo this is also hardcoded, Should come from labels
-               pinEditText.setText("");
-           }
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put("pin", pin);
+            queryMap.put("practice_mgmt", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+            queryMap.put("practice_id", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeId());
+            ((ISession) context).getWorkflowServiceHelper().execute(this.transitionDTOPinLink, commonTransitionCallback, queryMap);
         }
     }
 
@@ -234,10 +229,35 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
 
         @Override
         public void onFailure(String exceptionMessage) {
+            Gson gson = new Gson();
+            String displayMessage;
+            try{
+                PinError pinError = gson.fromJson(exceptionMessage, PinError.class);
+                displayMessage = pinError.getException();
+            }catch (JsonSyntaxException jsx){
+                jsx.printStackTrace();
+                displayMessage = "Pin Error, Please try again";
+            }
+
             ((ISession) context).hideProgressDialog();
-            callBack.onError(exceptionMessage);
+            pinEditText.setText("");
+            SystemUtil.showErrorToast(getContext(), displayMessage);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+
+    private class PinError{
+        @SerializedName("exception")
+        private String exception;
+
+        public String getException() {
+            return exception;
+        }
+
+        public void setException(String exception) {
+            this.exception = exception;
+        }
+    }
 
 }
