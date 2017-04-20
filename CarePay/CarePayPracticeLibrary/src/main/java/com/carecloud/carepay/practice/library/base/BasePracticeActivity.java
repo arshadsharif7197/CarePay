@@ -173,7 +173,7 @@ public abstract class BasePracticeActivity extends BaseActivity
                 if (resultCode == RESULT_OK) {
                     processExternalPayment(PaymentExecution.clover, data);
                 } else {
-                    processExternalPaymentFailure(PaymentExecution.clover);
+                    processExternalPaymentFailure(PaymentExecution.clover, resultCode);
                 }
 
                 break;
@@ -188,7 +188,7 @@ public abstract class BasePracticeActivity extends BaseActivity
         throw new NotImplementedException("Process external payment has not been implemented by " + getClass().getSimpleName());
     }
 
-    protected void processExternalPaymentFailure(PaymentExecution paymentExecution) {
+    protected void processExternalPaymentFailure(PaymentExecution paymentExecution, int resultCode) {
 
     }
 

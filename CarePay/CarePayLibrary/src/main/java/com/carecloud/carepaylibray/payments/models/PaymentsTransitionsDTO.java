@@ -28,6 +28,9 @@ public class PaymentsTransitionsDTO {
     @SerializedName("logout")
     @Expose
     private TransitionDTO logout = new TransitionDTO();
+    @SerializedName("queue_payment")
+    @Expose
+    private TransitionDTO queuePayment = new TransitionDTO();
 
     /**
      *
@@ -151,5 +154,13 @@ public class PaymentsTransitionsDTO {
      */
     public void setLogout(TransitionDTO logout) {
         this.logout = logout;
+    }
+
+    public TransitionDTO getQueuePayment() {
+        return queuePayment;
+    }
+
+    public void setQueuePayment(TransitionDTO queuePayment) {
+        this.queuePayment = queuePayment;
     }
 }
