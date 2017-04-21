@@ -218,8 +218,8 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
     private void onSetValuesFromDTO() {
         checkInLabelDTO = checkInDTO.getMetadata().getLabel();
         if (!isWaitingRoom) {
-            demographicsCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogDemographics()));
-            consentFormsCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogConsentForms()));
+            demographicsCheckbox.setText(StringUtil.getFormatedLabal(context, Label.getLabel("practice_checkin_detail_dialog_demographics")));
+            consentFormsCheckbox.setText(StringUtil.getFormatedLabal(context, Label.getLabel("practice_checkin_detail_dialog_consent_forms")));
             intakeCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogIntake()));
             responsibilityCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogResponsibility()));
         } else {
@@ -230,11 +230,11 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         }
 
         checkingInLabel.setText(StringUtil.getFormatedLabal(context, isWaitingRoom ?
-                checkInLabelDTO.getPracticeCheckinDetailDialogWaitingRoom() : checkInLabelDTO.getPracticeCheckinDetailDialogCheckingIn()));
-        balanceTextLabel.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogBalance()));
-        assistButton.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogAssist()));
-        pageButton.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogPage()));
-        paymentButton.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogPayment()));
+                checkInLabelDTO.getPracticeCheckinDetailDialogWaitingRoom() : Label.getLabel("practice_checkin_detail_dialog_checking_in")));
+        balanceTextLabel.setText(StringUtil.getFormatedLabal(context, Label.getLabel("practice_checkin_detail_dialog_balance")));
+        assistButton.setText(StringUtil.getFormatedLabal(context, Label.getLabel("practice_checkin_detail_dialog_assist")));
+        pageButton.setText(StringUtil.getFormatedLabal(context, Label.getLabel("practice_checkin_detail_dialog_page")));
+        paymentButton.setText(StringUtil.getFormatedLabal(context, Label.getLabel("practice_checkin_detail_dialog_payment")));
 
         balanceValueLabel.setText(StringUtil.getFormattedBalanceAmount(getPatientBalance()));
         patientNameLabel.setText(StringUtil.getFormatedLabal(context, appointmentPayloadDTO.getPatient().getFullName()));

@@ -597,11 +597,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     @Override
     public void onBackPressed() {
 
-        if(!HttpConstants.isUseUnifiedAuth()) {
-            Log.v(this.getClass().getSimpleName(), "sign out Cognito");
-            getAppAuthorizationHelper().getPool().getUser().signOut();
-            getAppAuthorizationHelper().setUser(null);
-        }
         getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
 
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {

@@ -48,8 +48,9 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
     @Override
     protected void onResume() {
         super.onResume();
+        getAppAuthorizationHelper();
         isVisible = true;
-       final View rootView = findViewById(android.R.id.content);
+        final View rootView = findViewById(android.R.id.content);
         rootView.setSoundEffectsEnabled(false);
         rootView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckInFragment;
+import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentPlanFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
@@ -294,4 +296,25 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 return;
         }
     }
+
+    @Override
+    protected void processExternalPaymentFailure(PaymentExecution paymentExecution, int resultCode) {
+        if(resultCode == CarePayConstants.PAYMENT_RETRY_PENDING_RESULT_CODE){
+            //Display a success notification and do some cleanup
+            PaymentQueuedDialogFragment dialogFragment = new PaymentQueuedDialogFragment();
+            DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    Intent intent = getIntent();
+                    setResult(CarePayConstants.HOME_PRESSED, intent);
+                    finish();
+                }
+            };
+            dialogFragment.setOnDismissListener(dismissListener);
+            dialogFragment.show(getSupportFragmentManager(), dialogFragment.getClass().getName());
+
+        }
+    }
+
+
 }
