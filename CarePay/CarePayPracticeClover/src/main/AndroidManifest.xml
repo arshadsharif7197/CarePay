@@ -88,7 +88,7 @@
         <activity
             android:name="com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity"
             android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name="com.carecloud.carepaylibray.qrcodescanner.ScannerActivity"
             android:screenOrientation="sensorLandscape" />

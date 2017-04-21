@@ -6,8 +6,10 @@ import android.view.View;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
+import com.carecloud.carepaylibray.utils.AndroidBug5497Workaround;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -41,8 +43,9 @@ public class FormsFragment extends BaseWebFormFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
+        AndroidBug5497Workaround.assistFragment(this, (int) getResources().getDimension(R.dimen.dimen_60dp));
         setHeader(Label.getLabel("demographics_consent_forms_title"));
     }
 
@@ -75,9 +78,9 @@ public class FormsFragment extends BaseWebFormFragment {
     @Override
     protected void saveForm(JsonObject jsonResponse) {
         int displayedFormsIndex = getDisplayedFormsIndex();
-        if(jsonFormSaveResponseArray.size()>displayedFormsIndex){
+        if (jsonFormSaveResponseArray.size() > displayedFormsIndex) {
             jsonFormSaveResponseArray.set(displayedFormsIndex, jsonResponse);
-        }else {
+        } else {
             jsonFormSaveResponseArray.add(jsonResponse);
         }
 
