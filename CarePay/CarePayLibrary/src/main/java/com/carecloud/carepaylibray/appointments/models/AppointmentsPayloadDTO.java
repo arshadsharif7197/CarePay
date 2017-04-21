@@ -718,16 +718,17 @@ public class AppointmentsPayloadDTO {
             return false;
         }
 
-        DateUtil startDate = DateUtil.getInstance().setDateRaw(startTime);
-        if (!startDate.isToday()) {
-            return false;
-        }
+//        DateUtil startDate = DateUtil.getInstance().setDateRaw(startTime);
+//        if (!startDate.isToday()) {
+//            return false;
+//        }
 
         long earlyCheckInPeriod = Long.parseLong(checkin.getEarlyCheckinPeriod());
         if (ANYTIME_PERIOD == earlyCheckInPeriod) {
             return true;
         }
 
+        DateUtil startDate = DateUtil.getInstance().setDateRaw(startTime);
         long differenceInMinutes = DateUtil.getMinutesElapsed(startDate.getDate(), new Date());
 
         return differenceInMinutes < earlyCheckInPeriod;

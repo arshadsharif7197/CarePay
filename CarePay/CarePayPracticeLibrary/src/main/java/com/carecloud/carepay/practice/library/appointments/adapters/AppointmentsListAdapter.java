@@ -132,6 +132,8 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
             String statusCode = payloadDTO.getAppointmentStatusModel().getCode();
 
             switch (statusCode) {
+                case CarePayConstants.IN_PROGRESS_IN_ROOM:
+                case CarePayConstants.IN_PROGRESS_OUT_ROOM:
                 case CarePayConstants.CHECKED_IN:
                     headerBackground.setColor(context.getResources().getColor(R.color.yellowGreen));
                     appointmentStatusCheckedIn.setVisibility(View.VISIBLE);
@@ -150,6 +152,8 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
 
                     break;
 
+                case CarePayConstants.BILLED:
+                case CarePayConstants.MANUALLY_BILLED:
                 case CarePayConstants.CHECKED_OUT:
                     headerBackground.setColor(context.getResources().getColor(R.color.slateGray));
                     appointmentStatusCheckedOut.setVisibility(View.VISIBLE);

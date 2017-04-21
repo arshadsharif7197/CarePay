@@ -22,6 +22,10 @@ public class CarePayConstants {
     public static final String REQUESTED = "R";
     public static final String CHECKING_IN = "CI";
     public static final String CHECKED_OUT = "O";
+    public static final String BILLED = "B";
+    public static final String MANUALLY_BILLED = "M";
+    public static final String IN_PROGRESS_IN_ROOM = "PR";
+    public static final String IN_PROGRESS_OUT_ROOM = "PH";
 
     public static final String ATTR_APPOINTMENTS = "appointments";
     public static final String ATTR_APPT_ID = "appointment_id";
@@ -116,6 +120,8 @@ public class CarePayConstants {
     public static final String CLOVER_PAYMENT_POST_MODEL = "clover_payment_post_model";
     public static final String CLOVER_PAYMENT_SUCCESS_INTENT_DATA = "clover_payment_success_intent_data";
 
+    public static final String CLOVER_QUEUE_PAYMENT_TRANSITION = "clover_queue_payment_transition";
+    public static final int PAYMENT_RETRY_PENDING_RESULT_CODE = 0x777;
 
     //Shared Preference Keys
     public static final String KEY_PRACTICE_PATIENT_IDS = "practice_patient_ids";

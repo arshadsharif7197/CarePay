@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.payments;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,6 +18,7 @@ import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.models.ResponsibilityHeaderModel;
 import com.carecloud.carepay.practice.library.payments.adapter.PaymentBalancesAdapter;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
+import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
@@ -283,6 +285,25 @@ public class PatientModePracticePaymentsActivity extends BasePracticeActivity im
             default:
                 //nothing
                 return;
+        }
+    }
+
+    @Override
+    protected void processExternalPaymentFailure(PaymentExecution paymentExecution, int resultCode) {
+        if(resultCode == CarePayConstants.PAYMENT_RETRY_PENDING_RESULT_CODE){
+            //Display a success notification and do some cleanup
+            PaymentQueuedDialogFragment dialogFragment = new PaymentQueuedDialogFragment();
+            DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    Intent intent = getIntent();
+                    setResult(CarePayConstants.HOME_PRESSED, intent);
+                    finish();
+                }
+            };
+            dialogFragment.setOnDismissListener(dismissListener);
+            dialogFragment.show(getSupportFragmentManager(), dialogFragment.getClass().getName());
+
         }
     }
 

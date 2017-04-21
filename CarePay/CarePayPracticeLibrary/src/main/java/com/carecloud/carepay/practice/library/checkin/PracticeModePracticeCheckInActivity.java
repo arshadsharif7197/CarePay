@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.checkin;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,6 +25,7 @@ import com.carecloud.carepay.practice.library.checkin.dtos.CheckInPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.customdialog.FilterDialog;
 import com.carecloud.carepay.practice.library.models.FilterModel;
+import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.AddPaymentItemFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionEntryFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionFragment;
@@ -507,6 +509,23 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
             default:
                 //nothing
                 return;
+        }
+    }
+
+    @Override
+    protected void processExternalPaymentFailure(PaymentExecution paymentExecution, int resultCode) {
+        if(resultCode == CarePayConstants.PAYMENT_RETRY_PENDING_RESULT_CODE){
+            //Display a success notification and do some cleanup
+            PaymentQueuedDialogFragment dialogFragment = new PaymentQueuedDialogFragment();
+            DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    completePaymentProcess(new UpdatePatientBalancesDTO());
+                }
+            };
+            dialogFragment.setOnDismissListener(dismissListener);
+            dialogFragment.show(getSupportFragmentManager(), dialogFragment.getClass().getName());
+
         }
     }
 

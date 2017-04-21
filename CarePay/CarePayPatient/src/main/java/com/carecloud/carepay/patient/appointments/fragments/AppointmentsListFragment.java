@@ -206,6 +206,8 @@ public class AppointmentsListFragment extends BaseFragment {
         AppointmentsPayloadDTO payloadDTO = appointmentDTO.getPayload();
         String statusCode = payloadDTO.getAppointmentStatusModel().getCode();
         switch (statusCode) {
+            case CarePayConstants.IN_PROGRESS_IN_ROOM:
+            case CarePayConstants.IN_PROGRESS_OUT_ROOM:
             case CarePayConstants.CHECKED_IN:
                 new QueueAppointmentDialog(getContext(), appointmentDTO, appointmentLabels).show();
                 break;

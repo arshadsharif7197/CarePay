@@ -65,6 +65,10 @@ public class CloverPaymentAdapter {
         String paymentTransitionString = gson.toJson(paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment());
         intent.putExtra(CarePayConstants.CLOVER_PAYMENT_TRANSITION, paymentTransitionString);
 
+        String queueTransitionString = gson.toJson(paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getQueuePayment());
+        intent.putExtra(CarePayConstants.CLOVER_QUEUE_PAYMENT_TRANSITION, queueTransitionString);
+
+
         String paymentMetadata = gson.toJson(paymentsModel.getPaymentPayload().getPatientBalances().get(0));
         intent.putExtra(CarePayConstants.CLOVER_PAYMENT_METADATA, paymentMetadata);
 
