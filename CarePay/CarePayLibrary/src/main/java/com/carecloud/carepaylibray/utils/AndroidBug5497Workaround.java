@@ -14,6 +14,11 @@ public class AndroidBug5497Workaround {
     // For more information, see https://code.google.com/p/android/issues/detail?id=5497
     // To use this class, simply invoke assistFragment() on an Fragment that already has its content view set.
 
+    /**
+     *
+     * @param fragment the fragment to manage its height
+     * @param offset the bottom offset
+     */
     public static void assistFragment(Fragment fragment, int offset) {
         new AndroidBug5497Workaround(fragment, offset);
     }
