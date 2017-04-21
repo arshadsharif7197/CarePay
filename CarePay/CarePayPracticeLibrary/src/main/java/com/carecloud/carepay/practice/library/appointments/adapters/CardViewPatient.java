@@ -30,6 +30,7 @@ public class CardViewPatient {
     public Boolean isCheckedIn;
     public Boolean isCheckingIn;
     public Boolean isPending;
+    public Boolean isCheckedOut;
     int headCount;
 
     CardViewPatient(Object raw, String id, ProviderIndexDTO provider, LocationIndexDTO location, Double balance, PatientModel dto) {
@@ -76,9 +77,14 @@ public class CardViewPatient {
         this.locationId = dto.getLocation().getId().toString();
         String code = dto.getAppointmentStatus().getCode();
         this.isRequested = code.equalsIgnoreCase(CarePayConstants.REQUESTED);
-        this.isCheckedIn = code.equalsIgnoreCase(CarePayConstants.CHECKED_IN);
+        this.isCheckedIn = code.equalsIgnoreCase(CarePayConstants.CHECKED_IN) ||
+            code.equalsIgnoreCase(CarePayConstants.IN_PROGRESS_IN_ROOM) ||
+            code.equalsIgnoreCase(CarePayConstants.IN_PROGRESS_OUT_ROOM);
         this.isCheckingIn = code.equalsIgnoreCase(CarePayConstants.CHECKING_IN);
         this.isPending = code.equalsIgnoreCase(CarePayConstants.PENDING);
+        this.isCheckedOut = code.equalsIgnoreCase(CarePayConstants.CHECKED_OUT) ||
+                code.equalsIgnoreCase(CarePayConstants.BILLED) ||
+                code.equalsIgnoreCase(CarePayConstants.MANUALLY_BILLED);
     }
 
     /**

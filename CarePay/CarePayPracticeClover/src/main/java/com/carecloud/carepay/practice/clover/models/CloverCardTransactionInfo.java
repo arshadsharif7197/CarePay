@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.clover.models;
 
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -68,7 +69,7 @@ public class CloverCardTransactionInfo {
     }
 
     public String getToken() {
-        return token!=null?token:"NO-TOKEN";
+        return !StringUtil.isNullOrEmpty(token)?token:"NO-TOKEN";
     }
 
     public void setToken(String token) {

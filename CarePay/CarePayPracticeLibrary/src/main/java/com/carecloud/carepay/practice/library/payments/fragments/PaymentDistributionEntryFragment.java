@@ -10,6 +10,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 /**
  * Created by lmenendez on 3/17/17.
@@ -56,20 +57,29 @@ public class PaymentDistributionEntryFragment extends PartialPaymentBaseDialogFr
         super.onClick(view);
         int id = view.getId();
         if (id == R.id.enter_amount_button && callback != null) {
-            try {
-                if (balanceItem != null) {
-                    callback.applyAmountToBalanceItem(Double.parseDouble(amountText.getText().toString()), balanceItem);
-                } else if (chargeItem != null) {
-                    callback.addNewCharge(Double.parseDouble(amountText.getText().toString()), chargeItem);
-                } else {
-                    callback.applyNewDistributionAmount(Double.parseDouble(amountText.getText().toString()));
-                }
-                dismiss();
-            } catch (NumberFormatException nfe) {
-                nfe.printStackTrace();
+            if (balanceItem != null) {
+                callback.applyAmountToBalanceItem(getDoubleAmountForEntry(), balanceItem);
+            } else if (chargeItem != null) {
+                callback.addNewCharge(getDoubleAmountForEntry(), chargeItem);
+            } else {
+                callback.applyNewDistributionAmount(getDoubleAmountForEntry());
             }
+            dismiss();
         }
 
+    }
+
+    private double getDoubleAmountForEntry(){
+        String entry = amountText.getText().toString();
+        if(StringUtil.isNullOrEmpty(entry)){
+            return 0D;
+        }
+        try {
+            return Double.parseDouble(entry);
+        }catch (NumberFormatException nfe){
+            nfe.printStackTrace();
+        }
+        return 0D;
     }
 
     /**
