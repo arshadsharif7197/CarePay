@@ -22,6 +22,12 @@ import java.util.Date;
 
 public class PracticeAvailableHoursDialogFragment extends BaseAvailableHoursFragment {
 
+    /**
+     * Create Instance with Data
+     * @param appointmentsResultModel appointment Model
+     * @param appointmentDTO Appointment DTO
+     * @return new PracticeAvailableHoursDialogFragment
+     */
     public static PracticeAvailableHoursDialogFragment newInstance(AppointmentsResultModel appointmentsResultModel,
                                                      AppointmentDTO appointmentDTO) {
         Bundle args = new Bundle();
@@ -32,6 +38,15 @@ public class PracticeAvailableHoursDialogFragment extends BaseAvailableHoursFrag
         return availableHoursFragment;
     }
 
+    /**
+     * Create Instance with Data
+     * @param appointmentsResultModel appointmenr Model
+     * @param appointmentResource appointment resource
+     * @param startDate appt start date
+     * @param endDate appt end date
+     * @param visitTypeDTO visit type
+     * @return new PracticeAvailableHoursDialogFragment
+     */
     public static PracticeAvailableHoursDialogFragment newInstance(AppointmentsResultModel appointmentsResultModel,
                                                      AppointmentResourcesItemDTO appointmentResource, Date startDate, Date endDate,
                                                      VisitTypeDTO visitTypeDTO) {

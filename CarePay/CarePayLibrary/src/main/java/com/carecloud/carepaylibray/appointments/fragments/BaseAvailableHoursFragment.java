@@ -19,8 +19,8 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
-import com.carecloud.carepaylibray.appointments.adapters.AvailableHoursAdapter;
 import com.carecloud.carepaylibray.appointments.adapters.AvailableLocationsAdapter;
+import com.carecloud.carepaylibray.appointments.adapters.FilterableAvailableHoursAdapter;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -48,7 +48,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public abstract class BaseAvailableHoursFragment extends BaseDialogFragment implements AvailableHoursAdapter.SelectAppointmentTimeSlotCallback, AvailableLocationsAdapter.SelectLocationCallback {
+public abstract class BaseAvailableHoursFragment extends BaseDialogFragment implements FilterableAvailableHoursAdapter.SelectAppointmentTimeSlotCallback, AvailableLocationsAdapter.SelectLocationCallback {
 
     private Date startDate;
     private Date endDate;
@@ -64,7 +64,7 @@ public abstract class BaseAvailableHoursFragment extends BaseDialogFragment impl
     private View progressView;
     protected TextView titleView;
 
-    private List<LocationDTO> selectedLocations = new LinkedList<>();
+    private Map<String, LocationDTO> selectedLocations = new HashMap<>();
     private SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
 
     private AppointmentNavigationCallback callback;
@@ -173,13 +173,18 @@ public abstract class BaseAvailableHoursFragment extends BaseDialogFragment impl
         List<LocationDTO> locations = extractAvailableLocations(availabilityDTO);
 
         if (availableHoursRecycleView.getAdapter() == null) {
-            availableHoursRecycleView.setAdapter(new AvailableHoursAdapter(getActivity(),
-                    getAvailableHoursListWithHeader(), this, locations.size() > 1));
+//            availableHoursRecycleView.setAdapter(new AvailableHoursAdapter(getActivity(),
+//                    getAvailableHoursListWithHeader(), this, locations.size() > 1));
+            availableHoursRecycleView.setAdapter(new FilterableAvailableHoursAdapter(getContext(), getAllAvailableTimeSlots(), selectedLocations, this));
+
         } else {
-            AvailableHoursAdapter availableHoursAdapter = (AvailableHoursAdapter) availableHoursRecycleView.getAdapter();
-            availableHoursAdapter.setItems(getAvailableHoursListWithHeader());
-            availableHoursAdapter.setMultiLocationStyle(locations.size() > 1);
-            availableHoursAdapter.notifyDataSetChanged();
+//            AvailableHoursAdapter availableHoursAdapter = (AvailableHoursAdapter) availableHoursRecycleView.getAdapter();
+//            availableHoursAdapter.setItems(getAvailableHoursListWithHeader());
+//            availableHoursAdapter.setMultiLocationStyle(locations.size() > 1);
+//            availableHoursAdapter.notifyDataSetChanged();
+            FilterableAvailableHoursAdapter filterableAvailableHoursAdapter = (FilterableAvailableHoursAdapter) availableHoursRecycleView.getAdapter();
+            filterableAvailableHoursAdapter.setAllTimeSlots(getAllAvailableTimeSlots());
+
         }
 
         if (locations.isEmpty()) {
@@ -240,6 +245,31 @@ public abstract class BaseAvailableHoursFragment extends BaseDialogFragment impl
         } else {
             ((AvailableLocationsAdapter) availableLocationsRecycleView.getAdapter()).updateSelectedLocations(selectedLocations);
         }
+    }
+
+
+    private List<AppointmentsSlotsDTO> getAllAvailableTimeSlots(){
+        List<AppointmentsSlotsDTO> timeSlots = new ArrayList<>();
+        if(availabilityDTO != null && !availabilityDTO.getPayload().getAppointmentAvailability().getPayload().isEmpty()){
+            List<AppointmentAvailabilityPayloadDTO> availabilityPayloadDTOs = availabilityDTO.getPayload().getAppointmentAvailability().getPayload();
+            timeSlots = groupAllLocationSlotsByTime(availabilityPayloadDTOs);
+            if(!timeSlots.isEmpty()){
+                Collections.sort(timeSlots, new Comparator<AppointmentsSlotsDTO>() {
+                    @Override
+                    public int compare(AppointmentsSlotsDTO lhs, AppointmentsSlotsDTO rhs) {
+                        if (lhs != null && rhs != null) {
+                            Date d1 = DateUtil.getInstance().setDateRaw(lhs.getStartTime()).getDate();
+                            Date d2 = DateUtil.getInstance().setDateRaw(rhs.getStartTime()).getDate();
+
+                            return d1.compareTo(d2);
+                        }
+                        return -1;
+                    }
+                });
+
+            }
+        }
+        return timeSlots;
     }
 
 
@@ -391,14 +421,18 @@ public abstract class BaseAvailableHoursFragment extends BaseDialogFragment impl
             if (selectedLocations.isEmpty()) {//Initial state, reset location selections to remove the All selected status
                 resetLocationSelections(false);
             }
-            if (!selectedLocations.contains(locationDTO)) {
-                selectedLocations.add(locationDTO);
-            } else if (selectedLocations.contains(locationDTO)) {
-                selectedLocations.remove(locationDTO);
+            if (!selectedLocations.containsKey(locationDTO.getGuid())) {
+                selectedLocations.put(locationDTO.getGuid(), locationDTO);
+            } else if (selectedLocations.containsKey(locationDTO.getGuid())) {
+                selectedLocations.remove(locationDTO.getGuid());
             }
             updateSelectedLocationsForAdapter();
         }
-        setAdapters();
+
+        if(availableHoursRecycleView.getAdapter()!=null){
+            FilterableAvailableHoursAdapter adapter = (FilterableAvailableHoursAdapter) availableHoursRecycleView.getAdapter();
+            adapter.updateFilteredSlots();
+        }
     }
 
     private List<LocationDTO> extractAvailableLocations(AppointmentAvailabilityDTO availabilityDTO) {
@@ -414,12 +448,11 @@ public abstract class BaseAvailableHoursFragment extends BaseDialogFragment impl
         List<AppointmentsSlotsDTO> appointmentsSlots = new LinkedList<>();
         for (AppointmentAvailabilityPayloadDTO availabilityPayloadDTO : appointmentAvailabilityPayloadDTOs) {
             LocationDTO location = availabilityPayloadDTO.getLocation();
-            if (isLocationSelected(location)) {
-                for (AppointmentsSlotsDTO slotsDTO : availabilityPayloadDTO.getSlots()) {
-                    slotsDTO.setLocation(location);
-                    appointmentsSlots.add(slotsDTO);
-                }
+            for (AppointmentsSlotsDTO slotsDTO : availabilityPayloadDTO.getSlots()) {
+                slotsDTO.setLocation(location);
+                appointmentsSlots.add(slotsDTO);
             }
+
         }
 
         //need to sort the slots by time just in case there are multiple locations and times are out of order
@@ -440,10 +473,6 @@ public abstract class BaseAvailableHoursFragment extends BaseDialogFragment impl
         });
 
         return appointmentsSlots;
-    }
-
-    private boolean isLocationSelected(LocationDTO locationDTO) {
-        return selectedLocations.isEmpty() || selectedLocations.contains(locationDTO);
     }
 
     protected abstract void setupEditDateButton(View view);

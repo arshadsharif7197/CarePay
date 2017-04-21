@@ -36,6 +36,13 @@ public class FilterableAvailableHoursAdapter extends RecyclerView.Adapter<Recycl
     private Map<String, LocationDTO> selectedLocations = new HashMap<>();
     private List<AppointmentsSlotsDTO> filteredTimeSlots = new ArrayList<>();
 
+    /**
+     * Constructor
+     * @param context Context
+     * @param allTimeSlots all Appoitnment Slots
+     * @param selectedLocations Selected Locations
+     * @param callback Selected Slot callback
+     */
     public FilterableAvailableHoursAdapter(Context context, List<AppointmentsSlotsDTO> allTimeSlots, Map<String, LocationDTO> selectedLocations, SelectAppointmentTimeSlotCallback callback){
         this.context = context;
         this.allTimeSlots = allTimeSlots;
@@ -113,6 +120,9 @@ public class FilterableAvailableHoursAdapter extends RecyclerView.Adapter<Recycl
         return filteredTimeSlots.size();
     }
 
+    /**
+     * Update Slots
+     */
     public void updateFilteredSlots(){
         filteredTimeSlots.clear();
 
