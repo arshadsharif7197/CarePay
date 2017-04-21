@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.appointments.adapters;
+package com.carecloud.carepaylibray.appointments.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -10,8 +10,9 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AvailableLocationsAdapter extends RecyclerView.Adapter<AvailableLocationsAdapter.ViewHolderLocation> {
 
@@ -24,7 +25,7 @@ public class AvailableLocationsAdapter extends RecyclerView.Adapter<AvailableLoc
     private Context context;
     private SelectLocationCallback selectLocationCallback;
     private String allButtonText;
-    private List<LocationDTO> selectedLocations = new LinkedList<>();
+    private Map<String, LocationDTO> selectedLocations = new HashMap<>();
 
     /**
      * Constructor.
@@ -65,7 +66,7 @@ public class AvailableLocationsAdapter extends RecyclerView.Adapter<AvailableLoc
 
         }else{
             locationTextView.setText(appointmentLocations.getName());
-            locationTextView.setSelected(selectedLocations.contains(appointmentLocations));
+            locationTextView.setSelected(selectedLocations.isEmpty() || selectedLocations.containsKey(appointmentLocations.getGuid()));
         }
 
         locationTextView.setOnClickListener(new View.OnClickListener() {
@@ -90,7 +91,7 @@ public class AvailableLocationsAdapter extends RecyclerView.Adapter<AvailableLoc
         notifyDataSetChanged();
     }
 
-    public void updateSelectedLocations(List<LocationDTO> selectedLocations){
+    public void updateSelectedLocations(Map<String, LocationDTO> selectedLocations){
         this.selectedLocations = selectedLocations;
     }
 

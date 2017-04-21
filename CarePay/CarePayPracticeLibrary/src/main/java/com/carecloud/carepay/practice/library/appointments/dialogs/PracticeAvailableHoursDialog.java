@@ -138,8 +138,8 @@ public class PracticeAvailableHoursDialog extends BasePracticeDialog implements 
     }
 
     private void inflateUIComponents(View view) {
-        singleLocation = view.findViewById(R.id.practice_available_single_location);
-        singleLocationText = (TextView) view.findViewById(R.id.practice_single_location_text);
+        singleLocation = view.findViewById(R.id.appointment_available_single_location);
+        singleLocationText = (TextView) view.findViewById(R.id.available_single_location_text);
 
         LinearLayoutManager availableHoursLayoutManager = new LinearLayoutManager(context);
         availableHoursLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
