@@ -6,6 +6,7 @@
     android:orientation="vertical"
     android:layout_width="@dimen/dialog_width"
     android:layout_height="wrap_content"
+    android:minHeight="@dimen/dimen_300dp"
     android:background="@drawable/background_blue_rounded_border"
     android:gravity="center_horizontal">
 
@@ -18,8 +19,10 @@
         android:layout_marginTop="@dimen/dimen_20dp"/>
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/success_message"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:gravity="center"
         android:layout_margin="@dimen/dimen_20dp"
         android:textColor="@color/white"

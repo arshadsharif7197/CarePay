@@ -440,6 +440,10 @@ public class WorkflowServiceHelper {
     }
 
     private void executeRefreshTokenRequest(@NonNull final WorkflowServiceCallback callback) {
+        if(appAuthorizationHelper == null){
+            atomicAppRestart();
+        }
+
         Gson gson = new Gson();
         String jsonBody = gson.toJson(new RefreshDTO(appAuthorizationHelper.getRefreshToken()));
 
@@ -496,7 +500,9 @@ public class WorkflowServiceHelper {
 
 
     private void atomicAppRestart(){
-        applicationMode.clearUserPracticeDTO();
+        if(applicationMode!=null) {
+            applicationMode.clearUserPracticeDTO();
+        }
         Intent intent = new Intent();
         intent.setAction("com.carecloud.carepay.restart");
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
