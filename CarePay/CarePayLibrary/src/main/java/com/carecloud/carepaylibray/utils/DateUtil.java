@@ -766,7 +766,7 @@ public class DateUtil {
         }
 
         //Just return this date in readable format
-        return getInstance().setDate(date).getDateAsMonthLiteralDayOrdinal();
+        return getInstance().setDate(date).getDateAsDayMonthDayOrdinal();
     }
 
     /**

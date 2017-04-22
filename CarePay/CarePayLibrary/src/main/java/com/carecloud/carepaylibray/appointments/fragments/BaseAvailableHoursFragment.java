@@ -36,7 +36,6 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -63,6 +62,8 @@ public abstract class BaseAvailableHoursFragment extends BaseDialogFragment impl
     private TextView singleLocationText;
     private View progressView;
     protected TextView titleView;
+    private View noAppointmentLayout;
+    private View locationsLayout;
 
     private Map<String, LocationDTO> selectedLocations = new HashMap<>();
     private SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ");
@@ -166,25 +167,30 @@ public abstract class BaseAvailableHoursFragment extends BaseDialogFragment impl
 
         progressView = view.findViewById(R.id.progressview);
         progressView.setVisibility(View.VISIBLE);
+
+        noAppointmentLayout = view.findViewById(R.id.no_appointment_layout);
+        locationsLayout = view.findViewById(R.id.location_layout);
+
+        TextView noApptTitle = (TextView) view.findViewById(R.id.no_apt_message_title);
+        noApptTitle.setText(Label.getLabel("no_appointment_slots_title"));
+        TextView noApptMessage = (TextView) view.findViewById(R.id.no_apt_message_desc);
+        noApptMessage.setText(Label.getLabel("no_appointment_slots_message"));
     }
 
 
     private void setAdapters() {
         List<LocationDTO> locations = extractAvailableLocations(availabilityDTO);
+        FilterableAvailableHoursAdapter.LocationMode locationMode = locations.size()>1? FilterableAvailableHoursAdapter.LocationMode.MULTI: FilterableAvailableHoursAdapter.LocationMode.SINGLE;
 
+        FilterableAvailableHoursAdapter hoursAdapter;
         if (availableHoursRecycleView.getAdapter() == null) {
-//            availableHoursRecycleView.setAdapter(new AvailableHoursAdapter(getActivity(),
-//                    getAvailableHoursListWithHeader(), this, locations.size() > 1));
-            availableHoursRecycleView.setAdapter(new FilterableAvailableHoursAdapter(getContext(), getAllAvailableTimeSlots(), selectedLocations, this));
+            hoursAdapter = new FilterableAvailableHoursAdapter(getContext(), getAllAvailableTimeSlots(), selectedLocations, this, locationMode);
+            availableHoursRecycleView.setAdapter(hoursAdapter);
 
         } else {
-//            AvailableHoursAdapter availableHoursAdapter = (AvailableHoursAdapter) availableHoursRecycleView.getAdapter();
-//            availableHoursAdapter.setItems(getAvailableHoursListWithHeader());
-//            availableHoursAdapter.setMultiLocationStyle(locations.size() > 1);
-//            availableHoursAdapter.notifyDataSetChanged();
-            FilterableAvailableHoursAdapter filterableAvailableHoursAdapter = (FilterableAvailableHoursAdapter) availableHoursRecycleView.getAdapter();
-            filterableAvailableHoursAdapter.setAllTimeSlots(getAllAvailableTimeSlots());
-
+            hoursAdapter = (FilterableAvailableHoursAdapter) availableHoursRecycleView.getAdapter();
+            hoursAdapter.setAllTimeSlots(getAllAvailableTimeSlots());
+            hoursAdapter.setMode(locationMode);
         }
 
         if (locations.isEmpty()) {
@@ -206,6 +212,17 @@ public abstract class BaseAvailableHoursFragment extends BaseDialogFragment impl
             singleLocation.setVisibility(View.VISIBLE);
             singleLocationText.setText(locations.get(0).getName());
         }
+
+        if(hoursAdapter.getItemCount() < 1){
+            noAppointmentLayout.setVisibility(View.VISIBLE);
+            locationsLayout.setVisibility(View.GONE);
+            availableHoursRecycleView.setVisibility(View.GONE);
+        }else{
+            noAppointmentLayout.setVisibility(View.GONE);
+            locationsLayout.setVisibility(View.VISIBLE);
+            availableHoursRecycleView.setVisibility(View.VISIBLE);
+        }
+
     }
 
     private void updateDateRange() {
@@ -272,99 +289,6 @@ public abstract class BaseAvailableHoursFragment extends BaseDialogFragment impl
         return timeSlots;
     }
 
-
-    private ArrayList<Object> getAvailableHoursListWithHeader() {
-        ArrayList<Object> timeSlotsListWithHeaders = new ArrayList<>();
-
-        if (availabilityDTO != null && availabilityDTO.getPayload().getAppointmentAvailability().getPayload().size() > 0) {
-            List<AppointmentAvailabilityPayloadDTO> availabilityPayloadDTOs = availabilityDTO.getPayload().getAppointmentAvailability().getPayload();
-            List<AppointmentsSlotsDTO> appointmentsSlotsDTOList = groupAllLocationSlotsByTime(availabilityPayloadDTOs);//availabilityDTO.getPayload().getAppointmentAvailability().getPayload().get(0).getSlots();
-            if (appointmentsSlotsDTOList != null && appointmentsSlotsDTOList.size() > 0) {
-                // To sort appointment time slots list based on time
-                Collections.sort(appointmentsSlotsDTOList, new Comparator<AppointmentsSlotsDTO>() {
-                    public int compare(AppointmentsSlotsDTO obj1, AppointmentsSlotsDTO obj2) {
-                        String dateO1 = obj1.getStartTime();
-                        String dateO2 = obj2.getStartTime();
-
-                        Date date1 = DateUtil.getInstance().setDateRaw(dateO1).getDate();
-                        Date date2 = DateUtil.getInstance().setDateRaw(dateO2).getDate();
-
-                        long time1 = 0;
-                        long time2 = 0;
-                        if (date1 != null) {
-                            time1 = date1.getTime();
-                        }
-
-                        if (date2 != null) {
-                            time2 = date2.getTime();
-                        }
-
-                        if (time1 < time2) {
-                            return -1;
-                        } else {
-                            return 1;
-                        }
-                    }
-                });
-
-                // To sort appointment time slots list based on today or tomorrow
-                Collections.sort(appointmentsSlotsDTOList, new Comparator<AppointmentsSlotsDTO>() {
-                    public int compare(AppointmentsSlotsDTO obj1, AppointmentsSlotsDTO obj2) {
-                        String date01 = obj1.getStartTime();
-                        String date02 = obj2.getStartTime();
-
-                        Date date2 = DateUtil.getInstance().setDateRaw(date02).getDate();
-                        DateUtil.getInstance().setDateRaw(date01);
-                        return DateUtil.getInstance().compareTo(date2);
-                    }
-                });
-
-                // To create appointment time slots list data structure along with headers
-                String headerTitle = "";
-                for (AppointmentsSlotsDTO timSlotsDTO : appointmentsSlotsDTOList) {
-
-                    String title = getSectionHeaderTitle(timSlotsDTO.getStartTime());
-                    if (headerTitle.equalsIgnoreCase(title)) {
-                        timeSlotsListWithHeaders.add(timSlotsDTO);
-                    } else {
-                        headerTitle = title;
-                        timeSlotsListWithHeaders.add(headerTitle);
-                        timeSlotsListWithHeaders.add(timSlotsDTO);
-                    }
-                }
-
-            }
-        }
-        return timeSlotsListWithHeaders;
-    }
-
-    private String getSectionHeaderTitle(String timeSlotRawDate) {
-        // Current date
-        String currentDate = DateUtil.getInstance().setToCurrent().toStringWithFormatMmDashDdDashYyyy();
-        final Date currentConvertedDate = DateUtil.getInstance().setDateRaw(currentDate).getDate();
-
-        // day after tomorrow date
-        String dayAfterTomorrowDate = DateUtil.getInstance().setToDayAfterTomorrow().toStringWithFormatMmDashDdDashYyyy();
-        final Date dayAfterTomorrowConvertedDate = DateUtil.getInstance().setDateRaw(dayAfterTomorrowDate).getDate();
-
-        // Appointment time slot date
-        String appointmentDate = DateUtil.getInstance().setDateRaw(timeSlotRawDate).toStringWithFormatMmDashDdDashYyyy();
-        final Date convertedAppointmentDate = DateUtil.getInstance().setDateRaw(appointmentDate).getDate();
-
-        String headerText;
-        if (convertedAppointmentDate.after(dayAfterTomorrowConvertedDate) ||
-                appointmentDate.equalsIgnoreCase(dayAfterTomorrowDate)) {
-            headerText = DateUtil.getInstance().getDateAsDayMonthDayOrdinal();
-        } else if (convertedAppointmentDate.after(currentConvertedDate) && convertedAppointmentDate.before(dayAfterTomorrowConvertedDate)
-                && !appointmentDate.equalsIgnoreCase(currentDate)) {
-            headerText = Label.getLabel("add_appointment_tomorrow");
-        } else if (convertedAppointmentDate.before(currentConvertedDate)) {
-            headerText = Label.getLabel("today_appointments_heading");
-        } else {
-            headerText = Label.getLabel("today_appointments_heading");
-        }
-        return headerText;
-    }
 
     private void getAvailableHoursTimeSlots() {
         Map<String, String> queryMap = new HashMap<>();
@@ -454,24 +378,6 @@ public abstract class BaseAvailableHoursFragment extends BaseDialogFragment impl
             }
 
         }
-
-        //need to sort the slots by time just in case there are multiple locations and times are out of order
-        Collections.sort(appointmentsSlots, new Comparator<AppointmentsSlotsDTO>() {
-            @Override
-            public int compare(AppointmentsSlotsDTO o1, AppointmentsSlotsDTO o2) {
-                try {
-                    Date d1 = dateFormater.parse(o1.getStartTime());
-                    Date d2 = dateFormater.parse(o2.getStartTime());
-
-                    return d1.compareTo(d2);
-                } catch (ParseException pxe) {
-                    pxe.printStackTrace();
-                }
-
-                return 0;
-            }
-        });
-
         return appointmentsSlots;
     }
 

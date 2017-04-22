@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
@@ -30,11 +31,19 @@ public class FilterableAvailableHoursAdapter extends RecyclerView.Adapter<Recycl
         void onSelectAppointmentTimeSlot(AppointmentsSlotsDTO appointmentsSlotsDTO);
     }
 
+    public enum LocationMode {
+        SINGLE, MULTI;
+    }
+
     private Context context;
     private SelectAppointmentTimeSlotCallback callback;
     private List<AppointmentsSlotsDTO> allTimeSlots = new ArrayList<>();
     private Map<String, LocationDTO> selectedLocations = new HashMap<>();
     private List<AppointmentsSlotsDTO> filteredTimeSlots = new ArrayList<>();
+    private LocationMode mode;
+
+    private String today = Label.getLabel("today_label");
+    private String tomorrow = Label.getLabel("add_appointment_tomorrow");
 
     /**
      * Constructor
@@ -43,16 +52,22 @@ public class FilterableAvailableHoursAdapter extends RecyclerView.Adapter<Recycl
      * @param selectedLocations Selected Locations
      * @param callback Selected Slot callback
      */
-    public FilterableAvailableHoursAdapter(Context context, List<AppointmentsSlotsDTO> allTimeSlots, Map<String, LocationDTO> selectedLocations, SelectAppointmentTimeSlotCallback callback){
+    public FilterableAvailableHoursAdapter(Context context, List<AppointmentsSlotsDTO> allTimeSlots, Map<String, LocationDTO> selectedLocations, SelectAppointmentTimeSlotCallback callback, LocationMode mode){
         this.context = context;
         this.allTimeSlots = allTimeSlots;
         this.selectedLocations = selectedLocations;
         this.callback = callback;
+        this.mode = mode;
+        updateFilteredSlots();
     }
 
     public void setAllTimeSlots(List<AppointmentsSlotsDTO> allTimeSlots) {
         this.allTimeSlots = allTimeSlots;
         updateFilteredSlots();
+    }
+
+    public void setMode(LocationMode mode){
+        this.mode = mode;
     }
 
     @Override
@@ -88,7 +103,7 @@ public class FilterableAvailableHoursAdapter extends RecyclerView.Adapter<Recycl
 
         if (viewHolder.getItemViewType() == CELL_HEADER) {
             ViewHolderSectionHeader vhSectionHeader = (ViewHolderSectionHeader) viewHolder;
-            vhSectionHeader.getTextView().setText(appointmentSlotItem.toString());
+            vhSectionHeader.getTextView().setText(appointmentSlotItem.getStartTime());
         } else {
             ViewHolderTimeSlot vhTimeSlot = (ViewHolderTimeSlot) viewHolder;
             final AppointmentsSlotsDTO appointmentsSlotsDTO = ((AppointmentsSlotsDTO) appointmentSlotItem);
@@ -98,7 +113,7 @@ public class FilterableAvailableHoursAdapter extends RecyclerView.Adapter<Recycl
             String time12Hour = DateUtil.getInstance().getTime12Hour();
             vhTimeSlot.getTextView().setText(time12Hour);
 
-            if (selectedLocations.size() == 1) {
+            if (selectedLocations.size() == 1 || mode == LocationMode.SINGLE) {
                 //Single location selected no need to show Location in each Slot
                 vhTimeSlot.getTextViewLocation().setVisibility(View.GONE);
             } else {
@@ -127,7 +142,7 @@ public class FilterableAvailableHoursAdapter extends RecyclerView.Adapter<Recycl
         filteredTimeSlots.clear();
 
         Date lastDate = new Date(0);
-        AppointmentsSlotsDTO hederTemplate;
+        AppointmentsSlotsDTO headerTemplate;
         int headerCount = 0;
         for(AppointmentsSlotsDTO slot : allTimeSlots){
             //Check if this is a filtered Location
@@ -138,22 +153,24 @@ public class FilterableAvailableHoursAdapter extends RecyclerView.Adapter<Recycl
             Date slotDate = DateUtil.getInstance().setDateRaw(slot.getStartTime()).getDate();
             if(slotDate!=null && !DateUtil.isSameDay(lastDate, slotDate)){
                 //add this slot object to the list
-                hederTemplate = new AppointmentsSlotsDTO();
-                hederTemplate.setStartTime(slot.getStartTime());
-                filteredTimeSlots.add(hederTemplate);
+                headerTemplate = new AppointmentsSlotsDTO();
+                headerTemplate.setStartTime(DateUtil.getFormattedDate(slotDate, today, tomorrow));
+                filteredTimeSlots.add(headerTemplate);
                 headerCount++;
+                lastDate = slotDate;
             }
 
             filteredTimeSlots.add(slot);
 
         }
 
-        if(headerCount <= 1){
-            filteredTimeSlots.remove(0);
-        }
+//        if(headerCount == 1){
+//            filteredTimeSlots.remove(0);
+//        }
 
         notifyDataSetChanged();
     }
+
 
     private class ViewHolderTimeSlot extends RecyclerView.ViewHolder {
 

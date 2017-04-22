@@ -9,6 +9,7 @@
     <include layout="@layout/add_appointment_toolbar" />
 
     <LinearLayout
+        android:id="@+id/location_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/add_apt_available_hours_edit_range_height"
         android:background="@color/date_range_header"
@@ -108,6 +109,9 @@
                 android:indeterminateDrawable="@drawable/progress_indeterminate_custom" />
 
         </FrameLayout>
+
+        <include layout="@layout/no_appointment_layout"
+                 android:id="@+id/no_appointment_layout"/>
 
 
     </FrameLayout>
