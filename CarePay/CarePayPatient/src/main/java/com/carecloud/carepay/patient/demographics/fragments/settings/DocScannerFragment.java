@@ -43,7 +43,8 @@ public class DocScannerFragment extends DocumentScannerFragment {
     private String documentsdocumentsScanFirstString = null;
     private String documentsScanBackString = null;
 
-    private DocScannerFragment() {
+    public DocScannerFragment() {
+
     }
 
     /**
