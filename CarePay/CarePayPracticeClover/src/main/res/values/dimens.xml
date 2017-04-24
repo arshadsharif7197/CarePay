@@ -3,4 +3,6 @@
 
     <dimen name="dialog_width">510dp</dimen>
     <dimen name="dialog_height">600dp</dimen>
+    <dimen name="checkinNavBarOpenOffset">60dp</dimen>
+    <dimen name="checkinNavBarClosedOffset">0dp</dimen>
 </resources>
