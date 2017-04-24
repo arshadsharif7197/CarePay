@@ -11,7 +11,8 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.fcm.NotificationModel;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.google.gson.Gson;
+
+import java.util.Map;
 
 /**
  * Created by pjohnson on 4/04/17.
@@ -29,8 +30,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
-            Gson gson = new Gson();
-            NotificationModel notificationModel = gson.fromJson(remoteMessage.getData().get("payload"), NotificationModel.class);
+            NotificationModel notificationModel = getRemoteMessageInfo(remoteMessage.getData());
             NotificationCompat.Builder builder =
                     new NotificationCompat.Builder(this)
                             .setAutoCancel(true)
@@ -59,6 +59,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
         }
 
+    }
+
+    private NotificationModel getRemoteMessageInfo(Map<String, String> data) {
+        NotificationModel notificationModel = new NotificationModel();
+        notificationModel.setAlert(data.get("alert"));
+        notificationModel.setAppointmentId(data.get("appointment_id"));
+        notificationModel.setPatientId(data.get("patient_id"));
+        notificationModel.setPracticeId(data.get("practice_id"));
+        notificationModel.setPracticeMgmt(data.get("practice_mgmt"));
+        return notificationModel;
     }
 
 
