@@ -9,7 +9,7 @@ import android.widget.FrameLayout;
 /**
  * @author pjohnson on 21/04/17.
  */
-public class AndroidBug5497Workaround {
+public class KeyboardScrollWithWebViewFix {
 
     // For more information, see https://code.google.com/p/android/issues/detail?id=5497
     // To use this class, simply invoke assistFragment() on an Fragment that already has its content view set.
@@ -20,14 +20,14 @@ public class AndroidBug5497Workaround {
      * @param offset the bottom offset
      */
     public static void assistFragment(Fragment fragment, int offset) {
-        new AndroidBug5497Workaround(fragment, offset);
+        new KeyboardScrollWithWebViewFix(fragment, offset);
     }
 
     private View mChildOfContent;
     private int usableHeightPrevious;
     private FrameLayout.LayoutParams frameLayoutParams;
 
-    private AndroidBug5497Workaround(Fragment fragment, final int offset) {
+    private KeyboardScrollWithWebViewFix(Fragment fragment, final int offset) {
         if (fragment != null) {
             FrameLayout content = (FrameLayout) fragment.getView().getParent();
             mChildOfContent = content.getChildAt(0);
