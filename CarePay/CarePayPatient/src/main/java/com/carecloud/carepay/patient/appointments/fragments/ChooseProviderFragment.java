@@ -28,9 +28,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -88,7 +86,7 @@ public class ChooseProviderFragment extends BaseFragment implements ProviderAdap
 
         Toolbar toolbar = (Toolbar) chooseProviderView.findViewById(R.id.add_appointment_toolbar);
         TextView titleView = (TextView) toolbar.findViewById(R.id.add_appointment_toolbar_title);
-        titleView.setText(appointmentsResultModel.getMetadata().getLabel().getChooseProviderHeading());
+        titleView.setText(Label.getLabel("choose_provider_heading"));
         titleView.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
         toolbar.setTitle("");
 
