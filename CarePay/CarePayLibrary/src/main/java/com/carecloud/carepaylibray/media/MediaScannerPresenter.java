@@ -43,6 +43,12 @@ public class MediaScannerPresenter {
 
     private String pendingAction;
 
+    /**
+     * Presenter for handling any views that require use of the Camera or Gallery
+     * @param context context
+     * @param cameraReady camera callback
+     * @param mediaViewInterface  view interface
+     */
     public MediaScannerPresenter(Context context, CarePayCameraReady cameraReady, MediaViewInterface mediaViewInterface){
         this.context = context;
         this.cameraReady = cameraReady;
@@ -50,6 +56,10 @@ public class MediaScannerPresenter {
     }
 
 
+    /**
+     * Start Image Selection by presenting a set of choices
+     * @param includeGalleryOption should include select from Gallery choice
+     */
     public void selectImage(boolean includeGalleryOption) {
         // create the chooser dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -64,6 +74,12 @@ public class MediaScannerPresenter {
         builder.show();
     }
 
+    /**
+     * Forward permission result handling to presenter
+     * @param requestCode requestCode
+     * @param permissions permissions
+     * @param grantResults grantResults
+     */
     public void handleRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
         switch (requestCode) {
             case PermissionsUtil.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
@@ -82,10 +98,20 @@ public class MediaScannerPresenter {
                     //code for deny
                     Log.v(LOG_TAG, "camera denied");
                 }
+                break;
+
+            default:
+                Log.d(MediaScannerPresenter.class.getName(), "Cannot handle this permission request");
         }
 
     }
 
+    /**
+     * Forward activity Result handling to Presenter
+     * @param requestCode requestCode
+     * @param resultCode resultCode
+     * @param data intent data
+     */
     public void handleActivityResult(int requestCode, int resultCode, Intent data){
         if (resultCode == Activity.RESULT_OK) {
             Bitmap bitmap = null;
