@@ -187,16 +187,12 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         this.visitTypeDTO = visitTypeDTO;
         PracticeAvailableHoursDialogFragment fragment = PracticeAvailableHoursDialogFragment.newInstance(appointmentsResultModel, appointmentResourcesDTO.getResource(), null, null, visitTypeDTO);
         fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
-
-//        new PracticeAvailableHoursDialog(getContext(), Label.getLabel("available_hours_back"), appointmentResourcesDTO.getResource(), appointmentsResultModel, visitTypeDTO, getLinks().getAppointmentAvailability(), this).show();
-
     }
 
     @Override
     public void selectTime(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource, AppointmentsResultModel appointmentsResultModel) {
         PracticeAvailableHoursDialogFragment fragment = PracticeAvailableHoursDialogFragment.newInstance(appointmentsResultModel, appointmentResourcesDTO.getResource(), startDate, endDate, visitTypeDTO);
         fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
-//        new PracticeAvailableHoursDialog(getContext(), Label.getLabel("available_hours_back"), appointmentResource, appointmentsResultModel, visitTypeDTO, getLinks().getAppointmentAvailability(), this, startDate, endDate).show();
     }
 
     @Override

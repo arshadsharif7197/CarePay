@@ -225,7 +225,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         AppointmentDateRangeFragment appointmentDateRangeFragment = new AppointmentDateRangeFragment();
         appointmentDateRangeFragment.setArguments(bundle);
 
-        navigateToFragment(appointmentDateRangeFragment, true);
+        navigateToFragment(appointmentDateRangeFragment, false);
         displayToolbar(false, null);
     }
 

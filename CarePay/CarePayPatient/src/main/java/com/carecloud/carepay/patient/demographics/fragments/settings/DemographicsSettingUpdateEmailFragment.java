@@ -54,7 +54,8 @@ public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
     private TextInputLayout passwordLabelLayout;
     private View rootView;
 
-    private DemographicsSettingUpdateEmailFragment() {
+    public DemographicsSettingUpdateEmailFragment() {
+
     }
 
     /**
