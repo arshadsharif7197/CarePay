@@ -63,9 +63,12 @@
 -keep class org.w3c.dom.bootstrap.** { *; }
 -dontwarn org.codehaus.jackson.**
 
--keep class com.smartystreets.api.** { *; }
-
 -keep class com.google.android.gms.measurement.** { *; }
 -dontwarn com.google.firebase.messaging.**
+
+-keep class com.smartystreets.api.** { *; }
+
+-keep class sun.misc.** { *; }
+-dontwarn com.google.common.**
 
 
