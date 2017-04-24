@@ -373,6 +373,7 @@ public class SigninFragment extends BaseFragment {
     private WorkflowServiceCallback unifiedLoginCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
+            SystemUtil.hideSoftKeyboard(getActivity());
             showProgressDialog();
         }
 
