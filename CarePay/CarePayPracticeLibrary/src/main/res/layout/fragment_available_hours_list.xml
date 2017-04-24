@@ -49,6 +49,7 @@
         </FrameLayout>
 
         <LinearLayout
+            android:id="@+id/location_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/add_apt_available_hours_edit_range_height"
             android:background="@color/payne_gray"
