@@ -241,7 +241,7 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
 
             ((ISession) context).hideProgressDialog();
             pinEditText.setText("");
-            SystemUtil.showErrorToast(getContext(), displayMessage);
+            SystemUtil.showErrorToast(context, displayMessage);
             Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
