@@ -37,9 +37,9 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.smartystreets.api.us_zipcode.City;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
-
 import java.util.Arrays;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 
 /**
  * A simple {@link CheckInDemographicsBaseFragment} subclass.
@@ -146,7 +146,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
                     cityEditText.setText(smartyStreetsResponse.getCity());
                     stateAbbr = smartyStreetsResponse.getStateAbbreviation();
                     stateEditText.setText(stateAbbr);
-
+                    checkIfEnableButton(getView());
                 }
             }
 
