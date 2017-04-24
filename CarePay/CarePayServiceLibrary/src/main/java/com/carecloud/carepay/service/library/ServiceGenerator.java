@@ -2,10 +2,13 @@ package com.carecloud.carepay.service.library;
 
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
+import com.carecloud.carepay.service.library.interceptors.HeaderInterceptor;
+import com.carecloud.carepay.service.library.interceptors.JSONFormattedLoggingInterceptor;
 
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -85,6 +88,7 @@ public class ServiceGenerator {
         if (headers != null) {
             httpClient.addInterceptor(new HeaderInterceptor(headers));
         }
+        httpClient.addInterceptor(new JSONFormattedLoggingInterceptor());
         OkHttpClient client = httpClient.build();
         Retrofit retrofit = builder.client(client).build();
 
