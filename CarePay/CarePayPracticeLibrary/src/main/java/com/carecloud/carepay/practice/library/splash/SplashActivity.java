@@ -12,6 +12,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
+import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
 
 public class SplashActivity extends BasePracticeActivity {
 
@@ -23,6 +24,9 @@ public class SplashActivity extends BasePracticeActivity {
         super.onCreate(savedInstanceState);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash);
+
+        WorkflowSessionHandler.createSession(this);
+
         getWorkflowServiceHelper().executeApplicationStartRequest(applicationStartCallback);
 
         //clear old Labels from Preferences

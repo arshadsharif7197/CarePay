@@ -7,6 +7,8 @@ public class WorkFlowRecord extends SugarRecord {
     private String payload;
     private String state;
 
+    private Long sessionKey;
+
     /**
      * Do not delete - SugarRecord needs it
      */
@@ -33,5 +35,13 @@ public class WorkFlowRecord extends SugarRecord {
 
     public String getState() {
         return state;
+    }
+
+    public Long getSessionKey() {
+        return sessionKey;
+    }
+
+    public void setSessionKey(Long sessionKey) {
+        this.sessionKey = sessionKey;
     }
 }

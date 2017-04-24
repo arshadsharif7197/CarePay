@@ -217,22 +217,4 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
 
     public abstract void navigateToWorkflow(WorkflowDTO workflowDTO);
 
-    @Override
-    protected void onDestroy() {
-        Bundle bundle = this.getIntent().getExtras();
-
-        if (bundle != null) {
-            Object rawWorkflowDTO = bundle.get(WorkflowDTO.class.getSimpleName());
-            if (rawWorkflowDTO != null) {
-                try {
-                    long id = (Long) rawWorkflowDTO;
-                    WorkFlowRecord.findById(WorkFlowRecord.class, id).delete();
-                } catch (ClassCastException e) {
-                    // Do nothing
-                }
-            }
-        }
-
-        super.onDestroy();
-    }
 }
