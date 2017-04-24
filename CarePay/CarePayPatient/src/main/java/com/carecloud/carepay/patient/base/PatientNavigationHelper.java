@@ -18,6 +18,7 @@ import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
+import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 public class PatientNavigationHelper {
@@ -131,6 +132,8 @@ public class PatientNavigationHelper {
         }
 
         WorkFlowRecord workFlowRecord = new WorkFlowRecord(workflowDTO);
+        workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(context));
+
         Bundle bundle = new Bundle();
         bundle.putLong(WorkflowDTO.class.getSimpleName(), workFlowRecord.save());
         if (intent != null) {
