@@ -189,6 +189,13 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     }
 
     @Override
+    public void onCaptureFail() {
+        if (carePayCameraCallback != null) {
+            carePayCameraCallback.onCaptureFail();
+        }
+    }
+
+    @Override
     public void showHelpFragment() {
         navigateToFragment(new HelpFragment(), true);
     }

@@ -1,6 +1,5 @@
 package com.carecloud.carepaylibray.demographics.scanner;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -261,6 +260,11 @@ public class InsuranceScannerFragment extends DocumentScannerFragment {
                 backDTO.setInsurancePhoto(imageAsBase64); // create the image dto
             }
         }
+    }
+
+    @Override
+    public void onCaptureFail() {
+
     }
 
     /**

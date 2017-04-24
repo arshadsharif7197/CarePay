@@ -57,4 +57,10 @@ public class CarePayCameraActivity extends BaseActivity implements CarePayCamera
         ImageCaptureHelper.setImageBitmap(bitmap);
         finish();
     }
+
+    @Override
+    public void onCaptureFail() {
+        setResult(RESULT_CANCELED);
+        finish();
+    }
 }

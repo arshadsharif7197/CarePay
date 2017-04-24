@@ -158,6 +158,11 @@ public class DocScannerFragment extends DocumentScannerFragment {
     }
 
     @Override
+    public void onCaptureFail() {
+
+    }
+
+    @Override
     public void populateViewsFromModel(View view) {
         if (model != null) {
             // add front image

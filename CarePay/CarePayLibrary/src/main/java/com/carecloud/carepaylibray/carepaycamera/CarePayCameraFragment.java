@@ -71,6 +71,12 @@ public class CarePayCameraFragment extends BaseDialogFragment implements CarePay
     }
 
     @Override
+    public void onCaptureFail() {
+        dismiss();
+    }
+
+
+    @Override
     public void onStart() {
         super.onStart();
 

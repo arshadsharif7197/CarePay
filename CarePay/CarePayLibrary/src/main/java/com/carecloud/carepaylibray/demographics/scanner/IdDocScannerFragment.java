@@ -165,6 +165,11 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
     }
 
     @Override
+    public void onCaptureFail() {
+
+    }
+
+    @Override
     public void populateViewsFromModel(View view) {
         String frontPic = null;
         String backPic = null;
