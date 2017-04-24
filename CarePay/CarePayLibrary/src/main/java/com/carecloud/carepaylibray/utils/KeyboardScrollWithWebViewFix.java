@@ -17,40 +17,40 @@ public class KeyboardScrollWithWebViewFix {
     /**
      *
      * @param fragment the fragment to manage its height
-     * @param offset the bottom offset
+     * @param closedOffset the bottom offset
      */
-    public static void assistFragment(Fragment fragment, int offset) {
-        new KeyboardScrollWithWebViewFix(fragment, offset);
+    public static void assistFragment(Fragment fragment, int closedOffset, int openOffset) {
+        new KeyboardScrollWithWebViewFix(fragment, closedOffset, openOffset);
     }
 
     private View childOfContent;
     private int usableHeightPrevious;
     private FrameLayout.LayoutParams frameLayoutParams;
 
-    private KeyboardScrollWithWebViewFix(Fragment fragment, final int offset) {
+    private KeyboardScrollWithWebViewFix(Fragment fragment, final int closedOffset, final int openOffset) {
         if (fragment != null) {
             FrameLayout content = (FrameLayout) fragment.getView().getParent();
             childOfContent = content.getChildAt(0);
             childOfContent.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 public void onGlobalLayout() {
-                    possiblyResizeChildOfContent(offset);
+                    possiblyResizeChildOfContent(closedOffset, openOffset);
                 }
             });
             frameLayoutParams = (FrameLayout.LayoutParams) childOfContent.getLayoutParams();
         }
     }
 
-    private void possiblyResizeChildOfContent(int offset) {
+    private void possiblyResizeChildOfContent(int closedOffset, int openOffset) {
         int usableHeightNow = computeUsableHeight();
         if (usableHeightNow != usableHeightPrevious) {
             int usableHeightSansKeyboard = childOfContent.getRootView().getHeight();
             int heightDifference = usableHeightSansKeyboard - usableHeightNow;
             if (heightDifference > (usableHeightSansKeyboard / 4)) {
                 // keyboard probably just became visible
-                frameLayoutParams.height = usableHeightSansKeyboard - heightDifference + offset;
+                frameLayoutParams.height = usableHeightSansKeyboard - heightDifference + openOffset;
             } else {
                 // keyboard probably just became hidden
-                frameLayoutParams.height = usableHeightSansKeyboard - offset;
+                frameLayoutParams.height = usableHeightSansKeyboard - closedOffset;
             }
             childOfContent.requestLayout();
             usableHeightPrevious = usableHeightNow;
