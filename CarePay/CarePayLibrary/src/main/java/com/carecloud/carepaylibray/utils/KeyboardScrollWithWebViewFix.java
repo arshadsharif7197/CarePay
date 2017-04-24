@@ -23,27 +23,27 @@ public class KeyboardScrollWithWebViewFix {
         new KeyboardScrollWithWebViewFix(fragment, offset);
     }
 
-    private View mChildOfContent;
+    private View childOfContent;
     private int usableHeightPrevious;
     private FrameLayout.LayoutParams frameLayoutParams;
 
     private KeyboardScrollWithWebViewFix(Fragment fragment, final int offset) {
         if (fragment != null) {
             FrameLayout content = (FrameLayout) fragment.getView().getParent();
-            mChildOfContent = content.getChildAt(0);
-            mChildOfContent.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            childOfContent = content.getChildAt(0);
+            childOfContent.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 public void onGlobalLayout() {
                     possiblyResizeChildOfContent(offset);
                 }
             });
-            frameLayoutParams = (FrameLayout.LayoutParams) mChildOfContent.getLayoutParams();
+            frameLayoutParams = (FrameLayout.LayoutParams) childOfContent.getLayoutParams();
         }
     }
 
     private void possiblyResizeChildOfContent(int offset) {
         int usableHeightNow = computeUsableHeight();
         if (usableHeightNow != usableHeightPrevious) {
-            int usableHeightSansKeyboard = mChildOfContent.getRootView().getHeight();
+            int usableHeightSansKeyboard = childOfContent.getRootView().getHeight();
             int heightDifference = usableHeightSansKeyboard - usableHeightNow;
             if (heightDifference > (usableHeightSansKeyboard / 4)) {
                 // keyboard probably just became visible
@@ -52,15 +52,15 @@ public class KeyboardScrollWithWebViewFix {
                 // keyboard probably just became hidden
                 frameLayoutParams.height = usableHeightSansKeyboard - offset;
             }
-            mChildOfContent.requestLayout();
+            childOfContent.requestLayout();
             usableHeightPrevious = usableHeightNow;
         }
     }
 
     private int computeUsableHeight() {
-        Rect r = new Rect();
-        mChildOfContent.getWindowVisibleDisplayFrame(r);
-        return (r.bottom - r.top);
+        Rect rect = new Rect();
+        childOfContent.getWindowVisibleDisplayFrame(rect);
+        return (rect.bottom - rect.top);
     }
 
 }
