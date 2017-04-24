@@ -50,6 +50,12 @@ public class JSONFormattedLoggingInterceptor implements Interceptor {
                 .build();
     }
 
+    /**
+     * Body to string string.
+     *
+     * @param request the request
+     * @return the string
+     */
     public static String bodyToString(final Request request) {
         try {
             final Request copy = request.newBuilder().build();
