@@ -806,6 +806,11 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
     }
 
+    @Override
+    public void onCaptureFail() {
+
+    }
+
     private boolean hasInsurance() {
         return !demographicDTO.getPayload().getDemographics().getPayload().getInsurances().isEmpty();
     }

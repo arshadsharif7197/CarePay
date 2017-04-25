@@ -39,10 +39,10 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
+
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -305,6 +305,11 @@ public class EditProfileFragment extends DocumentScannerFragment {
                 demographicsPersonalDetails.setProfilePhoto(imageAsBase64);
             }
         }
+    }
+
+    @Override
+    public void onCaptureFail() {
+
     }
 
     @Override

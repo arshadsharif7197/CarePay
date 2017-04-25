@@ -39,7 +39,6 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.models.PatientModel;
-import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityPersDetailsDTO;
@@ -1358,6 +1357,11 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
     @Override
     public void onCapturedSuccess(Bitmap bitmap) {
+
+    }
+
+    @Override
+    public void onCaptureFail() {
 
     }
 

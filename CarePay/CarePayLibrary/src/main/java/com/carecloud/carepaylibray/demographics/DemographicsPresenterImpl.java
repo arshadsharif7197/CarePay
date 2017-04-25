@@ -20,12 +20,12 @@ import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckinCompletedDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
+import com.carecloud.carepaylibray.demographics.fragments.FormsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
 import com.carecloud.carepaylibray.demographics.fragments.IdentificationFragment;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.fragments.IntakeFormsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
-import com.carecloud.carepaylibray.demographics.fragments.FormsFragment;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.demographics.scanner.ProfilePictureFragment;
 import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearchFragment;
@@ -313,6 +313,13 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     public void onCapturedSuccess(Bitmap bitmap) {
         if (carePayCameraCallback != null) {
             carePayCameraCallback.onCapturedSuccess(bitmap);
+        }
+    }
+
+    @Override
+    public void onCaptureFail() {
+        if (carePayCameraCallback != null) {
+            carePayCameraCallback.onCaptureFail();
         }
     }
 
