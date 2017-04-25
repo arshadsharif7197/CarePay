@@ -425,4 +425,8 @@
     <dimen name="button_delete_key_height">27dp</dimen>
     <dimen name="keypad_width">600dp</dimen>
     <dimen name="keypad_height">700dp</dimen>
+
+    <dimen name="home_logo_width">174dp</dimen>
+    <dimen name="checkinNavBarOpenOffset">60dp</dimen>
+    <dimen name="checkinNavBarClosedOffset">0dp</dimen>
 </resources>
