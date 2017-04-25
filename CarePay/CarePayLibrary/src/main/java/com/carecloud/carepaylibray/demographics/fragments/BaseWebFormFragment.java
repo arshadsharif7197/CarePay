@@ -29,6 +29,7 @@ import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
+import com.carecloud.carepaylibray.utils.KeyboardScrollWithWebViewFix;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.marcok.stepprogressbar.StepProgressBar;
@@ -100,6 +101,11 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         progressBar = (ProgressBar) view.findViewById(com.carecloud.carepaylibrary.R.id.progressBarConsent);
         progressBar.setVisibility(View.VISIBLE);
         initWebView();
+
+        KeyboardScrollWithWebViewFix.assistFragment(this,
+                (int) getResources().getDimension(R.dimen.checkinNavBarClosedOffset),
+                (int) getResources().getDimension(R.dimen.checkinNavBarOpenOffset));
+
     }
 
     protected void setHeader(String text){
