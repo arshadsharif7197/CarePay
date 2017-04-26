@@ -8,7 +8,7 @@ package com.carecloud.carepaylibray.signinsignup.dtos.signup;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-
+@Deprecated
 public class CreatePasswordValidationDTO {
 
     @SerializedName("type")

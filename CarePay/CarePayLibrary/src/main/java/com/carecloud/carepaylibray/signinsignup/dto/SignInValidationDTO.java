@@ -1,14 +1,13 @@
-package com.carecloud.carepaylibray.signinsignup.dtos.signin;
-
-/**
- * Created by Rahul on 11/7/16.
- */
+package com.carecloud.carepaylibray.signinsignup.dto;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-@Deprecated
-public class SignInPasswordValidationDTO {
 
+/**
+ * @author pjohnson on 25/04/17.
+ */
+
+public class SignInValidationDTO {
     @SerializedName("type")
     @Expose
     private String type;
@@ -60,5 +59,4 @@ public class SignInPasswordValidationDTO {
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
     }
-
 }

@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by Jahirul Bhuiyan on 10/25/2016.
  */
-
+@Deprecated
 public class SigninDTO {
     @SerializedName("metadata")
     @Expose

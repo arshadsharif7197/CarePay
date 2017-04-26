@@ -8,7 +8,7 @@ import com.carecloud.carepaylibray.signinsignup.dtos.signin.SignInDTO;
 import com.carecloud.carepaylibray.signinsignup.dtos.signup.SignUpDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
+@Deprecated
 public class SignInDataModelDTO {
 
     @SerializedName("signin")

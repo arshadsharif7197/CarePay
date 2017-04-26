@@ -1,16 +1,14 @@
-package com.carecloud.carepaylibray.signinsignup.dtos;
-
-/**
- * Created by Rahul on 11/7/16.
- */
-
+package com.carecloud.carepaylibray.signinsignup.dto;
 
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-@Deprecated
-public class SignInSignUpTransitionsDTO {
+/**
+ * @author pjohnson on 25/04/17.
+ */
+
+public class SignInTransitionsDTO {
 
     @SerializedName("authenticate")
     @Expose
@@ -36,20 +34,17 @@ public class SignInSignUpTransitionsDTO {
     @Expose
     private TransitionDTO signOut = new TransitionDTO();
 
-    /**
-     *
-     * @return
-     * The authenticate
-     */
+    @SerializedName("action")
+    @Expose
+    private TransitionDTO action = new TransitionDTO();
+    @SerializedName("qrcode")
+    @Expose
+    private TransitionDTO qrcode = new TransitionDTO();
+
     public TransitionDTO getAuthenticate() {
         return authenticate;
     }
 
-    /**
-     *
-     * @param authenticate
-     * The authenticate
-     */
     public void setAuthenticate(TransitionDTO authenticate) {
         this.authenticate = authenticate;
     }
@@ -92,5 +87,21 @@ public class SignInSignUpTransitionsDTO {
 
     public void setSignOut(TransitionDTO signOut) {
         this.signOut = signOut;
+    }
+
+    public TransitionDTO getAction() {
+        return action;
+    }
+
+    public void setAction(TransitionDTO action) {
+        this.action = action;
+    }
+
+    public TransitionDTO getQrcode() {
+        return qrcode;
+    }
+
+    public void setQrcode(TransitionDTO qrcode) {
+        this.qrcode = qrcode;
     }
 }

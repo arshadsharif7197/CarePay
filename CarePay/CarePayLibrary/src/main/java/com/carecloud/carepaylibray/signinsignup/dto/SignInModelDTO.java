@@ -1,15 +1,15 @@
-package com.carecloud.carepay.practice.library.signin.dtos;
-
-/**
- * Created by Rahul on 11/2/16.
- */
+package com.carecloud.carepaylibray.signinsignup.dto;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-@Deprecated
+/**
+ * @author pjohnson on 25/04/17.
+ */
+
 public class SignInModelDTO {
-    @SerializedName("labels")
+
+    @SerializedName("label")
     @Expose
     private String labels;
     @SerializedName("properties")
@@ -43,5 +43,4 @@ public class SignInModelDTO {
     public void setProperties(SignInPropertiesDTO properties) {
         this.properties = properties;
     }
-
 }
