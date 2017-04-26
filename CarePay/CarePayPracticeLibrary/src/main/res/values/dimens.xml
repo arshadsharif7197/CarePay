@@ -235,4 +235,5 @@
     <dimen name="keypad_width">600dp</dimen>
     <dimen name="keypad_height">700dp</dimen>
     <dimen name="calculator_entry_text">90sp</dimen>
+    <dimen name="emailFieldTopMargin">0dp</dimen>
 </resources>

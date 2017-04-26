@@ -67,8 +67,9 @@
             android:layout_width="500dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_gravity="center_horizontal"
             android:background="@drawable/layout_shadow"
+            android:gravity="center"
+            android:orientation="vertical"
             android:paddingBottom="20dp"
             android:paddingEnd="20dp"
             android:paddingStart="20dp"
@@ -78,6 +79,7 @@
                 android:id="@+id/signInEmailTextInputLayout"
                 style="@style/TextInputLayoutStyle"
                 android:layout_alignParentTop="true"
+                android:layout_marginTop="@dimen/emailFieldTopMargin"
                 app:customAssetFont="proxima_nova_semi_bold"
                 app:hintTextAppearance="@style/FloatingLabelStyle">
 
@@ -127,12 +129,12 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/signinButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/dimen_48dp"
                 android:layout_below="@id/passwordContainer"
                 android:layout_marginBottom="@dimen/dimen_20dp"
                 android:layout_marginEnd="2dp"
                 android:layout_marginStart="2dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="@dimen/dimen_30dp"
                 android:background="@drawable/button_sign_in_selector"
                 android:enabled="false"
                 android:textAllCaps="false"
