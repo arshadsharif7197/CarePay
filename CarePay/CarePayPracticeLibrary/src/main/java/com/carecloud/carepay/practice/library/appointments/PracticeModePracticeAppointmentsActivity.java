@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.appointments.dialogs.CancelAppointmentConfirmDialogFragment;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAppointmentDialog;
 import com.carecloud.carepay.practice.library.appointments.dtos.PracticeAppointmentDTO;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
@@ -64,7 +65,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         implements FilterDialog.FilterDialogListener,
         DateRangePickerDialog.DateRangePickerDialogListener,
         PracticeAppointmentDialog.PracticeAppointmentDialogListener,
-        PaymentNavigationCallback, ResponsibilityFragmentDialog.PayResponsibilityCallback {
+        PaymentNavigationCallback, ResponsibilityFragmentDialog.PayResponsibilityCallback,
+        CancelAppointmentConfirmDialogFragment.CancelAppointmentCallback{
 
     private FilterModel filter;
 
@@ -409,7 +411,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         }
     };
 
-    private void showPracticeAppointmentDialog(AppointmentDTO appointmentDTO) {
+    @Override
+    public void showPracticeAppointmentDialog(AppointmentDTO appointmentDTO) {
         PracticeAppointmentDialog.AppointmentDialogStyle dialogStyle = PracticeAppointmentDialog.AppointmentDialogStyle.DEFAULT;
         AppointmentPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
         if (appointmentPayloadDTO.getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
@@ -450,12 +453,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getConfirmAppointment();
         confirmationMessageText = "appointment_request_success_message_HTML";
         transitionAppointment(transitionDTO, appointmentDTO, true);
-    }
-
-    private void cancelAppointment(AppointmentDTO appointmentDTO) {
-        TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getCancelAppointment();
-        confirmationMessageText = "appointment_cancellation_success_message_HTML";
-        transitionAppointment(transitionDTO, appointmentDTO, false);
     }
 
     private void rejectAppointment(AppointmentDTO appointmentDTO) {
@@ -647,7 +644,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         } else if (appointmentPayloadDTO.isAppointmentOver()) {
             //TODO Add future logic
         } else {
-            cancelAppointment(appointmentDTO);
+            CancelAppointmentConfirmDialogFragment dialogFragment = CancelAppointmentConfirmDialogFragment.newInstance(appointmentDTO);
+            dialogFragment.show(getSupportFragmentManager(), dialogFragment.getClass().getName());
         }
     }
 
@@ -708,4 +706,12 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             showErrorNotification(exceptionMessage);
         }
     };
+
+    @Override
+    public void cancelAppointment(AppointmentDTO appointmentDTO) {
+        TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getCancelAppointment();
+        confirmationMessageText = "appointment_cancellation_success_message_HTML";
+        transitionAppointment(transitionDTO, appointmentDTO, false);
+    }
+
 }
