@@ -1,5 +1,4 @@
-
-package com.carecloud.carepay.practice.library.signin.dtos;
+package com.carecloud.carepaylibray.signinsignup.dto;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -7,9 +6,11 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-@Deprecated
-public class GenderDTO {
+/**
+ * @author pjohnson on 25/04/17.
+ */
 
+public class GenderPropertyDTO {
     @SerializedName("type")
     @Expose
     private String type;
@@ -21,7 +22,7 @@ public class GenderDTO {
     private List<GenderValidationDTO> validations = new ArrayList<>();
     @SerializedName("options")
     @Expose
-    private List<GenderOptionDTO> options = null;
+    private List<OptionDTO> options = null;
 
     public String getType() {
         return type;
@@ -47,12 +48,11 @@ public class GenderDTO {
         this.validations = validations;
     }
 
-    public List<GenderOptionDTO> getOptions() {
+    public List<OptionDTO> getOptions() {
         return options;
     }
 
-    public void setOptions(List<GenderOptionDTO> options) {
+    public void setOptions(List<OptionDTO> options) {
         this.options = options;
     }
-
 }

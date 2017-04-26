@@ -7,7 +7,7 @@ package com.carecloud.carepay.practice.library.signin.dtos;
 import com.carecloud.carepay.service.library.dtos.CognitoDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
+@Deprecated
 public class PatientModeSigninDataDTO {
 
     @SerializedName("cognito")

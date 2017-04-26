@@ -11,6 +11,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
+@Deprecated
 public class SignInLablesDTO implements Serializable{
 
     @SerializedName("signin_button")

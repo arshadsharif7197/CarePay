@@ -10,6 +10,7 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+@Deprecated
 public class SignInDTO {
 
     @SerializedName("label")

@@ -8,6 +8,7 @@ package com.carecloud.carepaylibray.signinsignup.dtos.signin;
 import com.google.gson.annotations.Expose;
         import com.google.gson.annotations.SerializedName;
 
+@Deprecated
 public class SignInPropertiesDTO {
 
     @SerializedName("email")

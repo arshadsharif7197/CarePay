@@ -3,27 +3,23 @@ package com.carecloud.carepay.practice.library.signin.dtos;
 /**
  * Created by sudhir_pingale on 11/18/2016.
  */
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
+@Deprecated
 public class PatientModeLoginDataMetadataDTO {
+
     @SerializedName("user_id")
     @Expose
     private String userId;
-
     @SerializedName("username")
     @Expose
     private String username;
-
     @SerializedName("practice_mgmt")
     @Expose
     private String practiceMgmt;
     @SerializedName("practice_id")
-
     @Expose
     private String practiceId;
-
     @SerializedName("patient_id")
     @Expose
     private String patientId;

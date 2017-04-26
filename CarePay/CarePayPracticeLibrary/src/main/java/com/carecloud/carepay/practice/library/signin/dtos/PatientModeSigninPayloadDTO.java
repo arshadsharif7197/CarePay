@@ -8,7 +8,7 @@ package com.carecloud.carepay.practice.library.signin.dtos;
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
+@Deprecated
 public class PatientModeSigninPayloadDTO {
 
     @SerializedName("patient_mode_signin")
@@ -19,13 +19,13 @@ public class PatientModeSigninPayloadDTO {
     @Expose
     private PatientModeLoginDataDTO payload = new PatientModeLoginDataDTO();
 
-    @SerializedName("state")
-    @Expose
-    private String state;
-
     @SerializedName("personal_info_check")
     @Expose
     private PatientModePersonalInfoCheckDTO patientModePersonalInfoCheck = new PatientModePersonalInfoCheckDTO();
+
+    @SerializedName("state")
+    @Expose
+    private String state;
 
     /**
      * 

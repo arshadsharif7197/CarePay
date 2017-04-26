@@ -6,7 +6,7 @@ package com.carecloud.carepaylibray.signinsignup.dtos;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
+@Deprecated
 public class SignInLinksDTO {
 
     @SerializedName("self")

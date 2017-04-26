@@ -1,13 +1,14 @@
-
-package com.carecloud.carepay.practice.library.signin.dtos;
+package com.carecloud.carepaylibray.signinsignup.dto;
 
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-@Deprecated
-public class SigninPatientModeLinksDTO {
+/**
+ * @author pjohnson on 25/04/17.
+ */
 
+public class SignInLinksDTO {
     @SerializedName("self")
     @Expose
     private TransitionDTO self = new TransitionDTO();
@@ -18,33 +19,12 @@ public class SigninPatientModeLinksDTO {
     @Expose
     private TransitionDTO personalInfo = new TransitionDTO();
 
-    /**
-     * @return The self
-     */
     public TransitionDTO getSelf() {
         return self;
     }
 
-    /**
-     * @param self The self
-     */
     public void setSelf(TransitionDTO self) {
         this.self = self;
-    }
-
-
-    /**
-     * @return The personalInfo
-     */
-    public TransitionDTO getPersonalInfo() {
-        return personalInfo;
-    }
-
-    /**
-     * @param personalInfo The personal_info
-     */
-    public void setPersonalInfo(TransitionDTO personalInfo) {
-        this.personalInfo = personalInfo;
     }
 
     public TransitionDTO getLogin() {
@@ -53,5 +33,13 @@ public class SigninPatientModeLinksDTO {
 
     public void setLogin(TransitionDTO login) {
         this.login = login;
+    }
+
+    public TransitionDTO getPersonalInfo() {
+        return personalInfo;
+    }
+
+    public void setPersonalInfo(TransitionDTO personalInfo) {
+        this.personalInfo = personalInfo;
     }
 }

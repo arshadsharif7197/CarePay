@@ -4,7 +4,7 @@ package com.carecloud.carepay.practice.library.signin.dtos;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
+@Deprecated
 public class SigninPatientModeLabelsDTO {
 
     @SerializedName("signin_button")

@@ -1,12 +1,13 @@
-package com.carecloud.carepay.practice.library.signin.dtos;
+package com.carecloud.carepaylibray.signinsignup.dto;
 
-/**
- * Created by kavin kannan on 11/18/2016.
- */
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-@Deprecated
-public class PatientModePersonalInfoCheckMetadataDTO {
+
+/**
+ * @author pjohnson on 25/04/17.
+ */
+
+public class SignInPayloadMetadata {
 
     @SerializedName("user_id")
     @Expose
@@ -24,95 +25,43 @@ public class PatientModePersonalInfoCheckMetadataDTO {
     @Expose
     private String patientId;
 
-
-    /**
-     *
-     * @return
-     * The userId
-     */
     public String getUserId() {
         return userId;
     }
 
-    /**
-     *
-     * @param userId
-     * The user_id
-     */
     public void setUserId(String userId) {
         this.userId = userId;
     }
 
-    /**
-     *
-     * @return
-     * The username
-     */
     public String getUsername() {
         return username;
     }
 
-    /**
-     *
-     * @param username
-     * The username
-     */
     public void setUsername(String username) {
         this.username = username;
     }
 
-    /**
-     *
-     * @return
-     * The practiceMgmt
-     */
     public String getPracticeMgmt() {
         return practiceMgmt;
     }
 
-    /**
-     *
-     * @param practiceMgmt
-     * The practice_mgmt
-     */
     public void setPracticeMgmt(String practiceMgmt) {
         this.practiceMgmt = practiceMgmt;
     }
 
-    /**
-     *
-     * @return
-     * The practiceId
-     */
     public String getPracticeId() {
         return practiceId;
     }
 
-    /**
-     *
-     * @param practiceId
-     * The practice_id
-     */
     public void setPracticeId(String practiceId) {
         this.practiceId = practiceId;
     }
 
-    /**
-     *
-     * @return
-     * The patientId
-     */
     public String getPatientId() {
         return patientId;
     }
 
-    /**
-     *
-     * @param patientId
-     * The patient_id
-     */
     public void setPatientId(String patientId) {
         this.patientId = patientId;
     }
-
 }

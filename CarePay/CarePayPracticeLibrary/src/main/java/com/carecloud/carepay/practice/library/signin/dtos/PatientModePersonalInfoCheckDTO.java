@@ -6,15 +6,15 @@ package com.carecloud.carepay.practice.library.signin.dtos;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
+@Deprecated
 public class PatientModePersonalInfoCheckDTO {
-    @SerializedName("payload")
-    @Expose
-    private boolean isPersonalInfoCheckSuccessful;
 
     @SerializedName("metadata")
     @Expose
     private PatientModePersonalInfoCheckMetadataDTO metadata = new PatientModePersonalInfoCheckMetadataDTO();
+    @SerializedName("payload")
+    @Expose
+    private boolean isPersonalInfoCheckSuccessful;
 
     /**
      *
