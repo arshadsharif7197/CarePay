@@ -37,9 +37,14 @@ public class SignInTransitionsDTO {
     @SerializedName("action")
     @Expose
     private TransitionDTO action = new TransitionDTO();
+
     @SerializedName("qrcode")
     @Expose
     private TransitionDTO qrcode = new TransitionDTO();
+
+    @SerializedName("forgot_password")
+    @Expose
+    private TransitionDTO forgotPassword = new TransitionDTO();
 
     public TransitionDTO getAuthenticate() {
         return authenticate;
@@ -103,5 +108,13 @@ public class SignInTransitionsDTO {
 
     public void setQrcode(TransitionDTO qrcode) {
         this.qrcode = qrcode;
+    }
+
+    public TransitionDTO getForgotPassword() {
+        return forgotPassword;
+    }
+
+    public void setForgotPassword(TransitionDTO forgotPassword) {
+        this.forgotPassword = forgotPassword;
     }
 }

@@ -4,7 +4,7 @@ package com.carecloud.carepay.practice.library.patientmode.dtos;
  * Created by Rahul on 10/26/16.
  */
 
-import com.carecloud.carepay.practice.library.signin.dtos.LanguageOptionDTO;
+import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -18,7 +18,7 @@ public class PatientModePayloadDTO {
     private PatientModesStartDTO patientModeStart = new PatientModesStartDTO();
     @SerializedName("languages")
     @Expose
-    private List<LanguageOptionDTO> languages = new ArrayList<>();
+    private List<OptionDTO> languages = new ArrayList<>();
     @SerializedName("practice")
     @Expose
     private PracticeWelcomeDTO practice = new PracticeWelcomeDTO();
@@ -28,7 +28,7 @@ public class PatientModePayloadDTO {
      * @return
      * The languages
      */
-    public List<LanguageOptionDTO> getLanguages() {
+    public List<OptionDTO> getLanguages() {
         return languages;
     }
 
@@ -37,7 +37,7 @@ public class PatientModePayloadDTO {
      * @param languages
      * The languages
      */
-    public void setLanguages(List<LanguageOptionDTO> languages) {
+    public void setLanguages(List<OptionDTO> languages) {
         this.languages = languages;
     }
 

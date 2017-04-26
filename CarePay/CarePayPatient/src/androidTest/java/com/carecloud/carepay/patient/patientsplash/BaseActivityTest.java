@@ -1,16 +1,12 @@
 package com.carecloud.carepay.patient.patientsplash;
 
 import android.content.Context;
-
 import android.content.SharedPreferences;
-
 import android.support.test.InstrumentationRegistry;
 import android.util.Log;
 
-
 import com.carecloud.carepay.patient.patientsplash.dtos.SelectLanguageDTO;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
-
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
@@ -18,14 +14,14 @@ import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
+import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.Map;
 
 
-public class BaseActivityTest  {
+public class BaseActivityTest {
 
     private ApplicationPreferences applicationPreferences;
 
@@ -43,7 +39,6 @@ public class BaseActivityTest  {
     protected Context context;
 
 
-
     WorkflowServiceCallback signInCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -53,8 +48,8 @@ public class BaseActivityTest  {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             workFlowDtoString = workflowDTO.toString();
-            SignInSignUpDTO signInSignUpDTO = new Gson().fromJson(workFlowDtoString, SignInSignUpDTO.class);
-            getApplicationMode().setCognitoDTO(signInSignUpDTO.getPayload().getPatientAppSignin().getCognito());
+            SignInDTO signInSignUpDTO = new Gson().fromJson(workFlowDtoString, SignInDTO.class);
+//            getApplicationMode().setCognitoDTO(signInSignUpDTO.getPayload().getPatientAppSignin().getCognito());
             getAppAuthorizationHelper().signIn(user, passowrd, cognitoActionCallback);
             Log.d(TAG, "on post execute signInCallback");
         }
@@ -190,14 +185,13 @@ public class BaseActivityTest  {
     /**
      * Pause execution
      */
-    public void delay(int time){
+    public void delay(int time) {
         try {
             Thread.sleep(time);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
-
 
 
 }
