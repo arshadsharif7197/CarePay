@@ -44,7 +44,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     public final static int SUBFLOW_PAYMENTS = 3;
 
-    private DemographicsPresenter presenter;
+    private PatientModeDemographicsPresenter presenter;
 
     private PaymentsModel paymentDTO;
 
@@ -57,8 +57,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
         initializeHomeButton();
         initializeLeftNavigation();
-
         presenter = new PatientModeDemographicsPresenter(this, savedInstanceState, this);
+
     }
 
     @Override
@@ -101,8 +101,10 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         findViewById(R.id.checkinHomeClickable).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setResult(CarePayConstants.HOME_PRESSED);
-                finish();
+                if(!presenter.handleHomeButtonClick()) {
+                    setResult(CarePayConstants.HOME_PRESSED);
+                    finish();
+                }
             }
         });
     }

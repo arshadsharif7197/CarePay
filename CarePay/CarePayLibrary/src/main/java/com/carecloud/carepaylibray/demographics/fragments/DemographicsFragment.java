@@ -92,6 +92,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
         // Required empty public constructor
     }
 
+
     /**
      * on create view
      */
@@ -100,8 +101,6 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
                              Bundle savedInstanceState) {
 
         View mainView  = super.onCreateView(inflater, container, savedInstanceState);
-
-        initializeDemographicsDTO();
 
         initialiseUIFields(mainView);
 
@@ -142,6 +141,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment  {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initializeDemographicsDTO();
     }
 
     /**

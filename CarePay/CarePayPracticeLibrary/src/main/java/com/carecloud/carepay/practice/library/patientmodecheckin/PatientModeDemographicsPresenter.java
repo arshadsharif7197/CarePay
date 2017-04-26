@@ -14,6 +14,8 @@ import com.carecloud.carepaylibray.demographics.DemographicsView;
 
 public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl {
 
+    private boolean shouldHandleHomeButton = false;
+
     /**
      * Default Constructor
      * @param demographicsView demographics View
@@ -25,12 +27,30 @@ public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl 
 
         if(applicationSession.getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE){
             //need to switch to PatientMode
-            applicationSession.getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
             PatientModeCheckinDTO patientModeCheckinDTO = demographicsView.getConvertedDTO(PatientModeCheckinDTO.class);
-            String username = patientModeCheckinDTO.getPayloadDTO().getCheckinModeDTO().getMetadata().getUsername();
-            applicationSession.getAppAuthorizationHelper().setUser(username);
+            if(patientModeCheckinDTO != null) {
+                applicationSession.getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
+                String username = patientModeCheckinDTO.getPayloadDTO().getCheckinModeDTO().getMetadata().getUsername();
+                applicationSession.getAppAuthorizationHelper().setUser(username);
 
+                shouldHandleHomeButton = true;
+            }
         }
 
     }
+
+
+    public boolean handleHomeButtonClick(){
+        if(shouldHandleHomeButton){
+            // TODO: handle home button
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    protected boolean shouldPreventBackNav(){
+        return getCurrentStep() == 1;
+    }
+
 }

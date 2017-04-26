@@ -142,6 +142,10 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        attachCallback(context);
+    }
+
+    private void attachCallback(Context context){
         try {
             if (context instanceof DemographicsView) {
                 callback = ((DemographicsView) context).getPresenter();
@@ -160,6 +164,15 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
             }
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement CarePayCameraReady");
+        }
+
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(callback == null || carePayCameraReady == null){
+            attachCallback(getContext());
         }
     }
 

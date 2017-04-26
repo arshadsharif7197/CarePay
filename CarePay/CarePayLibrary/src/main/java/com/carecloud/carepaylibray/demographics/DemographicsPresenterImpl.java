@@ -109,12 +109,12 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
         Fragment prev = fm.findFragmentByTag(tag);
         if (prev != null) {
-            transaction.remove(prev);
+            fm.popBackStackImmediate(tag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
 
         transaction.replace(R.id.root_layout, fragment, tag);
         if (addToBackStack) {
-            transaction.addToBackStack(null);
+            transaction.addToBackStack(tag);
         }
         transaction.commitAllowingStateLoss();
     }
@@ -298,6 +298,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         if(fragment!=null) {
             Bundle args = new Bundle();
             DtoHelper.bundleDto(args, demographicDTO);
+            args.putBoolean(CheckInDemographicsBaseFragment.PREVENT_NAV_BACK, shouldPreventBackNav());
             fragment.setArguments(args);
 
             navigateToFragment(fragment, currentDemographicStep != 1);
@@ -379,5 +380,9 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             default:
                 return null;
         }
+    }
+
+    protected boolean shouldPreventBackNav(){
+        return false;
     }
 }

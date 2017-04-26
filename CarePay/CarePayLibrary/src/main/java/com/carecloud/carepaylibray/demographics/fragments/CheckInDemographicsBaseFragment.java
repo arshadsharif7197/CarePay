@@ -37,7 +37,10 @@ import java.util.Map;
 
 public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragment {
 
+    public static final String PREVENT_NAV_BACK = "prevent_nav_back";
+
     StepProgressBar stepProgressBar;
+    boolean preventNavBack = false;
 
     protected CheckinFlowCallback checkinFlowCallback;
 
@@ -84,19 +87,29 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         return view;
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(checkinFlowCallback == null){
+            attachCallback(getContext());
+        }
+    }
+
     private void inflateToolbarViews(View view) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         if (toolbar == null) {
             return;
         }
         toolbar.setTitle("");
-        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.icn_nav_back));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
+        if(!preventNavBack) {
+            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.icn_nav_back));
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getActivity().onBackPressed();
+                }
+            });
+        }
     }
 
     protected boolean checkTextEmptyValue(int textEditableId, View view) {
@@ -155,23 +168,6 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     protected abstract DemographicDTO updateDemographicDTO(View view);
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
-        try {
-            if (context instanceof DemographicsView) {
-                checkinFlowCallback = ((DemographicsView) context).getPresenter();
-            } else {
-                checkinFlowCallback = (CheckinFlowCallback) context;
-            }
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement CheckinFlowCallback");
-        }
-    }
-
     protected void openNextFragment(DemographicDTO demographicDTO, boolean transition) {
         Map<String, String> queries = new HashMap<>();
         queries.put("practice_mgmt", demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getPracticeMgmt());
@@ -187,5 +183,25 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE,
                 demographicDTO.getPayload().getDemographics().getPayload().getAddress());
         getWorkflowServiceHelper().execute(transitionDTO, consentformcallback, demogrPayloadString, queries, header);
+    }
+
+    @Override
+    public  boolean navigateBack(){
+        return preventNavBack;
+    }
+
+    @Override
+    public void attachCallback(Context context){
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            if (context instanceof DemographicsView) {
+                checkinFlowCallback = ((DemographicsView) context).getPresenter();
+            } else {
+                checkinFlowCallback = (CheckinFlowCallback) context;
+            }
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement CheckinFlowCallback");
+        }
     }
 }

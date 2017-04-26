@@ -32,8 +32,8 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     private InsuranceDocumentScannerListener callback;
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public void attachCallback(Context context) {
+        super.attachCallback(context);
         try {
             if (context instanceof DemographicsView) {
                 callback = ((DemographicsView) context).getPresenter();
@@ -52,14 +52,19 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-
+    public void onCreate(Bundle icicle){
+        super.onCreate(icicle);
         if (demographicDTO == null) {
             demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
         } else if (!hasInsurance()) {
             demographicDTO = null;
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+
         initActiveSection(view);
 
         checkIfEnableButton(view);
@@ -95,6 +100,9 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     @Override
     public void onResume() {
         super.onResume();
+        if(callback == null){
+            attachCallback(getContext());
+        }
         stepProgressBar.setCurrentProgressDot(4);
         checkinFlowCallback.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 5);
         checkinFlowCallback.setCurrentStep(5);

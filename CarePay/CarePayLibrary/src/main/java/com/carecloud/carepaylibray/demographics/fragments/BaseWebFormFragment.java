@@ -55,8 +55,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
     private CheckinFlowCallback callback;
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public void attachCallback(Context context){
         try{
             if (context instanceof DemographicsView) {
                 callback = ((DemographicsView) context).getPresenter();
@@ -67,7 +66,6 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
             throw new ClassCastException("Attached context must implement CheckinFlowCallback");
         }
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -106,6 +104,14 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
                 (int) getResources().getDimension(R.dimen.checkinNavBarClosedOffset),
                 (int) getResources().getDimension(R.dimen.checkinNavBarOpenOffset));
 
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(callback == null){
+            attachCallback(getContext());
+        }
     }
 
     protected void setHeader(String text){

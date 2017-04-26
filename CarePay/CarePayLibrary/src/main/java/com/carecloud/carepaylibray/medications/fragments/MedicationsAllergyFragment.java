@@ -74,6 +74,10 @@ public class MedicationsAllergyFragment extends BaseFragment implements Medicati
     @Override
     public void onAttach(Context context){
         super.onAttach(context);
+        attachCallback(context);
+    }
+
+    private void attachCallback(Context context){
         try{
             if (context instanceof DemographicsView) {
                 callback = ((DemographicsView) context).getPresenter();
@@ -82,6 +86,15 @@ public class MedicationsAllergyFragment extends BaseFragment implements Medicati
             }
         }catch (ClassCastException cce){
             throw new ClassCastException("Attached Context must implement DemographicsPresenter");
+        }
+
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(callback == null){
+            attachCallback(getContext());
         }
     }
 
