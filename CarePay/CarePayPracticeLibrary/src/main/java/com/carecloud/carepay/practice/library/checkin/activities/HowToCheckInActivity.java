@@ -17,8 +17,6 @@ import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.checkin.dtos.QRCodeScanResultDTO;
 import com.carecloud.carepay.practice.library.signin.SigninActivity;
-import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeDTO;
-import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeLabelsDTO;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
@@ -28,6 +26,8 @@ import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookButto
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
 import com.carecloud.carepaylibray.qrcodescanner.ScannerQRActivity;
+import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
+import com.carecloud.carepaylibray.signinsignup.dto.SignInLabelsDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -43,7 +43,7 @@ import java.util.Map;
 
 public class HowToCheckInActivity extends BasePracticeActivity {
 
-    private SigninPatientModeDTO signinPatientModeDTO;
+    private SignInDTO signinPatientModeDTO;
     private CustomGothamRoundedMediumButton goBackButton;
     private CustomGothamRoundedMediumLabel howToCheckInTextView;
     private CustomGothamRoundedBookButton carePayLoginButton;
@@ -60,7 +60,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        signinPatientModeDTO = getConvertedDTO(SigninPatientModeDTO.class);
+        signinPatientModeDTO = getConvertedDTO(SignInDTO.class);
 
         setContentView(R.layout.activity_how_to_check_in);
 
@@ -179,7 +179,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
     };
 
     private void populateWithLabels() {
-        SigninPatientModeLabelsDTO signinPatientModeLabels = signinPatientModeDTO.getMetadata().getLabels();
+        SignInLabelsDTO signinPatientModeLabels = signinPatientModeDTO.getMetadata().getLabels();
         goBackButton.setText(signinPatientModeLabels.getSiginHowCheckInGoBack());
         howToCheckInTextView.setText(signinPatientModeLabels.getSigninHowWantCheckIn());
         carePayLoginButton.setText(signinPatientModeLabels.getSigninHowCheckInCarepayLogin());

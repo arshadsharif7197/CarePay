@@ -239,6 +239,7 @@ public class DemographicsInformationFragment extends BaseFragment {
         zipCodeEditext = (EditText) view.findViewById(R.id.zipCodeId);
         cityEditext = (EditText) view.findViewById(R.id.cityId);
         stateEditText = (EditText) view.findViewById(R.id.stateAutoCompleteTextView);
+        progressBar = (ProgressBar) view.findViewById(R.id.demographicReviewProgressBar);
 
         doblabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
         phoneNumberLabel = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);

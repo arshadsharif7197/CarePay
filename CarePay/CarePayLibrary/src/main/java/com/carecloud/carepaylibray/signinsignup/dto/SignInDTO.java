@@ -1,6 +1,6 @@
 package com.carecloud.carepaylibray.signinsignup.dto;
 
-import com.carecloud.carepaylibray.signinsignup.DTO;
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
