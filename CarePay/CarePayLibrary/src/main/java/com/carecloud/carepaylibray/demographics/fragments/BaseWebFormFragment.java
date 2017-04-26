@@ -76,8 +76,6 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
     public void onViewCreated(View view, Bundle icicle){
         inflateToolbarViews(view);
 
-        callback.setCheckinFlow(getCheckinFlowState(), totalForms, displayedFormsIndex);
-
         nextButton = (Button) view.findViewById(com.carecloud.carepaylibrary.R.id.consentButtonNext);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,6 +110,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         if(callback == null){
             attachCallback(getContext());
         }
+        callback.setCheckinFlow(getCheckinFlowState(), totalForms, displayedFormsIndex+1);
     }
 
     protected void setHeader(String text){

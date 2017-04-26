@@ -96,6 +96,7 @@ public class MedicationsAllergyFragment extends BaseFragment implements Medicati
         if(callback == null){
             attachCallback(getContext());
         }
+        callback.setCheckinFlow(CheckinFlowState.MEDICATIONS_AND_ALLERGIES, 1, 1);
     }
 
     @Override
@@ -134,7 +135,6 @@ public class MedicationsAllergyFragment extends BaseFragment implements Medicati
 
         View container = view.findViewById(R.id.container_main);
         hideKeyboardOnViewTouch(container);
-        callback.setCheckinFlow(CheckinFlowState.MEDICATIONS_AND_ALLERGIES, 1, 1);
     }
 
     private void inflateToolbarViews(View view){

@@ -56,6 +56,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             DemographicDTO demographicDTO = new Gson().fromJson(workflowDTO.toString(), DemographicDTO.class);
 
             if (checkinFlowCallback.getCurrentStep() == 5) {
+                checkinFlowCallback.setCurrentStep(checkinFlowCallback.getCurrentStep()+1);
                 checkinFlowCallback.navigateToWorkflow(workflowDTO);
             } else {
                 checkinFlowCallback.applyChangesAndNavTo(demographicDTO, checkinFlowCallback.getCurrentStep() + 1);

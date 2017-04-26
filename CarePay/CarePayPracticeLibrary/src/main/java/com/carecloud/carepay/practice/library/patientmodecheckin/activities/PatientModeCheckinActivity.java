@@ -143,6 +143,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         bundle.putString(PaymentsModel.class.getSimpleName(), workflowJson);
         responsibilityFragment.setArguments(bundle);
         presenter.navigateToFragment(responsibilityFragment, true);
+        updateCheckInFlow(CheckinFlowState.PAYMENT, 1, 1);
 
         new Thread(new Runnable() {
             @Override
