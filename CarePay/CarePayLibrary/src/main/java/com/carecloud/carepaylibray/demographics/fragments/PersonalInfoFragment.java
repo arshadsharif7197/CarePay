@@ -61,6 +61,12 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
 
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
+//        callback.loadPictureFragment();
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
         callback.loadPictureFragment();
     }
 

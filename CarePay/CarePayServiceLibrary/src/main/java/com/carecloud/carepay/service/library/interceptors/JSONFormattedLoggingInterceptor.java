@@ -74,13 +74,15 @@ public class JSONFormattedLoggingInterceptor implements Interceptor {
      * @return the string
      */
     private String toPrettyFormat(String jsonString) {
-        JsonParser parser = new JsonParser();
-        JsonObject json = parser.parse(jsonString).getAsJsonObject();
+        try {
+            JsonParser parser = new JsonParser();
+            JsonObject json = parser.parse(jsonString).getAsJsonObject();
 
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String prettyJson = gson.toJson(json);
-
-        return prettyJson;
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            return gson.toJson(json);
+        }catch (Exception ex){
+            return jsonString;
+        }
     }
 
 
