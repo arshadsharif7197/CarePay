@@ -705,6 +705,10 @@ public class AppointmentPayloadDTO {
         return dateTime.isBeforeNow();
     }
 
+    /**
+     * Check if this appointment can be checked into
+     * @return true if appointment can check in according to its status
+     */
     public boolean canCheckIn(){
         String statusCode = getAppointmentStatus().getCode();
         switch (statusCode){
@@ -716,6 +720,10 @@ public class AppointmentPayloadDTO {
         }
     }
 
+    /**
+     * Check if this appointment can be checked out of
+     * @return true if appointment can check out according to its status
+     */
     public boolean canCheckOut(){
         String statusCode = getAppointmentStatus().getCode();
         switch (statusCode){
@@ -728,6 +736,10 @@ public class AppointmentPayloadDTO {
         }
     }
 
+    /**
+     * Check if this appointment is finished
+     * @return true if appointment is finished according to its status
+     */
     public boolean isAppointmentFinished(){
         String statusCode = getAppointmentStatus().getCode();
         switch (statusCode){

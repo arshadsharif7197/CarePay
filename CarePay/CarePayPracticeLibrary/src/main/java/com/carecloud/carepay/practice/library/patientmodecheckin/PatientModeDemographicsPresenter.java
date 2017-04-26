@@ -14,6 +14,12 @@ import com.carecloud.carepaylibray.demographics.DemographicsView;
 
 public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl {
 
+    /**
+     * Default Constructor
+     * @param demographicsView demographics View
+     * @param savedInstanceState bundle
+     * @param applicationSession application session
+     */
     public PatientModeDemographicsPresenter(DemographicsView demographicsView, Bundle savedInstanceState, IApplicationSession applicationSession){
         super(demographicsView, savedInstanceState, true);
 
