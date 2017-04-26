@@ -243,6 +243,8 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         long hour = DateUtil.getInstance().setDateRaw(appointmentPayloadDTO.getStartTime()).getDate().getTime();
         final DateTime appointmentDateTime = new DateTime(hour);
         hourLabel.setText(appointmentDateTime.toString("hh:mm a"));
+        setHourLabelBackground(appointmentDateTime);
+
 
         findViewById(R.id.checkin_close_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -281,6 +283,22 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         hourLabel.bringToFront();
 
         enableActionItems();
+    }
+
+    /**
+     * Sets hour label background.
+     *
+     * If the appointment start time has passed curent time, then show the appointment time label background in red.
+     * If the appointment start time is in future, then show the appointment time label background in green.
+     *
+     */
+    private void setHourLabelBackground(DateTime appointmentDateTime) {
+
+        if (appointmentDateTime.isBeforeNow()) {
+            hourLabel.setBackgroundResource(R.drawable.right_rounded_background_red);
+        } else {
+            hourLabel.setBackgroundResource(R.drawable.right_rounded_background_green);
+        }
     }
 
     private void enableActionItems() {
