@@ -410,24 +410,20 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     };
 
     private void showPracticeAppointmentDialog(AppointmentDTO appointmentDTO) {
-        int headerColor = R.color.dark_blue;
-        String leftAction = null;
-        String rightAction = null;
+        PracticeAppointmentDialog.AppointmentDialogStyle dialogStyle = PracticeAppointmentDialog.AppointmentDialogStyle.DEFAULT;
         AppointmentPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
         if (appointmentPayloadDTO.getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
-            headerColor = R.color.lightningyellow;
-            leftAction = Label.getLabel("reject_label");
-            rightAction = Label.getLabel("accept_label");
+            dialogStyle = PracticeAppointmentDialog.AppointmentDialogStyle.REQUESTED;
 
         }else if (appointmentPayloadDTO.canCheckOut()) {
-            leftAction = Label.getLabel("cancel_appointment_label");
+            dialogStyle = PracticeAppointmentDialog.AppointmentDialogStyle.CHECKED_IN;
 
         }else if (appointmentPayloadDTO.isAppointmentOver() || appointmentPayloadDTO.isAppointmentFinished()) {
             //todo finished appt options, Doing nothing for now
 
         } else if (appointmentPayloadDTO.canCheckIn()) {
-            leftAction = Label.getLabel("cancel_appointment_short_label");
-            rightAction = Label.getLabel("start_checkin_label");
+            dialogStyle = PracticeAppointmentDialog.AppointmentDialogStyle.PENDING;
+
         }
 
         String tag = PracticeAppointmentDialog.class.getSimpleName();
@@ -443,11 +439,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         ft.addToBackStack(null);
 
         PracticeAppointmentDialog dialog = PracticeAppointmentDialog.newInstance(
-                headerColor,
-                Label.getLabel("today_label"),
-                Label.getLabel("visit_type_heading"),
-                leftAction,
-                rightAction,
+                dialogStyle,
                 appointmentDTO,
                 PracticeModePracticeAppointmentsActivity.this
         );
