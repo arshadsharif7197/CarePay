@@ -2,15 +2,15 @@ package com.carecloud.carepay.practice.library.appointments.dialogs;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.telephony.PhoneNumberUtils;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -35,14 +35,13 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
     private AppointmentDTO appointmentDTO;
     private int headerColor;
     private String todayLabel;
-    private String cancelString;
     private String leftAction;
     private String rightAction;
     private String visitTypeLabel;
     private String photoUrl;
 
     private View view;
-    private LinearLayout headerView;
+    private View headerView;
 
     public interface PracticeAppointmentDialogListener {
         void onLeftActionTapped(AppointmentDTO appointmentDTO);
@@ -68,7 +67,6 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
 
     /**
      * @param headerColor color of header
-     * @param closeText label below the close icon
      * @param todayLabel today in current language
      * @param visitTypeLabel visit type label
      * @param leftAction label for left button. If empty, then no left button
@@ -78,7 +76,6 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
      * @return new instance of PracticeAppointmentDialog 
      */
     public static PracticeAppointmentDialog newInstance(int headerColor,
-                                                        String closeText,
                                                         String todayLabel,
                                                         String visitTypeLabel,
                                                         String leftAction,
@@ -89,7 +86,6 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         Bundle args = new Bundle();
         args.putInt("headerColor", headerColor);
         args.putString("todayLabel", todayLabel);
-        args.putString("cancelString", closeText);
         args.putString("leftAction", leftAction);
         args.putString("rightAction", rightAction);
         args.putString("visitTypeLabel", visitTypeLabel);
@@ -110,7 +106,6 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         Bundle arguments = getArguments();
         this.headerColor = arguments.getInt("headerColor");
         this.todayLabel = arguments.getString("todayLabel");
-        this.cancelString = arguments.getString("cancelString");
         this.leftAction = arguments.getString("leftAction");
         this.rightAction = arguments.getString("rightAction");
         this.visitTypeLabel = arguments.getString("visitTypeLabel");
@@ -126,7 +121,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
 
     @SuppressWarnings("deprecation")
     private void initializeViews() {
-        headerView = (LinearLayout) view.findViewById(R.id.appointment_card_header);
+        headerView = view.findViewById(R.id.appointment_card_header);
 
         AppointmentPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
 
@@ -168,12 +163,16 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         initializeViews();
+        GradientDrawable drawable = (GradientDrawable) headerView.getBackground();
+        drawable.setColor(ContextCompat.getColor(getContext(), headerColor));
 
-        if (!TextUtils.isEmpty(photoUrl)) {
-            initializeHeaderBackgroundView();
-        } else {
-            headerView.setBackgroundResource(headerColor);
-        }
+//        headerView.setBackgroundResource(headerColor);
+
+//        if (!TextUtils.isEmpty(photoUrl)) {
+//            initializeHeaderBackgroundView();
+//        } else {
+//            headerView.setBackgroundResource(headerColor);
+//        }
     }
 
     private void initializeHeaderBackgroundView() {
@@ -252,7 +251,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
 
     @Override
     protected String getCancelString() {
-        return cancelString;
+        return null;
     }
 
     @Override

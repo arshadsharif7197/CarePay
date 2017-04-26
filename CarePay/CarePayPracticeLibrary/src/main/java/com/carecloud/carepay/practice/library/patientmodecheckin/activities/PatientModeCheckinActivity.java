@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
+import com.carecloud.carepay.practice.library.patientmodecheckin.PatientModeDemographicsPresenter;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckInFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentPlanFragment;
@@ -25,7 +26,6 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
-import com.carecloud.carepaylibray.demographics.DemographicsPresenterImpl;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
@@ -58,7 +58,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         initializeHomeButton();
         initializeLeftNavigation();
 
-        presenter = new DemographicsPresenterImpl(this, savedInstanceState, true);
+        presenter = new PatientModeDemographicsPresenter(this, savedInstanceState, this);
     }
 
     @Override

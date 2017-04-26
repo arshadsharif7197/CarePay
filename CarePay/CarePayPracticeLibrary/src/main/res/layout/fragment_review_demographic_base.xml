@@ -125,7 +125,7 @@
             android:layout_marginEnd="@dimen/dimen_20dp"
             android:layout_marginStart="@dimen/dimen_20dp"
             android:layout_weight="1"
-            android:background="@drawable/bg_green_overlay"
+            android:background="@drawable/green_rounded_button_selector"
             android:enabled="false"
             android:gravity="center"
             android:textColor="@color/white"

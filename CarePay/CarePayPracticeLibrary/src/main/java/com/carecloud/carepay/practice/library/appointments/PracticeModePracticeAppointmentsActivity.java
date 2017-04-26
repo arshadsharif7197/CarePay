@@ -11,10 +11,10 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAppointmentDialog;
 import com.carecloud.carepay.practice.library.appointments.dtos.PracticeAppointmentDTO;
+import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
-import com.carecloud.carepay.practice.library.checkin.dtos.CheckInLabelDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.customcomponent.TwoColumnPatientListView;
@@ -34,7 +34,6 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.LinksDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
@@ -73,7 +72,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     private Date endDate;
 
     private CheckInDTO checkInDTO;
-    private CheckInLabelDTO checkInLabelDTO;
 
     private TwoColumnPatientListView patientListView;
     private boolean needsToConfirmAppointmentCreation;
@@ -85,9 +83,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//
         setContentView(R.layout.activity_practice_appointments);
 
         filter = new FilterModel();
@@ -98,7 +93,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     private void initializeCheckinDto() {
         checkInDTO = getConvertedDTO(CheckInDTO.class);
         if (null != checkInDTO) {
-            checkInLabelDTO = checkInDTO.getMetadata().getLabel();
             populateLists();
             initializePatientListView();
             initializePatientCounter();
@@ -112,17 +106,17 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         count = String.format(Locale.getDefault(), "%1s", patientListView.getSizeFilteredPendingPatients());
         setTextViewById(R.id.practice_pending_count, count);
 
-        count = String.format(Locale.getDefault(), "%d %s", patientListView.getSizeFilteredPendingPatients(), checkInLabelDTO.getPendingAppointmentsLabel());
+        count = String.format(Locale.getDefault(), "%d %s", patientListView.getSizeFilteredPendingPatients(), Label.getLabel("pending_appointments_label"));
         setTextViewById(R.id.activity_practice_appointments_show_pending_appointments_label, count);
 
         if (null != startDate && null != endDate) {
             String practiceCountLabel = DateUtil.getFormattedDate(
                     startDate,
                     endDate,
-                    checkInLabelDTO.getTodayLabel(),
-                    checkInLabelDTO.getTomorrowLabel(),
-                    checkInLabelDTO.getThisMonthLabel(),
-                    checkInLabelDTO.getNextDaysLabel()
+                    Label.getLabel("today_label"),
+                    Label.getLabel("tomorrow_label"),
+                    Label.getLabel("this_month_label"),
+                    Label.getLabel("next_days_label")
             ).toUpperCase(Locale.getDefault());
             setTextViewById(R.id.practice_patient_count_label, practiceCountLabel);
         }
@@ -147,15 +141,14 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         TextView addAppointmentTextView = (TextView) findViewById(R.id.activity_practice_appointments_add);
         addAppointmentTextView.setOnClickListener(getFindPatientListener(false));
 
-        if (checkInLabelDTO != null) {
-            setTextViewById(R.id.practice_go_back, Label.getLabel("go_back"));
-            setTextViewById(R.id.activity_practice_appointments_change_date_range_label, Label.getLabel("change_date_range_label"));
-            setTextViewById(R.id.activity_practice_appointments_show_all_appointments_label, Label.getLabel("all_appointments_label"));
-            setTextViewById(R.id.practice_patient_count_label, Label.getLabel("today_label"));
-            setTextViewById(R.id.practice_pending_count_label, Label.getLabel("pending_label"));
-            setTextViewById(R.id.practice_filter_label, Label.getLabel("practice_checkin_filter"));
-            findPatientTextView.setText(Label.getLabel("practice_checkin_filter_find_patient"));
-        }
+        setTextViewById(R.id.practice_go_back, Label.getLabel("go_back"));
+        setTextViewById(R.id.activity_practice_appointments_change_date_range_label, Label.getLabel("change_date_range_label"));
+        setTextViewById(R.id.activity_practice_appointments_show_all_appointments_label, Label.getLabel("all_appointments_label"));
+        setTextViewById(R.id.practice_patient_count_label, Label.getLabel("today_label"));
+        setTextViewById(R.id.practice_pending_count_label, Label.getLabel("pending_label"));
+        setTextViewById(R.id.practice_filter_label, Label.getLabel("practice_checkin_filter"));
+        findPatientTextView.setText(Label.getLabel("practice_checkin_filter_find_patient"));
+
 
         findViewById(R.id.practice_go_back).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,8 +162,9 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             public void onClick(View view) {
                 FilterDialog filterDialog = new FilterDialog(getContext(),
                         findViewById(R.id.activity_practice_appointments), filter,
-                        checkInLabelDTO.getPracticeCheckinFilter(), checkInLabelDTO.getPracticeCheckinFilterFindPatientByName(),
-                        checkInLabelDTO.getPracticeCheckinFilterClearFilters());
+                        Label.getLabel("practice_checkin_filter"),
+                        Label.getLabel("practice_checkin_filter_find_patient_by_name"),
+                        Label.getLabel("practice_checkin_filter_clear_filters"));
 
                 filterDialog.showPopWindow();
             }
@@ -416,19 +410,24 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     };
 
     private void showPracticeAppointmentDialog(AppointmentDTO appointmentDTO) {
-        int headerColor = R.color.colorPrimary;
+        int headerColor = R.color.dark_blue;
         String leftAction = null;
         String rightAction = null;
         AppointmentPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
         if (appointmentPayloadDTO.getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
             headerColor = R.color.lightningyellow;
-            leftAction = checkInLabelDTO.getRejectLabel();
-            rightAction = checkInLabelDTO.getAcceptLabel();
+            leftAction = Label.getLabel("reject_label");
+            rightAction = Label.getLabel("accept_label");
 
-        } else if (appointmentPayloadDTO.isAppointmentOver()) {
-            // Doing nothing for now
-        } else {
-            leftAction = checkInLabelDTO.getCancelAppointmentLabel();
+        }else if (appointmentPayloadDTO.canCheckOut()) {
+            leftAction = Label.getLabel("cancel_appointment_label");
+
+        }else if (appointmentPayloadDTO.isAppointmentOver() || appointmentPayloadDTO.isAppointmentFinished()) {
+            //todo finished appt options, Doing nothing for now
+
+        } else if (appointmentPayloadDTO.canCheckIn()) {
+            leftAction = Label.getLabel("cancel_appointment_short_label");
+            rightAction = Label.getLabel("start_checkin_label");
         }
 
         String tag = PracticeAppointmentDialog.class.getSimpleName();
@@ -445,9 +444,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
         PracticeAppointmentDialog dialog = PracticeAppointmentDialog.newInstance(
                 headerColor,
-                checkInLabelDTO.getDateRangePickerDialogClose(),
-                checkInLabelDTO.getTodayLabel(),
-                checkInLabelDTO.getVisitTypeHeading(),
+                Label.getLabel("today_label"),
+                Label.getLabel("visit_type_heading"),
                 leftAction,
                 rightAction,
                 appointmentDTO,
@@ -634,11 +632,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     @Override
-    protected AppointmentLabelDTO getLabels() {
-        return checkInLabelDTO;
-    }
-
-    @Override
     protected TransitionDTO getMakeAppointmentTransition() {
         return checkInDTO.getMetadata().getTransitions().getMakeAppointment();
     }
@@ -675,6 +668,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     public void onRightActionTapped(AppointmentDTO appointmentDTO) {
         if (appointmentDTO.getPayload().getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
             confirmAppointment(appointmentDTO);
+        }else if(appointmentDTO.getPayload().canCheckIn()){
+            launchPatientModeCheckin(appointmentDTO);
         }
     }
 
@@ -692,4 +687,33 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                 .newInstance(paymentsModel, paymentLineItem, true);
         dialog.show(ft, tag);
     }
+
+
+    private void launchPatientModeCheckin(AppointmentDTO appointmentDTO){
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("appointment_id", appointmentDTO.getPayload().getId());
+
+        TransitionDTO checkinPatientTransition = checkInDTO.getMetadata().getTransitions().getCheckinPatientMode();
+
+        getWorkflowServiceHelper().execute(checkinPatientTransition, patientModeCallback, queryMap);
+    }
+
+    private WorkflowServiceCallback patientModeCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(exceptionMessage);
+        }
+    };
 }
