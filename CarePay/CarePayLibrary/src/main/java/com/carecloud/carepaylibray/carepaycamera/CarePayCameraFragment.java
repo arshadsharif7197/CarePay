@@ -76,7 +76,7 @@ public class CarePayCameraFragment extends BaseDialogFragment implements CarePay
         }
     }
 
-    public void attachCallback(Context context){
+    private void attachCallback(Context context){
         try {
             if (context instanceof DemographicsView) {
                 callback = ((DemographicsView) context).getPresenter();

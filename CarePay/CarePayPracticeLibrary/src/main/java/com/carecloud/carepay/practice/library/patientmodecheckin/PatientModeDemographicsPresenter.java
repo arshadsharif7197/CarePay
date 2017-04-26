@@ -40,6 +40,10 @@ public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl 
     }
 
 
+    /**
+     * Callback if Presenter will handle the home button
+     * @return true if Presenter will handle home button
+     */
     public boolean handleHomeButtonClick(){
         if(shouldHandleHomeButton){
             // TODO: handle home button
