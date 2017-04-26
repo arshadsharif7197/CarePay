@@ -5,8 +5,11 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +22,7 @@ import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -127,16 +131,16 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         try {
             if (null == errorNotification) {
 
-                if(!StringUtil.isNullOrEmpty(errorMessage)){
+                if (!StringUtil.isNullOrEmpty(errorMessage)) {
                     errorNotification = new CustomPopupNotification(getContext(), getCurrentFocus(), getWindow(), errorMessage, CustomPopupNotification.TYPE_ERROR_NOTIFICATION, errorNotificationSwipeListener());
-                }else{
+                } else {
                     errorNotification = new CustomPopupNotification(getContext(), getCurrentFocus(), getWindow(), CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE, CustomPopupNotification.TYPE_ERROR_NOTIFICATION, errorNotificationSwipeListener());
                 }
 
             }
             errorNotification.showPopWindow();
         } catch (Exception e) {
-                Log.e("Base Activity", e.getMessage());
+            Log.e("Base Activity", e.getMessage());
         }
     }
 
@@ -216,5 +220,59 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
     }
 
     public abstract void navigateToWorkflow(WorkflowDTO workflowDTO);
+
+    /**
+     * @param toolbar the toolbar
+     */
+    public void setToolbar(Toolbar toolbar) {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (toolbar != null) {
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onBackPressed();
+                }
+            });
+        }
+    }
+
+    /**
+     * @param fragment       the new fragment
+     * @param addToBackStack if true, add to back stack
+     */
+    public void replaceFragment(int containerId, Fragment fragment, boolean addToBackStack) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        String tag = fragment.getClass().getCanonicalName();
+        transaction.replace(containerId, fragment, tag);
+        if (addToBackStack) {
+            transaction.addToBackStack(null);
+        }
+        transaction.commit();
+    }
+
+    /**
+     * @param errorMessage the error message
+     */
+    public void showErrorToast(String errorMessage) {
+        new CustomMessageToast(this, errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
+    }
+
+    /**
+     * @param successMessage the success message
+     */
+    public void showSuccessToast(String successMessage) {
+        new CustomMessageToast(this, successMessage, CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
+    }
+
+    /**
+     * @param title the action bar title
+     */
+    public void setActionBarTitle(String title) {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(title);
+        }
+
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.signinsignuppatient.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -26,18 +27,18 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserAttributes;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserCodeDeliveryDetails;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler;
+import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.cognito.SignUpConfirmActivity;
-import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
-import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
+import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
+import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
+import com.carecloud.carepaylibray.signinsignup.dto.SignInLabelsDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -51,24 +52,26 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
 public class SignupFragment extends BaseFragment {
 
     private static final String TAG = "SignupFragment";
-    private SignInSignUpDTO signInSignUpDTO;
-    private SignInLablesDTO signInLablesDTO;
-    private LinearLayout    parentLayout;
-    private ProgressBar     progressBar;
+    private SignInDTO signInSignUpDTO;
+    private SignInLabelsDTO signInLablesDTO;
+    private LinearLayout parentLayout;
+    private ProgressBar progressBar;
     private TextInputLayout emailInputLayout;
     private TextInputLayout passwordInputLayout;
     private TextInputLayout passwordRepeatInputLayout;
-    private EditText        emailText;
-    private EditText        passwordText;
-    private EditText        repeatPasswordText;
-    private boolean         isEmailEmpty;
-    private boolean         isPasswordEmpty;
-    private boolean         isRepeatPasswordEmpty;
-    private Button          submitButton;
-    private TextView        accountExistTextView;
+    private EditText emailText;
+    private EditText passwordText;
+    private EditText repeatPasswordText;
+    private boolean isEmailEmpty;
+    private boolean isPasswordEmpty;
+    private boolean isRepeatPasswordEmpty;
+    private Button submitButton;
+    private TextView accountExistTextView;
     private TextView passwordFormatHint;
-    private String          userName;
-    private SignUpHandler           signUpHandler          = new SignUpHandler() {
+    private String userName;
+    private FragmentActivityInterface listener;
+
+    private SignUpHandler signUpHandler = new SignUpHandler() {
         @Override
         public void onSuccess(CognitoUser user, boolean signUpConfirmationState,
                               CognitoUserCodeDeliveryDetails cognitoUserCodeDeliveryDetails) {
@@ -94,6 +97,7 @@ public class SignupFragment extends BaseFragment {
 //                                         errorMsg);
         }
     };
+
     private WorkflowServiceCallback signUpWorkflowCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -113,7 +117,8 @@ public class SignupFragment extends BaseFragment {
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
-    private CognitoActionCallback   cognitoActionCallback  = new CognitoActionCallback() {
+
+    private CognitoActionCallback cognitoActionCallback = new CognitoActionCallback() {
         @Override
         public void onLoginSuccess() {
             progressBar.setVisibility(View.INVISIBLE);
@@ -139,10 +144,20 @@ public class SignupFragment extends BaseFragment {
     };
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            listener = (FragmentActivityInterface) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Attached Context must implement DTOInterface");
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_signup, container, false);
 
-        signInSignUpDTO = ((SigninSignupActivity) getActivity()).getSignInSignUpDTO();
+        signInSignUpDTO = (SignInDTO) listener.getDto();
         signInLablesDTO = signInSignUpDTO.getMetadata().getLabels();
         parentLayout = (LinearLayout) view.findViewById(R.id.signUpLl);
 
@@ -225,7 +240,7 @@ public class SignupFragment extends BaseFragment {
         repeatPasswordText.setTag(passwordRepeatInputLayout);
 
 
-        passwordFormatHint= (TextView) view.findViewById(R.id.singupPasswordFormatHint);
+        passwordFormatHint = (TextView) view.findViewById(R.id.singupPasswordFormatHint);
         passwordFormatHint.setText(signInLablesDTO.getPasswordHintText());
         setTypefaces();
 
@@ -526,16 +541,14 @@ public class SignupFragment extends BaseFragment {
         String password = passwordText.getText().toString();
 
         getAppAuthorizationHelper().getPool().signUpInBackground(userName,
-                                                      password,
-                                                      userAttributes,
-                                                      null,
-                                                      signUpHandler);
+                password,
+                userAttributes,
+                null,
+                signUpHandler);
     }
 
     private void confirmSignUp(CognitoUserCodeDeliveryDetails cognitoUserCodeDeliveryDetails) {
         Intent intent = new Intent(getActivity(), SignUpConfirmActivity.class);
-        intent.putExtra("source", signInLablesDTO.getSignUp());
-        intent.putExtra("signInLablesDTO",signInLablesDTO);
         intent.putExtra("name", userName);
         intent.putExtra("destination", cognitoUserCodeDeliveryDetails.getDestination());
         intent.putExtra("deliveryMed", cognitoUserCodeDeliveryDetails.getDeliveryMedium());

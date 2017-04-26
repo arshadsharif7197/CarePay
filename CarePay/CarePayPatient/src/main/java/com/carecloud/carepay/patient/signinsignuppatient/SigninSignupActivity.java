@@ -1,32 +1,31 @@
 package com.carecloud.carepay.patient.signinsignuppatient;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.MenuItem;
 
+import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.signinsignuppatient.fragments.SigninFragment;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
-import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
+import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
+import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 /**
  * Created by harish_revuri on 9/7/2016.
  * Activity supporting Signin and Sign-up
  */
-public class SigninSignupActivity extends BasePatientActivity {
+public class SigninSignupActivity extends BasePatientActivity implements FragmentActivityInterface {
 
 
-    private SignInSignUpDTO signInSignUpDTO;
+    private SignInDTO signInSignUpDTO;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin_signup);
-        signInSignUpDTO = getConvertedDTO(SignInSignUpDTO.class);
-        if (signInSignUpDTO != null && !HttpConstants.isUseUnifiedAuth()) {
-            getApplicationMode().setCognitoDTO(signInSignUpDTO.getPayload().getPatientAppSignin().getCognito());
-        }
+        signInSignUpDTO = getConvertedDTO(SignInDTO.class);
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
             fragmentManager.beginTransaction()
@@ -45,11 +44,13 @@ public class SigninSignupActivity extends BasePatientActivity {
         return false;
     }
 
-    public SignInSignUpDTO getSignInSignUpDTO() {
+    @Override
+    public DTO getDto() {
         return signInSignUpDTO;
     }
 
-    public void setSignInSignUpDTO(SignInSignUpDTO signInSignUpDTO) {
-        this.signInSignUpDTO = signInSignUpDTO;
+    @Override
+    public void replaceFragment(Fragment fragment, boolean addToBackStack) {
+        replaceFragment(R.id.layoutSigninSignup, fragment, addToBackStack);
     }
 }

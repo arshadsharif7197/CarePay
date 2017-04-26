@@ -2,13 +2,11 @@
 <resources>
     <color name="colorPrimary">#5BC5D0</color>
     <color name="colorPrimaryDark">#489DA6</color>
-    <color name="screen_gradient">#41949D</color>
     <color name="page_indicator">#4D5BC5D0</color>
 
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="transparent_apt">#00000000</color>
-    <color name="transparent_20">#33ffffff</color>
     <color name="transparent_70">#80ffffff</color>
 
     <color name="colorAccent">#acacac</color>
@@ -58,7 +56,6 @@
     <color name="news_item_divider">#3378909C</color>
 
     <color name="cadet_gray">#ff90a4ae</color>
-    <color name="optional_gray">#90a4ae</color>
     <color name="pastel_blue">#b0bec5</color>
 
     <color name="yellowGreen_blend">#337ed321</color>
@@ -89,7 +86,6 @@
     <!--Payments-->
     <!--<color name="screen_header">#056DA3</color>-->
     <color name="filter_on">#34590C</color>
-    <color name="confirm_pin_sub_title">#9FE5ED</color>
     <color name="count_bg">#61D3DF</color>
 
     <color name="lightSlateGray">#78909C</color>

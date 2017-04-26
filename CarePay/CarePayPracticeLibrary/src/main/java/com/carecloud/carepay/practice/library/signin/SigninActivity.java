@@ -1,8 +1,9 @@
 package com.carecloud.carepay.practice.library.signin;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -21,32 +22,29 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
-import com.carecloud.carepay.practice.library.signin.dtos.LanguageOptionDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionResponseModel;
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionUserPractice;
-import com.carecloud.carepay.practice.library.signin.dtos.SigninDTO;
-import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeDTO;
 import com.carecloud.carepay.practice.library.signin.fragments.PracticeSearchFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepay.service.library.platform.AndroidPlatform;
+import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
+import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
+import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
-
-import static com.carecloud.carepay.practice.library.R.id.signinButton;
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,23 +60,20 @@ import java.util.Map;
  */
 public class SigninActivity extends BasePracticeActivity implements PracticeSearchFragment.SelectPracticeCallback {
 
-    public enum SignInScreenMode {
+    private enum SignInScreenMode {
         PRACTICE_MODE_SIGNIN, PATIENT_MODE_SIGNIN
     }
 
-    private TextView forgotPasswordButton;
-    private CarePayButton gobackButton;
+    private TextView forgotPasswordTextView;
+    private CarePayButton goBackButton;
     private TextInputLayout signInEmailTextInputLayout;
     private TextInputLayout passwordTextInputLayout;
     private EditText emailEditText;
     private EditText passwordEditText;
-    private boolean isEmptyEmail;
-    private boolean isEmptyPassword;
     private ImageView homeButton;
     private Button signInButton;
     private List<String> languages = new ArrayList<>();
-    private SigninDTO signinDTO;
-    private SigninPatientModeDTO signinPatientModeDTO;
+    private SignInDTO signinDTO;
     private Spinner langSpinner;
     private View showPasswordButton;
 
@@ -86,95 +81,172 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-        // init cognito
-        SignInScreenMode signinScreenMode = SignInScreenMode.PRACTICE_MODE_SIGNIN;
-        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
-            signinDTO = getConvertedDTO(SigninDTO.class);
-            if (signinDTO != null) {
-                if(!HttpConstants.isUseUnifiedAuth()) {
-                    getApplicationMode().setCognitoDTO(signinDTO.getPayload().getPracticeModeSignin().getCognito());
-                    getAppAuthorizationHelper();
-                }
-                signinScreenMode = SignInScreenMode.valueOf(signinDTO.getState().toUpperCase());
-            }
-        } else if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
-            signinPatientModeDTO = getConvertedDTO(SigninPatientModeDTO.class);
-            if (signinPatientModeDTO != null && signinPatientModeDTO.getPayload() != null
-                    && signinPatientModeDTO.getPayload().getPatientModeSigninData() != null
-                    && signinPatientModeDTO.getPayload().getPatientModeSigninData().getCognito() != null) {
-                if(!HttpConstants.isUseUnifiedAuth()) {
-                    getApplicationMode().setCognitoDTO(signinPatientModeDTO.getPayload().getPatientModeSigninData().getCognito());
-                    getAppAuthorizationHelper();
-                }
-                signinScreenMode = SignInScreenMode.valueOf(signinPatientModeDTO.getState().toUpperCase());
-            }
-        }
-
+        signinDTO = getConvertedDTO(SignInDTO.class);
+        SignInScreenMode signinScreenMode = SignInScreenMode.valueOf(signinDTO.getState().toUpperCase());
         setContentView(R.layout.activity_signin);
         setSystemUiVisibility();
         initViews(signinScreenMode);
         setEditTexts();
         setClickables();
-
         changeScreenMode(signinScreenMode);
-        isEmptyEmail = true;
-        isEmptyPassword = true;
     }
 
     /**
      * Initailizing the view
      */
-    public void initViews(SignInScreenMode signInScreenMode) {
-        signInButton = (Button) findViewById(signinButton);
+    private void initViews(SignInScreenMode signInScreenMode) {
+        signInButton = (Button) findViewById(R.id.signinButton);
         homeButton = (ImageView) findViewById(R.id.signInHome);
-        gobackButton = (CarePayButton) findViewById(R.id.goBackButton);
-        gobackButton.setOnClickListener(goBackButtonListener);
-        forgotPasswordButton = (TextView) findViewById(R.id.forgot_passwordTextview);
+        goBackButton = (CarePayButton) findViewById(R.id.goBackButton);
+        forgotPasswordTextView = (TextView) findViewById(R.id.forgot_passwordTextview);
         passwordEditText = (EditText) findViewById(R.id.passwordpracticeEditText);
         emailEditText = (EditText) findViewById(R.id.signinEmailpracticeEditText);
         langSpinner = (Spinner) findViewById(R.id.signinLangSpinner);
         signInEmailTextInputLayout = (TextInputLayout) findViewById(R.id.signInEmailTextInputLayout);
         passwordTextInputLayout = (TextInputLayout) findViewById(R.id.passwordTextInputLayout);
-        TextView signinTitle = (TextView) findViewById(R.id.signinTitleTextview);
         showPasswordButton = findViewById(R.id.show_password_button);
 
-        if (signInScreenMode == SignInScreenMode.PRACTICE_MODE_SIGNIN
-                && signinDTO.getPayload().getLanguages() != null) {
+        if (signInScreenMode == SignInScreenMode.PRACTICE_MODE_SIGNIN) {
+            setUpLanguageSpinner();
+        } else if (signInScreenMode == SignInScreenMode.PATIENT_MODE_SIGNIN) {
+            TextView signInTitle = (TextView) findViewById(R.id.signinTitleTextview);
+            signInTitle.setText(Label.getLabel("carepay_signin_title"));
+        }
 
-            int languageListSize = signinDTO.getPayload().getLanguages().size();
-            LanguageOptionDTO defaultLangOption = null;
-
-            int indexDefault = 0;
-            for (int i = 0; i < languageListSize; i++) {
-                LanguageOptionDTO languageOption = signinDTO.getPayload().getLanguages().get(i);
-                languages.add(i, languageOption.getCode().toUpperCase());
-                if (languageOption.getDefault()) {
-                    defaultLangOption = languageOption;
-                    indexDefault = i;
+        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                if (view.length() > 0 && areAllFieldsValid(emailEditText.getText().toString(),
+                        passwordEditText.getText().toString())) {
+                    signIn();
                 }
+                return false;
             }
+        });
+    }
 
-            ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.home_spinner_item, languages);
-            spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            langSpinner = (Spinner) findViewById(R.id.signinLangSpinner);
-            langSpinner.setAdapter(spinnerArrayAdapter);
+    private void signIn() {
+        if (areAllFieldsValid(emailEditText.getText().toString(), passwordEditText.getText().toString())) {
+            TransitionDTO signInTransition = null;
+            signInTransition = signinDTO.getMetadata().getTransitions().getSignIn();
+            setSignInButtonClickable(false);
+            unifiedSignIn(emailEditText.getText().toString(), passwordEditText.getText().toString(), signInTransition);
+        }
+    }
 
-            // this should be always true, as there's always a default option
-            if (defaultLangOption != null && !getApplicationPreferences().getUserLanguage().isEmpty()) {
-                langSpinner.setSelection(spinnerArrayAdapter.getPosition(getApplicationPreferences().getUserLanguage().toUpperCase()));
-            } else {
-                langSpinner.setSelection(indexDefault);
-                getApplicationPreferences().setPracticeLanguage(defaultLangOption.getCode());
+    private void unifiedSignIn(String userName, String password, TransitionDTO signInTransition) {
+        UnifiedSignInUser user = new UnifiedSignInUser();
+        user.setEmail(userName);
+        user.setPassword(password);
+        user.setDeviceToken(((AndroidPlatform) Platform.get()).openDefaultSharedPreferences()
+                .getString(CarePayConstants.FCM_TOKEN, null));
+
+        UnifiedSignInDTO signInDTO = new UnifiedSignInDTO();
+        signInDTO.setUser(user);
+
+        Map<String, String> queryParams = new HashMap<>();
+        Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
+        if (signInDTO.isValidUser()) {
+            Gson gson = new Gson();
+            getWorkflowServiceHelper().execute(signInTransition, unifiedLoginCallback, gson.toJson(signInDTO),
+                    queryParams, headers);
+            getAppAuthorizationHelper().setUser(userName);
+        }
+    }
+
+    private WorkflowServiceCallback unifiedLoginCallback = new WorkflowServiceCallback() {
+
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            Gson gson = new Gson();
+            String signInResponseString = gson.toJson(workflowDTO);
+            UnifiedSignInResponse signInResponse = gson.fromJson(signInResponseString, UnifiedSignInResponse.class);
+            TransitionDTO transition = null;
+            TransitionDTO refreshTransition = null;
+            if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
+                transition = signinDTO.getMetadata().getTransitions().getAuthenticate();
+                refreshTransition = signinDTO.getMetadata().getTransitions().getRefresh();
+            } else if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType
+                    .PRACTICE_PATIENT_MODE) {
+                transition = signinDTO.getMetadata().getTransitions().getAction();
+            }
+            managePracticeOrAuthenticate(signInResponse, transition, refreshTransition);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            setSignInButtonClickable(true);
+            if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE
+                    || getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT) {
+                getWorkflowServiceHelper().setAppAuthorizationHelper(null);
+            }
+            showErrorToast(CarePayConstants.INVALID_LOGIN_ERROR_MESSAGE);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+    private void managePracticeOrAuthenticate(UnifiedSignInResponse signInResponse, TransitionDTO transitionDTO,
+                                              TransitionDTO refreshTransition) {
+        if (signInResponse != null) {
+            UnifiedAuthenticationTokens authTokens = signInResponse.getPayload().getAuthorizationModel().getCognito().getAuthenticationTokens();
+            getAppAuthorizationHelper().setAuthorizationTokens(authTokens);
+            if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
+                getAppAuthorizationHelper().setRefreshTransition(refreshTransition);
+            }
+            getWorkflowServiceHelper().setAppAuthorizationHelper(getAppAuthorizationHelper());
+        }
+
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("language", getApplicationPreferences().getUserLanguage());
+
+        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
+            getWorkflowServiceHelper().execute(transitionDTO, selectPracticeCallback, queryMap);
+        } else if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+            queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
+            queryMap.put("patient_id", signInResponse.getPayload().getSignIn().getMetadata().getPatientId());
+            getApplicationMode().setPatientId(signInResponse.getPayload().getSignIn().getMetadata().getPatientId());
+            getWorkflowServiceHelper().execute(transitionDTO, signInCallback, queryMap);
+        }
+    }
+
+    private void setUpLanguageSpinner() {
+        int languageListSize = signinDTO.getPayload().getLanguages().size();
+        OptionDTO defaultLangOption = null;
+
+        int indexDefault = 0;
+        for (int i = 0; i < languageListSize; i++) {
+            OptionDTO languageOption = signinDTO.getPayload().getLanguages().get(i);
+            languages.add(i, languageOption.getCode().toUpperCase());
+            if (languageOption.getDefault()) {
+                defaultLangOption = languageOption;
+                indexDefault = i;
             }
         }
 
-        if(signInScreenMode == SignInScreenMode.PATIENT_MODE_SIGNIN){
-            signinTitle.setText(Label.getLabel("carepay_signin_title"));
-        }
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, R.layout.home_spinner_item, languages);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        langSpinner = (Spinner) findViewById(R.id.signinLangSpinner);
+        langSpinner.setAdapter(spinnerArrayAdapter);
 
-        // disable sign-in button
-        setEnabledSigninButton(false);
+        // this should be always true, as there's always a default option
+        if (defaultLangOption != null && !getApplicationPreferences().getUserLanguage().isEmpty()) {
+            langSpinner.setSelection(spinnerArrayAdapter.getPosition(getApplicationPreferences().getUserLanguage().toUpperCase()));
+        } else {
+            langSpinner.setSelection(indexDefault);
+            getApplicationPreferences().setPracticeLanguage(defaultLangOption.getCode());
+        }
+    }
+
+    private void setClickables() {
+
+        goBackButton.setOnClickListener(goBackButtonListener);
 
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,36 +255,10 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
             }
         });
 
-        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                if(view.length()>0 && areAllValid()){
-                    signInUser();
-                }
-                return false;
-            }
-        });
-    }
-
-
-    private void setEnabledSigninButton(boolean enabled) {
-        if (!enabled) {
-            signInButton.setBackground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.bg_silver_overlay));
-        } else {
-
-            signInButton.setBackground(ContextCompat.getDrawable(getApplicationContext(),R.drawable.bg_green_overlay));
-        }
-        signInButton.setEnabled(enabled);
-    }
-
-    private void setClickables() {
-
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                if (areAllValid()) {
-                    signInUser();
-                }
+            public void onClick(View view) {
+                signIn();
             }
         });
 
@@ -228,434 +274,106 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
             }
         });
 
-        forgotPasswordButton.setOnClickListener(new View.OnClickListener() {
+        forgotPasswordTextView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        forgotPasswordButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
+            public void onClick(View view) {
+                Intent intent = new Intent(SigninActivity.this, ResetPasswordActivity.class);
+                Bundle bundle = new Bundle();
+                DtoHelper.bundleDto(bundle, signinDTO);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
 
         showPasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(passwordEditText.getInputType()!=InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
+                if (passwordEditText.getInputType() != InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
                     setInputType(passwordEditText, InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-//                    handler.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            setInputType(passwordEditText, InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
-//                        }
-//                    }, 3 * 1000);
-                }else{
-                    setInputType(passwordEditText, InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                } else {
+                    setInputType(passwordEditText, InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 }
             }
         });
 
     }
 
-    private void setInputType(EditText editText, int inputType){
+    private void setInputType(EditText editText, int inputType) {
         int selection = editText.getSelectionEnd();
-        if(editText.getInputType()!=inputType){
+        if (editText.getInputType() != inputType) {
             editText.setInputType(inputType);
             editText.setSelection(selection);
         }
     }
 
-
-    private boolean checkEmail() {
-        String email = emailEditText.getText().toString();
-        isEmptyEmail = StringUtil.isNullOrEmpty(email);
-        boolean isEmailValid = StringUtil.isValidmail(email);
-        signInEmailTextInputLayout.setErrorEnabled(isEmptyEmail || !isEmailValid); // enable for error if either empty or invalid email
-        if (isEmptyEmail) {
-            signInEmailTextInputLayout.setError(getString(com.carecloud.carepaylibrary.R.string.signin_signup_error_empty_email));
-        } else if (!isEmailValid) {
-            signInEmailTextInputLayout.setError(getString(com.carecloud.carepaylibrary.R.string.signin_signup_error_invalid_email));
-        } else {
-            signInEmailTextInputLayout.setError(null);
-        }
-        return !isEmptyEmail && isEmailValid;
-    }
-
-    private boolean checkPassword() {
-        isEmptyPassword = StringUtil.isNullOrEmpty(passwordEditText.getText().toString());
-        String error = (isEmptyPassword ? getString(com.carecloud.carepaylibrary.R.string.signin_signup_error_empty_password) : null);
-        passwordTextInputLayout.setErrorEnabled(isEmptyPassword);
-        passwordTextInputLayout.setError(error);
-        return !isEmptyPassword;
-    }
-
-    private boolean areAllValid() {
-        boolean isPasswordValid = checkPassword();
-        if (!isPasswordValid) {
-            passwordEditText.requestFocus();
-        }
-        boolean isEmailValid = checkEmail();
-        if (!isEmailValid) {
-            emailEditText.requestFocus();
-        }
-        return isEmailValid && isPasswordValid;
-    }
-
     private void setTextListeners() {
         emailEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
 
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-                isEmptyEmail = StringUtil.isNullOrEmpty(emailEditText.getText().toString());
+                boolean isEmptyEmail = StringUtil.isNullOrEmpty(emailEditText.getText().toString());
                 if (!isEmptyEmail) { // clear the error
                     signInEmailTextInputLayout.setError(null);
                     signInEmailTextInputLayout.setErrorEnabled(false);
                 }
-                enableSigninButton();
+                enableSignInButton(editable.toString(), passwordEditText.getText().toString());
             }
         });
         passwordEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
 
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-                isEmptyPassword = StringUtil.isNullOrEmpty(passwordEditText.getText().toString());
+                boolean isEmptyPassword = StringUtil.isNullOrEmpty(passwordEditText.getText().toString());
                 if (isEmptyPassword) {
                     passwordTextInputLayout.setError(null);
                     passwordTextInputLayout.setErrorEnabled(false);
                 }
-                enableSigninButton();
+                enableSignInButton(emailEditText.getText().toString(), editable.toString());
             }
         });
+    }
+
+    private void enableSignInButton(String email, String password) {
+        if (StringUtil.isNullOrEmpty(email) || StringUtil.isNullOrEmpty(password)) {
+            setSignInButtonEnabled(false);
+        } else {
+            setSignInButtonEnabled(true);
+        }
     }
 
     private void changeScreenMode(SignInScreenMode signInScreenMode) {
         if (signInScreenMode == SignInScreenMode.PATIENT_MODE_SIGNIN) {
             homeButton.setVisibility(View.VISIBLE);
-            gobackButton.setVisibility(View.VISIBLE);
+            goBackButton.setVisibility(View.VISIBLE);
             langSpinner.setVisibility(View.GONE);
+            forgotPasswordTextView.setVisibility(View.VISIBLE);
             setNavigationBarVisibility();
-        } else {
-            homeButton.setVisibility(View.GONE);
-            gobackButton.setVisibility(View.GONE);
-            langSpinner.setVisibility(View.GONE);
-
         }
     }
 
     private void setEditTexts() {
-//        signInEmailTextInputLayout.setTag(emailLabel);
-//        emailEditText.setTag(signInEmailTextInputLayout);
-//
-//        passwordTextInputLayout.setTag(passwordLabel);
-//        passwordEditText.setTag(passwordTextInputLayout);
-
         setTextListeners();
         emailEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(signInEmailTextInputLayout, null));
         passwordEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(passwordTextInputLayout, null));
-//        setChangeFocusListeners();
-
-
-//        emailEditText.clearFocus();
-//        passwordEditText.clearFocus();
     }
-
-//    private void setChangeFocusListeners() {
-//        emailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View view, boolean bool) {
-//                if (bool) {
-//                    SystemUtil.showSoftKeyboard(SigninActivity.this);
-//                }
-////                SystemUtil.handleHintChange(view, bool);
-//            }
-//        });
-//        passwordEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View view, boolean bool) {
-//                if (bool) {
-//                    SystemUtil.showSoftKeyboard(SigninActivity.this);
-//                }
-////                SystemUtil.handleHintChange(view, bool);
-//            }
-//        });
-//    }
-
-    private void enableSigninButton() {
-        boolean areAllNonEmpty = !(isEmptyEmail || isEmptyPassword);
-        setEnabledSigninButton(areAllNonEmpty);
-    }
-
-    private void signInUser() {
-        Log.d(LOG_TAG, "Sign in user");
-        signInButton.setClickable(false);
-        String userName = emailEditText.getText().toString();
-        String password = passwordEditText.getText().toString();
-
-        if(!HttpConstants.isUseUnifiedAuth()) {
-            getAppAuthorizationHelper().signIn(userName, password, cognitoActionCallback);
-        }else{
-            unifiedSignIn(userName, password);
-        }
-    }
-
-    private void unifiedSignIn(String userName, String password){
-        UnifiedSignInUser user = new UnifiedSignInUser();
-        user.setEmail(userName);
-        user.setPassword(password);
-
-        UnifiedSignInDTO signInDTO = new UnifiedSignInDTO();
-        signInDTO.setUser(user);
-
-        Map<String, String> queryParams = new HashMap<>();
-        Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
-
-        TransitionDTO signIn = null;
-        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
-            signIn = signinDTO.getMetadata().getTransitions().getSignIn();
-        }else if(getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE){
-            signIn = signinPatientModeDTO.getMetadata().getTransitions().getSignIn();
-        }
-
-        if(signInDTO.isValidUser()){
-            Gson gson = new Gson();
-            getWorkflowServiceHelper().execute(signIn, unifiedLoginCallback, gson.toJson(signInDTO), queryParams, headers);
-            getAppAuthorizationHelper().setUser(userName);// This must be set after the signin call is executed
-        }
-    }
-
-
-    private WorkflowServiceCallback unifiedLoginCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-
-            Gson gson = new Gson();
-            String signInResponseString = gson.toJson(workflowDTO);
-            UnifiedSignInResponse signInResponse = gson.fromJson(signInResponseString, UnifiedSignInResponse.class);
-            if(signInResponse != null) {
-                UnifiedAuthenticationTokens authTokens = signInResponse.getPayload().getAuthorizationModel().getCognito().getAuthenticationTokens();
-                getAppAuthorizationHelper().setAuthorizationTokens(authTokens);
-                if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
-                    getAppAuthorizationHelper().setRefreshTransition(signinDTO.getMetadata().getTransitions().getRefresh());
-                }
-                getWorkflowServiceHelper().setAppAuthorizationHelper(getAppAuthorizationHelper());
-            }
-
-            Map<String, String> queryMap = new HashMap<>();
-            queryMap.put("language", getApplicationPreferences().getUserLanguage());
-
-            TransitionDTO transitionDTO;
-            if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
-                transitionDTO = signinDTO.getMetadata().getTransitions().getAuthenticate();
-                getWorkflowServiceHelper().execute(transitionDTO, selectPracticeCallback, queryMap);
-            } else if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
-                transitionDTO = signinPatientModeDTO.getMetadata().getTransitions().getAction();
-                queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
-                queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
-                queryMap.put("patient_id", signInResponse.getPayload().getSignIn().getMetadata().getPatientId());
-                getApplicationMode().setPatientId(signInResponse.getPayload().getSignIn().getMetadata().getPatientId());
-                getWorkflowServiceHelper().execute(transitionDTO, signinPatientModeAppointmentsCallback, queryMap);
-            }
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            signInButton.setClickable(true);
-            if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
-                getWorkflowServiceHelper().setAppAuthorizationHelper(null);
-            }
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
-
-
-    private WorkflowServiceCallback selectPracticeCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            PracticeSelectionResponseModel practiceSelectionModel  = DtoHelper.getConvertedDTO(PracticeSelectionResponseModel.class, workflowDTO);
-            List<PracticeSelectionUserPractice> practiceList = practiceSelectionModel.getPayload().getUserPracticesList();
-
-            if(practiceList.isEmpty()){
-                onFailure("No Practice associated to this user");
-                return;
-            }
-
-            if(practiceList.size() == 1){
-                PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
-                signInButton.setClickable(true);
-            }else {
-
-                Gson gson = new Gson();
-                Bundle args = new Bundle();
-                args.putString(CarePayConstants.PRACTICE_SELECTION_BUNDLE, gson.toJson(workflowDTO));
-
-                PracticeSearchFragment fragment = new PracticeSearchFragment();
-                fragment.setArguments(args);
-                fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
-            }
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            getWorkflowServiceHelper().setAppAuthorizationHelper(null);
-            signInButton.setClickable(true);
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
-
-
-    private WorkflowServiceCallback signinCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
-            signInButton.setClickable(true);
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            signInButton.setClickable(true);
-            getWorkflowServiceHelper().setAppAuthorizationHelper(null);
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
-
-    private WorkflowServiceCallback signinPatientModeAppointmentsCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
-            signInButton.setClickable(true);
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            signInButton.setClickable(true);
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
-
-    private WorkflowServiceCallback signinPatientModeCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            Map<String, String> queryMap = new HashMap<>();
-
-            Gson gson = new Gson();
-            SigninPatientModeDTO signinPatientModeDTOLocal = gson.fromJson(workflowDTO.toString(), SigninPatientModeDTO.class);
-            queryMap.put("language", getApplicationPreferences().getUserLanguage());
-            queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
-            queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
-            queryMap.put("patient_id", signinPatientModeDTOLocal.getPayload().getPatientModeLoginData().getPatientModeLoginDataMetadata().getPatientId());
-            getApplicationMode().setPatientId(signinPatientModeDTOLocal.getPayload().getPatientModeLoginData().getPatientModeLoginDataMetadata().getPatientId());
-            Map<String, String> headers = new HashMap<>();
-            headers.put("transition", "false");
-            TransitionDTO transitionDTO;
-            transitionDTO = signinPatientModeDTO.getMetadata().getTransitions().getAction();
-            getWorkflowServiceHelper().execute(transitionDTO, signinPatientModeAppointmentsCallback, queryMap, headers);
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            signInButton.setClickable(true);
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
-
-    private CognitoActionCallback cognitoActionCallback = new CognitoActionCallback() {
-        @Override
-        public void onLoginSuccess() {
-            //launchHomescreen();
-            Map<String, String> queryMap = new HashMap<>();
-            TransitionDTO transitionDTO;
-            queryMap.put("language", getApplicationPreferences().getUserLanguage());
-            if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
-                transitionDTO = signinDTO.getMetadata().getTransitions().getAuthenticate();
-                getWorkflowServiceHelper().execute(transitionDTO, signinCallback, queryMap);
-            } else if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
-                transitionDTO = signinPatientModeDTO.getMetadata().getLinks().getLogin();
-                queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
-                queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
-                getWorkflowServiceHelper().execute(transitionDTO, signinPatientModeCallback, queryMap);
-            }
-        }
-        //launchHomescreen
-
-
-        @Override
-        public void onBeforeLogin() {
-            SystemUtil.hideSoftKeyboard(SigninActivity.this);
-        }
-
-        @Override
-        public void onLoginFailure(String exceptionMessage) {
-            signInButton.setClickable(true);
-            showErrorNotification(CarePayConstants.INVALID_LOGIN_ERROR_MESSAGE);
-//            SystemUtil.showFailureDialogMessage(SigninActivity.this,
-//                    "Sign-in failed",
-//                    "Invalid user id or password");
-
-        }
-    };
-
 
     /**
      * Click listener for go back button
@@ -671,43 +389,169 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
     public void onBackPressed() {
         super.onBackPressed();
         // log out previous user from Cognito
-        if(!HttpConstants.isUseUnifiedAuth()) {
+        if (!HttpConstants.isUseUnifiedAuth()) {
             Log.v(this.getClass().getSimpleName(), "sign out Cognito");
             getAppAuthorizationHelper().getPool().getUser().signOut();
             getAppAuthorizationHelper().setUser(null);
         }
-        if (!(getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)){
+        if (!(getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)) {
             getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
         }
-
-    }
-
-    private PracticeSelectionUserPractice findUserPractice(String practiceName, List<PracticeSelectionUserPractice> practiceList){
-        for(PracticeSelectionUserPractice practice : practiceList){
-            if(practice.getPracticeName().equals(practiceName)){
-                return practice;
-            }
-        }
-        return null;
     }
 
     @Override
     public void onSelectPractice(PracticeSelectionResponseModel model, PracticeSelectionUserPractice userPractice) {
+        TransitionDTO transitionDTO = model.getMetadata().getTransitions().getAuthenticate();
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("language", getApplicationPreferences().getUserLanguage());
         queryMap.put("practice_mgmt", userPractice.getPracticeMgmt());
         queryMap.put("practice_id", userPractice.getPracticeId());
-
-        TransitionDTO transitionDTO = model.getMetadata().getTransitions().getAuthenticate();
-        getWorkflowServiceHelper().execute(transitionDTO, signinCallback, queryMap);
+        getWorkflowServiceHelper().execute(transitionDTO, signInCallback, queryMap);
     }
 
     @Override
     public void onSelectPracticeCanceled() {
         getWorkflowServiceHelper().setAppAuthorizationHelper(null);
-        signInButton.setClickable(true);
+        setSignInButtonClickable(true);
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    public void requestPasswordFocus() {
+        passwordEditText.requestFocus();
+    }
+
+    public void requestEmailFocus() {
+        emailEditText.requestFocus();
+    }
+
+    public void setPasswordError(String error) {
+        passwordTextInputLayout.setErrorEnabled(true);
+        passwordTextInputLayout.setError(error);
+    }
+
+    public void setEmailError(String error) {
+        signInEmailTextInputLayout.setErrorEnabled(true);
+        signInEmailTextInputLayout.setError(error);
+    }
+
+    public void setSignInButtonClickable(boolean clickable) {
+        signInButton.setClickable(clickable);
+    }
+
+    public void setSignInButtonEnabled(boolean enable) {
+        signInButton.setEnabled(enable);
     }
 
 
+    private WorkflowServiceCallback selectPracticeCallback = new WorkflowServiceCallback() {
 
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            PracticeSelectionResponseModel practiceSelectionModel = DtoHelper
+                    .getConvertedDTO(PracticeSelectionResponseModel.class, workflowDTO);
+            List<PracticeSelectionUserPractice> practiceList = practiceSelectionModel.getPayload()
+                    .getUserPracticesList();
+
+            if (practiceList.isEmpty()) {
+                onFailure("No Practice associated to this user");
+                return;
+            }
+
+            if (practiceList.size() == 1) {
+                navigateToWorkFlow(workflowDTO);
+                setSignInButtonClickable(true);
+            } else {
+                showPracticeSearchFragment(workflowDTO);
+            }
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            getWorkflowServiceHelper().setAppAuthorizationHelper(null);
+            setSignInButtonClickable(true);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+    private WorkflowServiceCallback signInCallback = new WorkflowServiceCallback() {
+
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            setSignInButtonClickable(true);
+            navigateToWorkFlow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            setSignInButtonClickable(true);
+            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+    private void navigateToWorkFlow(WorkflowDTO workflowDTO) {
+        PracticeNavigationHelper.navigateToWorkflow(this, workflowDTO);
+    }
+
+    private void showPracticeSearchFragment(WorkflowDTO workflowDTO) {
+        Gson gson = new Gson();
+        Bundle args = new Bundle();
+        args.putString(CarePayConstants.PRACTICE_SELECTION_BUNDLE, gson.toJson(workflowDTO));
+        PracticeSearchFragment fragment = new PracticeSearchFragment();
+        fragment.setArguments(args);
+        fragment.show(getSupportFragmentManager(), fragment.getClass().getSimpleName());
+    }
+
+    private boolean areAllFieldsValid(String email, String password) {
+        boolean isPasswordValid = checkPassword(password);
+        if (!isPasswordValid) {
+            requestPasswordFocus();
+        }
+        boolean isEmailValid = checkEmail(email);
+        if (!isEmailValid) {
+            requestEmailFocus();
+        }
+        return isEmailValid && isPasswordValid;
+    }
+
+    private boolean checkEmail(String email) {
+        boolean isEmptyEmail = StringUtil.isNullOrEmpty(email);
+        boolean isEmailValid = StringUtil.isValidmail(email);
+        if (isEmptyEmail || !isEmailValid) {
+            if (isEmptyEmail) {
+                setEmailError(getString(com.carecloud.carepaylibrary.R.string.signin_signup_error_empty_email));
+            } else {
+                setEmailError(getString(com.carecloud.carepaylibrary.R.string.signin_signup_error_invalid_email));
+            }
+        }
+        return !isEmptyEmail && isEmailValid;
+    }
+
+    private boolean checkPassword(String password) {
+        boolean isEmptyPassword = StringUtil.isNullOrEmpty(password);
+
+        if (isEmptyPassword) {
+            String error = getString(com.carecloud.carepaylibrary.R.string.signin_signup_error_empty_password);
+            setPasswordError(error);
+        }
+        return !isEmptyPassword;
+    }
 }

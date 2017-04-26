@@ -3,7 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="signin_button_textsize">18sp</dimen>
-    <dimen name="signin_title_textsize">36sp</dimen>
 
     <!-- Default dimens which will be use for any default styling  -->
     <dimen name="dimen_1dp">1dp</dimen>
@@ -67,7 +66,6 @@
     <dimen name="text_size_17sp">17sp</dimen>
     <dimen name="text_size_20sp">20sp</dimen>
     <dimen name="text_size_21sp">21sp</dimen>
-    <dimen name="text_size_22sp">22sp</dimen>
     <dimen name="text_size_23sp">23sp</dimen>
     <dimen name="text_size_28sp">28sp</dimen>
     <dimen name="text_size_30sp">30sp</dimen>
