@@ -415,7 +415,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         if (callback != null) {
             callback.onInsuranceEdited(demographicDTO, false);
 
-            if (!hadInsurance || !isPatientMode) {
+            if (callback!=null && (!hadInsurance || !isPatientMode)) {
                 callback.goOneStepBack();
             }
         }
