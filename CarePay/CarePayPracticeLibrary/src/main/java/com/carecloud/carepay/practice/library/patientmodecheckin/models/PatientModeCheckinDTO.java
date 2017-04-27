@@ -9,15 +9,27 @@ import com.google.gson.annotations.SerializedName;
 
 public class PatientModeCheckinDTO {
 
+    @SerializedName("metadata")
+    @Expose
+    private PatientModeCheckinMetaDataDTO metaData = new PatientModeCheckinMetaDataDTO();
+
     @SerializedName("payload")
     @Expose
-    private PatientModeCheckinPayloadDTO payloadDTO = new PatientModeCheckinPayloadDTO();
+    private PatientModeCheckinPayloadDTO payload = new PatientModeCheckinPayloadDTO();
 
-    public PatientModeCheckinPayloadDTO getPayloadDTO() {
-        return payloadDTO;
+    public PatientModeCheckinPayloadDTO getPayload() {
+        return payload;
     }
 
-    public void setPayloadDTO(PatientModeCheckinPayloadDTO payloadDTO) {
-        this.payloadDTO = payloadDTO;
+    public void setPayload(PatientModeCheckinPayloadDTO payload) {
+        this.payload = payload;
+    }
+
+    public PatientModeCheckinMetaDataDTO getMetaData() {
+        return metaData;
+    }
+
+    public void setMetaData(PatientModeCheckinMetaDataDTO metaData) {
+        this.metaData = metaData;
     }
 }
