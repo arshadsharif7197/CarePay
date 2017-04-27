@@ -2,6 +2,7 @@ package com.carecloud.carepay.patient.payment.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,7 +22,6 @@ import com.carecloud.carepaylibray.payments.models.PaymentsLinksDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -76,24 +76,31 @@ public class PatientPaymentHistoryFragment extends BaseFragment implements Payme
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_patient_balance_history, container, false);
-
+    public void onCreate(Bundle icicle) {
+        super.onCreate(icicle);
         Gson gson = new Gson();
         String paymentsDTOString = getArguments().getString(CarePayConstants.INTAKE_BUNDLE);
         paymentDTO = gson.fromJson(paymentsDTOString, PaymentsModel.class);
-        historyRecyclerView = (RecyclerView) rootView.findViewById(R.id.history_recycler_view);
-        noPaymentsLayout = rootView.findViewById(R.id.no_payment_layout);
-
-        hideNoPaymentsLayout();
-        setUpRecyclerView();
-
-        return rootView;
+        sectionNumber = getArguments().getInt(CarePayConstants.TAB_SECTION_NUMBER);
     }
 
-    private void setUpRecyclerView() {
-        sectionNumber = getArguments().getInt(CarePayConstants.TAB_SECTION_NUMBER);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_patient_balance_history, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        noPaymentsLayout = view.findViewById(R.id.no_payment_layout);
+        setUpRecyclerView(view);
+    }
+
+    private void setUpRecyclerView(View view) {
+        historyRecyclerView = (RecyclerView) view.findViewById(R.id.history_recycler_view);
+        historyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         Map<String, String> queryString = new HashMap<>();
         PaymentsLinksDTO paymentsLinks = paymentDTO.getPaymentsMetadata().getPaymentsLinks();
 
@@ -145,11 +152,6 @@ public class PatientPaymentHistoryFragment extends BaseFragment implements Payme
         noPaymentsLayout.setVisibility(View.VISIBLE);
     }
 
-    private void hideNoPaymentsLayout() {
-        noPaymentsLayout.setVisibility(View.GONE);
-    }
-
-
     private WorkflowServiceCallback balancesCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -200,7 +202,7 @@ public class PatientPaymentHistoryFragment extends BaseFragment implements Payme
             try {
                 paymentDTO = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
                 PaymentHistoryAdapter historyAdapter = new PaymentHistoryAdapter(getActivity(), paymentDTO);
-                historyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
                 historyRecyclerView.setAdapter(historyAdapter);
 
                 if (historyAdapter.getItemCount() < 1) {

@@ -66,7 +66,7 @@ public class PaymentBalanceHistoryFragment extends BaseFragment implements Payme
 
         noPaymentTitle.setText(Label.getLabel("no_payment_title"));
         noPaymentDesc.setText(Label.getLabel("no_payment_description"));
-        
+
         Bundle bundle = getArguments();
         String paymentsDTOString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
         Gson gson = new Gson();

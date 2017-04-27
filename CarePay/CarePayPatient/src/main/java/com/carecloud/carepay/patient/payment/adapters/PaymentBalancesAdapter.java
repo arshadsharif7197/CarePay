@@ -16,7 +16,7 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalancesAdapter.PaymentHistoryViewHolder> {
+public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalancesAdapter.ViewHolder> {
     private Context context;
     private List<PendingBalancePayloadDTO> paymentsPatientBalances = new ArrayList<>();
     private OnBalanceListItemClickListener listener;
@@ -36,14 +36,14 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
     }
 
     @Override
-    public PaymentBalancesAdapter.PaymentHistoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View paymentHistoryListItemView = LayoutInflater.from(context).inflate(
                 R.layout.balances_list_item, parent, false);
-        return new PaymentBalancesAdapter.PaymentHistoryViewHolder(paymentHistoryListItemView);
+        return new ViewHolder(paymentHistoryListItemView);
     }
 
     @Override
-    public void onBindViewHolder(final PaymentBalancesAdapter.PaymentHistoryViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         final PendingBalancePayloadDTO charge = paymentsPatientBalances.get(position);
         String locationName = CarePayConstants.NOT_DEFINED;
         holder.shortName.setText(StringUtil.getShortName(locationName));
@@ -63,13 +63,13 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
         return paymentsPatientBalances.size();
     }
 
-    static class PaymentHistoryViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
         private CarePayTextView shortName;
         private CarePayTextView locationName;
         private CarePayTextView amount;
 
-        PaymentHistoryViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
 
             locationName = (CarePayTextView) itemView.findViewById(com.carecloud.carepaylibrary.R.id.balancesLocation);
