@@ -87,20 +87,18 @@ public abstract class BaseAvailableHoursFragment extends BaseDialogFragment impl
         Bundle bundle = getArguments();
         AppointmentDTO appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, bundle);
         if (appointmentDTO != null) {
-            startDate = DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime()).getDate();
-            endDate = DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getEndTime()).getDate();
             selectedVisitTypeDTO = appointmentDTO.getPayload().getVisitType();
             selectedResource = new AppointmentResourcesItemDTO();
             selectedResource.setId(appointmentDTO.getPayload().getResourceId());
             selectedResource.setProvider(appointmentDTO.getPayload().getProvider());
             resourcesToScheduleDTO = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, bundle);
         } else {
-            startDate = (Date) bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE);
-            endDate = (Date) bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE);
             selectedVisitTypeDTO = DtoHelper.getConvertedDTO(VisitTypeDTO.class, bundle);
             selectedResource = DtoHelper.getConvertedDTO(AppointmentResourcesItemDTO.class, bundle);
             resourcesToScheduleDTO = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, bundle);
         }
+        startDate = (Date) bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE);
+        endDate = (Date) bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE);
 
 
     }

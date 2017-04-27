@@ -100,14 +100,13 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
         preRegisterButton.setOnClickListener(getPreRegisterButtonClickListener());
     }
 
-    @SuppressWarnings("deprecation")
     private void initializeOff(View view, String status, int statusColor, int headerColor) {
         CarePayTextView appointmentStatusLabel = (CarePayTextView) view.findViewById(R.id.appointmentStatusLabel);
         appointmentStatusLabel.setVisibility(View.VISIBLE);
         appointmentStatusLabel.setText(status);
         appointmentStatusLabel.setTextColor(ContextCompat.getColor(context, statusColor));
 
-        findViewById(R.id.dialogHeaderlayout).setBackground(context.getResources().getDrawable(headerColor));
+        findViewById(R.id.dialogHeaderlayout).setBackground(ContextCompat.getDrawable(context, headerColor));
 
         ((CarePayTextView) findViewById(R.id.appointDateTextView)).setTextColor(ContextCompat.getColor(context, R.color.white));
         ((CarePayTextView) findViewById(R.id.appointTimeTextView)).setTextColor(ContextCompat.getColor(context, R.color.white));
