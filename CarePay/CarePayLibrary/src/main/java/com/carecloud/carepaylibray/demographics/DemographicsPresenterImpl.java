@@ -52,6 +52,8 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     private int currentDemographicStep = 1;
     private static final String SAVED_STEP_KEY = "save_step";
 
+    private boolean startCheckin = false;
+
     /**
      * @param demographicsView Demographics View
      * @param savedInstanceState Bundle
@@ -98,6 +100,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     private void displayStartFragment(WorkflowDTO workflowDTO){
+        startCheckin = true;
         switch (workflowDTO.getState()){
             case NavigationStateConstants.CONSENT_FORMS:
                 navigateToConsentForms(workflowDTO);
@@ -111,6 +114,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             default:
                 navigateToDemographicFragment(currentDemographicStep);
         }
+        startCheckin = false;
     }
 
     /**
@@ -131,7 +135,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         }
 
         transaction.replace(R.id.root_layout, fragment, tag);
-        if (addToBackStack) {
+        if (addToBackStack && !startCheckin) {
             transaction.addToBackStack(tag);
         }
         transaction.commitAllowingStateLoss();
