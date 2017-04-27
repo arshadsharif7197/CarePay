@@ -149,6 +149,9 @@ public class PaymentBalanceHistoryFragment extends BaseFragment implements Payme
         PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
                 .newInstance(paymentDTO, model);
         dialog.show(ft, tag);
+//        ResponsibilityFragment responsibilityFragment = ResponsibilityFragment.newInstance(paymentDTO);
+//        getChildFragmentManager().beginTransaction().replace(R.id.add_balance_history_frag_holder, responsibilityFragment)
+//                .addToBackStack(null).commit();
     }
 
 }

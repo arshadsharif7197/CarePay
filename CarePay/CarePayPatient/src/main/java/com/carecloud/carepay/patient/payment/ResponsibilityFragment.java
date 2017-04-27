@@ -19,8 +19,10 @@ import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialo
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -30,18 +32,28 @@ import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediu
 
 public class ResponsibilityFragment extends ResponsibilityBaseFragment {
 
+    public static ResponsibilityFragment newInstance(PaymentsModel paymentsDTO){
+        ResponsibilityFragment fragment = new ResponsibilityFragment();
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, paymentsDTO);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getPaymentInformation();
     }
 
-    @SuppressWarnings("deprecation")
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_responsibility, container, false);
+        return inflater.inflate(R.layout.fragment_responsibility, container, false);
+    }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
@@ -53,84 +65,49 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         });
         toolbar.setTitle("");
 
-        TextView responseTotal = (TextView) view.findViewById(R.id.respons_total);
-        TextView totalResponsibility = (TextView) view.findViewById(R.id.respons_total_label);
 
         Button payTotalAmountButton = (Button) view.findViewById(R.id.pay_total_amount_button);
-        payTotalAmountButton.setClickable(false);
-        payTotalAmountButton.setEnabled(false);
-        setGothamRoundedMediumTypeface(appCompatActivity, payTotalAmountButton);
-//        payTotalAmountButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
-
         Button makePartialPaymentButton = (Button) view.findViewById(R.id.make_partial_payment_button);
-        makePartialPaymentButton.setClickable(false);
-        makePartialPaymentButton.setEnabled(false);
-        setGothamRoundedMediumTypeface(appCompatActivity, makePartialPaymentButton);
-//        makePartialPaymentButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
-
         Button payLaterButton = (Button) view.findViewById(R.id.pay_later_button);
-        payLaterButton.setClickable(false);
-        payLaterButton.setEnabled(false);
-        setGothamRoundedMediumTypeface(appCompatActivity, payLaterButton);
-//        payLaterButton.setBackgroundColor(getResources().getColor(R.color.light_gray));
 
-        try {
-            getPaymentInformation();
-            if (paymentDTO != null) {
-                getPaymentLabels();
-                List<PendingBalanceDTO> paymentList = paymentDTO.getPaymentPayload()
-                        .getPatientBalances().get(0).getBalances();
+        if (paymentDTO != null) {
+            getPaymentLabels();
+            List<PendingBalanceDTO> paymentList = paymentDTO.getPaymentPayload()
+                    .getPatientBalances().get(0).getBalances();
 
-                total = 0;
-                if (paymentList != null && paymentList.size() > 0) {
-                    fillDetailAdapter(view, paymentList);
-                    for (PendingBalancePayloadDTO payment : paymentList.get(0).getPayload()) {
-                        total += payment.getAmount();
-                    }
-                    try {
-
-                        if (total > 0) {
-                            payTotalAmountButton.setClickable(true);
-                            payTotalAmountButton.setEnabled(true);
-                            makePartialPaymentButton.setEnabled(true);
-                            makePartialPaymentButton.setEnabled(true);
-                            payLaterButton.setEnabled(true);
-                            payLaterButton.setEnabled(true);
-
-                            payTotalAmountButton.setTextColor(Color.WHITE);
-                            makePartialPaymentButton.setTextColor(getResources().getColor(R.color.colorPrimary));
-                            payLaterButton.setTextColor(getResources().getColor(R.color.colorPrimary));
-
-//                            payTotalAmountButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-//                            makePartialPaymentButton.setBackgroundColor(Color.WHITE);
-//                            payLaterButton.setBackgroundColor(Color.WHITE);
-
-//                            GradientDrawable border = new GradientDrawable();
-//                            border.setColor(Color.WHITE);
-//                            border.setStroke(1, getResources().getColor(R.color.colorPrimary));
-//                            makePartialPaymentButton.setBackground(border);
-//                            payLaterButton.setBackground(border);
-                        }
-
-                        NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
-                        responseTotal.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));
-
-                    } catch (NumberFormatException ex) {
-                        ex.printStackTrace();
-                        Log.e(LOG_TAG, ex.getMessage());
-                    }
+            total = 0;
+            if (paymentList != null && paymentList.size() > 0) {
+                fillDetailAdapter(view, paymentList);
+                for (PendingBalancePayloadDTO payment : paymentList.get(0).getPayload()) {
+                    total += payment.getAmount();
                 }
+                try {
 
-                totalResponsibility.setText(totalResponsibilityString);
+                    if (total > 0) {
+                        payTotalAmountButton.setClickable(true);
+                        payTotalAmountButton.setEnabled(true);
+                        makePartialPaymentButton.setEnabled(true);
+                        makePartialPaymentButton.setEnabled(true);
+                        payLaterButton.setEnabled(true);
+                        payLaterButton.setEnabled(true);
 
-                payTotalAmountButton.setText(payTotalAmountString);
-                makePartialPaymentButton.setText(payPartialAmountString);
-                payLaterButton.setText(payLaterString);
+                        payTotalAmountButton.setTextColor(Color.WHITE);
+                        makePartialPaymentButton.setTextColor(getResources().getColor(R.color.colorPrimary));
+                        payLaterButton.setTextColor(getResources().getColor(R.color.colorPrimary));
+                    }
 
-                title.setText(paymentsTitleString);
+                    NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
+
+                    TextView responseTotal = (TextView) view.findViewById(R.id.respons_total);
+                    responseTotal.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));
+
+                } catch (NumberFormatException ex) {
+                    ex.printStackTrace();
+                    Log.e(LOG_TAG, ex.getMessage());
+                }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+
+            title.setText(paymentsTitleString);
         }
 
         payTotalAmountButton.setOnClickListener(new View.OnClickListener() {
@@ -153,8 +130,6 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
                 // Add code to pay later
             }
         });
-
-        return view;
     }
 
     protected void doPayment() {
