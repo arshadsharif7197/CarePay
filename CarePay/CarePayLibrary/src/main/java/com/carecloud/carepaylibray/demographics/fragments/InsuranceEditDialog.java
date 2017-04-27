@@ -424,8 +424,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     private void initializeScanArea() {
         healthInsuranceFrontPhotoView = (ImageView) findViewById(R.id.health_insurance_front_photo);
         healthInsuranceBackPhotoView = (ImageView) findViewById(R.id.health_insurance_back_photo);
-        healthInsuranceFrontPhotoView.measure(0,0);
-        healthInsuranceBackPhotoView.measure(0,0);
 
         if (editedIndex != NEW_INSURANCE) {
             String frontPic = null;
@@ -448,7 +446,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
                 }else{//must be BASE64
                     Bitmap bitmap = SystemUtil.convertStringToBitmap(frontPic);
                     File file = ImageCaptureHelper.getBitmapFileUrl(getContext(), bitmap, "idFront");
-                    setInsurancePhoto(healthInsuranceFrontPhotoView, file, healthInsuranceFrontPhotoView.getMeasuredWidth(), healthInsuranceFrontPhotoView.getMeasuredHeight());
+                    setInsurancePhoto(healthInsuranceFrontPhotoView, file);
                 }
             }
 
@@ -458,7 +456,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
                 }else{//must be BASE64
                     Bitmap bitmap = SystemUtil.convertStringToBitmap(backPic);
                     File file = ImageCaptureHelper.getBitmapFileUrl(getContext(), bitmap, "idBack");
-                    setInsurancePhoto(healthInsuranceBackPhotoView, file, healthInsuranceBackPhotoView.getMeasuredWidth(), healthInsuranceBackPhotoView.getMeasuredHeight());
+                    setInsurancePhoto(healthInsuranceBackPhotoView, file);
                 }
             }
 
@@ -488,11 +486,13 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     }
 
     private void setInsurancePhoto(final ImageView imageView, String photoUrl){
-        imageView.measure(0,0);
-        final int width = imageView.getMeasuredWidth();
-        final int height = imageView.getMeasuredHeight();
+        imageView.measure(0, 0);
+        ViewGroup.LayoutParams lp = imageView.getLayoutParams();
+        final int width = Math.max(imageView.getMeasuredWidth(), lp.width);
+        final int height = Math.max(imageView.getMeasuredHeight(), lp.height);
 
         Picasso.with(getContext()).load(photoUrl)
+                .placeholder(R.drawable.icn_camera)
                 .resize(width, height)
                 .centerInside()
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
@@ -500,18 +500,29 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
                 .into(imageView, new Callback() {
                     @Override
                     public void onSuccess() {
+                        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                        ViewGroup.LayoutParams lp = imageView.getLayoutParams();
+                        lp.width = width;
+                        lp.height = height;
+                        imageView.setLayoutParams(lp);
                     }
 
                     @Override
                     public void onError() {
                         imageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                                R.drawable.icn_placeholder_document));
+                                R.drawable.icn_camera));
                     }
                 });
     }
 
-    private void setInsurancePhoto(final ImageView imageView, File file, int width, int height){
+    private void setInsurancePhoto(final ImageView imageView, File file){
+        imageView.measure(0,0);
+        ViewGroup.LayoutParams lp = imageView.getLayoutParams();
+        final int width = Math.max(imageView.getMeasuredWidth(), lp.width);
+        final int height = Math.max(imageView.getMeasuredHeight(), lp.height);
+
         Picasso.with(getContext()).load(file)
+                .placeholder(R.drawable.icn_camera)
                 .resize(width, height)
                 .centerInside()
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
@@ -519,12 +530,17 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
                 .into(imageView, new Callback() {
                     @Override
                     public void onSuccess() {
+                        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                        ViewGroup.LayoutParams lp = imageView.getLayoutParams();
+                        lp.width = width;
+                        lp.height = height;
+                        imageView.setLayoutParams(lp);
                     }
 
                     @Override
                     public void onError() {
                         imageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                                R.drawable.icn_placeholder_document));
+                                R.drawable.icn_camera));
                     }
                 });
     }
@@ -795,7 +811,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
             imageView.getLayoutParams().height = height;
 
             File file = getBitmapFileUrl(getContext(), rotateBitmap, tempFile);
-            setInsurancePhoto(imageView, file, width, height);
+            setInsurancePhoto(imageView, file);
 
             handler.post(new Runnable() {
                 @Override
