@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
@@ -98,9 +99,11 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         progressBar.setVisibility(View.VISIBLE);
         initWebView();
 
-        KeyboardScrollWithWebViewFix.assistFragment(this,
-                (int) getResources().getDimension(R.dimen.checkinNavBarClosedOffset),
-                (int) getResources().getDimension(R.dimen.checkinNavBarOpenOffset));
+        if(getApplicationMode().getApplicationType() != ApplicationMode.ApplicationType.PATIENT) {
+            KeyboardScrollWithWebViewFix.assistFragment(this,
+                    (int) getResources().getDimension(R.dimen.checkinNavBarClosedOffset),
+                    (int) getResources().getDimension(R.dimen.checkinNavBarOpenOffset));
+        }
 
     }
 

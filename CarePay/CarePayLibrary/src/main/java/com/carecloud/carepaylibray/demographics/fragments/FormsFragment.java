@@ -6,11 +6,9 @@ import android.view.View;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
-import com.carecloud.carepaylibray.utils.KeyboardScrollWithWebViewFix;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -45,9 +43,6 @@ public class FormsFragment extends BaseWebFormFragment {
     @Override
     public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
-        KeyboardScrollWithWebViewFix.assistFragment(this,
-                (int) getResources().getDimension(R.dimen.checkinNavBarClosedOffset),
-                (int) getResources().getDimension(R.dimen.checkinNavBarOpenOffset));
         setHeader(Label.getLabel("demographics_consent_forms_title"));
     }
 
