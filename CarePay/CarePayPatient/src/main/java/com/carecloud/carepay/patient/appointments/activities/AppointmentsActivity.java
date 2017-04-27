@@ -237,6 +237,9 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         resourcesItemDTO.setId(appointmentDTO.getPayload().getResourceId());
         resourcesItemDTO.setProvider(appointmentDTO.getPayload().getProvider());
 
+        selectedAppointmentResourcesDTO = new AppointmentResourcesDTO();
+        selectedAppointmentResourcesDTO.setResource(resourcesItemDTO);
+
         ResourcesToScheduleDTO resourcesToSchedule = new ResourcesToScheduleDTO();
         resourcesToSchedule.getPractice().setPracticeId(appointmentDTO.getMetadata().getPracticeId());
         resourcesToSchedule.getPractice().setPracticeMgmt(appointmentDTO.getMetadata().getPracticeMgmt());
