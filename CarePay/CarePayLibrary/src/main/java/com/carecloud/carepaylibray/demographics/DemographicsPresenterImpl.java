@@ -12,6 +12,7 @@ import android.util.Log;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraFragment;
@@ -65,7 +66,8 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             currentDemographicStep = savedInstanceState.getInt(SAVED_STEP_KEY, 1);
         }
 
-        navigateToDemographicFragment(currentDemographicStep);
+        WorkflowDTO workflowDTO = demographicsView.getConvertedDTO(WorkflowDTO.class);
+        displayStartFragment(workflowDTO);
     }
 
     @Override
@@ -93,6 +95,22 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         }
 
         return null;
+    }
+
+    private void displayStartFragment(WorkflowDTO workflowDTO){
+        switch (workflowDTO.getState()){
+            case NavigationStateConstants.CONSENT_FORMS:
+                navigateToConsentForms(workflowDTO);
+                break;
+            case NavigationStateConstants.MEDICATION_ALLERGIES:
+                navigateToMedicationsAllergy(workflowDTO);
+                break;
+            case NavigationStateConstants.INTAKE_FORMS:
+                navigateToIntakeForms(workflowDTO);
+                break;
+            default:
+                navigateToDemographicFragment(currentDemographicStep);
+        }
     }
 
     /**

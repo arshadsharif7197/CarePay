@@ -106,6 +106,8 @@ public class PracticeNavigationHelper {
                 if (context instanceof PatientModeCheckinActivity) {
                     ((PatientModeCheckinActivity) context).navigateToMedicationsAllergy(workflowDTO);
                     return;
+                }else{
+                    intent = new Intent(context, PatientModeCheckinActivity.class);
                 }
                 break;
             }
@@ -113,6 +115,8 @@ public class PracticeNavigationHelper {
                 if (context instanceof PatientModeCheckinActivity) {
                     ((PatientModeCheckinActivity) context).navigateToConsentForms(workflowDTO);
                     return;
+                }else{
+                    intent = new Intent(context, PatientModeCheckinActivity.class);
                 }
                 break;
             }
@@ -121,6 +125,8 @@ public class PracticeNavigationHelper {
                 if (context instanceof PatientModeCheckinActivity) {
                     ((PatientModeCheckinActivity) context).navigateToIntakeForms(workflowDTO);
                     return;
+                }else{
+                    intent = new Intent(context, PatientModeCheckinActivity.class);
                 }
                 break;
             }
