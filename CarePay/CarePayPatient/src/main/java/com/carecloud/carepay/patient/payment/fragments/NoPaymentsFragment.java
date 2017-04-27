@@ -2,7 +2,6 @@ package com.carecloud.carepay.patient.payment.fragments;
 
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,10 +25,7 @@ public class NoPaymentsFragment extends BaseFragment {
      * @return a new instance of NoPaymentsFragment
      */
     public static NoPaymentsFragment newInstance() {
-        NoPaymentsFragment fragment = new NoPaymentsFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+        return new NoPaymentsFragment();
     }
 
     @Override
