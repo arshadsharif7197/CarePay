@@ -3,24 +3,29 @@
 <LinearLayout
     style="@style/DemographicsDocsHeaderStyle"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="horizontal"
-    android:layout_marginTop="0dp">
+    android:layout_marginTop="@dimen/dimen_20dp">
 
     <ImageView
         android:id="@+id/DetailsProfileImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/dimen_60dp"
+        android:layout_height="@dimen/dimen_60dp"
+        android:adjustViewBounds="true"
         android:src="@drawable/icn_placeholder_user_profile_png"
         android:contentDescription="@string/profile_picture"/>
 
-    <Button
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
         android:id="@+id/changeCurrentPhotoButton"
         style="@style/DemographicsAddRemoveInsuranceStyle"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="@dimen/dimen_10dp"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:text="@string/selectOrTakePhotoButton"/>
+        android:text="@string/selectOrTakePhotoButton"
+        app:customAssetFont="proxima_nova_regular"/>
 
 </LinearLayout>

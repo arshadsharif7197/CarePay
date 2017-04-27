@@ -87,6 +87,9 @@ public class PatientNavigationHelper {
                 if (context instanceof ReviewDemographicsActivity) {
                     ((ReviewDemographicsActivity) context).navigateToConsentForms(workflowDTO);
                     return;
+                }else{
+                    intent = new Intent(context, ReviewDemographicsActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 }
                 break;
             }
@@ -94,6 +97,9 @@ public class PatientNavigationHelper {
                 if (context instanceof ReviewDemographicsActivity) {
                     ((ReviewDemographicsActivity) context).navigateToIntakeForms(workflowDTO);
                     return;
+                }else{
+                    intent = new Intent(context, ReviewDemographicsActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 }
                 break;
             }
@@ -121,6 +127,9 @@ public class PatientNavigationHelper {
                 if (context instanceof ReviewDemographicsActivity) {
                     ((ReviewDemographicsActivity) context).navigateToMedicationsAllergy(workflowDTO);
                     return;
+                }else{
+                    intent = new Intent(context, ReviewDemographicsActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 }
                 break;
             }

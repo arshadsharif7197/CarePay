@@ -109,8 +109,9 @@
                 android:id="@+id/signup_button"
                 style="@style/SigninNewAccountButtonStyle"
                 android:text="@string/signup_button"
+                android:visibility="gone"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="create_new_account_button" />
+                breeze:textKey="create_new_account_button"/>
 
             <LinearLayout
                 android:id="@+id/bottomContainerLayout"

@@ -25,7 +25,6 @@ import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
@@ -97,6 +96,8 @@ public class SigninFragment extends BaseFragment {
         signInDTO = (SignInDTO) listener.getDto();
         setEditTexts(view);
         setClickListeners(view);
+        enableSignInButton(emailEditText.getText().toString(), passwordEditText.getText().toString());
+
     }
 
     private void setClickListeners(View view) {
@@ -306,25 +307,28 @@ public class SigninFragment extends BaseFragment {
         emailEditText = (EditText) view.findViewById(R.id.signinEmailEditText);
         passwordEditText = (EditText) view.findViewById(R.id.passwordEditText);
         passwordTextInputLayout = (TextInputLayout) view.findViewById(R.id.passwordTextInputLayout);
-        if (signInDTO != null) {
-            String emailAddress = Label.getLabel("signup_email");
-            signInEmailTextInputLayout.setTag(emailAddress);
-            emailEditText.setHint(emailAddress);
-            emailEditText.setTag(signInEmailTextInputLayout);
-
-            String password = signInDTO.getMetadata().getDataModels().getSignin().getProperties().getPassword().getLabel();
-            if (SystemUtil.isNotEmptyString(password)) {
-                passwordTextInputLayout.setTag(password);
-            }
-
-            passwordEditText.setHint(password);
-            passwordEditText.setTag(passwordTextInputLayout);
-        }
+        emailEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(signInEmailTextInputLayout, null));
+        passwordEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(passwordTextInputLayout, null));
+//        if (signInDTO != null) {
+//            String emailAddress = Label.getLabel("signup_email");
+//            signInEmailTextInputLayout.setTag(emailAddress);
+//            emailEditText.setHint(emailAddress);
+//            emailEditText.setTag(signInEmailTextInputLayout);
+//
+//            String password = signInDTO.getMetadata().getDataModels().getSignin().getProperties().getPassword().getLabel();
+//            if (SystemUtil.isNotEmptyString(password)) {
+//                passwordTextInputLayout.setTag(password);
+//            }
+//
+//            passwordEditText.setHint(password);
+//            passwordEditText.setTag(passwordTextInputLayout);
+//        }
         setTextListeners();
         setActionListeners();
 
-        emailEditText.clearFocus();
-        passwordEditText.clearFocus();
+//        emailEditText.clearFocus();
+//        passwordEditText.clearFocus();
+
     }
 
     /**
