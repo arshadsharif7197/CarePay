@@ -122,14 +122,15 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                 page = BACK_PIC;
             }
 
-                int width = imageView.getWidth();
-                int height = imageView.getHeight();
+                final int width = imageView.getWidth();
+                final int height = imageView.getHeight();
                 imageView.getLayoutParams().width = width;
                 imageView.getLayoutParams().height = height;
 
                 File file = ImageCaptureHelper.getBitmapFileUrl(getContext(), rotateBitmap, tempFile);
                 Picasso.with(getContext()).load(file)
 //                        .rotate(ImageCaptureHelper.getOrientation())
+                        .placeholder(R.drawable.icn_camera)
                         .resize(width, height)
                         .centerInside()
                         .memoryPolicy(MemoryPolicy.NO_CACHE)
@@ -138,11 +139,16 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                             @Override
                             public void onSuccess() {
                                 imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                                ViewGroup.LayoutParams lp = imageView.getLayoutParams();
+                                lp.width = width;
+                                lp.height = height;
+                                imageView.setLayoutParams(lp);
                             }
 
                             @Override
                             public void onError() {
-
+                                imageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                                        R.drawable.icn_camera));
                             }
                         });
 
@@ -234,6 +240,7 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
         final int height = imageView.getMeasuredHeight();
 
         Picasso.with(getContext()).load(photoUrl)
+                .placeholder(R.drawable.icn_camera)
                 .resize(width, height)
                 .centerInside()
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
@@ -242,12 +249,16 @@ public class IdDocScannerFragment extends DocumentScannerFragment {
                     @Override
                     public void onSuccess() {
                         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                        ViewGroup.LayoutParams lp = imageView.getLayoutParams();
+                        lp.width = width;
+                        lp.height = height;
+                        imageView.setLayoutParams(lp);
                     }
 
                     @Override
                     public void onError() {
                         imageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                                R.drawable.icn_placeholder_document));
+                                R.drawable.icn_camera));
                     }
                 });
     }
