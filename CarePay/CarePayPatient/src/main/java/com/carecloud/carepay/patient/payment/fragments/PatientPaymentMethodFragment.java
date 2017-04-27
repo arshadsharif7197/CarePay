@@ -22,6 +22,8 @@ import com.carecloud.carepaylibray.payments.adapter.PaymentMethodAdapter;
 import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.BooleanResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -59,8 +61,17 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     private List lineItems;
     private boolean isAndroidPayReady;
 
+    public static PatientPaymentMethodFragment newInstance(PaymentsModel paymentsModel, double amount) {
+        PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, paymentsModel);
+        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         paymentTypeMap.put(CarePayConstants.TYPE_ANDROID_PAY, R.drawable.payment_android_button_selector);
     }
@@ -71,10 +82,10 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         paymentMethodFragmentProgressBar = (ProgressBar) view.findViewById(R.id.paymentMethodFragmentProgressBar);
-         scrollviewChoices = (ScrollView) view.findViewById(R.id.scrollview_choices);
+        scrollviewChoices = (ScrollView) view.findViewById(R.id.scrollview_choices);
 
         if (googleApiClient == null) {
             setGoogleApiClient();
@@ -82,8 +93,6 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         isAndroidPayReadyToUse();
 
     }
-
-
 
 
     private void setGoogleApiClient() {
@@ -122,7 +131,6 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         Log.e(TAG, "onConnectionFailed:" + connectionResult.getErrorMessage());
         Toast.makeText(getActivity(), "Google Play Services error", Toast.LENGTH_SHORT).show();
     }
-
 
 
     private void isAndroidPayReadyToUse() {
@@ -168,7 +176,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
             paymentMethodsList.add(androidPayPaymentMethod);
 //            addPaymentMethodOptionView(paymentMethodsList.size() - 1);
 
-            if(getPaymentMethodList()!=null){//listview already init
+            if (getPaymentMethodList() != null) {//listview already init
                 PaymentMethodAdapter adapter = (PaymentMethodAdapter) getPaymentMethodList().getAdapter();
                 adapter.setPaymentMethodsList(paymentMethodsList);
                 adapter.notifyDataSetChanged();
@@ -193,11 +201,11 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
 
 
     @Override
-    protected void handlePaymentButton(PaymentsMethodsDTO paymentMethod, double amount){
-        if(paymentMethod.getType() == CarePayConstants.TYPE_ANDROID_PAY){
+    protected void handlePaymentButton(PaymentsMethodsDTO paymentMethod, double amount) {
+        if (paymentMethod.getType() == CarePayConstants.TYPE_ANDROID_PAY) {
             setLineItems(paymentList.get(0).getPayload());
             createAndAddWalletFragment(String.valueOf(amount));
-        }else{
+        } else {
             super.handlePaymentButton(paymentMethod, amount);
         }
     }
@@ -282,7 +290,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         return builder.build();
     }
 
-    private MerchantServiceMetadataDTO getPayeezyMerchantService(){
+    private MerchantServiceMetadataDTO getPayeezyMerchantService() {
         MerchantServiceMetadataDTO merchantServiceDTO = null;
         for (DemographicsSettingsPapiAccountsDTO papiAccountDTO : paymentsModel.getPaymentPayload().getPapiAccounts()) {
             if (papiAccountDTO.getType().contains("payeezy")) {
@@ -290,7 +298,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
             }
         }
 
-        return  merchantServiceDTO;
+        return merchantServiceDTO;
     }
 
     /**

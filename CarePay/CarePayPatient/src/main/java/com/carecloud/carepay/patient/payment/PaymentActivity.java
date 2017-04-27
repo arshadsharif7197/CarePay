@@ -37,7 +37,7 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
         setContentView(R.layout.activity_payment);
 
         paymentsDTO = getConvertedDTO(PaymentsModel.class);
-        ResponsibilityFragment responsibilityFragment = ResponsibilityFragment.newInstance(paymentsDTO);
+        ResponsibilityFragment responsibilityFragment = ResponsibilityFragment.newInstance(paymentsDTO, true);
         navigateToFragment(responsibilityFragment, false);
     }
 
@@ -163,15 +163,7 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
-        Gson gson = new Gson();
-        String paymentsDTOString = gson.toJson(paymentsDTO);
-        PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
-        Bundle bundle = new Bundle();
-        bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-        bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
-        fragment.setArguments(bundle);
-
-        navigateToFragment(fragment, true);
+        navigateToFragment(PatientPaymentMethodFragment.newInstance(paymentsModel, amount), true);
     }
 
     @Override
