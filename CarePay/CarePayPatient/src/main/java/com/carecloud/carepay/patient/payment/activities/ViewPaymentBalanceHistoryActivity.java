@@ -91,22 +91,6 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_PAYMENTS).setChecked(true);
     }
 
-//    /**
-//     * Helper method to replace fragments
-//     *
-//     * @param fragment       The fragment
-//     * @param addToBackStack Whether to add the transaction to back-stack
-//     */
-//    public void navigateToFragment(final Fragment fragment, final boolean addToBackStack) {
-//        FragmentManager fm = getSupportFragmentManager();
-//        FragmentTransaction transaction = fm.beginTransaction();
-//        transaction.replace(R.id.add_balance_history_frag_holder, fragment, fragment.getClass().getSimpleName());
-//        if (addToBackStack) {
-//            transaction.addToBackStack(fragment.getClass().getName());
-//        }
-//        transaction.commitAllowingStateLoss();
-//    }
-
     /**
      * Invoked after the user taps the Buy With Android Pay button and the selected
      * credit card and shipping address are confirmed. If the request succeeded,
@@ -288,23 +272,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void loadPaymentAmountScreen(PendingBalancePayloadDTO model, PaymentsModel paymentDTO) {
-//        String tag = PaymentDetailsFragmentDialog.class.getSimpleName();
-//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
-//        if (prev != null) {
-//            ft.remove(prev);
-//        }
-//        ft.addToBackStack(null);
-//
-//        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
-//                .newInstance(paymentDTO, model);
-//        dialog.show(ft, tag);
-
         ResponsibilityFragment responsibilityFragment = ResponsibilityFragment.newInstance(paymentDTO, false);
         replaceFragment(responsibilityFragment, true);
         displayToolbar(false, null);
-//        getChildFragmentManager().beginTransaction().replace(R.id.add_balance_history_frag_holder, responsibilityFragment)
-//                .addToBackStack(null).commit();
-
     }
 }
