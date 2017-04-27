@@ -61,6 +61,12 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     private List lineItems;
     private boolean isAndroidPayReady;
 
+    /**
+     *
+     * @param paymentsModel the payments DTO
+     * @param amount the amount
+     * @return an instance of PatientPaymentMethodFragment
+     */
     public static PatientPaymentMethodFragment newInstance(PaymentsModel paymentsModel, double amount) {
         PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
         Bundle args = new Bundle();

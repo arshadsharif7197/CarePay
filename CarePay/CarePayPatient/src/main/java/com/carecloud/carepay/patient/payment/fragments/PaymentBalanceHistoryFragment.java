@@ -9,7 +9,6 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.patient.payment.adapters.PaymentsSectionsPagerAdapter;
@@ -24,6 +23,10 @@ import com.carecloud.carepaylibray.utils.StringUtil;
  */
 public class PaymentBalanceHistoryFragment extends BaseFragment {
 
+    /**
+     *
+     * @return a new instance of PaymentBalanceHistoryFragment
+     */
     public static PaymentBalanceHistoryFragment newInstance() {
         PaymentBalanceHistoryFragment fragment = new PaymentBalanceHistoryFragment();
         Bundle args = new Bundle();
