@@ -75,12 +75,19 @@ public class PatientPaymentPlanFragment extends BaseCheckinFragment {
     private PaymentNavigationCallback callback;
 
     @Override
-    public void onAttach(Context context){
-        super.onAttach(context);
+    public void attachCallback(Context context){
         try{
             callback = (PaymentNavigationCallback) context;
         }catch(ClassCastException cce){
             throw new ClassCastException("Attached context must implement PaymentNavigationCallback");
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(callback == null){
+            attachCallback(getContext());
         }
     }
 

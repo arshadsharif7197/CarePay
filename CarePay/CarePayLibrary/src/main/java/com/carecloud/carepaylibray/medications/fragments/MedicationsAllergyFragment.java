@@ -74,6 +74,10 @@ public class MedicationsAllergyFragment extends BaseFragment implements Medicati
     @Override
     public void onAttach(Context context){
         super.onAttach(context);
+        attachCallback(context);
+    }
+
+    private void attachCallback(Context context){
         try{
             if (context instanceof DemographicsView) {
                 callback = ((DemographicsView) context).getPresenter();
@@ -83,6 +87,16 @@ public class MedicationsAllergyFragment extends BaseFragment implements Medicati
         }catch (ClassCastException cce){
             throw new ClassCastException("Attached Context must implement DemographicsPresenter");
         }
+
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(callback == null){
+            attachCallback(getContext());
+        }
+        callback.setCheckinFlow(CheckinFlowState.MEDICATIONS_AND_ALLERGIES, 1, 1);
     }
 
     @Override
@@ -121,7 +135,6 @@ public class MedicationsAllergyFragment extends BaseFragment implements Medicati
 
         View container = view.findViewById(R.id.container_main);
         hideKeyboardOnViewTouch(container);
-        callback.setCheckinFlow(CheckinFlowState.MEDICATIONS_AND_ALLERGIES, 1, 1);
     }
 
     private void inflateToolbarViews(View view){

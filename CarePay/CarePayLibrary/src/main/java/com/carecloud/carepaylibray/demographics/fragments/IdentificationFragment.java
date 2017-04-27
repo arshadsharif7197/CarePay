@@ -21,9 +21,14 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment {
     private DemographicDTO demographicDTO;
 
     @Override
+    public void onCreate(Bundle icicle){
+        super.onCreate(icicle);
+        demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
         checkIfEnableButton(view);
         view.findViewById(R.id.toolbar_layout).setVisibility(View.INVISIBLE);
 

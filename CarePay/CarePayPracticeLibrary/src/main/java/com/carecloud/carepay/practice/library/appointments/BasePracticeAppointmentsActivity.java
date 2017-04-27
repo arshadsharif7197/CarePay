@@ -16,7 +16,6 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
@@ -255,8 +254,6 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
             SystemUtil.doDefaultFailureBehavior((BaseActivity) getContext(), exceptionMessage);
         }
     };
-
-    protected abstract AppointmentLabelDTO getLabels();
 
     protected abstract TransitionDTO getMakeAppointmentTransition();
 

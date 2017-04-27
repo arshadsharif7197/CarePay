@@ -43,8 +43,7 @@ public abstract class DocumentScannerFragment extends BaseCheckinFragment implem
     protected CarePayCameraReady carePayCameraReady;
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public void attachCallback(Context context) {
         try {
             if (context instanceof DemographicsView) {
                 carePayCameraReady = ((DemographicsView) context).getPresenter();
@@ -53,6 +52,14 @@ public abstract class DocumentScannerFragment extends BaseCheckinFragment implem
             }
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement CarePayCameraReady");
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(carePayCameraReady == null){
+            attachCallback(getContext());
         }
     }
 

@@ -41,10 +41,16 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
     private UpdateProfilePictureListener callback;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
+    public void onCreate(Bundle icicle){
+        super.onCreate(icicle);
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
 
+        preventNavBack = getArguments().getBoolean(PREVENT_NAV_BACK);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
         initNextButton(view);
         setHeaderTitle(
                 Label.getLabel("demographics_review_peronsonalinfo_section"),
@@ -61,6 +67,12 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
 
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
+//        callback.loadPictureFragment();
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
         callback.loadPictureFragment();
     }
 
@@ -73,9 +85,8 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
+    public void attachCallback(Context context) {
+        super.attachCallback(context);
         try {
             if (context instanceof DemographicsView) {
                 callback = ((DemographicsView) context).getPresenter();

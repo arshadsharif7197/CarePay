@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
+import com.carecloud.carepay.practice.library.patientmodecheckin.PatientModeDemographicsPresenter;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckInFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientPaymentPlanFragment;
@@ -25,7 +26,6 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
-import com.carecloud.carepaylibray.demographics.DemographicsPresenterImpl;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
@@ -44,7 +44,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     public final static int SUBFLOW_PAYMENTS = 3;
 
-    private DemographicsPresenter presenter;
+    private PatientModeDemographicsPresenter presenter;
 
     private PaymentsModel paymentDTO;
 
@@ -57,8 +57,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
         initializeHomeButton();
         initializeLeftNavigation();
+        presenter = new PatientModeDemographicsPresenter(this, savedInstanceState, this);
 
-        presenter = new DemographicsPresenterImpl(this, savedInstanceState, true);
     }
 
     @Override
@@ -101,8 +101,10 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         findViewById(R.id.checkinHomeClickable).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setResult(CarePayConstants.HOME_PRESSED);
-                finish();
+                if(!presenter.handleHomeButtonClick()) {
+                    setResult(CarePayConstants.HOME_PRESSED);
+                    finish();
+                }
             }
         });
     }
@@ -141,6 +143,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         bundle.putString(PaymentsModel.class.getSimpleName(), workflowJson);
         responsibilityFragment.setArguments(bundle);
         presenter.navigateToFragment(responsibilityFragment, true);
+        updateCheckInFlow(CheckinFlowState.PAYMENT, 1, 1);
 
         new Thread(new Runnable() {
             @Override

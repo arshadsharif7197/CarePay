@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.checkin.dtos;
 
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.ProvidersReasonDTO;
@@ -703,4 +704,52 @@ public class AppointmentPayloadDTO {
         DateTime dateTime = new DateTime(DateUtil.getInstance().setDateRaw(endTime).getDate());
         return dateTime.isBeforeNow();
     }
+
+    /**
+     * Check if this appointment can be checked into
+     * @return true if appointment can check in according to its status
+     */
+    public boolean canCheckIn(){
+        String statusCode = getAppointmentStatus().getCode();
+        switch (statusCode){
+            case CarePayConstants.PENDING:
+            case CarePayConstants.CHECKING_IN:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Check if this appointment can be checked out of
+     * @return true if appointment can check out according to its status
+     */
+    public boolean canCheckOut(){
+        String statusCode = getAppointmentStatus().getCode();
+        switch (statusCode){
+            case CarePayConstants.CHECKED_IN:
+            case CarePayConstants.IN_PROGRESS_IN_ROOM:
+            case CarePayConstants.IN_PROGRESS_OUT_ROOM:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Check if this appointment is finished
+     * @return true if appointment is finished according to its status
+     */
+    public boolean isAppointmentFinished(){
+        String statusCode = getAppointmentStatus().getCode();
+        switch (statusCode){
+            case CarePayConstants.CHECKED_OUT:
+            case CarePayConstants.BILLED:
+            case CarePayConstants.MANUALLY_BILLED:
+                return true;
+            default:
+                return false;
+        }
+    }
+
 }

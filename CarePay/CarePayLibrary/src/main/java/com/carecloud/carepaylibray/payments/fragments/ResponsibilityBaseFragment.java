@@ -38,13 +38,18 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
     protected PaymentNavigationCallback actionCallback;
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public void attachCallback(Context context) {
         try {
             actionCallback = (PaymentNavigationCallback) context;
         } catch (ClassCastException cce) {
             throw new ClassCastException("Attached Context must implement ResponsibilityActionCallback");
         }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        attachCallback(getContext());
     }
 
     @Override

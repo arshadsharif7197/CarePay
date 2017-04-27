@@ -55,8 +55,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
     private CheckinFlowCallback callback;
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public void attachCallback(Context context){
         try{
             if (context instanceof DemographicsView) {
                 callback = ((DemographicsView) context).getPresenter();
@@ -68,7 +67,6 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         }
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_web_form, container, false);
@@ -77,8 +75,6 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
     @Override
     public void onViewCreated(View view, Bundle icicle){
         inflateToolbarViews(view);
-
-        callback.setCheckinFlow(getCheckinFlowState(), totalForms, displayedFormsIndex);
 
         nextButton = (Button) view.findViewById(com.carecloud.carepaylibrary.R.id.consentButtonNext);
         nextButton.setOnClickListener(new View.OnClickListener() {
@@ -106,6 +102,15 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
                 (int) getResources().getDimension(R.dimen.checkinNavBarClosedOffset),
                 (int) getResources().getDimension(R.dimen.checkinNavBarOpenOffset));
 
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(callback == null){
+            attachCallback(getContext());
+        }
+        callback.setCheckinFlow(getCheckinFlowState(), totalForms, displayedFormsIndex+1);
     }
 
     protected void setHeader(String text){

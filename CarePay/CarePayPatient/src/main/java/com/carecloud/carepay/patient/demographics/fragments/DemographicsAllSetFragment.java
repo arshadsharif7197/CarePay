@@ -21,10 +21,10 @@ import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBas
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
 public class DemographicsAllSetFragment extends CheckInDemographicsBaseFragment {
 
@@ -50,11 +50,16 @@ public class DemographicsAllSetFragment extends CheckInDemographicsBaseFragment 
         }
     };
 
+    @Override
+    public void onCreate(Bundle icicle){
+        super.onCreate(icicle);
+        demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
 
         initializeViews(view);
 

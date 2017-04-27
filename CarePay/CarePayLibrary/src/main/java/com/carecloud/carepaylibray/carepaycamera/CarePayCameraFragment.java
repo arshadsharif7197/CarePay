@@ -28,15 +28,7 @@ public class CarePayCameraFragment extends BaseDialogFragment implements CarePay
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        try {
-            if (context instanceof DemographicsView) {
-                callback = ((DemographicsView) context).getPresenter();
-            } else {
-                callback = (CarePayCameraCallback) context;
-            }
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement CarePayCameraCallback");
-        }
+        attachCallback(context);
     }
 
     @Override
@@ -87,6 +79,18 @@ public class CarePayCameraFragment extends BaseDialogFragment implements CarePay
                 window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             }
+        }
+    }
+
+    private void attachCallback(Context context){
+        try {
+            if (context instanceof DemographicsView) {
+                callback = ((DemographicsView) context).getPresenter();
+            } else {
+                callback = (CarePayCameraCallback) context;
+            }
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement CarePayCameraCallback");
         }
     }
 }
