@@ -10,7 +10,7 @@ import com.carecloud.carepay.patient.demographics.activities.NewDemographicsActi
 import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.patient.demographics.activities.ReviewDemographicsActivity;
 import com.carecloud.carepay.patient.notifications.activities.NotificationActivity;
-import com.carecloud.carepay.patient.payment.PaymentActivity;
+import com.carecloud.carepay.patient.payment.activities.PaymentActivity;
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.patient.purchases.activities.PurchaseActivity;
 import com.carecloud.carepay.patient.selectlanguage.SelectLanguageActivity;

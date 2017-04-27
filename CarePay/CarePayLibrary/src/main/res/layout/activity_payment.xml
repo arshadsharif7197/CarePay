@@ -9,6 +9,6 @@
         android:id="@+id/payment_frag_holder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.carecloud.carepay.patient.payment.PaymentActivity" />
+        tools:context="com.carecloud.carepay.patient.payment.activities.PaymentActivity" />
 
 </LinearLayout>

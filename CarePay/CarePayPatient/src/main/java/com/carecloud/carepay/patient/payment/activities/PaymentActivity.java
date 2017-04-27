@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.payment;
+package com.carecloud.carepay.patient.payment.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,9 +9,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
+import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.androidpay.ConfirmationActivity;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanFragment;
+import com.carecloud.carepay.patient.payment.fragments.ResponsibilityFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
@@ -35,7 +37,6 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
-
         paymentsDTO = getConvertedDTO(PaymentsModel.class);
         ResponsibilityFragment responsibilityFragment = ResponsibilityFragment.newInstance(paymentsDTO, true);
         navigateToFragment(responsibilityFragment, false);

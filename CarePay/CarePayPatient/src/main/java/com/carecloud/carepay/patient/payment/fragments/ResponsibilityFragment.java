@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.payment;
+package com.carecloud.carepay.patient.payment.fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -30,6 +30,11 @@ import java.util.List;
 
 public class ResponsibilityFragment extends ResponsibilityBaseFragment {
 
+    /**
+     * @param paymentsDTO              the payments DTO
+     * @param payLaterButtonVisibility a boolean that indicates the visibility of the pay later button
+     * @return an instance of ResponsibilityFragment
+     */
     public static ResponsibilityFragment newInstance(PaymentsModel paymentsDTO, boolean payLaterButtonVisibility) {
         ResponsibilityFragment fragment = new ResponsibilityFragment();
         Bundle args = new Bundle();
@@ -54,7 +59,6 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
-        TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +67,8 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
             }
         });
         toolbar.setTitle("");
+        TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
+        title.setText(paymentsTitleString);
 
 
         Button payTotalAmountButton = (Button) view.findViewById(R.id.pay_total_amount_button);
@@ -110,9 +116,6 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
                 Log.e(LOG_TAG, ex.getMessage());
             }
         }
-
-        title.setText(paymentsTitleString);
-
 
         payTotalAmountButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.payment.PaymentFragmentActivityInterface;
+import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
 import com.carecloud.carepay.patient.payment.adapters.PaymentBalancesAdapter;
 import com.carecloud.carepay.patient.payment.adapters.PaymentHistoryAdapter;
 import com.carecloud.carepay.service.library.CarePayConstants;
