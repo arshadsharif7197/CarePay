@@ -20,6 +20,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.base.ISession;
+import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.medications.adapters.MedicationAllergySearchAdapter;
 import com.carecloud.carepaylibray.medications.models.MedicationAllergiesLinkDTO;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
@@ -62,12 +63,22 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        try {
-            callback = (MedicationAllergySearchCallback) context;
-        } catch (ClassCastException cce) {
+        attachCallback(context);
+    }
+
+    private void attachCallback(Context context){
+        try{
+            if (context instanceof DemographicsView) {
+                callback = ((DemographicsView) context).getPresenter();
+            } else {
+                callback = (MedicationAllergySearchCallback) context;
+            }
+        }catch (ClassCastException cce){
             throw new ClassCastException("Attached Context must implement MedicationAllergyCallback");
         }
+
     }
+
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -93,6 +104,14 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
         initViews(view);
 
         setAdapters();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(callback == null){
+            attachCallback(getContext());
+        }
     }
 
     private void inflateToolbarViews(View view) {
