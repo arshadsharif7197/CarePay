@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
@@ -163,13 +164,16 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
             transparentPaint.setAntiAlias(true);
             Rect rect;
 
+            Point size = DisplayUtils.getDisplaySize(getContext());
             if (DisplayUtils.getScreenOrientation(getContext()) == Configuration.ORIENTATION_PORTRAIT) {
+                shadowWidth = (int) (size.y * .05);
                 rect = new Rect(getLeft() + shadowWidth,
                         getTop() + shadowWidth * 2,
                         getRight() - shadowWidth,
                         getBottom() - shadowWidth * 2);
                 shadowRect = rect;
             } else {
+                shadowWidth = (int) (size.x * .05);
                 rect = new Rect(getLeft() + shadowWidth * 2,
                         getTop() + shadowWidth,
                         getRight() - shadowWidth * 2,

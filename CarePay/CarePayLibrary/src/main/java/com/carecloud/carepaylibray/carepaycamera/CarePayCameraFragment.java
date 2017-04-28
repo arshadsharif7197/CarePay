@@ -38,9 +38,17 @@ public class CarePayCameraFragment extends BaseDialogFragment implements CarePay
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        if(callback == null){
+            attachCallback(getContext());
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        setCancelable(true);
         return inflater.inflate(R.layout.activity_care_pay_camera, container, false);
     }
 
@@ -56,7 +64,6 @@ public class CarePayCameraFragment extends BaseDialogFragment implements CarePay
     @Override
     public void onCapturedSuccess(Bitmap bitmap) {
         dismiss();
-
         if (callback != null) {
             callback.onCapturedSuccess(bitmap);
         }
@@ -71,7 +78,7 @@ public class CarePayCameraFragment extends BaseDialogFragment implements CarePay
     @Override
     public void onStart() {
         super.onStart();
-
+//        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         Dialog dialog = getDialog();
         if (dialog != null) {
             Window window = dialog.getWindow();
@@ -93,4 +100,5 @@ public class CarePayCameraFragment extends BaseDialogFragment implements CarePay
             throw new ClassCastException(context.toString() + " must implement CarePayCameraCallback");
         }
     }
+
 }
