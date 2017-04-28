@@ -294,8 +294,10 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         if (demographicAddressPayloadDTO != null) {
 
             if (SystemUtil.isNotEmptyString(demographicAddressPayloadDTO.getAddress1())) {
-                String adress1 = demographicAddressPayloadDTO.getAddress1();
-                initializeInputLayoutValue(adress1, R.id.addressEditTextId, view);
+                String address1 = demographicAddressPayloadDTO.getAddress1();
+                initializeInputLayoutValue(address1, R.id.addressEditTextId, view);
+            }else{
+                isAddressEmpty = true;
             }
 
             if (SystemUtil.isNotEmptyString(demographicAddressPayloadDTO.getAddress2())) {
@@ -304,6 +306,8 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
             if (SystemUtil.isNotEmptyString(demographicAddressPayloadDTO.getCity()) || !((EditText) view.findViewById(R.id.cityId)).getText().toString().isEmpty()) {
                 initializeInputLayoutValue(demographicAddressPayloadDTO.getCity(), R.id.cityId, view);
+            }else{
+                isCityEmpty = true;
             }
 
             String state = demographicAddressPayloadDTO.getState();
@@ -318,10 +322,14 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
             if (SystemUtil.isNotEmptyString(demographicAddressPayloadDTO.getZipcode())) {
                 initializeInputLayoutValue(demographicAddressPayloadDTO.getZipcode(), R.id.zipCodeId, view);
+            }else{
+                isZipEmpty = true;
             }
         } else {
             Log.v(TAG, "Demographic adress is empty ");
         }
+
+        checkIfEnableButton(view);
     }
 
     /**
