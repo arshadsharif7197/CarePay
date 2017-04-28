@@ -38,7 +38,6 @@ import com.google.gson.Gson;
 /**
  * Created by jorge on 29/12/16.
  */
-
 public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity implements PaymentFragmentActivityInterface {
 
     private static boolean isPaymentDone;
@@ -75,14 +74,24 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         inflateDrawer();
 
 
-        if ((paymentsDTO.getPaymentPayload().getPatientBalances().size() > 0 &&
-                paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().size() > 0)
-                || paymentsDTO.getPaymentPayload().getPatientHistory()
-                .getPaymentsPatientCharges().getCharges().size() > 0) {
+        if (hasPayments()
+                || hasCharges()) {
             replaceFragment(new PaymentBalanceHistoryFragment(), false);
         } else {
             showNoPaymentsLayout();
         }
+    }
+
+    private boolean hasCharges() {
+        return paymentsDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges()
+                .getCharges().size() > 0;
+    }
+
+    private boolean hasPayments() {
+        return paymentsDTO.getPaymentPayload().getPatientBalances().size() > 0
+                && paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().size() > 0
+                && paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0)
+                .getPayload().size() > 0;
     }
 
     @Override
