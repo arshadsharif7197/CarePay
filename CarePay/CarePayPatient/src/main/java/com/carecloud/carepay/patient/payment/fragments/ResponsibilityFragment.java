@@ -67,6 +67,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
             }
         });
         toolbar.setTitle("");
+        getPaymentLabels();
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
         title.setText(paymentsTitleString);
 
@@ -82,7 +83,6 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
             }
         });
 
-        getPaymentLabels();
         List<PendingBalanceDTO> paymentList = paymentDTO.getPaymentPayload()
                 .getPatientBalances().get(0).getBalances();
 

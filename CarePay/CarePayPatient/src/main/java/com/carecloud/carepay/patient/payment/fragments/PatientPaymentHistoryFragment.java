@@ -10,9 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
 import com.carecloud.carepay.patient.payment.adapters.PaymentBalancesAdapter;
 import com.carecloud.carepay.patient.payment.adapters.PaymentHistoryAdapter;
+import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -84,8 +84,10 @@ public class PatientPaymentHistoryFragment extends BaseFragment implements Payme
 
         switch (sectionNumber) {
             case SECTION_PENDING: {
-                if (paymentsDTO.getPaymentPayload().getPatientBalances().size() > 0 &&
-                        paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().size() > 0) {
+                if (paymentsDTO.getPaymentPayload().getPatientBalances().size() > 0
+                        && paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().size() > 0
+                        && paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0)
+                        .getPayload().size() > 0) {
                     PaymentBalancesAdapter paymentBalancesAdapter = new PaymentBalancesAdapter(
                             getActivity(), paymentsDTO, PatientPaymentHistoryFragment.this);
                     historyRecyclerView.setAdapter(paymentBalancesAdapter);
