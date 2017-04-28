@@ -60,7 +60,7 @@
             android:screenOrientation="sensorPortrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
-            android:name=".payment.PaymentActivity"
+            android:name=".payment.activities.PaymentActivity"
             android:parentActivityName=".appointments.activities.AppointmentsActivity"
             android:screenOrientation="sensorPortrait">
             <meta-data

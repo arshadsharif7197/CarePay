@@ -202,7 +202,8 @@ public class ConfirmationActivity extends AppCompatActivity {
      * @param bundle       the bundle
      * @return the intent
      */
-    public static Intent newIntent(Context context, MaskedWallet maskedWallet, String amount, String env, Bundle bundle, String paymentPatientBalanceToolbar) {
+    public static Intent newIntent(Context context, MaskedWallet maskedWallet, String amount,
+                                   String env, Bundle bundle, String paymentPatientBalanceToolbar) {
         Intent intent = new Intent(context, ConfirmationActivity.class);
         intent.putExtra(PaymentConstants.EXTRA_MASKED_WALLET, maskedWallet);
         intent.putExtra(PaymentConstants.EXTRA_AMOUNT, amount);

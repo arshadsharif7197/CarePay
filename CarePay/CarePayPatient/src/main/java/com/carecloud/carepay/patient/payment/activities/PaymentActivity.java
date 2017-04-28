@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.payment;
+package com.carecloud.carepay.patient.payment.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,9 +9,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
+import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.androidpay.ConfirmationActivity;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanFragment;
+import com.carecloud.carepay.patient.payment.fragments.ResponsibilityFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
@@ -30,37 +32,14 @@ import com.google.gson.Gson;
 
 public class PaymentActivity extends BasePatientActivity implements PaymentNavigationCallback {
     PaymentsModel paymentsDTO;
-    private String paymentsDTOString;
-    public Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
-
-        //Intent intent = getIntent();
         paymentsDTO = getConvertedDTO(PaymentsModel.class);
-
-        FragmentManager fm = getSupportFragmentManager();
-        ResponsibilityFragment fragment = (ResponsibilityFragment)
-                fm.findFragmentByTag(ResponsibilityFragment.class.getSimpleName());
-        if (fragment == null) {
-            fragment = new ResponsibilityFragment();
-        }
-        bundle = new Bundle();
-
-        Gson gson = new Gson();
-        paymentsDTOString = gson.toJson(paymentsDTO);
-        DtoHelper.bundleDto(bundle, paymentsDTO);
-        //fix for random crashes
-        if (fragment.getArguments() != null) {
-            fragment.getArguments().putAll(bundle);
-        } else {
-            fragment.setArguments(bundle);
-        }
-
-        fm.beginTransaction().replace(R.id.payment_frag_holder, fragment,
-                ResponsibilityFragment.class.getSimpleName()).commit();
+        ResponsibilityFragment responsibilityFragment = ResponsibilityFragment.newInstance(paymentsDTO, true);
+        navigateToFragment(responsibilityFragment, false);
     }
 
     @Override
@@ -127,7 +106,10 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
     }
 
     private void launchConfirmationPage(MaskedWallet maskedWallet) {
-        Intent intent = ConfirmationActivity.newIntent(this, maskedWallet, paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPendingRepsonsibility(), "CERT", bundle,
+        Bundle bundle = new Bundle();
+        DtoHelper.bundleDto(bundle, paymentsDTO);
+        Intent intent = ConfirmationActivity.newIntent(this, maskedWallet, paymentsDTO
+                        .getPaymentPayload().getPatientBalances().get(0).getPendingRepsonsibility(), "CERT", bundle,
                 Label.getLabel("payment_patient_balance_toolbar"));
         startActivity(intent);
     }
@@ -182,14 +164,7 @@ public class PaymentActivity extends BasePatientActivity implements PaymentNavig
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
-        PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
-
-        Bundle bundle = new Bundle();
-        bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-        bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
-        fragment.setArguments(bundle);
-
-        navigateToFragment(fragment, true);
+        navigateToFragment(PatientPaymentMethodFragment.newInstance(paymentsModel, amount), true);
     }
 
     @Override
