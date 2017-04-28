@@ -216,7 +216,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
             insuranceEditDialog.show(ft, tag);
         } else {
-            navigateToFragment(insuranceEditDialog, true);
+            navigateToFragment(insuranceEditDialog, showAsDialog);
         }
     }
 
