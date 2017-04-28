@@ -9,14 +9,15 @@ import android.view.ViewGroup;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalancesAdapter.ViewHolder> {
+    private final String practiceName;
     private Context context;
     private List<PendingBalancePayloadDTO> paymentsPatientBalances = new ArrayList<>();
     private OnBalanceListItemClickListener listener;
@@ -32,6 +33,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
                 paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().size() > 0) {
             this.paymentsPatientBalances = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
         }
+        practiceName = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getPracticeName();
         this.listener = listener;
     }
 
@@ -45,7 +47,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final PendingBalancePayloadDTO charge = paymentsPatientBalances.get(position);
-        String locationName = CarePayConstants.NOT_DEFINED;
+        String locationName = practiceName;
         holder.shortName.setText(StringUtil.getShortName(locationName));
         holder.locationName.setText(locationName);
         holder.amount.setText(StringUtil.getFormattedBalanceAmount(charge.getAmount()));
@@ -71,7 +73,6 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
 
         ViewHolder(View itemView) {
             super(itemView);
-
             locationName = (CarePayTextView) itemView.findViewById(com.carecloud.carepaylibrary.R.id.balancesLocation);
             amount = (CarePayTextView) itemView.findViewById(com.carecloud.carepaylibrary.R.id.balancesTotalAmount);
             shortName = (CarePayTextView) itemView.findViewById(com.carecloud.carepaylibrary.R.id.balancesAvatarTextView);

@@ -16,15 +16,24 @@ public class PendingBalanceMetadataDTO implements Serializable {
     @SerializedName("username")
     @Expose
     private String username;
+    @SerializedName("patient_id")
+    @Expose
+    private String patientId;
     @SerializedName("practice_mgmt")
     @Expose
     private String practiceMgmt;
     @SerializedName("practice_id")
     @Expose
     private String practiceId;
-    @SerializedName("patient_id")
+    @SerializedName("practice_name")
     @Expose
-    private String patientId;
+    private String practiceName;
+    @SerializedName("practice_photo")
+    @Expose
+    private String practicePhoto;
+    @SerializedName("practice_phone")
+    @Expose
+    private String practicePhone;
 
     /**
      * @return The userId
@@ -96,11 +105,36 @@ public class PendingBalanceMetadataDTO implements Serializable {
         this.patientId = patientId;
     }
 
+    public String getPracticeName() {
+        return practiceName;
+    }
+
+    public void setPracticeName(String practiceName) {
+        this.practiceName = practiceName;
+    }
+
+    public String getPracticePhoto() {
+        return practicePhoto;
+    }
+
+    public void setPracticePhoto(String practicePhoto) {
+        this.practicePhoto = practicePhoto;
+    }
+
+    public String getPracticePhone() {
+        return practicePhone;
+    }
+
+    public void setPracticePhone(String practicePhone) {
+        this.practicePhone = practicePhone;
+    }
+
     /**
      * validate this metadata
+     *
      * @return true if required fields are not null
      */
-    public boolean isValid(){
+    public boolean isValid() {
         return userId != null &&
                 username != null &&
                 practiceMgmt != null &&
