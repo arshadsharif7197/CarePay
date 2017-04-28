@@ -220,7 +220,10 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         View child = inflater.inflate(R.layout.add_edit_insurance_view, null);
         ((ViewGroup) view.findViewById(R.id.checkinDemographicsContentLayout)).addView(child);
 
-        view.findViewById(R.id.demographicsHeading).setVisibility(View.GONE);
+        View heading = view.findViewById(R.id.demographicsHeading);
+        if(heading!=null) {
+            heading.setVisibility(View.GONE);
+        }
 
         inflateToolbarViews(view);
 
