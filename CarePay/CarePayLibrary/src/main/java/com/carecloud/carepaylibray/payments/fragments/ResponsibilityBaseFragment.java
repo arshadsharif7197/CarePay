@@ -84,7 +84,7 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
         payTotalAmountString = Label.getLabel("payment_pay_total_amount_button");
         payPartialAmountString = Label.getLabel("payment_partial_amount_button");
         payLaterString = Label.getLabel("payment_responsibility_pay_later");
-        paymentsTitleString = Label.getLabel("payment_button");
+        paymentsTitleString = Label.getLabel("payment_patient_balance_toolbar");
     }
 
     /**
