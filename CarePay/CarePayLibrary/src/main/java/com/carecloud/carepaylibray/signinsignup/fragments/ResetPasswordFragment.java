@@ -41,7 +41,7 @@ public class ResetPasswordFragment extends BaseFragment {
     private Button resetPasswordButton;
     private TextInputLayout signInEmailTextInputLayout;
 
-    private ResetPasswordFragment() {
+    public ResetPasswordFragment() {
         // Required empty public constructor
     }
 
