@@ -72,4 +72,19 @@ public class DisplayUtils {
         return orientation;
     }
 
+    /**
+     * Get the size of the display
+     * @param context context
+     * @return dislplay size
+     */
+    public static Point getDisplaySize(Context context){
+        WindowManager systemService = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = systemService.getDefaultDisplay();
+
+        Point size = new Point();
+        display.getSize(size);
+
+        return size;
+    }
+
 }
