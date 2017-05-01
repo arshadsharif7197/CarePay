@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -33,15 +32,14 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/search_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/search_content"
-        android:orientation="vertical"
-        android:layout_marginStart="@dimen/dimen_26dp"
         android:layout_marginEnd="@dimen/dimen_26dp"
+        android:layout_marginStart="@dimen/dimen_26dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:layout_toRightOf="@+id/closeViewLayout">
+        android:orientation="vertical">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -49,25 +47,26 @@
             android:background="@drawable/patient_mode_dialog_header_bg"
             android:padding="@dimen/dimen_10dp">
 
-            <include layout="@layout/toolbar_title_only"
-                android:id="@+id/search_toolbar"/>
+            <include
+                android:id="@+id/search_toolbar"
+                layout="@layout/toolbar_title_only" />
 
         </FrameLayout>
 
         <FrameLayout
+            android:id="@+id/search_edit_frame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:id="@+id/search_edit_frame"
             android:padding="@dimen/dimen_30dp">
 
             <com.carecloud.carepaylibray.customcomponents.CarePaySearchView
+                android:id="@+id/search_entry_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/search_entry_view"
                 android:background="@drawable/search_rounded_border"
-                app:iconifiedByDefault="false"
-                app:customAssetFont="proxima_nova_regular"/>
+                app:customAssetFont="proxima_nova_regular"
+                app:iconifiedByDefault="false" />
 
         </FrameLayout>
 
@@ -77,33 +76,34 @@
             android:background="@color/white">
 
             <android.support.v7.widget.RecyclerView
+                android:id="@+id/search_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/search_recycler"
-                android:padding="@dimen/padding_xlarge"/>
+                android:padding="@dimen/padding_xlarge" />
 
         </FrameLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_1dp"
-            android:background="@color/light_gray"/>
+            android:background="@color/light_gray" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/patient_mode_dialog_body_bg"
             android:orientation="horizontal"
-            android:padding="@dimen/dimen_10dp"
-            android:background="@drawable/patient_mode_dialog_body_bg">
+            android:padding="@dimen/dimen_10dp">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/nextButton"
                 style="@style/BreezeButtonStyleDark"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_margin="@dimen/dimen_10dp"
+                android:layout_weight="1"
                 android:background="@drawable/green_rounded_button_selector"
+                android:enabled="false"
                 app:customAssetFont="gotham_rounded_medium" />
 
 
@@ -114,8 +114,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_toRightOf="@+id/search_content"
+        android:orientation="vertical"
         android:visibility="invisible">
 
 

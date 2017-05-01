@@ -34,11 +34,11 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.cognito.SignUpConfirmActivity;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
-import com.carecloud.carepaylibray.signinsignup.dto.SignInLabelsDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -53,7 +53,6 @@ public class SignupFragment extends BaseFragment {
 
     private static final String TAG = "SignupFragment";
     private SignInDTO signInSignUpDTO;
-    private SignInLabelsDTO signInLablesDTO;
     private LinearLayout parentLayout;
     private ProgressBar progressBar;
     private TextInputLayout emailInputLayout;
@@ -67,7 +66,6 @@ public class SignupFragment extends BaseFragment {
     private boolean isRepeatPasswordEmpty;
     private Button submitButton;
     private TextView accountExistTextView;
-    private TextView passwordFormatHint;
     private String userName;
     private FragmentActivityInterface listener;
 
@@ -158,7 +156,6 @@ public class SignupFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_signup, container, false);
 
         signInSignUpDTO = (SignInDTO) listener.getDto();
-        signInLablesDTO = signInSignUpDTO.getMetadata().getLabels();
         parentLayout = (LinearLayout) view.findViewById(R.id.signUpLl);
 
         // hide progress
@@ -189,7 +186,7 @@ public class SignupFragment extends BaseFragment {
 
     private void setClickables(View view) {
         submitButton = (Button) view.findViewById(R.id.submitSignupButton);
-        submitButton.setText(signInLablesDTO.getSignupButton());
+        submitButton.setText(Label.getLabel("signup_button"));
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -202,7 +199,7 @@ public class SignupFragment extends BaseFragment {
         submitButton.setEnabled(false);
 
         accountExistTextView = (TextView) view.findViewById(R.id.signupAlreadyHaveAccountTextView);
-        accountExistTextView.setText(signInLablesDTO.getAlreadyHaveAccountLink());
+        accountExistTextView.setText(Label.getLabel("already_have_account_link"));
         accountExistTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -222,26 +219,26 @@ public class SignupFragment extends BaseFragment {
     private void setEditTexts(View view) {
 
         emailInputLayout = (TextInputLayout) view.findViewById(R.id.emailTextInputLayout);
-        emailInputLayout.setTag(signInLablesDTO.getEmail());
+        emailInputLayout.setTag(Label.getLabel("signup_email"));
         emailText = (EditText) view.findViewById(R.id.emailEditText);
-        emailText.setHint(signInLablesDTO.getEmail());
+        emailText.setHint(Label.getLabel("signup_email"));
         emailText.setTag(emailInputLayout);
 
         passwordInputLayout = (TextInputLayout) view.findViewById(R.id.createPasswordTextInputLayout);
-        passwordInputLayout.setTag(signInLablesDTO.getCreatePassword());
+        passwordInputLayout.setTag(Label.getLabel("signup_create_password"));
         passwordText = (EditText) view.findViewById(R.id.createPasswordEditText);
-        passwordText.setHint(signInLablesDTO.getCreatePassword());
+        passwordText.setHint(Label.getLabel("signup_create_password"));
         passwordText.setTag(passwordInputLayout);
 
         passwordRepeatInputLayout = (TextInputLayout) view.findViewById(R.id.repeatPasswordTextInputLayout);
-        passwordRepeatInputLayout.setTag(signInLablesDTO.getRepeatPassword());
+        passwordRepeatInputLayout.setTag(Label.getLabel("signup_repeat_password"));
         repeatPasswordText = (EditText) view.findViewById(R.id.repeatPasswordEditText);
-        repeatPasswordText.setHint(signInLablesDTO.getRepeatPassword());
+        repeatPasswordText.setHint(Label.getLabel("signup_repeat_password"));
         repeatPasswordText.setTag(passwordRepeatInputLayout);
 
 
-        passwordFormatHint = (TextView) view.findViewById(R.id.singupPasswordFormatHint);
-        passwordFormatHint.setText(signInLablesDTO.getPasswordHintText());
+        TextView passwordFormatHint = (TextView) view.findViewById(R.id.singupPasswordFormatHint);
+        passwordFormatHint.setText(Label.getLabel("password_hint_text"));
         setTypefaces();
 
         setChangeFocusListeners();
@@ -404,9 +401,9 @@ public class SignupFragment extends BaseFragment {
         boolean isEmailValid = StringUtil.isValidmail(email);
         emailInputLayout.setErrorEnabled(isEmailEmpty || !isEmailValid); // enable for error if either empty or invalid email
         if (isEmailEmpty) {
-            emailInputLayout.setError(signInLablesDTO.getPleaseEnterEmail());
+            emailInputLayout.setError(Label.getLabel("signup_please_enter_email"));
         } else if (!isEmailValid) {
-            emailInputLayout.setError(signInLablesDTO.getInvalidEmail());
+            emailInputLayout.setError(Label.getLabel("signup_invalid_email"));
         } else {
             emailInputLayout.setError(null);
         }
@@ -421,9 +418,9 @@ public class SignupFragment extends BaseFragment {
         passwordInputLayout.setErrorEnabled(isPasswordEmpty || !isPasswordValid);
         String error;
         if (isPasswordEmpty) {
-            error = signInLablesDTO.getPleaseEnterPassword();
+            error = Label.getLabel("signup_please_enter_password");
         } else if (!isPasswordValid) {
-            error = signInLablesDTO.getInvalidPassword();
+            error = Label.getLabel("signup_invalid_password");
         } else {
             error = null;
         }
@@ -443,9 +440,9 @@ public class SignupFragment extends BaseFragment {
         passwordRepeatInputLayout.setErrorEnabled(isPasswordEmpty || isRepeatPasswordEmpty || isNotMachedPassw);
 
         if (isRepeatPasswordEmpty) {
-            passwordRepeatInputLayout.setError(signInLablesDTO.getRepeatPasswordIsEmpty());
+            passwordRepeatInputLayout.setError(Label.getLabel("signup_repeat_password_is_empty"));
         } else if (isNotMachedPassw) {
-            passwordRepeatInputLayout.setError(signInLablesDTO.getPasswordsDoNotMatch());
+            passwordRepeatInputLayout.setError(Label.getLabel("signup_passwords_do_not_match"));
         } else {
             passwordRepeatInputLayout.setError(null);
         }

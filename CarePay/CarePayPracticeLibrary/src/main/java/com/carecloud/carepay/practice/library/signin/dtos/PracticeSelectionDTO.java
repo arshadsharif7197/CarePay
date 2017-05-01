@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.signin.dtos;
 
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -7,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by lmenendez on 3/9/17.
  */
 
-public class PracticeSelectionResponseModel {
+public class PracticeSelectionDTO implements DTO{
 
     @SerializedName("metadata")
     @Expose
@@ -15,7 +16,7 @@ public class PracticeSelectionResponseModel {
 
     @SerializedName("payload")
     @Expose
-    private PracticeSelectionPayload payload = new PracticeSelectionPayload();
+    private PracticeSelectionPayloadDTO payload = new PracticeSelectionPayloadDTO();
 
     @SerializedName("state")
     String state;
@@ -28,11 +29,11 @@ public class PracticeSelectionResponseModel {
         this.metadata = metadata;
     }
 
-    public PracticeSelectionPayload getPayload() {
+    public PracticeSelectionPayloadDTO getPayload() {
         return payload;
     }
 
-    public void setPayload(PracticeSelectionPayload payload) {
+    public void setPayload(PracticeSelectionPayloadDTO payload) {
         this.payload = payload;
     }
 }

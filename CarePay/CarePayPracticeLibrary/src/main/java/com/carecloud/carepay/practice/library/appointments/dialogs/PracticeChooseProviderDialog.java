@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PracticeChooseProviderDialog extends BaseDialogFragment
-        implements ProviderSearchAdapter.SelectPracticeCallback {
+        implements ProviderSearchAdapter.SelectPracticeAdapterCallback {
 
     private AppointmentNavigationCallback callback;
 

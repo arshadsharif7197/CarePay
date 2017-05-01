@@ -21,13 +21,13 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookButton;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
 import com.carecloud.carepaylibray.qrcodescanner.ScannerQRActivity;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
-import com.carecloud.carepaylibray.signinsignup.dto.SignInLabelsDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -113,15 +113,6 @@ public class HowToCheckInActivity extends BasePracticeActivity {
     View.OnClickListener carePayLoginButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            /*Map<String, String> queryMap = new HashMap<>();
-            queryMap.put("language", getApplicationPreferences().getUserLanguage());
-            queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
-            queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
-
-            Map<String, String> headers = new HashMap<>();
-            headers.put("transition", "true");
-            TransitionDTO transitionDTO = signinPatientModeDTO.getMetadata().getLinks().getLogin();
-            getWorkflowServiceHelper().execute(transitionDTO, patientModeSignInCallback, queryMap, headers);*/
             Intent intent = new Intent(HowToCheckInActivity.this, SigninActivity.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable(WorkflowDTO.class.getSimpleName(), signinPatientModeDTO.toString());
@@ -179,33 +170,12 @@ public class HowToCheckInActivity extends BasePracticeActivity {
     };
 
     private void populateWithLabels() {
-        SignInLabelsDTO signinPatientModeLabels = signinPatientModeDTO.getMetadata().getLabels();
-        goBackButton.setText(signinPatientModeLabels.getSiginHowCheckInGoBack());
-        howToCheckInTextView.setText(signinPatientModeLabels.getSigninHowWantCheckIn());
-        carePayLoginButton.setText(signinPatientModeLabels.getSigninHowCheckInCarepayLogin());
-        scanQRCodeButton.setText(signinPatientModeLabels.getSiginHowCheckInScanQrCode());
-        manualSearchButton.setText(signinPatientModeLabels.getSiginHowCheckInManualSearch());
+        goBackButton.setText(Label.getLabel("go_back_label"));
+        howToCheckInTextView.setText(Label.getLabel("signin_how_want_check_in"));
+        carePayLoginButton.setText(Label.getLabel("signin_how_check_in_carepay_login"));
+        scanQRCodeButton.setText(Label.getLabel("sigin_how_check_in_scan_qr_code"));
+        manualSearchButton.setText(Label.getLabel("sigin_how_check_in_manual_search"));
     }
-
-    WorkflowServiceCallback patientModeSignInCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
 
     /**
      * Start QR code scanner base on the device
@@ -238,7 +208,8 @@ public class HowToCheckInActivity extends BasePracticeActivity {
                 String scanResult = intent.getStringExtra("SCAN_RESULT");
                 processScannedQRCOde(scanResult);
             } catch (JsonSyntaxException ex) {
-                String errorMessage = signinPatientModeDTO.getMetadata().getLabels().getInvalidQRCodeTitle() + ", " + signinPatientModeDTO.getMetadata().getLabels().getInvalidQRCodeMessage();
+                String errorMessage = Label.getLabel("invalid_qr_code_title") + ", "
+                        + Label.getLabel("invalid_qr_code_message");
                 SystemUtil.doDefaultFailureBehavior((BaseActivity) getContext(), errorMessage);
                 dismissDialog();
             }
@@ -267,23 +238,11 @@ public class HowToCheckInActivity extends BasePracticeActivity {
                     .getTransitions().getAction(), appointmentCallBack, queryMap);
 
         } else {
-            String errorMessage = signinPatientModeDTO.getMetadata().getLabels().getInvalidQRCodeTitle() + ", " + signinPatientModeDTO.getMetadata().getLabels().getInvalidQRCodeMessage();
+            String errorMessage = Label.getLabel("invalid_qr_code_title") + ", "
+                    + Label.getLabel("invalid_qr_code_message");
             SystemUtil.doDefaultFailureBehavior((BaseActivity) getContext(), errorMessage);
         }
     }
-
-    /**
-     * @param queryStrings the query strings for the url
-     * @return queryMap
-     *//*
-    private Map<String, String> getQueryParam(QueryStrings queryStrings, ScanQRCodeResultDTO scanQRCodeResultDTO) {
-        Map<String, String> queryMap = new HashMap<String, String>();
-        queryMap.put(queryStrings.getAppointmentId().getName(), scanQRCodeResultDTO.getAppointmentId());
-        queryMap.put(queryStrings.getPracticeManagement().getName(), scanQRCodeResultDTO.getPracticeManagement());
-        queryMap.put(queryStrings.getPracticeId().getName(), scanQRCodeResultDTO.getPracticeId());
-
-        return queryMap;
-    }*/
 
     /**
      * Call back for appointment API.
@@ -315,7 +274,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
     private void instantiateProgressDialog() {
         dialog = new ProgressDialog(this);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setMessage(signinPatientModeDTO.getMetadata().getLabels().getLoadingMessage());
+        dialog.setMessage(Label.getLabel("loading_message"));
         dialog.setIndeterminate(true);
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();

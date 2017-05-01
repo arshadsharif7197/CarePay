@@ -9,9 +9,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class SignInMetaDataDTO {
 
-    @SerializedName("labels")
-    @Expose
-    private SignInLabelsDTO labels = new SignInLabelsDTO();
     @SerializedName("links")
     @Expose
     private SignInLinksDTO links = new SignInLinksDTO();
@@ -21,14 +18,6 @@ public class SignInMetaDataDTO {
     @SerializedName("data_models")
     @Expose
     private SignInDataModelDTO dataModels = new SignInDataModelDTO();
-
-    public SignInLabelsDTO getLabels() {
-        return labels;
-    }
-
-    public void setLabels(SignInLabelsDTO labels) {
-        this.labels = labels;
-    }
 
     public SignInLinksDTO getLinks() {
         return links;
