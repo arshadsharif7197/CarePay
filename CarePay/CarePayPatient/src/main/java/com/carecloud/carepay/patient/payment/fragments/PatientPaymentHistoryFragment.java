@@ -15,8 +15,15 @@ import com.carecloud.carepay.patient.payment.adapters.PaymentHistoryAdapter;
 import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsBalancesItem;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jorge on 02/01/17.
@@ -89,7 +96,7 @@ public class PatientPaymentHistoryFragment extends BaseFragment implements Payme
                         && paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0)
                         .getPayload().size() > 0) {
                     PaymentBalancesAdapter paymentBalancesAdapter = new PaymentBalancesAdapter(
-                            getActivity(), paymentsDTO, PatientPaymentHistoryFragment.this);
+                            getActivity(), getPendingBalancesList(paymentsDTO), PatientPaymentHistoryFragment.this);
                     historyRecyclerView.setAdapter(paymentBalancesAdapter);
                 } else {
                     showNoPaymentsLayout();
@@ -123,6 +130,22 @@ public class PatientPaymentHistoryFragment extends BaseFragment implements Payme
         PendingBalancePayloadDTO selectedBalance = paymentsDTO.getPaymentPayload().getPatientBalances()
                 .get(0).getBalances().get(0).getPayload().get(position);
         callback.loadPaymentAmountScreen(selectedBalance, paymentsDTO);
+    }
+
+    private List<PaymentsBalancesItem> getPendingBalancesList(PaymentsModel paymentModel) {
+        List<PaymentsBalancesItem> list = new ArrayList<>();
+        for (PatientBalanceDTO patientBalanceDTO : paymentModel.getPaymentPayload().getPatientBalances()) {
+            for (PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()) {
+                PendingBalanceMetadataDTO metadataDTO = pendingBalanceDTO.getMetadata();
+                for (PendingBalancePayloadDTO pendingBalancePayloadDTO : pendingBalanceDTO.getPayload()) {
+                    PaymentsBalancesItem paymentsBalancesItem = new PaymentsBalancesItem();
+                    paymentsBalancesItem.setMetadata(metadataDTO);
+                    paymentsBalancesItem.setBalance(pendingBalancePayloadDTO);
+                    list.add(paymentsBalancesItem);
+                }
+            }
+        }
+        return list;
     }
 
 }
