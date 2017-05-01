@@ -132,7 +132,7 @@ public class PatientPaymentHistoryFragment extends BaseFragment implements Payme
         callback.loadPaymentAmountScreen(selectedBalance, paymentsDTO);
     }
 
-    public List<PaymentsBalancesItem> getPendingBalancesList(PaymentsModel paymentModel) {
+    private List<PaymentsBalancesItem> getPendingBalancesList(PaymentsModel paymentModel) {
         List<PaymentsBalancesItem> list = new ArrayList<>();
         for (PatientBalanceDTO patientBalanceDTO : paymentModel.getPaymentPayload().getPatientBalances()) {
             for (PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()) {
