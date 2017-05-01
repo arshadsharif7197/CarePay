@@ -212,7 +212,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
 
                 break;
             case REQUESTED:
-                headerColor = R.color.lightningyellow;
+                headerColor = R.color.lightning_yellow;
                 timeColor = R.color.transparent_70;
                 leftAction = Label.getLabel("reject_label");
                 rightAction = Label.getLabel("accept_label");

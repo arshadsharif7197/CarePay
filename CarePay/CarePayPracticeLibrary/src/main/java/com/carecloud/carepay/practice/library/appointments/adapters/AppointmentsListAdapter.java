@@ -165,7 +165,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
                     // Missed Appointment
                     if (payloadDTO.isAppointmentOver()) {
 
-                        headerBackground.setColor(context.getResources().getColor(R.color.lightningyellow));
+                        headerBackground.setColor(context.getResources().getColor(R.color.lightning_yellow));
 
                         appointmentStatusMissed.setVisibility(View.VISIBLE);
 

@@ -51,7 +51,7 @@ public class LargeAlertDialog extends Dialog  implements View.OnClickListener {
         this.message = message;
         this.largeAlertInterface = largeAlertInterface;
         this.actionText = actionText;
-        this.headerBackGroundColor = R.color.lightningyellow;
+        this.headerBackGroundColor = R.color.lightning_yellow;
     }
 
     /**

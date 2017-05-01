@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -64,6 +65,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
     private NestedScrollView scrollView;
     private RecyclerView balanceDetailsRecycler;
+    private View newChargesLayout;
+    private RecyclerView newChargesRecycler;
     private Button payButton;
 
     private PopupPickerWindow locationPickerWindow;
@@ -71,11 +74,13 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
     private PaymentsModel paymentsModel;
     private List<BalanceItemDTO> balanceItems = new ArrayList<>();
+    private List<BalanceItemDTO> chargeItems = new ArrayList<>();
 
     private PracticePaymentNavigationCallback callback;
 
     private double paymentAmount;
     private double balanceAmount;
+    private double chargesAmount;
     private double overPaymentAmount;
     private double unappliedCredit = 0D;
 
@@ -127,7 +132,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
     @Override
     public void onViewCreated(View view, Bundle icicle){
-        setupToolbar(view);
+//        setupToolbar(view, Label.getLabel("payment_title"));
 
         setupButtons(view);
 
@@ -139,27 +144,25 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
         scrollView = (NestedScrollView) view.findViewById(R.id.nested_scroller);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager balanceLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         balanceDetailsRecycler = (RecyclerView) view.findViewById(R.id.balances_recycler);
-        balanceDetailsRecycler.setLayoutManager(layoutManager);
-        balanceDetailsRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                clearLastSwipeView();
-                clearPickers();
-            }
+        balanceDetailsRecycler.setLayoutManager(balanceLayoutManager);
+        balanceDetailsRecycler.addOnScrollListener(scrollListener);
 
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-            }
-        });
+        ItemTouchHelper balanceTouchHelper = new ItemTouchHelper(new SwipeHelperCallback());
+        balanceTouchHelper.attachToRecyclerView(balanceDetailsRecycler);
 
-        ItemTouchHelper touchHelper = new ItemTouchHelper(new SwipeHelperCallback());
-        touchHelper.attachToRecyclerView(balanceDetailsRecycler);
 
-        setInitialValues();
+        newChargesLayout = view.findViewById(R.id.new_charges_layout);
+        RecyclerView.LayoutManager chargesLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        newChargesRecycler = (RecyclerView) view.findViewById(R.id.new_charges_recycler);
+        newChargesRecycler.setLayoutManager(chargesLayoutManager);
+        newChargesRecycler.addOnScrollListener(scrollListener);
+
+        ItemTouchHelper chargesTouchHelper = new ItemTouchHelper(new SwipeHelperCallback());
+        chargesTouchHelper.attachToRecyclerView(newChargesRecycler);
+
+        setInitialValues(view);
         setAdapter();
         setupPickerWindows();
         setDefaultProviderLocation();
@@ -176,11 +179,11 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
     }
 
-    private void setupToolbar(View view){
+    private void setupToolbar(View view, String titleString){
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.payment_toolbar);
         if(toolbar!=null){
             TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
-            title.setText(Label.getLabel("payment_title"));
+            title.setText(titleString);
         }
     }
 
@@ -241,16 +244,18 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
     }
 
-    private void setInitialValues(){
+    private void setInitialValues(View view){
         if(paymentsModel!=null){
             balanceAmount = calculateTotalBalance();
             paymentAmount = balanceAmount;
 
             setCurrency(balance, balanceAmount);
-            setCurrency(paymentTotal, paymentAmount);
+            updatePaymentAmount();
 
             String patientNameString = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getPersonalDetails().getFullName();
-            patientName.setText(StringUtil.getLabelForView(patientNameString));
+//            patientName.setText(StringUtil.getLabelForView(patientNameString));
+            patientNameString = StringUtil.capitalize(patientNameString);
+            setupToolbar(view, StringUtil.getLabelForView(patientNameString));
 
             try {
                 unappliedCredit = Double.parseDouble(paymentsModel.getPaymentPayload().getPatientBalances().get(0).getUnappliedCredit()) *-1;
@@ -273,11 +278,20 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
     private void setAdapter(){
         if(balanceDetailsRecycler.getAdapter()==null){
-            PaymentDistributionAdapter adapter = new PaymentDistributionAdapter(getContext(), balanceItems, this);
+            PaymentDistributionAdapter adapter = new PaymentDistributionAdapter(getContext(), balanceItems, this, PaymentDistributionAdapter.PaymentRowType.BALANCE);
             balanceDetailsRecycler.setAdapter(adapter);
         }else{
             PaymentDistributionAdapter adapter = (PaymentDistributionAdapter) balanceDetailsRecycler.getAdapter();
             adapter.setBalanceItems(balanceItems);
+            adapter.notifyDataSetChanged();
+        }
+
+        if(newChargesRecycler.getAdapter() == null){
+            PaymentDistributionAdapter adapter = new PaymentDistributionAdapter(getContext(), chargeItems, this, PaymentDistributionAdapter.PaymentRowType.NEW_CHARGE);
+            newChargesRecycler.setAdapter(adapter);
+        }else{
+            PaymentDistributionAdapter adapter = (PaymentDistributionAdapter) newChargesRecycler.getAdapter();
+            adapter.setBalanceItems(chargeItems);
             adapter.notifyDataSetChanged();
         }
     }
@@ -404,9 +418,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
                     }
                     balanceItem.setBalance(updateAmount);
                     paymentAmount-=difference;
-                    setCurrency(paymentTotal, paymentAmount);
-
-                    payButton.setEnabled(paymentAmount>0);
+                    updatePaymentAmount();
 
                 }
 
@@ -425,9 +437,42 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         }
     }
 
+    private void updatePaymentAmount(){
+        if(paymentAmount >= balanceAmount){
+            paymentTotal.setBackgroundResource(R.drawable.bg_green_border_trans);
+            paymentTotal.setTextColor(ContextCompat.getColor(getContext(), R.color.emerald));
+        }else{
+            paymentTotal.setBackgroundResource(R.drawable.bg_orange_border_trans);
+            paymentTotal.setTextColor(ContextCompat.getColor(getContext(), R.color.lightning_yellow));
+        }
+
+        double totalAmount = paymentAmount + chargesAmount;
+        payButton.setEnabled(totalAmount > 0);
+
+        setCurrency(paymentTotal, totalAmount);
+    }
+
     private void setCurrency(TextView textView, double amount){
         textView.setText(currencyFormatter.format(amount));
     }
+
+    private void setChargeLayoutVisibility(){
+        newChargesLayout.setVisibility(chargeItems.isEmpty()?View.GONE:View.VISIBLE);
+    }
+
+    private RecyclerView.OnScrollListener scrollListener =  new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+            clearLastSwipeView();
+            clearPickers();
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+        }
+    };
 
     @Override
     public void pickProvider(View view, BalanceItemDTO balanceItem) {
@@ -470,6 +515,15 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     }
 
     @Override
+    public void removeCharge(BalanceItemDTO chargeItem) {
+        chargeItems.remove(chargeItem);
+        chargesAmount-=chargeItem.getBalance();
+        updatePaymentAmount();
+        setAdapter();
+        setChargeLayoutVisibility();
+    }
+
+    @Override
     public void addNewCharge(double amount, SimpleChargeItem chargeItem){
         BalanceItemDTO balanceItemDTO = new BalanceItemDTO();
         balanceItemDTO.setNewCharge(true);
@@ -485,10 +539,11 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         if(defaultLocation!=null){
             balanceItemDTO.setLocation(defaultLocation);
         }
-        balanceItems.add(balanceItemDTO);
-        paymentAmount+=amount;
-        setCurrency(paymentTotal, paymentAmount);
+        chargeItems.add(balanceItemDTO);
+        chargesAmount+=amount;
+        updatePaymentAmount();
         setAdapter();
+        setChargeLayoutVisibility();
     }
 
     @Override
@@ -499,10 +554,12 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     @Override
     public void applyNewDistributionAmount(double amount) {
         paymentAmount = amount;
-        setCurrency(paymentTotal, amount);
+        chargesAmount = 0D;
+        updatePaymentAmount();
 
         resetInitialAmounts();
         balanceItems.clear();
+        chargeItems.clear();
         calculateTotalBalance();
 
         distributeAmountOverBalanceItems(amount);
@@ -593,8 +650,11 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     private void generatePaymentsModel(){
         hasPaymentError = false;
         PaymentPostModel postModel = new PaymentPostModel();
-        postModel.setAmount(paymentAmount);
+        postModel.setAmount(paymentAmount + chargesAmount);
         for(BalanceItemDTO balanceItemDTO : balanceItems){
+            addPaymentObject(balanceItemDTO, postModel);
+        }
+        for(BalanceItemDTO balanceItemDTO : chargeItems){
             addPaymentObject(balanceItemDTO, postModel);
         }
 
@@ -667,7 +727,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
                 maxSwipe = 0;
                 clearLastSwipeView();
                 clearPickers();
-                PaymentDistributionAdapter.PaymentDistributionViewHolder paymentViewHolder = (PaymentDistributionAdapter.PaymentDistributionViewHolder) viewHolder;
+                PaymentDistributionAdapter.BalanceViewHolder paymentViewHolder = (PaymentDistributionAdapter.BalanceViewHolder) viewHolder;
 
                 View swipeView = paymentViewHolder.getRowLayout();
                 if(lastSwipeView == null || !lastSwipeView.equals(swipeView)){
@@ -680,7 +740,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
         @Override
         public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder){
-            final PaymentDistributionAdapter.PaymentDistributionViewHolder paymentViewHolder = (PaymentDistributionAdapter.PaymentDistributionViewHolder) viewHolder;
+            final PaymentDistributionAdapter.BalanceViewHolder paymentViewHolder = (PaymentDistributionAdapter.BalanceViewHolder) viewHolder;
             getDefaultUIUtil().clearView(paymentViewHolder.getRowLayout());
 
         }
@@ -688,7 +748,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
         @Override
         public void onChildDraw(Canvas canvas, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float distanceX, float distanceY, int actionState, boolean isCurrentlyActive) {
-            PaymentDistributionAdapter.PaymentDistributionViewHolder paymentViewHolder = (PaymentDistributionAdapter.PaymentDistributionViewHolder) viewHolder;
+            PaymentDistributionAdapter.BalanceViewHolder paymentViewHolder = (PaymentDistributionAdapter.BalanceViewHolder) viewHolder;
             View rowLayout = paymentViewHolder.getRowLayout();
 
             getDefaultUIUtil().onDraw(canvas, recyclerView, rowLayout, distanceX, distanceY, actionState, isCurrentlyActive);
@@ -741,8 +801,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
         private void getMaxDistance(RecyclerView.ViewHolder viewHolder) {
             if(clearWidth == 0) {
-                PaymentDistributionAdapter.PaymentDistributionViewHolder paymentViewHolder = (PaymentDistributionAdapter.PaymentDistributionViewHolder) viewHolder;
-                clearWidth = paymentViewHolder.getClearButton().getMeasuredWidth();
+                PaymentDistributionAdapter.BalanceViewHolder paymentViewHolder = (PaymentDistributionAdapter.BalanceViewHolder) viewHolder;
+                clearWidth = paymentViewHolder.getSwipeWidth();
             }
         }
 

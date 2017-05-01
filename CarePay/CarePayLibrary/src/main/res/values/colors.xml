@@ -55,7 +55,7 @@
     <color name="grey_600">#303232</color>
     <color name="grey_700">#1D1E1E</color>
 
-    <color name="lightningyellow">#f5a623</color>
+    <color name="lightning_yellow">#f5a623</color>
     <color name="divider_color">#c4c4c4</color>
     <color name="checked_in_appointment_bg">#fffdea</color>
     <color name="cardinal">#c31e30</color>

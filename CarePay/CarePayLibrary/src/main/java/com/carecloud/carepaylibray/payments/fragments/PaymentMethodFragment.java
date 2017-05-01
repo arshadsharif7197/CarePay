@@ -138,7 +138,7 @@ public abstract class PaymentMethodFragment extends BaseDialogFragment {
             case CarePayConstants.TYPE_CASH:
                 new LargeAlertDialog(getActivity(), Label.getLabel("payment_see_front_desk_button"),
                         Label.getLabel("payment_back_button"),
-                        R.color.lightningyellow, R.drawable.icn_notification_basic, new LargeAlertDialog.LargeAlertInterface() {
+                        R.color.lightning_yellow, R.drawable.icn_notification_basic, new LargeAlertDialog.LargeAlertInterface() {
                     @Override
                     public void onActionButton() {
                     }
