@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/signUpLl"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:descendantFocusability="beforeDescendants"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical">
 
-    <include layout="@layout/toolbar_signup"/>
+    <include layout="@layout/toolbar_signup" />
 
     <ProgressBar
         android:id="@+id/signupProgressBar"
@@ -19,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="-8dp"
-        android:indeterminate="true"/>
+        android:indeterminate="true" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -42,45 +41,46 @@
                     style="@style/SigninSignupEditStyle"
                     android:imeOptions="actionNext"
                     android:inputType="textEmailAddress"
-                    android:nextFocusForward="@+id/passwordEditText"/>
+                    android:nextFocusForward="@+id/passwordEditText" />
 
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/createPasswordTextInputLayout"
                 style="@style/SigninSignupTextInputStyle"
-                app:passwordToggleEnabled="false"
-                app:hintTextAppearance="@style/FloatingLabelStyle">
+                app:hintTextAppearance="@style/FloatingLabelStyle"
+                app:passwordToggleEnabled="false">
 
                 <EditText
                     android:id="@+id/createPasswordEditText"
                     style="@style/SigninSignupEditStyle"
 
-                    android:inputType="textPassword"
                     android:layout_gravity="center_vertical"
-                    android:nextFocusForward="@+id/repeatPasswordEditText"/>
+                    android:inputType="textPassword"
+                    android:nextFocusForward="@+id/repeatPasswordEditText" />
 
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/repeatPasswordTextInputLayout"
                 style="@style/SigninSignupTextInputStyle"
-                app:passwordToggleEnabled="false"
-                app:hintTextAppearance="@style/FloatingLabelStyle">
+                app:hintTextAppearance="@style/FloatingLabelStyle"
+                app:passwordToggleEnabled="false">
 
                 <EditText
                     android:id="@+id/repeatPasswordEditText"
                     style="@style/SigninSignupEditStyle"
 
                     android:imeOptions="actionDone"
-                    android:inputType="textPassword"/>
+                    android:inputType="textPassword" />
             </android.support.design.widget.TextInputLayout>
 
-            <com.carecloud.carepaylibray.customcomponents.CustomProxyNovaRegularLabel
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/singupPasswordFormatHint"
-                android:text="@string/signup_password_format_instructions"
                 style="@style/SignupInstructionsStyle"
-                android:layout_width="match_parent"/>
+                android:layout_width="match_parent"
+                android:text="@string/signup_password_format_instructions"
+                app:customAssetFont="proxima_nova_regular" />
 
         </LinearLayout>
     </ScrollView>
@@ -95,14 +95,14 @@
             android:id="@+id/submitSignupButton"
             style="@style/DemographicsNextButtonStyle"
             android:background="@drawable/button_selector"
-            android:text="@string/signup_submit_button"/>
+            android:text="@string/signup_submit_button" />
 
         <TextView
             android:id="@+id/signupAlreadyHaveAccountTextView"
             style="@style/SigninSignupClickableTextView"
+            android:layout_gravity="bottom"
             android:text="@string/account_exist_textview"
-            android:textColor="@color/button_bright_cerulean"
-            android:layout_gravity="bottom"/>
+            android:textColor="@color/button_bright_cerulean" />
     </LinearLayout>
 
 </LinearLayout>

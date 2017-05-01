@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.practice.library.R;
@@ -25,7 +26,6 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookButton;
 import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
-import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumLabel;
 import com.carecloud.carepaylibray.qrcodescanner.ScannerQRActivity;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -45,7 +45,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
 
     private SignInDTO signinPatientModeDTO;
     private CustomGothamRoundedMediumButton goBackButton;
-    private CustomGothamRoundedMediumLabel howToCheckInTextView;
+    private TextView howToCheckInTextView;
     private CustomGothamRoundedBookButton carePayLoginButton;
     private CustomGothamRoundedBookButton scanQRCodeButton;
     private CustomGothamRoundedBookButton manualSearchButton;
@@ -77,7 +77,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
                 findViewById(R.id.goBackButton);
         goBackButton.setOnClickListener(goBackButtonListener);
 
-        howToCheckInTextView = (CustomGothamRoundedMediumLabel)
+        howToCheckInTextView = (TextView)
                 findViewById(R.id.howToCheckInTextView);
         howToCheckInTextView.setTextColor(ContextCompat.getColor(getBaseContext(), R.color.white));
 
