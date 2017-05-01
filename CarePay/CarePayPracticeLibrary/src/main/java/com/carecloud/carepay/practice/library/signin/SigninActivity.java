@@ -22,9 +22,10 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
-import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionResponseModel;
+import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionUserPractice;
 import com.carecloud.carepay.practice.library.signin.fragments.PracticeSearchFragment;
+import com.carecloud.carepay.practice.library.signin.interfaces.SelectPracticeCallback;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -39,6 +40,7 @@ import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -58,7 +60,7 @@ import java.util.Map;
  * On success authentication screen will navigate next screen from the transition Json
  * On failed showing the authentication failure dialog with no navigation
  */
-public class SigninActivity extends BasePracticeActivity implements PracticeSearchFragment.SelectPracticeCallback {
+public class SigninActivity extends BasePracticeActivity implements SelectPracticeCallback {
 
     private enum SignInScreenMode {
         PRACTICE_MODE_SIGNIN, PATIENT_MODE_SIGNIN
@@ -74,6 +76,7 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
     private Button signInButton;
     private List<String> languages = new ArrayList<>();
     private SignInDTO signinDTO;
+    private PracticeSelectionDTO practiceSelectionModel;
     private Spinner langSpinner;
     private View showPasswordButton;
 
@@ -400,7 +403,7 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
     }
 
     @Override
-    public void onSelectPractice(PracticeSelectionResponseModel model, PracticeSelectionUserPractice userPractice) {
+    public void onSelectPractice(PracticeSelectionDTO model, PracticeSelectionUserPractice userPractice) {
         TransitionDTO transitionDTO = model.getMetadata().getTransitions().getAuthenticate();
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("language", getApplicationPreferences().getUserLanguage());
@@ -457,8 +460,8 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            PracticeSelectionResponseModel practiceSelectionModel = DtoHelper
-                    .getConvertedDTO(PracticeSelectionResponseModel.class, workflowDTO);
+            practiceSelectionModel = DtoHelper
+                    .getConvertedDTO(PracticeSelectionDTO.class, workflowDTO);
             List<PracticeSelectionUserPractice> practiceList = practiceSelectionModel.getPayload()
                     .getUserPracticesList();
 
@@ -553,5 +556,10 @@ public class SigninActivity extends BasePracticeActivity implements PracticeSear
             setPasswordError(error);
         }
         return !isEmptyPassword;
+    }
+
+    @Override
+    public DTO getDto() {
+        return practiceSelectionModel;
     }
 }

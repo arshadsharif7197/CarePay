@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by lmenendez on 3/9/17.
  */
 
-public class PracticeSelectionTransitions {
+public class PracticeSelectionTransitionsDTO {
 
     @SerializedName("authenticate")
     @Expose

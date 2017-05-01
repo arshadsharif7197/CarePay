@@ -10,7 +10,7 @@ import java.util.List;
  * Created by lmenendez on 3/9/17.
  */
 
-public class PracticeSelectionPayload {
+public class PracticeSelectionPayloadDTO {
 
     @SerializedName("user_practices")
     @Expose

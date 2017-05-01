@@ -16,13 +16,13 @@ import java.util.List;
 
 public class ProviderSearchAdapter extends RecyclerView.Adapter<ProviderSearchAdapter.PracticeViewHolder> {
 
-    public interface SelectPracticeCallback{
+    public interface SelectPracticeAdapterCallback {
         void onSelectPractice(AppointmentResourcesDTO practice);
     }
 
     private Context context;
     private List<AppointmentResourcesDTO> practiceList = new ArrayList<>();
-    private SelectPracticeCallback callback;
+    private SelectPracticeAdapterCallback callback;
 
     private AppointmentResourcesDTO selectedPractice;
 
@@ -32,7 +32,7 @@ public class ProviderSearchAdapter extends RecyclerView.Adapter<ProviderSearchAd
      * @param practiceList list of practices
      * @param callback select practice callback
      */
-    public ProviderSearchAdapter(Context context, List<AppointmentResourcesDTO> practiceList, SelectPracticeCallback callback){
+    public ProviderSearchAdapter(Context context, List<AppointmentResourcesDTO> practiceList, SelectPracticeAdapterCallback callback){
         this.context = context;
         this.practiceList = practiceList;
         this.callback = callback;

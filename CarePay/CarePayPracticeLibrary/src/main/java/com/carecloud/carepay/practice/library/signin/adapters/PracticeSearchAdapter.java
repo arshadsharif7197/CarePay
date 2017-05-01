@@ -20,13 +20,13 @@ import java.util.List;
 
 public class PracticeSearchAdapter extends RecyclerView.Adapter<PracticeSearchAdapter.PracticeViewHolder> {
 
-    public interface SelectPracticeCallback{
+    public interface SelectPracticeAdapterCallback {
         void onSelectPractice(PracticeSelectionUserPractice practice);
     }
 
     private Context context;
     private List<PracticeSelectionUserPractice> practiceList = new ArrayList<>();
-    private SelectPracticeCallback callback;
+    private SelectPracticeAdapterCallback callback;
 
     private PracticeSelectionUserPractice selectedPractice;
 
@@ -36,7 +36,7 @@ public class PracticeSearchAdapter extends RecyclerView.Adapter<PracticeSearchAd
      * @param practiceList list of practices
      * @param callback select practice callback
      */
-    public PracticeSearchAdapter(Context context, List<PracticeSelectionUserPractice> practiceList, SelectPracticeCallback callback){
+    public PracticeSearchAdapter(Context context, List<PracticeSelectionUserPractice> practiceList, SelectPracticeAdapterCallback callback){
         this.context = context;
         this.practiceList = practiceList;
         this.callback = callback;
