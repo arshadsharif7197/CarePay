@@ -7,33 +7,27 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsBalancesItem;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalancesAdapter.ViewHolder> {
-    private final String practiceName;
+
     private Context context;
-    private List<PendingBalancePayloadDTO> paymentsPatientBalances = new ArrayList<>();
+    private List<PaymentsBalancesItem> balances = new ArrayList<>();
     private OnBalanceListItemClickListener listener;
 
     /**
-     * @param context    The context
-     * @param paymentDTO The payment DTO
-     * @param listener   the listener
+     * @param context         The context
+     * @param pendingBalances The list of the pending balances
+     * @param listener        the listener
      */
-    public PaymentBalancesAdapter(Context context, PaymentsModel paymentDTO, OnBalanceListItemClickListener listener) {
+    public PaymentBalancesAdapter(Context context, List<PaymentsBalancesItem> pendingBalances, OnBalanceListItemClickListener listener) {
         this.context = context;
-        if (paymentDTO.getPaymentPayload().getPatientBalances().size() > 0 &&
-                paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().size() > 0) {
-            this.paymentsPatientBalances = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
-        }
-        practiceName = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getPracticeName();
+        this.balances = pendingBalances;
         this.listener = listener;
     }
 
@@ -46,11 +40,12 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final PendingBalancePayloadDTO charge = paymentsPatientBalances.get(position);
-        String locationName = practiceName;
+        final PaymentsBalancesItem pendingBalance = balances.get(position);
+
+        String locationName = pendingBalance.getMetadata().getPracticeName();
         holder.shortName.setText(StringUtil.getShortName(locationName));
         holder.locationName.setText(locationName);
-        holder.amount.setText(StringUtil.getFormattedBalanceAmount(charge.getAmount()));
+        holder.amount.setText(StringUtil.getFormattedBalanceAmount(pendingBalance.getBalance().getAmount()));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +57,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
 
     @Override
     public int getItemCount() {
-        return paymentsPatientBalances.size();
+        return balances.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
