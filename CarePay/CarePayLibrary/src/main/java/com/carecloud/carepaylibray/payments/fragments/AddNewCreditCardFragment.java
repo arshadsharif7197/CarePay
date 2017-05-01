@@ -59,7 +59,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment implemen
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        setChildFragment(this);
+        setAuthorizeCallback(this);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 

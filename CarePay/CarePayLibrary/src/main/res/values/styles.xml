@@ -778,9 +778,9 @@
         <item name="android:fontFamily">ProximaNova-Extrabld</item>
     </style>
 
-    <style name="PaymentEditTextStyle" parent="android:Widget.EditText">
+    <style name="PaymentAddCreditCardInputStyle" parent="android:Widget.EditText">
         <item name="android:textColorHint">@color/payne_gray</item>
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/primary_color_enabled_selector</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">16sp</item>
