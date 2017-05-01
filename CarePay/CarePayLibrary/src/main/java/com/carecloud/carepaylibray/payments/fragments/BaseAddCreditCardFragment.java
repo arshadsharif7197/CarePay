@@ -149,7 +149,7 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
         return addNewCreditCardView;
     }
 
-    protected void setChildFragment(IAuthoriseCreditCardResponse callback) {
+    protected void setAuthorizeCallback(IAuthoriseCreditCardResponse callback) {
         this.authoriseCreditCardResponseCallback = callback;
     }
 
@@ -502,7 +502,7 @@ public abstract class BaseAddCreditCardFragment extends BaseDialogFragment imple
             address1EditText.setText(addressPayloadDTO.getAddress1());
             address1EditText.getOnFocusChangeListener().onFocusChange(address1EditText, !StringUtil.isNullOrEmpty(addressPayloadDTO.getAddress1()));
 
-            address2EditText.setText(addressPayloadDTO.getAddress2());
+            address2EditText.setText(!StringUtil.isNullOrEmpty(addressPayloadDTO.getAddress2())?addressPayloadDTO.getAddress2():" ");
             address2EditText.getOnFocusChangeListener().onFocusChange(address2EditText, !StringUtil.isNullOrEmpty(addressPayloadDTO.getAddress2()));
 
             zipCodeEditText.setText(addressPayloadDTO.getZipcode());
