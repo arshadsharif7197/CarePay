@@ -294,6 +294,10 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
             return removeButton;
         }
 
+        /**
+         * Calculate swipe width based on present action button width
+         * @return width for swipe offset
+         */
         public int getSwipeWidth() {
             if(removeButton!=null){
                 return removeButton.getMeasuredWidth();
