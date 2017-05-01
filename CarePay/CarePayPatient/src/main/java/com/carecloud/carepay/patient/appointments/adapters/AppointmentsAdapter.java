@@ -185,7 +185,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 holder.doctorName.setTextColor(ContextCompat.getColor(view.getContext(), R.color.optionl_gray));
                 holder.todayTimeTextView.setTypeface(null, Typeface.BOLD);
                 holder.todayTimeTextView.setTextColor(
-                        ContextCompat.getColor(view.getContext(), R.color.lightningyellow));
+                        ContextCompat.getColor(view.getContext(), R.color.lightning_yellow));
 
                 holder.cellAvatar.setVisibility(View.VISIBLE);
                 holder.cellAvatar.setImageDrawable(context.getResources()

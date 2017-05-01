@@ -51,7 +51,7 @@ public class PendingAppointmentRequestDialog extends BaseDoctorInfoDialog {
         CarePayTextView pendingRequestTextView = (CarePayTextView)
                 childActionView.findViewById(R.id.appointRequestPendingTextView);
         pendingRequestTextView.setText(appointmentLabels.getAppointmentsRequestPendingHeading());
-        pendingRequestTextView.setTextColor(ContextCompat.getColor(context, R.color.lightningyellow));
+        pendingRequestTextView.setTextColor(ContextCompat.getColor(context, R.color.lightning_yellow));
         pendingRequestTextView.setOnClickListener(this);
 
         mainLayout.addView(childActionView);
@@ -60,7 +60,7 @@ public class PendingAppointmentRequestDialog extends BaseDoctorInfoDialog {
     @SuppressWarnings("deprecation")
     private void onColorHeaderForPending() {
         View view = getRootView();
-        view.findViewById(R.id.dialogHeaderlayout).setBackgroundResource(R.color.lightningyellow);
+        view.findViewById(R.id.dialogHeaderlayout).setBackgroundResource(R.color.lightning_yellow);
         ((CustomProxyNovaLightLabel) view.findViewById(R.id.appointDateTextView))
                 .setTextColor(context.getResources().getColor(R.color.white));
         ((CustomGothamRoundedBoldLabel) view.findViewById(R.id.appointTimeTextView))

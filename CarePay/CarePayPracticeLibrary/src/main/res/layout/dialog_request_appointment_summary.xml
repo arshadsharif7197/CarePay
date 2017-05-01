@@ -192,7 +192,7 @@
                 android:layout_marginEnd="@dimen/dimen_24dp"
                 android:layout_marginStart="@dimen/dimen_24dp"
                 android:layout_marginTop="@dimen/dimen_15dp"
-                android:background="@drawable/bg_emerald_overlay"
+                android:background="@drawable/bg_green_overlay"
                 android:paddingBottom="@dimen/dimen_14dp"
                 android:paddingTop="@dimen/dimen_14dp"
                 android:textAllCaps="false"

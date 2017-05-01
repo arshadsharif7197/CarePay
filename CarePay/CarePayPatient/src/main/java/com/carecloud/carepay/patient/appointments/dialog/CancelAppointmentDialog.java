@@ -73,7 +73,7 @@ public class CancelAppointmentDialog extends BaseDoctorInfoDialog {
 
         switch (appointmentType) {
             case MISSED:
-                initializeOff(view, labelsDto.getAppointmentsMissedHeading(), R.color.lightningyellow, R.drawable.appointment_dialog_dark_gray_bg);
+                initializeOff(view, labelsDto.getAppointmentsMissedHeading(), R.color.lightning_yellow, R.drawable.appointment_dialog_dark_gray_bg);
                 break;
             case CANCELLED:
                 initializeOff(view, labelsDto.getAppointmentsCanceledHeading(), R.color.harvard_crimson, R.drawable.appointment_dialog_dark_gray_bg);
