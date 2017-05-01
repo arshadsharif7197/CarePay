@@ -124,17 +124,28 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     }
 
     protected void setHeaderTitle(String title, String heading, String subHeading, View view){
-        TextView textView = (TextView) view.findViewById(R.id.toolbar_title);
+        TextView titleTextView = (TextView) view.findViewById(R.id.toolbar_title);
         if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT ) {
             TextView mainHeadingTextView = (TextView) view.findViewById(R.id.demographicsMainHeading);
-            TextView subHeadingTextView = (TextView)  view.findViewById(R.id.demographicsSubHeading);
+            TextView subHeadingTextView = (TextView) view.findViewById(R.id.demographicsSubHeading);
             (view.findViewById(R.id.toolbar_layout)).setVisibility(View.VISIBLE);
 
-            mainHeadingTextView.setText(heading);
-            subHeadingTextView.setText(subHeading);
+            if (StringUtil.isNullOrEmpty(heading)) {
+                mainHeadingTextView.setVisibility(View.GONE);
+            } else {
+                mainHeadingTextView.setVisibility(View.VISIBLE);
+                mainHeadingTextView.setText(heading);
+            }
+
+            if(StringUtil.isNullOrEmpty(subHeading)){
+                subHeadingTextView.setVisibility(View.GONE);
+            }else {
+                subHeadingTextView.setVisibility(View.VISIBLE);
+                subHeadingTextView.setText(subHeading);
+            }
         }else{
             (view.findViewById(R.id.toolbar_layout)).setVisibility(View.VISIBLE);
-            textView.setText(title);
+            titleTextView.setText(title);
         }
     }
 
