@@ -565,6 +565,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         distributeAmountOverBalanceItems(amount);
 
         setAdapter();
+        setChargeLayoutVisibility();
     }
 
     @Override

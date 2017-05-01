@@ -253,8 +253,7 @@
                         android:textColor="@color/textview_default_textcolor"
                         android:textSize="@dimen/text_size_18sp"
                         android:textAllCaps="true"
-                        android:text="Extra charges"
-                        breeze:textKey=""
+                        breeze:textKey="payment_new_charges_header"
                         app:customAssetFont="proxima_nova_semi_bold"/>
 
                     <View
