@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,13 +44,11 @@ import java.util.Map;
  * A simple {@link Fragment} subclass.
  */
 public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
-    private AppCompatActivity appCompatActivity;
     private DemographicsSettingsDTO demographicsSettingsDTO;
 
     private EditText emailEditText;
     private EditText passwordEditText;
     private Button updateEmailButton;
-    private boolean isEmailEmpty = true;
     private boolean isPasswordEmpty = true;
     private TextInputLayout emailLabelLayout;
     private TextInputLayout passwordLabelLayout;
@@ -59,7 +59,6 @@ public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
     }
 
     /**
-     *
      * @param demographicsSettingsDTO the DemographicsSettingsDTO model
      * @return an instance of DemographicsSettingUpdateEmailFragment
      */
@@ -75,7 +74,6 @@ public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        appCompatActivity = (AppCompatActivity) getActivity();
         demographicsSettingsDTO = DtoHelper.getConvertedDTO(DemographicsSettingsDTO.class, getArguments());
     }
 
@@ -90,11 +88,10 @@ public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         rootView = view.findViewById(R.id.settings_root);
 
-        final Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
+        final Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbarLayout);
         TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
         title.setText(Label.getLabel("setting_change_Email"));
 
-        SystemUtil.setGothamRoundedMediumTypeface(appCompatActivity, title);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_close));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
@@ -116,6 +113,26 @@ public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
         passwordEditText.setTag(passwordLabelLayout);
         passwordEditText.setHint(Label.getLabel("settings_current_password"));
         setChangeFocusListeners();
+        passwordEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (editable.length() == 0) {
+                    updateEmailButton.setEnabled(false);
+                } else {
+                    updateEmailButton.setEnabled(true);
+                }
+            }
+        });
     }
 
     private void setChangeFocusListeners() {
@@ -151,16 +168,25 @@ public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
 
     }
 
-    private boolean checkEmail() {
+    private boolean isEmailValid() {
         String email = emailEditText.getText().toString();
-        isEmailEmpty = StringUtil.isNullOrEmpty(email);
-        emailLabelLayout.setErrorEnabled(isEmailEmpty); // enable for error if either empty or invalid email
-        if (isEmailEmpty) {
-            emailLabelLayout.setError("");
+        boolean isEmailValid = StringUtil.isValidmail(email);
+        emailLabelLayout.setErrorEnabled(!isEmailValid); // enable for error if either empty or invalid email
+        if (!isEmailValid) {
+            emailLabelLayout.setError(Label.getLabel("demographics_invalid_email_error"));
+            emailEditText.requestFocus();
         } else {
             emailLabelLayout.setError(null);
         }
-        return !isEmailEmpty;
+        return isEmailValid;
+    }
+
+    private boolean isPasswordValid() {
+        boolean isPasswordValid = checkPassword();
+        if (!isPasswordValid) {
+            passwordEditText.requestFocus();
+        }
+        return !isPasswordEmpty;
     }
 
     private boolean checkPassword() {
@@ -175,29 +201,12 @@ public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
         return !isPasswordEmpty;
     }
 
-    private boolean isEmailValid() {
-        boolean isEmailValid = checkEmail();
-        if (!isEmailValid) {
-            emailEditText.requestFocus();
-        }
-        return !isEmailEmpty;
-    }
-
-    private boolean isPasswordValid() {
-        boolean isPasswordValid = checkPassword();
-        if (!isPasswordValid) {
-            passwordEditText.requestFocus();
-        }
-        return !isPasswordEmpty;
-    }
-
     private void setClickListeners(View view) {
         updateEmailButton = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
-        updateEmailButton.setText(Label.getLabel("demographics_save_changes_label"));
         updateEmailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isEmailValid()) {
+                if (isEmailValid() && isPasswordValid()) {
                     DemographicsSettingsEmailProperties demographicsSettingsEmailProperties = demographicsSettingsDTO
                             .getDemographicsSettingsMetadataDTO().getTransitions().getChangeLoginEmail()
                             .getHeader().getMaintenance().getProperties();
