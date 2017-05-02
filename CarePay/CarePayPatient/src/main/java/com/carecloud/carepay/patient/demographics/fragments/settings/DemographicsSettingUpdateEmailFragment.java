@@ -276,14 +276,8 @@ public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
     };
 
     private String getCurrentEmail() {
-        String currentEmail = null;
-        if (demographicsSettingsDTO != null) {
-            DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
-            if (demographicsSettingsPayloadDTO != null) {
-                currentEmail = demographicsSettingsPayloadDTO.getCurrentEmail();
-            }
-        }
-        return currentEmail;
+        DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
+        return demographicsSettingsPayloadDTO.getCurrentEmail();
     }
 }
 

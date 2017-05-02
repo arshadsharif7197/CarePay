@@ -116,15 +116,12 @@ public class EditProfileFragment extends DocumentScannerFragment {
             Picasso.with(appCompatActivity).load(imageUrl).transform(
                     new CircleImageTransform()).resize(160, 160).into(profileImageView);
         }
-        String userId;
-
-        userId = getAppAuthorizationHelper().getCurrUser();
+        String userId = demographicsSettingsDTO.getPayload().getCurrentEmail();
         CarePayTextView patientNameValue = (CarePayTextView) view.findViewById(R.id.patientNameTextView);
         patientNameValue.setText(StringUtil.capitalize(firstNameValString + " " + middleNameValString + " " + lastNameValString));
 
         CarePayTextView patientEmailValue = (CarePayTextView) view.findViewById(R.id.patientEmailTextView);
         patientEmailValue.setText(userId);
-
 
         setClickListeners(view);
 

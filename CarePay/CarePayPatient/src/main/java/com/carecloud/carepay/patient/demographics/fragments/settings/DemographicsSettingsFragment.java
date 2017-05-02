@@ -96,7 +96,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
         CarePayTextView patientNameTextView = (CarePayTextView) view.findViewById(R.id.patient_name);
         patientNameTextView.setText(getCapitalizedUserName());
         CarePayTextView patientIdTextView = (CarePayTextView) view.findViewById(R.id.patient_id);
-        patientIdTextView.setText(getAppAuthorizationHelper().getCurrUser());
+        patientIdTextView.setText(demographicsSettingsDTO.getPayload().getCurrentEmail());
 
         initializeHelpButton(view);
 
