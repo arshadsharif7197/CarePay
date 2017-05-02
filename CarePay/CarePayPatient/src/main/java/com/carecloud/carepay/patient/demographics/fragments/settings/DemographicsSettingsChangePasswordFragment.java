@@ -62,8 +62,6 @@ public class DemographicsSettingsChangePasswordFragment extends BaseFragment {
     private TextInputLayout newPasswordLabel = null;
     private TextInputLayout repeatPasswordLabel = null;
 
-    private String changePasswordString = null;
-    private String passwordHelpString = null;
     private String saveChangesString = null;
 
     /**
@@ -103,22 +101,22 @@ public class DemographicsSettingsChangePasswordFragment extends BaseFragment {
 
         final Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
+        title.setText(Label.getLabel("settings_change_password"));
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_close));
         callback.setToolbar(toolbar);
 
         currentPasswordEditText = (EditText) view.findViewById(R.id.currentPasswordEditText);
         newPasswordEditText = (EditText) view.findViewById(R.id.newPasswordEditText);
         repeatPasswordEditText = (EditText) view.findViewById(R.id.repeatPasswordEditText);
-        TextView passwordHelpLabel = (TextView) view.findViewById(R.id.passwordHelpLabel);
 
         updatePasswordButton = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
         getSettingsLabels();
-        title.setText(changePasswordString);
         updatePasswordButton.setText(saveChangesString);
 
         initialiseUIFields(view);
         setEditTexts();
-        passwordHelpLabel.setText(passwordHelpString);
+        TextView passwordHelpLabel = (TextView) view.findViewById(R.id.passwordHelpLabel);
+        passwordHelpLabel.setText(Label.getLabel("settings_password_help_text"));
         setClickables();
         isCurrentPasswordEmpty = true;
         isNewPasswordEmpty = true;
@@ -132,8 +130,6 @@ public class DemographicsSettingsChangePasswordFragment extends BaseFragment {
      * demographics settings labels
      */
     public void getSettingsLabels() {
-        changePasswordString = Label.getLabel("settings_change_password");
-        passwordHelpString = Label.getLabel("settings_password_help_text");
         saveChangesString = Label.getLabel("demographics_save_changes_label");
         currentPasswordString = Label.getLabel("settings_current_password");
         newPasswordString = Label.getLabel("settings_new_password");

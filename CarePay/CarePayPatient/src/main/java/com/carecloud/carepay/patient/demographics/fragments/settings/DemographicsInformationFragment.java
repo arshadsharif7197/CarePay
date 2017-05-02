@@ -212,12 +212,8 @@ public class DemographicsInformationFragment extends BaseFragment {
         getLabels();
 
         raceDataTextView = (TextView) view.findViewById(R.id.raceListDataTextView);
-        TextView raceLabelTextView = (TextView) view.findViewById(R.id.raceDataTextView);
         ethnicityDataTextView = (TextView) view.findViewById(R.id.ethnicityListDataTextView);
-        TextView ethnicityLabelTextView = (TextView) view.findViewById(R.id.ethnicityDataTextView);
         selectGender = (TextView) view.findViewById(R.id.chooseGenderTextView);
-        TextView genderLabelTextView = (TextView) view.findViewById(R.id.genderTextView);
-        TextView languageDataTextView = (TextView) view.findViewById(R.id.languageDataTextView);
         languageLabelTextView = (TextView) view.findViewById(R.id.languageTextView);
 
         dobEditText = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
@@ -289,13 +285,17 @@ public class DemographicsInformationFragment extends BaseFragment {
         SystemUtil.hideSoftKeyboard(getActivity());
         selectGender.setText(genderValString);
 
-        ethnicityDataTextView.setText(ethnityValString);
+        TextView ethnicityLabelTextView = (TextView) view.findViewById(R.id.ethnicityDataTextView);
         ethnicityLabelTextView.setText(ethnicityTitleString);
+        TextView genderLabelTextView = (TextView) view.findViewById(R.id.genderTextView);
         genderLabelTextView.setText(genderTitleString);
-        raceDataTextView.setText(raceValString);
-        raceLabelTextView.setText(raceTitleString);
-        languageLabelTextView.setText(languageString);
+        TextView languageDataTextView = (TextView) view.findViewById(R.id.languageDataTextView);
         languageDataTextView.setText(languageString);
+        TextView raceLabelTextView = (TextView) view.findViewById(R.id.raceDataTextView);
+        raceLabelTextView.setText(raceTitleString);
+        raceDataTextView.setText(raceValString);
+        ethnicityDataTextView.setText(ethnityValString);
+        languageLabelTextView.setText(languageString);
 
         phoneNumberEditText.setHint(phoneNumberString);
         dobEditText.setHint(dateOfBirthString);

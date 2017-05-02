@@ -60,8 +60,6 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
     private String firstNameString = null;
     private String middleNameString = null;
     private String lastNameString = null;
-    private String saveChangesString = null;
-    private String changeNameString = null;
     private EditText firstNameEditText = null;
     private EditText middleNameEditText = null;
     private EditText lastNameEditText = null;
@@ -119,6 +117,7 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
 
         final Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
+        title.setText(Label.getLabel("setting_change_name"));
         ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.demographicReviewProgressBar);
         progressBar.setVisibility(View.GONE);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_close));
@@ -127,15 +126,13 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
         middleNameEditText = (EditText) view.findViewById(R.id.reviewdemogrMiddleNameEdit);
         lastNameEditText = (EditText) view.findViewById(R.id.reviewdemogrLastNameEdit);
         updateProfileButton = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
-        getEditProfileLabels();
 
         initialiseUIFields(view);
         getProfileProperties();
         setEditTexts();
 
         getPersonalDetails();
-        title.setText(changeNameString);
-        updateProfileButton.setText(saveChangesString);
+        updateProfileButton.setText(Label.getLabel("demographics_save_changes_label"));
         setClickables();
         formatEditText();
         isFirstNameEmpty = true;
@@ -195,15 +192,7 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
 
     }
 
-    /**
-     * demographics Edit Profile labels
-     */
-    public void getEditProfileLabels() {
-        saveChangesString = Label.getLabel("demographics_save_changes_label");
-        changeNameString = Label.getLabel("setting_change_name");
-    }
-
-    public void getProfileProperties() {
+    private void getProfileProperties() {
         DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
         if (demographicsSettingsMetadataDTO != null) {
             DemographicsSettingsDataModelsDTO demographicsSettingsDataModelsDTO = demographicsSettingsMetadataDTO.getDataModels();
