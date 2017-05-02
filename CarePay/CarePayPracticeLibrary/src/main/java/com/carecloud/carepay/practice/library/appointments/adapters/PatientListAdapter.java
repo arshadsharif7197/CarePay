@@ -28,8 +28,7 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import org.joda.time.DateTime;
-
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -55,6 +54,8 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private int sizeFilteredPatients;
     private int sizeFilteredPendingPatients;
+
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
 
     public interface OnItemTappedListener {
         void onItemTap(Object dto);
@@ -416,8 +417,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 return;
             }
 
-            final DateTime startDateTime = new DateTime(patient.appointmentStartTime);
-            timeTextView.setText(startDateTime.toString("hh:mm a"));
+            timeTextView.setText(dateFormat.format(patient.appointmentStartTime));
             if (patient.isRequested) {
                 timeTextView.setBackgroundResource(R.drawable.bg_orange_overlay);
             } else if (patient.isAppointmentOver) {

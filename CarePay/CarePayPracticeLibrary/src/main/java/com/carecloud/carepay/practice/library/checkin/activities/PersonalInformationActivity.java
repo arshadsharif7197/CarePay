@@ -29,8 +29,6 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
-import org.joda.time.LocalDate;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -315,7 +313,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         @Override
         public void onClick(final View view) {
             // Use the current date as the default date in the picker
-            final Calendar calendar = Calendar.getInstance();
+            Calendar calendar = Calendar.getInstance();
             int year = calendar.get(Calendar.YEAR);
             int month = calendar.get(Calendar.MONTH);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -336,8 +334,10 @@ public class PersonalInformationActivity extends BasePracticeActivity {
                     new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                            LocalDate date = new LocalDate(year, month + 1, day);
-                            DateUtil.getInstance().setDate(date.toDate());
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.set(year, month, day);
+
+                            DateUtil.getInstance().setDate(calendar);
                             selectDateButton.setText(DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
                         }
                     }, year, month, day);

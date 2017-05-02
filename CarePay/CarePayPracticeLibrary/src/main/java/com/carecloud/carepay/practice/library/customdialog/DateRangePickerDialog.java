@@ -14,8 +14,6 @@ import com.carecloud.carepaylibray.customdialogs.BaseDialogFragment;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.squareup.timessquare.CalendarPickerView;
 
-import org.joda.time.DateTime;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -124,10 +122,11 @@ public class DateRangePickerDialog extends BaseDialogFragment {
             endDate = today;
         }
         // If Start Date is after End Date, set End Date to Start Date
-        DateTime startDateTime = new DateTime(startDate);
-        DateTime endDateTime = new DateTime(endDate);
-        if (startDateTime.isAfter(endDateTime)) {
+        if(startDate.after(endDate)){
+            //switch them
+            Date temp = endDate;
             endDate = startDate;
+            startDate = temp;
         }
     }
 
