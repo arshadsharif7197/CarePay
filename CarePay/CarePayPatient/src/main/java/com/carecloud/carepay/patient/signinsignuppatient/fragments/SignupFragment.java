@@ -217,7 +217,6 @@ public class SignupFragment extends BaseFragment {
     }
 
     private void setEditTexts(View view) {
-
         emailInputLayout = (TextInputLayout) view.findViewById(R.id.emailTextInputLayout);
         emailInputLayout.setTag(Label.getLabel("signup_email"));
         emailText = (EditText) view.findViewById(R.id.emailEditText);
@@ -236,10 +235,8 @@ public class SignupFragment extends BaseFragment {
         repeatPasswordText.setHint(Label.getLabel("signup_repeat_password"));
         repeatPasswordText.setTag(passwordRepeatInputLayout);
 
-
         TextView passwordFormatHint = (TextView) view.findViewById(R.id.singupPasswordFormatHint);
         passwordFormatHint.setText(Label.getLabel("password_hint_text"));
-        setTypefaces();
 
         setChangeFocusListeners();
 
@@ -379,20 +376,6 @@ public class SignupFragment extends BaseFragment {
                 return false;
             }
         });
-    }
-
-    private void setTypefaces() {
-        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), emailInputLayout);
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), emailText);
-
-        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), passwordInputLayout);
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), passwordText);
-
-        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), passwordRepeatInputLayout);
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), repeatPasswordText);
-
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), accountExistTextView);
-        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), submitButton);
     }
 
     private boolean checkEmail() {

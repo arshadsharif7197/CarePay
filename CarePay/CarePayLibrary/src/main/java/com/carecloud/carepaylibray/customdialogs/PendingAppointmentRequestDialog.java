@@ -7,13 +7,12 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBoldLabel;
-import com.carecloud.carepaylibray.customcomponents.CustomProxyNovaLightLabel;
 
 public class PendingAppointmentRequestDialog extends BaseDoctorInfoDialog {
 
@@ -23,8 +22,9 @@ public class PendingAppointmentRequestDialog extends BaseDoctorInfoDialog {
 
     /**
      * Constructor.
-     * @param context activity context
-     * @param appointmentDTO appointment model
+     *
+     * @param context           activity context
+     * @param appointmentDTO    appointment model
      * @param appointmentLabels screen labels
      */
     public PendingAppointmentRequestDialog(Context context, AppointmentDTO appointmentDTO,
@@ -61,9 +61,9 @@ public class PendingAppointmentRequestDialog extends BaseDoctorInfoDialog {
     private void onColorHeaderForPending() {
         View view = getRootView();
         view.findViewById(R.id.dialogHeaderlayout).setBackgroundResource(R.color.lightning_yellow);
-        ((CustomProxyNovaLightLabel) view.findViewById(R.id.appointDateTextView))
+        ((TextView) view.findViewById(R.id.appointDateTextView))
                 .setTextColor(context.getResources().getColor(R.color.white));
-        ((CustomGothamRoundedBoldLabel) view.findViewById(R.id.appointTimeTextView))
+        ((TextView) view.findViewById(R.id.appointTimeTextView))
                 .setTextColor(context.getResources().getColor(R.color.white));
     }
 

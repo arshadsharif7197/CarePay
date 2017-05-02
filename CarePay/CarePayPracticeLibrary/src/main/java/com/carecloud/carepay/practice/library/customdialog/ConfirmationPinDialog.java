@@ -21,7 +21,6 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -43,10 +42,10 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
     private EditText pinEditText;
     private CarePayTextView headerLabel;
     private CarePayTextView subHeaderLabel;
-    private CustomGothamRoundedMediumButton dialogCancelTextView;
+    private Button dialogCancelTextView;
 
     private PatientModeSwitchPinDTO patientModeSwitchPinDTO;
-    private boolean isDynamicLabels ;
+    private boolean isDynamicLabels;
     private TransitionDTO transitionDTOPinLink;
     private ConfirmationPinDialogListener callBack;
 
@@ -107,7 +106,7 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
         pinEditText = (EditText) findViewById(R.id.pinEditText);
         headerLabel = (CarePayTextView) findViewById(R.id.headerLabel);
         subHeaderLabel = (CarePayTextView) findViewById(R.id.subHeaderLabel);
-        dialogCancelTextView = (CustomGothamRoundedMediumButton) findViewById(R.id.dialogCancelTextView);
+        dialogCancelTextView = (Button) findViewById(R.id.dialogCancelTextView);
     }
 
     /**
@@ -161,7 +160,7 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
 
     private void validatePin() {
         String pin = pinEditText.getText().toString();
-        if (pin.length() == 4 ) {
+        if (pin.length() == 4) {
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("pin", pin);
             queryMap.put("practice_mgmt", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
@@ -186,11 +185,11 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
         }
     }
 
-    private void onSetPinLabels(){
+    private void onSetPinLabels() {
         headerLabel.setText(patientModeSwitchPinDTO.getPracticeModeSwitchPinHeader());
         subHeaderLabel.setText(patientModeSwitchPinDTO.getPracticeModeSwitchPinEnterUnlock());
         dialogCancelTextView.setText(patientModeSwitchPinDTO.getPracticeModeSwitchPinCancel());
-        if(this.isDynamicLabels) {
+        if (this.isDynamicLabels) {
             onSetpinNumberLabel(R.id.pin_key_one, patientModeSwitchPinDTO.getPracticeModeSwitchPinOne());
             onSetpinNumberLabel(R.id.pin_key_two, patientModeSwitchPinDTO.getPracticeModeSwitchPinTwo());
             onSetpinNumberLabel(R.id.pin_key_three, patientModeSwitchPinDTO.getPracticeModeSwitchPinThree());
@@ -205,8 +204,8 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
         findViewById(R.id.mainViewLayout).setVisibility(View.VISIBLE);
     }
 
-    private void onSetpinNumberLabel(int pinViewId,String pinNumber){
-        ((CustomGothamRoundedMediumButton)findViewById(pinViewId)).setText(pinNumber);
+    private void onSetpinNumberLabel(int pinViewId, String pinNumber) {
+        ((Button) findViewById(pinViewId)).setText(pinNumber);
     }
 
     private WorkflowServiceCallback commonTransitionCallback = new WorkflowServiceCallback() {
@@ -219,8 +218,8 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ((ISession) context).hideProgressDialog();
             Gson gson = new Gson();
-            PatientModeSwitchPinResponseDTO patientModeSwitchPinResponseDTO =   gson.fromJson(workflowDTO.toString(),PatientModeSwitchPinResponseDTO.class);
-            if(patientModeSwitchPinResponseDTO.getPayload().getPinpad().getPayload()) {
+            PatientModeSwitchPinResponseDTO patientModeSwitchPinResponseDTO = gson.fromJson(workflowDTO.toString(), PatientModeSwitchPinResponseDTO.class);
+            if (patientModeSwitchPinResponseDTO.getPayload().getPinpad().getPayload()) {
                 ((ISession) context).getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
                 ((BasePracticeActivity) context).onPinConfirmationCheck(true, pinEditText.getText().toString());
                 dismiss();
@@ -231,10 +230,10 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
         public void onFailure(String exceptionMessage) {
             Gson gson = new Gson();
             String displayMessage;
-            try{
+            try {
                 PinError pinError = gson.fromJson(exceptionMessage, PinError.class);
                 displayMessage = pinError.getException();
-            }catch (JsonSyntaxException jsx){
+            } catch (JsonSyntaxException jsx) {
                 jsx.printStackTrace();
                 displayMessage = "Pin Error, Please try again";
             }
@@ -247,7 +246,7 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
     };
 
 
-    private class PinError{
+    private class PinError {
         @SerializedName("exception")
         private String exception;
 
