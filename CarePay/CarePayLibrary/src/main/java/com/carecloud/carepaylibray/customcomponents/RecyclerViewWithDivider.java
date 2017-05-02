@@ -59,7 +59,7 @@ public class RecyclerViewWithDivider extends RecyclerView {
     {
         Drawable dividerDrawable =  ContextCompat.getDrawable(context, R.drawable.light_gray_divider);
         RecyclerView.ItemDecoration dividerItemDecoration = new com.carecloud.carepaylibray
-                .itemDecorations.DividerItemDecoration(dividerDrawable);
+                .itemdecorations.DividerItemDecoration(dividerDrawable);
         this.addItemDecoration(dividerItemDecoration);
     }
 }
