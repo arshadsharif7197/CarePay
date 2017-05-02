@@ -130,14 +130,14 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             TextView subHeadingTextView = (TextView) view.findViewById(R.id.demographicsSubHeading);
             (view.findViewById(R.id.toolbar_layout)).setVisibility(View.VISIBLE);
 
-            if (StringUtil.isNullOrEmpty(heading)) {
+            if (StringUtil.isNullOrEmpty(heading) || heading.equalsIgnoreCase(CarePayConstants.NOT_DEFINED)) {
                 mainHeadingTextView.setVisibility(View.GONE);
             } else {
                 mainHeadingTextView.setVisibility(View.VISIBLE);
                 mainHeadingTextView.setText(heading);
             }
 
-            if(StringUtil.isNullOrEmpty(subHeading)){
+            if(StringUtil.isNullOrEmpty(subHeading) || subHeading.equalsIgnoreCase(CarePayConstants.NOT_DEFINED)){
                 subHeadingTextView.setVisibility(View.GONE);
             }else {
                 subHeadingTextView.setVisibility(View.VISIBLE);
