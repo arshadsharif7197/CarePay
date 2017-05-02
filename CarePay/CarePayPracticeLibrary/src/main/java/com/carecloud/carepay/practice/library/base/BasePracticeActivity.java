@@ -17,16 +17,8 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
-import com.carecloud.carepaylibray.utils.StringUtil;
-import com.google.gson.Gson;
 
 import org.apache.commons.lang3.NotImplementedException;
-
-/**
- * Created by Jahirul Bhuiyan on 10/24/2016.
- * Common Activity class for any practice.
- * Use for holding the common DTO which will be converted to the desire DTO using getConvertedDTO
- */
 
 public abstract class BasePracticeActivity extends BaseActivity
         implements IConfirmPracticeAppPin {
@@ -36,45 +28,11 @@ public abstract class BasePracticeActivity extends BaseActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         setSystemUiVisibility();
         if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             setNavigationBarVisibility();
         }
-    }
-
-    /**
-     * Common WorkflowDTO which will converted to the desire DTO with dtoClass params
-     *
-     * @param dtoClass class to convert
-     * @param <S>      Dynamic class to convert
-     * @return Dynamic converted class object
-     */
-    public <S> S getConvertedDTO(Class<S> dtoClass) {
-        Bundle bundle = this.getIntent().getExtras();
-
-        if (bundle != null) {
-            Gson gson = new Gson();
-            return gson.fromJson(bundle.getString(WorkflowDTO.class.getSimpleName()), dtoClass);
-        }
-        return null;
-    }
-
-    /**
-     * Common WorkflowDTO which will converted to the desire DTO with dtoClass params
-     *
-     * @param dtoClass class to convert
-     * @param <S>      Dynamic class to convert
-     * @return Dynamic converted class object
-     */
-    public static <S> S getConvertedDTO(Class<S> dtoClass, String jsonString) {
-
-        if (!StringUtil.isNullOrEmpty(jsonString)) {
-            Gson gson = new Gson();
-            return gson.fromJson(jsonString, dtoClass);
-        }
-        return null;
     }
 
     /**
@@ -217,5 +175,10 @@ public abstract class BasePracticeActivity extends BaseActivity
 
     protected void goToHome(TransitionDTO logOutDto) {
         getWorkflowServiceHelper().execute(logOutDto, homeCall);
+    }
+
+    @Override
+    public void navigateToWorkflow(WorkflowDTO workflowDTO) {
+        PracticeNavigationHelper.navigateToWorkflow(this, workflowDTO);
     }
 }

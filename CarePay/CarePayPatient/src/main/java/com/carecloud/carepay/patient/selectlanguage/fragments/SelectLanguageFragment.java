@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.patientsplash.dtos.PayloadDTO;
 import com.carecloud.carepay.patient.patientsplash.dtos.SelectLanguageDTO;
@@ -20,10 +21,8 @@ import com.carecloud.carepay.patient.selectlanguage.models.LanguageOptionModel;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,7 +52,7 @@ public class SelectLanguageFragment extends BaseFragment implements LanguageList
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             languageConfirmButton.setEnabled(true);
-            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+            PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
 
         }
 

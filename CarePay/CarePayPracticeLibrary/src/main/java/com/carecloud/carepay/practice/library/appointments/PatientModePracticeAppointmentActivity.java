@@ -17,7 +17,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.LinksDTO;
@@ -40,8 +40,6 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
     private AppointmentsResultModel scheduleResourcesModel;
 
     private LinearLayout noAppointmentView;
-
-    private AppointmentLabelDTO labels;
 
     private List<AppointmentResourcesDTO> resources;
 
@@ -115,14 +113,11 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
     };
 
     private void populateWithLabels() {
-        labels = scheduleResourcesModel.getMetadata().getLabel();
-        if (labels != null) {
-            ((TextView) findViewById(R.id.provider_logout)).setText(labels.getAppointmentsBtnLogout());
-            ((TextView) findViewById(R.id.provider_screen_header)).setText(labels.getProviderListHeader());
-            ((TextView) findViewById(R.id.provider_screen_sub_header)).setText(labels.getProviderListSubHeader());
-            ((TextView) findViewById(R.id.no_providers_message_title)).setText(labels.getNoAppointmentsMessageTitle());
-            ((TextView) findViewById(R.id.no_providers_message_desc)).setText(labels.getNoAppointmentsMessageText());
-        }
+        ((TextView) findViewById(R.id.provider_logout)).setText(Label.getLabel("practice_app_logout_text"));
+        ((TextView) findViewById(R.id.provider_screen_header)).setText(Label.getLabel("provider_list_header"));
+        ((TextView) findViewById(R.id.provider_screen_sub_header)).setText(Label.getLabel("provider_list_sub_header"));
+        ((TextView) findViewById(R.id.no_providers_message_title)).setText(Label.getLabel("no_appointments_message_title"));
+        ((TextView) findViewById(R.id.no_providers_message_desc)).setText(Label.getLabel("no_appointments_message_text"));
     }
 
     /**
@@ -189,18 +184,13 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
 
         @Override
         public void onFailure(String exceptionMessage) {
-           SystemUtil.doDefaultFailureBehavior((BaseActivity) getContext(), exceptionMessage);
+            SystemUtil.doDefaultFailureBehavior((BaseActivity) getContext(), exceptionMessage);
         }
     };
 
     @Override
     public void onProviderListItemClickListener(int position) {
         selectVisitType(resources.get(position), scheduleResourcesModel);
-    }
-
-    @Override
-    protected AppointmentLabelDTO getLabels() {
-        return labels;
     }
 
     @Override

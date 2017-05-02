@@ -13,9 +13,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -83,9 +83,8 @@ public class ChooseCreditCardDialog extends Dialog implements RadioGroup.OnCheck
                 }
 
 
-            PaymentsLabelDTO paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
-            ((TextView) findViewById(R.id.choose_credit_card_title)).setText(paymentsLabel.getPaymentChooseCreditCardButton());
-            ((TextView) findViewById(R.id.choose_credit_card_cancel)).setText(paymentsLabel.getPaymentCancelButton());
+            ((TextView) findViewById(R.id.choose_credit_card_title)).setText(Label.getLabel("payment_choose_credit_card_button"));
+            ((TextView) findViewById(R.id.choose_credit_card_cancel)).setText(Label.getLabel("payment_cancel_button"));
         }
 
         findViewById(R.id.choose_credit_card_cancel).setOnClickListener(new View.OnClickListener() {

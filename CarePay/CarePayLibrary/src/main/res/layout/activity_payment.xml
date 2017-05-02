@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/payment_frag_holder"
-    tools:context="com.carecloud.carepay.patient.payment.PaymentActivity"/>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/payment_frag_holder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.carecloud.carepay.patient.payment.activities.PaymentActivity" />
 
 </LinearLayout>

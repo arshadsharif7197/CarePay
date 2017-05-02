@@ -3,7 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="signin_button_textsize">18sp</dimen>
-    <dimen name="signin_title_textsize">36sp</dimen>
 
     <!-- Default dimens which will be use for any default styling  -->
     <dimen name="dimen_1dp">1dp</dimen>
@@ -67,7 +66,6 @@
     <dimen name="text_size_17sp">17sp</dimen>
     <dimen name="text_size_20sp">20sp</dimen>
     <dimen name="text_size_21sp">21sp</dimen>
-    <dimen name="text_size_22sp">22sp</dimen>
     <dimen name="text_size_23sp">23sp</dimen>
     <dimen name="text_size_28sp">28sp</dimen>
     <dimen name="text_size_30sp">30sp</dimen>
@@ -160,8 +158,6 @@
 
     <dimen name="home_alert_margin_start">10dp</dimen>
 
-    <dimen name="home_logo_width">174dp</dimen>
-
     <dimen name="home_button_width">232dp</dimen>
     <dimen name="home_button_height">200dp</dimen>
 
@@ -193,12 +189,9 @@
     <dimen name="sign_dialog_switch_font">17sp</dimen>
 
     <!-- Check-in -->
-    <dimen name="checkin_main_panel_start_padding">30dp</dimen>
-    <dimen name="checkin_separator_width">116dp</dimen>
     <dimen name="checkin_back_width">171dp</dimen>
     <dimen name="checkin_back_height">45dp</dimen>
     <dimen name="checkin_logo_width">150dp</dimen>
-    <dimen name="checkin_logo_height">46dp</dimen>
     <dimen name="checkin_info_label_width">150dp</dimen>
     <dimen name="checked_in_card_status_top_margin">36dp</dimen>
 
@@ -229,9 +222,6 @@
     <dimen name="dialog_row_padding">24.5dp</dimen>
     <dimen name="responsibility_list_margin">80dp</dimen>
 
-    <dimen name="list_dialog_min_height">400dp</dimen>
-    <dimen name="list_dialog_min_height_small">200dp</dimen>
-
     <dimen name="dimen_72dp">72dp</dimen>
     <dimen name="payment_distibution_dialog_height">540dp</dimen>
     <dimen name="payment_distribution_dialog_width">800dp</dimen>
@@ -242,4 +232,5 @@
     <dimen name="keypad_width">600dp</dimen>
     <dimen name="keypad_height">700dp</dimen>
     <dimen name="calculator_entry_text">90sp</dimen>
+    <dimen name="emailFieldTopMargin">0dp</dimen>
 </resources>

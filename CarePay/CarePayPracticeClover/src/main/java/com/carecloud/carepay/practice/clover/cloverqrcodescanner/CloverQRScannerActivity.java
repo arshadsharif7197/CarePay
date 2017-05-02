@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
-import com.carecloud.carepaylibray.base.BaseActivity;
 import com.clover.sdk.internal.util.Strings;
 import com.clover.sdk.v1.Intents;
 import com.clover.sdk.v3.scanner.BarcodeResult;
@@ -19,7 +19,7 @@ import com.clover.sdk.v3.scanner.BarcodeScanner;
  * Implement BroadcastReceiver for clover BarcodeResult.INTENT_ACTION
  */
 
-public class CloverQRScannerActivity extends BaseActivity {
+public class CloverQRScannerActivity extends AppCompatActivity {
 
     /**
      * BroadcastReceiver for the clover barcode result

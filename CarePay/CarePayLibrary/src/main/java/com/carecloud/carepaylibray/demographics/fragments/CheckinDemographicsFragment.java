@@ -37,6 +37,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
@@ -45,7 +46,6 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
-import com.carecloud.carepaylibray.demographics.misc.CheckinDemographicsInterface;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerFragment;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
@@ -73,7 +73,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 public class CheckinDemographicsFragment extends DocumentScannerFragment implements View.OnClickListener {
 
@@ -146,8 +145,6 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
     public interface CheckinDemographicsFragmentListener {
         void onDemographicDtoChanged(DemographicDTO demographicDTO);
-
-        void initializeDocumentFragment();
 
         void initializeInsurancesFragment();
     }
@@ -587,8 +584,10 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
     }
 
     private boolean isPhoneNumberValid() {
-        final String phoneError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : addressMetaDTO.getProperties().getPhone().getValidations().get(0).getErrorMessage();
-        final String phoneValidation = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : ((String) addressMetaDTO.getProperties().getPhone().getValidations().get(0).value);
+        final String phoneError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED :
+                addressMetaDTO.getProperties().getPhone().getValidations().get(0).getErrorMessage();
+        final String phoneValidation = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED :
+                (String) addressMetaDTO.getProperties().getPhone().getValidations().get(0).getValue();
         if (!isPhoneEmpty) { // check validity only if non-empty
             String phone = phoneNumberEditText.getText().toString();
             if (!StringUtil.isNullOrEmpty(phone)
@@ -665,7 +664,7 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             buttonConfirmData.setEnabled(true);
-            ((CheckinDemographicsInterface) getActivity()).navigateToConsentFlow(workflowDTO);
+            ((BaseActivity) getActivity()).navigateToWorkflow(workflowDTO);
         }
 
         @Override
@@ -1043,7 +1042,8 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             }
             String datetime = demographicPersDetailsPayloadDTO.getDateOfBirth();
             if (datetime != null) {
-                String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime).toStringWithFormatMmSlashDdSlashYyyy();
+                String dateOfBirthString = DateUtil.getInstance().setDateRaw(datetime)
+                        .toStringWithFormatMmSlashDdSlashYyyy();
                 dobEditText.setText(dateOfBirthString);
                 dobEditText.requestFocus();
             } else {
@@ -1131,7 +1131,8 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             firstNameLabel.setError(null);
             firstNameLabel.setErrorEnabled(false);
         } else {
-            final String firstNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getFirstName().getValidations().get(0).getErrorMessage();
+            final String firstNameError = addressMetaDTO == null ? CarePayConstants.NOT_DEFINED :
+                    persDetailsMetaDTO.getProperties().getFirstName().getValidations().get(0).getErrorMessage();
             firstNameLabel.setError(firstNameError);
             firstNameLabel.setErrorEnabled(true);
             firstNameText.requestFocus();
@@ -1142,7 +1143,8 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             lastNameLabel.setError(null);
             lastNameLabel.setErrorEnabled(false);
         } else {
-            final String lastNameError = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED : persDetailsMetaDTO.getProperties().getLastName().getValidations().get(0).getErrorMessage();
+            final String lastNameError = persDetailsMetaDTO == null ? CarePayConstants.NOT_DEFINED :
+                    persDetailsMetaDTO.getProperties().getLastName().getValidations().get(0).getErrorMessage();
             lastNameLabel.setError(lastNameError);
             lastNameLabel.setErrorEnabled(true);
             lastNameText.requestFocus();
@@ -1169,8 +1171,11 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
             allFieldsValid = false;
         }
 
-        if (demographicDTO.getMetadata().getDataModels().getDemographic().getIdentityDocuments().properties.items.identityDocument.properties.identityDocumentPhotos.getValidations().get(0).type.contains("required") &&
-                demographicDTO.getPayload().getDemographics().getPayload().getIdDocument().getIdDocPhothos().get(0) == null) {
+        if (demographicDTO.getMetadata().getDataModels().getDemographic().getIdentityDocuments().getProperties()
+                .getItems().getIdentityDocument().getProperties().getIdentityDocumentPhotos().getValidations()
+                .get(0).getType().contains("required") &&
+                demographicDTO.getPayload().getDemographics().getPayload().getIdDocument().getIdDocPhothos()
+                        .get(0) == null) {
             allFieldsValid = false;
         }
 
@@ -1352,6 +1357,11 @@ public class CheckinDemographicsFragment extends DocumentScannerFragment impleme
 
     @Override
     public void onCapturedSuccess(Bitmap bitmap) {
+
+    }
+
+    @Override
+    public void onCaptureFail() {
 
     }
 

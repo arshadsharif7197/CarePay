@@ -1,83 +1,52 @@
 package com.carecloud.carepay.patient.payment.fragments;
 
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.patient.payment.adapters.PaymentsSectionsPagerAdapter;
-import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialog;
-import com.carecloud.carepay.patient.payment.interfaces.PaymentPatientInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
-import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
-import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.google.gson.Gson;
 
 /**
  * Created by jorge on 29/12/16.
  */
-public class PaymentBalanceHistoryFragment extends BaseFragment implements PaymentPatientInterface {
+public class PaymentBalanceHistoryFragment extends BaseFragment {
 
-    private View noPaymentsLayout;
-    private View pagerLayout;
-    int sectionNumber = -1;
-    private PaymentNavigationCallback callback;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            callback = (PaymentNavigationCallback) context;
-        } catch (ClassCastException cce) {
-            throw new ClassCastException("Attached context must implement PaymentNavigationCallback");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        callback = null;
+    /**
+     *
+     * @return a new instance of PaymentBalanceHistoryFragment
+     */
+    public static PaymentBalanceHistoryFragment newInstance() {
+        PaymentBalanceHistoryFragment fragment = new PaymentBalanceHistoryFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        final View balanceHistoryView = inflater.inflate(R.layout.fragment_payment_balance_history, container, false);
-        noPaymentsLayout = balanceHistoryView.findViewById(R.id.no_payment_layout);
-        pagerLayout = balanceHistoryView.findViewById(R.id.payments_pager_layout);
-        TextView noPaymentTitle = (TextView) balanceHistoryView.findViewById(R.id.no_payment_message_title);
-        TextView noPaymentDesc = (TextView) balanceHistoryView.findViewById(R.id.no_payment_message_desc);
-
-        noPaymentTitle.setText(Label.getLabel("no_payment_title"));
-        noPaymentDesc.setText(Label.getLabel("no_payment_description"));
-        
-        Bundle bundle = getArguments();
-        String paymentsDTOString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
-        Gson gson = new Gson();
-        PaymentsModel paymentDTO = gson.fromJson(paymentsDTOString, PaymentsModel.class);
-        setupViewPager(balanceHistoryView, paymentDTO);
-        hideNoPaymentsLayout();
-
-        return balanceHistoryView;
+        return inflater.inflate(R.layout.fragment_payment_balance_history, container, false);
     }
 
-    private void setupViewPager(View balanceHistoryView, PaymentsModel paymentDTO) {
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setupViewPager(view);
+    }
+
+    private void setupViewPager(View balanceHistoryView) {
         ViewPager viewPager = (ViewPager) balanceHistoryView.findViewById(R.id.historyPager);
 
         TabLayout tabs = (TabLayout) balanceHistoryView.findViewById(R.id.balance_history_tabs);
@@ -93,8 +62,8 @@ public class PaymentBalanceHistoryFragment extends BaseFragment implements Payme
             ViewPaymentBalanceHistoryActivity.setIsPaymentDone(false);
         }
         PaymentsSectionsPagerAdapter adapter = new PaymentsSectionsPagerAdapter(getChildFragmentManager());
-        PatientPaymentHistoryFragment pendingPaymentsFragment = PatientPaymentHistoryFragment.newInstance(PatientPaymentHistoryFragment.SECTION_PENDING, paymentDTO);
-        PatientPaymentHistoryFragment paymentHistoryFragment = PatientPaymentHistoryFragment.newInstance(PatientPaymentHistoryFragment.SECTION_HISTORY, paymentDTO);
+        PatientPaymentHistoryFragment pendingPaymentsFragment = PatientPaymentHistoryFragment.newInstance(PatientPaymentHistoryFragment.SECTION_PENDING);
+        PatientPaymentHistoryFragment paymentHistoryFragment = PatientPaymentHistoryFragment.newInstance(PatientPaymentHistoryFragment.SECTION_HISTORY);
         pendingPaymentsFragment.setTargetFragment(this, 1);
         paymentHistoryFragment.setTargetFragment(this, 1);
 
@@ -115,40 +84,6 @@ public class PaymentBalanceHistoryFragment extends BaseFragment implements Payme
         if (getActivity() instanceof ViewPaymentBalanceHistoryActivity) {
             ((ViewPaymentBalanceHistoryActivity) this.getActivity()).displayToolbar(true, null);
         }
-    }
-
-    private void showNoPaymentsLayout() {
-        noPaymentsLayout.setVisibility(View.VISIBLE);
-        pagerLayout.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showNoPaymentsLayout(int sectionNumber) {
-        if (this.sectionNumber < 0) {//not yet set
-            this.sectionNumber = sectionNumber;
-        } else if (this.sectionNumber != sectionNumber) {//this is the second one so we should hide the pager
-            showNoPaymentsLayout();
-        }
-    }
-
-    private void hideNoPaymentsLayout() {
-        noPaymentsLayout.setVisibility(View.GONE);
-        pagerLayout.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void loadPaymentAmountScreen(PendingBalancePayloadDTO model, PaymentsModel paymentDTO) {
-        String tag = PaymentDetailsFragmentDialog.class.getSimpleName();
-        FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-        Fragment prev = getChildFragmentManager().findFragmentByTag(tag);
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
-
-        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
-                .newInstance(paymentDTO, model);
-        dialog.show(ft, tag);
     }
 
 }

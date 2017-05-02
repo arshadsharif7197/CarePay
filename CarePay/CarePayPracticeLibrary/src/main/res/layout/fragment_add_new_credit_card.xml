@@ -84,7 +84,7 @@
 
                         <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                             android:id="@+id/nameOnCardEditText"
-                            style="@style/PaymentEditTextStyle"
+                            style="@style/PaymentAddCreditCardInputStyle"
                             android:imeOptions="actionNext"
                             android:inputType="textPersonName"
                             android:maxLength="200"
@@ -130,7 +130,7 @@
 
                         <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                             android:id="@+id/creditCardNoEditText"
-                            style="@style/PaymentEditTextStyle"
+                            style="@style/PaymentAddCreditCardInputStyle"
                             android:digits="@string/restrict_digits_space"
                             android:imeOptions="actionNext"
                             android:inputType="number"
@@ -179,7 +179,7 @@
 
                         <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                             android:id="@+id/verificationCodeEditText"
-                            style="@style/PaymentEditTextStyle"
+                            style="@style/PaymentAddCreditCardInputStyle"
                             android:digits="@string/restrict_digits"
                             android:imeOptions="actionDone"
                             android:inputType="number"
@@ -333,7 +333,7 @@
 
                             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                                 android:id="@+id/addressEditTextId"
-                                style="@style/PaymentEditTextStyle"
+                                style="@style/PaymentAddCreditCardInputStyle"
                                 android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789 "
                                 android:imeOptions="actionNext"
                                 android:inputType="textPostalAddress"
@@ -367,7 +367,7 @@
 
                                 <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                                     android:id="@+id/addressEditText2Id"
-                                    style="@style/PaymentEditTextStyle"
+                                    style="@style/PaymentAddCreditCardInputStyle"
                                     android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789 "
                                     android:imeOptions="actionNext"
                                     android:inputType="textPostalAddress"
@@ -404,7 +404,7 @@
 
                             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                                 android:id="@+id/zipCodeId"
-                                style="@style/PaymentEditTextStyle"
+                                style="@style/PaymentAddCreditCardInputStyle"
                                 android:digits="0123456789-"
                                 android:imeOptions="actionNext"
                                 android:maxLength="10"
@@ -439,7 +439,7 @@
 
                                 <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                                     android:id="@+id/cityId"
-                                    style="@style/PaymentEditTextStyle"
+                                    style="@style/PaymentAddCreditCardInputStyle"
                                     android:imeOptions="actionNext"
                                     android:inputType="textCapCharacters"
                                     android:maxLength="255"
@@ -466,7 +466,7 @@
 
                                 <com.carecloud.carepaylibray.customcomponents.CarePayAutoCompleteTextView
                                     android:id="@+id/addNewCredidCardStateAutoCompleteTextView"
-                                    style="@style/PaymentEditTextStyle"
+                                    style="@style/PaymentAddCreditCardInputStyle"
                                     android:digits="@string/restrict_letters"
                                     android:imeOptions="actionDone"
                                     android:inputType="textAutoComplete"

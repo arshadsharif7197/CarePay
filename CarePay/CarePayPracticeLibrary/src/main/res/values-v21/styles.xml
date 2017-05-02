@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="CheckinContainerStyle">
-        <item name="android:background">@color/white</item>
-        <item name="android:elevation">@dimen/dimen_33dp</item>
-    </style>
-
     <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
         <item name="android:editTextColor">@color/textview_default_textcolor</item>
         <item name="android:textColorHint">@color/textview_default_textcolor</item>

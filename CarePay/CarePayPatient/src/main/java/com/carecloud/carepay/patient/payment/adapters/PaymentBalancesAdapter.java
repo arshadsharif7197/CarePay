@@ -7,56 +7,45 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsBalancesItem;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by jorge on 31/12/16.
- */
+public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalancesAdapter.ViewHolder> {
 
-public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalancesAdapter.PaymentHistoryViewHolder> {
     private Context context;
-    private List<PendingBalancePayloadDTO> paymentsPatientBalances = new ArrayList<>();
-    OnBalanceListItemClickListener listener;
-    PaymentsModel paymentDTO;
+    private List<PaymentsBalancesItem> balances = new ArrayList<>();
+    private OnBalanceListItemClickListener listener;
 
     /**
-     *
-     * @param context The context
-     * @param paymentDTO    The payment DTO
-     * @param listener the listener
+     * @param context         The context
+     * @param pendingBalances The list of the pending balances
+     * @param listener        the listener
      */
-    public PaymentBalancesAdapter(Context context, PaymentsModel paymentDTO, OnBalanceListItemClickListener listener) {
-        this.paymentDTO = paymentDTO;
+    public PaymentBalancesAdapter(Context context, List<PaymentsBalancesItem> pendingBalances, OnBalanceListItemClickListener listener) {
         this.context = context;
-        if (paymentDTO.getPaymentPayload().getPatientBalances().size()>0 &&
-                paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().size()>0) {
-            this.paymentsPatientBalances = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload();
-        }
+        this.balances = pendingBalances;
         this.listener = listener;
     }
 
     @Override
-    public PaymentBalancesAdapter.PaymentHistoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View paymentHistoryListItemView = LayoutInflater.from(context).inflate(
                 R.layout.balances_list_item, parent, false);
-        return new PaymentBalancesAdapter.PaymentHistoryViewHolder(paymentHistoryListItemView);
+        return new ViewHolder(paymentHistoryListItemView);
     }
 
     @Override
-    public void onBindViewHolder(final PaymentBalancesAdapter.PaymentHistoryViewHolder holder, int position) {
-        final PendingBalancePayloadDTO charge = paymentsPatientBalances.get(position);
-        String locationName= CarePayConstants.NOT_DEFINED;
+    public void onBindViewHolder(final ViewHolder holder, int position) {
+        final PaymentsBalancesItem pendingBalance = balances.get(position);
+
+        String locationName = pendingBalance.getMetadata().getPracticeName();
         holder.shortName.setText(StringUtil.getShortName(locationName));
         holder.locationName.setText(locationName);
-        holder.amount.setText(StringUtil.getFormattedBalanceAmount(charge.getAmount()));
-        holder.payNow.setText(paymentDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentDetailsPayNow());
+        holder.amount.setText(StringUtil.getFormattedBalanceAmount(pendingBalance.getBalance().getAmount()));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,27 +57,22 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
 
     @Override
     public int getItemCount() {
-        return paymentsPatientBalances.size();
+        return balances.size();
     }
 
-    static class PaymentHistoryViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
         private CarePayTextView shortName;
         private CarePayTextView locationName;
         private CarePayTextView amount;
-        private CarePayTextView payNow;
 
-        PaymentHistoryViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
-
             locationName = (CarePayTextView) itemView.findViewById(com.carecloud.carepaylibrary.R.id.balancesLocation);
             amount = (CarePayTextView) itemView.findViewById(com.carecloud.carepaylibrary.R.id.balancesTotalAmount);
-            payNow = (CarePayTextView) itemView.findViewById(com.carecloud.carepaylibrary.R.id.balancesPayNowTextView);
             shortName = (CarePayTextView) itemView.findViewById(com.carecloud.carepaylibrary.R.id.balancesAvatarTextView);
-
         }
     }
-
 
     public interface OnBalanceListItemClickListener {
         void onBalanceListItemClickListener(int position);

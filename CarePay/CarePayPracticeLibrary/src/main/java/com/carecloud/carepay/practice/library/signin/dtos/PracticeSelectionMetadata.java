@@ -9,27 +9,15 @@ import com.google.gson.annotations.SerializedName;
 
 public class PracticeSelectionMetadata {
 
-    @SerializedName("labels")
-    @Expose
-    private PracticeSelectionLabels labels = new PracticeSelectionLabels();
-
     @SerializedName("transitions")
     @Expose
-    private PracticeSelectionTransitions transitions = new PracticeSelectionTransitions();
+    private PracticeSelectionTransitionsDTO transitions = new PracticeSelectionTransitionsDTO();
 
-    public PracticeSelectionTransitions getTransitions() {
+    public PracticeSelectionTransitionsDTO getTransitions() {
         return transitions;
     }
 
-    public void setTransitions(PracticeSelectionTransitions transitions) {
+    public void setTransitions(PracticeSelectionTransitionsDTO transitions) {
         this.transitions = transitions;
-    }
-
-    public PracticeSelectionLabels getLabels() {
-        return labels;
-    }
-
-    public void setLabels(PracticeSelectionLabels labels) {
-        this.labels = labels;
     }
 }

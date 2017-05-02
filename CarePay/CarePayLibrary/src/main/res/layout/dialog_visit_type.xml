@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/visit_type_dialog_width"
+    android:layout_width="100dp"
     android:layout_height="match_parent"
     android:background="@drawable/dialog_background"
     android:orientation="vertical"
@@ -12,8 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/visit_type_vertical_margin"
         android:layout_marginStart="@dimen/visit_type_horizontal_margin"
-        android:gravity="left"
         android:layout_marginTop="@dimen/visit_type_vertical_margin"
+        android:gravity="left"
         android:textColor="@color/black"
         android:textSize="@dimen/visit_type_label_font" />
 

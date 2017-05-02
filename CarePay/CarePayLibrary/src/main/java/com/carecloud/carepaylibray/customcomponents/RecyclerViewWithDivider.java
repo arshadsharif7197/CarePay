@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.itemdecorations.DividerItemDecoration;
 
 /**
  * Created by kkannan on 2/22/17.
@@ -59,7 +58,8 @@ public class RecyclerViewWithDivider extends RecyclerView {
     private void setDivider(Context context)
     {
         Drawable dividerDrawable =  ContextCompat.getDrawable(context, R.drawable.light_gray_divider);
-        RecyclerView.ItemDecoration dividerItemDecoration = new DividerItemDecoration(dividerDrawable);
+        RecyclerView.ItemDecoration dividerItemDecoration = new com.carecloud.carepaylibray
+                .itemdecorations.DividerItemDecoration(dividerDrawable);
         this.addItemDecoration(dividerItemDecoration);
     }
 }

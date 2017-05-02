@@ -126,7 +126,7 @@
         android:orientation="horizontal"
         android:padding="10dp">
 
-        <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/dialog_date_range_picker_today_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -136,17 +136,19 @@
             android:textAllCaps="true"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/textview_textsize"
+            app:customAssetFont="gotham_rounded_bold"
             breeze:textKey="today_label" />
 
-        <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/applyDateRangeButton"
             android:layout_width="0dp"
             android:layout_height="@dimen/add_apt_apply_date_range_height"
             android:layout_weight="2"
             android:background="@drawable/button_green_selector"
-            android:text="@string/date_range_apply_button_label"
             android:textColor="@color/white"
-            android:textSize="@dimen/apt_popup_button_text" />
+            android:textSize="@dimen/apt_popup_button_text"
+            app:customAssetFont="gotham_rounded_bold"
+            breeze:textKey="datepicker_apply_option" />
 
     </LinearLayout>
 

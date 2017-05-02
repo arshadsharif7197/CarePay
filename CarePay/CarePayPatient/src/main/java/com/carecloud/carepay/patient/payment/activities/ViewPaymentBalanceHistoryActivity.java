@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
@@ -15,18 +14,22 @@ import android.widget.Toast;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
-import com.carecloud.carepay.patient.payment.ResponsibilityFragment;
 import com.carecloud.carepay.patient.payment.androidpay.ConfirmationActivity;
+import com.carecloud.carepay.patient.payment.fragments.NoPaymentsFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanFragment;
+import com.carecloud.carepay.patient.payment.fragments.ResponsibilityFragment;
+import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
+import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
 import com.google.android.gms.wallet.MaskedWallet;
 import com.google.android.gms.wallet.WalletConstants;
@@ -35,8 +38,7 @@ import com.google.gson.Gson;
 /**
  * Created by jorge on 29/12/16.
  */
-
-public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity implements PaymentNavigationCallback {
+public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity implements PaymentFragmentActivityInterface {
 
     private static boolean isPaymentDone;
     private PaymentsModel paymentsDTO;
@@ -60,57 +62,42 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         navigationView = (NavigationView) findViewById(com.carecloud.carepaylibrary.R.id.nav_view_hist);
         appointmentsDrawerUserIdTextView = (TextView) navigationView.getHeaderView(0)
                 .findViewById(com.carecloud.carepaylibrary.R.id.appointmentsDrawerIdTextView);
-        paymentsDTO = getConvertedDTO(PaymentsModel.class);
 
+        paymentsDTO = getConvertedDTO(PaymentsModel.class);
         practiceId = paymentsDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPracticeId();
         practiceMgmt = paymentsDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPracticeMgmt();
         patientId = paymentsDTO.getPaymentPayload().getPatientPaymentPlans().getMetadata().getPatientId();
 
         toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.balance_history_toolbar);
-        toolBarTitle = paymentsDTO.getPaymentsMetadata().getPaymentsLabel().getPaymentPatientBalanceToolbar();
+        toolBarTitle = Label.getLabel("payment_patient_balance_toolbar");
         displayToolbar(true, toolBarTitle);
         inflateDrawer();
-        FragmentManager fm = getSupportFragmentManager();
-        PaymentBalanceHistoryFragment paymentBalanceHistoryFragment = (PaymentBalanceHistoryFragment)
-                fm.findFragmentByTag(PaymentBalanceHistoryFragment.class.getSimpleName());
-        if (paymentBalanceHistoryFragment == null) {
-            paymentBalanceHistoryFragment = new PaymentBalanceHistoryFragment();
-        }
-        //params
-        Gson gson = new Gson();
-        String paymentsDTOString = gson.toJson(paymentsDTO);
-        bundle = new Bundle();
-        bundle.putString(CarePayConstants.INTAKE_BUNDLE, paymentsDTOString);
-        if (paymentBalanceHistoryFragment.getArguments() != null) {
-            paymentBalanceHistoryFragment.getArguments().putAll(bundle);
+
+
+        if (hasPayments()
+                || hasCharges()) {
+            replaceFragment(new PaymentBalanceHistoryFragment(), false);
         } else {
-            paymentBalanceHistoryFragment.setArguments(bundle);
+            showNoPaymentsLayout();
         }
-        //include fragment
-        fm.beginTransaction().replace(R.id.add_balance_history_frag_holder, paymentBalanceHistoryFragment,
-                PaymentBalanceHistoryFragment.class.getSimpleName()).commit();
+    }
+
+    private boolean hasCharges() {
+        return paymentsDTO.getPaymentPayload().getPatientHistory().getPaymentsPatientCharges()
+                .getCharges().size() > 0;
+    }
+
+    private boolean hasPayments() {
+        return paymentsDTO.getPaymentPayload().getPatientBalances().size() > 0
+                && paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().size() > 0
+                && paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0)
+                .getPayload().size() > 0;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_PAYMENTS).setChecked(true);
-    }
-
-    /**
-     * Helper method to replace fragments
-     *
-     * @param fragment       The fragment
-     * @param addToBackStack Whether to add the transaction to back-stack
-     */
-    public void navigateToFragment(final Fragment fragment, final boolean addToBackStack) {
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.add_balance_history_frag_holder, fragment, fragment.getClass().getSimpleName());
-        if (addToBackStack) {
-            transaction.addToBackStack(fragment.getClass().getName());
-        }
-        transaction.commitAllowingStateLoss();
     }
 
     /**
@@ -163,9 +150,9 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     private void launchConfirmationPage(MaskedWallet maskedWallet) {
-        //setTitle("");
-        Intent intent = ConfirmationActivity.newIntent(this, maskedWallet, paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getPendingRepsonsibility(), "CERT", bundle, new Gson().toJson(paymentsDTO.getPaymentsMetadata().getPaymentsLabel()));// .getPayload().get(0).getTotal(), "CERT");
-        // intent.putExtra(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, paymentsDTOString);
+        Intent intent = ConfirmationActivity.newIntent(this, maskedWallet, paymentsDTO
+                        .getPaymentPayload().getPatientBalances().get(0).getPendingRepsonsibility(), "CERT", bundle,
+                Label.getLabel("payment_patient_balance_toolbar"));
         startActivity(intent);
     }
 
@@ -203,17 +190,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
-        PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
-
-        Bundle bundle = new Bundle();
-        Gson gson = new Gson();
-        String paymentsDTOString = gson.toJson(paymentsDTO);
-        bundle.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-        bundle.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
-        fragment.setArguments(bundle);
-
-        navigateToFragment(fragment, true);
-
+        replaceFragment(PatientPaymentMethodFragment.newInstance(paymentsModel, amount), true);
         displayToolbar(false, toolBarTitle);
     }
 
@@ -229,8 +206,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
         if (paymentsDTO.getPaymentPayload().getPatientCreditCards() != null && !paymentsDTO.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             Fragment fragment = ChooseCreditCardFragment.newInstance(paymentsDTO, selectedPaymentMethod.getLabel(), amount);
-            navigateToFragment(fragment, true);
-            navigateToFragment(fragment, true);
+            replaceFragment(fragment, true);
         } else {
             showAddCard(amount, paymentsModel);
         }
@@ -248,7 +224,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
 
         fragment.setArguments(args);
-        navigateToFragment(fragment, true);
+        replaceFragment(fragment, true);
     }
 
     @Override
@@ -271,7 +247,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
         fragment.setArguments(args);
 
-        navigateToFragment(fragment, true);
+        replaceFragment(fragment, true);
     }
 
     @Override
@@ -289,4 +265,24 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     }
 
+    @Override
+    public DTO getDto() {
+        return paymentsDTO;
+    }
+
+    @Override
+    public void replaceFragment(Fragment fragment, boolean addToBackStack) {
+        replaceFragment(R.id.add_balance_history_frag_holder, fragment, addToBackStack);
+    }
+
+    public void showNoPaymentsLayout() {
+        replaceFragment(NoPaymentsFragment.newInstance(), false);
+    }
+
+    @Override
+    public void loadPaymentAmountScreen(PendingBalancePayloadDTO model, PaymentsModel paymentDTO) {
+        ResponsibilityFragment responsibilityFragment = ResponsibilityFragment.newInstance(paymentDTO, false);
+        replaceFragment(responsibilityFragment, true);
+        displayToolbar(false, null);
+    }
 }

@@ -2,20 +2,22 @@ package com.carecloud.carepay.practice.library.appointments.dialogs;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.telephony.PhoneNumberUtils;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
+import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customdialogs.BaseDialogFragment;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
@@ -34,15 +36,14 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
     private PracticeAppointmentDialogListener callback;
     private AppointmentDTO appointmentDTO;
     private int headerColor;
-    private String todayLabel;
-    private String cancelString;
+    private int timeColor;
     private String leftAction;
     private String rightAction;
-    private String visitTypeLabel;
     private String photoUrl;
+    private AppointmentDisplayStyle style;
 
     private View view;
-    private LinearLayout headerView;
+    private View headerView;
 
     public interface PracticeAppointmentDialogListener {
         void onLeftActionTapped(AppointmentDTO appointmentDTO);
@@ -67,33 +68,17 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
     }
 
     /**
-     * @param headerColor color of header
-     * @param closeText label below the close icon
-     * @param todayLabel today in current language
-     * @param visitTypeLabel visit type label
-     * @param leftAction label for left button. If empty, then no left button
-     * @param rightAction label for right button. If empty, then no right button
+     * @param style dialog style to determine buttons and colors
      * @param appointmentDTO appointment information
      * @param callback listener
      * @return new instance of PracticeAppointmentDialog 
      */
-    public static PracticeAppointmentDialog newInstance(int headerColor,
-                                                        String closeText,
-                                                        String todayLabel,
-                                                        String visitTypeLabel,
-                                                        String leftAction,
-                                                        String rightAction,
+    public static PracticeAppointmentDialog newInstance(AppointmentDisplayStyle style,
                                                         AppointmentDTO appointmentDTO,
                                                         PracticeAppointmentDialogListener callback) {
         // Supply inputs as an argument
         Bundle args = new Bundle();
-        args.putInt("headerColor", headerColor);
-        args.putString("todayLabel", todayLabel);
-        args.putString("cancelString", closeText);
-        args.putString("leftAction", leftAction);
-        args.putString("rightAction", rightAction);
-        args.putString("visitTypeLabel", visitTypeLabel);
-
+        args.putSerializable("style", style);
         DtoHelper.bundleDto(args, appointmentDTO);
 
         PracticeAppointmentDialog dialog = new PracticeAppointmentDialog();
@@ -108,13 +93,9 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         super.onCreate(savedInstanceState);
 
         Bundle arguments = getArguments();
-        this.headerColor = arguments.getInt("headerColor");
-        this.todayLabel = arguments.getString("todayLabel");
-        this.cancelString = arguments.getString("cancelString");
-        this.leftAction = arguments.getString("leftAction");
-        this.rightAction = arguments.getString("rightAction");
-        this.visitTypeLabel = arguments.getString("visitTypeLabel");
+        this.style = (AppointmentDisplayStyle) arguments.getSerializable("style");
         this.appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, arguments);
+
     }
 
     @Override
@@ -126,7 +107,9 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
 
     @SuppressWarnings("deprecation")
     private void initializeViews() {
-        headerView = (LinearLayout) view.findViewById(R.id.appointment_card_header);
+        setupDialogStyle();
+
+        headerView = view.findViewById(R.id.appointment_card_header);
 
         AppointmentPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
 
@@ -136,7 +119,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
 
         if (dateUtil.isToday()) {
             String dayLiteral = StringUtils.substringBefore(appointmentDateStr, COMMA);
-            appointmentDateStr = appointmentDateStr.replace(dayLiteral, todayLabel);
+            appointmentDateStr = appointmentDateStr.replace(dayLiteral, Label.getLabel("today_label"));
         }
 
         setTextViewById(R.id.appointment_start_day, appointmentDateStr);
@@ -146,6 +129,10 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
 
         PatientModel patientDTO = appointmentDTO.getPayload().getPatient();
         photoUrl = patientDTO.getProfilePhoto();
+        if(photoUrl!=null){
+            initializeProfilePhotoView();
+        }
+
         setTextViewById(R.id.appointment_patient_name, StringUtil.captialize(patientDTO.getFullName()));
 
         String primaryPhoneNumber = patientDTO.getPrimaryPhoneNumber();
@@ -158,7 +145,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         setTextViewById(R.id.appointment_short_name, patientDTO.getShortName());
 
         setTextViewById(R.id.appointment_visit_type, StringUtil.captialize(appointmentPayloadDTO.getVisitReason().getName()));
-        setTextViewById(R.id.appointment_visit_type_label, visitTypeLabel);
+        setTextViewById(R.id.appointment_visit_type_label, Label.getLabel("visit_type_heading"));
 
         initializeButtons();
     }
@@ -168,12 +155,12 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         initializeViews();
+        GradientDrawable drawable = (GradientDrawable) headerView.getBackground();
+        drawable.setColor(ContextCompat.getColor(getContext(), headerColor));
 
-        if (!TextUtils.isEmpty(photoUrl)) {
-            initializeHeaderBackgroundView();
-        } else {
-            headerView.setBackgroundResource(headerColor);
-        }
+        TextView apptTime = (TextView) view.findViewById(R.id.appointment_start_time);
+        apptTime.setTextColor(ContextCompat.getColor(getContext(), timeColor));
+
     }
 
     private void initializeHeaderBackgroundView() {
@@ -183,7 +170,6 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
             @Override
             public void onSuccess() {
                 imageView.setVisibility(View.VISIBLE);
-                initializeProfilePhotoView();
 
                 if (isAdded()) {
                     int trueHeaderColor = getResources().getColor(headerColor);
@@ -209,6 +195,33 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         Picasso.with(getActivity()).load(photoUrl).transform(new CircleImageTransform())
                 .resize(58, 58).into(profileImage);
         profileImage.setVisibility(View.VISIBLE);
+    }
+
+    private void setupDialogStyle(){
+        switch (this.style){
+            case PENDING:
+                headerColor = R.color.dark_blue;
+                timeColor = R.color.colorPrimary;
+                leftAction = Label.getLabel("cancel_appointment_short_label");
+                rightAction = Label.getLabel("start_checkin_label");
+
+                break;
+            case REQUESTED:
+                headerColor = R.color.lightning_yellow;
+                timeColor = R.color.transparent_70;
+                leftAction = Label.getLabel("reject_label");
+                rightAction = Label.getLabel("accept_label");
+
+                break;
+            case CHECKED_IN:
+                headerColor = R.color.dark_blue;
+                timeColor = R.color.colorPrimary;
+                leftAction = Label.getLabel("cancel_appointment_label");
+                break;
+            default:
+                headerColor = R.color.colorPrimary;
+                timeColor = R.color.white;
+        }
     }
 
     private void initializeButtons() {
@@ -252,7 +265,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
 
     @Override
     protected String getCancelString() {
-        return cancelString;
+        return null;
     }
 
     @Override

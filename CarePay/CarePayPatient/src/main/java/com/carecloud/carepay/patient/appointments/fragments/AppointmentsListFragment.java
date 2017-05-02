@@ -185,7 +185,7 @@ public class AppointmentsListFragment extends BaseFragment {
                 }
 
                 appointmentsAdapter = new AppointmentsAdapter(getActivity(),
-                        appointmentListWithHeader, appointmentsListFragment, appointmentInfo, new AppointmentsAdapter.AppointmentsAdapterListener() {
+                        appointmentListWithHeader, appointmentsListFragment, new AppointmentsAdapter.AppointmentsAdapterListener() {
                     @Override
                     public void onItemTapped(AppointmentDTO appointmentDTO) {
                         showAppointmentPopup(appointmentDTO);
@@ -572,7 +572,7 @@ public class AppointmentsListFragment extends BaseFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            PatientNavigationHelper.getInstance(getContext()).navigateToWorkflow(workflowDTO);
+            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
 
         @Override

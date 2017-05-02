@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.signinsignuppatient.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -26,18 +27,18 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserAttributes;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserCodeDeliveryDetails;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler;
+import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.cognito.SignUpConfirmActivity;
-import com.carecloud.carepaylibray.signinsignup.dtos.SignInLablesDTO;
-import com.carecloud.carepaylibray.signinsignup.dtos.SignInSignUpDTO;
+import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
+import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -51,24 +52,24 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
 public class SignupFragment extends BaseFragment {
 
     private static final String TAG = "SignupFragment";
-    private SignInSignUpDTO signInSignUpDTO;
-    private SignInLablesDTO signInLablesDTO;
-    private LinearLayout    parentLayout;
-    private ProgressBar     progressBar;
+    private SignInDTO signInSignUpDTO;
+    private LinearLayout parentLayout;
+    private ProgressBar progressBar;
     private TextInputLayout emailInputLayout;
     private TextInputLayout passwordInputLayout;
     private TextInputLayout passwordRepeatInputLayout;
-    private EditText        emailText;
-    private EditText        passwordText;
-    private EditText        repeatPasswordText;
-    private boolean         isEmailEmpty;
-    private boolean         isPasswordEmpty;
-    private boolean         isRepeatPasswordEmpty;
-    private Button          submitButton;
-    private TextView        accountExistTextView;
-    private TextView passwordFormatHint;
-    private String          userName;
-    private SignUpHandler           signUpHandler          = new SignUpHandler() {
+    private EditText emailText;
+    private EditText passwordText;
+    private EditText repeatPasswordText;
+    private boolean isEmailEmpty;
+    private boolean isPasswordEmpty;
+    private boolean isRepeatPasswordEmpty;
+    private Button submitButton;
+    private TextView accountExistTextView;
+    private String userName;
+    private FragmentActivityInterface listener;
+
+    private SignUpHandler signUpHandler = new SignUpHandler() {
         @Override
         public void onSuccess(CognitoUser user, boolean signUpConfirmationState,
                               CognitoUserCodeDeliveryDetails cognitoUserCodeDeliveryDetails) {
@@ -94,6 +95,7 @@ public class SignupFragment extends BaseFragment {
 //                                         errorMsg);
         }
     };
+
     private WorkflowServiceCallback signUpWorkflowCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -103,7 +105,7 @@ public class SignupFragment extends BaseFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+            PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
         }
 
         @Override
@@ -113,7 +115,8 @@ public class SignupFragment extends BaseFragment {
             Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
-    private CognitoActionCallback   cognitoActionCallback  = new CognitoActionCallback() {
+
+    private CognitoActionCallback cognitoActionCallback = new CognitoActionCallback() {
         @Override
         public void onLoginSuccess() {
             progressBar.setVisibility(View.INVISIBLE);
@@ -139,11 +142,20 @@ public class SignupFragment extends BaseFragment {
     };
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            listener = (FragmentActivityInterface) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Attached Context must implement DTOInterface");
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_signup, container, false);
 
-        signInSignUpDTO = ((SigninSignupActivity) getActivity()).getSignInSignUpDTO();
-        signInLablesDTO = signInSignUpDTO.getMetadata().getLabels();
+        signInSignUpDTO = (SignInDTO) listener.getDto();
         parentLayout = (LinearLayout) view.findViewById(R.id.signUpLl);
 
         // hide progress
@@ -174,7 +186,7 @@ public class SignupFragment extends BaseFragment {
 
     private void setClickables(View view) {
         submitButton = (Button) view.findViewById(R.id.submitSignupButton);
-        submitButton.setText(signInLablesDTO.getSignupButton());
+        submitButton.setText(Label.getLabel("signup_button"));
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -187,7 +199,7 @@ public class SignupFragment extends BaseFragment {
         submitButton.setEnabled(false);
 
         accountExistTextView = (TextView) view.findViewById(R.id.signupAlreadyHaveAccountTextView);
-        accountExistTextView.setText(signInLablesDTO.getAlreadyHaveAccountLink());
+        accountExistTextView.setText(Label.getLabel("already_have_account_link"));
         accountExistTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -205,29 +217,26 @@ public class SignupFragment extends BaseFragment {
     }
 
     private void setEditTexts(View view) {
-
         emailInputLayout = (TextInputLayout) view.findViewById(R.id.emailTextInputLayout);
-        emailInputLayout.setTag(signInLablesDTO.getEmail());
+        emailInputLayout.setTag(Label.getLabel("signup_email"));
         emailText = (EditText) view.findViewById(R.id.emailEditText);
-        emailText.setHint(signInLablesDTO.getEmail());
+        emailText.setHint(Label.getLabel("signup_email"));
         emailText.setTag(emailInputLayout);
 
         passwordInputLayout = (TextInputLayout) view.findViewById(R.id.createPasswordTextInputLayout);
-        passwordInputLayout.setTag(signInLablesDTO.getCreatePassword());
+        passwordInputLayout.setTag(Label.getLabel("signup_create_password"));
         passwordText = (EditText) view.findViewById(R.id.createPasswordEditText);
-        passwordText.setHint(signInLablesDTO.getCreatePassword());
+        passwordText.setHint(Label.getLabel("signup_create_password"));
         passwordText.setTag(passwordInputLayout);
 
         passwordRepeatInputLayout = (TextInputLayout) view.findViewById(R.id.repeatPasswordTextInputLayout);
-        passwordRepeatInputLayout.setTag(signInLablesDTO.getRepeatPassword());
+        passwordRepeatInputLayout.setTag(Label.getLabel("signup_repeat_password"));
         repeatPasswordText = (EditText) view.findViewById(R.id.repeatPasswordEditText);
-        repeatPasswordText.setHint(signInLablesDTO.getRepeatPassword());
+        repeatPasswordText.setHint(Label.getLabel("signup_repeat_password"));
         repeatPasswordText.setTag(passwordRepeatInputLayout);
 
-
-        passwordFormatHint= (TextView) view.findViewById(R.id.singupPasswordFormatHint);
-        passwordFormatHint.setText(signInLablesDTO.getPasswordHintText());
-        setTypefaces();
+        TextView passwordFormatHint = (TextView) view.findViewById(R.id.singupPasswordFormatHint);
+        passwordFormatHint.setText(Label.getLabel("password_hint_text"));
 
         setChangeFocusListeners();
 
@@ -369,29 +378,15 @@ public class SignupFragment extends BaseFragment {
         });
     }
 
-    private void setTypefaces() {
-        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), emailInputLayout);
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), emailText);
-
-        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), passwordInputLayout);
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), passwordText);
-
-        SystemUtil.setProximaNovaSemiboldTextInputLayout(getActivity(), passwordRepeatInputLayout);
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), repeatPasswordText);
-
-        SystemUtil.setProximaNovaSemiboldTypeface(getActivity(), accountExistTextView);
-        SystemUtil.setGothamRoundedMediumTypeface(getActivity(), submitButton);
-    }
-
     private boolean checkEmail() {
         String email = emailText.getText().toString();
         isEmailEmpty = StringUtil.isNullOrEmpty(email);
         boolean isEmailValid = StringUtil.isValidmail(email);
         emailInputLayout.setErrorEnabled(isEmailEmpty || !isEmailValid); // enable for error if either empty or invalid email
         if (isEmailEmpty) {
-            emailInputLayout.setError(signInLablesDTO.getPleaseEnterEmail());
+            emailInputLayout.setError(Label.getLabel("signup_please_enter_email"));
         } else if (!isEmailValid) {
-            emailInputLayout.setError(signInLablesDTO.getInvalidEmail());
+            emailInputLayout.setError(Label.getLabel("signup_invalid_email"));
         } else {
             emailInputLayout.setError(null);
         }
@@ -406,9 +401,9 @@ public class SignupFragment extends BaseFragment {
         passwordInputLayout.setErrorEnabled(isPasswordEmpty || !isPasswordValid);
         String error;
         if (isPasswordEmpty) {
-            error = signInLablesDTO.getPleaseEnterPassword();
+            error = Label.getLabel("signup_please_enter_password");
         } else if (!isPasswordValid) {
-            error = signInLablesDTO.getInvalidPassword();
+            error = Label.getLabel("signup_invalid_password");
         } else {
             error = null;
         }
@@ -428,9 +423,9 @@ public class SignupFragment extends BaseFragment {
         passwordRepeatInputLayout.setErrorEnabled(isPasswordEmpty || isRepeatPasswordEmpty || isNotMachedPassw);
 
         if (isRepeatPasswordEmpty) {
-            passwordRepeatInputLayout.setError(signInLablesDTO.getRepeatPasswordIsEmpty());
+            passwordRepeatInputLayout.setError(Label.getLabel("signup_repeat_password_is_empty"));
         } else if (isNotMachedPassw) {
-            passwordRepeatInputLayout.setError(signInLablesDTO.getPasswordsDoNotMatch());
+            passwordRepeatInputLayout.setError(Label.getLabel("signup_passwords_do_not_match"));
         } else {
             passwordRepeatInputLayout.setError(null);
         }
@@ -526,16 +521,14 @@ public class SignupFragment extends BaseFragment {
         String password = passwordText.getText().toString();
 
         getAppAuthorizationHelper().getPool().signUpInBackground(userName,
-                                                      password,
-                                                      userAttributes,
-                                                      null,
-                                                      signUpHandler);
+                password,
+                userAttributes,
+                null,
+                signUpHandler);
     }
 
     private void confirmSignUp(CognitoUserCodeDeliveryDetails cognitoUserCodeDeliveryDetails) {
         Intent intent = new Intent(getActivity(), SignUpConfirmActivity.class);
-        intent.putExtra("source", signInLablesDTO.getSignUp());
-        intent.putExtra("signInLablesDTO",signInLablesDTO);
         intent.putExtra("name", userName);
         intent.putExtra("destination", cognitoUserCodeDeliveryDetails.getDestination());
         intent.putExtra("deliveryMed", cognitoUserCodeDeliveryDetails.getDeliveryMedium());

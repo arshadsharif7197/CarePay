@@ -8,4 +8,6 @@ import android.graphics.Bitmap;
 
 public interface CarePayCameraCallback {
     void onCapturedSuccess(Bitmap bitmap);
+
+    void onCaptureFail();
 }

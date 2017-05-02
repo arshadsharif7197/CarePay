@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.OrientationEventListener;
 import android.widget.FrameLayout;
 
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
@@ -45,10 +46,21 @@ public class CarePayCameraActivity extends BaseActivity implements CarePayCamera
     }
 
     @Override
+    public void navigateToWorkflow(WorkflowDTO workflowDTO) {
+
+    }
+
+    @Override
     public void onCapturedSuccess(Bitmap bitmap) {
         setResult(RESULT_OK, null);
         ImageCaptureHelper.setOrientation(orientation);
         ImageCaptureHelper.setImageBitmap(bitmap);
+        finish();
+    }
+
+    @Override
+    public void onCaptureFail() {
+        setResult(RESULT_CANCELED);
         finish();
     }
 }

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
@@ -77,6 +77,11 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
     }
 
     @Override
+    public void onCaptureFail() {
+
+    }
+
+    @Override
     public void populateViewsFromModel(View view) {
         recaptureCaption = Label.getLabel("demographics_take_another_picture_button_title");
 
@@ -84,7 +89,14 @@ public class ProfilePictureFragment extends DocumentScannerFragment {
         buttonChangeCurrentPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage(imageFront, true, ImageCaptureHelper.CameraType.DEFAULT_CAMERA);
+                ImageCaptureHelper.CameraType cameraType;
+                if(getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE){
+                    cameraType = ImageCaptureHelper.CameraType.CUSTOM_CAMERA;
+                }else{
+                    cameraType = ImageCaptureHelper.CameraType.DEFAULT_CAMERA;
+                }
+
+                selectImage(imageFront, true, cameraType);
             }
         });
 

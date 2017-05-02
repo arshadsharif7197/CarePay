@@ -10,6 +10,9 @@
         <activity
             android:name=".payments.PatientModePracticePaymentsActivity"
             android:screenOrientation="sensorLandscape" />
+        <activity
+            android:name=".signin.ResetPasswordActivity"
+            android:screenOrientation="sensorLandscape" />
     </application>
 
 </manifest>

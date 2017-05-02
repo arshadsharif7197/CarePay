@@ -130,7 +130,7 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ((ISession) context).hideProgressDialog();
-            PatientNavigationHelper.getInstance(getContext()).navigateToWorkflow(workflowDTO);
+            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
         }
 
         @Override
@@ -168,7 +168,7 @@ public class CheckInOfficeNowAppointmentDialog extends BaseDoctorInfoDialog {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ((ISession) context).hideProgressDialog();
             checkInNowButton.setEnabled(true);
-            PatientNavigationHelper.getInstance(context).navigateToWorkflow(workflowDTO);
+            PatientNavigationHelper.navigateToWorkflow(context, workflowDTO);
         }
 
         @Override

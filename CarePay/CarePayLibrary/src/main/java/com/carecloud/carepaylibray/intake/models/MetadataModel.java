@@ -5,9 +5,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class MetadataModel {
 
-    @SerializedName("labels")
-    @Expose
-    private LabelModel label = new LabelModel();
     @SerializedName("links")
     @Expose
     private LinksModel links = new LinksModel();
@@ -24,33 +21,6 @@ public class MetadataModel {
      */
     public DataModelsMetadataModel getDataModels() {
         return dataModels;
-    }
-
-    /**
-     *
-     * @param dataModels
-     *     The data_models
-     */
-    public void setDataModels(DataModelsMetadataModel dataModels) {
-        this.dataModels = dataModels;
-    }
-
-    /**
-     * 
-     * @return
-     *     The label
-     */
-    public LabelModel getLabel() {
-        return label;
-    }
-
-    /**
-     * 
-     * @param label
-     *     The label
-     */
-    public void setLabel(LabelModel label) {
-        this.label = label;
     }
 
     /**

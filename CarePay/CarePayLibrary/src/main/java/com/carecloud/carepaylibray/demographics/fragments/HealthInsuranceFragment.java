@@ -12,9 +12,9 @@ import android.widget.Button;
 
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.adapters.InsuranceLineItemsListAdapter;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -24,10 +24,6 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
 
     public interface InsuranceDocumentScannerListener {
         void editInsurance(DemographicDTO demographicDTO, Integer editedIndex, boolean showAsDialog);
-
-        void navigateToParentFragment();
-
-        void updateInsuranceDTO(int index, DemographicInsurancePayloadDTO model);
     }
 
     private DemographicDTO demographicDTO;
@@ -36,10 +32,14 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     private InsuranceDocumentScannerListener callback;
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public void attachCallback(Context context) {
+        super.attachCallback(context);
         try {
-            callback = (InsuranceDocumentScannerListener) context;
+            if (context instanceof DemographicsView) {
+                callback = ((DemographicsView) context).getPresenter();
+            } else {
+                callback = (InsuranceDocumentScannerListener) context;
+            }
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement InsuranceDocumentScannerListener");
         }
@@ -52,14 +52,19 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-
+    public void onCreate(Bundle icicle){
+        super.onCreate(icicle);
         if (demographicDTO == null) {
             demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
         } else if (!hasInsurance()) {
             demographicDTO = null;
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+
         initActiveSection(view);
 
         checkIfEnableButton(view);
@@ -95,9 +100,12 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     @Override
     public void onResume() {
         super.onResume();
+        if(callback == null){
+            attachCallback(getContext());
+        }
         stepProgressBar.setCurrentProgressDot(4);
-        checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 5);
-        checkInNavListener.setCurrentStep(5);
+        checkinFlowCallback.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 5);
+        checkinFlowCallback.setCurrentStep(5);
     }
 
     @Override
@@ -129,11 +137,11 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
             }
         });
 
-        setHeaderTitle(Label.getLabel("demographics_insurance_label"), view);
-        initNextButton(null, view, View.VISIBLE);
-
-//        Button nextButton = (Button) view.findViewById(R.id.checkinDemographicsNextButton);
-//        nextButton.setText(Label.getLabel("demographics_review_go_to_consent"));
+        setHeaderTitle(Label.getLabel("demographics_insurance_label"),
+                Label.getLabel("demographics_health_insurance_heading"),
+                Label.getLabel("demographics_health_insurance_subheading"),
+                view);
+        initNextButton(view);
     }
 
     @Override

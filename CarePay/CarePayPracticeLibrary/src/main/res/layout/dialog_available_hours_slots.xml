@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:background="@drawable/patient_mode_dialog_body_bg"
@@ -58,13 +58,13 @@
             android:visibility="visible" />
 
         <FrameLayout
-            android:id="@+id/practice_available_single_location"
+            android:id="@+id/appointment_available_single_location"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/practice_single_location_text"
+                android:id="@+id/available_single_location_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center_vertical"
@@ -126,6 +126,6 @@
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/text_size_16sp"
         android:visibility="visible"
-        app:customAssetFont="proxima_nova_regular" />
+        app:customAssetFont="gotham_rounded_bold" />
 
 </LinearLayout>

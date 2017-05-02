@@ -129,4 +129,8 @@ public class CarePayConstants {
     public static final String CONNECTION_ISSUE_ERROR_MESSAGE = "<b>Connection issue.</b> There was a problem with your request. Please try again later.";
     public static final String INVALID_LOGIN_ERROR_MESSAGE = "<b>Sign-in failed.</b> Invalid user id or password.";
 
+    //FCM
+    public static final String FCM_TOKEN = "fcmToken";
+    public static final String PUSH_NOTIFICATION_ENABLED = "pushNotificationEnabled";
+
 }

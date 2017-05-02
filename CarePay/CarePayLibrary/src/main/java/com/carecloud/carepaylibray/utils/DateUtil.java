@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class DateUtil {
 
     public static final String TAG = "DateUtil";
+    private static final String FORMAT_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ssZZZZZ";
     private static final String FORMAT_ISO_8601 = "yyyy-MM-dd'T'HH:mm:ss";
     private static final String FORMAT_YYYY_DASH_MM_DASH_DD = "yyyy-MM-dd";
     private static final String FORMAT_MM_DASH_DD_DASH_YYYY = "MM-dd-yyyy";
@@ -50,6 +51,7 @@ public class DateUtil {
             instance.setDate(Calendar.getInstance(Locale.getDefault()).getTime());
 
             instance.formats = new String[] {
+                    FORMAT_TIMEZONE,
                     FORMAT_ISO_8601,
                     FORMAT_YYYY_DASH_MM_DASH_DD,
                     FORMAT_MM_DASH_DD_DASH_YYYY,
@@ -766,7 +768,7 @@ public class DateUtil {
         }
 
         //Just return this date in readable format
-        return getInstance().setDate(date).getDateAsMonthLiteralDayOrdinal();
+        return getInstance().setDate(date).getDateAsDayMonthDayOrdinal();
     }
 
     /**

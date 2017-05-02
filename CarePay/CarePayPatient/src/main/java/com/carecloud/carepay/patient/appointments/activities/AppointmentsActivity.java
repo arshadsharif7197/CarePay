@@ -16,7 +16,6 @@ import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFrag
 import com.carecloud.carepay.patient.appointments.fragments.AvailableHoursFragment;
 import com.carecloud.carepay.patient.appointments.fragments.ChooseProviderFragment;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
-import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
@@ -40,7 +39,6 @@ import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
-import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -165,7 +163,9 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     @Override
     public void newAppointment() {
         Bundle args = new Bundle();
-        DtoHelper.bundleBaseDTO(args, getIntent(), CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, PatientNavigationHelper.class.getSimpleName());
+        Gson gson = new Gson();
+
+        args.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(appointmentsResultModel));
 
         ChooseProviderFragment chooseProviderFragment = new ChooseProviderFragment();
         chooseProviderFragment.setArguments(args);
@@ -225,7 +225,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         AppointmentDateRangeFragment appointmentDateRangeFragment = new AppointmentDateRangeFragment();
         appointmentDateRangeFragment.setArguments(bundle);
 
-        navigateToFragment(appointmentDateRangeFragment, true);
+        navigateToFragment(appointmentDateRangeFragment, false);
         displayToolbar(false, null);
     }
 
@@ -236,6 +236,9 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         AppointmentResourcesItemDTO resourcesItemDTO = new AppointmentResourcesItemDTO();
         resourcesItemDTO.setId(appointmentDTO.getPayload().getResourceId());
         resourcesItemDTO.setProvider(appointmentDTO.getPayload().getProvider());
+
+        selectedAppointmentResourcesDTO = new AppointmentResourcesDTO();
+        selectedAppointmentResourcesDTO.setResource(resourcesItemDTO);
 
         ResourcesToScheduleDTO resourcesToSchedule = new ResourcesToScheduleDTO();
         resourcesToSchedule.getPractice().setPracticeId(appointmentDTO.getMetadata().getPracticeId());

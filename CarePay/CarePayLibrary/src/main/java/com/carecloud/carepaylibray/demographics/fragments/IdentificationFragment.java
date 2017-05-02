@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemIdDocDTO;
@@ -20,17 +21,26 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment {
     private DemographicDTO demographicDTO;
 
     @Override
+    public void onCreate(Bundle icicle){
+        super.onCreate(icicle);
+        demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
         checkIfEnableButton(view);
         view.findViewById(R.id.toolbar_layout).setVisibility(View.INVISIBLE);
 
-        setHeaderTitle(demographicDTO.getMetadata().getLabels().getDemographicsReviewIdentification(), view);
-        initNextButton(null, view, View.VISIBLE);
+        setHeaderTitle(Label.getLabel("demographics_review_identification"),
+                Label.getLabel("demographics_identity_heading"),
+                Label.getLabel("demographics_identity_subheading"),
+                view);
+
+        initNextButton(view);
 
         DemographicIdDocPayloadDTO idDocument = demographicDTO.getPayload().getDemographics().getPayload().getIdDocument();
-        initialiseChildFragment(idDocument, demographicDTO.getMetadata().getDataModels().getDemographic().getIdentityDocuments().properties.items.identityDocument);
+        initialiseChildFragment(idDocument, demographicDTO.getMetadata().getDataModels().getDemographic().getIdentityDocuments().getProperties().getItems().getIdentityDocument());
         return view;
     }
 
@@ -38,8 +48,8 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment {
     public void onResume() {
         super.onResume();
         stepProgressBar.setCurrentProgressDot(3);
-        checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 4);
-        checkInNavListener.setCurrentStep(4);
+        checkinFlowCallback.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 4);
+        checkinFlowCallback.setCurrentStep(4);
     }
 
     @Override

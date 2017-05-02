@@ -1,28 +1,22 @@
 package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityAddressDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
@@ -36,8 +30,6 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.smartystreets.api.us_zipcode.City;
-
-import java.util.Arrays;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 
@@ -78,24 +70,20 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        boolean isPractice = getApplicationMode().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
-
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
         addressMetaDTO = demographicDTO.getMetadata().getDataModels().getDemographic().getAddress();
         if (demographicDTO.getPayload().getDemographics() != null) {
             demographicAddressPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getAddress();
         }
 
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         View mainView  = super.onCreateView(inflater, container, savedInstanceState);
         initialiseUIFields(mainView);
         formatEditText(mainView);
-//        setTypefaces(mainView);
 
         initViewFromModels(mainView);
         return mainView;
@@ -110,8 +98,8 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
     public void onResume(){
         super.onResume();
         stepProgressBar.setCurrentProgressDot(1);
-        checkInNavListener.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 2);
-        checkInNavListener.setCurrentStep(2);
+        checkinFlowCallback.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, 5, 2);
+        checkinFlowCallback.setCurrentStep(2);
     }
 
 
@@ -306,8 +294,10 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         if (demographicAddressPayloadDTO != null) {
 
             if (SystemUtil.isNotEmptyString(demographicAddressPayloadDTO.getAddress1())) {
-                String adress1 = demographicAddressPayloadDTO.getAddress1();
-                initializeInputLayoutValue(adress1, R.id.addressEditTextId, view);
+                String address1 = demographicAddressPayloadDTO.getAddress1();
+                initializeInputLayoutValue(address1, R.id.addressEditTextId, view);
+            }else{
+                isAddressEmpty = true;
             }
 
             if (SystemUtil.isNotEmptyString(demographicAddressPayloadDTO.getAddress2())) {
@@ -316,6 +306,8 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
             if (SystemUtil.isNotEmptyString(demographicAddressPayloadDTO.getCity()) || !((EditText) view.findViewById(R.id.cityId)).getText().toString().isEmpty()) {
                 initializeInputLayoutValue(demographicAddressPayloadDTO.getCity(), R.id.cityId, view);
+            }else{
+                isCityEmpty = true;
             }
 
             String state = demographicAddressPayloadDTO.getState();
@@ -330,10 +322,14 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
             if (SystemUtil.isNotEmptyString(demographicAddressPayloadDTO.getZipcode())) {
                 initializeInputLayoutValue(demographicAddressPayloadDTO.getZipcode(), R.id.zipCodeId, view);
+            }else{
+                isZipEmpty = true;
             }
         } else {
             Log.v(TAG, "Demographic adress is empty ");
         }
+
+        checkIfEnableButton(view);
     }
 
     /**
@@ -378,51 +374,14 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
     }
 
     /**
-     * Show alert dialog
-     */
-    private void showAlertDialogWithListview(final String[] dataArray, String title, String cancelLabel, final int selectedDataArray) {
-
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-        dialog.setTitle(title);
-        dialog.setNegativeButton(cancelLabel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int listener) {
-                dialogInterface.dismiss();
-            }
-        });
-        View customView = LayoutInflater.from(getActivity()).inflate(
-                R.layout.alert_list_layout, (ViewGroup) getView(), false);
-        ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
-        CustomAlertAdapter alertAdapter = new CustomAlertAdapter(getActivity(), Arrays.asList(dataArray));
-        listView.setAdapter(alertAdapter);
-        dialog.setView(customView);
-        final AlertDialog alert = dialog.create();
-        alert.show();
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long listener) {
-                switch (selectedDataArray) {
-
-                    case 4:
-                        stateAbbr = dataArray[position];
-                        ((TextView) findViewById(R.id.reviewDemographicsStateAutoCompleteTextView)).setText(stateAbbr);
-                        break;
-                    default:
-                        break;
-                }
-                checkIfEnableButton(view);
-                alert.dismiss();
-            }
-        });
-    }
-
-    /**
      * Initialize ui fields
      */
     private void initialiseUIFields(View view) {
-        setHeaderTitle(Label.getLabel("demographics_address_section"), view);
-        initNextButton(null, view, View.VISIBLE);
+        setHeaderTitle(Label.getLabel("demographics_address_section"),
+                Label.getLabel("demographics_address_heading"),
+                Label.getLabel("demographics_address_subheading"),
+                view);
+        initNextButton(view);
 
         cityEditText = (EditText) view.findViewById(R.id.cityId);
         stateEditText = (TextView) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView);

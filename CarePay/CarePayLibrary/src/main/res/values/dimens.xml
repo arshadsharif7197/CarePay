@@ -53,6 +53,8 @@
     <dimen name="text_size_15">15sp</dimen>
     <dimen name="text_size_16">16sp</dimen>
     <dimen name="text_size_17">17sp</dimen>
+    <dimen name="text_size_19sp">19sp</dimen>
+    <dimen name="text_size_22sp">22sp</dimen>
     <dimen name="text_size_24sp">24sp</dimen>
     <dimen name="text_size_20">20sp</dimen>
     <dimen name="text_size_21">21sp</dimen>
@@ -112,7 +114,7 @@
     <dimen name="respons_button_margin_left_right">17dp</dimen>
     <dimen name="dialog_header_height">205dp</dimen>
     <dimen name="dialog_profile_pic_size">88dp</dimen>
-    <dimen name="dialog_width">510dp</dimen>
+    <dimen name="dialog_width">300dp</dimen>
     <dimen name="dialog_height">672dp</dimen>
 
     <!-- Demographics Documents -->
@@ -259,7 +261,7 @@
     <dimen name="intake_radio_option_text_size">14sp</dimen>
 
     <!--Available hours-->
-    <dimen name="apt_available_hours_list_header_text">22sp</dimen>
+    <dimen name="apt_available_hours_list_header_text">15sp</dimen>
     <dimen name="apt_available_hours_list_row_text">17sp</dimen>
     <dimen name="apt_available_locations_list_row_text">15sp</dimen>
 
@@ -314,8 +316,11 @@
     <dimen name="apt_skicky_header_height">35dp</dimen>
     <dimen name="optional_text_edit">-20dp</dimen>
 
+    <dimen name="checkin_main_panel_start_padding">30dp</dimen>
     <dimen name="checkbox_padding_left_right">3dp</dimen>
     <dimen name="checkbox_padding_top_bottom">3dp</dimen>
+    <dimen name="checkin_logo_height">46dp</dimen>
+    <dimen name="checkin_separator_width">116dp</dimen>
 
     <dimen name="no_apt_place_holder_icon_margin_top">72dp</dimen>
     <dimen name="no_apt_message_title_margin_top">23dp</dimen>
@@ -429,4 +434,9 @@
     <dimen name="home_logo_width">174dp</dimen>
     <dimen name="checkinNavBarOpenOffset">60dp</dimen>
     <dimen name="checkinNavBarClosedOffset">0dp</dimen>
+    <dimen name="signin_title_textsize">36sp</dimen>
+
+    <dimen name="list_dialog_min_height">400dp</dimen>
+    <dimen name="list_dialog_min_height_small">200dp</dimen>
+
 </resources>

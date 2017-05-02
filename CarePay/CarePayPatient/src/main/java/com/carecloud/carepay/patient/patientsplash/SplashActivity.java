@@ -1,15 +1,17 @@
 package com.carecloud.carepay.patient.patientsplash;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
-import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.patientsplash.dtos.SelectLanguageDTO;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
+import com.carecloud.carepaylibray.fcm.RegistrationIntentService;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.newrelic.agent.android.NewRelic;
@@ -36,7 +38,7 @@ public class SplashActivity extends BasePatientActivity {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            PatientNavigationHelper.getInstance(SplashActivity.this).navigateToWorkflow(workflowDTO);
+            navigateToWorkflow(workflowDTO);
             // end-splash activity and transition
             SplashActivity.this.finish();
         }
@@ -58,7 +60,7 @@ public class SplashActivity extends BasePatientActivity {
         public void onPostExecute(WorkflowDTO workflowDTO) {
 
             if (!SystemUtil.isNotEmptyString(getApplicationPreferences().getUserLanguage())) {
-                PatientNavigationHelper.getInstance(SplashActivity.this).navigateToWorkflow(workflowDTO);
+                navigateToWorkflow(workflowDTO);
             } else if (SystemUtil.isNotEmptyString(getApplicationPreferences().getUserLanguage())) {
               String languageid=  getApplicationPreferences().getUserLanguage();
 
@@ -86,6 +88,8 @@ public class SplashActivity extends BasePatientActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        WorkflowSessionHandler.createSession(this);
+
         // dynamic transition
         getWorkflowServiceHelper().executeApplicationStartRequest(applicationStartCallback);
 
@@ -93,6 +97,7 @@ public class SplashActivity extends BasePatientActivity {
                 getString(R.string.new_relic_application_token)
         ).start(this.getApplication());
 
-
+        Intent intent = new Intent(this, RegistrationIntentService.class);
+        startService(intent);
     }
 }

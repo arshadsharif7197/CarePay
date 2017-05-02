@@ -46,8 +46,8 @@ import com.google.gson.JsonObject;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import org.joda.time.DateTime;
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,6 +101,8 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
     private AppointmentDialogCallback callback;
     private PopupPickerWindow pickerWindow;
     private String pushUserId;
+
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
 
     /**
      * Constructor.
@@ -218,8 +220,8 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
     private void onSetValuesFromDTO() {
         checkInLabelDTO = checkInDTO.getMetadata().getLabel();
         if (!isWaitingRoom) {
-            demographicsCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogDemographics()));
-            consentFormsCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogConsentForms()));
+            demographicsCheckbox.setText(StringUtil.getFormatedLabal(context, Label.getLabel("practice_checkin_detail_dialog_demographics")));
+            consentFormsCheckbox.setText(StringUtil.getFormatedLabal(context, Label.getLabel("practice_checkin_detail_dialog_consent_forms")));
             intakeCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogIntake()));
             responsibilityCheckbox.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogResponsibility()));
         } else {
@@ -230,19 +232,19 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         }
 
         checkingInLabel.setText(StringUtil.getFormatedLabal(context, isWaitingRoom ?
-                checkInLabelDTO.getPracticeCheckinDetailDialogWaitingRoom() : checkInLabelDTO.getPracticeCheckinDetailDialogCheckingIn()));
-        balanceTextLabel.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogBalance()));
-        assistButton.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogAssist()));
-        pageButton.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogPage()));
-        paymentButton.setText(StringUtil.getFormatedLabal(context, checkInLabelDTO.getPracticeCheckinDetailDialogPayment()));
+                checkInLabelDTO.getPracticeCheckinDetailDialogWaitingRoom() : Label.getLabel("practice_checkin_detail_dialog_checking_in")));
+        balanceTextLabel.setText(StringUtil.getFormatedLabal(context, Label.getLabel("practice_checkin_detail_dialog_balance")));
+        assistButton.setText(StringUtil.getFormatedLabal(context, Label.getLabel("practice_checkin_detail_dialog_assist")));
+        pageButton.setText(StringUtil.getFormatedLabal(context, Label.getLabel("practice_checkin_detail_dialog_page")));
+        paymentButton.setText(StringUtil.getFormatedLabal(context, Label.getLabel("practice_checkin_detail_dialog_payment")));
 
         balanceValueLabel.setText(StringUtil.getFormattedBalanceAmount(getPatientBalance()));
         patientNameLabel.setText(StringUtil.getFormatedLabal(context, appointmentPayloadDTO.getPatient().getFullName()));
         doctorNameLabel.setText(StringUtil.getFormatedLabal(context, appointmentPayloadDTO.getProvider().getName()));
 
-        long hour = DateUtil.getInstance().setDateRaw(appointmentPayloadDTO.getStartTime()).getDate().getTime();
-        final DateTime appointmentDateTime = new DateTime(hour);
-        hourLabel.setText(appointmentDateTime.toString("hh:mm a"));
+        Date date = DateUtil.getInstance().setDateRaw(appointmentPayloadDTO.getStartTime()).getDate();
+        hourLabel.setText(dateFormat.format(date));
+        setHourLabelBackground(date);
 
         findViewById(R.id.checkin_close_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -281,6 +283,22 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         hourLabel.bringToFront();
 
         enableActionItems();
+    }
+
+    /**
+     * Sets hour label background.
+     *
+     * If the appointment start time has passed curent time, then show the appointment time label background in red.
+     * If the appointment start time is in future, then show the appointment time label background in green.
+     *
+     */
+    private void setHourLabelBackground(Date appointmentDateTime) {
+
+        if (appointmentDateTime.before(new Date())) {
+            hourLabel.setBackgroundResource(R.drawable.right_rounded_background_red);
+        } else {
+            hourLabel.setBackgroundResource(R.drawable.right_rounded_background_green);
+        }
     }
 
     private void enableActionItems() {
@@ -406,8 +424,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
      * @param workflowDTO workflow model returned by server.
      */
     private void updateQueueStatus(WorkflowDTO workflowDTO) {
-        Gson gson = new Gson();
-        QueueStatusPayloadDTO queueStatusPayloadDTO = gson.fromJson(workflowDTO.getPayload(), QueueStatusPayloadDTO.class);
+        QueueStatusPayloadDTO queueStatusPayloadDTO = workflowDTO.getPayload(QueueStatusPayloadDTO.class);
         List<QueueDTO> queueList = queueStatusPayloadDTO.getQueueStatus().getQueueStatusInnerPayload().getQueueList();
 
         Map<Integer, QueueDTO> queueMap = new HashMap<>();
@@ -505,38 +522,14 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
                 }
             }
         }
-
-//            int maxIndex = queueList.size() - 1;
-//            int index = maxIndex;
-//            QueueDTO queue;
-//            CheckBox checkBox;
-//
-//            for (int checkIndex = Math.min(index, 3); checkIndex >= 0; checkIndex--) {
-//                queue = queueList.get(index);
-//                checkBox = checkBoxes.get(checkIndex);
-//                if (index == maxIndex) {
-//                    checkBox.setChecked(true);
-//                    checkBox.setText(ordinal(queue.getRank(), sufixes) + " " + metadata.getLabel().getPracticeCheckinDetailDialogQueue());
-//                    checkBox.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
-//                    checkBox.setTypeface(checkBox.getTypeface(), Typeface.BOLD);
-//                } else {
-//                    checkBox.setText(ordinal(queue.getRank(), sufixes) + " " + queue.getFirstName());
-//                }
-//
-//                Log.d(this.getClass().getSimpleName(), "queue practice id: " + queue.getFirstName());
-//                index--;
-//            }
     }
 
     /**
      * @param workflowDTO workflow model returned by server.
      */
     private void updateUI(WorkflowDTO workflowDTO) {
-        JsonObject jsonObject = workflowDTO.getPayload();
-
-        Gson gson = new Gson();
         try {
-            CheckInStatusPayloadDTO checkInStatusPayloadDTO = gson.fromJson(jsonObject, CheckInStatusPayloadDTO.class);
+            CheckInStatusPayloadDTO checkInStatusPayloadDTO = workflowDTO.getPayload(CheckInStatusPayloadDTO.class);
 
             if (checkInStatusPayloadDTO != null) {
                 CheckInStatusDataPayloadValueDTO payloadValueDTO = checkInStatusPayloadDTO
@@ -577,7 +570,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         for(QueueDTO queueDTO: queueDTOList){
             placeMap.put(queueDTO.getRank(), queueDTO);
             if(queueDTO.getAppointmentId().equals(appointmentId)){
-                 patientQueueDTO = queueDTO;
+                patientQueueDTO = queueDTO;
             }
         }
         return patientQueueDTO;

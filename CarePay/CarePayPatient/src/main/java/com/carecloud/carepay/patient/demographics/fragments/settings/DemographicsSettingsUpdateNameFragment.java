@@ -26,6 +26,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
@@ -46,12 +47,12 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
-
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -194,17 +195,9 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
      * demographics Edit Profile labels
      */
     public void getEditProfileLabels() {
-        if (demographicsSettingsDTO != null) {
-            DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
-            if (demographicsSettingsMetadataDTO != null) {
-                demographicsSettingsLabelsDTO = demographicsSettingsMetadataDTO.getLabels();
-                if (demographicsSettingsLabelsDTO != null) {
-                    profileString = demographicsSettingsLabelsDTO.getProfileHeadingLabel();
-                    saveChangesString = demographicsSettingsLabelsDTO.getDemographicsSaveChangesLabel();
-                    changeNameString = demographicsSettingsLabelsDTO.getDemographicsChangeNameLabel();
-                }
-            }
-        }
+        profileString = Label.getLabel("profile_heading");
+        saveChangesString = Label.getLabel("demographics_save_changes_label");
+        changeNameString = Label.getLabel("setting_change_name");
     }
 
     public void getProfileProperties() {
@@ -289,7 +282,7 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
         } else {
             lastNameLabel.setError(null);
         }
-        return !isLastNameEmpty ;
+        return !isLastNameEmpty;
     }
 
     private boolean isAllFieldsValid() {
@@ -307,20 +300,20 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
     }
 
     private void formatEditText() {
-      try{
-        if (demographicsSettingsDTO != null) {
-            DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
-            if (demographicsSettingsMetadataDTO != null) {
-                DemographicsSettingsDataModelsDTO demographicsSettingsDataModelsDTO = demographicsSettingsMetadataDTO.getDataModels();
-                DemographicsSettingsDetailsDTO demographicsSettingsDemographicsDTO = demographicsSettingsDataModelsDTO.getDemographic();
-                DemographicsSettingsPersonalDetailsPropertiesDTO demographicsSettingsPersonalDetailsDTO = demographicsSettingsDemographicsDTO.getPersonalDetails();
-                demographicsSettingsDetailsDTO = demographicsSettingsPersonalDetailsDTO.getProperties();
+        try {
+            if (demographicsSettingsDTO != null) {
+                DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
+                if (demographicsSettingsMetadataDTO != null) {
+                    DemographicsSettingsDataModelsDTO demographicsSettingsDataModelsDTO = demographicsSettingsMetadataDTO.getDataModels();
+                    DemographicsSettingsDetailsDTO demographicsSettingsDemographicsDTO = demographicsSettingsDataModelsDTO.getDemographic();
+                    DemographicsSettingsPersonalDetailsPropertiesDTO demographicsSettingsPersonalDetailsDTO = demographicsSettingsDemographicsDTO.getPersonalDetails();
+                    demographicsSettingsDetailsDTO = demographicsSettingsPersonalDetailsDTO.getProperties();
 
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-      }catch (Exception e){
-          e.printStackTrace();
-      }
 
         firstNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -382,7 +375,7 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
         updateProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try{
+                try {
                     if (isAllFieldsValid()) {
                         updateProfileButton.setEnabled(false);
                         if (demographicsSettingsDTO != null) {
@@ -416,11 +409,10 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
                                 }
                             }
                         }
-                    } else
-                    {
-                        showErrorNotification(demographicsSettingsLabelsDTO.getDemographicsMissingInformation());
+                    } else {
+                        showErrorNotification(Label.getLabel("demographics_missing_information"));
                     }
-                }catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -438,7 +430,7 @@ public class DemographicsSettingsUpdateNameFragment extends BaseFragment {
             hideProgressDialog();
             updateProfileButton.setEnabled(true);
 
-            PatientNavigationHelper.getInstance(getActivity()).navigateToWorkflow(workflowDTO);
+            PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
         }
 
         @Override

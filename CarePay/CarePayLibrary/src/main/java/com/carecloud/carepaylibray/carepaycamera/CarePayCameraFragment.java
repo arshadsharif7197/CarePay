@@ -15,6 +15,7 @@ import android.widget.FrameLayout;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.demographics.DemographicsView;
 
 /**
  * Created by cocampo on 3/28/17.
@@ -27,11 +28,7 @@ public class CarePayCameraFragment extends BaseDialogFragment implements CarePay
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        try {
-            callback = (CarePayCameraCallback) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement CarePayCameraCallback");
-        }
+        attachCallback(context);
     }
 
     @Override
@@ -41,9 +38,17 @@ public class CarePayCameraFragment extends BaseDialogFragment implements CarePay
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        if(callback == null){
+            attachCallback(getContext());
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        setCancelable(true);
         return inflater.inflate(R.layout.activity_care_pay_camera, container, false);
     }
 
@@ -59,16 +64,21 @@ public class CarePayCameraFragment extends BaseDialogFragment implements CarePay
     @Override
     public void onCapturedSuccess(Bitmap bitmap) {
         dismiss();
-
         if (callback != null) {
             callback.onCapturedSuccess(bitmap);
         }
     }
 
     @Override
+    public void onCaptureFail() {
+        dismiss();
+    }
+
+
+    @Override
     public void onStart() {
         super.onStart();
-
+//        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         Dialog dialog = getDialog();
         if (dialog != null) {
             Window window = dialog.getWindow();
@@ -78,4 +88,17 @@ public class CarePayCameraFragment extends BaseDialogFragment implements CarePay
             }
         }
     }
+
+    private void attachCallback(Context context){
+        try {
+            if (context instanceof DemographicsView) {
+                callback = ((DemographicsView) context).getPresenter();
+            } else {
+                callback = (CarePayCameraCallback) context;
+            }
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement CarePayCameraCallback");
+        }
+    }
+
 }

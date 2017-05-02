@@ -337,7 +337,7 @@ public class WorkflowServiceHelper {
                 String message = response.message().toLowerCase();
                 String errorBodyString = "";
                 try {
-                    errorBodyString = response.errorBody().string();
+                    errorBodyString = response.errorBody().string().toLowerCase();
                 }catch (Exception ex){
                     ex.printStackTrace();
                 }
@@ -354,7 +354,14 @@ public class WorkflowServiceHelper {
 
             private void onResponseBadRequest(Response<WorkflowDTO> response) throws IOException {
                 String message = response.message().toLowerCase();
-                if(message.contains(TOKEN) && message.contains(REVOKED)){
+                String errorBodyString = "";
+                try {
+                    errorBodyString = response.errorBody().string().toLowerCase();
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
+
+                if((message.contains(TOKEN) && message.contains(REVOKED)) || (errorBodyString.contains(TOKEN) && errorBodyString.contains(REVOKED))){
                     atomicAppRestart();
                 }else{
                     onFailure(response);

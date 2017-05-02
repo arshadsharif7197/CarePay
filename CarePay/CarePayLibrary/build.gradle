@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'newrelic'
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -34,27 +35,15 @@ configurations {
     compile.exclude group: "org.apache.httpcomponents", module: "httpclient"
 }
 dependencies {
-    //compile fileTree(include: ['*.jar'], dir: 'libs')
-    //    compile files('libs/com.fasterxml.jackson.databind.jar')
-    //    compile files('libs/spring-android-rest-template-1.0.0.RELEASE.jar')
-    //    compile files('libs/jackson-mapper-asl-1.8.8.jar')
-    //    compile files('libs/jackson-core-asl-1.8.8.jar')
-    //    compile files('libs/jackson-annotations-2.5.1.jar')
-    //    compile files('libs/jxl-2.6.12.jar')
-    //    compile files('libs/org.apache.httpclient.jar')
-    //    compile files('libs/spring-android-core-1.0.0.RELEASE.jar')
-    //    compile files('libs/org.apache.httpcomponents.httpcore_4.2.1.jar')
-    //    compile files('libs/com.fasterxml.jackson.jsonschema.jar')
     // support library
-    compile 'com.android.support:appcompat-v7:25.2.0'
-    compile 'com.android.support:support-v4:25.2.0'
-    compile 'com.android.support:cardview-v7:25.2.0'
-    compile 'com.android.support:design:25.2.0'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.android.support:cardview-v7:25.3.1'
+    compile 'com.android.support:design:25.3.1'
     compile 'com.android.support:multidex:1.0.1'
     // apache utils
     compile 'org.apache.commons:commons-lang3:3.5'
     //datetime
-    compile 'joda-time:joda-time:2.9.4'
     compile project(path: ':CarePayServiceLibrary')
     // Using for image loading
     compile 'com.squareup.picasso:picasso:2.5.2'
@@ -66,6 +55,7 @@ dependencies {
     compile 'com.google.zxing:core:3.2.1'
     compile 'me.dm7.barcodescanner:zxing:1.9'
     compile 'com.marcok.stepprogressbar:stepprogressbar:1.0.1'
+    compile 'com.google.firebase:firebase-messaging:10.2.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'

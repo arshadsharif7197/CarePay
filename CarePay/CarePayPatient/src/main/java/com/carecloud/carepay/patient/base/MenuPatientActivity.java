@@ -16,8 +16,8 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,9 +26,9 @@ import java.util.Map;
  * Created by jorge on 10/01/17.
  */
 
-public class MenuPatientActivity extends BasePatientActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MenuPatientActivity extends BasePatientActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String LOG_TAG =  MenuPatientActivity.class.getSimpleName();
+    private static final String LOG_TAG = MenuPatientActivity.class.getSimpleName();
     //keys
     protected String practiceId;
     protected String practiceMgmt;
@@ -51,17 +51,13 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
 
     protected void inflateDrawer() {
         setSupportActionBar(toolbar);
-
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, com.carecloud.carepaylibrary.R.string.navigation_drawer_open, com.carecloud.carepaylibrary.R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
-
         navigationView.setNavigationItemSelectedListener(this);
 
         String userId = getAppAuthorizationHelper().getCurrUser();
-
-
         if (userId != null) {
             appointmentsDrawerUserIdTextView.setText(userId);
         } else {
@@ -73,7 +69,6 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (toggle.onOptionsItemSelected(item)) {
@@ -83,49 +78,46 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
     }
 
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        if (id == com.carecloud.carepaylibrary.R.id.nav_appointments && transitionAppointments != null) {
+        if (id == R.id.nav_appointments && transitionAppointments != null) {
             Map<String, String> queryString = new HashMap<>();
             queryString.put("practice_id", practiceId == null ? "" : practiceId);
             queryString.put("practice_mgmt", practiceMgmt == null ? "" : practiceMgmt);
             queryString.put("patient_id", patientId == null ? "" : patientId);
             getWorkflowServiceHelper().execute(transitionAppointments, appointmentsWorkflowCallback, queryString);
 
-        } else if (id == com.carecloud.carepaylibrary.R.id.nav_payments && transitionBalance != null) {
+        } else if (id == R.id.nav_payments && transitionBalance != null) {
             Map<String, String> queryString = new HashMap<>();
             queryString.put("practice_id", practiceId == null ? "" : practiceId);
             queryString.put("practice_mgmt", practiceMgmt == null ? "" : practiceMgmt);
             queryString.put("patient_id", patientId == null ? "" : patientId);
             getWorkflowServiceHelper().execute(transitionBalance, paymentsCallBack, queryString);
 
-        } else if (id == com.carecloud.carepaylibrary.R.id.nav_settings && transitionProfile != null) {
+        } else if (id == R.id.nav_settings && transitionProfile != null) {
             Map<String, String> queryString = new HashMap<>();
             queryString.put("practice_id", practiceId == null ? "" : practiceId);
             queryString.put("practice_mgmt", practiceMgmt == null ? "" : practiceMgmt);
             queryString.put("patient_id", patientId == null ? "" : patientId);
             getWorkflowServiceHelper().execute(transitionProfile, demographicsSettingsCallBack, queryString);
 
-        } else if (id == com.carecloud.carepaylibrary.R.id.nav_logout && transitionLogout != null) {
+        } else if (id == R.id.nav_logout && transitionLogout != null) {
             // perform log out, of course
             String userName = getAppAuthorizationHelper().getCurrUser();
-
             if (userName != null) {
                 Log.v(LOG_TAG, "sign out");
                 Map<String, String> headersMap = new HashMap<>();
                 headersMap.put("x-api-key", HttpConstants.getApiStartKey());
-                if(!HttpConstants.isUseUnifiedAuth())
-                {
+                if (!HttpConstants.isUseUnifiedAuth()) {
                     headersMap.put("Authorization", getAppAuthorizationHelper().getCurrSession().getIdToken().getJWTToken());
                 }
                 headersMap.put("transition", "true");
                 Map<String, String> queryMap = new HashMap<>();
                 getWorkflowServiceHelper().execute(transitionLogout, appointmentsWorkflowCallback, queryMap, headersMap);
             }
-        } else if (id == com.carecloud.carepaylibrary.R.id.nav_purchase) {
+        } else if (id == R.id.nav_purchase) {
             Log.v(LOG_TAG, "Purchase");
             Map<String, String> queryString = new HashMap<>();
             queryString.put("practice_id", practiceId == null ? "" : practiceId);
@@ -133,7 +125,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
             queryString.put("patient_id", patientId == null ? "" : patientId);
             getWorkflowServiceHelper().execute(transitionAppointments, purchaseWorkflowCallback, queryString);
 
-        } else if (id == com.carecloud.carepaylibrary.R.id.nav_notification) {
+        } else if (id == R.id.nav_notification) {
             Log.v(LOG_TAG, "Notification");
             //Temporary link to landing Activity for blank purchase screen
             Map<String, String> queryString = new HashMap<>();
@@ -158,7 +150,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             PatientNavigationHelper.setAccessPaymentsBalances(true);
-            PatientNavigationHelper.getInstance(MenuPatientActivity.this).navigateToWorkflow(workflowDTO);
+            navigateToWorkflow(workflowDTO);
         }
 
         @Override
@@ -180,7 +172,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
 
             hideProgressDialog();
 
-            PatientNavigationHelper.getInstance(MenuPatientActivity.this).navigateToWorkflow(workflowDTO);
+            navigateToWorkflow(workflowDTO);
         }
 
         @Override
@@ -202,7 +194,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            PatientNavigationHelper.getInstance(MenuPatientActivity.this).navigateToWorkflow(workflowDTO);
+            navigateToWorkflow(workflowDTO);
         }
 
         @Override
@@ -223,8 +215,8 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             //need to manually redirect this response to the notifications screen temporarily
-            workflowDTO.setState(PatientNavigationStateConstants.PURCHASE);
-            PatientNavigationHelper.getInstance(MenuPatientActivity.this).navigateToWorkflow(workflowDTO);
+            workflowDTO.setState(NavigationStateConstants.PURCHASE);
+            navigateToWorkflow(workflowDTO);
         }
 
         @Override
@@ -244,8 +236,8 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             //need to manually redirect this response to the notifications screen temporarily
-            workflowDTO.setState(PatientNavigationStateConstants.NOTIFICATION);
-            PatientNavigationHelper.getInstance(MenuPatientActivity.this).navigateToWorkflow(workflowDTO);
+            workflowDTO.setState(NavigationStateConstants.NOTIFICATION);
+            navigateToWorkflow(workflowDTO);
         }
 
         @Override
@@ -278,20 +270,19 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
      *
      * @param visibility the visibility
      */
-    public void displayToolbar(boolean visibility, String toolBarTitle){
+    public void displayToolbar(boolean visibility, String toolBarTitle) {
 //        toolbarVisibility = visibility;
         TextView toolbarText = (TextView) findViewById(R.id.balance_history_toolbar_title);
-        if(toolBarTitle!=null) {
+        if (toolBarTitle != null) {
             toolbarText.setText(StringUtil.isNullOrEmpty(toolBarTitle) ? CarePayConstants.NOT_DEFINED : toolBarTitle);
         }
-        if(visibility){
+        if (visibility) {
             setSupportActionBar(toolbar);
             getSupportActionBar().show();
         } else {
             getSupportActionBar().hide();
         }
     }
-
 
 
 }

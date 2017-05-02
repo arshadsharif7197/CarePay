@@ -1,12 +1,14 @@
 package com.carecloud.carepaylibray.practice;
 
+import android.content.Context;
+
 import com.carecloud.carepaylibray.base.BaseFragment;
 
 /**
  * Created by lsoco_user on 11/29/2016.
  */
 
-public class BaseCheckinFragment extends BaseFragment {
+public abstract class BaseCheckinFragment extends BaseFragment {
 
     protected FlowStateInfo flowStateInfo;
 
@@ -21,4 +23,13 @@ public class BaseCheckinFragment extends BaseFragment {
     public boolean navigateBack(){
         return false;
     }
+
+    @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+        attachCallback(context);
+    }
+
+    public abstract void attachCallback(Context context);
+
 }

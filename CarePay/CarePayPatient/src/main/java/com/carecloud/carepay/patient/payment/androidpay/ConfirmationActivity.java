@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.google.android.gms.wallet.MaskedWallet;
 import com.google.android.gms.wallet.WalletConstants;
 import com.google.android.gms.wallet.fragment.SupportWalletFragment;
@@ -23,7 +22,6 @@ import com.google.android.gms.wallet.fragment.WalletFragmentInitParams;
 import com.google.android.gms.wallet.fragment.WalletFragmentMode;
 import com.google.android.gms.wallet.fragment.WalletFragmentOptions;
 import com.google.android.gms.wallet.fragment.WalletFragmentStyle;
-import com.google.gson.Gson;
 
 import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
 
@@ -54,18 +52,13 @@ public class ConfirmationActivity extends AppCompatActivity {
         maskedWallet = getIntent().getParcelableExtra(PaymentConstants.EXTRA_MASKED_WALLET);
 
         bundle = getIntent().getExtras();
-        String paymentsDTOString = bundle.getString(PaymentConstants.EXTRA_RESULT_MESSAGE);
 
         setContentView(R.layout.activity_confirmation);
         Toolbar toolbar = (Toolbar) findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(this, com.carecloud.carepaylibrary.R.drawable.icn_nav_back));
         TextView title = (TextView) toolbar.findViewById(com.carecloud.carepaylibrary.R.id.respons_toolbar_title);
+        title.setText(bundle.getString(PaymentConstants.EXTRA_RESULT_MESSAGE));
 
-        if(paymentsDTOString != null){
-            Gson gson = new Gson();
-            PaymentsLabelDTO paymentLabelsDTO = gson.fromJson(paymentsDTOString, PaymentsLabelDTO.class);
-            title.setText(paymentLabelsDTO.getPaymentPatientBalanceToolbar());
-        }
         setGothamRoundedMediumTypeface(this, title);
         setSupportActionBar(toolbar);
         createAndAddWalletFragment();
@@ -209,12 +202,13 @@ public class ConfirmationActivity extends AppCompatActivity {
      * @param bundle       the bundle
      * @return the intent
      */
-    public static Intent newIntent(Context context, MaskedWallet maskedWallet, String amount, String env, Bundle bundle, String labels) {
+    public static Intent newIntent(Context context, MaskedWallet maskedWallet, String amount,
+                                   String env, Bundle bundle, String paymentPatientBalanceToolbar) {
         Intent intent = new Intent(context, ConfirmationActivity.class);
         intent.putExtra(PaymentConstants.EXTRA_MASKED_WALLET, maskedWallet);
         intent.putExtra(PaymentConstants.EXTRA_AMOUNT, amount);
         intent.putExtra(PaymentConstants.EXTRA_ENV, env);
-        intent.putExtra(PaymentConstants.EXTRA_RESULT_MESSAGE, labels);
+        intent.putExtra(PaymentConstants.EXTRA_RESULT_MESSAGE, paymentPatientBalanceToolbar);
         intent.putExtra(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, bundle);
         return intent;
     }

@@ -2,14 +2,11 @@
 <resources>
     <color name="colorPrimary">#5BC5D0</color>
     <color name="colorPrimaryDark">#489DA6</color>
-    <color name="left_panel_color">#4EAAB3</color>
-    <color name="screen_gradient">#41949D</color>
     <color name="page_indicator">#4D5BC5D0</color>
 
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="transparent_apt">#00000000</color>
-    <color name="transparent_20">#33ffffff</color>
     <color name="transparent_70">#80ffffff</color>
 
     <color name="colorAccent">#acacac</color>
@@ -53,17 +50,14 @@
     <color name="grey_600">#303232</color>
     <color name="grey_700">#1D1E1E</color>
 
-    <color name="lightning_yellow">#f5a623</color>
     <color name="divider_color">#c4c4c4</color>
     <color name="checked_in_appointment_bg">#fffdea</color>
     <color name="news_item_divider">#3378909C</color>
 
     <color name="cadet_gray">#ff90a4ae</color>
-    <color name="optional_gray">#90a4ae</color>
     <color name="pastel_blue">#b0bec5</color>
 
     <color name="yellowGreen_blend">#337ed321</color>
-    <color name="medium_jungle_green">#263238</color>
     <color name="white_transparent">#26ffffff</color>
     <color name="manatee">#9ba4a9</color>
 
@@ -87,15 +81,9 @@
     <color name="scan_camera_background_bg">#ff424242</color>
     <color name="scan_camera_bg">#50acacac</color>
 
-    <!-- Checkin -->
-    <color name="white_opacity_60">#99ffffff</color>
-    <color name="black_opacity_70">#3c000000</color>
-    <color name="white_opacity_30">#4Dffffff</color>
-
     <!--Payments-->
     <!--<color name="screen_header">#056DA3</color>-->
     <color name="filter_on">#34590C</color>
-    <color name="confirm_pin_sub_title">#9FE5ED</color>
     <color name="count_bg">#61D3DF</color>
 
     <color name="lightSlateGray">#78909C</color>

@@ -37,7 +37,6 @@ import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsLabelDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -57,7 +56,6 @@ import java.util.Map;
 
 public class PaymentsActivity extends BasePracticeActivity implements FilterDialog.FilterDialogListener, PracticePaymentNavigationCallback {
 
-    private PaymentsLabelDTO paymentsLabel;
     private PaymentsModel paymentsModel;
     private FilterModel filter;
 
@@ -81,21 +79,9 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     private void setLabels() {
-        if (paymentsModel != null) {
-            paymentsLabel = paymentsModel.getPaymentsMetadata().getPaymentsLabel();
-            if (paymentsLabel != null) {
-
-                setTextViewById(R.id.practice_payment_title, paymentsLabel.getPracticePaymentsHeader());
-                setTextViewById(R.id.practice_payment_go_back, paymentsLabel.getPracticePaymentsBackLabel());
-                setTextViewById(R.id.practice_payment_find_patient, paymentsLabel.getPracticePaymentsFindPatientLabel());
-                setTextViewById(R.id.practice_payment_filter_label, paymentsLabel.getPracticePaymentsFilter());
-                setTextViewById(R.id.practice_payment_in_office_label, paymentsLabel.getPracticePaymentsInOffice());
-
-                practicePaymentsFilter = paymentsLabel.getPracticePaymentsFilter();
-                practicePaymentsFilterFindPatientByName = paymentsLabel.getPracticePaymentsFilterFindPatientByName();
-                practicePaymentsFilterClearFilters = paymentsLabel.getPracticePaymentsFilterClearFilters();
-            }
-        }
+        practicePaymentsFilter = Label.getLabel("practice_payments_filter");
+        practicePaymentsFilterFindPatientByName = Label.getLabel("practice_payments_filter_find_patient_by_name");
+        practicePaymentsFilterClearFilters = Label.getLabel("practice_payments_filter_clear_filters");
     }
 
     private void populateList() {

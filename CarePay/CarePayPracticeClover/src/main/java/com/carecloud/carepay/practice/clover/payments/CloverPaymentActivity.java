@@ -165,6 +165,11 @@ public class CloverPaymentActivity extends BaseActivity {
     }
 
     @Override
+    public void navigateToWorkflow(WorkflowDTO workflowDTO) {
+
+    }
+
+    @Override
     public void onBackPressed() {
         setResult(RESULT_CANCELED);
         disconnect();

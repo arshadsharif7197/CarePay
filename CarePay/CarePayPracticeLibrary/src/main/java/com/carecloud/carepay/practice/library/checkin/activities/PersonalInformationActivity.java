@@ -15,8 +15,6 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
-import com.carecloud.carepay.practice.library.signin.dtos.GenderOptionDTO;
-import com.carecloud.carepay.practice.library.signin.dtos.SigninPatientModeDTO;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -24,12 +22,12 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
+import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
-
-import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -48,13 +46,13 @@ public class PersonalInformationActivity extends BasePracticeActivity {
     private boolean isEmptyPhoneNumber = true;
     private boolean isEmptyDate = true;
     private boolean isEmptyGender = true;
-    private SigninPatientModeDTO signinPatientModeDTO;
+    private SignInDTO signInPatientModeDTO;
     private String[] gendersArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        signinPatientModeDTO = getConvertedDTO(SigninPatientModeDTO.class);
+        signInPatientModeDTO = getConvertedDTO(SignInDTO.class);
         setContentView(R.layout.activity_personal_information);
         initViews();
     }
@@ -94,7 +92,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
 
 
         CarePayTextView genderTextView = (CarePayTextView) findViewById(R.id.genderTextView);
-        genderTextView.setText(signinPatientModeDTO.getMetadata().getLoginDataModels().getPersonalInfo().getProperties().getGender().getLabel());
+        genderTextView.setText(signInPatientModeDTO.getMetadata().getDataModels().getPersonalInfo().getProperties().getGender().getLabel());
 
         TextView genderButton = (TextView) findViewById(R.id.selectGenderButton);
         genderButton.setOnClickListener(selectGenderButtonListener);
@@ -133,10 +131,10 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         ImageView homeImageView = (ImageView) findViewById(R.id.homeImageView);
         homeImageView.setOnClickListener(homeImageViewListener);
 
-        List<GenderOptionDTO> options = signinPatientModeDTO.getMetadata().getLoginDataModels().getPersonalInfo().getProperties().getGender().getOptions();
+        List<OptionDTO> options = signInPatientModeDTO.getMetadata().getDataModels().getPersonalInfo().getProperties().getGender().getOptions();
         List<String> genders = new ArrayList<>();
-        for (GenderOptionDTO o : options) {
-            genders.add(o.getLabel());
+        for (OptionDTO option : options) {
+            genders.add(option.getLabel());
         }
         gendersArray = genders.toArray(new String[0]);
     }
@@ -315,7 +313,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         @Override
         public void onClick(final View view) {
             // Use the current date as the default date in the picker
-            final Calendar calendar = Calendar.getInstance();
+            Calendar calendar = Calendar.getInstance();
             int year = calendar.get(Calendar.YEAR);
             int month = calendar.get(Calendar.MONTH);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -336,8 +334,10 @@ public class PersonalInformationActivity extends BasePracticeActivity {
                     new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                            LocalDate date = new LocalDate(year, month + 1, day);
-                            DateUtil.getInstance().setDate(date.toDate());
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.set(year, month, day);
+
+                            DateUtil.getInstance().setDate(calendar);
                             selectDateButton.setText(DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
                         }
                     }, year, month, day);
@@ -381,7 +381,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
         queryMap.put("gender", ((TextView) findViewById(R.id.selectGenderButton)).getText().toString());
         TransitionDTO transitionDTO;
-        transitionDTO = signinPatientModeDTO.getMetadata().getLinks().getPersonalInfo();
+        transitionDTO = signInPatientModeDTO.getMetadata().getLinks().getPersonalInfo();
         getWorkflowServiceHelper().execute(transitionDTO, findMyAppointmentsCallback, queryMap);
     }
 
@@ -398,18 +398,18 @@ public class PersonalInformationActivity extends BasePracticeActivity {
             Map<String, String> queryMap = new HashMap<>();
             TransitionDTO transitionDTO;
             Gson gson = new Gson();
-            SigninPatientModeDTO signinPatientModeDTOLocal = gson.fromJson(workflowDTO.toString(), SigninPatientModeDTO.class);
-            getApplicationMode().setPatientId(signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getPatientId());
-            if (signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getPersonalInfoCheckSuccessful()) {
+            SignInDTO signInDTO = gson.fromJson(workflowDTO.toString(), SignInDTO.class);
+            getApplicationMode().setPatientId(signInDTO.getPayload().getPatientModePersonalInfoCheck().getMetadata().getPatientId());
+            if (signInDTO.getPayload().getPatientModePersonalInfoCheck().getPersonalInfoCheckSuccessful()) {
                 queryMap.put("language", getApplicationPreferences().getUserLanguage());
                 queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
                 queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
                 queryMap.put("patient_id", getApplicationMode().getPatientId());
                 Map<String, String> headers = new HashMap<>();
 
-                getAppAuthorizationHelper().setUser(signinPatientModeDTOLocal.getPayload().getPatientModePersonalInfoCheck().getMetadata().getUsername());
+                getAppAuthorizationHelper().setUser(signInDTO.getPayload().getPatientModePersonalInfoCheck().getMetadata().getUsername());
 
-                transitionDTO = signinPatientModeDTO.getMetadata().getTransitions().getAction();
+                transitionDTO = signInPatientModeDTO.getMetadata().getTransitions().getAction();
                 getWorkflowServiceHelper().execute(transitionDTO, patientModeAppointmentsCallback, queryMap, headers);
             } else {
                 String errorMessage = Label.getLabel("sign_in_failed") + ", " + Label.getLabel("personal_info_incorrect_details");

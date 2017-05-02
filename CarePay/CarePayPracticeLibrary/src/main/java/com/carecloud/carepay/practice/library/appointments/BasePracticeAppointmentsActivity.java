@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
-import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAvailableHoursDialog;
+import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAvailableHoursDialogFragment;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeChooseProviderDialog;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeRequestAppointmentDialog;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
@@ -16,7 +16,6 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
@@ -185,12 +184,14 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     @Override
     public void selectTime(VisitTypeDTO visitTypeDTO, AppointmentResourcesDTO appointmentResourcesDTO, AppointmentsResultModel appointmentsResultModel) {
         this.visitTypeDTO = visitTypeDTO;
-        new PracticeAvailableHoursDialog(getContext(), Label.getLabel("available_hours_back"), appointmentResourcesDTO.getResource(), appointmentsResultModel, visitTypeDTO, getLinks().getAppointmentAvailability(), this).show();
+        PracticeAvailableHoursDialogFragment fragment = PracticeAvailableHoursDialogFragment.newInstance(appointmentsResultModel, appointmentResourcesDTO.getResource(), null, null, visitTypeDTO);
+        fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
     }
 
     @Override
     public void selectTime(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO, AppointmentResourcesItemDTO appointmentResource, AppointmentsResultModel appointmentsResultModel) {
-        new PracticeAvailableHoursDialog(getContext(), Label.getLabel("available_hours_back"), appointmentResource, appointmentsResultModel, visitTypeDTO, getLinks().getAppointmentAvailability(), this, startDate, endDate).show();
+        PracticeAvailableHoursDialogFragment fragment = PracticeAvailableHoursDialogFragment.newInstance(appointmentsResultModel, appointmentResourcesDTO.getResource(), startDate, endDate, visitTypeDTO);
+        fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
     }
 
     @Override
@@ -253,8 +254,6 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
             SystemUtil.doDefaultFailureBehavior((BaseActivity) getContext(), exceptionMessage);
         }
     };
-
-    protected abstract AppointmentLabelDTO getLabels();
 
     protected abstract TransitionDTO getMakeAppointmentTransition();
 
