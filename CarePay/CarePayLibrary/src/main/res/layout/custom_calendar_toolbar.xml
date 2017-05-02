@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:id="@+id/add_appointment_toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -13,15 +15,16 @@
         android:layout_gravity="center_vertical"
         android:text="@string/pick_a_date_label" />
 
-    <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
         android:id="@+id/today_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_gravity="center_vertical|end"
         android:background="@color/transparent_apt"
-        android:text="@string/apt_day_today"
         android:textColor="@color/white"
-        android:textSize="@dimen/textview_textsize" />
+        android:textSize="@dimen/textview_textsize"
+        app:customAssetFont="gotham_rounded_medium"
+        breeze:textKey="today_appointments_heading" />
 
 </android.support.v7.widget.Toolbar>

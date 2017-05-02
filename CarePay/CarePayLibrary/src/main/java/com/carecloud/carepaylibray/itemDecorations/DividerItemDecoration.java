@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.itemdecorations;
+package com.carecloud.carepaylibray.itemDecorations;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;

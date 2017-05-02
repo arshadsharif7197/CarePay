@@ -10,10 +10,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
 import com.carecloud.carepaylibray.customdialogs.BaseDialogFragment;
 import com.carecloud.carepaylibray.utils.DateUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.timessquare.CalendarPickerView;
 
 import org.joda.time.DateTime;
@@ -27,7 +25,7 @@ import java.util.List;
 public class DateRangePickerDialog extends BaseDialogFragment {
 
     private CalendarPickerView calendarPickerView;
-    private CustomGothamRoundedMediumButton applyDateRangeButton;
+    private Button applyDateRangeButton;
 
     private DateRangePickerDialogListener callback;
 
@@ -61,12 +59,12 @@ public class DateRangePickerDialog extends BaseDialogFragment {
 
     /**
      * @param dialogTitle title to be shown at the top of the dialog
-     * @param closeText label below the close icon
-     * @param startDate current start date
-     * @param endDate current end date
-     * @param minDate minimum date to be picked
-     * @param maxDate maximum date to be picked
-     * @return new instance of DateRangePickerDialog 
+     * @param closeText   label below the close icon
+     * @param startDate   current start date
+     * @param endDate     current end date
+     * @param minDate     minimum date to be picked
+     * @param maxDate     maximum date to be picked
+     * @return new instance of DateRangePickerDialog
      */
     public static DateRangePickerDialog newInstance(String dialogTitle, String closeText,
                                                     boolean isCancelable, Date startDate, Date endDate, Date minDate, Date maxDate,
@@ -162,7 +160,7 @@ public class DateRangePickerDialog extends BaseDialogFragment {
     };
 
     private void initializeApplyDateRangeButton(View view) {
-        applyDateRangeButton = (CustomGothamRoundedMediumButton)
+        applyDateRangeButton = (Button)
                 view.findViewById(com.carecloud.carepaylibrary.R.id.applyDateRangeButton);
         applyDateRangeButton.setEnabled(false);
         applyDateRangeButton.setOnClickListener(new View.OnClickListener() {
@@ -171,13 +169,9 @@ public class DateRangePickerDialog extends BaseDialogFragment {
                 if (null != callback) {
                     callback.onRangeSelected(startDate, endDate);
                 }
-
                 dismiss();
-
             }
         });
-
-        SystemUtil.setGothamRoundedBoldTypeface(getActivity(), applyDateRangeButton);
     }
 
     /**

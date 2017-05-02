@@ -9,6 +9,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,8 +25,6 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseActivity;
-import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookButton;
-import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
 import com.carecloud.carepaylibray.qrcodescanner.ScannerQRActivity;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -44,11 +43,6 @@ import java.util.Map;
 public class HowToCheckInActivity extends BasePracticeActivity {
 
     private SignInDTO signinPatientModeDTO;
-    private CustomGothamRoundedMediumButton goBackButton;
-    private TextView howToCheckInTextView;
-    private CustomGothamRoundedBookButton carePayLoginButton;
-    private CustomGothamRoundedBookButton scanQRCodeButton;
-    private CustomGothamRoundedBookButton manualSearchButton;
     private ProgressDialog dialog;
 
 
@@ -66,31 +60,25 @@ public class HowToCheckInActivity extends BasePracticeActivity {
 
         /*Initialise views*/
         initViews();
-        populateWithLabels();
     }
 
     /**
      * Method to initialise view
      */
     void initViews() {
-        goBackButton = (CustomGothamRoundedMediumButton)
-                findViewById(R.id.goBackButton);
+        Button goBackButton = (Button) findViewById(R.id.goBackButton);
         goBackButton.setOnClickListener(goBackButtonListener);
 
-        howToCheckInTextView = (TextView)
-                findViewById(R.id.howToCheckInTextView);
+        TextView howToCheckInTextView = (TextView) findViewById(R.id.howToCheckInTextView);
         howToCheckInTextView.setTextColor(ContextCompat.getColor(getBaseContext(), R.color.white));
 
-        carePayLoginButton = (CustomGothamRoundedBookButton)
-                findViewById(R.id.carePayLoginButton);
+        Button carePayLoginButton = (Button) findViewById(R.id.carePayLoginButton);
         carePayLoginButton.setOnClickListener(carePayLoginButtonListener);
 
-        scanQRCodeButton = (CustomGothamRoundedBookButton)
-                findViewById(R.id.scanQRCodeButton);
+        Button scanQRCodeButton = (Button) findViewById(R.id.scanQRCodeButton);
         scanQRCodeButton.setOnClickListener(scanQRCodeButtonListener);
 
-        manualSearchButton = (CustomGothamRoundedBookButton)
-                findViewById(R.id.manualSearchButton);
+        Button manualSearchButton = (Button) findViewById(R.id.manualSearchButton);
         manualSearchButton.setOnClickListener(manualSearchButtonListener);
 
         ImageView homeImageView = (ImageView) findViewById(R.id.homeImageView);
@@ -169,13 +157,6 @@ public class HowToCheckInActivity extends BasePracticeActivity {
         }
     };
 
-    private void populateWithLabels() {
-        goBackButton.setText(Label.getLabel("go_back_label"));
-        howToCheckInTextView.setText(Label.getLabel("signin_how_want_check_in"));
-        carePayLoginButton.setText(Label.getLabel("signin_how_check_in_carepay_login"));
-        scanQRCodeButton.setText(Label.getLabel("sigin_how_check_in_scan_qr_code"));
-        manualSearchButton.setText(Label.getLabel("sigin_how_check_in_manual_search"));
-    }
 
     /**
      * Start QR code scanner base on the device

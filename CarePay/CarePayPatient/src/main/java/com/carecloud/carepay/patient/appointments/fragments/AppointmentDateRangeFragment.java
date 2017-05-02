@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +24,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customcomponents.CustomCalendarCellDecorator;
-import com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.squareup.timessquare.CalendarCellDecorator;
@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 public class AppointmentDateRangeFragment extends BaseFragment {
 
     private CalendarPickerView calendarPickerView;
-    private CustomGothamRoundedMediumButton applyDateRangeButton;
+    private Button applyDateRangeButton;
     private Date previousStartDate;
     private Date previousEndDate;
     private Date newStartDate;
@@ -124,8 +124,7 @@ public class AppointmentDateRangeFragment extends BaseFragment {
         toolbar.setNavigationIcon(closeIcon);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
-        CustomGothamRoundedMediumButton todayButton = (CustomGothamRoundedMediumButton)
-                toolbar.findViewById(R.id.today_button);
+        Button todayButton = (Button) toolbar.findViewById(R.id.today_button);
         todayButton.setOnClickListener(todayButtonClickListener);
 
         toolbar.setNavigationOnClickListener(navigationOnClickListener);
@@ -184,14 +183,9 @@ public class AppointmentDateRangeFragment extends BaseFragment {
             Calendar rangeEnd = Calendar.getInstance();
             rangeEnd.add(Calendar.DAY_OF_MONTH, 7);
 
-//            Collection<Date> selectedDates = new ArrayList<>();
-//            selectedDates.add(rangeStart.getTime());
-//            selectedDates.add(rangeEnd.getTime());
-
             Date today = new Date();
             calendarPickerView.init(today, getNextSixMonthCalendar().getTime())
                     .inMode(CalendarPickerView.SelectionMode.RANGE);
-//                .withSelectedDates(selectedDates);
         }
 
         calendarPickerView.setOnDateSelectedListener(onDateSelectListener);
@@ -200,7 +194,7 @@ public class AppointmentDateRangeFragment extends BaseFragment {
                 ContextCompat.getColor(getContext(), R.color.payne_gray)));
         calendarPickerView.setDecorators(decorators);
 
-        applyDateRangeButton = (CustomGothamRoundedMediumButton)
+        applyDateRangeButton = (Button)
                 view.findViewById(R.id.applyDateRangeButton);
         applyDateRangeButton.setOnClickListener(applyButtonClickListener);
         applyDateRangeButton.setEnabled(false);

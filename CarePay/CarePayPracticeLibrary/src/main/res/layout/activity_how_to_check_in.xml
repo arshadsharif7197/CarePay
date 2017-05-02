@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_how_to_check_in"
     android:layout_width="match_parent"
@@ -18,7 +19,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedMediumButton
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/goBackButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,7 +30,9 @@
             android:paddingRight="@dimen/dimen_15dp"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_22sp" />
+            android:textSize="@dimen/text_size_22sp"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="go_back_label" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -54,9 +57,10 @@
             android:layout_marginTop="@dimen/dimen_20dp"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_36sp"
-            app:customAssetFont="gotham_rounded_medium" />
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="signin_how_want_check_in" />
 
-        <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookButton
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/carePayLoginButton"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dimen_81dp"
@@ -68,16 +72,18 @@
             android:drawablePadding="@dimen/dimen_25dp"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_28sp" />
+            android:textSize="@dimen/text_size_28sp"
+            app:customAssetFont="gotham_rounded_book"
+            breeze:textKey="signin_how_check_in_carepay_login" />
 
-        <TextView
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:layout_width="@dimen/dimen_450dp"
             android:layout_height="@dimen/dimen_1dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dimen_10dp"
             android:background="@color/white_opacity_30" />
 
-        <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookButton
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/scanQRCodeButton"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dimen_81dp"
@@ -88,16 +94,18 @@
             android:drawablePadding="@dimen/dimen_25dp"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_28sp" />
+            android:textSize="@dimen/text_size_28sp"
+            app:customAssetFont="gotham_rounded_book"
+            breeze:textKey="sigin_how_check_in_scan_qr_code" />
 
-        <TextView
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:layout_width="@dimen/dimen_450dp"
             android:layout_height="@dimen/dimen_1dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dimen_10dp"
             android:background="@color/white_opacity_30" />
 
-        <com.carecloud.carepaylibray.customcomponents.CustomGothamRoundedBookButton
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/manualSearchButton"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dimen_81dp"
@@ -108,9 +116,11 @@
             android:drawablePadding="@dimen/dimen_25dp"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_28sp" />
+            android:textSize="@dimen/text_size_28sp"
+            app:customAssetFont="gotham_rounded_book"
+            breeze:textKey="sigin_how_check_in_manual_search" />
 
-        <TextView
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:layout_width="@dimen/dimen_450dp"
             android:layout_height="@dimen/dimen_1dp"
             android:layout_gravity="center_horizontal"
