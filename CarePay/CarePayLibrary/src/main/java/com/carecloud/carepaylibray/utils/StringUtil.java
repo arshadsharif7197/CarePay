@@ -7,18 +7,18 @@ import android.util.Log;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.isNotEmptyString;
-
 import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.isNotEmptyString;
+
 public class StringUtil {
 
-    private static final String EMAIL_PATTERN      =
+    private static final String EMAIL_PATTERN =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     private static final String PASSWORD_REGEX_VALIDATION
-                                                   = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@!%*?&_-])[A-Za-z\\d$@!%*?&_-]{8,}";
+            = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@!%*?&_-])[A-Za-z\\d$@!%*?&_-]{8,}";
 
     /**
      * Determines if the specified String object is null or equal to
@@ -33,12 +33,7 @@ public class StringUtil {
     }
 
     public static boolean isValidmail(String email) {
-        if (email != null) {
-            Pattern pattern = Pattern.compile(EMAIL_PATTERN);
-            Matcher matcher = pattern.matcher(email);
-            return matcher.matches();
-        }
-        return false;
+        return !isNullOrEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     /**
@@ -58,8 +53,8 @@ public class StringUtil {
     }
 
 
-    public static String getFormatedLabal(Context context, String label){
-        return isNullOrEmpty(label)?context.getString(R.string.not_defined):label;
+    public static String getFormatedLabal(Context context, String label) {
+        return isNullOrEmpty(label) ? context.getString(R.string.not_defined) : label;
     }
 
     /**
@@ -281,11 +276,12 @@ public class StringUtil {
 
     /**
      * Convinience method for validating json String
+     *
      * @param jsonLabel - String to vaildate
      * @return - Either original string if valid or "Not Defined"
      */
-    public static String validateJsonLabel(String jsonLabel){
-        if(isNotEmptyString(jsonLabel)) {
+    public static String validateJsonLabel(String jsonLabel) {
+        if (isNotEmptyString(jsonLabel)) {
             return jsonLabel;
         }
         return CarePayConstants.NOT_DEFINED;
@@ -299,12 +295,13 @@ public class StringUtil {
      */
     public static String getFormattedBalanceAmount(double amount) {
         DecimalFormat decimalFormat = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
-        return CarePayConstants.DOLLAR+decimalFormat.format(amount);
+        return CarePayConstants.DOLLAR + decimalFormat.format(amount);
     }
 
     /**
      * Returns encoded credit card number
-     * @param cardType Card Type
+     *
+     * @param cardType   Card Type
      * @param cardNumber Card Number
      * @return encoded credit card number
      */
@@ -317,7 +314,8 @@ public class StringUtil {
 
     /**
      * Returns formatted credit card number
-     * @param cardType Card Type
+     *
+     * @param cardType   Card Type
      * @param cardNumber Card Number
      * @return formatted credit card number
      */
@@ -329,14 +327,13 @@ public class StringUtil {
     }
 
     /**
-     *
      * @param capString The capString
      * @return modified String
      */
-    public static String capitalize(String capString){
+    public static String capitalize(String capString) {
         StringBuffer capBuffer = new StringBuffer();
         Matcher capMatcher = Pattern.compile("([a-z])([a-z]*)", Pattern.CASE_INSENSITIVE).matcher(capString);
-        while (capMatcher.find()){
+        while (capMatcher.find()) {
             capMatcher.appendReplacement(capBuffer, capMatcher.group(1).toUpperCase() + capMatcher.group(2).toLowerCase());
         }
 
