@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.demographics.fragments.settings;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -32,17 +34,16 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
-import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
-
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.hideSoftKeyboard;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,24 +56,36 @@ public class EditProfileFragment extends DocumentScannerFragment {
     private String middleNameValString = null;
 
     private ImageView profileImageView;
+    private DemographicsSettingsFragmentListener callback;
 
     /**
-     *
-     * @param demographicsSettingsDTO the model
      * @return an instance of EditProfileFragment
      */
-    public static EditProfileFragment newInstance(DemographicsSettingsDTO demographicsSettingsDTO) {
-        Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, demographicsSettingsDTO);
-        EditProfileFragment editProfileFragment = new EditProfileFragment();
-        editProfileFragment.setArguments(args);
-        return editProfileFragment;
+    public static EditProfileFragment newInstance() {
+        return new EditProfileFragment();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            callback = (DemographicsSettingsFragmentListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement DemographicsSettingsFragmentListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        callback = null;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        demographicsSettingsDTO = DtoHelper.getConvertedDTO(DemographicsSettingsDTO.class, getArguments());
+        demographicsSettingsDTO = (DemographicsSettingsDTO) callback.getDto();
     }
 
     @Nullable
@@ -164,7 +177,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
                 DemographicsSettingsUpdateNameFragment fragment = (DemographicsSettingsUpdateNameFragment)
                         fm.findFragmentByTag(DemographicsSettingsUpdateNameFragment.class.getSimpleName());
                 if (fragment == null) {
-                    fragment = new DemographicsSettingsUpdateNameFragment();
+                    fragment = DemographicsSettingsUpdateNameFragment.newInstance();
                 }
 
                 //fix for random crashes
@@ -189,7 +202,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
                 DemographicsSettingUpdateEmailFragment fragment = (DemographicsSettingUpdateEmailFragment)
                         fm.findFragmentByTag(DemographicsSettingUpdateEmailFragment.class.getSimpleName());
                 if (fragment == null) {
-                    fragment = DemographicsSettingUpdateEmailFragment.newInstance(demographicsSettingsDTO);
+                    fragment = DemographicsSettingUpdateEmailFragment.newInstance();
                 }
 
                 fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
@@ -212,7 +225,7 @@ public class EditProfileFragment extends DocumentScannerFragment {
                 DemographicsSettingsChangePasswordFragment fragment = (DemographicsSettingsChangePasswordFragment)
                         fm.findFragmentByTag(DemographicsSettingsChangePasswordFragment.class.getSimpleName());
                 if (fragment == null) {
-                    fragment = new DemographicsSettingsChangePasswordFragment();
+                    fragment = DemographicsSettingsChangePasswordFragment.newInstance();
                 }
 
                 //fix for random crashes

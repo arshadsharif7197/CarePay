@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.demographics.fragments.settings;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.DemographicSettingsCurrentPasswordDTO;
@@ -30,7 +32,6 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
-import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.api.client.util.Base64;
@@ -45,6 +46,7 @@ import java.util.Map;
  */
 public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
     private DemographicsSettingsDTO demographicsSettingsDTO;
+    private DemographicsSettingsFragmentListener callback;
 
     private EditText emailEditText;
     private EditText passwordEditText;
@@ -59,22 +61,33 @@ public class DemographicsSettingUpdateEmailFragment extends BaseFragment {
     }
 
     /**
-     * @param demographicsSettingsDTO the DemographicsSettingsDTO model
      * @return an instance of DemographicsSettingUpdateEmailFragment
      */
-    public static DemographicsSettingUpdateEmailFragment newInstance(DemographicsSettingsDTO demographicsSettingsDTO) {
-        Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, demographicsSettingsDTO);
-        DemographicsSettingUpdateEmailFragment demographicsSettingUpdateEmailFragment
-                = new DemographicsSettingUpdateEmailFragment();
-        demographicsSettingUpdateEmailFragment.setArguments(args);
-        return demographicsSettingUpdateEmailFragment;
+    public static DemographicsSettingUpdateEmailFragment newInstance() {
+        return new DemographicsSettingUpdateEmailFragment();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            callback = (DemographicsSettingsFragmentListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement DemographicsSettingsFragmentListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        callback = null;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        demographicsSettingsDTO = DtoHelper.getConvertedDTO(DemographicsSettingsDTO.class, getArguments());
+        demographicsSettingsDTO = (DemographicsSettingsDTO) callback.getDto();
     }
 
     @Nullable

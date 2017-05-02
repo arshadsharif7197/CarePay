@@ -13,13 +13,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
 import com.carecloud.carepay.patient.tutorial.tutorial.TutorialActivity;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 
 public class HelpFragment extends BaseFragment {
 
-    private HelpFragmentListener callback;
+    private DemographicsSettingsFragmentListener callback;
 
     @Override
     public void onAttach(Context context) {
@@ -28,7 +29,7 @@ public class HelpFragment extends BaseFragment {
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            callback = (HelpFragmentListener) context;
+            callback = (DemographicsSettingsFragmentListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement HelpFragmentListener");
         }
@@ -112,9 +113,5 @@ public class HelpFragment extends BaseFragment {
 
     private void openUrl(String url) {
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-    }
-
-    public interface HelpFragmentListener {
-        void showSupportFragment();
     }
 }

@@ -1,11 +1,11 @@
 package com.carecloud.carepay.patient.demographics.fragments.settings;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,17 +13,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.DemographicSettingsCurrentPasswordDTO;
-import com.carecloud.carepay.service.library.dtos.DemographicsSettingsEmailProperties;
-import com.carecloud.carepay.service.library.dtos.DemographicsSettingsHeaderDTO;
-import com.carecloud.carepay.service.library.dtos.DemographicsSettingsMaintainanceDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -32,26 +28,22 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMetadataDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsTransitionsDTO;
-import com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.api.client.util.Base64;
-import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.setGothamRoundedMediumTypeface;
-
 /**
  * A simple {@link Fragment} subclass.
  */
 public class DemographicsSettingsChangePasswordFragment extends BaseFragment {
-    private static final String LOG_TAG = DemographicsSettingsFragment.class.getSimpleName();
-    private AppCompatActivity appCompatActivity;
-    private DemographicsSettingsDTO demographicsSettingsDTO = null;
+
+    private DemographicsSettingsDTO demographicsSettingsDTO;
+    private DemographicsSettingsFragmentListener callback;
 
     private String currentPasswordString = null;
     private String newPasswordString = null;
@@ -60,8 +52,6 @@ public class DemographicsSettingsChangePasswordFragment extends BaseFragment {
     private EditText currentPasswordEditText = null;
     private EditText newPasswordEditText = null;
     private EditText repeatPasswordEditText = null;
-
-    private TextView passwordHelpLabel = null;
 
     private Button updatePasswordButton = null;
     private boolean isCurrentPasswordEmpty;
@@ -76,16 +66,34 @@ public class DemographicsSettingsChangePasswordFragment extends BaseFragment {
     private String passwordHelpString = null;
     private String saveChangesString = null;
 
-    private LinearLayout rootview;
+    /**
+     * @return an instance of DemographicsSettingsChangePasswordFragment
+     */
+    public static DemographicsSettingsChangePasswordFragment newInstance() {
+        return new DemographicsSettingsChangePasswordFragment();
+    }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            callback = (DemographicsSettingsFragmentListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement DemographicsSettingsFragmentListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        callback = null;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        appCompatActivity = (AppCompatActivity) getActivity();
-    }
-
-    public DemographicsSettingsChangePasswordFragment() {
+        demographicsSettingsDTO = (DemographicsSettingsDTO) callback.getDto();
     }
 
     @Nullable
@@ -95,21 +103,13 @@ public class DemographicsSettingsChangePasswordFragment extends BaseFragment {
 
         final Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
-        setGothamRoundedMediumTypeface(appCompatActivity, title);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_close));
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            Gson gson = new Gson();
-            bundle = getArguments();
-            String demographicsSettingsDTOString = bundle.getString(CarePayConstants.DEMOGRAPHICS_SETTINGS_BUNDLE);
-            demographicsSettingsDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsDTO.class);
-        }
+        callback.setToolbar(toolbar);
 
         currentPasswordEditText = (EditText) view.findViewById(R.id.currentPasswordEditText);
         newPasswordEditText = (EditText) view.findViewById(R.id.newPasswordEditText);
         repeatPasswordEditText = (EditText) view.findViewById(R.id.repeatPasswordEditText);
-        passwordHelpLabel = (TextView) view.findViewById(R.id.passwordHelpLabel);
+        TextView passwordHelpLabel = (TextView) view.findViewById(R.id.passwordHelpLabel);
 
         updatePasswordButton = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
         getSettingsLabels();
@@ -117,9 +117,9 @@ public class DemographicsSettingsChangePasswordFragment extends BaseFragment {
         updatePasswordButton.setText(saveChangesString);
 
         initialiseUIFields(view);
-        setEditTexts(view);
+        setEditTexts();
         passwordHelpLabel.setText(passwordHelpString);
-        setClickables(view);
+        setClickables();
         isCurrentPasswordEmpty = true;
         isNewPasswordEmpty = true;
         isRepeatPasswordEmpty = true;
@@ -152,7 +152,7 @@ public class DemographicsSettingsChangePasswordFragment extends BaseFragment {
         repeatPasswordLabel = (TextInputLayout) view.findViewById(R.id.repeatPasswordTextInputLayout);
     }
 
-    private void setEditTexts(View view) {
+    private void setEditTexts() {
         currentPasswordLabel.setTag(currentPasswordString);
         currentPasswordEditText.setTag(currentPasswordLabel);
         currentPasswordEditText.setHint(currentPasswordString);
@@ -259,15 +259,6 @@ public class DemographicsSettingsChangePasswordFragment extends BaseFragment {
         return !isRepeatPasswordEmpty;
     }
 
-    /**
-     * For tests
-     *
-     * @param activity The activity
-     */
-    public void setActivity(KeyboardHolderActivity activity) {
-        appCompatActivity = activity;
-    }
-
     WorkflowServiceCallback updatePasswordCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -288,57 +279,31 @@ public class DemographicsSettingsChangePasswordFragment extends BaseFragment {
     };
 
 
-    private void setClickables(View view) {
-        {
-            updatePasswordButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    try {
-                        if (isCurrentPasswordValid() && demographicsSettingsDTO != null) {
-                            DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
-                            DemographicsSettingsTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
-                            TransitionDTO demographicsSettingsUpdatePasswordDTO = demographicsSettingsTransitionsDTO.getChangePassword();
-                            DemographicsSettingsHeaderDTO demographicsSettingsHeaderDTO = demographicsSettingsUpdatePasswordDTO.getHeader();
-                            DemographicsSettingsMaintainanceDTO demographicsSettingsMaintainanceDTO = demographicsSettingsHeaderDTO.getMaintenance();
-                            DemographicsSettingsEmailProperties demographicsSettingsEmailProperties = demographicsSettingsMaintainanceDTO.getProperties();
-                            DemographicSettingsCurrentPasswordDTO demographicSettingsCurrentPasswordDTO = demographicsSettingsEmailProperties.getCurrentPassword();
+    private void setClickables() {
+        updatePasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isCurrentPasswordValid()) {
+                    DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
+                    DemographicsSettingsTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
+                    TransitionDTO demographicsSettingsUpdatePasswordDTO = demographicsSettingsTransitionsDTO.getChangePassword();
 
-                            Map<String, String> properties = null;
-                            properties = new HashMap<>();
+                    Map<String, String> properties = new HashMap<>();
+                    properties.put("login_email", getCurrentEmail());
+                    properties.put("current_password", currentPasswordEditText.getText().toString());
+                    properties.put("proposed_password", newPasswordEditText.getText().toString());
+                    JSONObject attributes = new JSONObject(properties);
+                    String encodedAttributes = new String(Base64.encodeBase64(attributes.toString().getBytes()));
+                    Map<String, String> header = new HashMap<>();
+                    header.put("maintenance", encodedAttributes);
 
-                            properties.put("login_email", getCurrentEmail());
-                            properties.put("current_password", currentPasswordEditText.getText().toString());
-                            properties.put("proposed_password", newPasswordEditText.getText().toString());
-                            JSONObject attributes = new JSONObject(properties);
-                            String encodedAttributes = new String(Base64.encodeBase64(attributes.toString().getBytes()));
-                            Map<String, String> header = null;
-                            header = new HashMap<>();
-                            header.put("maintenance", encodedAttributes);
-
-                            try {
-                                if (demographicsSettingsDTO != null) {
-                                    DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
-                                    if (demographicsSettingsPayloadDTO != null) {
-                                        //DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-                                        //DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload().;
-                                        //PatientModel demographicsPersonalDetails = demographicPayload.getPersonalDetails();
-
-                                        Gson gson = new Gson();
-                                        String jsonInString = gson.toJson(demographicsSettingsPayloadDTO);
-                                        getWorkflowServiceHelper().execute(demographicsSettingsUpdatePasswordDTO, updatePasswordCallback, null, null, header);
-                                    }
-                                }
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
+                    if (demographicsSettingsPayloadDTO != null) {
+                        getWorkflowServiceHelper().execute(demographicsSettingsUpdatePasswordDTO, updatePasswordCallback, null, null, header);
                     }
                 }
-            });
-        }
+            }
+        });
     }
 
     private String getCurrentEmail() {

@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
@@ -30,7 +31,6 @@ import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
-import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.JsonObject;
@@ -45,44 +45,32 @@ public class DemographicsSettingsFragment extends BaseFragment {
 
     private DemographicsSettingsDTO demographicsSettingsDTO;
     private Button signOutButton;
-    private IDemographicsSettingsFragmentListener callback;
+    private DemographicsSettingsFragmentListener callback;
     private CheckBox pushNotificationCheckBox;
     private CheckBox emailNotificationCheckBox;
 
-    public interface IDemographicsSettingsFragmentListener {
-        void initializeCreditCardListFragment();
-
-        void showHelpFragment();
-    }
-
     /**
-     *
-     * @param demographicsSettingsDTO the model
      * @return an instance of DemographicsSettingsFragment
      */
-    public static DemographicsSettingsFragment newInstance(DemographicsSettingsDTO demographicsSettingsDTO) {
-        Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, demographicsSettingsDTO);
-        DemographicsSettingsFragment demographicsSettingsFragment = new DemographicsSettingsFragment();
-        demographicsSettingsFragment.setArguments(args);
-        return demographicsSettingsFragment;
+    public static DemographicsSettingsFragment newInstance() {
+        return new DemographicsSettingsFragment();
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            callback = (IDemographicsSettingsFragmentListener) context;
+            callback = (DemographicsSettingsFragmentListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + " must implement IDemographicsSettingsFragmentListener");
+                    + " must implement DemographicsSettingsFragmentListener");
         }
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        demographicsSettingsDTO = DtoHelper.getConvertedDTO(DemographicsSettingsDTO.class, getArguments());
+        demographicsSettingsDTO = (DemographicsSettingsDTO) callback.getDto();
     }
 
     @Nullable
@@ -165,7 +153,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
                 EditProfileFragment fragment = (EditProfileFragment)
                         fm.findFragmentByTag(EditProfileFragment.class.getSimpleName());
                 if (fragment == null) {
-                    fragment = EditProfileFragment.newInstance(demographicsSettingsDTO);
+                    fragment = EditProfileFragment.newInstance();
                 }
                 fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
                         EditProfileFragment.class.getSimpleName()).addToBackStack(null).commit();
@@ -181,7 +169,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
                 DemographicsInformationFragment fragment = (DemographicsInformationFragment)
                         fm.findFragmentByTag(DemographicsInformationFragment.class.getSimpleName());
                 if (fragment == null) {
-                    fragment = DemographicsInformationFragment.newInstance(demographicsSettingsDTO);
+                    fragment = DemographicsInformationFragment.newInstance();
                 }
                 fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
                         DemographicsInformationFragment.class.getSimpleName()).addToBackStack(null).commit();
@@ -197,7 +185,7 @@ public class DemographicsSettingsFragment extends BaseFragment {
                 DemographicsSettingsDocumentsFragment fragment = (DemographicsSettingsDocumentsFragment)
                         fm.findFragmentByTag(DemographicsSettingsDocumentsFragment.class.getSimpleName());
                 if (fragment == null) {
-                    fragment = DemographicsSettingsDocumentsFragment.newInstance(demographicsSettingsDTO);
+                    fragment = DemographicsSettingsDocumentsFragment.newInstance();
                 }
                 fm.beginTransaction().replace(R.id.activity_demographics_settings, fragment,
                         DemographicsSettingsDocumentsFragment.class.getSimpleName()).addToBackStack(null).commit();
