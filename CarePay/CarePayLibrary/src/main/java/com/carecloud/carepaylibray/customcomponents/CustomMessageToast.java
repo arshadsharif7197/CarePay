@@ -44,19 +44,18 @@ public class CustomMessageToast extends Toast {
         int orientation = DisplayUtils.getScreenOrientation(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout = inflater.inflate(R.layout.success_message_toast, null);
-        if(!StringUtil.isNullOrEmpty(successMessage))
-        {
+        if (!StringUtil.isNullOrEmpty(successMessage)) {
             TextView successTextView = (TextView) layout.findViewById(R.id.success_message_toast_textview);
-            if (Build.VERSION.SDK_INT >= 24){
+            if (Build.VERSION.SDK_INT >= 24) {
                 successTextView.setText(Html.fromHtml(successMessage, Html.FROM_HTML_MODE_LEGACY));
-            } else{
+            } else {
                 successTextView.setText(Html.fromHtml(successMessage));
             }
         }
         setView(layout);
-        if(orientation == Configuration.ORIENTATION_PORTRAIT){
-            setGravity(Gravity.FILL_HORIZONTAL|Gravity.TOP, 0, 0);
-        }else {
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            setGravity(Gravity.FILL_HORIZONTAL | Gravity.TOP, 0, 0);
+        } else {
             setGravity(Gravity.TOP, 0, 0);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -65,7 +64,7 @@ public class CustomMessageToast extends Toast {
 
         View container = layout.findViewById(R.id.success_message_toast_layout);
         ImageView icon = (ImageView) layout.findViewById(R.id.success_icon);
-        switch(notificationType){
+        switch (notificationType) {
             case NOTIFICATION_TYPE_ERROR:
                 icon.setImageResource(R.drawable.icn_notification_error);
                 container.setBackgroundResource(R.drawable.error_notification_background);
@@ -88,10 +87,10 @@ public class CustomMessageToast extends Toast {
             @Override
             public void run() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    ((BaseActivity) context).getWindow().setStatusBarColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                    ((BaseActivity) context).getWindow().setStatusBarColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
                 }
             }
-        }, getDuration()==LENGTH_SHORT?1000:5000);//this should correspond to Toast LENGTH_SHORT & LENGTH_LONG
+        }, getDuration() == LENGTH_SHORT ? 1000 : 5000);//this should correspond to Toast LENGTH_SHORT & LENGTH_LONG
 
     }
 }
