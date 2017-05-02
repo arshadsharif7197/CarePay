@@ -17,6 +17,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.AppointmentPayloadDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customdialogs.BaseDialogFragment;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
@@ -27,8 +28,6 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringUtils;
-
-import java.io.Serializable;
 
 public class PracticeAppointmentDialog extends BaseDialogFragment {
 
@@ -41,7 +40,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
     private String leftAction;
     private String rightAction;
     private String photoUrl;
-    private AppointmentDialogStyle style;
+    private AppointmentDisplayStyle style;
 
     private View view;
     private View headerView;
@@ -50,10 +49,6 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         void onLeftActionTapped(AppointmentDTO appointmentDTO);
 
         void onRightActionTapped(AppointmentDTO appointmentDTO);
-    }
-
-    public enum AppointmentDialogStyle implements Serializable {
-        PENDING, REQUESTED, CHECKED_IN, DEFAULT;
     }
 
     @Override
@@ -78,7 +73,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
      * @param callback listener
      * @return new instance of PracticeAppointmentDialog 
      */
-    public static PracticeAppointmentDialog newInstance(AppointmentDialogStyle style,
+    public static PracticeAppointmentDialog newInstance(AppointmentDisplayStyle style,
                                                         AppointmentDTO appointmentDTO,
                                                         PracticeAppointmentDialogListener callback) {
         // Supply inputs as an argument
@@ -98,7 +93,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         super.onCreate(savedInstanceState);
 
         Bundle arguments = getArguments();
-        this.style = (AppointmentDialogStyle) arguments.getSerializable("style");
+        this.style = (AppointmentDisplayStyle) arguments.getSerializable("style");
         this.appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, arguments);
 
     }

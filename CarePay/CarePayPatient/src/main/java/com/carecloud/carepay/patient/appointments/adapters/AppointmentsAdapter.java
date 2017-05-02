@@ -14,12 +14,11 @@ import android.widget.LinearLayout;
 
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentLabelDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -47,10 +46,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         this.appointmentItems = appointmentItems;
     }
 
-    public List<Object> appointmentItems;
-    private AppointmentLabelDTO appointmentLabels;
+    private List<Object> appointmentItems;
     private final AppointmentsAdapterListener callback;
-    private AppointmentsResultModel appointmentInfo;
     private AppointmentsListFragment appointmentsListFragment;
 
     public interface AppointmentsAdapterListener {
@@ -66,14 +63,11 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
      */
     public AppointmentsAdapter(Context context, List<Object> appointmentItems,
                                AppointmentsListFragment appointmentsListFragment,
-                               AppointmentsResultModel appointmentInfo,
                                AppointmentsAdapterListener callback) {
 
         this.context = context;
         this.appointmentItems = appointmentItems;
         this.appointmentsListFragment = appointmentsListFragment;
-        this.appointmentInfo = appointmentInfo;
-        this.appointmentLabels = appointmentInfo.getMetadata().getLabel();
         this.callback = callback;
     }
 
@@ -121,11 +115,11 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             boolean isCanceled = status.equalsIgnoreCase(CarePayConstants.CANCELLED);
             final boolean isRequested = status.equalsIgnoreCase(CarePayConstants.REQUESTED);
 
-            if (sectionHeaderTitle.equals(appointmentLabels.getUpcomingAppointmentsHeading())) {
+            if (sectionHeaderTitle.equals(Label.getLabel("upcoming_appointments_heading"))) {
                 if (isCheckedIn) {
                     holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
                     holder.upcomingDateLinearLayout.setVisibility(View.GONE);
-                    holder.todayTimeTextView.setText(appointmentLabels.getAppointmentsCheckedInLabel());
+                    holder.todayTimeTextView.setText(Label.getLabel("appointments_checked_in_label"));
                     holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
                 } else {
                     holder.todayTimeLinearLayout.setVisibility(View.GONE);
@@ -140,8 +134,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 holder.todayTimeLinearLayout.setVisibility(View.VISIBLE);
                 holder.upcomingDateLinearLayout.setVisibility(View.GONE);
                 if (isCheckedIn) {
-                    holder.todayTimeTextView.setText(StringUtil.getLabelForView(
-                            appointmentLabels.getAppointmentsCheckedInLabel()));
+                    holder.todayTimeTextView.setText(Label.getLabel("appointments_checked_in_label"));
                     holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
                 } else {
                     holder.todayTimeTextView.setText(time12Hour);
@@ -178,7 +171,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
             if (sectionHeaderTitle.equalsIgnoreCase(CarePayConstants.DAY_OVER) && !isCheckedIn) {
                 holder.missedAppointmentTextView.setVisibility(View.VISIBLE);
-                holder.missedAppointmentTextView.setText(appointmentLabels.getMissedAppointmentsHeading());
+                holder.missedAppointmentTextView.setText(Label.getLabel("missed_appointments_heading"));
                 holder.missedAppointmentTextView.setTextColor(
                         ContextCompat.getColor(view.getContext(), R.color.optionl_gray));
 
@@ -305,7 +298,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
         if (convertedAppointmentDate.after(convertedCurrentDate)
                 && !appointmentDate.equalsIgnoreCase(currentDate)) {
-            return appointmentLabels.getUpcomingAppointmentsHeading();
+            return Label.getLabel("upcoming_appointments_heading");
         }
 
         if (convertedAppointmentDate.before(convertedCurrentDate)) {
@@ -324,17 +317,17 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                     return CarePayConstants.DAY_OVER;
                 }
             }
-            return appointmentLabels.getTodayAppointmentsHeading();
+            return Label.getLabel("today_appointments_heading");
         }
     }
 
 
     private String getSectionHeaderTitleByDay(String day) {
         if (day.equalsIgnoreCase(CarePayConstants.DAY_OVER) ||
-                day.equalsIgnoreCase(appointmentLabels.getTodayAppointmentsHeading())) {
-            return appointmentLabels.getTodayAppointmentsHeading();
+                day.equalsIgnoreCase(Label.getLabel("today_appointments_heading"))) {
+            return Label.getLabel("today_appointments_heading");
         } else {
-            return appointmentLabels.getUpcomingAppointmentsHeading();
+            return Label.getLabel("upcoming_appointments_heading");
         }
     }
 
@@ -355,20 +348,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         return appointmentItems.size();
     }
 
-//    @Override
-//    public void onRefreshAppointmentList(AppointmentDTO appointmentDTO) {
-//        int index = appointmentItems.indexOf(appointmentDTO);
-//        appointmentDTO.getPayload().getAppointmentStatusModel().setCode(CarePayConstants.CANCELLED);
-//        appointmentItems.set(index, appointmentDTO);
-//        notifyDataSetChanged();
-//    }
 
-//    @Override
-//    public void onPreRegisterTapped(AppointmentDTO appointmentDTO, AppointmentsResultModel appointmentInfo) {
-//        if (null != callback) {
-//            callback.onPreRegisterTapped(appointmentDTO, appointmentInfo);
-//        }
-//    }
 
     class AppointmentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private CarePayTextView upcomingDateTextView;

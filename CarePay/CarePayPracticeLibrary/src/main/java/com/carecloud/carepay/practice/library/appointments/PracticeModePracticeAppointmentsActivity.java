@@ -35,6 +35,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
 import com.carecloud.carepaylibray.appointments.models.LinksDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
@@ -413,19 +414,19 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void showPracticeAppointmentDialog(AppointmentDTO appointmentDTO) {
-        PracticeAppointmentDialog.AppointmentDialogStyle dialogStyle = PracticeAppointmentDialog.AppointmentDialogStyle.DEFAULT;
+        AppointmentDisplayStyle dialogStyle = AppointmentDisplayStyle.DEFAULT;
         AppointmentPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
         if (appointmentPayloadDTO.getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
-            dialogStyle = PracticeAppointmentDialog.AppointmentDialogStyle.REQUESTED;
+            dialogStyle = AppointmentDisplayStyle.REQUESTED;
 
         }else if (appointmentPayloadDTO.canCheckOut()) {
-            dialogStyle = PracticeAppointmentDialog.AppointmentDialogStyle.CHECKED_IN;
+            dialogStyle = AppointmentDisplayStyle.CHECKED_IN;
 
         }else if (appointmentPayloadDTO.isAppointmentOver() || appointmentPayloadDTO.isAppointmentFinished()) {
             //todo finished appt options, Doing nothing for now
 
         } else if (appointmentPayloadDTO.canCheckIn()) {
-            dialogStyle = PracticeAppointmentDialog.AppointmentDialogStyle.PENDING;
+            dialogStyle = AppointmentDisplayStyle.PENDING;
 
         }
 
