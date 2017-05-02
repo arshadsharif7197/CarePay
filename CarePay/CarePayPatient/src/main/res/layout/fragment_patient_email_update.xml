@@ -1,56 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:id="@+id/settings_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/toolbar_demographics_settings" />
+    <include
+        android:id="@+id/toolbarLayout"
+        layout="@layout/toolbar_demographics_settings" />
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/signInEmailTextInputLayout"
         style="@style/TextInputLayoutStyle"
-        android:layout_marginTop="@dimen/dimen_26dp"
+        android:layout_below="@id/toolbarLayout"
         android:layout_marginLeft="@dimen/dimen_20dp"
+        android:layout_marginTop="@dimen/dimen_26dp"
+        app:customAssetFont="proxima_nova_regular"
         app:hintTextAppearance="@style/FloatingLabelStyle">
 
-        <EditText
+        <com.carecloud.carepaylibray.customcomponents.CarePayEditText
             android:id="@+id/signinEmailEditText"
             style="@style/EditTextStyle"
             android:inputType="textEmailAddress"
-            />
+            app:customAssetFont="proxima_nova_regular" />
 
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/oldPasswordTextInputLayout"
         style="@style/TextInputLayoutStyle"
+        android:layout_below="@id/signInEmailTextInputLayout"
         android:layout_marginLeft="@dimen/dimen_20dp"
+        app:customAssetFont="proxima_nova_regular"
         app:hintTextAppearance="@style/FloatingLabelStyle"
         app:passwordToggleEnabled="false">
 
-        <EditText
+        <com.carecloud.carepaylibray.customcomponents.CarePayEditText
             android:id="@+id/passwordEditText"
             style="@style/EditTextStyle"
             android:imeOptions="actionDone"
+            android:inputType="textPassword"
             android:textColor="@color/colorPrimary"
-            android:inputType="textPassword"/>
+            app:customAssetFont="proxima_nova_regular" />
 
     </android.support.design.widget.TextInputLayout>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
-        <Button
-            android:id="@+id/buttonAddDemographicInfo"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:background="@drawable/settings_button_selector"
-            android:layout_alignParentBottom="true"
-            android:gravity="center"
-            android:textColor="@color/white" />
-    </RelativeLayout>
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
+        android:id="@+id/buttonAddDemographicInfo"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/settings_button_selector"
+        android:enabled="false"
+        android:gravity="center"
+        android:textColor="@color/white"
+        app:customAssetFont="gotham_rounded_medium"
+        breeze:textKey="demographics_save_changes_label" />
 
 
-</LinearLayout>
+</RelativeLayout>
