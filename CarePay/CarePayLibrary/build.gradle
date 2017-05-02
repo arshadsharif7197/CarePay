@@ -44,7 +44,6 @@ dependencies {
     // apache utils
     compile 'org.apache.commons:commons-lang3:3.5'
     //datetime
-    compile 'joda-time:joda-time:2.9.4'
     compile project(path: ':CarePayServiceLibrary')
     // Using for image loading
     compile 'com.squareup.picasso:picasso:2.5.2'

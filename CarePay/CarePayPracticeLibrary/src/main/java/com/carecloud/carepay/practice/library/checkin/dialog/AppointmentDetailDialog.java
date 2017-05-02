@@ -46,8 +46,8 @@ import com.google.gson.JsonObject;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import org.joda.time.DateTime;
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,6 +101,8 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
     private AppointmentDialogCallback callback;
     private PopupPickerWindow pickerWindow;
     private String pushUserId;
+
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
 
     /**
      * Constructor.
@@ -240,11 +242,9 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         patientNameLabel.setText(StringUtil.getFormatedLabal(context, appointmentPayloadDTO.getPatient().getFullName()));
         doctorNameLabel.setText(StringUtil.getFormatedLabal(context, appointmentPayloadDTO.getProvider().getName()));
 
-        long hour = DateUtil.getInstance().setDateRaw(appointmentPayloadDTO.getStartTime()).getDate().getTime();
-        final DateTime appointmentDateTime = new DateTime(hour);
-        hourLabel.setText(appointmentDateTime.toString("hh:mm a"));
-        setHourLabelBackground(appointmentDateTime);
-
+        Date date = DateUtil.getInstance().setDateRaw(appointmentPayloadDTO.getStartTime()).getDate();
+        hourLabel.setText(dateFormat.format(date));
+        setHourLabelBackground(date);
 
         findViewById(R.id.checkin_close_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -292,9 +292,9 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
      * If the appointment start time is in future, then show the appointment time label background in green.
      *
      */
-    private void setHourLabelBackground(DateTime appointmentDateTime) {
+    private void setHourLabelBackground(Date appointmentDateTime) {
 
-        if (appointmentDateTime.isBeforeNow()) {
+        if (appointmentDateTime.before(new Date())) {
             hourLabel.setBackgroundResource(R.drawable.right_rounded_background_red);
         } else {
             hourLabel.setBackgroundResource(R.drawable.right_rounded_background_green);
@@ -570,7 +570,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         for(QueueDTO queueDTO: queueDTOList){
             placeMap.put(queueDTO.getRank(), queueDTO);
             if(queueDTO.getAppointmentId().equals(appointmentId)){
-                 patientQueueDTO = queueDTO;
+                patientQueueDTO = queueDTO;
             }
         }
         return patientQueueDTO;

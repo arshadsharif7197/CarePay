@@ -6,8 +6,6 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import org.joda.time.DateTime;
-
 import java.util.Date;
 
 /**
@@ -681,8 +679,9 @@ public class AppointmentsPayloadDTO {
             return false;
         }
 
-        DateTime dateTime = new DateTime(DateUtil.getInstance().setDateRaw(endTime).getDate());
-        return dateTime.isBeforeNow();
+        Date apptEndDate = DateUtil.getInstance().setDateRaw(endTime).getDate();
+        return apptEndDate.before(new Date());
+
     }
 
     /**
@@ -693,8 +692,9 @@ public class AppointmentsPayloadDTO {
             return false;
         }
 
-        DateTime dateTime = new DateTime(DateUtil.getInstance().setDateRaw(startTime).getDate());
-        return dateTime.isBeforeNow();
+        Date apptStartDate = DateUtil.getInstance().setDateRaw(startTime).getDate();
+        return apptStartDate.before(new Date());
+
     }
 
     public VisitTypeDTO getVisitType() {

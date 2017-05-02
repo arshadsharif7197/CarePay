@@ -14,12 +14,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.squareup.picasso.Picasso;
 
-import org.joda.time.DateTime;
-
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
@@ -38,6 +38,8 @@ public class AppointmentStatusCardView extends LinearLayout {
     private String appointmentId;
     private CarePayTextView shortNameTextView;
     private boolean isWaitingRoom;
+
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
 
     /**
      * AppointmentStatusCardView with context
@@ -110,8 +112,7 @@ public class AppointmentStatusCardView extends LinearLayout {
     }
 
     public void setAmount(String amount) {
-        // TODO: Move this to label
-        this.amountTextView.setText("Balance: " + amount);
+        this.amountTextView.setText(Label.getLabel("responsibility_balance_title") + amount);
     }
 
     public String getAppointmentId() {
@@ -139,9 +140,8 @@ public class AppointmentStatusCardView extends LinearLayout {
             return;
         }
 
-        final DateTime appointmentDateTime = new DateTime(appointmentTime);
-        timeTextView.setText(appointmentDateTime.toString("hh:mm a"));
-        if (appointmentDateTime.isBeforeNow()) {
+        timeTextView.setText(dateFormat.format(appointmentTime));
+        if (appointmentTime.before(new Date())) {
             timeTextView.setBackgroundResource(R.drawable.bg_red_overlay);
         } else {
             timeTextView.setBackgroundResource(R.drawable.bg_green_overlay);
