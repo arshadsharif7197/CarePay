@@ -57,67 +57,74 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
 
     /* Font utils*/
 
+    @Deprecated
     public static void setTypefaceFromAssets(Context context, String pathToFontInAssets, TextView view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), pathToFontInAssets);
         view.setTypeface(typeface);
     }
 
+    @Deprecated
     public static void setProximaNovaRegularTypeface(Context context, TextView view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_regular.otf");
         view.setTypeface(typeface);
     }
 
+    @Deprecated
     public static void setProximaNovaExtraboldTypeface(Context context, TextView view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/ProximaNova-Extrabld.otf");
         view.setTypeface(typeface);
     }
 
+    @Deprecated
     public static void setProximaNovaExtraboldTypefaceInput(Context context, TextInputLayout view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/ProximaNova-Extrabld.otf");
         view.setTypeface(typeface);
     }
 
+    @Deprecated
     public static void setProximaNovaSemiboldTypeface(Context context, TextView view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_semibold.otf");
         view.setTypeface(typeface);
     }
 
+    @Deprecated
     public static void setProximaNovaSemiboldTextInputLayout(Context context, TextInputLayout view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_semibold.otf");
         view.setTypeface(typeface);
     }
 
+    @Deprecated
     public static void setGothamRoundedBookTypeface(Context context, TextView view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_book.otf");
         view.setTypeface(typeface);
     }
 
+    @Deprecated
     public static void setGothamRoundedMediumTypeface(Context context, TextView view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_medium.otf");
         view.setTypeface(typeface);
     }
 
-    public static void setGothamRoundedLightTypeface(Context context, TextView view) {
-        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_light.otf");
-        view.setTypeface(typeface);
-    }
-
+    @Deprecated
     public static void setGothamRoundedBoldTypeface(Context context, TextView view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/gotham_rounded_bold.otf");
         view.setTypeface(typeface);
     }
 
+    @Deprecated
     public static void setProximaNovaSemiboldTypefaceEdittext(Context context, EditText view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_semibold.otf");
         view.setTypeface(typeface);
     }
 
+    @Deprecated
     public static void setProximaNovaLightTypeface(Context context, TextView view) {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/proximanova_light.otf");
         view.setTypeface(typeface);
     }
 
 
+    @Deprecated
     /**
      * Set the type face of a text input layout
      *
