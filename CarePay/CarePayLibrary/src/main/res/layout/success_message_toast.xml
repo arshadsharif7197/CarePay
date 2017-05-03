@@ -20,8 +20,7 @@
             style="@style/AppointmentPopupMessageText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/apt_popup_message_margin"
-            android:text="Success"/>
+            android:layout_margin="@dimen/apt_popup_message_margin"/>
 
     </LinearLayout>
 

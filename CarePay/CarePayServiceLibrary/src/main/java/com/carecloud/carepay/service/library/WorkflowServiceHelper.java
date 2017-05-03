@@ -24,6 +24,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -295,12 +297,11 @@ public class WorkflowServiceHelper {
                 }
             }
 
-            private void handleException(Exception exception)
-            {
-                if(exception.getMessage()!=null) {
+            private void handleException(Exception exception) {
+                if (exception.getMessage() != null) {
                     callback.onFailure(exception.getMessage());
                     Log.e("WorkflowServiceHelper", exception.getMessage(), exception);
-                }else{
+                } else {
                     callback.onFailure(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
                 }
             }
@@ -338,7 +339,7 @@ public class WorkflowServiceHelper {
                 String errorBodyString = "";
                 try {
                     errorBodyString = response.errorBody().string().toLowerCase();
-                }catch (Exception ex){
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
 
@@ -356,15 +357,24 @@ public class WorkflowServiceHelper {
                 String message = response.message().toLowerCase();
                 String errorBodyString = "";
                 try {
-                    errorBodyString = response.errorBody().string().toLowerCase();
-                }catch (Exception ex){
+                    JSONObject json = new JSONObject(response.errorBody().string());
+                    if (json.has("exception")) {
+                        JSONObject exceptionJson = json.getJSONObject("exception");
+                        if (exceptionJson.has("body")) {
+                            JSONObject bodyJson = exceptionJson.getJSONObject("body");
+                            if (bodyJson.has("error")){
+                                errorBodyString = bodyJson.getString("error");
+                            }
+                        }
+                    }
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
 
-                if((message.contains(TOKEN) && message.contains(REVOKED)) || (errorBodyString.contains(TOKEN) && errorBodyString.contains(REVOKED))){
+                if ((message.contains(TOKEN) && message.contains(REVOKED)) || (errorBodyString.contains(TOKEN) && errorBodyString.contains(REVOKED))) {
                     atomicAppRestart();
-                }else{
-                    onFailure(response);
+                } else {
+                    onFailure(errorBodyString);
                 }
             }
 
@@ -372,7 +382,7 @@ public class WorkflowServiceHelper {
                 if (null != response.errorBody()) {
                     try {
                         FaultResponseDTO fault = getConvertedDTO(FaultResponseDTO.class, response.errorBody().string());
-                            onFailure(fault.getException().getBody().getError().getMessage());
+                        onFailure(fault.getException().getBody().getError().getMessage());
                     } catch (Exception e) {
                         onFailure(response.errorBody().string());
                     }
@@ -447,7 +457,7 @@ public class WorkflowServiceHelper {
     }
 
     private void executeRefreshTokenRequest(@NonNull final WorkflowServiceCallback callback) {
-        if(appAuthorizationHelper == null){
+        if (appAuthorizationHelper == null) {
             atomicAppRestart();
         }
 
@@ -497,8 +507,8 @@ public class WorkflowServiceHelper {
     /**
      * Stop all calls in progress
      */
-    public void interrupt(){
-        while(!callStack.isEmpty()){
+    public void interrupt() {
+        while (!callStack.isEmpty()) {
             Call<?> call = callStack.peek();
             call.cancel();
             callStack.pop();
@@ -506,13 +516,13 @@ public class WorkflowServiceHelper {
     }
 
 
-    private void atomicAppRestart(){
-        if(applicationMode!=null) {
+    private void atomicAppRestart() {
+        if (applicationMode != null) {
             applicationMode.clearUserPracticeDTO();
         }
         Intent intent = new Intent();
         intent.setAction("com.carecloud.carepay.restart");
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
         Context context = applicationPreferences.getContext();
         Toast.makeText(context, "Login Authorization has Expired!\nPlease Login to Application again", Toast.LENGTH_LONG).show();
