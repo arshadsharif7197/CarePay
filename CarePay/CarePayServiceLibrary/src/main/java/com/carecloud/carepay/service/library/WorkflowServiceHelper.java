@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -357,23 +358,30 @@ public class WorkflowServiceHelper {
                 String message = response.message().toLowerCase();
                 String errorBodyString = "";
                 try {
-                    JSONObject json = new JSONObject(response.errorBody().string());
-                    if (json.has("exception")) {
-                        JSONObject exceptionJson = json.getJSONObject("exception");
-                        if (exceptionJson.has("body")) {
-                            JSONObject bodyJson = exceptionJson.getJSONObject("body");
-                            if (bodyJson.has("error")){
-                                errorBodyString = bodyJson.getString("error");
-                            }
-                        }
-                    }
+                    errorBodyString = response.errorBody().string();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
 
-                if ((message.contains(TOKEN) && message.contains(REVOKED)) || (errorBodyString.contains(TOKEN) && errorBodyString.contains(REVOKED))) {
+                if ((message.contains(TOKEN) && message.contains(REVOKED))
+                        || (errorBodyString.toLowerCase().contains(TOKEN) && errorBodyString.toLowerCase().contains(REVOKED))) {
                     atomicAppRestart();
                 } else {
+                    try {
+                        JSONObject json = new JSONObject(errorBodyString);
+                        if (json.has("exception")) {
+                            JSONObject exceptionJson = json.getJSONObject("exception");
+                            if (exceptionJson.has("body")) {
+                                JSONObject bodyJson = exceptionJson.getJSONObject("body");
+                                if (bodyJson.has("error")) {
+                                    errorBodyString = bodyJson.getString("error");
+                                }
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
                     onFailure(errorBodyString);
                 }
             }
