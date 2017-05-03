@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.demographics;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -10,8 +11,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.IApplicationSession;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraCallback;
@@ -53,6 +57,8 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     private static final String SAVED_STEP_KEY = "save_step";
 
     private boolean startCheckin = false;
+    public String appointmentId ;
+
 
     /**
      * @param demographicsView Demographics View
@@ -62,6 +68,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     public DemographicsPresenterImpl(DemographicsView demographicsView, Bundle savedInstanceState, boolean isPatientMode) {
         this.demographicsView = demographicsView;
         demographicDTO = demographicsView.getConvertedDTO(DemographicDTO.class);
+        appointmentId = demographicDTO.getPayload().getAppointmentpayloaddto().get(0).getMetadata().getAppointmentId() ;
         this.isPatientMode = isPatientMode;
 
         if (savedInstanceState != null) {
@@ -187,17 +194,31 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     @Override
-    public void displayCheckInSuccess(final WorkflowDTO workflowDTO) {
-        //display confirmation
-        CheckinCompletedDialogFragment successFragment = new CheckinCompletedDialogFragment();
-        successFragment.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                demographicsView.finish();
-                demographicsView.navigateToWorkflow(workflowDTO);
-            }
-        });
-        successFragment.show(getSupportFragmentManager(), successFragment.getClass().getName());
+    public String getAppointmentId() {
+        return appointmentId;
+    }
+
+    @Override
+    public void displayCheckInSuccess(final WorkflowDTO workflowDTO, Context context) {
+        if( ((IApplicationSession)demographicsView.getContext()).getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT ) {
+            SystemUtil.showSuccessToast(context, Label.getLabel("confirm_appointment_checkin"));
+            completeDemographics(workflowDTO) ;
+        } else {
+            CheckinCompletedDialogFragment successFragment = new CheckinCompletedDialogFragment();
+            successFragment.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    completeDemographics(workflowDTO);
+                }
+            });
+            successFragment.show(getSupportFragmentManager(), successFragment.getClass().getName());
+        }
+    }
+
+    private void completeDemographics(WorkflowDTO workflowDTO)
+    {
+        demographicsView.finish();
+        demographicsView.navigateToWorkflow(workflowDTO);
     }
 
     @Override

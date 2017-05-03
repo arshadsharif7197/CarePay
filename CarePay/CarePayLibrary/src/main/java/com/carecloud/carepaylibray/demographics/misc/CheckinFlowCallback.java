@@ -1,6 +1,6 @@
 package com.carecloud.carepaylibray.demographics.misc;
 
-import android.content.DialogInterface;
+import android.content.Context;
 
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
@@ -16,5 +16,8 @@ public interface CheckinFlowCallback {
 
     void navigateToWorkflow(WorkflowDTO workflowDTO);
 
-    void displayCheckInSuccess(WorkflowDTO workflowDTO);
+    void displayCheckInSuccess(WorkflowDTO workflowDTO, Context context);
+
+    String getAppointmentId();
+
 }
