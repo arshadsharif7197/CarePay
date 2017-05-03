@@ -1,10 +1,11 @@
 
 package com.carecloud.carepaylibray.demographicsettings.models;
 
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class DemographicsSettingsDTO {
+public class DemographicsSettingsDTO implements DTO{
 
     @SerializedName("metadata")
     @Expose

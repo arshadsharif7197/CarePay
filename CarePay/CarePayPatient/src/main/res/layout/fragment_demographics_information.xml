@@ -38,13 +38,14 @@
             android:orientation="vertical">
 
 
-            <TextView
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/reviewdemogrPersonalInfoLabel"
                 style="@style/reviewDemographicBlue."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_25dp"
                 android:layout_marginTop="@dimen/dimen_20dp"
-                android:layout_marginBottom="@dimen/dimen_25dp"/>
+                app:customAssetFont="proxima_nova_semi_bold" />
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -55,18 +56,18 @@
                     style="@style/SigninSignupTextInputStyle"
                     app:hintTextAppearance="@style/FloatingLabelStyle">
 
-                    <EditText
+                    <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                         android:id="@+id/revewidemogrDOBEdit"
                         style="@style/SigninSignupEditStyle"
                         android:digits="0123456789/"
                         android:imeOptions="actionNext"
                         android:inputType="date"
                         android:maxLength="10"
-                        android:textColor="@color/colorPrimary"
-                        android:nextFocusForward="@+id/revewidemoPhoneNumberEdit" />
+                        android:nextFocusForward="@+id/revewidemoPhoneNumberEdit"
+                        android:textColor="@color/colorPrimary" />
                 </android.support.design.widget.TextInputLayout>
 
-                <TextView
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/dobformatlabel"
                     style="@style/SignupRequireHintStyle"
                     android:textColor="@color/cadet_gray" />
@@ -77,24 +78,25 @@
                 style="@style/SigninSignupTextInputStyle"
                 app:hintTextAppearance="@style/FloatingLabelStyle">
 
-                <EditText
+                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                     android:id="@+id/reviewgrdemoPhoneNumberEdit"
                     style="@style/SigninSignupEditStyle"
                     android:digits="0123456789-"
                     android:imeOptions="actionNext"
                     android:inputType="phone"
                     android:maxLength="12"
-                    android:textColor="@color/colorPrimary"
-                    android:nextFocusForward="@+id/driverLicenseEditText" />
+                    android:nextFocusForward="@+id/driverLicenseEditText"
+                    android:textColor="@color/colorPrimary" />
             </android.support.design.widget.TextInputLayout>
 
-            <TextView
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/demographicsSectionLabel"
                 style="@style/reviewDemographicBlue."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_36dp"
                 android:layout_marginTop="@dimen/dimen_36dp"
-                android:layout_marginBottom="@dimen/dimen_36dp"/>
+                app:customAssetFont="proxima_nova_semi_bold" />
 
 
             <LinearLayout
@@ -103,17 +105,19 @@
                 android:layout_marginRight="@dimen/consentform_relativeLayout_margin"
                 android:orientation="horizontal">
 
-                <TextView
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/genderTextView"
                     style="@style/DemographicsDocsLabelStyle"
                     android:layout_width="0dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    app:customAssetFont="proxima_nova_regular" />
 
-                <TextView
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/chooseGenderTextView"
                     style="@style/DemographicsDocsClickableTextStyle"
+                    android:layout_width="wrap_content"
                     android:textColor="@color/colorPrimary"
-                    android:layout_width="wrap_content" />
+                    app:customAssetFont="proxima_nova_semi_bold" />
             </LinearLayout>
 
             <View
@@ -127,21 +131,23 @@
                 android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop"
                 android:orientation="horizontal">
 
-                <TextView
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/raceDataTextView"
                     style="@style/DemographicsDocsLabelStyle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight=".30"/>
+                    android:layout_weight=".30"
+                    app:customAssetFont="proxima_nova_regular" />
 
-                <TextView
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/raceListDataTextView"
                     style="@style/DemographicsDocsClickableTextStyle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight=".70"
                     android:textAlignment="textEnd"
                     android:textColor="@color/colorPrimary"
-                    android:layout_weight=".70"/>
+                    app:customAssetFont="proxima_nova_semi_bold" />
             </LinearLayout>
 
             <View
@@ -155,21 +161,23 @@
                 android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop"
                 android:orientation="horizontal">
 
-                <TextView
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/ethnicityDataTextView"
                     style="@style/DemographicsDocsLabelStyle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight=".35" />
+                    android:layout_weight=".35"
+                    app:customAssetFont="proxima_nova_regular" />
 
-                <TextView
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/ethnicityListDataTextView"
                     style="@style/DemographicsDocsClickableTextStyle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight=".65"
                     android:textAlignment="textEnd"
                     android:textColor="@color/colorPrimary"
-                    android:layout_weight=".65" />
+                    app:customAssetFont="proxima_nova_semi_bold" />
 
             </LinearLayout>
 
@@ -184,23 +192,25 @@
                 android:layout_marginTop="@dimen/consentform_realtivelayout_textpaddingtop"
                 android:orientation="horizontal">
 
-                <TextView
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/languageDataTextView"
                     style="@style/DemographicsDocsLabelStyle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight=".60"
                     android:text="Prefered Language"
-                    android:layout_weight=".60"/>
+                    app:customAssetFont="proxima_nova_regular" />
 
-                <TextView
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/languageTextView"
                     style="@style/DemographicsDocsClickableTextStyle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textAlignment="textEnd"
+                    android:layout_weight=".40"
                     android:text="Prefered Language"
+                    android:textAlignment="textEnd"
                     android:textColor="@color/colorPrimary"
-                    android:layout_weight=".40"/>
+                    app:customAssetFont="proxima_nova_semi_bold" />
             </LinearLayout>
 
             <View
@@ -211,26 +221,27 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/reviewDriverLicenseLabel"
                 style="@style/SigninSignupTextInputStyle"
-                android:layout_weight="1"
                 android:layout_marginTop="@dimen/dimen_5dp"
+                android:layout_weight="1"
                 app:hintTextAppearance="@style/FloatingLabelStyle">
 
-                <EditText
+                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                     android:id="@+id/driverLicenseEditText"
                     style="@style/SigninSignupEditStyle"
                     android:imeOptions="actionNext"
-                    android:textColor="@color/colorPrimary"
-                    android:nextFocusForward="@+id/addressEditTextId" />
+                    android:nextFocusForward="@+id/addressEditTextId"
+                    android:textColor="@color/colorPrimary" />
             </android.support.design.widget.TextInputLayout>
 
 
-            <TextView
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/demographicsAddressSectionLabel"
                 style="@style/reviewDemographicBlue."
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_36dp"
                 android:layout_marginTop="@dimen/dimen_36dp"
-                android:layout_marginBottom="@dimen/dimen_36dp"/>
+                app:customAssetFont="proxima_nova_semi_bold" />
 
 
             <LinearLayout
@@ -245,15 +256,15 @@
                     android:layout_weight="1"
                     app:hintTextAppearance="@style/FloatingLabelStyle">
 
-                    <EditText
+                    <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                         android:id="@+id/addressEditTextId"
                         style="@style/SigninSignupEditStyle"
                         android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789 "
                         android:imeOptions="actionNext"
                         android:inputType="textPostalAddress"
                         android:maxLength="50"
-                        android:textColor="@color/colorPrimary"
                         android:nextFocusForward="@+id/addressEditText2Id"
+                        android:textColor="@color/colorPrimary"
                         app:hintTextAppearance="@style/FloatingLabelStyle" />
 
                 </android.support.design.widget.TextInputLayout>
@@ -268,21 +279,21 @@
                         android:layout_weight="1"
                         app:hintTextAppearance="@style/FloatingLabelStyle">
 
-                        <EditText
+                        <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                             android:id="@+id/addressEditText2Id"
                             style="@style/SigninSignupEditStyle"
                             android:digits="abcdefghijklmnopqurstuvwxyzABCDEFGHIZKLMNOPQURSTUVWXYZ0123456789 "
                             android:imeOptions="actionNext"
                             android:inputType="textPostalAddress"
                             android:maxLength="50"
-                            android:textColor="@color/colorPrimary"
-                            android:nextFocusForward="@+id/zipCodeId" />
+                            android:nextFocusForward="@+id/zipCodeId"
+                            android:textColor="@color/colorPrimary" />
                     </android.support.design.widget.TextInputLayout>
 
-                    <TextView
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/demogrAddressOptionalLabel"
-                        android:text="Optional"
-                        style="@style/SignupRequireHintStyle" />
+                        style="@style/SignupRequireHintStyle"
+                        android:text="Optional" />
 
                 </FrameLayout>
 
@@ -292,14 +303,14 @@
                     android:layout_weight="1"
                     app:hintTextAppearance="@style/FloatingLabelStyle">
 
-                    <EditText
+                    <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                         android:id="@+id/zipCodeId"
                         style="@style/SigninSignupEditStyle"
                         android:digits="0123456789-"
                         android:imeOptions="actionNext"
                         android:maxLength="10"
-                        android:textColor="@color/colorPrimary"
-                        android:nextFocusForward="@+id/cityId" />
+                        android:nextFocusForward="@+id/cityId"
+                        android:textColor="@color/colorPrimary" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -314,11 +325,11 @@
                         android:layout_weight="1"
                         app:hintTextAppearance="@style/FloatingLabelStyle">
 
-                        <EditText
+                        <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                             android:id="@+id/cityId"
                             style="@style/SigninSignupEditStyle"
-                            android:textColor="@color/colorPrimary"
-                            android:nextFocusRight="@+id/stateAutoCompleteTextView" />
+                            android:nextFocusRight="@+id/stateAutoCompleteTextView"
+                            android:textColor="@color/colorPrimary" />
 
                     </android.support.design.widget.TextInputLayout>
 
@@ -334,8 +345,8 @@
                             android:digits="ABCDEFGHIJKLMNOPQURSTUVWXYZ"
                             android:imeOptions="actionDone"
                             android:inputType="textCapCharacters"
-                            android:textColor="@color/colorPrimary"
-                            android:maxLength="2" />
+                            android:maxLength="2"
+                            android:textColor="@color/colorPrimary" />
 
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
@@ -345,12 +356,12 @@
         </LinearLayout>
     </ScrollView>
 
-    <Button
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
         android:id="@+id/buttonAddDemographicInfo"
         android:layout_width="match_parent"
         android:layout_height="52dp"
-        android:background="@drawable/settings_button_selector"
         android:layout_alignParentBottom="true"
+        android:background="@drawable/settings_button_selector"
         android:gravity="center"
         android:text="SAVE CHANGES"
         android:textColor="@color/white" />

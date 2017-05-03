@@ -37,7 +37,7 @@ import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 
-public class SystemUtil implements Thread.UncaughtExceptionHandler{
+public class SystemUtil implements Thread.UncaughtExceptionHandler {
 
     private static final String LOG_TAG = SystemUtil.class.getSimpleName();
 
@@ -150,7 +150,7 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
      * Hides the keyboard
      *
      * @param context the context for the view
-     * @param view the view showing the keyboard
+     * @param view    the view showing the keyboard
      */
     public static void hideSoftKeyboard(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -216,30 +216,31 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
 
     /**
      * Focus listener for handling CAPS on EditTexts that have attached TextInputLayout
-     * @param textInputLayout TextInputLayout that will handle the hint
+     *
+     * @param textInputLayout  TextInputLayout that will handle the hint
      * @param optionalListener Set if the view needs to do additional work on focus change
      * @return focus change listener
      */
-    public static View.OnFocusChangeListener getHintFocusChangeListener(final TextInputLayout textInputLayout, final View.OnFocusChangeListener optionalListener){
+    public static View.OnFocusChangeListener getHintFocusChangeListener(final TextInputLayout textInputLayout, final View.OnFocusChangeListener optionalListener) {
         return new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 TextView textView = (TextView) view;
                 String[] tags = (String[]) view.getTag();
-                if(tags == null && textInputLayout.getHint()!=null){
+                if (tags == null && textInputLayout.getHint() != null) {
                     tags = new String[]{textInputLayout.getHint().toString().toUpperCase(), textInputLayout.getHint().toString()};
                     view.setTag(tags);
                 }
 
-                if(tags!=null){
-                    if(hasFocus || !StringUtil.isNullOrEmpty(textView.getText().toString())){
+                if (tags != null) {
+                    if (hasFocus || !StringUtil.isNullOrEmpty(textView.getText().toString())) {
                         textInputLayout.setHint(tags[0]);
-                    }else{
+                    } else {
                         textInputLayout.setHint(tags[1]);
                     }
                 }
 
-                if(optionalListener!=null){
+                if (optionalListener != null) {
                     optionalListener.onFocusChange(view, hasFocus);
                 }
             }
@@ -264,6 +265,7 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
 
     /**
      * Decode a base64 to a bitmap
+     *
      * @param bitmapString The bitmap as base64
      * @return The bitmap
      */
@@ -271,7 +273,7 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
         try {
             byte[] decodedString = Base64.decode(bitmapString, Base64.DEFAULT);
             return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-        } catch(IllegalArgumentException exc) {
+        } catch (IllegalArgumentException exc) {
             return null;
         }
     }
@@ -279,6 +281,7 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
 
     /**
      * Convert the image capture place holder into a base64
+     *
      * @param context The context
      * @return The base64 string
      */
@@ -386,7 +389,7 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
     }
 
     /**
-     * @param context The context
+     * @param context          The context
      * @param exceptionMessage message to log
      */
     public static void doDefaultFailureBehavior(BaseActivity context, String exceptionMessage) {
@@ -415,10 +418,10 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler{
     /**
      * Show error Toast
      *
-     * @param context context
+     * @param context      context
      * @param errorMessage message to display
      */
-    public static void showErrorToast(Context context, String errorMessage){
+    public static void showErrorToast(Context context, String errorMessage) {
 
         if (null == context) {
             return;

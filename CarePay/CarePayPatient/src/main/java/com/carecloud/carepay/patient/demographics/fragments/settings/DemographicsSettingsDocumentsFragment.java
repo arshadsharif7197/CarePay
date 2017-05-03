@@ -20,14 +20,13 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityIdDocsDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityInsurancesDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.entities.DemographicMetadataEntityItemInsuranceDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataOptionDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
@@ -41,7 +40,6 @@ import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettin
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsMetadataDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsTransitionsDTO;
-import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -63,7 +61,6 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
     private Button nextButton;
     private DemographicIdDocPayloadDTO demPayloadIdDocDTO;
     private List<DemographicInsurancePayloadDTO> insuranceDTOsList;
-    private DemographicMetadataEntityInsurancesDTO insurancesMetaDTO;
     private SwitchCompat switchCompat;
     private TextView idTypeClickable;
     private TextView idDocTypeLabel;
@@ -78,29 +75,38 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
     private String documentsSaveChangesString = null;
     private String documentsCancelString = null;
     private String documentsTypeString = null;
-    private String documentsString = null;
     private String documentsIdentityString = null;
 
-    private AppCompatActivity appCompatActivity;
+    private DemographicsSettingsFragmentListener callback;
 
     /**
-     *
-     * @param demographicsSettingsDTO the model
      * @return an instance of DemographicsSettingsDocumentsFragment
      */
-    public static DemographicsSettingsDocumentsFragment newInstance(DemographicsSettingsDTO demographicsSettingsDTO) {
-        Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, demographicsSettingsDTO);
-        DemographicsSettingsDocumentsFragment fragment = new DemographicsSettingsDocumentsFragment();
-        fragment.setArguments(args);
-        return fragment;
+    public static DemographicsSettingsDocumentsFragment newInstance() {
+        return new DemographicsSettingsDocumentsFragment();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            callback = (DemographicsSettingsFragmentListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement DemographicsSettingsFragmentListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        callback = null;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        appCompatActivity = (AppCompatActivity) getActivity();
-        demographicsSettingsDTO = DtoHelper.getConvertedDTO(DemographicsSettingsDTO.class, getArguments());
+        demographicsSettingsDTO = (DemographicsSettingsDTO) callback.getDto();
     }
 
     @Nullable
@@ -115,9 +121,9 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         final Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
         TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
-        title.setText(documentsString);
+        title.setText(Label.getLabel("documents_label"));
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        callback.setToolbar(toolbar);
 
         getDocumentsLabels();
         // fetch the models
@@ -126,7 +132,7 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
         // fetch the scroll view
         mainScrollView = (ScrollView) view.findViewById(R.id.demographicsDocsScroll);
         TextView identityLabel = (TextView) view.findViewById(R.id.demographicsDocsHeaderSubtitle);
-        setProximaNovaSemiboldTypeface(appCompatActivity, identityLabel);
+        setProximaNovaSemiboldTypeface(getActivity(), identityLabel);
         TextView healthInsuranceLabel = (TextView) view.findViewById(R.id.demographicsDocsHealthInsurancetitle);
         healthInsuranceLabel.setText(documentsHealthInsuranceString);
         identityLabel.setText(documentsIdentityString);
@@ -146,7 +152,6 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
         documentsSaveChangesString = Label.getLabel("demographics_save_changes_label");
         documentsHealthInsuranceString = Label.getLabel("documents_health_insurance_label");
         documentsIdentityString = Label.getLabel("document_identity_label");
-        documentsString = Label.getLabel("documents_label");
     }
 
 
@@ -158,7 +163,7 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
 
         idDocTypeLabel = (TextView) view.findViewById(R.id.demogrDocTypeLabel);
         idDocTypeLabel.setText(documentsTypeString);
-        setProximaNovaRegularTypeface(appCompatActivity, idDocTypeLabel);
+        setProximaNovaRegularTypeface(getActivity(), idDocTypeLabel);
 
         idTypeClickable = (TextView) view.findViewById(R.id.demogrDocTypeClickable);
         idTypeClickable.setText(documentsTypeString);
@@ -196,21 +201,13 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
     }
 
     private void getPayloadDTOs() {
-        DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
-        if (demographicsSettingsPayloadDTO != null) {
-            DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-            DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
-
-            demPayloadIdDocDTO = demographicPayload.getIdDocument();
-            insuranceDTOsList = demographicPayload.getInsurances();
-
-            if (insuranceDTOsList == null) {
-                insuranceDTOsList = new ArrayList<>();
-                insuranceDTOsList.add(new DemographicInsurancePayloadDTO());
-            } else if (insuranceDTOsList.size() == 0) {
-                insuranceDTOsList.add(new DemographicInsurancePayloadDTO());
-            }
+        DemographicPayloadDTO demographicPayload = demographicsSettingsDTO.getPayload().getDemographics().getPayload();
+        demPayloadIdDocDTO = demographicPayload.getIdDocument();
+        insuranceDTOsList = demographicPayload.getInsurances();
+        if (insuranceDTOsList.size() == 0) {
+            insuranceDTOsList.add(new DemographicInsurancePayloadDTO());
         }
+
     }
 
     WorkflowServiceCallback updateDocumentsCallback = new WorkflowServiceCallback() {
@@ -247,44 +244,32 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
                 nextButton.setEnabled(false);
                 insuranceDTOsList.clear();
                 for (DemographicInsurancePayloadDTO payloadDTO : wrapperCollection1.sendPayloads()) {
-                    if (isInsuaranceNonTrivial(payloadDTO)) {
+                    if (isInsuranceNonTrivial(payloadDTO)) {
                         insuranceDTOsList.add(payloadDTO);
                     }
                 }
 
-                if (demographicsSettingsDTO != null) {
-                    DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
-                    if (demographicsSettingsMetadataDTO != null) {
-                        DemographicsSettingsTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
-                        TransitionDTO demographicsSettingsUpdateDemographicsDTO = demographicsSettingsTransitionsDTO.getUpdateDemographics();
-                        Map<String, String> header = null;
-
-                        if (demographicsSettingsDTO != null) {
-                            DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
-                            if (demographicsSettingsPayloadDTO != null) {
-                                DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
-                                DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
-
-                                List<DemographicInsurancePayloadDTO> demographicsInsuranceDetailsPayloadDTO = demographicPayload.getInsurances();
-                                for (int i = 0; i <= demographicsInsuranceDetailsPayloadDTO.size() - 1; i++) {
-                                    List<DemographicInsurancePhotoDTO> demographicInsurancePhotoDTOs = insuranceDTOsList.get(i).getInsurancePhotos();
-                                    demographicsInsuranceDetailsPayloadDTO.get(i).setInsurancePhotos(demographicInsurancePhotoDTOs);
-                                    demographicsInsuranceDetailsPayloadDTO.get(i).setInsuranceProvider(insuranceDTOsList.get(i).getInsuranceProvider());
-                                    demographicsInsuranceDetailsPayloadDTO.get(i).setInsurancePlan(insuranceDTOsList.get(i).getInsurancePlan());
-                                    demographicsInsuranceDetailsPayloadDTO.get(i).setInsuranceMemberId(insuranceDTOsList.get(i).getInsuranceMemberId());
-                                    demographicsInsuranceDetailsPayloadDTO.get(i).setInsuranceType(insuranceDTOsList.get(i).getInsuranceType());
-
-                                }
-                                Gson gson = new Gson();
-                                String jsonInString = gson.toJson(demographicsSettingsPayloadDTO);
-                                getWorkflowServiceHelper().execute(demographicsSettingsUpdateDemographicsDTO, updateDocumentsCallback, jsonInString, header);
-                            }
-                        }
-                        header = new HashMap<>();
-                        header.put("transition", "true");
-
-                    }
+                DemographicsSettingsMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getDemographicsSettingsMetadataDTO();
+                DemographicsSettingsTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
+                TransitionDTO demographicsSettingsUpdateDemographicsDTO = demographicsSettingsTransitionsDTO.getUpdateDemographics();
+                Map<String, String> header = null;
+                DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
+                DemographicsSettingsDemographicsDTO demographicsDTO = demographicsSettingsPayloadDTO.getDemographics();
+                DemographicPayloadDTO demographicPayload = demographicsDTO.getPayload();
+                List<DemographicInsurancePayloadDTO> demographicsInsuranceDetailsPayloadDTO = demographicPayload.getInsurances();
+                for (int i = 0; i <= demographicsInsuranceDetailsPayloadDTO.size() - 1; i++) {
+                    List<DemographicInsurancePhotoDTO> demographicInsurancePhotoDTOs = insuranceDTOsList.get(i).getInsurancePhotos();
+                    demographicsInsuranceDetailsPayloadDTO.get(i).setInsurancePhotos(demographicInsurancePhotoDTOs);
+                    demographicsInsuranceDetailsPayloadDTO.get(i).setInsuranceProvider(insuranceDTOsList.get(i).getInsuranceProvider());
+                    demographicsInsuranceDetailsPayloadDTO.get(i).setInsurancePlan(insuranceDTOsList.get(i).getInsurancePlan());
+                    demographicsInsuranceDetailsPayloadDTO.get(i).setInsuranceMemberId(insuranceDTOsList.get(i).getInsuranceMemberId());
+                    demographicsInsuranceDetailsPayloadDTO.get(i).setInsuranceType(insuranceDTOsList.get(i).getInsuranceType());
                 }
+                Gson gson = new Gson();
+                String jsonInString = gson.toJson(demographicsSettingsPayloadDTO);
+                getWorkflowServiceHelper().execute(demographicsSettingsUpdateDemographicsDTO, updateDocumentsCallback, jsonInString, header);
+                header = new HashMap<>();
+                header.put("transition", "true");
             }
         });
 
@@ -299,7 +284,7 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
         });
     }
 
-    private boolean isInsuaranceNonTrivial(DemographicInsurancePayloadDTO insModel) {
+    private boolean isInsuranceNonTrivial(DemographicInsurancePayloadDTO insModel) {
         return insModel != null &&
                 insModel.getInsurancePlan() != null &&
                 insModel.getInsuranceProvider() != null &&
@@ -323,11 +308,9 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
     }
 
     private void createInsuranceFragments(LinearLayout insContainersWrapper) {
-        DemographicMetadataEntityItemInsuranceDTO metadataInsuranceDTO
-                = (insurancesMetaDTO == null ? null : insurancesMetaDTO.getProperties().getItems().getInsurance());
         wrapperCollection1 = new InsuranceWrapperCollection((AppCompatActivity) getActivity(),
                 insContainersWrapper,
-                metadataInsuranceDTO,
+                null,
                 demographicsSettingsDTO,
                 new OnClickRemoveOrAddCallback() {
                     @Override
@@ -367,7 +350,6 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
         Context context = getActivity();
         setProximaNovaRegularTypeface(context, idDocTypeLabel);
         setProximaNovaSemiboldTypeface(context, idTypeClickable);
-
         setProximaNovaRegularTypeface(context, switchCompat);
         setGothamRoundedMediumTypeface(context, multipleInsClickable);
         setGothamRoundedMediumTypeface(context, nextButton);
@@ -392,10 +374,6 @@ public class DemographicsSettingsDocumentsFragment extends BaseFragment {
         });
         switchCompat.setText(documentsHaveHealthInsuranceString);
         SystemUtil.hideSoftKeyboard(getActivity());
-    }
-
-    public void setInsurancesMetaDTO(DemographicMetadataEntityInsurancesDTO insurancesMetaDTO) {
-        this.insurancesMetaDTO = insurancesMetaDTO;
     }
 
     public void showAddCardButton(boolean isVisible) {
