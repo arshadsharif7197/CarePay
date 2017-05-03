@@ -25,7 +25,6 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
@@ -341,11 +340,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            if(workflowDTO.getState().equals(NavigationStateConstants.APPOINTMENTS)){
-                callback.displayCheckInSuccess(workflowDTO);
-            } else {
-                callback.navigateToWorkflow(workflowDTO);
-            }
+            onUpdate(callback, workflowDTO);
         }
 
         @Override
