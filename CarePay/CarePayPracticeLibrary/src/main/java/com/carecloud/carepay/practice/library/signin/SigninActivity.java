@@ -43,6 +43,7 @@ import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
+import com.carecloud.carepaylibray.signinsignup.fragments.ResetPasswordFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -61,6 +62,8 @@ import java.util.Map;
  * On failed showing the authentication failure dialog with no navigation
  */
 public class SigninActivity extends BasePracticeActivity implements SelectPracticeCallback {
+
+    private static final int RESET_PASSWORD = 100;
 
     private enum SignInScreenMode {
         PRACTICE_MODE_SIGNIN, PATIENT_MODE_SIGNIN
@@ -284,7 +287,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
                 Bundle bundle = new Bundle();
                 DtoHelper.bundleDto(bundle, signinDTO);
                 intent.putExtras(bundle);
-                startActivity(intent);
+                startActivityForResult(intent, RESET_PASSWORD);
             }
         });
 
@@ -561,5 +564,13 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     @Override
     public DTO getDto() {
         return practiceSelectionModel;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESET_PASSWORD && resultCode == ResetPasswordFragment.GO_TO_HOME) {
+            finish();
+        }
     }
 }
