@@ -95,13 +95,12 @@
             android:visibility="gone">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/missed_appointment_text_view"
+                android:id="@+id/todayTimeMessage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="bottom|end"
                 android:textSize="@dimen/apt_list_missing_txt_size"
                 android:visibility="gone"
-                breeze:textKey="missed_appointments_heading"
                 app:customAssetFont="proxima_nova_semi_bold" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView

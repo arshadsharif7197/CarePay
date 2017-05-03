@@ -399,7 +399,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
             // Missed
             missedAppointmentTextView = (CarePayTextView)
-                    itemView.findViewById(R.id.missed_appointment_text_view);
+                    itemView.findViewById(R.id.todayTimeMessage);
 
             listItemDivider = itemView.findViewById(R.id.appointment_list_item_divider);
 

@@ -1,6 +1,7 @@
 package com.carecloud.carepay.patient.appointments.adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,6 +86,9 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
             return;
         }
 
+        //cleanup
+        cleanupViews(holder);
+
         //Appointment
         ProviderDTO provider = appointmentsPayload.getProvider();
         if(!StringUtil.isNullOrEmpty(provider.getName())) {
@@ -92,6 +96,105 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
         }
         holder.doctorName.setText(StringUtil.getLabelForView(provider.getName()));
         holder.doctorType.setText(StringUtil.getLabelForView(provider.getSpecialty().getName()));
+
+        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentsPayload.getStartTime());
+        AppointmentDisplayStyle style = appointmentsPayload.getDisplayStyle();
+        switch (style){
+            case CHECKED_IN:{
+                holder.checkOutButton.setVisibility(View.VISIBLE);
+                //todo set checkout button listener
+                holder.checkOutButton.setClickable(false);
+                holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.emerald));
+                holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
+                holder.initials.setBackgroundResource(R.drawable.round_list_tv_green);
+                holder.cellAvatar.setImageResource(R.drawable.round_list_tv_green);
+                break;
+            }
+            case PENDING:{
+                holder.todayTimeLayout.setVisibility(View.VISIBLE);
+                holder.todayTimeTextView.setText(dateUtil.getTime12Hour());
+                holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.emerald));
+                holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.emerald));
+                holder.initials.setTextColor(ContextCompat.getColor(context, R.color.emerald));
+                holder.initials.setBackgroundResource(R.drawable.round_list_tv_green_border);
+                holder.cellAvatar.setImageResource(R.drawable.round_list_tv_green_border);
+                break;
+            }
+            case REQUESTED:{
+                holder.todayTimeLayout.setVisibility(View.VISIBLE);
+                holder.todayTimeTextView.setText(dateUtil.getTime12Hour());
+                holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.lightning_yellow));
+                holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
+                holder.initials.setBackgroundResource(R.drawable.round_list_tv_orange);
+                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_pending);
+                holder.cellAvatar.setVisibility(View.VISIBLE);
+                break;
+            }
+            case MISSED:{
+                holder.todayTimeMessage.setVisibility(View.VISIBLE);
+                holder.todayTimeMessage.setText(Label.getLabel("missed_appointments_heading"));
+                holder.todayTimeLayout.setVisibility(View.VISIBLE);
+                holder.todayTimeTextView.setText(dateUtil.getTime12Hour());
+                holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.remove_red));
+                holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.remove_red));
+                holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
+                holder.initials.setBackgroundResource(R.drawable.round_list_tv_red);
+                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_missed);
+                holder.cellAvatar.setVisibility(View.VISIBLE);
+                break;
+            }
+            case CANCELED:{
+                holder.todayTimeMessage.setVisibility(View.VISIBLE);
+                holder.todayTimeMessage.setText(Label.getLabel("appointment_canceled"));
+                holder.todayTimeLayout.setVisibility(View.VISIBLE);
+                holder.todayTimeTextView.setText(dateUtil.getTime12Hour());
+                holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.pastel_blue));
+                holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.pastel_blue));
+                holder.initials.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
+                holder.initials.setBackgroundResource(R.drawable.round_list_tv);
+                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_canceled);
+                holder.cellAvatar.setVisibility(View.VISIBLE);
+                break;
+            }
+            case PENDING_UPCOMING:{
+                holder.upcomingDateLayout.setVisibility(View.VISIBLE);
+                holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
+                holder.upcomingMonthTextView.setText(dateUtil.getMonthLiteralAbbr());
+                holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
+                holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.grayRound));
+                holder.initials.setTextColor(ContextCompat.getColor(context, R.color.emerald));
+                holder.initials.setBackgroundResource(R.drawable.round_list_tv_green_border);
+                holder.cellAvatar.setImageResource(R.drawable.round_list_tv_green_border);
+                break;
+            }
+            case REQUESTED_UPCOMING:{
+                holder.upcomingDateLayout.setVisibility(View.VISIBLE);
+                holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
+                holder.upcomingMonthTextView.setText(dateUtil.getMonthLiteralAbbr());
+                holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
+                holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.lightning_yellow));
+                holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
+                holder.initials.setBackgroundResource(R.drawable.round_list_tv_orange);
+                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_pending);
+                holder.cellAvatar.setVisibility(View.VISIBLE);
+                break;
+            }
+            case CANCELED_UPCOMING:{
+                holder.upcomingDateLayout.setVisibility(View.VISIBLE);
+                holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
+                holder.upcomingMonthTextView.setText(dateUtil.getMonthLiteralAbbr());
+                holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
+                holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.pastel_blue));
+                holder.initials.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
+                holder.initials.setBackgroundResource(R.drawable.round_list_tv);
+                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_canceled);
+                holder.cellAvatar.setVisibility(View.VISIBLE);
+                break;
+            }
+            default:{
+                cleanupViews(holder);
+            }
+        }
 
         Picasso.with(context).load(appointmentsPayload.getProvider().getPhoto())
                 .resize(58, 58)
@@ -102,6 +205,7 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
                     public void onSuccess() {
                         holder.profileImage.setVisibility(View.VISIBLE);
                         holder.initials.setVisibility(View.GONE);
+                        holder.cellAvatar.setVisibility(View.VISIBLE);
                     }
 
                     @Override
@@ -111,74 +215,7 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
                     }
                 });
 
-        //cleanup
-        cleanupViews(holder);
 
-        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentsPayload.getStartTime());
-        AppointmentDisplayStyle style = appointmentsPayload.getDisplayStyle();
-        switch (style){
-            case CHECKED_IN:{
-                holder.checkOutButton.setVisibility(View.VISIBLE);
-                //todo set checkout button listener
-                holder.checkOutButton.setClickable(false);
-                break;
-            }
-            case PENDING:{
-                holder.todayTimeLayout.setVisibility(View.VISIBLE);
-                holder.todayTimeTextView.setText(dateUtil.getTime12Hour());
-                break;
-            }
-            case REQUESTED:{
-                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_pending);
-                holder.cellAvatar.setVisibility(View.VISIBLE);
-                holder.todayTimeLayout.setVisibility(View.VISIBLE);
-                holder.todayTimeTextView.setText(dateUtil.getTime12Hour());
-                break;
-            }
-            case MISSED:{
-                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_missed);
-                holder.cellAvatar.setVisibility(View.VISIBLE);
-                holder.todayTimeLayout.setVisibility(View.VISIBLE);
-                holder.missedAppointmentTextView.setVisibility(View.VISIBLE);
-                holder.todayTimeTextView.setText(dateUtil.getTime12Hour());
-                break;
-            }
-            case CANCELED:{
-                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_canceled);
-                holder.cellAvatar.setVisibility(View.VISIBLE);
-                holder.todayTimeLayout.setVisibility(View.VISIBLE);
-                holder.todayTimeTextView.setText(dateUtil.getTime12Hour());
-                break;
-            }
-            case PENDING_UPCOMING:{
-                holder.upcomingDateLayout.setVisibility(View.VISIBLE);
-                holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
-                holder.upcomingMonthTextView.setText(dateUtil.getMonthLiteralAbbr());
-                holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
-                break;
-            }
-            case REQUESTED_UPCOMING:{
-                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_pending);
-                holder.cellAvatar.setVisibility(View.VISIBLE);
-                holder.upcomingDateLayout.setVisibility(View.VISIBLE);
-                holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
-                holder.upcomingMonthTextView.setText(dateUtil.getMonthLiteralAbbr());
-                holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
-                break;
-            }
-            case CANCELED_UPCOMING:{
-                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_canceled);
-                holder.cellAvatar.setVisibility(View.VISIBLE);
-                holder.upcomingDateLayout.setVisibility(View.VISIBLE);
-                holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
-                holder.upcomingMonthTextView.setText(dateUtil.getMonthLiteralAbbr());
-                holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
-                break;
-            }
-            default:{
-                cleanupViews(holder);
-            }
-        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -327,7 +364,7 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
         holder.checkOutButton.setVisibility(View.GONE);
         holder.todayTimeLayout.setVisibility(View.GONE);
         holder.upcomingDateLayout.setVisibility(View.GONE);
-        holder.missedAppointmentTextView.setVisibility(View.GONE);
+        holder.todayTimeMessage.setVisibility(View.GONE);
         holder.cellAvatar.setVisibility(View.GONE);
         holder.itemView.setOnClickListener(null);//need to remove this for header just in case
     }
@@ -343,7 +380,7 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
 
         View todayTimeLayout;
         TextView todayTimeTextView;
-        TextView missedAppointmentTextView;
+        TextView todayTimeMessage;
 
         View upcomingDateLayout;
         TextView upcomingDateTextView;
@@ -372,9 +409,7 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
             // Today
             todayTimeLayout = itemView.findViewById(R.id.todayTimeLayout);
             todayTimeTextView = (TextView) itemView.findViewById(R.id.todayTimeTextView);
-
-            // Missed
-            missedAppointmentTextView = (TextView) itemView.findViewById(R.id.missed_appointment_text_view);
+            todayTimeMessage = (TextView) itemView.findViewById(R.id.todayTimeMessage);
 
             // Upcoming
             upcomingDateLayout = itemView.findViewById(R.id.upcomingDateLayout);
