@@ -61,11 +61,19 @@ public abstract class BaseCheckinFragment extends BaseFragment {
         }
     }
 
+    /**
+     * Gets appointment by id.
+     *
+     * @param appointmentsList the appointments list
+     * @param appointmentId    the appointment id
+     * @return the appointment by id
+     */
     private AppointmentDTO getAppointmentById(List<AppointmentDTO> appointmentsList, String appointmentId)
     {
         for (AppointmentDTO  appointment : appointmentsList) {
-            if(appointment.getMetadata().getAppointmentId().equalsIgnoreCase(appointmentId))
+            if(appointment.getMetadata().getAppointmentId().equalsIgnoreCase(appointmentId)){
                 return appointment;
+            }
         }
         return  null;
     }
