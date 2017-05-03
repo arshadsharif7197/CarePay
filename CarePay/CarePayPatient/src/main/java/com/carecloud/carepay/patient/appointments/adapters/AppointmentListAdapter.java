@@ -47,6 +47,12 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
 
     private List<AppointmentDTO> sortedAppointments = new ArrayList<>();
 
+    /**
+     * Constructor
+     * @param context context
+     * @param appointmentItems initial appt list
+     * @param callback select appt callback
+     */
     public AppointmentListAdapter(Context context, List<AppointmentDTO> appointmentItems, SelectAppointmentCallback callback){
         this.context = context;
         this.appointmentItems = appointmentItems;
@@ -234,6 +240,10 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
         return sortedAppointments.size();
     }
 
+    /**
+     * Update appt list
+     * @param appointmentItems new appt list
+     */
     public void setAppointmentItems(List<AppointmentDTO> appointmentItems){
         this.appointmentItems = appointmentItems;
         sortAppointments();

@@ -704,6 +704,10 @@ public class AppointmentsPayloadDTO {
 
     }
 
+    /**
+     * Check if appt date is same as current date
+     * @return true is appt date is current date
+     */
     public boolean isAppointmentToday(){
         if(startTime == null){
             return false;

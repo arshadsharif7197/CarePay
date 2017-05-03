@@ -39,17 +39,12 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.BaseDoctorInfoDialog.AppointmentType;
 import com.carecloud.carepaylibray.customdialogs.QrCodeViewDialog;
 import com.carecloud.carepaylibray.customdialogs.QueueAppointmentDialog;
-import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +58,6 @@ public class AppointmentsListFragment extends BaseFragment implements Appointmen
     private LinearLayout noAppointmentView;
     private View appointmentsListView;
 
-//    private AppointmentsAdapter appointmentsAdapter;
     private AppointmentListAdapter appointmentListAdapter;
     private List<AppointmentDTO> appointmentsItems;
     private List<Object> appointmentListWithHeader;
@@ -172,34 +166,6 @@ public class AppointmentsListFragment extends BaseFragment implements Appointmen
 
             setAdapter();
 
-            // Sort appointment list as per Today and Upcoming
-//            appointmentListWithHeader = getAppointmentListWithHeader();
-//            if (appointmentListWithHeader != null && appointmentListWithHeader.size() > 0) {
-//
-//                if (bundle != null) {
-//                    Gson gson = new Gson();
-//                    String appointmentDTOString = bundle.getString(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
-//                    AppointmentsResultModel appointmentDTO = gson.fromJson(appointmentDTOString,
-//                            AppointmentsResultModel.class);
-//
-//                    if (appointmentDTO != null) {
-//                        // adding checked-in appointment at the top of the list
-//                        appointmentListWithHeader.add(0, appointmentDTO);
-//                    }
-//                }
-//
-//                appointmentsAdapter = new AppointmentsAdapter(getActivity(),
-//                        appointmentListWithHeader, appointmentsListFragment, new AppointmentsAdapter.AppointmentsAdapterListener() {
-//                    @Override
-//                    public void onItemTapped(AppointmentDTO appointmentDTO) {
-//                        showAppointmentPopup(appointmentDTO);
-//                    }
-//                });
-//                appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//                appointmentRecyclerView.setAdapter(appointmentsAdapter);
-//            } else {
-//                showNoAppointmentScreen();
-//            }
         } else {
             // Show no appointment screen
             showNoAppointmentScreen();
@@ -355,11 +321,6 @@ public class AppointmentsListFragment extends BaseFragment implements Appointmen
         }
         setAdapter();
 
-
-//        int index = appointmentsAdapter.getAppointmentItems().indexOf(appointmentDTO);
-//        appointmentDTO.getPayload().getAppointmentStatus().setCode(CarePayConstants.CANCELLED);
-//        appointmentsAdapter.getAppointmentItems().set(index, appointmentDTO);
-//        appointmentsAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -459,9 +420,6 @@ public class AppointmentsListFragment extends BaseFragment implements Appointmen
                 appointmentListWithHeader.clear();
             }
 
-//            if (appointmentsAdapter != null) {
-//                appointmentsAdapter.hideHeaderView();
-//            }
         }
 
         // API call to fetch latest appointments
@@ -496,96 +454,6 @@ public class AppointmentsListFragment extends BaseFragment implements Appointmen
         }
     };
 
-    private String getSectionHeaderTitle(String appointmentRawDate) {
-        // Current date
-        String currentDate = DateUtil.getInstance().setToCurrent().toStringWithFormatMmDashDdDashYyyy();
-        Date currentConvertedDate = DateUtil.getInstance().setDateRaw(currentDate).getDate();
-
-        // Appointment date
-        String appointmentDate = DateUtil.getInstance().setDateRaw(appointmentRawDate).toStringWithFormatMmDashDdDashYyyy();
-        Date convertedAppointmentDate = DateUtil.getInstance().setDateRaw(appointmentDate).getDate();
-
-        String headerText;
-        if (convertedAppointmentDate.after(currentConvertedDate)
-                && !appointmentDate.equalsIgnoreCase(currentDate)) {
-            headerText = appointmentInfo.getMetadata().getLabel().getUpcomingAppointmentsHeading();
-        } else if (convertedAppointmentDate.before(currentConvertedDate)) {
-            headerText = appointmentInfo.getMetadata().getLabel().getTodayAppointmentsHeading();
-        } else {
-            headerText = appointmentInfo.getMetadata().getLabel().getTodayAppointmentsHeading();
-        }
-        return headerText;
-    }
-
-
-    // Method to return appointmentListWithHeader
-    private List<Object> getAppointmentListWithHeader() {
-        if (appointmentsItems != null && appointmentsItems.size() > 0) {
-            // To sort appointment list based on appointment time
-            Collections.sort(appointmentsItems, new Comparator<AppointmentDTO>() {
-                public int compare(AppointmentDTO o1, AppointmentDTO o2) {
-                    String dateO1 = o1.getPayload().getStartTime();
-                    String dateO2 = o2.getPayload().getStartTime();
-
-                    Date date1 = DateUtil.getInstance().setDateRaw(dateO1).getDate();
-                    Date date2 = DateUtil.getInstance().setDateRaw(dateO2).getDate();
-
-                    long time1 = 0;
-                    long time2 = 0;
-                    if (date1 != null) {
-                        time1 = date1.getTime();
-                    }
-
-                    if (date2 != null) {
-                        time2 = date2.getTime();
-                    }
-
-                    if (time1 < time2) {
-                        return -1;
-                    } else {
-                        return 1;
-                    }
-                }
-            });
-
-            // To sort appointment list based on today or tomorrow
-            Collections.sort(appointmentsItems, new Comparator<AppointmentDTO>() {
-                public int compare(AppointmentDTO o1, AppointmentDTO o2) {
-                    String date01 = o1.getPayload().getStartTime();
-
-                    String date02 = o2.getPayload().getStartTime();
-                    Date date2 = DateUtil.getInstance().setDateRaw(date02).getDate();
-                    DateUtil.getInstance().setDateRaw(date01);
-                    return DateUtil.getInstance().compareTo(date2);
-                }
-            });
-
-            // To create appointment list data structure along with headers
-            String headerTitle = "";
-            appointmentListWithHeader = new ArrayList<>();
-
-            for (AppointmentDTO appointmentDTO : appointmentsItems) {
-                if (!appointmentDTO.getPayload().getAppointmentStatus().getCode()
-                        .equalsIgnoreCase(CarePayConstants.CHECKED_IN)) {
-
-                    String title = getSectionHeaderTitle(appointmentDTO.getPayload().getStartTime());
-                    if (headerTitle.equalsIgnoreCase(title)) {
-                        appointmentListWithHeader.add(appointmentDTO);
-                    } else {
-                        headerTitle = getSectionHeaderTitle(appointmentDTO.getPayload().getStartTime());
-                        AppointmentSectionHeaderModel appointmentSectionHeaderModel = new AppointmentSectionHeaderModel();
-                        appointmentSectionHeaderModel.setAppointmentHeader(headerTitle);
-                        appointmentListWithHeader.add(appointmentSectionHeaderModel);
-                        appointmentListWithHeader.add(appointmentDTO);
-                    }
-                } else {
-                    appointmentListWithHeader.add(0, appointmentDTO);
-                }
-            }
-        }
-        return appointmentListWithHeader;
-    }
-
     private WorkflowServiceCallback preRegisterCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -609,6 +477,6 @@ public class AppointmentsListFragment extends BaseFragment implements Appointmen
 
     @Override
     public void onItemTapped(AppointmentDTO appointmentDTO) {
-
+        showAppointmentPopup(appointmentDTO);
     }
 }
