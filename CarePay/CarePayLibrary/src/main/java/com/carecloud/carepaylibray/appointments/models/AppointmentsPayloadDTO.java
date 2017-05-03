@@ -1,6 +1,8 @@
 
 package com.carecloud.carepaylibray.appointments.models;
 
+import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.google.gson.annotations.Expose;
@@ -21,7 +23,7 @@ public class AppointmentsPayloadDTO {
     private String id;
     @SerializedName("appointment_status")
     @Expose
-    private AppointmentStatusDTO appointmentStatusModel = new AppointmentStatusDTO();
+    private AppointmentStatusDTO appointmentStatus = new AppointmentStatusDTO();
     @SerializedName("patient")
     @Expose
     private PatientModel patient = new PatientModel();
@@ -113,6 +115,8 @@ public class AppointmentsPayloadDTO {
     @Expose
     private AppointmentResourceDTO resource = new AppointmentResourceDTO();
 
+    private AppointmentDisplayStyle displayStyle;
+
     /**
      * 
      * @return
@@ -134,19 +138,19 @@ public class AppointmentsPayloadDTO {
     /**
      * 
      * @return
-     *     The appointmentStatusModel
+     *     The appointmentStatus
      */
-    public AppointmentStatusDTO getAppointmentStatusModel() {
-        return appointmentStatusModel;
+    public AppointmentStatusDTO getAppointmentStatus() {
+        return appointmentStatus;
     }
 
     /**
      * 
-     * @param appointmentStatusModel
+     * @param appointmentStatus
      *     The appointment_status
      */
-    public void setAppointmentStatusModel(AppointmentStatusDTO appointmentStatusModel) {
-        this.appointmentStatusModel = appointmentStatusModel;
+    public void setAppointmentStatus(AppointmentStatusDTO appointmentStatus) {
+        this.appointmentStatus = appointmentStatus;
     }
 
     /**
@@ -671,6 +675,22 @@ public class AppointmentsPayloadDTO {
         this.resource = resource;
     }
 
+    public VisitTypeDTO getVisitType() {
+        return visitType;
+    }
+
+    public void setVisitType(VisitTypeDTO visitType) {
+        this.visitType = visitType;
+    }
+
+    public AppointmentDisplayStyle getDisplayStyle() {
+        return displayStyle;
+    }
+
+    public void setDisplayStyle(AppointmentDisplayStyle displayStyle) {
+        this.displayStyle = displayStyle;
+    }
+
     /**
      * @return true if appointment time is over
      */
@@ -682,6 +702,31 @@ public class AppointmentsPayloadDTO {
         Date apptEndDate = DateUtil.getInstance().setDateRaw(endTime).getDate();
         return apptEndDate.before(new Date());
 
+    }
+
+    public boolean isAppointmentToday(){
+        if(startTime == null){
+            return false;
+        }
+
+        Date apptStart = DateUtil.getInstance().setDateRaw(startTime).getDate();
+        return DateUtil.isToday(apptStart);
+    }
+
+    /**
+     * Check if this appointment is finished
+     * @return true if appointment is finished according to its status
+     */
+    public boolean isAppointmentFinished(){
+        String statusCode = getAppointmentStatus().getCode();
+        switch (statusCode){
+            case CarePayConstants.CHECKED_OUT:
+            case CarePayConstants.BILLED:
+            case CarePayConstants.MANUALLY_BILLED:
+                return true;
+            default:
+                return false;
+        }
     }
 
     /**
@@ -697,18 +742,14 @@ public class AppointmentsPayloadDTO {
 
     }
 
-    public VisitTypeDTO getVisitType() {
-        return visitType;
-    }
-
-    public void setVisitType(VisitTypeDTO visitType) {
-        this.visitType = visitType;
-    }
-
     /**
      * @return true if appointment can check in now
      */
     public boolean canCheckInNow(AppointmentsResultModel appointmentInfo) {
+        if(!canCheckIn()) {
+            return false;
+        }
+
         if (hasAppointmentStarted()) {
             return true;
         }
@@ -718,10 +759,6 @@ public class AppointmentsPayloadDTO {
             return false;
         }
 
-//        DateUtil startDate = DateUtil.getInstance().setDateRaw(startTime);
-//        if (!startDate.isToday()) {
-//            return false;
-//        }
 
         long earlyCheckInPeriod = Long.parseLong(checkin.getEarlyCheckinPeriod());
         if (ANYTIME_PERIOD == earlyCheckInPeriod) {
@@ -733,6 +770,22 @@ public class AppointmentsPayloadDTO {
 
         return differenceInMinutes < earlyCheckInPeriod;
     }
+
+    /**
+     * Check if this appointment can be checked into
+     * @return true if appointment can check in according to its status
+     */
+    public boolean canCheckIn(){
+        String statusCode = getAppointmentStatus().getCode();
+        switch (statusCode){
+            case CarePayConstants.PENDING:
+            case CarePayConstants.CHECKING_IN:
+                return true;
+            default:
+                return false;
+        }
+    }
+
 
     /**
      * @return true if appointment can be canceled
@@ -759,4 +812,25 @@ public class AppointmentsPayloadDTO {
 
         return differenceInMinutes < cancellationNoticePeriod;
     }
+
+
+
+    /**
+     * Check if this appointment can be checked out of
+     * @return true if appointment can check out according to its status
+     */
+    public boolean canCheckOut(){
+        String statusCode = getAppointmentStatus().getCode();
+        switch (statusCode){
+            case CarePayConstants.CHECKED_IN:
+            case CarePayConstants.IN_PROGRESS_IN_ROOM:
+            case CarePayConstants.IN_PROGRESS_OUT_ROOM:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+
+
 }

@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.carecloud.carepay.patient.appointments.adapters.AppointmentsAdapter;
+import com.carecloud.carepay.patient.appointments.adapters.AppointmentListAdapter;
 import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentDialog;
 import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
 import com.carecloud.carepay.patient.appointments.dialog.CheckInOfficeNowAppointmentDialog;
@@ -54,7 +54,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AppointmentsListFragment extends BaseFragment {
+public class AppointmentsListFragment extends BaseFragment implements AppointmentListAdapter.SelectAppointmentCallback {
 
     private AppointmentsResultModel appointmentInfo;
     private ProgressBar appointmentProgressBar;
@@ -63,7 +63,8 @@ public class AppointmentsListFragment extends BaseFragment {
     private LinearLayout noAppointmentView;
     private View appointmentsListView;
 
-    private AppointmentsAdapter appointmentsAdapter;
+//    private AppointmentsAdapter appointmentsAdapter;
+    private AppointmentListAdapter appointmentListAdapter;
     private List<AppointmentDTO> appointmentsItems;
     private List<Object> appointmentListWithHeader;
     private RecyclerView appointmentRecyclerView;
@@ -107,7 +108,10 @@ public class AppointmentsListFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(View view, Bundle icicle) {
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         appointmentRecyclerView = (RecyclerView) appointmentsListView.findViewById(R.id.appointments_recycler_view);
+        appointmentRecyclerView.setLayoutManager(layoutManager);
+
         appointmentsListFragment = this;
 
 
@@ -160,51 +164,61 @@ public class AppointmentsListFragment extends BaseFragment {
 
         appointmentProgressBar.setVisibility(View.GONE);
 
-        if (appointmentInfo != null && appointmentInfo.getPayload() != null
-                && appointmentInfo.getPayload().getAppointments() != null
-                && appointmentInfo.getPayload().getAppointments().size() > 0) {
+        if (appointmentInfo!=null && appointmentInfo.getPayload().getAppointments().size() > 0) {
 
             appointmentsItems = appointmentInfo.getPayload().getAppointments();
             noAppointmentView.setVisibility(View.GONE);
             appointmentView.setVisibility(View.VISIBLE);
 
+            setAdapter();
+
             // Sort appointment list as per Today and Upcoming
-            appointmentListWithHeader = getAppointmentListWithHeader();
-            if (appointmentListWithHeader != null && appointmentListWithHeader.size() > 0) {
-
-                if (bundle != null) {
-                    Gson gson = new Gson();
-                    String appointmentDTOString = bundle.getString(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
-                    AppointmentsResultModel appointmentDTO = gson.fromJson(appointmentDTOString,
-                            AppointmentsResultModel.class);
-
-                    if (appointmentDTO != null) {
-                        // adding checked-in appointment at the top of the list
-                        appointmentListWithHeader.add(0, appointmentDTO);
-                    }
-                }
-
-                appointmentsAdapter = new AppointmentsAdapter(getActivity(),
-                        appointmentListWithHeader, appointmentsListFragment, new AppointmentsAdapter.AppointmentsAdapterListener() {
-                    @Override
-                    public void onItemTapped(AppointmentDTO appointmentDTO) {
-                        showAppointmentPopup(appointmentDTO);
-                    }
-                });
-                appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                appointmentRecyclerView.setAdapter(appointmentsAdapter);
-            } else {
-                showNoAppointmentScreen();
-            }
+//            appointmentListWithHeader = getAppointmentListWithHeader();
+//            if (appointmentListWithHeader != null && appointmentListWithHeader.size() > 0) {
+//
+//                if (bundle != null) {
+//                    Gson gson = new Gson();
+//                    String appointmentDTOString = bundle.getString(CarePayConstants.CHECKED_IN_APPOINTMENT_BUNDLE);
+//                    AppointmentsResultModel appointmentDTO = gson.fromJson(appointmentDTOString,
+//                            AppointmentsResultModel.class);
+//
+//                    if (appointmentDTO != null) {
+//                        // adding checked-in appointment at the top of the list
+//                        appointmentListWithHeader.add(0, appointmentDTO);
+//                    }
+//                }
+//
+//                appointmentsAdapter = new AppointmentsAdapter(getActivity(),
+//                        appointmentListWithHeader, appointmentsListFragment, new AppointmentsAdapter.AppointmentsAdapterListener() {
+//                    @Override
+//                    public void onItemTapped(AppointmentDTO appointmentDTO) {
+//                        showAppointmentPopup(appointmentDTO);
+//                    }
+//                });
+//                appointmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//                appointmentRecyclerView.setAdapter(appointmentsAdapter);
+//            } else {
+//                showNoAppointmentScreen();
+//            }
         } else {
             // Show no appointment screen
             showNoAppointmentScreen();
         }
     }
 
+    private void setAdapter(){
+        if(appointmentRecyclerView.getAdapter() == null){
+            AppointmentListAdapter adapter = new AppointmentListAdapter(getContext(), appointmentsItems, this);
+            appointmentRecyclerView.setAdapter(adapter);
+        }else{
+            AppointmentListAdapter adapter = (AppointmentListAdapter) appointmentRecyclerView.getAdapter();
+            adapter.setAppointmentItems(appointmentsItems);
+        }
+    }
+
     private void showAppointmentPopup(AppointmentDTO appointmentDTO) {
         AppointmentsPayloadDTO payloadDTO = appointmentDTO.getPayload();
-        String statusCode = payloadDTO.getAppointmentStatusModel().getCode();
+        String statusCode = payloadDTO.getAppointmentStatus().getCode();
         switch (statusCode) {
             case CarePayConstants.IN_PROGRESS_IN_ROOM:
             case CarePayConstants.IN_PROGRESS_OUT_ROOM:
@@ -332,11 +346,20 @@ public class AppointmentsListFragment extends BaseFragment {
     }
 
 
-    private void refreshAppointmentListAfterCancellation(AppointmentDTO appointmentDTO) {
-        int index = appointmentsAdapter.getAppointmentItems().indexOf(appointmentDTO);
-        appointmentDTO.getPayload().getAppointmentStatusModel().setCode(CarePayConstants.CANCELLED);
-        appointmentsAdapter.getAppointmentItems().set(index, appointmentDTO);
-        appointmentsAdapter.notifyDataSetChanged();
+    private void refreshAppointmentListAfterCancellation(AppointmentDTO cancelAppointmentDTO) {
+        for(AppointmentDTO appointmentDTO : appointmentsItems){
+            if(appointmentDTO == cancelAppointmentDTO){
+                appointmentDTO.getPayload().getAppointmentStatus().setCode(CarePayConstants.CANCELLED);
+                break;
+            }
+        }
+        setAdapter();
+
+
+//        int index = appointmentsAdapter.getAppointmentItems().indexOf(appointmentDTO);
+//        appointmentDTO.getPayload().getAppointmentStatus().setCode(CarePayConstants.CANCELLED);
+//        appointmentsAdapter.getAppointmentItems().set(index, appointmentDTO);
+//        appointmentsAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -436,9 +459,9 @@ public class AppointmentsListFragment extends BaseFragment {
                 appointmentListWithHeader.clear();
             }
 
-            if (appointmentsAdapter != null) {
-                appointmentsAdapter.hideHeaderView();
-            }
+//            if (appointmentsAdapter != null) {
+//                appointmentsAdapter.hideHeaderView();
+//            }
         }
 
         // API call to fetch latest appointments
@@ -542,7 +565,7 @@ public class AppointmentsListFragment extends BaseFragment {
             appointmentListWithHeader = new ArrayList<>();
 
             for (AppointmentDTO appointmentDTO : appointmentsItems) {
-                if (!appointmentDTO.getPayload().getAppointmentStatusModel().getCode()
+                if (!appointmentDTO.getPayload().getAppointmentStatus().getCode()
                         .equalsIgnoreCase(CarePayConstants.CHECKED_IN)) {
 
                     String title = getSectionHeaderTitle(appointmentDTO.getPayload().getStartTime());
@@ -583,4 +606,9 @@ public class AppointmentsListFragment extends BaseFragment {
             Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+    @Override
+    public void onItemTapped(AppointmentDTO appointmentDTO) {
+
+    }
 }

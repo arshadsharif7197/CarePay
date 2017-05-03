@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/appointments_section_header_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/apt_skicky_header_height"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
+        android:paddingEnd="0dp"
+        android:paddingStart="@dimen/list_apt_padding_right"
+        android:textColor="@color/lightSlateGray"
+        android:textSize="@dimen/textview_textsize"
+        app:customAssetFont="gotham_rounded_medium" />
+
+</LinearLayout>

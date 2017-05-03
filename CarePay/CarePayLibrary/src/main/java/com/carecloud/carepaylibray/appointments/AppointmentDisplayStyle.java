@@ -8,13 +8,20 @@ import java.io.Serializable;
 
 public enum AppointmentDisplayStyle implements Serializable {
     PENDING,
+    PENDING_UPCOMING,
+
     REQUESTED,
+    REQUESTED_UPCOMING,
+
     CHECKED_IN,
 
     CANCELED,
-    FUTURE,
+    CANCELED_UPCOMING,
+
     CHECKED_OUT,
     MISSED,
+
+    HEADER,
 
     DEFAULT;
 

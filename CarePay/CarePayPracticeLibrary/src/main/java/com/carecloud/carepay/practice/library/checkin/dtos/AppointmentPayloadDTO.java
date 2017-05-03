@@ -11,8 +11,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-//import org.joda.time.DateTime;
-
 /**
  * Created by Jahirul Bhuiyan on 10/27/2016.
  */
