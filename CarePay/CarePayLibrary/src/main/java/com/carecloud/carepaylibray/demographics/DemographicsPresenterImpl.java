@@ -199,9 +199,9 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     @Override
-    public void displayCheckInSuccess(final WorkflowDTO workflowDTO, Context context) {
+    public void displayCheckInSuccess(final WorkflowDTO workflowDTO) {
         if( ((IApplicationSession)demographicsView.getContext()).getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT ) {
-            SystemUtil.showSuccessToast(context, Label.getLabel("confirm_appointment_checkin"));
+            SystemUtil.showSuccessToast(demographicsView.getContext(), Label.getLabel("confirm_appointment_checkin"));
             completeDemographics(workflowDTO) ;
         } else {
             CheckinCompletedDialogFragment successFragment = new CheckinCompletedDialogFragment();
