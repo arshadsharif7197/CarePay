@@ -40,6 +40,7 @@ public class ResetPasswordFragment extends BaseFragment {
     private FragmentActivityInterface listener;
     private Button resetPasswordButton;
     private TextInputLayout signInEmailTextInputLayout;
+    public static final int GO_TO_HOME = 200;
 
     public ResetPasswordFragment() {
         // Required empty public constructor
@@ -144,6 +145,7 @@ public class ResetPasswordFragment extends BaseFragment {
             signInHome.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    getActivity().setResult(GO_TO_HOME);
                     getActivity().finish();
                 }
             });

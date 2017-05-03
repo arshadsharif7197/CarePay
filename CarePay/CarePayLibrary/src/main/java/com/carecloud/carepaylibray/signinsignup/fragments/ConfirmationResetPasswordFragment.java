@@ -101,6 +101,7 @@ public class ConfirmationResetPasswordFragment extends BaseFragment {
             signInHome.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    getActivity().setResult(ResetPasswordFragment.GO_TO_HOME);
                     getActivity().finish();
                 }
             });
