@@ -38,6 +38,7 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
 
     @Override
     public void attachCallback(Context context) {
+        super.attachCallback(context);
         try {
             if (context instanceof DemographicsView) {
                 flowCallback = ((DemographicsView) context).getPresenter();
@@ -46,11 +47,6 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
             }
         } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement CheckinFlowCallback");
-        }
-        try {
-            actionCallback = (PaymentNavigationCallback) context;
-        } catch (ClassCastException cce) {
-            throw new ClassCastException("Attached Context must implement ResponsibilityActionCallback");
         }
     }
 
