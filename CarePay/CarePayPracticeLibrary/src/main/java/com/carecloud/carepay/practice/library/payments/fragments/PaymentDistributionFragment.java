@@ -3,7 +3,6 @@ package com.carecloud.carepay.practice.library.payments.fragments;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -51,7 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by lmenendez on 3/14/17.
+ * Created by lmenendez on 3/14/17
  */
 
 public class PaymentDistributionFragment extends BaseDialogFragment implements PaymentDistributionAdapter.PaymentDistributionCallback, PopupPickerAdapter.PopupPickCallback,
@@ -97,8 +96,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     private boolean shouldAutoApply = false;
     private boolean resetAutoApplyOnError = false;
 
-    private Handler handler;
-
 
     @Override
     public void onAttach(Context context){
@@ -114,7 +111,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     public void onCreate(Bundle icicle){
         super.onCreate(icicle);
         currencyFormatter = NumberFormat.getCurrencyInstance();
-        handler = new Handler();
 
         Bundle args = getArguments();
         if(args!=null){
@@ -132,7 +128,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
 
     @Override
     public void onViewCreated(View view, Bundle icicle){
-//        setupToolbar(view, Label.getLabel("payment_title"));
 
         setupButtons(view);
 
@@ -252,15 +247,22 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             setCurrency(balance, balanceAmount);
             updatePaymentAmount();
 
-            String patientNameString = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getPersonalDetails().getFullName();
-//            patientName.setText(StringUtil.getLabelForView(patientNameString));
-            patientNameString = StringUtil.capitalize(patientNameString);
-            setupToolbar(view, StringUtil.getLabelForView(patientNameString));
+            PatientBalanceDTO patientBalanceDTO = null;
+            if(!paymentsModel.getPaymentPayload().getPatientBalances().isEmpty()){
+                patientBalanceDTO = paymentsModel.getPaymentPayload().getPatientBalances().get(0);
+            }
 
-            try {
-                unappliedCredit = Double.parseDouble(paymentsModel.getPaymentPayload().getPatientBalances().get(0).getUnappliedCredit()) *-1;
-            }catch (NumberFormatException nfe){
-                nfe.printStackTrace();
+            if(patientBalanceDTO!=null) {
+                String patientNameString = patientBalanceDTO.getDemographics().getPayload().getPersonalDetails().getFullName();
+
+                patientNameString = StringUtil.capitalize(patientNameString);
+                setupToolbar(view, StringUtil.getLabelForView(patientNameString));
+
+                try {
+                    unappliedCredit = Double.parseDouble(patientBalanceDTO.getUnappliedCredit()) *-1;
+                }catch (NumberFormatException nfe){
+                    nfe.printStackTrace();
+                }
             }
 
             if(unappliedCredit > 0D){
@@ -361,6 +363,10 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     }
 
     private void setDefaultProviderLocation(){
+        if(paymentsModel.getPaymentPayload().getPatientBalances().isEmpty() ||
+                paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().isEmpty()){
+            return;
+        }
         String patientID = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getPatientId();
         String locationID = null;
         String providerID = null;
