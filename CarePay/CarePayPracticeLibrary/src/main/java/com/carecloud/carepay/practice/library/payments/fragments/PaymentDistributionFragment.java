@@ -50,8 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * Created by lmenendez on 3/14/17.
+ * Created by lmenendez on 3/14/17
  */
 
 public class PaymentDistributionFragment extends BaseDialogFragment implements PaymentDistributionAdapter.PaymentDistributionCallback, PopupPickerAdapter.PopupPickCallback,
