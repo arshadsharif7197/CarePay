@@ -177,11 +177,12 @@
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/forgot_passwordTextview"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="15dp"
             android:gravity="center"
+            android:padding="10dp"
             android:textColor="@color/white"
             android:textSize="@dimen/forgotpassword_textsize"
             android:visibility="gone"

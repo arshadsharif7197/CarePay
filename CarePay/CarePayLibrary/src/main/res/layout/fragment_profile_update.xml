@@ -16,33 +16,37 @@
     <include layout="@layout/toolbar_demographics_settings" />
 
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dimen_40dp"
         android:layout_marginLeft="@dimen/dimen_17dp"
         android:layout_marginRight="@dimen/dimen_17dp"
-        android:layout_marginTop="@dimen/dimen_20dp"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_marginTop="@dimen/dimen_20dp">
 
         <ImageView
             android:id="@+id/providerPicImageView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".25"
+            android:layout_width="@dimen/signup_clickable_textview_height"
+            android:layout_height="@dimen/signup_clickable_textview_height"
+            android:layout_alignParentStart="true"
             android:contentDescription="@string/profile_picture"
             android:src="@drawable/icn_placeholder_user_profile_png" />
 
-        <Button
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/changeCurrentPhotoButton"
             style="@style/DemographicsChooseProfilePicStyle"
-            android:layout_width="0dp"
-            android:layout_weight="0.75"
-            breeze:textKey="profile_change_photo_label"
-            android:textColor="@color/colorPrimary" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/dimen_20dp"
+            android:layout_toEndOf="@id/providerPicImageView"
+            android:paddingEnd="@dimen/dimen_20dp"
+            android:paddingStart="@dimen/dimen_20dp"
+            android:textColor="@color/colorPrimary"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="profile_change_photo_label" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/adddemoLinearLayout"
@@ -124,13 +128,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".50"
-                breeze:textKey="setting_change_Email"
                 android:gravity="end"
                 android:padding="2dp"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_14"
                 android:textStyle="bold"
-                app:customAssetFont="proxima_nova_regular" />/>
+                app:customAssetFont="proxima_nova_regular"
+                breeze:textKey="setting_change_Email" />/>
 
         </LinearLayout>
 
@@ -171,11 +175,11 @@
                 android:layout_weight=".50"
                 android:gravity="end"
                 android:padding="2dp"
-                breeze:textKey="settings_change_password"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_14"
                 android:textStyle="bold"
-                app:customAssetFont="proxima_nova_regular" />
+                app:customAssetFont="proxima_nova_regular"
+                breeze:textKey="settings_change_password" />
 
         </LinearLayout>
 
@@ -196,10 +200,10 @@
             android:id="@+id/buttonAddDemographicInfo"
             android:layout_width="match_parent"
             android:layout_height="52dp"
-            breeze:textKey="demographics_save_changes_label"
             android:layout_alignParentBottom="true"
             android:background="@drawable/settings_button_selector"
             android:gravity="center"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            breeze:textKey="demographics_save_changes_label" />
     </RelativeLayout>
 </LinearLayout>

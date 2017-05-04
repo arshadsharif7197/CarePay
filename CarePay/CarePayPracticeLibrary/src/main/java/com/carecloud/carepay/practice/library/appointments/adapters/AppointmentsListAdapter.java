@@ -129,7 +129,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
 
             GradientDrawable headerBackground = (GradientDrawable) appointmentCardHeader.getBackground();
 
-            String statusCode = payloadDTO.getAppointmentStatusModel().getCode();
+            String statusCode = payloadDTO.getAppointmentStatus().getCode();
 
             switch (statusCode) {
                 case CarePayConstants.IN_PROGRESS_IN_ROOM:

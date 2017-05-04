@@ -105,7 +105,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             int day = DateUtil.getInstance().getDay();
 
             String sectionHeaderTitle = getSectionHeaderTitle(appointmentStartTime, item.getEndTime());
-            String status = item.getAppointmentStatusModel().getCode();
+            String status = item.getAppointmentStatus().getCode();
 
             boolean isPending = status.equalsIgnoreCase(CarePayConstants.PENDING) ||
                     status.equalsIgnoreCase(CarePayConstants.CHECKING_IN);
@@ -259,7 +259,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                             CarePayTextView appointmentStickyHeaderTitle =
                                     (CarePayTextView) view.findViewById(R.id.appointments_sticky_header_title);
 
-                            boolean isCheckedIn = item.getPayload().getAppointmentStatusModel()
+                            boolean isCheckedIn = item.getPayload().getAppointmentStatus()
                                     .getCode().equalsIgnoreCase("I");
                             if (isCheckedIn) {
                                 appointmentStickyHeaderTitle.setVisibility(View.GONE);
@@ -388,18 +388,18 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                     itemView.findViewById(R.id.appointments_section_header_title);
 
             // Today
-            todayTimeLinearLayout = (LinearLayout) itemView.findViewById(R.id.todayTimeLinearlayout);
+            todayTimeLinearLayout = (LinearLayout) itemView.findViewById(R.id.todayTimeLayout);
             todayTimeTextView = (CarePayTextView) itemView.findViewById(R.id.todayTimeTextView);
 
             // Upcoming
-            upcomingDateLinearLayout = (LinearLayout) itemView.findViewById(R.id.upcomingDateLinearlayout);
+            upcomingDateLinearLayout = (LinearLayout) itemView.findViewById(R.id.upcomingDateLayout);
             upcomingDateTextView = (CarePayTextView) itemView.findViewById(R.id.upcomingDateTextView);
             upcomingMonthTextView = (CarePayTextView) itemView.findViewById(R.id.upcomingMonthTextView);
             upcomingTimeTextView = (CarePayTextView) itemView.findViewById(R.id.upcomingTimeTextView);
 
             // Missed
             missedAppointmentTextView = (CarePayTextView)
-                    itemView.findViewById(R.id.missed_appointment_text_view);
+                    itemView.findViewById(R.id.todayTimeMessage);
 
             listItemDivider = itemView.findViewById(R.id.appointment_list_item_divider);
 
