@@ -50,7 +50,7 @@ public abstract class BaseCheckinFragment extends BaseFragment {
         try {
             CheckInWorkFlowDTO checkInWorkflowDTO = DtoHelper.getConvertedDTO(CheckInWorkFlowDTO.class, workflowDTO ) ;
             AppointmentDTO appointmentDTO = getAppointmentById(checkInWorkflowDTO.getPayload().getAppointments(), callback.getAppointmentId());
-            if(appointmentDTO != null && appointmentDTO.getPayload().getAppointmentStatusModel().getCode().equalsIgnoreCase(CarePayConstants.CHECKED_IN) ){
+            if(appointmentDTO != null && appointmentDTO.getPayload().getAppointmentStatus().getCode().equalsIgnoreCase(CarePayConstants.CHECKED_IN) ){
                 callback.displayCheckInSuccess(workflowDTO);
             } else {
                 callback.navigateToWorkflow(workflowDTO);
