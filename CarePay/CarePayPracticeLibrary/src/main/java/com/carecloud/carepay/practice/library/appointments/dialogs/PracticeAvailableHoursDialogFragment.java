@@ -11,6 +11,7 @@ import com.carecloud.carepaylibray.appointments.fragments.BaseAvailableHoursFrag
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
@@ -96,4 +97,11 @@ public class PracticeAvailableHoursDialogFragment extends BaseAvailableHoursFrag
         super.selectDateRange();
         dismiss();
     }
+
+    @Override
+    public void onSelectAppointmentTimeSlot(AppointmentsSlotsDTO appointmentsSlotsDTO) {
+        super.onSelectAppointmentTimeSlot(appointmentsSlotsDTO);
+        dismiss();
+    }
+
 }
