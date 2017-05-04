@@ -21,6 +21,7 @@ import com.carecloud.carepay.practice.library.signin.interfaces.SelectPracticeCa
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.utils.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,6 +94,11 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
         });
 
         searchView = (SearchView) view.findViewById(R.id.search_entry_view);
+        for (TextView textView : ViewUtils.findChildrenByClass(searchView, TextView.class)) {
+            textView.setHintTextColor(getResources().getColor(R.color.textview_default_textcolor));
+            textView.setTextColor(getResources().getColor(R.color.textview_default_textcolor));
+        }
+
         searchView.setQueryHint(Label.getLabel("search_field_hint"));
         searchView.setOnQueryTextListener(queryTextListener);
 
