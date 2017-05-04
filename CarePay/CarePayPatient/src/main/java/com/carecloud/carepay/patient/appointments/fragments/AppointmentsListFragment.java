@@ -414,7 +414,6 @@ public class AppointmentsListFragment extends BaseFragment implements Appointmen
     WorkflowServiceCallback pageRefreshCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            showProgressDialog();
             appointmentProgressBar.setVisibility(View.VISIBLE);
         }
 
