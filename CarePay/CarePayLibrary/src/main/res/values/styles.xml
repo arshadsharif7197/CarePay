@@ -875,9 +875,10 @@
 
     <style name="ProgressDialogFullscreenWithTitlebar" parent="android:Theme.Translucent.NoTitleBar.Fullscreen">
         <item name="keepStatusBar">true</item>
-    </style>
+    </style>Theme.AppCompat.Light.NoActionBar
 
-    <style name="Base_Dialog_MinWidth" parent="android:Theme.DeviceDefault.Dialog.NoActionBar.MinWidth">
+    <!--<style name="Base_Dialog_MinWidth" parent="android:Theme.DeviceDefault.Dialog.NoActionBar.MinWidth">-->
+    <style name="Base_Dialog_MinWidth" parent="Theme.AppCompat.Light.Dialog.MinWidth">
         <item name="android:windowFullscreen">false</item>
     </style>
 
