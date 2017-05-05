@@ -20,7 +20,6 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
@@ -32,6 +31,7 @@ import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesQueryStrings;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
 import com.carecloud.carepaylibray.medications.models.MedicationsObject;
+import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -45,7 +45,7 @@ import java.util.Map;
  * Created by lmenendez on 2/15/17.
  */
 
-public class MedicationsAllergyFragment extends BaseFragment implements MedicationAllergiesAdapter.MedicationAllergiesAdapterCallback{
+public class MedicationsAllergyFragment extends BaseCheckinFragment implements MedicationAllergiesAdapter.MedicationAllergiesAdapterCallback{
 
     public interface MedicationAllergyCallback {
         void showMedicationSearch();
@@ -77,7 +77,8 @@ public class MedicationsAllergyFragment extends BaseFragment implements Medicati
         attachCallback(context);
     }
 
-    private void attachCallback(Context context){
+    @Override
+    public void attachCallback(Context context){
         try{
             if (context instanceof DemographicsView) {
                 callback = ((DemographicsView) context).getPresenter();
@@ -326,6 +327,7 @@ public class MedicationsAllergyFragment extends BaseFragment implements Medicati
     private View.OnClickListener navigationClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            SystemUtil.hideSoftKeyboard(getActivity());
             getActivity().onBackPressed();
         }
     };
