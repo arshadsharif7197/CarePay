@@ -79,6 +79,7 @@ public class CancelAppointmentConfirmDialogFragment extends BaseDialogFragment {
                 @Override
                 public void onClick(View view) {
                     callback.cancelAppointment(appointmentDTO);
+                    dismiss();
                 }
             });
 

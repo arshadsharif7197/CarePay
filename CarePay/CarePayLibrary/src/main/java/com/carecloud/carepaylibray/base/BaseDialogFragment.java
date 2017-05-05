@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.base;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -30,13 +31,18 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     private DialogInterface.OnCancelListener onCancelListener;
 
     @Override
+    public void onCreate(Bundle icicle){
+        super.onCreate(icicle);
+        isPracticeAppPatientMode = ((ISession) getActivity()).getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE;
+    }
+
+    @Override
     public void setupDialog(Dialog dialog, int style) {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.dialog = getDialog();
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         setCancelable(false);
 
-        isPracticeAppPatientMode = ((ISession) getActivity()).getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE;
         if (isPracticeAppPatientMode) {
             setNavigationBarVisibility();
         }
@@ -62,7 +68,6 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
 
     @Override
     public int getTheme(){
-//        return android.R.style.Theme_DeviceDefault_Dialog_NoActionBar_MinWidth;
         return R.style.Base_Dialog_MinWidth;
     }
 
@@ -138,6 +143,8 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     protected void hideKeyboardOnViewTouch(View view){
         if(isPracticeAppPatientMode && view!=null){
             view.setSoundEffectsEnabled(false);
+            view.setFocusable(true);
+            view.setFocusableInTouchMode(true);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

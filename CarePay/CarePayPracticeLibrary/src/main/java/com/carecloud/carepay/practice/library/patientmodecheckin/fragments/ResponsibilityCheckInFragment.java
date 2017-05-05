@@ -19,12 +19,14 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.practice.FlowStateInfo;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -35,11 +37,15 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
     private CheckinFlowCallback flowCallback;
 
     @Override
-    public void onAttach(Context context){
-        super.onAttach(context);
-        try{
-            flowCallback = (CheckinFlowCallback) context;
-        }catch (ClassCastException cce){
+    public void attachCallback(Context context) {
+        super.attachCallback(context);
+        try {
+            if (context instanceof DemographicsView) {
+                flowCallback = ((DemographicsView) context).getPresenter();
+            } else {
+                flowCallback = (CheckinFlowCallback) context;
+            }
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement CheckinFlowCallback");
         }
     }
@@ -58,13 +64,14 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
         View view = inflater.inflate(R.layout.fragment_responsibility_practice, container, false);
 
         Toolbar toolbar = (Toolbar) view.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             toolbar.setElevation(0);
         }
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back_white));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SystemUtil.hideSoftKeyboard(getActivity());
                 getActivity().onBackPressed();
             }
         });
@@ -149,9 +156,11 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-//        ((PatientModeCheckinActivity) getActivity()).updateSection(flowStateInfo);
+    public void onResume() {
+        super.onResume();
+        if(flowCallback == null){
+            attachCallback(getContext());
+        }
         flowCallback.setCheckinFlow(CheckinFlowState.PAYMENT, 1, 1);
     }
 
