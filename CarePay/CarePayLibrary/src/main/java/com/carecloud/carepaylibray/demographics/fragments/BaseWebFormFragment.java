@@ -30,6 +30,7 @@ import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.KeyboardScrollWithWebViewFix;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.marcok.stepprogressbar.StepProgressBar;
@@ -129,6 +130,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SystemUtil.hideSoftKeyboard(getActivity());
                 getActivity().onBackPressed();
             }
         });
