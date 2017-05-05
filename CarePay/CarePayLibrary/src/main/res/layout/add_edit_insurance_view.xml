@@ -114,7 +114,6 @@
             style="@style/SigninSignupTextInputStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="@color/transparent_apt"
             app:customAssetFont="proxima_nova_semi_bold"
             app:hintTextAppearance="@style/FloatingLabelStyle">
 
@@ -123,6 +122,7 @@
                 style="@style/SigninSignupEditStyle"
                 android:inputType="text"
                 android:textAllCaps="true"
+                breeze:hintKey="demographics_insurance_card_number"
                 app:customAssetFont="proxima_nova_regular" />
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
@@ -131,7 +131,6 @@
             style="@style/SigninSignupTextInputStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="@color/transparent_apt"
             app:customAssetFont="proxima_nova_semi_bold"
             app:hintTextAppearance="@style/FloatingLabelStyle">
 
@@ -140,6 +139,7 @@
                 style="@style/SigninSignupEditStyle"
                 android:inputType="text"
                 android:textAllCaps="true"
+                breeze:hintKey="demographics_insurance_group_number"
                 app:customAssetFont="proxima_nova_regular" />
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 

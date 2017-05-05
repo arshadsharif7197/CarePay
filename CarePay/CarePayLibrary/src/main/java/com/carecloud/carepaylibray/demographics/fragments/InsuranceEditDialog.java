@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
@@ -197,7 +196,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         hadInsurance = hasInsurance();
-        if (hadInsurance) {
+        if (getDialog()!=null || (hadInsurance && !isPatientMode)) {
             View view =  inflater.inflate(R.layout.dialog_add_edit_insurance, container, false);
 
             hideKeyboardOnViewTouch(view.findViewById(R.id.dialog_content_layout));
@@ -228,6 +227,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         inflateToolbarViews(view);
 
         hideKeyboardOnViewTouch(view);
+        hideKeyboardOnViewTouch(view.findViewById(R.id.dialog_content_layout));
         hideKeyboardOnViewTouch(view.findViewById(R.id.container_main));
 
         return view;
@@ -281,29 +281,23 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         cardNumber = (EditText) findViewById(R.id.health_insurance_card_number);
         otherProviderEditText = (EditText) findViewById(R.id.otherProviderEditText);
 
-        String cardNumberHint = Label.getLabel("demographics_insurance_card_number");
-        cardNumberInput.setTag(cardNumberHint);
-        cardNumber.setHint(cardNumberHint);
-        cardNumber.setTag(cardNumberInput);
-
         groupNumberInput = (TextInputLayout) findViewById(R.id.health_insurance_group_number_layout);
         groupNumber = (EditText) findViewById(R.id.health_insurance_group_number);
-
-        String groupNumberHint = Label.getLabel("demographics_insurance_group_number");
-        groupNumberInput.setTag(groupNumberHint);
-        groupNumber.setHint(groupNumberHint);
-        groupNumber.setTag(groupNumberInput);
 
         setTextListeners();
         setChangeFocusListeners();
         setActionListeners();
 
-        cardNumber.clearFocus();
-        groupNumber.clearFocus();
+//        cardNumber.clearFocus();
+//        groupNumber.clearFocus();
 
         initializeScanArea();
 
-        saveInsuranceButton = (Button) findViewById(R.id.save_insurance_changes);
+        if(getDialog()!=null) {
+            saveInsuranceButton = (Button) findViewById(R.id.save_insurance_changes);
+        }else{
+            saveInsuranceButton = (Button) findViewById(R.id.checkinDemographicsNextButton);
+        }
 
         getInsuranceDropdownLists();
 
@@ -315,14 +309,13 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
             selectedTypeTextView.setText(Label.getLabel("demographics_choose"));
 
-            if (hasInsurance()) {
+            if (hasInsurance() && getDialog()!=null) {
                 disappearViewById(R.id.remove_insurance_entry);
                 ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(
                         Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));
             } else {
                 showViewById(R.id.check_in_demographics_left_button);
                 findViewById(R.id.check_in_demographics_left_button).setOnClickListener(getNoInsuranceListener());
-                saveInsuranceButton = (Button) findViewById(R.id.checkinDemographicsNextButton);
                 saveInsuranceButton.setText(Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));
             }
         } else {
@@ -341,9 +334,13 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
             selectedTypeTextView.setText(selectedType);
 
             cardNumber.setText(demographicInsurancePayload.getInsuranceMemberId());
-            cardNumber.getOnFocusChangeListener().onFocusChange(cardNumber, false);
+            if(!StringUtil.isNullOrEmpty(demographicInsurancePayload.getInsuranceMemberId()) && cardNumber.getOnFocusChangeListener()!=null) {
+                cardNumber.getOnFocusChangeListener().onFocusChange(cardNumber, false);
+            }
             groupNumber.setText(demographicInsurancePayload.getInsuranceGroupId());
-            groupNumber.getOnFocusChangeListener().onFocusChange(groupNumber, false);
+            if(!StringUtil.isNullOrEmpty(demographicInsurancePayload.getInsuranceGroupId()) && groupNumber.getOnFocusChangeListener()!=null) {
+                groupNumber.getOnFocusChangeListener().onFocusChange(groupNumber, false);
+            }
 
             findViewById(R.id.remove_insurance_entry).setOnClickListener(removeButtonListener);
         }
@@ -404,7 +401,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
                 photos.add(backInsurancePhotoDTO);
             }
 
-            if (hasInsurance) {
+            if (hasInsurance && getDialog()!=null) {
                 closeDialog();
             } else {
                 callback.onInsuranceEdited(demographicDTO, true);
@@ -745,17 +742,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     }
 
     private void setChangeFocusListeners() {
-        View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard((Activity) getContext());
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        };
-        cardNumber.setOnFocusChangeListener(onFocusChangeListener);
-        groupNumber.setOnFocusChangeListener(onFocusChangeListener);
+        cardNumber.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(cardNumberInput, null));
+        groupNumber.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(groupNumberInput, null));
     }
 
     private void setActionListeners() {

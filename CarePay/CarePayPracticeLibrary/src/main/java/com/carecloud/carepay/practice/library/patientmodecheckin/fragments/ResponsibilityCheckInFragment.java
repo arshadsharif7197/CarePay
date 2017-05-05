@@ -22,11 +22,11 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
-import com.carecloud.carepaylibray.payments.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.practice.FlowStateInfo;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -71,6 +71,7 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SystemUtil.hideSoftKeyboard(getActivity());
                 getActivity().onBackPressed();
             }
         });
@@ -155,9 +156,11 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-//        ((PatientModeCheckinActivity) getActivity()).updateSection(flowStateInfo);
+    public void onResume() {
+        super.onResume();
+        if(flowCallback == null){
+            attachCallback(getContext());
+        }
         flowCallback.setCheckinFlow(CheckinFlowState.PAYMENT, 1, 1);
     }
 
