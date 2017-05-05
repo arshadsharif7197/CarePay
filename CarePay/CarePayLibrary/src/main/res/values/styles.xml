@@ -877,7 +877,8 @@
         <item name="keepStatusBar">true</item>
     </style>
 
-    <style name="Base_Dialog_MinWidth" parent="android:Theme.DeviceDefault.Dialog.NoActionBar.MinWidth">
+    <!--<style name="Base_Dialog_MinWidth" parent="android:Theme.DeviceDefault.Dialog.NoActionBar.MinWidth">-->
+    <style name="Base_Dialog_MinWidth" parent="Theme.AppCompat.Light.Dialog.MinWidth">
         <item name="android:windowFullscreen">false</item>
     </style>
 
