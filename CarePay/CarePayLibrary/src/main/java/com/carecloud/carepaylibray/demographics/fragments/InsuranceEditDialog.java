@@ -197,7 +197,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         hadInsurance = hasInsurance();
-        if (hadInsurance) {
+        if (getDialog()!=null || (hadInsurance && !isPatientMode)) {
             View view =  inflater.inflate(R.layout.dialog_add_edit_insurance, container, false);
 
             hideKeyboardOnViewTouch(view.findViewById(R.id.dialog_content_layout));
@@ -303,7 +303,11 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
         initializeScanArea();
 
-        saveInsuranceButton = (Button) findViewById(R.id.save_insurance_changes);
+        if(getDialog()!=null) {
+            saveInsuranceButton = (Button) findViewById(R.id.save_insurance_changes);
+        }else{
+            saveInsuranceButton = (Button) findViewById(R.id.checkinDemographicsNextButton);
+        }
 
         getInsuranceDropdownLists();
 
@@ -315,14 +319,13 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
             selectedTypeTextView.setText(Label.getLabel("demographics_choose"));
 
-            if (hasInsurance()) {
+            if (hasInsurance() && getDialog()!=null) {
                 disappearViewById(R.id.remove_insurance_entry);
                 ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(
                         Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));
             } else {
                 showViewById(R.id.check_in_demographics_left_button);
                 findViewById(R.id.check_in_demographics_left_button).setOnClickListener(getNoInsuranceListener());
-                saveInsuranceButton = (Button) findViewById(R.id.checkinDemographicsNextButton);
                 saveInsuranceButton.setText(Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));
             }
         } else {
@@ -404,7 +407,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
                 photos.add(backInsurancePhotoDTO);
             }
 
-            if (hasInsurance) {
+            if (hasInsurance && getDialog()!=null) {
                 closeDialog();
             } else {
                 callback.onInsuranceEdited(demographicDTO, true);
