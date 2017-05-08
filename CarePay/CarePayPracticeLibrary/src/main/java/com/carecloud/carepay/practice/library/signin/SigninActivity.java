@@ -45,6 +45,7 @@ import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.signinsignup.fragments.ResetPasswordFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.KeyboardWatcher;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -95,6 +96,8 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         setEditTexts();
         setClickables();
         changeScreenMode(signinScreenMode);
+
+        new KeyboardWatcher(findViewById(android.R.id.content));
     }
 
     /**
