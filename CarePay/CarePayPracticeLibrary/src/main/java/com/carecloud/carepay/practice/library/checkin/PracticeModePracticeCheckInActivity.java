@@ -404,11 +404,11 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
     }
 
     @Override
-    public void showPaymentConfirmation(PaymentsModel paymentsModel) {
-        Gson gson = new Gson();
+    public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
+//        Gson gson = new Gson();
         Bundle args = new Bundle();
-        String paymentsDTOString = gson.toJson(paymentsModel);
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
+//        String paymentsDTOString = gson.toJson(paymentsModel);
+        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
 
         PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
         confirmationFragment.setArguments(args);
@@ -497,10 +497,10 @@ public class PracticeModePracticeCheckInActivity extends BasePracticeActivity im
                 String jsonPayload = data.getStringExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA);
                 if (jsonPayload != null) {
                     Gson gson = new Gson();
-//                    PaymentUpdateBalanceDTO updateBalanceDTO = gson.fromJson(jsonPayload, PaymentUpdateBalanceDTO.class);
-//                    updatePatientBalance(updateBalanceDTO.getUpdatePatientBalancesDTO().get(0));
-                    PaymentsModel paymentsModel = gson.fromJson(jsonPayload, PaymentsModel.class);
-                    showPaymentConfirmation(paymentsModel);
+
+//                    PaymentsModel paymentsModel = gson.fromJson(jsonPayload, PaymentsModel.class);
+                    WorkflowDTO workflowDTO = gson.fromJson(jsonPayload, WorkflowDTO.class);
+                    showPaymentConfirmation(workflowDTO);
 
 
                 }

@@ -42,7 +42,7 @@ public class WebViewKeyboardAdjuster implements KeyboardWatcher.KeyboardStateLis
 
     private int computeViewHeight() {
         Rect rect = new Rect();
-        targetView.getWindowVisibleDisplayFrame(rect);
+        targetView.getGlobalVisibleRect(rect);
         return (rect.bottom - rect.top);
     }
 

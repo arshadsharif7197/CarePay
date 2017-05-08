@@ -11,18 +11,29 @@
     android:orientation="vertical">
 
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:padding="@dimen/dimen_10dp">
 
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dimen_3dp"
+            android:layout_alignStart="@+id/progress_layout"
+            android:layout_alignEnd="@+id/progress_layout"
+            android:layout_marginStart="@dimen/dimen_44dp"
+            android:layout_marginEnd="@dimen/dimen_44dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:background="@color/light_gray"/>
+
 
         <LinearLayout
+            android:id="@+id/progress_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_gravity="center_horizontal">
+            android:layout_centerHorizontal="true">
 
             <include
                 android:id="@+id/checkin_flow_demographics"
@@ -52,7 +63,8 @@
             android:id="@+id/checkinHomeClickable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end|center_vertical"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
             android:background="@drawable/bg_blue_border"
             android:minHeight="@dimen/dimen_10dp"
             android:padding="@dimen/dimen_10dp"
@@ -61,7 +73,7 @@
             android:textColor="@color/colorPrimary"
             app:customAssetFont="gotham_rounded_medium"/>
 
-    </FrameLayout>
+    </RelativeLayout>
 
 
 
