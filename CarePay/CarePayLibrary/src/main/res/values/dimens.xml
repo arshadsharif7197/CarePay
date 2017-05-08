@@ -432,8 +432,7 @@
     <dimen name="keypad_height">700dp</dimen>
 
     <dimen name="home_logo_width">174dp</dimen>
-    <dimen name="checkinNavBarOpenOffset">60dp</dimen>
-    <dimen name="checkinNavBarClosedOffset">0dp</dimen>
+    <dimen name="checkinNavBarOpenOffset">80dp</dimen>
     <dimen name="signin_title_textsize">36sp</dimen>
 
     <dimen name="list_dialog_min_height">400dp</dimen>
