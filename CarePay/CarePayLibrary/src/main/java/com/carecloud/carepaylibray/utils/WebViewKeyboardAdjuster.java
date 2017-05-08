@@ -19,6 +19,11 @@ public class WebViewKeyboardAdjuster implements KeyboardWatcher.KeyboardStateLis
     private int maxHeight;
 
 
+    /**
+     * Constructor for KB adjuster
+     * @param targetView view to adjust when keyboard state changes
+     * @param openOffset additional offset for view. The amount of this offset will be hidden under the keyboard when open
+     */
     public WebViewKeyboardAdjuster(View targetView, int openOffset ){
         this.targetView = targetView;
         this.openOffset = openOffset;

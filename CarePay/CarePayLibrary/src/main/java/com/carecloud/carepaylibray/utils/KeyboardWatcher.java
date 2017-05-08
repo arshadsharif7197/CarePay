@@ -16,22 +16,39 @@ public class KeyboardWatcher implements ViewTreeObserver.OnGlobalLayoutListener 
 
     public interface KeyboardStateListener{
         void onKeyboardOpened(int kbHeight);
+
         void onKeyboardClosed();
     }
-    private String TAG = KeyboardWatcher.class.getName();
+
+    private static String TAG = KeyboardWatcher.class.getName();
 
     private View rootView;
     private boolean opened;
     private List<KeyboardStateListener> keyboardStateListeners = new LinkedList<>();
 
+    /**
+     * Constructor for basic Keyboard Watcher with no additional Arguments will init with KB displayed false and no listeners
+     * @param rootView root view of Activity to measure for height change when KB displayed
+     */
     public KeyboardWatcher(View rootView){
         this(rootView, false);
     }
 
+    /**
+     * Constructor with option to set current KB state
+     * @param rootView root view of Activity to measure for height change when KB displayed
+     * @param opened true if KB is currently opened, will affect behavior if this is set incorrectly
+     */
     public KeyboardWatcher(View rootView, boolean opened){
         this(rootView, opened, null);
     }
 
+    /**
+     * Constuctor with Callback to handle keyboard visibility changes
+     * @param rootView root view of Activity to measure for height change when KB displayed
+     * @param opened true if KB is currently opened, will affect behavior if this is set incorrectly
+     * @param listener callback for changes in KB visibility
+     */
     public KeyboardWatcher(View rootView, boolean opened, KeyboardStateListener listener){
         this.rootView = rootView;
         this.opened = opened;
@@ -66,7 +83,6 @@ public class KeyboardWatcher implements ViewTreeObserver.OnGlobalLayoutListener 
             Log.d(TAG, "Keyboard gone");
         }
     }
-
 
     public boolean isOpened() {
         return opened;
