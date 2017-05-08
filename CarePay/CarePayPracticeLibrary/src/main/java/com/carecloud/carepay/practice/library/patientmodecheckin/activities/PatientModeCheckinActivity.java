@@ -243,11 +243,21 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             TextView progress = (TextView) flowView.findViewById(R.id.checkin_flow_progress);
 
             if (flowState.ordinal() == i) {
-                section.setFontAttribute(CustomAssetStyleable.GOTHAM_ROUNDED_BOLD);
+                if(section.getFontAttribute()==CustomAssetStyleable.GOTHAM_ROUNDED_LIGHT) {
+                    section.setFontAttribute(CustomAssetStyleable.GOTHAM_ROUNDED_BOLD);
+                }
+                section.setSelected(true);
+                section.setEnabled(true);
                 progress.setVisibility(View.VISIBLE);
                 progress.setText(currentPage + " of " + totalPages); //TODO label for "of"
             } else {
-                section.setFontAttribute(CustomAssetStyleable.GOTHAM_ROUNDED_LIGHT);
+                if(section.getFontAttribute()==CustomAssetStyleable.GOTHAM_ROUNDED_BOLD) {
+                    section.setFontAttribute(CustomAssetStyleable.GOTHAM_ROUNDED_LIGHT);
+                }
+                if(flowState.ordinal() > i) {
+                    section.setEnabled(false);
+                }
+                section.setSelected(false);
                 progress.setVisibility(View.GONE);
             }
         }
