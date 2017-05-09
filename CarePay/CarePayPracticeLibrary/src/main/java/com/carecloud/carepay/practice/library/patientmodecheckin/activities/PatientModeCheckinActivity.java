@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
+import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.patientmodecheckin.PatientModeDemographicsPresenter;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckInFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
@@ -201,8 +202,14 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     @Override
     public void completePaymentProcess(UpdatePatientBalancesDTO updatePatientBalancesDTO) {
         Intent intent = getIntent();
-        setResult(CarePayConstants.HOME_PRESSED, intent);
-        finish();
+        String worflowString = intent.getStringExtra(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
+        if(worflowString != null){
+            Gson gson = new Gson();
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), gson.fromJson(worflowString, WorkflowDTO.class));
+        }else {
+            setResult(CarePayConstants.HOME_PRESSED, intent);
+            finish();
+        }
     }
 
     @Override
@@ -224,11 +231,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void showPaymentConfirmation(PaymentsModel paymentsModel) {
-        Gson gson = new Gson();
+    public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
+        getIntent().putExtra(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
+
         Bundle args = new Bundle();
-        String paymentsDTOString = gson.toJson(paymentsModel);
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
+        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
 
         PaymentConfirmationFragment confirmationFragment = new PaymentConfirmationFragment();
         confirmationFragment.setArguments(args);
@@ -243,11 +250,21 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             TextView progress = (TextView) flowView.findViewById(R.id.checkin_flow_progress);
 
             if (flowState.ordinal() == i) {
-                section.setFontAttribute(CustomAssetStyleable.GOTHAM_ROUNDED_BOLD);
+                if(section.getFontAttribute()==CustomAssetStyleable.GOTHAM_ROUNDED_LIGHT) {
+                    section.setFontAttribute(CustomAssetStyleable.GOTHAM_ROUNDED_BOLD);
+                }
+                section.setSelected(true);
+                section.setEnabled(true);
                 progress.setVisibility(View.VISIBLE);
                 progress.setText(currentPage + " of " + totalPages); //TODO label for "of"
             } else {
-                section.setFontAttribute(CustomAssetStyleable.GOTHAM_ROUNDED_LIGHT);
+                if(section.getFontAttribute()==CustomAssetStyleable.GOTHAM_ROUNDED_BOLD) {
+                    section.setFontAttribute(CustomAssetStyleable.GOTHAM_ROUNDED_LIGHT);
+                }
+                if(flowState.ordinal() > i) {
+                    section.setEnabled(false);
+                }
+                section.setSelected(false);
                 progress.setVisibility(View.GONE);
             }
         }
@@ -289,8 +306,9 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 String jsonPayload = data.getStringExtra(CarePayConstants.CLOVER_PAYMENT_SUCCESS_INTENT_DATA);
                 if (jsonPayload != null) {
                     Gson gson = new Gson();
-                    PaymentsModel paymentsModel = gson.fromJson(jsonPayload, PaymentsModel.class);
-                    showPaymentConfirmation(paymentsModel);
+                    WorkflowDTO workflowDTO = gson.fromJson(jsonPayload, WorkflowDTO.class);
+//                    PaymentsModel paymentsModel = gson.fromJson(jsonPayload, PaymentsModel.class);
+                    showPaymentConfirmation(workflowDTO);
                 }
                 break;
             }

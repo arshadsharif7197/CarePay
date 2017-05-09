@@ -204,9 +204,12 @@ public abstract class DocumentScannerFragment extends BaseCheckinFragment implem
 
     protected void loadFrontPlaceHolder() {
         // if no image to load, simply load the placeholder
-        Drawable drawable = ContextCompat.getDrawable(getActivity(), R.drawable.icn_placeholder_user_profile_png);
+        Drawable drawable = null;
+        if(getContext()!=null) {
+            drawable = ContextCompat.getDrawable(getContext(), R.drawable.icn_placeholder_user_profile_png);
+        }
 
-        if (imageFront != null) {
+        if (imageFront != null && drawable!=null) {
             imageFront.setImageDrawable(drawable);
         }
     }
