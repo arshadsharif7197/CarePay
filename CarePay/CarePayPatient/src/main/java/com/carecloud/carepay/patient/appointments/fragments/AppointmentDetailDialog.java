@@ -58,7 +58,11 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     private Button rightButton;
 
 
-
+    /**
+     * Return a new instance of AppointmentDetailDialog and setup the arguments
+     * @param appointmentDTO appointment info
+     * @return AppointmentDetailDialog
+     */
     public static AppointmentDetailDialog newInstance(AppointmentDTO appointmentDTO){
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, appointmentDTO);
@@ -297,14 +301,14 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
 
     private View.OnClickListener dismissDialogClick = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
             dismiss();
         }
     };
 
     private View.OnClickListener cancelAppointmentClick = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
             callback.onCancelAppointment(appointmentDTO);
             dismiss();
         }
@@ -312,7 +316,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
 
     private View.OnClickListener mapClick = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
             String address = appointmentDTO.getPayload().getLocation().getAddress().getPlaceAddressString();
             launchMapView(address);
         }
@@ -320,7 +324,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
 
     private View.OnClickListener callClick = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
             String phone = appointmentDTO.getPayload().getProvider().getPhone();
             startPhoneCall(phone);
         }
@@ -328,7 +332,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
 
     private View.OnClickListener checkInClick = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
             callback.onCheckInStarted(appointmentDTO);
             dismiss();
         }
@@ -336,14 +340,14 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
 
     private View.OnClickListener checkOutClick = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
             callback.onCheckOutStarted(appointmentDTO);
         }
     };
 
     private View.OnClickListener scanClick = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
             callback.onCheckInOfficeStarted(appointmentDTO);
             dismiss();
         }
@@ -351,7 +355,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
 
     private View.OnClickListener rescheduleClick = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
             callback.rescheduleAppointment(appointmentDTO);
             dismiss();
         }
