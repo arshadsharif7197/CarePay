@@ -103,6 +103,12 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         setTransitionProfile(appointmentsResultModel.getMetadata().getLinks().getProfileUpdate());
         setTransitionAppointments(appointmentsResultModel.getMetadata().getLinks().getAppointments());
 
+        String userImageUrl = appointmentsResultModel.getPayload().getDemographicDTO().getPayload()
+                .getPersonalDetails().getProfilePhoto();
+        if (userImageUrl != null) {
+            getApplicationPreferences().setUserPhotoUrl(userImageUrl);
+        }
+
         inflateDrawer();
         gotoAppointmentFragment();
     }
@@ -197,7 +203,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         selectedVisitTypeDTO = visitTypeDTO;
         AvailableHoursFragment availableHoursFragment = AvailableHoursFragment
                 .newInstance(appointmentsResultModel,
-                appointmentResourcesDTO.getResource(), null, null, visitTypeDTO);
+                        appointmentResourcesDTO.getResource(), null, null, visitTypeDTO);
         navigateToFragment(availableHoursFragment, true);
         displayToolbar(false, null);
     }
@@ -207,7 +213,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                            AppointmentsResultModel appointmentsResultModel) {
         AvailableHoursFragment availableHoursFragment = AvailableHoursFragment
                 .newInstance(appointmentsResultModel, appointmentResource,
-                startDate, endDate, visitTypeDTO);
+                        startDate, endDate, visitTypeDTO);
         navigateToFragment(availableHoursFragment, false);
         displayToolbar(false, null);
     }

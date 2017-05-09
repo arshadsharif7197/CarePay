@@ -13,10 +13,10 @@
 
     <ImageView
         android:id="@+id/appointmentDrawerIdImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:paddingBottom="@dimen/nav_image_padding"
+        android:layout_width="@dimen/dimen_70dp"
+        android:layout_height="@dimen/dimen_70dp"
+        android:layout_marginBottom="@dimen/nav_image_padding"
+        android:layout_marginTop="@dimen/nav_header_vertical_spacing"
         android:src="@drawable/icn_placeholder_user_profile_png" />
 
     <TextView
@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
-        android:textColor="@color/white"/>
+        android:textColor="@color/white" />
 
 
 </LinearLayout>
