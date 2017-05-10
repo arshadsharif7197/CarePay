@@ -293,7 +293,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
         initializeScanArea();
 
-        if(getDialog()!=null) {
+        if(getDialog()!=null || (hadInsurance && !isPatientMode)) {
             saveInsuranceButton = (Button) findViewById(R.id.save_insurance_changes);
         }else{
             saveInsuranceButton = (Button) findViewById(R.id.checkinDemographicsNextButton);
