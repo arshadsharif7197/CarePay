@@ -309,7 +309,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
 
             selectedTypeTextView.setText(Label.getLabel("demographics_choose"));
 
-            if (hasInsurance() && getDialog()!=null) {
+            if (hasInsurance() && (getDialog()!=null || !isPatientMode)) {
                 disappearViewById(R.id.remove_insurance_entry);
                 ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(
                         Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));
