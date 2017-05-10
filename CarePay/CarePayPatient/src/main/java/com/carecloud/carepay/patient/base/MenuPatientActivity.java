@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
@@ -17,7 +18,9 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
+import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,7 +59,6 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
-
         String userId = getAppAuthorizationHelper().getCurrUser();
         if (userId != null) {
             appointmentsDrawerUserIdTextView.setText(userId);
@@ -66,8 +68,14 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         patientId = getApplicationPreferences().getPatientId();
         practiceId = getApplicationPreferences().getPracticeId();
         practiceMgmt = getApplicationPreferences().getPracticeManagement();
-    }
 
+        String imageUrl = getApplicationPreferences().getUserPhotoUrl();
+        ImageView userImageView = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.appointmentDrawerIdImageView);
+        if (!StringUtil.isNullOrEmpty(imageUrl)) {
+            Picasso.with(this).load(imageUrl).placeholder(R.drawable.icn_placeholder_user_profile_png)
+                    .transform(new CircleImageTransform()).into(userImageView);
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -135,7 +143,6 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
             getWorkflowServiceHelper().execute(transitionAppointments, notificationsWorkflowCallback, queryString);
         }
 
-        //DrawerLayout drawer = (DrawerLayout) findViewById(com.carecloud.carepaylibrary.R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -226,6 +233,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
     private WorkflowServiceCallback notificationsWorkflowCallback = new WorkflowServiceCallback() {//TODO this is currently pointed at appointments endpoint
         @Override
         public void onPreExecute() {
@@ -271,7 +279,6 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
      * @param visibility the visibility
      */
     public void displayToolbar(boolean visibility, String toolBarTitle) {
-//        toolbarVisibility = visibility;
         TextView toolbarText = (TextView) findViewById(R.id.balance_history_toolbar_title);
         if (toolBarTitle != null) {
             toolbarText.setText(StringUtil.isNullOrEmpty(toolBarTitle) ? CarePayConstants.NOT_DEFINED : toolBarTitle);
@@ -283,6 +290,5 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
             getSupportActionBar().hide();
         }
     }
-
 
 }

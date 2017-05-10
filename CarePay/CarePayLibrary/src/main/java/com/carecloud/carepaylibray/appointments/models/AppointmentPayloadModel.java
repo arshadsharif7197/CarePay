@@ -1,6 +1,7 @@
 
 package com.carecloud.carepaylibray.appointments.models;
 
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -46,6 +47,9 @@ public class AppointmentPayloadModel implements Serializable {
     @SerializedName("appointments_settings")
     @Expose
     private List<AppointmentsSettingDTO> appointmentsSettings = new ArrayList<AppointmentsSettingDTO>();
+    @SerializedName("demographics")
+    @Expose
+    private DemographicsSettingsDemographicsDTO demographicDTO = new DemographicsSettingsDemographicsDTO();
 
     /**
      * @return languages
@@ -178,7 +182,6 @@ public class AppointmentPayloadModel implements Serializable {
     }
 
     /**
-     *
      * @return practice_patent_ids
      */
     public List<IdsDTO> getPracticePatientIds() {
@@ -186,7 +189,6 @@ public class AppointmentPayloadModel implements Serializable {
     }
 
     /**
-     *
      * @param practicePatientIds practicePatientIds
      */
     public void setPracticePatientIds(List<IdsDTO> practicePatientIds) {
@@ -194,7 +196,6 @@ public class AppointmentPayloadModel implements Serializable {
     }
 
     /**
-     *
      * @return appointmentsSettings
      */
     public List<AppointmentsSettingDTO> getAppointmentsSettings() {
@@ -202,10 +203,17 @@ public class AppointmentPayloadModel implements Serializable {
     }
 
     /**
-     *
      * @param appointmentsSettings appointmentsSettings
      */
     public void setAppointmentsSettings(List<AppointmentsSettingDTO> appointmentsSettings) {
         this.appointmentsSettings = appointmentsSettings;
+    }
+
+    public DemographicsSettingsDemographicsDTO getDemographicDTO() {
+        return demographicDTO;
+    }
+
+    public void setDemographicDTO(DemographicsSettingsDemographicsDTO demographicDTO) {
+        this.demographicDTO = demographicDTO;
     }
 }
