@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -47,7 +48,7 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
 
     public enum SearchMode {
         MEDICATION,
-        ALLERGY;
+        ALLERGY
     }
 
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
@@ -66,14 +67,14 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
         attachCallback(context);
     }
 
-    private void attachCallback(Context context){
-        try{
+    private void attachCallback(Context context) {
+        try {
             if (context instanceof DemographicsView) {
                 callback = ((DemographicsView) context).getPresenter();
             } else {
                 callback = (MedicationAllergySearchCallback) context;
             }
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Attached Context must implement MedicationAllergyCallback");
         }
 
@@ -107,9 +108,9 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        if(callback == null){
+        if (callback == null) {
             attachCallback(getContext());
         }
     }
@@ -140,18 +141,14 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
         searchRecycler = (RecyclerView) view.findViewById(R.id.search_recycler);
         searchRecycler.setLayoutManager(layoutManager);
 
-        if (getDialog() != null) {
-            View closeButton = view.findViewById(R.id.closeViewLayout);
-            if (closeButton != null) {
-                closeButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        SystemUtil.hideSoftKeyboard(getContext(), view);
-                        dismiss();
-                    }
-                });
+        ImageView dismissView = (ImageView) view.findViewById(R.id.dismissView);
+        dismissView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SystemUtil.hideSoftKeyboard(getContext(), view);
+                dismiss();
             }
-        }
+        });
     }
 
     private void setAdapters() {
