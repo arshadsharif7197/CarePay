@@ -225,6 +225,10 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                     appointmentStatus.setVisibility(View.VISIBLE);
                     appointmentStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.remove_red));
                     appointmentStatus.setText(Label.getLabel("appointments_missed_heading"));
+                    actionsLayout.setVisibility(View.VISIBLE);
+                    leftButton.setVisibility(View.VISIBLE);
+                    leftButton.setText(Label.getLabel("appointment_reschedule_button"));
+                    leftButton.setOnClickListener(rescheduleClick);
                     break;
                 }
                 case CANCELED_UPCOMING:

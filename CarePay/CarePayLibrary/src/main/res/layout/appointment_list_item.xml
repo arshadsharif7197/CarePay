@@ -27,8 +27,7 @@
                 android:layout_width="@dimen/dimen_22dp"
                 android:layout_height="@dimen/dimen_22dp"
                 android:layout_alignParentTop="true"
-                android:elevation="@dimen/apt_lst_img_elevation"
-                android:src="@drawable/icn_cell_avatar_badge_pending"/>
+                android:elevation="@dimen/apt_lst_img_elevation"/>
 
             <FrameLayout
                 android:layout_width="match_parent"

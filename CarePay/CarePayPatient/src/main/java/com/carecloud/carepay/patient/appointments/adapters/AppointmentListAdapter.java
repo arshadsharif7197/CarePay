@@ -114,7 +114,7 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
                 holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.emerald));
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
                 holder.initials.setBackgroundResource(R.drawable.round_list_tv_green);
-                holder.cellAvatar.setImageResource(R.drawable.round_list_tv_green);
+                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_checked_in);
                 break;
             }
             case PENDING:{
@@ -124,7 +124,7 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
                 holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.emerald));
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.emerald));
                 holder.initials.setBackgroundResource(R.drawable.round_list_tv_green_border);
-                holder.cellAvatar.setImageResource(R.drawable.round_list_tv_green_border);
+                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_upcoming);
                 break;
             }
             case REQUESTED:{
@@ -172,7 +172,7 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
                 holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.grayRound));
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.emerald));
                 holder.initials.setBackgroundResource(R.drawable.round_list_tv_green_border);
-                holder.cellAvatar.setImageResource(R.drawable.round_list_tv_green_border);
+                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_upcoming);
                 break;
             }
             case REQUESTED_UPCOMING:{
@@ -205,7 +205,7 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
                 holder.initials.setBackgroundResource(R.drawable.round_tv);
                 holder.initials.setVisibility(View.VISIBLE);
-                holder.cellAvatar.setImageResource(R.drawable.round_tv);
+                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_checked_out);
                 break;
             }
             default:{
