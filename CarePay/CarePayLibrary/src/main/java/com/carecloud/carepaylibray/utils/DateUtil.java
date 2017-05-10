@@ -775,9 +775,9 @@ public class DateUtil {
     /**
      * Convinience method for formatting a date range using contextual output that returns a short date
      * @param date date to format
-     * @param today
-     * @param tomorrow
-     * @return
+     * @param today String to represent today output
+     * @param tomorrow String to represent tomorrow output
+     * @return Contextually formatted Date range in short format mm/dd/yyyy
      */
     public static String getFormattedShortDate(Date date, String today, String tomorrow){
         Calendar calendar = Calendar.getInstance();
