@@ -7,5 +7,6 @@ package com.carecloud.carepaylibray.payments.models.postmodel;
 public enum ResponsibilityType {
     co_pay,
     co_insurance,
-    deductable;
+    deductable,
+    prepayment;
 }
