@@ -488,7 +488,7 @@ public class DateUtil {
      */
     public static boolean startsThisMonth(Calendar calendar){
         Calendar checkCal = Calendar.getInstance();
-        checkCal.set(Calendar.DAY_OF_MONTH, 1);
+        checkCal.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH));
 
         return isSameDay(calendar, checkCal);
     }
@@ -741,7 +741,8 @@ public class DateUtil {
             return String.format(nextDays, elapsedDays);
         }
 
-        String toText = getFormattedDate(endDate, today, tomorrow);
+        String toText = getFormattedShortDate(endDate, today, tomorrow);
+        fromText = getFormattedShortDate(startDate, today, tomorrow);
 
         //return from - to format
         return String.format("%s - %s", fromText, toText);
@@ -769,6 +770,31 @@ public class DateUtil {
 
         //Just return this date in readable format
         return getInstance().setDate(date).getDateAsDayMonthDayOrdinal();
+    }
+
+    /**
+     * Convinience method for formatting a date range using contextual output that returns a short date
+     * @param date date to format
+     * @param today String to represent today output
+     * @param tomorrow String to represent tomorrow output
+     * @return Contextually formatted Date range in short format mm/dd/yyyy
+     */
+    public static String getFormattedShortDate(Date date, String today, String tomorrow){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        //check for today
+        if(isToday(calendar)){
+            return today;
+        }
+
+        //check for tomorrow
+        if(isTomorrow(calendar)){
+            return tomorrow;
+        }
+
+        //Just return this date in readable format
+        return getInstance().setDate(date).toStringWithFormatMmSlashDdSlashYyyy();
     }
 
     /**
