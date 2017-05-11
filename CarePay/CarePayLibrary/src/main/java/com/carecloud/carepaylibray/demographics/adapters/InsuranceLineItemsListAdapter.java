@@ -11,12 +11,15 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class InsuranceLineItemsListAdapter extends
         RecyclerView.Adapter<InsuranceLineItemsListAdapter.InsuranceDetailsListViewHolder> {
 
     private Context context;
-    private DemographicDTO demographicDTO;
     private OnInsuranceEditClickListener listener;
+    private List<DemographicInsurancePayloadDTO> insuranceList = new ArrayList<>();
 
     /**
      * Constructor
@@ -28,8 +31,8 @@ public class InsuranceLineItemsListAdapter extends
                                          OnInsuranceEditClickListener listener) {
 
         this.context = context;
-        this.demographicDTO = demographicDTO;
         this.listener = listener;
+        loadFilteredList(demographicDTO);
     }
 
     @Override
@@ -41,28 +44,32 @@ public class InsuranceLineItemsListAdapter extends
 
     @Override
     public int getItemCount() {
-        if (demographicDTO == null) {
-            return 0;
-        }
-
-        return demographicDTO.getPayload().getDemographics().getPayload().getInsurances().size();
+        return insuranceList.size();
     }
 
     @Override
     public void onBindViewHolder(final InsuranceDetailsListViewHolder holder, int position) {
-        final DemographicInsurancePayloadDTO lineItem = demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(position);
+        final DemographicInsurancePayloadDTO lineItem = insuranceList.get(position);
         String plan = lineItem.getInsurancePlan();
         String provider = lineItem.getInsuranceProvider();
         holder.name.setText(provider+" "+(plan!=null?plan:""));
         holder.type.setText(lineItem.getInsuranceType());
     }
 
+    private void loadFilteredList(DemographicDTO demographicDTO){
+        insuranceList.clear();
+        for(DemographicInsurancePayloadDTO insurance : demographicDTO.getPayload().getDemographics().getPayload().getInsurances()){
+            if(!insurance.isDelete()){
+                insuranceList.add(insurance);
+            }
+        }
+    }
+
     /**
      * @param demographicDTO Demographic DTO
      */
     public void setDemographicDTO(DemographicDTO demographicDTO) {
-        this.demographicDTO = demographicDTO;
-
+        loadFilteredList(demographicDTO);
         notifyDataSetChanged();
     }
 

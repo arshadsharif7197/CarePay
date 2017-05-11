@@ -354,7 +354,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements CarePayCa
         @Override
         public void onClick(View saveChanges) {
             if (editedIndex != NEW_INSURANCE) {
-                demographicDTO.getPayload().getDemographics().getPayload().getInsurances().remove(editedIndex);
+                demographicDTO.getPayload().getDemographics().getPayload().getInsurances().get(editedIndex).setDelete(true);
             }
             closeDialog();
         }
