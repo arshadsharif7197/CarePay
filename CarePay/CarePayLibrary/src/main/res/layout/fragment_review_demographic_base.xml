@@ -30,13 +30,15 @@
         android:layout_marginTop="@dimen/dimen_8dp"
         android:orientation="vertical">
 
-        <TextView
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/demographicsMainHeading"
-            style="@style/DemographicsDocsHeaderTitleStyle" />
+            style="@style/DemographicsDocsHeaderTitleStyle"
+            app:customAssetFont="gotham_rounded_medium"/>
 
-        <TextView
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/demographicsSubHeading"
-            style="@style/DemographicsDocsHeaderSubtitleStyle" />
+            style="@style/DemographicsDocsHeaderSubtitleStyle"
+            app:customAssetFont="gotham_rounded_medium"/>
 
     </LinearLayout>
 
