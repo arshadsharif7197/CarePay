@@ -61,8 +61,23 @@ public class NotificationFragment extends BaseFragment {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
         notificationsRecycler = (RecyclerView) view.findViewById(R.id.notifications_recycler);
-        noNotificationLayout.setVisibility(View.VISIBLE);
+        notificationsRecycler.setLayoutManager(linearLayoutManager);
+
+        setAdapter();
+
+    }
+
+    private void setAdapter(){
+        if(!notificationItems.isEmpty()){
 
 
+
+            notificationsRecycler.setVisibility(View.VISIBLE);
+            noNotificationLayout.setVisibility(View.GONE);
+
+        }else{
+            notificationsRecycler.setVisibility(View.GONE);
+            noNotificationLayout.setVisibility(View.VISIBLE);
+        }
     }
 }
