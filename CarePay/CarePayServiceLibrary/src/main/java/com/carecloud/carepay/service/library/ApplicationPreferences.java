@@ -33,6 +33,8 @@ public class ApplicationPreferences {
 
     private static final String PREFERENCE_PATIENT_PHOTO_URL = "patient_photo_url";
 
+    private static final String PREFERENCE_IS_TUTORIAL_SHOWN = "is_tutorial_shown";
+
     private Context context;
 
     private String patientId;
@@ -43,6 +45,7 @@ public class ApplicationPreferences {
     private String userLanguage;
     private String practiceLanguage;
     private Boolean navigateToAppointments;
+    private Boolean isTutorialShown;
     private String photoUrl;
 
     public ApplicationPreferences(Context context) {
@@ -222,6 +225,12 @@ public class ApplicationPreferences {
         return readStringFromSharedPref(PREFERENCE_PREFIX);
     }
 
+    private void writeBooleanToSharedPref(String key, Boolean value) {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putBoolean(key, value);
+        editor.apply();
+    }
+
     private void writeStringToSharedPref(String key, String value) {
         SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putString(key, value);
@@ -279,5 +288,24 @@ public class ApplicationPreferences {
         return context;
     }
 
+    /**
+     *
+     * @param tutorialShown a boolean indicating if the tutorial has been shown
+     */
+    public void setTutorialShown(Boolean tutorialShown) {
+        isTutorialShown = tutorialShown;
+        writeBooleanToSharedPref(PREFERENCE_IS_TUTORIAL_SHOWN, tutorialShown);
+    }
 
+    /**
+     *
+     * @return a boolean indicating if the tutorial has been shown
+     */
+    public boolean isTutorialShown() {
+        if (isTutorialShown != null) {
+            return isTutorialShown;
+        }
+
+        return readBooleanFromSharedPref(PREFERENCE_IS_TUTORIAL_SHOWN);
+    }
 }
