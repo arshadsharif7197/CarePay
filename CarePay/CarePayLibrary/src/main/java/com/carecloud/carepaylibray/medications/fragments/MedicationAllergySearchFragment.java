@@ -11,7 +11,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -141,14 +140,15 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
         searchRecycler = (RecyclerView) view.findViewById(R.id.search_recycler);
         searchRecycler.setLayoutManager(layoutManager);
 
-        ImageView dismissView = (ImageView) view.findViewById(R.id.dismissView);
-        dismissView.setOnClickListener(new View.OnClickListener() {
+        View closeButton = view.findViewById(R.id.closeViewLayout);
+        closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 SystemUtil.hideSoftKeyboard(getContext(), view);
                 dismiss();
             }
         });
+
     }
 
     private void setAdapters() {
