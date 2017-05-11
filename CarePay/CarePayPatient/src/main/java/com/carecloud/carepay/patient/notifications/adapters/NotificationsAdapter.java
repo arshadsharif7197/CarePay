@@ -38,6 +38,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     private List<NotificationItem> notificationItems = new ArrayList<>();
     private SelectNotificationCallback callback;
 
+    /**
+     * Constructor
+     * @param context context
+     * @param notificationItems list of notifications
+     * @param callback callback
+     */
     public NotificationsAdapter(Context context, List<NotificationItem> notificationItems, SelectNotificationCallback callback){
         this.context = context;
         this.notificationItems = notificationItems;
@@ -95,11 +101,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     private void displayAppointmentNotification(final NotificationViewHolder holder, NotificationItem notificationItem){
         AppointmentDTO appointment = notificationItem.getPayload().getAppointment();
-        AppointmentDisplayStyle displayStyle = AppointmentDisplayUtil.determineDisplayStyle(appointment);
 
         holder.message.setText(notificationItem.getPayload().getAlertMessage());
         holder.initials.setText(StringUtil.getShortName(appointment.getPayload().getProvider().getName()));
         holder.header.setText("Notification");
+
+        AppointmentDisplayStyle displayStyle = AppointmentDisplayUtil.determineDisplayStyle(appointment);
 
         switch (displayStyle){
             case MISSED:{
@@ -127,6 +134,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 holder.cellAvatar.setVisibility(View.VISIBLE);
                 break;
             }
+            default:
+                resetViews(holder);
         }
 
         int size = context.getResources().getDimensionPixelSize(R.dimen.payment_details_dialog_icon_size);

@@ -34,6 +34,11 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
     private RecyclerView notificationsRecycler;
     private SwipeRefreshLayout refreshLayout;
 
+    /**
+     * Instantiate Notification Fragment with Notification data
+     * @param notificationsDTO notification data
+     * @return NotificationFragment
+     */
     public static NotificationFragment newInstance(NotificationsDTO notificationsDTO){
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, notificationsDTO);

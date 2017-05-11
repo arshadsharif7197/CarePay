@@ -10,6 +10,11 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 
 public class AppointmentDisplayUtil {
 
+    /**
+     * Determint the display style for an appointment object
+     * @param appointmentDTO appointment object
+     * @return display style enum
+     */
     public static AppointmentDisplayStyle determineDisplayStyle(AppointmentDTO appointmentDTO){
         AppointmentsPayloadDTO appointmentsPayload =  appointmentDTO.getPayload();
         switch (appointmentsPayload.getAppointmentStatus().getCode()){
