@@ -10,7 +10,7 @@ public class NavigationStateConstants {
     public static final String PAYMENTS = "payments";
     public static final String PROFILE_UPDATE = "profile_update";
     public static final String PURCHASE = "purchase";
-    public static final String NOTIFICATION = "notification";
+    public static final String NOTIFICATION = "notifications";
     public static final String MEDICATION_ALLERGIES = "medications_allergies";
 
     public static final String PRACTICE_HOME = "practice_home";

@@ -52,6 +52,16 @@ public class LinksDTO {
     @SerializedName("notifications")
     @Expose
     private TransitionDTO notifications = new TransitionDTO();
+    @SerializedName("all_notifications")
+    @Expose
+    private TransitionDTO allNotifications = new TransitionDTO();
+    @SerializedName("delete_notifications")
+    @Expose
+    private TransitionDTO deleteNotifications = new TransitionDTO();
+    @SerializedName("mark_as_read")
+    @Expose
+    private TransitionDTO readNotifications = new TransitionDTO();
+
 
     /**
      * @return The self
