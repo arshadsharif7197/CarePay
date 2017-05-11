@@ -18,10 +18,6 @@ public class NotificationItemPayload {
     @Expose
     private NotificationType notificationType;
 
-    @SerializedName("notification_sub_type")
-    @Expose
-    private NotificationSubType notificationSubType;
-
     @SerializedName("read_status")
     @Expose
     private NotificationStatus readStatus;
@@ -48,14 +44,6 @@ public class NotificationItemPayload {
 
     public void setNotificationType(NotificationType notificationType) {
         this.notificationType = notificationType;
-    }
-
-    public NotificationSubType getNotificationSubType() {
-        return notificationSubType;
-    }
-
-    public void setNotificationSubType(NotificationSubType notificationSubType) {
-        this.notificationSubType = notificationSubType;
     }
 
     public NotificationStatus getReadStatus() {

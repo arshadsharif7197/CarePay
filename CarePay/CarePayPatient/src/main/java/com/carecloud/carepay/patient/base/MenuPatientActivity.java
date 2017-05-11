@@ -38,6 +38,7 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
     protected String patientId;
     protected String prefix;
     protected String userId;
+
     //transitions
     private static TransitionDTO transitionBalance;
     private static TransitionDTO transitionProfile;
@@ -136,10 +137,6 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
 
         if(headersMap.isEmpty()){
             //do regular transition
-            queryMap.put("practice_id", practiceId == null ? "" : practiceId);
-            queryMap.put("practice_mgmt", practiceMgmt == null ? "" : practiceMgmt);
-            queryMap.put("patient_id", patientId == null ? "" : patientId);
-
             getWorkflowServiceHelper().execute(transition, callback, queryMap);
         }else{
             //do transition with headers since no query params are required we can ignore them

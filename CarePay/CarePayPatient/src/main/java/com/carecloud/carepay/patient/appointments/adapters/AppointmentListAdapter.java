@@ -11,9 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
+import com.carecloud.carepaylibray.appointments.AppointmentDisplayUtil;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
@@ -309,7 +309,7 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
 
         for(AppointmentDTO appointmentDTO : appointmentItems){
             if(appointmentDTO.getPayload().getDisplayStyle()==null){//required here to handle the case where user has only 1 appt and it was not run through comparator
-                appointmentDTO.getPayload().setDisplayStyle(determineDisplayStyle(appointmentDTO));
+                appointmentDTO.getPayload().setDisplayStyle(AppointmentDisplayUtil.determineDisplayStyle(appointmentDTO));
             }
 
             //check if we need to add a checked in header
@@ -346,48 +346,12 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
     private AppointmentDisplayStyle getDisplayStyle(AppointmentDTO appointmentDTO){
         AppointmentDisplayStyle displayStyle = appointmentDTO.getPayload().getDisplayStyle();
         if(displayStyle == null){
-            displayStyle = determineDisplayStyle(appointmentDTO);
+            displayStyle = AppointmentDisplayUtil.determineDisplayStyle(appointmentDTO);
             appointmentDTO.getPayload().setDisplayStyle(displayStyle);
         }
         return displayStyle;
     }
 
-    private AppointmentDisplayStyle determineDisplayStyle(AppointmentDTO appointmentDTO){
-        AppointmentsPayloadDTO appointmentsPayload =  appointmentDTO.getPayload();
-        switch (appointmentsPayload.getAppointmentStatus().getCode()){
-            case CarePayConstants.CHECKED_IN:
-            case CarePayConstants.IN_PROGRESS_IN_ROOM:
-            case CarePayConstants.IN_PROGRESS_OUT_ROOM:
-                return AppointmentDisplayStyle.CHECKED_IN;
-            case CarePayConstants.CHECKED_OUT:
-            case CarePayConstants.BILLED:
-            case CarePayConstants.MANUALLY_BILLED:
-                return AppointmentDisplayStyle.CHECKED_OUT;
-            case CarePayConstants.REQUESTED:
-                if(appointmentsPayload.isAppointmentToday()) {
-                    return AppointmentDisplayStyle.REQUESTED;
-                }else{
-                    return AppointmentDisplayStyle.REQUESTED_UPCOMING;
-                }
-            case CarePayConstants.CANCELLED:
-                if(appointmentsPayload.isAppointmentToday()) {
-                    return AppointmentDisplayStyle.CANCELED;
-                }else{
-                    return AppointmentDisplayStyle.CANCELED_UPCOMING;
-                }
-            case CarePayConstants.PENDING:
-            case CarePayConstants.CHECKING_IN:
-            default: {
-                if(appointmentsPayload.isAppointmentToday()) {
-                    if(appointmentsPayload.isAppointmentOver()){
-                        return AppointmentDisplayStyle.MISSED;
-                    }
-                    return AppointmentDisplayStyle.PENDING;
-                }
-                return AppointmentDisplayStyle.PENDING_UPCOMING;
-            }
-        }
-    }
 
     private void cleanupViews(ViewHolder holder){
         holder.checkOutButton.setVisibility(View.GONE);

@@ -24,6 +24,12 @@ public class NotificationItemMetadata {
     @SerializedName("username")
     @Expose
     private String username;
+    @SerializedName("created_dt")
+    @Expose
+    private String createdDt;
+    @SerializedName("updated_dt")
+    @Expose
+    private String updatedDt;
 
     public String getPracticeMgmt() {
         return practiceMgmt;
@@ -63,5 +69,21 @@ public class NotificationItemMetadata {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getCreatedDt() {
+        return createdDt;
+    }
+
+    public void setCreatedDt(String createdDt) {
+        this.createdDt = createdDt;
+    }
+
+    public String getUpdatedDt() {
+        return updatedDt;
+    }
+
+    public void setUpdatedDt(String updatedDt) {
+        this.updatedDt = updatedDt;
     }
 }
