@@ -38,11 +38,13 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
     protected String patientId;
     protected String prefix;
     protected String userId;
+
     //transitions
     private static TransitionDTO transitionBalance;
     private static TransitionDTO transitionProfile;
     private static TransitionDTO transitionAppointments;
     private static TransitionDTO transitionLogout;
+    private static TransitionDTO transitionNotifications;
 
     protected ActionBarDrawerToggle toggle;
     protected TextView appointmentsDrawerUserIdTextView;
@@ -89,62 +91,62 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
+
+        WorkflowServiceCallback callback;
+        TransitionDTO transition;
+        Map<String, String> headersMap = new HashMap<>();
+        Map<String, String> queryMap = new HashMap<>();
+
         int id = item.getItemId();
-        if (id == R.id.nav_appointments && transitionAppointments != null) {
-            Map<String, String> queryString = new HashMap<>();
-            queryString.put("practice_id", practiceId == null ? "" : practiceId);
-            queryString.put("practice_mgmt", practiceMgmt == null ? "" : practiceMgmt);
-            queryString.put("patient_id", patientId == null ? "" : patientId);
-            getWorkflowServiceHelper().execute(transitionAppointments, appointmentsWorkflowCallback, queryString);
-
-        } else if (id == R.id.nav_payments && transitionBalance != null) {
-            Map<String, String> queryString = new HashMap<>();
-            queryString.put("practice_id", practiceId == null ? "" : practiceId);
-            queryString.put("practice_mgmt", practiceMgmt == null ? "" : practiceMgmt);
-            queryString.put("patient_id", patientId == null ? "" : patientId);
-            getWorkflowServiceHelper().execute(transitionBalance, paymentsCallBack, queryString);
-
-        } else if (id == R.id.nav_settings && transitionProfile != null) {
-            Map<String, String> queryString = new HashMap<>();
-            queryString.put("practice_id", practiceId == null ? "" : practiceId);
-            queryString.put("practice_mgmt", practiceMgmt == null ? "" : practiceMgmt);
-            queryString.put("patient_id", patientId == null ? "" : patientId);
-            getWorkflowServiceHelper().execute(transitionProfile, demographicsSettingsCallBack, queryString);
-
-        } else if (id == R.id.nav_logout && transitionLogout != null) {
-            // perform log out, of course
-            String userName = getAppAuthorizationHelper().getCurrUser();
-            if (userName != null) {
-                Log.v(LOG_TAG, "sign out");
-                Map<String, String> headersMap = new HashMap<>();
+        switch (id){
+            case R.id.nav_appointments:
+                callback = appointmentsWorkflowCallback;
+                transition = transitionAppointments;
+                break;
+            case R.id.nav_payments:
+                callback = paymentsCallBack;
+                transition = transitionBalance;
+                break;
+            case R.id.nav_settings:
+                callback = demographicsSettingsCallBack;
+                transition = transitionProfile;
+                break;
+            case R.id.nav_purchase:
+                transition = transitionAppointments;
+                callback = purchaseWorkflowCallback;
+                break;
+            case R.id.nav_notification:
+                transition = transitionNotifications;
+                callback = notificationsWorkflowCallback;
+                break;
+            case R.id.nav_logout:
+                transition = transitionLogout;
+                callback = appointmentsWorkflowCallback;
                 headersMap.put("x-api-key", HttpConstants.getApiStartKey());
-                if (!HttpConstants.isUseUnifiedAuth()) {
-                    headersMap.put("Authorization", getAppAuthorizationHelper().getCurrSession().getIdToken().getJWTToken());
-                }
                 headersMap.put("transition", "true");
-                Map<String, String> queryMap = new HashMap<>();
-                getWorkflowServiceHelper().execute(transitionLogout, appointmentsWorkflowCallback, queryMap, headersMap);
-            }
-        } else if (id == R.id.nav_purchase) {
-            Log.v(LOG_TAG, "Purchase");
-            Map<String, String> queryString = new HashMap<>();
-            queryString.put("practice_id", practiceId == null ? "" : practiceId);
-            queryString.put("practice_mgmt", practiceMgmt == null ? "" : practiceMgmt);
-            queryString.put("patient_id", patientId == null ? "" : patientId);
-            getWorkflowServiceHelper().execute(transitionAppointments, purchaseWorkflowCallback, queryString);
-
-        } else if (id == R.id.nav_notification) {
-            Log.v(LOG_TAG, "Notification");
-            //Temporary link to landing Activity for blank purchase screen
-            Map<String, String> queryString = new HashMap<>();
-            queryString.put("practice_id", practiceId == null ? "" : practiceId);
-            queryString.put("practice_mgmt", practiceMgmt == null ? "" : practiceMgmt);
-            queryString.put("patient_id", patientId == null ? "" : patientId);
-            getWorkflowServiceHelper().execute(transitionAppointments, notificationsWorkflowCallback, queryString);
+                break;
+            default:
+                drawer.closeDrawer(GravityCompat.START);
+                return false;
         }
 
+        if(transition == null || transition.getUrl()==null){
+            drawer.closeDrawer(GravityCompat.START);
+            return false;
+        }
+
+        if(headersMap.isEmpty()){
+            //do regular transition
+            getWorkflowServiceHelper().execute(transition, callback, queryMap);
+        }else{
+            //do transition with headers since no query params are required we can ignore them
+            getWorkflowServiceHelper().execute(transition, callback, queryMap, headersMap);
+        }
+
+
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return false;
+
     }
 
     private WorkflowServiceCallback paymentsCallBack = new WorkflowServiceCallback() {
@@ -243,8 +245,6 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            //need to manually redirect this response to the notifications screen temporarily
-            workflowDTO.setState(NavigationStateConstants.NOTIFICATION);
             navigateToWorkflow(workflowDTO);
         }
 
@@ -271,6 +271,10 @@ public class MenuPatientActivity extends BasePatientActivity implements Navigati
 
     public static void setTransitionLogout(TransitionDTO transitionLogout) {
         MenuPatientActivity.transitionLogout = transitionLogout;
+    }
+
+    public static void setTransitionNotifications(TransitionDTO transitionNotifications){
+        MenuPatientActivity.transitionNotifications = transitionNotifications;
     }
 
     /**

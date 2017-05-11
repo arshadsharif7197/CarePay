@@ -11,9 +11,8 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.notifications.fragments.NotificationFragment;
+import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.google.gson.Gson;
 
 /**
  * Created by lmenendez on 2/8/17.
@@ -32,16 +31,12 @@ public class NotificationActivity extends MenuPatientActivity {
         appointmentsDrawerUserIdTextView = (TextView) navigationView.getHeaderView(0)
                 .findViewById(com.carecloud.carepaylibrary.R.id.appointmentsDrawerIdTextView);
 
-        Gson gson = new Gson();
-        AppointmentsResultModel appointmentDTO = getConvertedDTO(AppointmentsResultModel.class);
-        Bundle bundle = new Bundle();
-        bundle.putString(CarePayConstants.APPOINTMENT_INFO_BUNDLE, gson.toJson(appointmentDTO));
-        NotificationFragment notificationFragment = new NotificationFragment();
-        notificationFragment.setArguments(bundle);
-
+        NotificationsDTO notificationsDTO = getConvertedDTO(NotificationsDTO.class);
+        NotificationFragment notificationFragment = NotificationFragment.newInstance(notificationsDTO);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container_main, notificationFragment, null);
         transaction.commit();
+
 
         inflateDrawer();
     }
@@ -56,4 +51,5 @@ public class NotificationActivity extends MenuPatientActivity {
             actionBar.setTitle(navigationView.getMenu().getItem(CarePayConstants.NAVIGATION_ITEM_INDEX_NOTIFICATION).getTitle());
         }
     }
+
 }

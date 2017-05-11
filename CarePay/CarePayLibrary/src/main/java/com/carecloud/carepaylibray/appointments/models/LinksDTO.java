@@ -34,22 +34,34 @@ public class LinksDTO {
     @SerializedName("profile_update")
     @Expose
     private TransitionDTO profileUpdate = new TransitionDTO();
-
     @SerializedName("find_patient")
     @Expose
     private TransitionDTO findPatient = new TransitionDTO();
-
     @SerializedName("checkin_status")
     @Expose
     private TransitionDTO checkinStatus = new TransitionDTO();
-
     @SerializedName("queue_status")
     @Expose
     private TransitionDTO queueStatus = new TransitionDTO();
-
     @SerializedName("page")
     @Expose
     private TransitionDTO pagePatient = new TransitionDTO();
+    @SerializedName("unread_notifications")
+    @Expose
+    private TransitionDTO unreadNotifications = new TransitionDTO();
+    @SerializedName("notifications")
+    @Expose
+    private TransitionDTO notifications = new TransitionDTO();
+    @SerializedName("all_notifications")
+    @Expose
+    private TransitionDTO allNotifications = new TransitionDTO();
+    @SerializedName("delete_notifications")
+    @Expose
+    private TransitionDTO deleteNotifications = new TransitionDTO();
+    @SerializedName("mark_as_read")
+    @Expose
+    private TransitionDTO readNotifications = new TransitionDTO();
+
 
     /**
      * @return The self
@@ -186,5 +198,21 @@ public class LinksDTO {
 
     public void setPagePatient(TransitionDTO pagePatient) {
         this.pagePatient = pagePatient;
+    }
+
+    public TransitionDTO getUnreadNotifications() {
+        return unreadNotifications;
+    }
+
+    public void setUnreadNotifications(TransitionDTO unreadNotifications) {
+        this.unreadNotifications = unreadNotifications;
+    }
+
+    public TransitionDTO getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(TransitionDTO notifications) {
+        this.notifications = notifications;
     }
 }
