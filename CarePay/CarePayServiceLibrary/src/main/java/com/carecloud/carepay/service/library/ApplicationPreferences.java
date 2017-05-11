@@ -288,11 +288,19 @@ public class ApplicationPreferences {
         return context;
     }
 
+    /**
+     *
+     * @param tutorialShown a boolean indicating if the tutorial has been shown
+     */
     public void setTutorialShown(Boolean tutorialShown) {
         isTutorialShown = tutorialShown;
         writeBooleanToSharedPref(PREFERENCE_IS_TUTORIAL_SHOWN, tutorialShown);
     }
 
+    /**
+     *
+     * @return a boolean indicating if the tutorial has been shown
+     */
     public boolean isTutorialShown() {
         if (isTutorialShown != null) {
             return isTutorialShown;
