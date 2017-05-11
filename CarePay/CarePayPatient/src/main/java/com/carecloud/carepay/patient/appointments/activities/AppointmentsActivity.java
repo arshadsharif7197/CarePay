@@ -110,6 +110,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Patient
         setTransitionLogout(appointmentsResultModel.getMetadata().getTransitions().getLogout());
         setTransitionProfile(appointmentsResultModel.getMetadata().getLinks().getProfileUpdate());
         setTransitionAppointments(appointmentsResultModel.getMetadata().getLinks().getAppointments());
+        setTransitionNotifications(appointmentsResultModel.getMetadata().getLinks().getNotifications());
 
         String userImageUrl = appointmentsResultModel.getPayload().getDemographicDTO().getPayload()
                 .getPersonalDetails().getProfilePhoto();
