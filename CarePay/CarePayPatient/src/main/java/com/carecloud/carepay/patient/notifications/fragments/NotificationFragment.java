@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.SwipeHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,9 +80,27 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
             }
         });
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         notificationsRecycler = (RecyclerView) view.findViewById(R.id.notifications_recycler);
         notificationsRecycler.setLayoutManager(linearLayoutManager);
+
+        final SwipeHelper swipeHelper = new SwipeHelper(null);
+        ItemTouchHelper notificationsTouchHelper = new ItemTouchHelper(swipeHelper);
+        notificationsTouchHelper.attachToRecyclerView(notificationsRecycler);
+
+        notificationsRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                swipeHelper.clearLastSwipeView();
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+
 
         setAdapter();
 
@@ -143,4 +163,6 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
             showErrorNotification(exceptionMessage);
         }
     };
+
+
 }

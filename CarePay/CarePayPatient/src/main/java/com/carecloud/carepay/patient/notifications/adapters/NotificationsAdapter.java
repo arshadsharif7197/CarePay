@@ -15,6 +15,7 @@ import com.carecloud.carepay.patient.notifications.models.NotificationType;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayUtil;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.customcomponents.SwipeViewHolder;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -107,6 +108,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.header.setText("Notification");
 
         AppointmentDisplayStyle displayStyle = AppointmentDisplayUtil.determineDisplayStyle(appointment);
+        notificationItem.getPayload().getAppointment().getPayload().setDisplayStyle(displayStyle);
 
         switch (displayStyle){
             case MISSED:{
@@ -173,13 +175,16 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.itemView.setOnClickListener(null);
     }
 
-    class NotificationViewHolder extends RecyclerView.ViewHolder{
+    class NotificationViewHolder extends SwipeViewHolder{
         TextView initials;
         ImageView cellAvatar;
         ImageView image;
         TextView header;
         TextView message;
         TextView time;
+
+        View deleteButton;
+        View notificationItemView;
 
         NotificationViewHolder(View itemView) {
             super(itemView);
@@ -189,6 +194,18 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             header = (TextView) itemView.findViewById(R.id.notification_header);
             message = (TextView) itemView.findViewById(R.id.notification_message);
             time = (TextView) itemView.findViewById(R.id.notification_time);
+            deleteButton = itemView.findViewById(R.id.delete_notification);
+            notificationItemView = itemView.findViewById(R.id.notification_item_layout);
+        }
+
+        @Override
+        public int getSwipeWidth() {
+            return deleteButton.getMeasuredWidth();
+        }
+
+        @Override
+        public View getSwipeableView() {
+            return notificationItemView;
         }
     }
 }

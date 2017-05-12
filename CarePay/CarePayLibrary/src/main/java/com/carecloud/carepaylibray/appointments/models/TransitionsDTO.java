@@ -34,6 +34,14 @@ public class TransitionsDTO {
     @Expose
     private TransitionDTO makeAppointment = new TransitionDTO();
 
+    @SerializedName("delete_notifications")
+    @Expose
+    private TransitionDTO deleteNotifications = new TransitionDTO();
+
+    @SerializedName("mark_as_read")
+    @Expose
+    private TransitionDTO readNotifications = new TransitionDTO();
+
     /**
      * @return The checkingIn
      */
@@ -115,5 +123,21 @@ public class TransitionsDTO {
      */
     public void setMakeAppointment(TransitionDTO makeAppointment) {
         this.makeAppointment = makeAppointment;
+    }
+
+    public TransitionDTO getDeleteNotifications() {
+        return deleteNotifications;
+    }
+
+    public void setDeleteNotifications(TransitionDTO deleteNotifications) {
+        this.deleteNotifications = deleteNotifications;
+    }
+
+    public TransitionDTO getReadNotifications() {
+        return readNotifications;
+    }
+
+    public void setReadNotifications(TransitionDTO readNotifications) {
+        this.readNotifications = readNotifications;
     }
 }
