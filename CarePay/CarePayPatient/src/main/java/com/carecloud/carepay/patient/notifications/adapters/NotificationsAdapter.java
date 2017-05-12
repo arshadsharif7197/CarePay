@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.notifications.models.NotificationItem;
@@ -90,6 +91,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         }
 
         holder.time.setText(getTimeStamp(notificationItem));
+        holder.setOnActionListener(new SwipeViewHolder.OnActionListener() {
+            @Override
+            public void onAction(SwipeViewHolder holder) {
+                Toast.makeText(context, "Notification Clicked " + ((NotificationViewHolder)holder).message, Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 
     private void displayPaymentNotification(NotificationViewHolder holder, NotificationItem notificationItem){
@@ -172,7 +180,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.initials.setVisibility(View.VISIBLE);
         holder.cellAvatar.setVisibility(View.GONE);
         holder.image.setVisibility(View.GONE);
-        holder.itemView.setOnClickListener(null);
     }
 
     class NotificationViewHolder extends SwipeViewHolder{

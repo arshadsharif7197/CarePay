@@ -96,7 +96,7 @@ public class SwipeHelper extends ItemTouchHelper.Callback {
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
 //            clearLastSwipeView();
         Log.d(TAG, "Get Movement Flags & Set Touch Listener");
-        recyclerView.setOnTouchListener(swipeTouchListener);
+        recyclerView.setOnTouchListener(getSwipeTouchListener((SwipeViewHolder) viewHolder));
         setClearWidth(viewHolder);
         return makeMovementFlags(0, ItemTouchHelper.LEFT);
     }
@@ -118,23 +118,30 @@ public class SwipeHelper extends ItemTouchHelper.Callback {
 
     }
 
-    private View.OnTouchListener swipeTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent event) {
-            Log.d(TAG, "Triggered Touch Listener");
+    private View.OnTouchListener getSwipeTouchListener(final SwipeViewHolder swipeViewHolder){
+        return new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                Log.d(TAG, "Triggered Touch Listener");
 
-            if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
-                bounceBack = true;
-                if (maxSwipe > clearWidth) {
-                    lastSwipeView.setLeft((int)-clearWidth);
+                if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    bounceBack = true;
+                    if (maxSwipe > clearWidth) {
+                        lastSwipeView.setLeft((int)-clearWidth);
+                    }else{
+                        swipeViewHolder.doViewAction();
+                    }
+                } else {
+                    if(event.getAction() == MotionEvent.ACTION_DOWN && maxSwipe > 0){
+                        maxSwipe = 0;
+                    }
+                    bounceBack = false;
                 }
-            } else {
-                bounceBack = false;
+                Log.d(TAG, "Set Bounceback: "+bounceBack);
+                return false;
             }
-            Log.d(TAG, "Set Bounceback: "+bounceBack);
-            return false;
-        }
-    };
+        };
+    }
 
 
     private void setClearWidth(RecyclerView.ViewHolder viewHolder) {
