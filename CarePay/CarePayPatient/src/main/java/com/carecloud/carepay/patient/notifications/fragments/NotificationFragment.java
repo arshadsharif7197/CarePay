@@ -1,9 +1,13 @@
 package com.carecloud.carepay.patient.notifications.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,23 +20,39 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.customcomponents.SwipeViewHolder;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.SwipeHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lmenendez on 2/8/17
  */
 
-public class NotificationFragment extends BaseFragment implements NotificationsAdapter.SelectNotificationCallback {
+public class NotificationFragment extends BaseFragment implements NotificationsAdapter.SelectNotificationCallback, SwipeHelper.SwipeHelperListener {
+
+    public interface NotificationCallback{
+        void displayNotification(NotificationItem notificationItem);
+    }
+
+    private static final long NOTIFICATION_DELETE_DELAY = 1000 * 5;
+    private static final String TAG = NotificationFragment.class.getName();
 
     private NotificationsDTO notificationsDTO;
     private List<NotificationItem> notificationItems = new ArrayList<>();
+    private NotificationCallback callback;
 
     private View noNotificationLayout;
     private RecyclerView notificationsRecycler;
+    private NotificationsAdapter notificationsAdapter;
     private SwipeRefreshLayout refreshLayout;
+    private SwipeHelper swipeHelper;
+
+    private Handler handler;
 
     /**
      * Instantiate Notification Fragment with Notification data
@@ -49,6 +69,16 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
     }
 
     @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+        try{
+            callback = (NotificationCallback) context;
+        }catch (ClassCastException cce){
+            throw new ClassCastException("Attached Context must implement NotificationCallback");
+        }
+    }
+
+    @Override
     public void onCreate(Bundle icicle){
         super.onCreate(icicle);
 
@@ -59,6 +89,8 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
                 notificationItems = notificationsDTO.getPayload().getNotifications();
             }
         }
+
+        handler = new Handler();
     }
 
     @Override
@@ -79,11 +111,28 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
         });
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
+        linearLayoutManager.setStackFromEnd(true);
         notificationsRecycler = (RecyclerView) view.findViewById(R.id.notifications_recycler);
         notificationsRecycler.setLayoutManager(linearLayoutManager);
 
-        setAdapter();
+        swipeHelper = new SwipeHelper(this);
+        ItemTouchHelper notificationsTouchHelper = new ItemTouchHelper(swipeHelper);
+        notificationsTouchHelper.attachToRecyclerView(notificationsRecycler);
 
+        notificationsRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                deleteNotificationRunnable.run();
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+
+        setAdapter();
     }
 
     @Override
@@ -95,11 +144,11 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
     private void setAdapter(){
         if(!notificationItems.isEmpty()){
             if(notificationsRecycler.getAdapter()==null) {
-                NotificationsAdapter adapter = new NotificationsAdapter(getContext(), notificationItems, this);
-                notificationsRecycler.setAdapter(adapter);
+                notificationsAdapter = new NotificationsAdapter(getContext(), notificationItems, this);
+                notificationsRecycler.setAdapter(notificationsAdapter);
             }else{
-                NotificationsAdapter adapter = (NotificationsAdapter) notificationsRecycler.getAdapter();
-                adapter.setNotificationItems(notificationItems);
+                notificationsAdapter = (NotificationsAdapter) notificationsRecycler.getAdapter();
+                notificationsAdapter.setNotificationItems(notificationItems);
             }
 
             refreshLayout.setVisibility(View.VISIBLE);
@@ -113,6 +162,17 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
 
     @Override
     public void notificationSelected(NotificationItem notificationItem) {
+        callback.displayNotification(notificationItem);
+    }
+
+    @Override
+    public void undoDeleteNotification(SwipeViewHolder holder) {
+        Log.d(TAG, "Undo delete");
+        NotificationItem notificationItem = notificationItems.get(holder.getAdapterPosition());
+        notificationsAdapter.clearRemovedNotification(notificationItem);
+        deleteNotificationRunnable.setNotificationItem(null);
+        handler.removeCallbacks(deleteNotificationRunnable);
+        notificationsRecycler.getAdapter().notifyItemChanged(holder.getAdapterPosition());
 
     }
 
@@ -143,4 +203,71 @@ public class NotificationFragment extends BaseFragment implements NotificationsA
             showErrorNotification(exceptionMessage);
         }
     };
+
+
+
+    @Override
+    public void startNewSwipe() {
+        deleteNotificationRunnable.run();
+    }
+
+    @Override
+    public void viewSwipeCompleted(SwipeViewHolder holder) {
+        NotificationItem notificationItem = notificationItems.get(holder.getAdapterPosition());
+        notificationsAdapter.scheduleNotificationRemoval(notificationItem);
+        notificationsRecycler.getAdapter().notifyItemChanged(holder.getAdapterPosition());
+        deleteNotificationRunnable.setNotificationItem(notificationItem);
+        handler.postDelayed(deleteNotificationRunnable, NOTIFICATION_DELETE_DELAY);
+    }
+
+    private DeleteNotificationRunnable deleteNotificationRunnable = new DeleteNotificationRunnable();
+
+    private class DeleteNotificationRunnable implements Runnable{
+
+        public void setNotificationItem(NotificationItem notificationItem) {
+            this.notificationItem = notificationItem;
+        }
+
+        private NotificationItem notificationItem;
+
+
+        @Override
+        public void run() {
+            if(notificationItem!=null) {
+                Log.d(TAG, "Deleting notification");
+                int index = notificationItems.indexOf(notificationItem);
+                notificationsAdapter.clearRemovedNotification(notificationItem);
+                notificationItems.remove(notificationItem);
+                notificationsRecycler.getAdapter().notifyItemRemoved(index);
+//                deleteNotification(notificationItem); todo enable this when ready
+                notificationItem = null;
+            }
+        }
+
+        private void deleteNotification(NotificationItem notificationItem){
+            TransitionDTO transitionDTO = notificationsDTO.getMetadata().getTransitions().getDeleteNotifications();
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put("notification_id", notificationItem.getPayload().getNotificationId());
+
+            getWorkflowServiceHelper().execute(transitionDTO, deleteNotificationsCallback, queryMap);
+        }
+
+        private WorkflowServiceCallback deleteNotificationsCallback = new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                Log.d(TAG, "Delete notificaton successful");
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                Log.d(TAG, "Delete notificaton FAILED");
+            }
+        };
+    }
+
 }

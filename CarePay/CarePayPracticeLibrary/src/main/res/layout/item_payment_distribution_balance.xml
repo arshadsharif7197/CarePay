@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -18,7 +19,7 @@
             android:layout_height="match_parent"
             android:background="@color/remove_red"
             android:padding="@dimen/dimen_16dp"
-            android:layout_gravity="right"
+            android:layout_gravity="end"
             android:gravity="center"
             android:textSize="@dimen/text_size_20"
             android:textColor="@color/white"
@@ -45,7 +46,7 @@
                 android:gravity="start|center_vertical"
                 android:textSize="@dimen/text_size_16sp"
                 android:textColor="@color/Feldgrau"
-                android:text="Co-pay"
+                tools:text="Co-pay"
                 app:customAssetFont="proxima_nova_regular"/>
 
             <View
@@ -98,7 +99,7 @@
                     android:gravity="start|center_vertical"
                     android:textSize="@dimen/text_size_16sp"
                     android:textColor="@color/colorPrimary"
-                    android:text="Dr. Nina Simone"
+                    tools:text="Dr. Nina Simone"
                     app:customAssetFont="proxima_nova_regular"/>
 
                 <ImageView
@@ -144,7 +145,7 @@
                     android:gravity="start|center_vertical"
                     android:textSize="@dimen/text_size_16sp"
                     android:textColor="@color/colorPrimary"
-                    android:text="Miami, FL"
+                    tools:text="Miami, FL"
                     app:customAssetFont="proxima_nova_regular"/>
 
                 <ImageView
@@ -174,7 +175,7 @@
                 android:gravity="center"
                 android:textSize="@dimen/text_size_20"
                 android:textColor="@color/colorPrimary"
-                android:text="$55.00"
+                tools:text="$55.00"
                 app:customAssetFont="proxima_nova_semi_bold"/>
 
 

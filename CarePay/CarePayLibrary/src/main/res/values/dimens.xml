@@ -48,6 +48,7 @@
     <dimen name="dimen_minus_5dp">-5dp</dimen>
 
     <dimen name="text_size_11">11sp</dimen>
+    <dimen name="text_size_12sp">12sp</dimen>
     <dimen name="text_size_13">13sp</dimen>
     <dimen name="text_size_14">14sp</dimen>
     <dimen name="text_size_15">15sp</dimen>
