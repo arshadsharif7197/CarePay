@@ -167,7 +167,7 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
             case PENDING_UPCOMING:{
                 holder.upcomingDateLayout.setVisibility(View.VISIBLE);
                 holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
-                holder.upcomingMonthTextView.setText(dateUtil.getMonthLiteralAbbr());
+                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDayOrdinal());
                 holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
                 holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.grayRound));
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.emerald));
@@ -178,7 +178,7 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
             case REQUESTED_UPCOMING:{
                 holder.upcomingDateLayout.setVisibility(View.VISIBLE);
                 holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
-                holder.upcomingMonthTextView.setText(dateUtil.getMonthLiteralAbbr());
+                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDayOrdinal());
                 holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
                 holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.lightning_yellow));
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
@@ -190,7 +190,7 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
             case CANCELED_UPCOMING:{
                 holder.upcomingDateLayout.setVisibility(View.VISIBLE);
                 holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
-                holder.upcomingMonthTextView.setText(dateUtil.getMonthLiteralAbbr());
+                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDayOrdinal());
                 holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
                 holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.pastel_blue));
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));

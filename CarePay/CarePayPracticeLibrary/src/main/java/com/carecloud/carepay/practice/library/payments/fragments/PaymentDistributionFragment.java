@@ -39,8 +39,8 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentApplication;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentNewCharge;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentObject;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPostModel;
+import com.carecloud.carepaylibray.utils.BounceHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.carecloud.carepaylibray.utils.SwipeHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -53,7 +53,7 @@ import java.util.List;
  */
 
 public class PaymentDistributionFragment extends BaseDialogFragment implements PaymentDistributionAdapter.PaymentDistributionCallback, PopupPickerAdapter.PopupPickCallback,
-        AddPaymentItemFragment.AddItemCallback, PaymentDistributionEntryFragment.PaymentDistributionAmountCallback, SwipeHelper.SwipeHelperListener {
+        AddPaymentItemFragment.AddItemCallback, PaymentDistributionEntryFragment.PaymentDistributionAmountCallback, BounceHelper.BounceHelperListener {
 
     private TextView patientName;
     private TextView balance;
@@ -67,8 +67,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
     private RecyclerView newChargesRecycler;
     private Button payButton;
 
-    private SwipeHelper balanceViewSwipeHelper;
-    private SwipeHelper chargeViewSwipeHelper;
+    private BounceHelper balanceViewSwipeHelper;
+    private BounceHelper chargeViewSwipeHelper;
 
     private PopupPickerWindow locationPickerWindow;
     private PopupPickerWindow providerPickerWindow;
@@ -146,7 +146,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         balanceDetailsRecycler.setLayoutManager(balanceLayoutManager);
         balanceDetailsRecycler.addOnScrollListener(scrollListener);
 
-        balanceViewSwipeHelper = new SwipeHelper(this);
+        balanceViewSwipeHelper = new BounceHelper(this);
         ItemTouchHelper balanceTouchHelper = new ItemTouchHelper(balanceViewSwipeHelper);
         balanceTouchHelper.attachToRecyclerView(balanceDetailsRecycler);
 
@@ -157,7 +157,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
         newChargesRecycler.setLayoutManager(chargesLayoutManager);
         newChargesRecycler.addOnScrollListener(scrollListener);
 
-        chargeViewSwipeHelper = new SwipeHelper(this);
+        chargeViewSwipeHelper = new BounceHelper(this);
         ItemTouchHelper chargesTouchHelper = new ItemTouchHelper(chargeViewSwipeHelper);
         chargesTouchHelper.attachToRecyclerView(newChargesRecycler);
 
@@ -451,8 +451,18 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             balanceItem.setLocation(updateLocation);
             balanceItem.setLocationId(updateLocation.getId());
         }
-        setAdapter();
-        return;
+//        setAdapter();
+
+        int index = balanceItems.indexOf(balanceItem);
+        if(index >= 0){
+            balanceDetailsRecycler.getAdapter().notifyItemChanged(index);
+        }else{
+            index = chargeItems.indexOf(balanceItem);
+            if(index >= 0){
+                newChargesRecycler.getAdapter().notifyItemChanged(index);
+            }
+        }
+
     }
 
 
@@ -492,6 +502,11 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
             super.onScrolled(recyclerView, dx, dy);
         }
     };
+
+    @Override
+    public void startNewSwipe() {
+        clearPickers();
+    }
 
     @Override
     public void pickProvider(View view, BalanceItemDTO balanceItem) {
@@ -745,11 +760,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment implements P
                 shouldAutoApply = true;
             }
         }
-    }
-
-    @Override
-    public void clearViews() {
-        clearPickers();
     }
 
 }

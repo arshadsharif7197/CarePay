@@ -9,29 +9,15 @@ import android.view.View;
 
 public abstract class SwipeViewHolder extends RecyclerView.ViewHolder {
 
-    public interface OnActionListener {
-        void onAction(SwipeViewHolder holder);
-    }
-
-    private OnActionListener actionListener;
-
     public SwipeViewHolder(View itemView) {
         super(itemView);
-    }
-
-    public void setOnActionListener(OnActionListener actionListener){
-        this.actionListener = actionListener;
-    }
-
-    public void doViewAction(){
-        if(actionListener!=null){
-            actionListener.onAction(this);
-        }
     }
 
     public abstract int getSwipeWidth();
 
     public abstract View getSwipeableView();
+
+    public abstract void displayUndoOption();
 
 
 }

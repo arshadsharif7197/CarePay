@@ -310,6 +310,11 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
         public View getSwipeableView() {
             return rowLayout;
         }
+
+        @Override
+        public void displayUndoOption() {
+
+        }
     }
 
 
